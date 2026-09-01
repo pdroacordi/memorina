@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://cxmds8nc576iu"]
+
+[ext_resource type="Script" uid="uid://cu1c1mo6x7ca6" path="res://Scenes/Characters/Player/character.gd" id="1_ynyct"]
+[ext_resource type="Texture2D" uid="uid://ckpihqdvcjx8u" path="res://resources/placeholder/Placeholder_01.png" id="2_ynyct"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rxs28"]
+size = Vector2(32, 64)
+
+[node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
+script = ExtResource("1_ynyct")
+_air_control = 0.8
+_air_brakes = 0.8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=64234537]
+position = Vector2(0, -64)
+shape = SubResource("RectangleShape2D_rxs28")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1693411011]
+position = Vector2(0, -64)
+texture = ExtResource("2_ynyct")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1964201661]
+
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=902993815]
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=2054351473]
+
+[node name="GPUParticles2D" type="GPUParticles2D" parent="." unique_id=1639502161]

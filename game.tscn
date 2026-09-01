@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://ccbpf3johlglr"]
+
+[ext_resource type="PackedScene" uid="uid://cxmds8nc576iu" path="res://Scenes/Characters/Player/ivo.tscn" id="1_e2o6t"]
+[ext_resource type="Script" uid="uid://c1uo8k8aac7gw" path="res://Scenes/Characters/Player/player_input.gd" id="2_feb5d"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_e2o6t"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3v0ji"]
+size = Vector2(300, 128)
+
+[sub_resource type="QuadMesh" id="QuadMesh_rxs28"]
+size = Vector2(300, 128)
+
+[node name="Game" type="Node2D" unique_id=585377483]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=870631150]
+process_mode = 1
+
+[node name="Current Level" type="StaticBody2D" parent="WorldEnvironment" unique_id=830180253]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldEnvironment/Current Level" unique_id=947264095]
+shape = SubResource("WorldBoundaryShape2D_e2o6t")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="WorldEnvironment/Current Level" unique_id=269642059]
+position = Vector2(-167, -64)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldEnvironment/Current Level/StaticBody2D" unique_id=1244886017]
+shape = SubResource("RectangleShape2D_3v0ji")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="WorldEnvironment/Current Level/StaticBody2D" unique_id=1925946316]
+mesh = SubResource("QuadMesh_rxs28")
+
+[node name="Ivo" parent="WorldEnvironment" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
+position = Vector2(-118, -220)
+_jump_height = 128.0
+_fall_gravity_mult = 10.0
+_air_control = 1.0
+_air_brakes = 1.0
+
+[node name="PlayerInput" type="Node" parent="WorldEnvironment/Ivo" unique_id=176611484]
+script = ExtResource("2_feb5d")
+
+[node name="Camera2D" type="Camera2D" parent="WorldEnvironment" unique_id=1746271803]
+position = Vector2(3, -182)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=873140419]
+
+[node name="Control" type="Control" parent="CanvasLayer" unique_id=1191215520]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+metadata/_edit_use_anchors_ = true
