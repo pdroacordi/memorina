@@ -6,6 +6,12 @@ const GROUP := "spawner"
 func _enter_tree() -> void:
 	add_to_group(GROUP)
 
+## Frees every spawned instance. Call on room transitions so effects from
+## the previous room don't linger into the next one.
+func clear() -> void:
+	for child in get_children():
+		child.queue_free()
+
 func spawn(scene: PackedScene, global_pos: Vector2 = Vector2.ZERO) -> Node:
 	var instance := scene.instantiate()
 
