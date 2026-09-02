@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://b2a63w0vkfy3a"]
+
+[ext_resource type="Texture2D" uid="uid://eekgpjljcp8c" path="res://Assets/Sprites/Particles/Dust/landdust-64x32.png" id="1_t74rj"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hov54"]
+atlas = ExtResource("1_t74rj")
+region = Rect2(0, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7kw27"]
+atlas = ExtResource("1_t74rj")
+region = Rect2(64, 0, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2quym"]
+atlas = ExtResource("1_t74rj")
+region = Rect2(0, 32, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vqe6j"]
+atlas = ExtResource("1_t74rj")
+region = Rect2(64, 32, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3h8qw"]
+atlas = ExtResource("1_t74rj")
+region = Rect2(0, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ndfhe"]
+atlas = ExtResource("1_t74rj")
+region = Rect2(64, 64, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7w0gk"]
+atlas = ExtResource("1_t74rj")
+region = Rect2(0, 96, 64, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cepvs"]
+atlas = ExtResource("1_t74rj")
+region = Rect2(64, 96, 64, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dk131"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hov54")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7kw27")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2quym")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vqe6j")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3h8qw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ndfhe")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7w0gk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cepvs")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 12.0
+}]
+
+[node name="LandingDustParticles" type="AnimatedSprite2D" unique_id=831895557]
+sprite_frames = SubResource("SpriteFrames_dk131")
+frame = 7
+frame_progress = 1.0
+offset = Vector2(0, -16)

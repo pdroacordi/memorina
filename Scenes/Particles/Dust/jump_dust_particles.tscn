@@ -1,0 +1,59 @@
+[gd_scene format=3 uid="uid://cbam77lyl5m76"]
+
+[ext_resource type="Texture2D" uid="uid://dsecw6wtxg8nc" path="res://Assets/Sprites/Particles/Dust/jumpcloud-32x32.png" id="1_ljep0"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yxci8"]
+atlas = ExtResource("1_ljep0")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nvoeu"]
+atlas = ExtResource("1_ljep0")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u3kw3"]
+atlas = ExtResource("1_ljep0")
+region = Rect2(0, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yfpja"]
+atlas = ExtResource("1_ljep0")
+region = Rect2(32, 32, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ikop2"]
+atlas = ExtResource("1_ljep0")
+region = Rect2(0, 64, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_u6vj4"]
+atlas = ExtResource("1_ljep0")
+region = Rect2(32, 64, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_dk131"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yxci8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nvoeu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u3kw3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yfpja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ikop2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_u6vj4")
+}],
+"loop": 0,
+"name": &"default",
+"speed": 12.0
+}]
+
+[node name="JumpDustParticles" type="AnimatedSprite2D" unique_id=831895557]
+sprite_frames = SubResource("SpriteFrames_dk131")
+frame = 5
+frame_progress = 1.0
+offset = Vector2(0, -16)
