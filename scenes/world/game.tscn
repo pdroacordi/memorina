@@ -3,11 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://cxmds8nc576iu" path="res://scenes/characters/player/ivo.tscn" id="1_e2o6t"]
 [ext_resource type="Script" uid="uid://drh8ksb1dbina" path="res://scenes/world/spawner.gd" id="2_hqfqh"]
 
-[sub_resource type="GDScript" id="GDScript_w44h4"]
-script/source = "extends WorldEnvironment
-
-"
-
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_e2o6t"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3v0ji"]
@@ -18,31 +13,30 @@ size = Vector2(150, 64)
 
 [node name="Game" type="Node2D" unique_id=585377483]
 
-[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=870631150]
+[node name="World" type="Node2D" parent="." unique_id=870631150]
 process_mode = 1
-script = SubResource("GDScript_w44h4")
 
-[node name="Current Level" type="StaticBody2D" parent="WorldEnvironment" unique_id=830180253]
+[node name="Current Level" type="StaticBody2D" parent="World" unique_id=830180253]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldEnvironment/Current Level" unique_id=947264095]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Current Level" unique_id=947264095]
 shape = SubResource("WorldBoundaryShape2D_e2o6t")
 
-[node name="StaticBody2D" type="StaticBody2D" parent="WorldEnvironment/Current Level" unique_id=269642059]
+[node name="StaticBody2D" type="StaticBody2D" parent="World/Current Level" unique_id=269642059]
 position = Vector2(-83, -35)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="WorldEnvironment/Current Level/StaticBody2D" unique_id=1244886017]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Current Level/StaticBody2D" unique_id=1244886017]
 shape = SubResource("RectangleShape2D_3v0ji")
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="WorldEnvironment/Current Level/StaticBody2D" unique_id=1925946316]
+[node name="MeshInstance2D" type="MeshInstance2D" parent="World/Current Level/StaticBody2D" unique_id=1925946316]
 mesh = SubResource("QuadMesh_rxs28")
 
-[node name="Ivo" parent="WorldEnvironment" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
+[node name="Ivo" parent="World" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
 position = Vector2(-118.10907, -232.21048)
 
-[node name="Camera2D" type="Camera2D" parent="WorldEnvironment" unique_id=1746271803]
+[node name="Camera2D" type="Camera2D" parent="World" unique_id=1746271803]
 position = Vector2(2, -91)
 
-[node name="Spawner" type="Node2D" parent="WorldEnvironment" unique_id=1572119967]
+[node name="Spawner" type="Node2D" parent="World" unique_id=1572119967]
 script = ExtResource("2_hqfqh")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=873140419]
