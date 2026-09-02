@@ -7,7 +7,7 @@ Godot 4.7 (GDScript, Forward+ renderer), 2D metroidvania. Design source of truth
 Bias hard toward object-oriented design and SOLID/KISS. Concretely, in Godot terms:
 
 - **Composition over inheritance.** Prefer small, single-purpose scripts wired together over deep `extends` chains. Reserve inheritance for genuinely "is-a" relationships on engine base classes; use it sparingly even then.
-- **Single responsibility per script/node.** A script should do one thing. If a node's script is handling input, physics, *and* state bookkeeping, split it — see `PlayerInput` / `Player` in `Scenes/Characters/Player/` as the reference pattern: input reads `Input`/`InputEvent` and emits signals; the logic node owns state and behavior, and only reacts to those signals. Extend this same split for every future controller (guardians, enemies, UI controllers) rather than reading `Input` directly inside a logic node.
+- **Single responsibility per script/node.** A script should do one thing. If a node's script is handling input, physics, *and* state bookkeeping, split it — see `PlayerInput` / `Player` in `scenes/characters/player/` as the reference pattern: input reads `Input`/`InputEvent` and emits signals; the logic node owns state and behavior, and only reacts to those signals. Extend this same split for every future controller (guardians, enemies, UI controllers) rather than reading `Input` directly inside a logic node.
 - **Signals for decoupling (Observer).** Nodes that need to react to something emit or listen to signals rather than reaching into each other via `get_node()` chains or tight parent/child coupling.
 - **Resources for interchangeable data/behavior (Strategy).** Data-driven variation (e.g. per-guardian attack patterns, per-season note-sequence definitions) belongs in custom `Resource` subclasses, not in branching logic inside a single script.
 - **Shallow scene trees.** If a scene's node hierarchy is growing deep to express behavior rather than actual spatial/rendering structure, that's a sign to extract a script or sub-scene instead.
@@ -30,9 +30,18 @@ Bias hard toward object-oriented design and SOLID/KISS. Concretely, in Godot ter
 
 ## Project structure
 
-- `Scenes/Characters/<Name>/` — one folder per character, containing its scene(s) and scripts (e.g. `Scenes/Characters/Player/`).
-- `resources/` — art/data assets (currently placeholders).
+**Every file and folder is lowercase `snake_case`** — no spaces, no PascalCase, no kebab-case. `res://` paths are case-sensitive on Linux/web exports, so mixed casing produces builds that work on Windows and break everywhere else.
+
+- `scenes/characters/<name>/` — one folder per character, containing its scene(s) *and* its scripts (e.g. `scenes/characters/player/`).
+- `scenes/world/` — `game.tscn`, the main scene: the composition root holding player, camera and HUD, and swapping levels underneath.
+- `scenes/particles/<kind>/` — reusable one-shot effect scenes, spawned by whoever triggers them.
+- `assets/sprites/<category>/<name>/` — art, mirroring the `scenes/` layout (e.g. `assets/sprites/characters/ivo/`).
+- `resources/` — custom `Resource` data assets (currently placeholders).
 - `docs/design/` — design docs (lore, mechanics), source of truth for game intent.
+
+**Scripts live beside the scene they belong to — never in a shared `scripts/` folder.** Grouping is by feature, not by file type. A `scripts/` directory would make every new file a coin flip between two conventions.
+
+Rename and move files **from inside the Godot editor** (FileSystem dock), so it rewrites `uid://` references, `path=` entries and `.import` sidecars for you.
 
 ## Known gaps (not yet implemented)
 

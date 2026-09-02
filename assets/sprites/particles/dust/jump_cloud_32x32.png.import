@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://d0h3ok4ikdxyf"
-path="res://.godot/imported/Player Idle 48x48.png-24fa4fc07fb497c4f02787a3882f38e2.ctex"
+uid="uid://dsecw6wtxg8nc"
+path="res://.godot/imported/jump_cloud_32x32.png-38c622d1a383bd4a86d6a7fc0f071a50.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Characters/Ivo/Player Idle 48x48.png"
-dest_files=["res://.godot/imported/Player Idle 48x48.png-24fa4fc07fb497c4f02787a3882f38e2.ctex"]
+source_file="res://assets/sprites/particles/dust/jump_cloud_32x32.png"
+dest_files=["res://.godot/imported/jump_cloud_32x32.png-38c622d1a383bd4a86d6a7fc0f071a50.ctex"]
 
 [params]
 

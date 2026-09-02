@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c464itsdkhmbv"
-path="res://.godot/imported/player run 48x48.png-fd9dc883f1f314e2982afd86d01edf4e.ctex"
+uid="uid://t5p6blm00j2j"
+path="res://.godot/imported/player_new_jump_48x48.png-1858f3965b71bb25691c9d0eee66fffa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Characters/Ivo/player run 48x48.png"
-dest_files=["res://.godot/imported/player run 48x48.png-fd9dc883f1f314e2982afd86d01edf4e.ctex"]
+source_file="res://assets/sprites/characters/ivo/player_new_jump_48x48.png"
+dest_files=["res://.godot/imported/player_new_jump_48x48.png-1858f3965b71bb25691c9d0eee66fffa.ctex"]
 
 [params]
 

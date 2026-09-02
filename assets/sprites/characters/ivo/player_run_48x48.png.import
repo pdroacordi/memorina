@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dsecw6wtxg8nc"
-path="res://.godot/imported/jumpcloud-32x32.png-73fcd4aa1933632e4404ed3581b78bec.ctex"
+uid="uid://c464itsdkhmbv"
+path="res://.godot/imported/player_run_48x48.png-30822198d76ab06e3e72b621a3710df7.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Particles/Dust/jumpcloud-32x32.png"
-dest_files=["res://.godot/imported/jumpcloud-32x32.png-73fcd4aa1933632e4404ed3581b78bec.ctex"]
+source_file="res://assets/sprites/characters/ivo/player_run_48x48.png"
+dest_files=["res://.godot/imported/player_run_48x48.png-30822198d76ab06e3e72b621a3710df7.ctex"]
 
 [params]
 

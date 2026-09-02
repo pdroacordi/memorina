@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ckpihqdvcjx8u"
-path="res://.godot/imported/Placeholder_01.png-7ec7d2606de6a6179792a7dac81977f1.ctex"
+uid="uid://b7kj4fpt3ocqy"
+path="res://.godot/imported/player_land_48x48.png-dc3de00dfa0d07f734307786c22c41a6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://resources/placeholder/Placeholder_01.png"
-dest_files=["res://.godot/imported/Placeholder_01.png-7ec7d2606de6a6179792a7dac81977f1.ctex"]
+source_file="res://assets/sprites/characters/ivo/player_land_48x48.png"
+dest_files=["res://.godot/imported/player_land_48x48.png-dc3de00dfa0d07f734307786c22c41a6.ctex"]
 
 [params]
 

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b2a63w0vkfy3a"]
 
-[ext_resource type="Texture2D" uid="uid://eekgpjljcp8c" path="res://Assets/Sprites/Particles/Dust/landdust-64x32.png" id="1_t74rj"]
+[ext_resource type="Texture2D" uid="uid://eekgpjljcp8c" path="res://assets/sprites/particles/dust/land_dust_64x32.png" id="1_t74rj"]
+[ext_resource type="Script" uid="uid://cuqeaexyauj8h" path="res://scenes/particles/dust/dust_particle.gd" id="2_v4xv3"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hov54"]
 atlas = ExtResource("1_t74rj")
@@ -71,3 +72,4 @@ sprite_frames = SubResource("SpriteFrames_dk131")
 frame = 7
 frame_progress = 1.0
 offset = Vector2(0, -16)
+script = ExtResource("2_v4xv3")

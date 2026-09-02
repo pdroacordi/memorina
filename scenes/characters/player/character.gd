@@ -1,5 +1,8 @@
-extends CharacterBody2D
 class_name Player
+extends CharacterBody2D
+
+signal jumped(position: Vector2)
+signal landed(position: Vector2, impact_speed: float)
 
 
 @export_category("Locomotion")
@@ -12,7 +15,7 @@ class_name Player
 @export_category("Jumping")
 @export var jump_height       : float = 32
 @export var rise_gravity_mult : float = 1.6
-@export var fall_gravity_mult : float = 2
+@export var fall_gravity_mult : float = 1.0
 @export var terminal_velocity : float = 900
 @export var coyote_time_max   : float = 0.12
 @export var jump_buffer_max   : float = 0.12
@@ -24,18 +27,24 @@ var _direction                : float = 0.0
 var _is_jumping               : bool  = false
 var _coyote_timer             : float = 0.0
 var _jump_buffer_timer        : float = -1.0
+var _was_on_floor             : bool  = true
+var _last_fall_speed          : float = 0.0
 
 @onready var _sprite          : Sprite2D    = $Sprite2D
-@onready var input            : PlayerInput = $PlayerInput
+@onready var _input           : PlayerInput = $PlayerInput
 @onready var _base_gravity    : float = PhysicsServer2D.area_get_param(get_world_2d().space, PhysicsServer2D.AREA_PARAM_GRAVITY)
 
 func _ready() -> void:
-	input.direction_changed.connect(_on_direction_changed)
-	input.jump_pressed.connect(_on_jump_pressed)
-	input.jump_canceled.connect(_on_jump_canceled)
+	_input.direction_changed.connect(_on_direction_changed)
+	_input.jump_pressed.connect(_on_jump_pressed)
+	_input.jump_canceled.connect(_on_jump_canceled)
 
 func _physics_process(delta: float) -> void:
 	var on_floor := is_on_floor()
+
+	if on_floor and not _was_on_floor:
+		landed.emit(global_position, _last_fall_speed)
+	_was_on_floor = on_floor
 
 	_update_facing()
 	_update_timers(delta, on_floor)
@@ -85,6 +94,7 @@ func _air_physics(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, _direction * move_speed, acceleration * air_control * delta)
 	else:
 		velocity.x = move_toward(velocity.x, 0.0, deceleration * air_brakes * delta)
+	_last_fall_speed = maxf(velocity.y, 0.0)
 
 #############################################
 ##  J U M P I N G                          ##
@@ -122,6 +132,7 @@ func _try_jump(on_floor: bool) -> void:
 		_is_jumping = true
 		_coyote_timer = 0.0
 		_jump_buffer_timer = -1.0
+		jumped.emit(global_position)
 
 func _cut_jump() -> void:
 	if _is_jumping and velocity.y < 0.0:

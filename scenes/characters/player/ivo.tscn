@@ -1,11 +1,15 @@
 [gd_scene format=3 uid="uid://cxmds8nc576iu"]
 
-[ext_resource type="Script" uid="uid://cu1c1mo6x7ca6" path="res://Scenes/Characters/Player/character.gd" id="1_ynyct"]
-[ext_resource type="Texture2D" uid="uid://d0h3ok4ikdxyf" path="res://Assets/Sprites/Characters/Ivo/Player Idle 48x48.png" id="2_ynyct"]
-[ext_resource type="Texture2D" uid="uid://c464itsdkhmbv" path="res://Assets/Sprites/Characters/Ivo/player run 48x48.png" id="3_k18kj"]
-[ext_resource type="Script" uid="uid://c1uo8k8aac7gw" path="res://Scenes/Characters/Player/player_input.gd" id="3_pinput"]
-[ext_resource type="Texture2D" uid="uid://t5p6blm00j2j" path="res://Assets/Sprites/Characters/Ivo/player new jump 48x48.png" id="3_ra23q"]
-[ext_resource type="Texture2D" uid="uid://b7kj4fpt3ocqy" path="res://Assets/Sprites/Characters/Ivo/player land 48x48.png" id="4_dk131"]
+[ext_resource type="Script" uid="uid://cu1c1mo6x7ca6" path="res://scenes/characters/player/character.gd" id="1_ynyct"]
+[ext_resource type="Texture2D" uid="uid://d0h3ok4ikdxyf" path="res://assets/sprites/characters/ivo/player_idle_48x48.png" id="2_ynyct"]
+[ext_resource type="Texture2D" uid="uid://c464itsdkhmbv" path="res://assets/sprites/characters/ivo/player_run_48x48.png" id="3_k18kj"]
+[ext_resource type="Script" uid="uid://c1uo8k8aac7gw" path="res://scenes/characters/player/player_input.gd" id="3_pinput"]
+[ext_resource type="Texture2D" uid="uid://t5p6blm00j2j" path="res://assets/sprites/characters/ivo/player_new_jump_48x48.png" id="3_ra23q"]
+[ext_resource type="Texture2D" uid="uid://b7kj4fpt3ocqy" path="res://assets/sprites/characters/ivo/player_land_48x48.png" id="4_dk131"]
+[ext_resource type="Texture2D" uid="uid://bcs3306b7rnos" path="res://assets/sprites/characters/ivo/player_walk_48x48.png" id="6_8uojx"]
+[ext_resource type="Script" uid="uid://branmbikueiyl" path="res://scenes/particles/dust/dust_emitter.gd" id="8_45amr"]
+[ext_resource type="PackedScene" uid="uid://cbam77lyl5m76" path="res://scenes/particles/dust/jump_dust_particles.tscn" id="9_soiyk"]
+[ext_resource type="PackedScene" uid="uid://b2a63w0vkfy3a" path="res://scenes/particles/dust/landing_dust_particles.tscn" id="10_466qv"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 6.0
@@ -341,6 +345,48 @@ tracks/2/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6, 7]
 }
 
+[sub_resource type="Animation" id="Animation_oxrm5"]
+resource_name = "walk"
+length = 0.6666667
+loop_mode = 1
+step = 0.083333336
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("6_8uojx")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25, 0.33333334, 0.4166667, 0.5, 0.5833334),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ra23q"]
 _data = {
 &"RESET": SubResource("Animation_knqxj"),
@@ -350,7 +396,8 @@ _data = {
 &"jump_idle": SubResource("Animation_yxci8"),
 &"jump_start": SubResource("Animation_nvoeu"),
 &"land": SubResource("Animation_u3kw3"),
-&"run": SubResource("Animation_ra23q")
+&"run": SubResource("Animation_ra23q"),
+&"walk": SubResource("Animation_oxrm5")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_nvoeu"]
@@ -376,14 +423,6 @@ animation = &"run"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ks11i"]
 advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_yxci8"]
-advance_mode = 2
-advance_expression = "_direction != 0.0"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dk131"]
-advance_mode = 2
-advance_expression = "_direction == 0.0"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u6vj4"]
 advance_mode = 2
@@ -444,6 +483,14 @@ switch_mode = 2
 advance_mode = 2
 advance_expression = "velocity.y >= 0.0"
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_yxci8"]
+advance_mode = 2
+advance_expression = "_direction != 0.0"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dk131"]
+advance_mode = 2
+advance_expression = "_direction == 0.0"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ks11i"]
 states/Start/position = Vector2(129, 100)
 states/fall_idle/node = SubResource("AnimationNodeAnimation_nvoeu")
@@ -459,9 +506,9 @@ states/jump_start/position = Vector2(119, 245)
 states/land/node = SubResource("AnimationNodeAnimation_ikop2")
 states/land/position = Vector2(697, 245)
 states/run/node = SubResource("AnimationNodeAnimation_ks11i")
-states/run/position = Vector2(382, 100)
-transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_ks11i"), "idle", "run", SubResource("AnimationNodeStateMachineTransition_yxci8"), "run", "idle", SubResource("AnimationNodeStateMachineTransition_dk131"), "run", "jump_start", SubResource("AnimationNodeStateMachineTransition_u6vj4"), "idle", "jump_start", SubResource("AnimationNodeStateMachineTransition_nvoeu"), "idle", "fall_start", SubResource("AnimationNodeStateMachineTransition_u3kw3"), "run", "fall_start", SubResource("AnimationNodeStateMachineTransition_yfpja"), "jump_start", "jump_idle", SubResource("AnimationNodeStateMachineTransition_ikop2"), "jump_idle", "fall_start", SubResource("AnimationNodeStateMachineTransition_oke38"), "fall_start", "fall_idle", SubResource("AnimationNodeStateMachineTransition_srgfu"), "fall_idle", "land", SubResource("AnimationNodeStateMachineTransition_c86r7"), "fall_start", "land", SubResource("AnimationNodeStateMachineTransition_s01jl"), "jump_idle", "land", SubResource("AnimationNodeStateMachineTransition_snax1"), "land", "idle", SubResource("AnimationNodeStateMachineTransition_0i31r"), "land", "run", SubResource("AnimationNodeStateMachineTransition_a0pwy"), "land", "jump_start", SubResource("AnimationNodeStateMachineTransition_gxeod"), "jump_start", "fall_start", SubResource("AnimationNodeStateMachineTransition_bj5at")]
-graph_offset = Vector2(-142, -3)
+states/run/position = Vector2(523, 100)
+transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_ks11i"), "run", "jump_start", SubResource("AnimationNodeStateMachineTransition_u6vj4"), "idle", "jump_start", SubResource("AnimationNodeStateMachineTransition_nvoeu"), "idle", "fall_start", SubResource("AnimationNodeStateMachineTransition_u3kw3"), "run", "fall_start", SubResource("AnimationNodeStateMachineTransition_yfpja"), "jump_start", "jump_idle", SubResource("AnimationNodeStateMachineTransition_ikop2"), "jump_idle", "fall_start", SubResource("AnimationNodeStateMachineTransition_oke38"), "fall_start", "fall_idle", SubResource("AnimationNodeStateMachineTransition_srgfu"), "fall_idle", "land", SubResource("AnimationNodeStateMachineTransition_c86r7"), "fall_start", "land", SubResource("AnimationNodeStateMachineTransition_s01jl"), "jump_idle", "land", SubResource("AnimationNodeStateMachineTransition_snax1"), "land", "idle", SubResource("AnimationNodeStateMachineTransition_0i31r"), "land", "run", SubResource("AnimationNodeStateMachineTransition_a0pwy"), "land", "jump_start", SubResource("AnimationNodeStateMachineTransition_gxeod"), "jump_start", "fall_start", SubResource("AnimationNodeStateMachineTransition_bj5at"), "idle", "run", SubResource("AnimationNodeStateMachineTransition_yxci8"), "run", "idle", SubResource("AnimationNodeStateMachineTransition_dk131")]
+graph_offset = Vector2(-137, 40)
 
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
 script = ExtResource("1_ynyct")
@@ -469,7 +516,6 @@ air_control = 0.8
 air_brakes = 0.8
 jump_height = 80.0
 rise_gravity_mult = 0.85
-fall_gravity_mult = 1.0
 terminal_velocity = 500.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1693411011]
@@ -496,3 +542,11 @@ anim_player = NodePath("../AnimationPlayer")
 
 [node name="PlayerInput" type="Node" parent="." unique_id=985844870]
 script = ExtResource("3_pinput")
+
+[node name="DustEmitter" type="Node" parent="." unique_id=1251765753]
+script = ExtResource("8_45amr")
+jump_particles = ExtResource("9_soiyk")
+land_particles = ExtResource("10_466qv")
+
+[connection signal="jumped" from="." to="DustEmitter" method="spawn_jump_dust"]
+[connection signal="landed" from="." to="DustEmitter" method="spawn_land_dust"]

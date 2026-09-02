@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cbam77lyl5m76"]
 
-[ext_resource type="Texture2D" uid="uid://dsecw6wtxg8nc" path="res://Assets/Sprites/Particles/Dust/jumpcloud-32x32.png" id="1_ljep0"]
+[ext_resource type="Texture2D" uid="uid://dsecw6wtxg8nc" path="res://assets/sprites/particles/dust/jump_cloud_32x32.png" id="1_ljep0"]
+[ext_resource type="Script" uid="uid://cuqeaexyauj8h" path="res://scenes/particles/dust/dust_particle.gd" id="2_sne6l"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_yxci8"]
 atlas = ExtResource("1_ljep0")
@@ -57,3 +58,4 @@ sprite_frames = SubResource("SpriteFrames_dk131")
 frame = 5
 frame_progress = 1.0
 offset = Vector2(0, -16)
+script = ExtResource("2_sne6l")

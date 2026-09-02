@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://t5p6blm00j2j"
-path="res://.godot/imported/player new jump 48x48.png-d414ebdac6aa58970e1c7d4688bb1523.ctex"
+uid="uid://ckpihqdvcjx8u"
+path="res://.godot/imported/placeholder_01.png-8855ca6675717ba49d42b3792629e727.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/Sprites/Characters/Ivo/player new jump 48x48.png"
-dest_files=["res://.godot/imported/player new jump 48x48.png-d414ebdac6aa58970e1c7d4688bb1523.ctex"]
+source_file="res://resources/placeholder/placeholder_01.png"
+dest_files=["res://.godot/imported/placeholder_01.png-8855ca6675717ba49d42b3792629e727.ctex"]
 
 [params]
 
