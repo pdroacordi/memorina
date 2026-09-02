@@ -512,11 +512,6 @@ graph_offset = Vector2(-137, 40)
 
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
 script = ExtResource("1_ynyct")
-air_control = 0.8
-air_brakes = 0.8
-jump_height = 80.0
-rise_gravity_mult = 0.85
-terminal_velocity = 500.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1693411011]
 position = Vector2(0, -16)

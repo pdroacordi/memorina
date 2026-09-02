@@ -9,14 +9,14 @@ signal landed(position: Vector2, impact_speed: float)
 @export var move_speed        : float = 96
 @export var acceleration      : float = 1024
 @export var deceleration      : float = 2048
-@export var air_control       : float = 1.2
-@export var air_brakes        : float = 1.0
+@export var air_control       : float = 0.8
+@export var air_brakes        : float = 0.8
 
 @export_category("Jumping")
-@export var jump_height       : float = 32
-@export var rise_gravity_mult : float = 1.6
+@export var jump_height       : float = 80
+@export var rise_gravity_mult : float = 0.85
 @export var fall_gravity_mult : float = 1.0
-@export var terminal_velocity : float = 900
+@export var terminal_velocity : float = 500
 @export var coyote_time_max   : float = 0.12
 @export var jump_buffer_max   : float = 0.12
 @export var jump_cut_mult     : float = 0.5
