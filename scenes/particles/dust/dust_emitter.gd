@@ -3,7 +3,7 @@ extends Node
 
 @export var jump_particles : PackedScene
 @export var land_particles : PackedScene
-@export var min_land_speed : float = 400.0
+@export var min_land_speed : float = 800.0
 
 @onready var _spawner : Spawner = get_tree().get_first_node_in_group(Spawner.GROUP)
 
