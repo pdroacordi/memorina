@@ -1,49 +1,31 @@
 [gd_scene format=3 uid="uid://ccbpf3johlglr"]
 
+[ext_resource type="PackedScene" uid="uid://d3yi3wnqg8gub" path="res://scenes/world/rooms/home_village/downtown.tscn" id="1_3iwug"]
 [ext_resource type="PackedScene" uid="uid://cxmds8nc576iu" path="res://scenes/characters/player/ivo.tscn" id="1_e2o6t"]
 [ext_resource type="Script" uid="uid://drh8ksb1dbina" path="res://scenes/world/spawner.gd" id="2_hqfqh"]
-
-[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_e2o6t"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_3v0ji"]
-size = Vector2(150, 64)
-
-[sub_resource type="QuadMesh" id="QuadMesh_rxs28"]
-size = Vector2(150, 64)
+[ext_resource type="Script" uid="uid://c0gjegnydjn44" path="res://scenes/world/camera.gd" id="3_r5nxa"]
+[ext_resource type="Script" uid="uid://dudvwafpfnf4a" path="res://scenes/world/game.gd" id="4_game"]
 
 [node name="Game" type="Node2D" unique_id=585377483]
+script = ExtResource("4_game")
 
 [node name="World" type="Node2D" parent="." unique_id=870631150]
 process_mode = 1
 
-[node name="Current Level" type="StaticBody2D" parent="World" unique_id=830180253]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Current Level" unique_id=947264095]
-shape = SubResource("WorldBoundaryShape2D_e2o6t")
-
-[node name="StaticBody2D" type="StaticBody2D" parent="World/Current Level" unique_id=269642059]
-position = Vector2(-224, -237)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Current Level/StaticBody2D" unique_id=1244886017]
-shape = SubResource("RectangleShape2D_3v0ji")
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="World/Current Level/StaticBody2D" unique_id=1925946316]
-mesh = SubResource("QuadMesh_rxs28")
-
-[node name="StaticBody2D2" type="StaticBody2D" parent="World/Current Level" unique_id=592380786]
-position = Vector2(-130, -103)
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="World/Current Level/StaticBody2D2" unique_id=1644705043]
-shape = SubResource("RectangleShape2D_3v0ji")
-
-[node name="MeshInstance2D" type="MeshInstance2D" parent="World/Current Level/StaticBody2D2" unique_id=892197655]
-mesh = SubResource("QuadMesh_rxs28")
+[node name="Level" parent="World" unique_id=463950041 instance=ExtResource("1_3iwug")]
 
 [node name="Ivo" parent="World" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
-position = Vector2(-213, -280)
+position = Vector2(-173, -4)
 
 [node name="Camera2D" type="Camera2D" parent="World" unique_id=1746271803]
-position = Vector2(5, -180)
+position = Vector2(1, -122)
+script = ExtResource("3_r5nxa")
+framing_offset_y = -48.0
+look_ahead_duration = 1.5
+look_ahead_transition = 7
+look_ahead_ease = 2
+peek_distance = 128.0
+vertical_smooth_time = 0.5
 
 [node name="Spawner" type="Node2D" parent="World" unique_id=1572119967]
 script = ExtResource("2_hqfqh")
