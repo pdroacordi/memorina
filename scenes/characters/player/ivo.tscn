@@ -1,19 +1,18 @@
 [gd_scene format=3 uid="uid://cxmds8nc576iu"]
 
 [ext_resource type="Script" uid="uid://cu1c1mo6x7ca6" path="res://scenes/characters/player/character.gd" id="1_ynyct"]
-[ext_resource type="Texture2D" uid="uid://d0h3ok4ikdxyf" path="res://assets/sprites/characters/ivo/player_idle_48x48.png" id="2_ynyct"]
-[ext_resource type="Texture2D" uid="uid://c464itsdkhmbv" path="res://assets/sprites/characters/ivo/player_run_48x48.png" id="3_k18kj"]
+[ext_resource type="Texture2D" uid="uid://c0bfcw6louuhh" path="res://assets/sprites/characters/ivo/player_idle_96x96.png" id="2_45amr"]
 [ext_resource type="Script" uid="uid://c1uo8k8aac7gw" path="res://scenes/characters/player/player_input.gd" id="3_pinput"]
-[ext_resource type="Texture2D" uid="uid://t5p6blm00j2j" path="res://assets/sprites/characters/ivo/player_new_jump_48x48.png" id="3_ra23q"]
-[ext_resource type="Texture2D" uid="uid://b7kj4fpt3ocqy" path="res://assets/sprites/characters/ivo/player_land_48x48.png" id="4_dk131"]
-[ext_resource type="Texture2D" uid="uid://bcs3306b7rnos" path="res://assets/sprites/characters/ivo/player_walk_48x48.png" id="6_8uojx"]
+[ext_resource type="Texture2D" uid="uid://cvsmwfqcpsebp" path="res://assets/sprites/characters/ivo/player_jump_96x96.png" id="3_soiyk"]
+[ext_resource type="Texture2D" uid="uid://6web0uujory8" path="res://assets/sprites/characters/ivo/player_land_96x96.png" id="4_466qv"]
+[ext_resource type="Texture2D" uid="uid://bn6x0lpukduy8" path="res://assets/sprites/characters/ivo/player_run_96x96.png" id="5_ip35x"]
 [ext_resource type="Script" uid="uid://branmbikueiyl" path="res://scenes/particles/dust/dust_emitter.gd" id="8_45amr"]
 [ext_resource type="PackedScene" uid="uid://cbam77lyl5m76" path="res://scenes/particles/dust/jump_dust_particles.tscn" id="9_soiyk"]
 [ext_resource type="PackedScene" uid="uid://b2a63w0vkfy3a" path="res://scenes/particles/dust/landing_dust_particles.tscn" id="10_466qv"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
-radius = 6.0
-height = 28.0
+radius = 11.0
+height = 54.0
 
 [sub_resource type="Animation" id="Animation_knqxj"]
 length = 0.001
@@ -27,7 +26,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ynyct")]
+"values": [ExtResource("2_45amr")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -69,7 +68,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_ra23q")]
+"values": [ExtResource("3_soiyk")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -110,7 +109,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_ra23q")]
+"values": [ExtResource("3_soiyk")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -152,7 +151,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("2_ynyct")]
+"values": [ExtResource("2_45amr")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -194,7 +193,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_ra23q")]
+"values": [ExtResource("3_soiyk")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -235,7 +234,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_ra23q")]
+"values": [ExtResource("3_soiyk")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -276,7 +275,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("4_dk131")]
+"values": [ExtResource("4_466qv")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -318,49 +317,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("3_k18kj")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [8]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25, 0.33333334, 0.4166667, 0.5, 0.5833334),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4, 5, 6, 7]
-}
-
-[sub_resource type="Animation" id="Animation_oxrm5"]
-resource_name = "walk"
-length = 0.6666667
-loop_mode = 1
-step = 0.083333336
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("6_8uojx")]
+"values": [ExtResource("5_ip35x")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -396,8 +353,7 @@ _data = {
 &"jump_idle": SubResource("Animation_yxci8"),
 &"jump_start": SubResource("Animation_nvoeu"),
 &"land": SubResource("Animation_u3kw3"),
-&"run": SubResource("Animation_ra23q"),
-&"walk": SubResource("Animation_oxrm5")
+&"run": SubResource("Animation_ra23q")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_nvoeu"]
@@ -512,14 +468,21 @@ graph_offset = Vector2(-137, 40)
 
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
 script = ExtResource("1_ynyct")
+move_speed = 192.0
+acceleration = 2048.0
+deceleration = 4096.0
+jump_height = 144.0
+terminal_velocity = 1000.0
+apex_threshold = 80.0
+hard_land_speed = 800.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1693411011]
-position = Vector2(0, -16)
-texture = ExtResource("2_ynyct")
+position = Vector2(0, -32)
+texture = ExtResource("2_45amr")
 hframes = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=64234537]
-position = Vector2(0, -14)
+position = Vector2(-1, -27)
 shape = SubResource("CapsuleShape2D_ynyct")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1964201661]

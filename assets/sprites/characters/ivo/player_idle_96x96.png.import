@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b7kj4fpt3ocqy"
-path="res://.godot/imported/player_land_48x48.png-dc3de00dfa0d07f734307786c22c41a6.ctex"
+uid="uid://c0bfcw6louuhh"
+path="res://.godot/imported/player_idle_96x96.png-02e0d340d7dd2027af60a4ee73763b6a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/characters/ivo/player_land_48x48.png"
-dest_files=["res://.godot/imported/player_land_48x48.png-dc3de00dfa0d07f734307786c22c41a6.ctex"]
+source_file="res://assets/sprites/characters/ivo/player_idle_96x96.png"
+dest_files=["res://.godot/imported/player_idle_96x96.png-02e0d340d7dd2027af60a4ee73763b6a.ctex"]
 
 [params]
 
