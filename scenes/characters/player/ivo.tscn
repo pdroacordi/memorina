@@ -382,28 +382,28 @@ advance_mode = 2
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u6vj4"]
 advance_mode = 2
-advance_expression = "_is_jumping"
+advance_expression = "is_jumping()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_nvoeu"]
 advance_mode = 2
-advance_expression = "_is_jumping"
+advance_expression = "is_jumping()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_u3kw3"]
 advance_mode = 2
-advance_expression = "not is_on_floor() and not _is_jumping"
+advance_expression = "is_falling()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_yfpja"]
 advance_mode = 2
-advance_expression = "not is_on_floor() and not _is_jumping"
+advance_expression = "is_falling()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ikop2"]
 switch_mode = 2
 advance_mode = 2
-advance_expression = "velocity.y < 0.0"
+advance_expression = "is_rising()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_oke38"]
 advance_mode = 2
-advance_expression = "velocity.y >= 0.0"
+advance_expression = "not is_rising()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_srgfu"]
 switch_mode = 2
@@ -424,28 +424,28 @@ advance_expression = "is_on_floor()"
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_0i31r"]
 switch_mode = 2
 advance_mode = 2
-advance_expression = "_direction == 0.0"
+advance_expression = "not wants_to_move()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_a0pwy"]
 advance_mode = 2
-advance_expression = "_direction != 0.0"
+advance_expression = "wants_to_move()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_gxeod"]
 advance_mode = 2
-advance_expression = "_is_jumping"
+advance_expression = "is_jumping()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_bj5at"]
 switch_mode = 2
 advance_mode = 2
-advance_expression = "velocity.y >= 0.0"
+advance_expression = "not is_rising()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_yxci8"]
 advance_mode = 2
-advance_expression = "_direction != 0.0"
+advance_expression = "wants_to_move()"
 
 [sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_dk131"]
 advance_mode = 2
-advance_expression = "_direction == 0.0"
+advance_expression = "not wants_to_move()"
 
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ks11i"]
 states/Start/position = Vector2(129, 100)
@@ -507,4 +507,4 @@ jump_particles = ExtResource("9_soiyk")
 land_particles = ExtResource("10_466qv")
 
 [connection signal="jumped" from="." to="DustEmitter" method="spawn_jump_dust"]
-[connection signal="landed" from="." to="DustEmitter" method="spawn_land_dust"]
+[connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]

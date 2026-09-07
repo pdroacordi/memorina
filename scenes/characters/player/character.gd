@@ -1,8 +1,8 @@
 class_name Player
 extends CharacterBody2D
 
+signal facing_changed(facing: int)
 signal jumped(position: Vector2)
-signal landed(position: Vector2, impact_speed: float)
 signal hard_landed(position: Vector2, impact_speed: float)
 
 
@@ -28,7 +28,8 @@ signal hard_landed(position: Vector2, impact_speed: float)
 @export var hard_land_speed   : float = 400.0
 @export var hard_land_time    : float = 0.75
 
-var _direction                : float = 0.0
+var facing                    : int   = 1
+
 var _is_jumping               : bool  = false
 var _coyote_timer             : float = 0.0
 var _jump_buffer_timer        : float = -1.0
@@ -41,7 +42,6 @@ var _recovery_timer           : float = 0.0
 @onready var _base_gravity    : float = PhysicsServer2D.area_get_param(get_world_2d().space, PhysicsServer2D.AREA_PARAM_GRAVITY)
 
 func _ready() -> void:
-	_input.direction_changed.connect(_on_direction_changed)
 	_input.jump_pressed.connect(_on_jump_pressed)
 	_input.jump_canceled.connect(_on_jump_canceled)
 
@@ -59,25 +59,63 @@ func _physics_process(delta: float) -> void:
 	_try_jump(on_floor)
 	move_and_slide()
 
-	# Must run after move_and_slide(): that is what updates is_on_floor(), and
-	# the AnimationTree evaluates as a child node later in the same frame. Any
-	# later and the state machine sees "grounded with input" for one frame and
-	# escapes the land animation into run.
+	# Must run after move_and_slide(): that is what refreshes is_on_floor().
+	# _recovery_timer must also be set before the AnimationTree evaluates, which
+	# holds structurally — AnimationTree is a child of this node, and Godot
+	# processes parents before their children.
 	_check_landing()
 
 #############################################
-##  S T A T E                              ##
+##  A N I M A T I O N   C O N T R A C T    ##
 #############################################
+## Bound by advance_expression strings in ivo.tscn. Renaming or changing the
+## semantics of anything below breaks animation SILENTLY at runtime, with no
+## compile error. Update both together.
+
+func move_axis() -> float:
+	return 0.0 if is_recovering() else _input.direction
+
+func wants_to_move() -> bool:
+	return not is_zero_approx(move_axis())
+
+func is_jumping() -> bool:
+	return _is_jumping
+
+func is_rising() -> bool:
+	return velocity.y < 0.0
+
+func is_falling() -> bool:
+	return not is_on_floor() and not _is_jumping
 
 func is_recovering() -> bool:
 	return _recovery_timer > 0.0
 
 #############################################
+##  C A M E R A   I N T E N T              ##
+#############################################
+## Consumed by the camera; no animation binds to these. The two axes are
+## mutually exclusive by construction — one requires standing, the other
+## requires being airborne — so a camera may simply add them.
+
+## Deliberate peek in [-1, 1] — negative up, positive down (screen space).
+## Only a character standing still can peek, so this returns 0.0 while airborne,
+## moving or recovering.
+func look_axis() -> float:
+	if not is_on_floor() or wants_to_move() or is_recovering():
+		return 0.0
+	return _input.look_direction
+
+## Automatic vertical lead in [-1, 1], proportional to fall speed — negative
+## while rising, positive while falling, 0.0 on the ground. Lets the camera show
+## where the character is heading rather than where they are.
+func air_axis() -> float:
+	if is_on_floor():
+		return 0.0
+	return clampf(velocity.y / terminal_velocity, -1.0, 1.0)
+
+#############################################
 ##  E V E N T S                            ##
 #############################################
-
-func _on_direction_changed(new_direction: float) -> void:
-	_direction = 0.0 if is_recovering() else new_direction
 
 func _on_jump_pressed() -> void:
 	_jump_buffer_timer = jump_buffer_max
@@ -90,25 +128,37 @@ func _on_jump_canceled() -> void:
 #############################################
 
 func _update_facing() -> void:
-	if _direction != 0.0:
-		_sprite.flip_h = _direction < 0.0
+	var axis: float = move_axis()
+	if is_zero_approx(axis):
+		return
+
+	var new_facing: int = -1 if axis < 0.0 else 1
+	if new_facing == facing:
+		return
+
+	facing = new_facing
+	_sprite.flip_h = facing < 0
+	facing_changed.emit(facing)
 
 func _ground_physics(delta: float) -> void:
-	if _direction != 0.0:
-		if velocity.x == 0.0 or sign(velocity.x) == sign(_direction):
-			velocity.x = move_toward(velocity.x, _direction * move_speed, acceleration * delta)
-		else:
-			velocity.x = move_toward(velocity.x, _direction * move_speed, deceleration * delta)
-	else:
+	var axis: float = move_axis()
+
+	if is_zero_approx(axis):
 		velocity.x = move_toward(velocity.x, 0.0, deceleration * delta)
+	elif is_zero_approx(velocity.x) or signf(velocity.x) == signf(axis):
+		velocity.x = move_toward(velocity.x, axis * move_speed, acceleration * delta)
+	else:
+		velocity.x = move_toward(velocity.x, axis * move_speed, deceleration * delta)
 
 func _air_physics(delta: float) -> void:
 	_apply_gravity(delta)
 
-	if _direction != 0.0:
-		velocity.x = move_toward(velocity.x, _direction * move_speed, acceleration * air_control * delta)
-	else:
+	var axis: float = move_axis()
+
+	if is_zero_approx(axis):
 		velocity.x = move_toward(velocity.x, 0.0, deceleration * air_brakes * delta)
+	else:
+		velocity.x = move_toward(velocity.x, axis * move_speed, acceleration * air_control * delta)
 	_last_fall_speed = maxf(velocity.y, 0.0)
 
 #############################################
@@ -167,11 +217,7 @@ func _jump_force(height: float) -> float:
 func _check_landing() -> void:
 	var on_floor := is_on_floor()
 
-	if on_floor and not _was_on_floor:
-		landed.emit(global_position, _last_fall_speed)
-
-		if _last_fall_speed >= hard_land_speed:
-			_recovery_timer = hard_land_time
-			_direction = 0.0
-			hard_landed.emit(global_position, _last_fall_speed)
+	if on_floor and not _was_on_floor and _last_fall_speed >= hard_land_speed:
+		_recovery_timer = hard_land_time
+		hard_landed.emit(global_position, _last_fall_speed)
 	_was_on_floor = on_floor
