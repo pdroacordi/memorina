@@ -3,6 +3,7 @@ extends CharacterBody2D
 
 signal jumped(position: Vector2)
 signal landed(position: Vector2, impact_speed: float)
+signal hard_landed(position: Vector2, impact_speed: float)
 
 
 @export_category("Locomotion")
@@ -23,12 +24,17 @@ signal landed(position: Vector2, impact_speed: float)
 @export var apex_threshold    : float = 40.0
 @export var apex_gravity_mult : float = 0.5
 
+@export_category("Landing")
+@export var hard_land_speed   : float = 400.0
+@export var hard_land_time    : float = 0.75
+
 var _direction                : float = 0.0
 var _is_jumping               : bool  = false
 var _coyote_timer             : float = 0.0
 var _jump_buffer_timer        : float = -1.0
 var _was_on_floor             : bool  = true
 var _last_fall_speed          : float = 0.0
+var _recovery_timer           : float = 0.0
 
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
@@ -42,10 +48,6 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	var on_floor := is_on_floor()
 
-	if on_floor and not _was_on_floor:
-		landed.emit(global_position, _last_fall_speed)
-	_was_on_floor = on_floor
-
 	_update_facing()
 	_update_timers(delta, on_floor)
 
@@ -57,12 +59,25 @@ func _physics_process(delta: float) -> void:
 	_try_jump(on_floor)
 	move_and_slide()
 
+	# Must run after move_and_slide(): that is what updates is_on_floor(), and
+	# the AnimationTree evaluates as a child node later in the same frame. Any
+	# later and the state machine sees "grounded with input" for one frame and
+	# escapes the land animation into run.
+	_check_landing()
+
+#############################################
+##  S T A T E                              ##
+#############################################
+
+func is_recovering() -> bool:
+	return _recovery_timer > 0.0
+
 #############################################
 ##  E V E N T S                            ##
 #############################################
 
 func _on_direction_changed(new_direction: float) -> void:
-	_direction = new_direction
+	_direction = 0.0 if is_recovering() else new_direction
 
 func _on_jump_pressed() -> void:
 	_jump_buffer_timer = jump_buffer_max
@@ -109,6 +124,9 @@ func _update_timers(delta: float, on_floor: bool) -> void:
 	if _jump_buffer_timer > 0.0:
 		_jump_buffer_timer -= delta
 
+	if _recovery_timer > 0.0:
+		_recovery_timer = _recovery_timer - delta if on_floor else 0.0
+
 func _apply_gravity(delta: float) -> void:
 	var gravity_mult := fall_gravity_mult if velocity.y >= 0.0 else rise_gravity_mult
 
@@ -124,7 +142,7 @@ func _apply_gravity(delta: float) -> void:
 		_is_jumping = false
 
 func _try_jump(on_floor: bool) -> void:
-	var can_jump := on_floor or _coyote_timer > 0.0
+	var can_jump := (on_floor or _coyote_timer > 0.0) and not is_recovering()
 	var wants_jump := _jump_buffer_timer > 0.0
 
 	if can_jump and wants_jump:
@@ -141,3 +159,19 @@ func _cut_jump() -> void:
 func _jump_force(height: float) -> float:
 	var gravity_rise := _base_gravity * rise_gravity_mult
 	return sqrt(gravity_rise * height * 2.0) * -1.0
+
+#############################################
+##  L A N D I N G                          ##
+#############################################
+
+func _check_landing() -> void:
+	var on_floor := is_on_floor()
+
+	if on_floor and not _was_on_floor:
+		landed.emit(global_position, _last_fall_speed)
+
+		if _last_fall_speed >= hard_land_speed:
+			_recovery_timer = hard_land_time
+			_direction = 0.0
+			hard_landed.emit(global_position, _last_fall_speed)
+	_was_on_floor = on_floor
