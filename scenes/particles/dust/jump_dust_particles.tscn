@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://cbam77lyl5m76"]
 
-[ext_resource type="Texture2D" uid="uid://dsecw6wtxg8nc" path="res://assets/sprites/particles/dust/jump_cloud_256x256.png" id="1_ljep0"]
+[ext_resource type="Texture2D" uid="uid://dsecw6wtxg8nc" path="res://assets/sprites/particles/dust/jump_cloud_128x192.png" id="1_ljep0"]
 [ext_resource type="Script" uid="uid://cuqeaexyauj8h" path="res://scenes/particles/dust/dust_particle.gd" id="2_sne6l"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sne6l"]
