@@ -17,7 +17,8 @@ process_mode = 1
 
 [node name="Ivo" parent="World" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
 unique_name_in_owner = true
-position = Vector2(-173, -4)
+position = Vector2(-173, 0)
+double_jump_height = 96.0
 
 [node name="Camera2D" type="Camera2D" parent="World" unique_id=1746271803]
 unique_name_in_owner = true
@@ -46,7 +47,6 @@ metadata/_edit_use_anchors_ = true
 [node name="Fade" type="ColorRect" parent="CanvasLayer" unique_id=1302556381]
 unique_name_in_owner = true
 visible = false
-layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
