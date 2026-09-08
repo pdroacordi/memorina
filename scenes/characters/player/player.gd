@@ -30,23 +30,34 @@ signal hard_landed(position: Vector2, impact_speed: float)
 @export var hard_land_speed   : float = 400.0
 @export var hard_land_time    : float = 0.75
 
+@export_category("Wall Slide")
+@export var wall_gravity_mult : float = 0.1
+
+@export_category("Roll")
+@export var roll_time         : float = 0.3
+@export var roll_distance     : float = 128
+
 var facing                    : int   = 1
 
 var _is_jumping               : bool  = false
+var _is_wall_sliding          : bool  = false
 var _coyote_timer             : float = 0.0
 var _jump_buffer_timer        : float = -1.0
 var _was_on_floor             : bool  = true
 var _last_fall_speed          : float = 0.0
 var _recovery_timer           : float = 0.0
+var _roll_timer               : float = 0.0
 var _double_jump_is_ready     : bool  = false
 
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
 @onready var _base_gravity    : float = PhysicsServer2D.area_get_param(get_world_2d().space, PhysicsServer2D.AREA_PARAM_GRAVITY)
+@onready var roll_speed       : float = roll_distance / roll_time
 
 func _ready() -> void:
 	_input.jump_pressed.connect(_on_jump_pressed)
 	_input.jump_canceled.connect(_on_jump_canceled)
+	_input.roll_pressed.connect(_on_roll_pressed)
 
 func _physics_process(delta: float) -> void:
 	var on_floor := is_on_floor()
@@ -54,7 +65,9 @@ func _physics_process(delta: float) -> void:
 	_update_facing()
 	_update_timers(delta, on_floor)
 
-	if on_floor:
+	if is_rolling():
+		pass
+	elif on_floor:
 		_ground_physics(delta)
 	else:
 		_air_physics(delta)
@@ -76,7 +89,7 @@ func _physics_process(delta: float) -> void:
 ## compile error. Update both together.
 
 func move_axis() -> float:
-	return 0.0 if is_recovering() else _input.direction
+	return 0.0 if is_recovering() or is_rolling() else _input.direction
 
 func wants_to_move() -> bool:
 	return not is_zero_approx(move_axis())
@@ -92,6 +105,12 @@ func is_falling() -> bool:
 
 func is_recovering() -> bool:
 	return _recovery_timer > 0.0
+
+func is_wall_sliding() -> bool:
+	return _is_wall_sliding
+
+func is_rolling() -> bool:
+	return _roll_timer > 0.0
 
 #############################################
 ##  C A M E R A   I N T E N T              ##
@@ -125,6 +144,9 @@ func _on_jump_pressed() -> void:
 
 func _on_jump_canceled() -> void:
 	_cut_jump()
+	
+func _on_roll_pressed() -> void:
+	_roll()
 
 #############################################
 ##  L O C O M O T I O N                    ##
@@ -154,7 +176,8 @@ func _ground_physics(delta: float) -> void:
 		velocity.x = move_toward(velocity.x, axis * move_speed, deceleration * delta)
 
 func _air_physics(delta: float) -> void:
-	_apply_gravity(delta)
+	if not _wall_slide(delta):
+		_apply_gravity(delta)
 
 	var axis: float = move_axis()
 
@@ -180,6 +203,9 @@ func _update_timers(delta: float, on_floor: bool) -> void:
 
 	if _recovery_timer > 0.0:
 		_recovery_timer = _recovery_timer - delta if on_floor else 0.0
+	
+	if _roll_timer > 0.0:
+		_roll_timer = max(_roll_timer - delta, 0.0)
 
 func _apply_gravity(delta: float) -> void:
 	var gravity_mult := fall_gravity_mult if velocity.y >= 0.0 else rise_gravity_mult
@@ -202,12 +228,14 @@ func _try_jump(on_floor: bool) -> void:
 	if on_floor or _coyote_timer > 0.0:
 		velocity.y = _jump_force(jump_height)
 		_is_jumping = true
+		_is_wall_sliding = false
 		_coyote_timer = 0.0
 		_jump_buffer_timer = -1.0
 		jumped.emit(global_position)
 	elif _has_unlocked(Enums.PLAYER_SKILLS.DOUBLE_JUMP) and _double_jump_is_ready:
 		velocity.y = _jump_force(double_jump_height)
 		_is_jumping = true
+		_is_wall_sliding = false
 		_double_jump_is_ready = false
 		_jump_buffer_timer = -1.0
 		double_jumped.emit(global_position)
@@ -231,10 +259,48 @@ func _check_landing() -> void:
 		_recovery_timer = hard_land_time
 		hard_landed.emit(global_position, _last_fall_speed)
 	_was_on_floor = on_floor
-	
+
+	if on_floor:
+		_is_wall_sliding = false
+
 #############################################
 ##  A B I L I T I E S                      ##
 #############################################
 
 func _has_unlocked(skill: Enums.PLAYER_SKILLS) -> bool:
 	return SaveSystem.player_data.unlocked_player_skills[skill]
+	
+func _wall_slide(delta: float) -> bool:
+	if _is_wall_sliding:
+		if not is_on_wall() or sign(get_wall_normal().x) == sign(move_axis()):
+			_is_wall_sliding = false
+		else:
+			velocity.y += _base_gravity * delta * wall_gravity_mult
+			_coyote_timer = coyote_time_max
+			_double_jump_is_ready = true
+	elif (
+		_has_unlocked(Enums.PLAYER_SKILLS.WALL_CLIMB)
+		and is_on_wall()
+		and velocity.y >= 0
+		and sign(move_axis() * -1) == sign(get_wall_normal().x)
+	):
+		_is_wall_sliding = true
+		_coyote_timer = coyote_time_max
+		_double_jump_is_ready = true
+		velocity.y = min(velocity.y, 0)
+
+	return _is_wall_sliding
+
+func _roll() -> void:
+	if not _has_unlocked(Enums.PLAYER_SKILLS.ROLL):
+		return
+	if not is_on_floor():
+		return
+	if is_rolling():
+		return
+
+	var direction: float = move_axis()
+	var roll_direction: float = sign(direction) if direction else facing
+
+	velocity.x = roll_direction * roll_speed
+	_roll_timer = roll_time
