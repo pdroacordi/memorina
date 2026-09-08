@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="JumpStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/characters/jump_stats.gd" id="1_jumpstats"]
+
+[resource]
+script = ExtResource("1_jumpstats")
+jump_height = 144.0
+rise_gravity_mult = 0.85
+fall_gravity_mult = 1.0
+terminal_velocity = 1000.0
+coyote_time_max = 0.12
+jump_buffer_max = 0.12
+jump_cut_mult = 0.5
+apex_threshold = 80.0
+apex_gravity_mult = 0.5

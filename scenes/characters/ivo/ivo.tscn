@@ -18,6 +18,8 @@
 [ext_resource type="Script" uid="uid://dsp4w4pojjffd" path="res://scenes/combat/health/health.gd" id="16_uw5th"]
 [ext_resource type="Script" uid="uid://dfbu5a2uchyf5" path="res://scenes/characters/components/locomotion_component.gd" id="17_locomo"]
 [ext_resource type="Resource" path="res://resources/characters/ivo_locomotion_stats.tres" id="18_locsta"]
+[ext_resource type="Script" path="res://scenes/characters/components/jump_component.gd" id="19_jumpco"]
+[ext_resource type="Resource" path="res://resources/characters/ivo_jump_stats.tres" id="20_jumpst"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -765,9 +767,6 @@ graph_offset = Vector2(-123.03302, -7.0251007)
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
 collision_layer = 256
 script = ExtResource("1_ynyct")
-jump_height = 144.0
-terminal_velocity = 1000.0
-apex_threshold = 80.0
 double_jump_height = 128.0
 hard_land_speed = 800.0
 
@@ -811,6 +810,10 @@ script = ExtResource("16_uw5th")
 [node name="Locomotion" type="Node" parent="." unique_id=1774390216]
 script = ExtResource("17_locomo")
 stats = ExtResource("18_locsta")
+
+[node name="Jump" type="Node" parent="." unique_id=1102847533]
+script = ExtResource("19_jumpco")
+stats = ExtResource("20_jumpst")
 
 [connection signal="double_jumped" from="." to="AnimationTree" method="play_air_spin"]
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]

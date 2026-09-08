@@ -7,15 +7,6 @@ signal hard_landed(position: Vector2, impact_speed: float)
 
 
 @export_category("Jumping")
-@export var jump_height       : float = 80
-@export var rise_gravity_mult : float = 0.85
-@export var fall_gravity_mult : float = 1.0
-@export var terminal_velocity : float = 500
-@export var coyote_time_max   : float = 0.12
-@export var jump_buffer_max   : float = 0.12
-@export var jump_cut_mult     : float = 0.5
-@export var apex_threshold    : float = 40.0
-@export var apex_gravity_mult : float = 0.5
 @export var double_jump_height: float = 64
 
 @export_category("Landing")
@@ -32,10 +23,7 @@ signal hard_landed(position: Vector2, impact_speed: float)
 @export var roll_coyote_time_max : float = 0.12
 @export var roll_buffer_max      : float = 0.12
 
-var _is_jumping               : bool  = false
 var _is_wall_sliding          : bool  = false
-var _coyote_timer             : float = 0.0
-var _jump_buffer_timer        : float = -1.0
 var _was_on_floor             : bool  = true
 var _last_fall_speed          : float = 0.0
 var _recovery_timer           : float = 0.0
@@ -48,13 +36,18 @@ var _double_jump_is_ready     : bool  = false
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
 @onready var _locomotion      : LocomotionComponent = $Locomotion
+@onready var _jump            : JumpComponent = $Jump
 @onready var _roll_speed       : float = roll_distance / roll_time
 
 func _ready() -> void:
 	super()
 
-	_input.jump_pressed.connect(_on_jump_pressed)
-	_input.jump_canceled.connect(_on_jump_canceled)
+	_input.jump_pressed.connect(_jump.buffer_jump)
+	_input.jump_canceled.connect(_jump.cut_jump)
+	# Player must re-emit the component's signal because ivo.tscn wires
+	# DustEmitter.spawn_jump_dust to Player's own `jumped` signal (from="."),
+	# and that scene connection needs to keep working untouched.
+	_jump.jumped.connect(jumped.emit)
 	_input.roll_pressed.connect(_on_roll_pressed)
 
 	facing_changed.connect(_on_facing_changed)
@@ -63,10 +56,11 @@ func _process_motion(delta: float) -> void:
 	var on_floor := is_on_floor()
 
 	face_towards(move_axis())
+	_jump.tick_timers(delta, on_floor)
 	_update_timers(delta, on_floor)
 
 	if is_in_knockback():
-		_apply_gravity(delta)
+		_jump.apply_gravity(delta)
 		apply_knockback_decay(delta)
 	elif is_rolling():
 		pass
@@ -95,13 +89,13 @@ func wants_to_move() -> bool:
 	return not is_zero_approx(move_axis())
 
 func is_jumping() -> bool:
-	return _is_jumping
+	return _jump.is_jumping
 
 func is_rising() -> bool:
 	return velocity.y < 0.0
 
 func is_falling() -> bool:
-	return not is_on_floor() and not _is_jumping
+	return not is_on_floor() and not _jump.is_jumping
 
 func is_recovering() -> bool:
 	return _recovery_timer > 0.0
@@ -133,18 +127,12 @@ func look_axis() -> float:
 func air_axis() -> float:
 	if is_on_floor():
 		return 0.0
-	return clampf(velocity.y / terminal_velocity, -1.0, 1.0)
+	return clampf(velocity.y / _jump.terminal_velocity(), -1.0, 1.0)
 
 #############################################
 ##  E V E N T S                            ##
 #############################################
 
-func _on_jump_pressed() -> void:
-	_jump_buffer_timer = jump_buffer_max
-
-func _on_jump_canceled() -> void:
-	_cut_jump()
-	
 func _on_roll_pressed() -> void:
 	_roll_buffer_timer = roll_buffer_max
 
@@ -159,7 +147,7 @@ func _on_facing_changed(new_facing: int) -> void:
 
 func _air_physics(delta: float) -> void:
 	if not _wall_slide(delta):
-		_apply_gravity(delta)
+		_jump.apply_gravity(delta)
 	_locomotion.air_update(delta, move_axis())
 	_last_fall_speed = maxf(velocity.y, 0.0)
 
@@ -169,15 +157,10 @@ func _air_physics(delta: float) -> void:
 
 func _update_timers(delta: float, on_floor: bool) -> void:
 	if on_floor:
-		_coyote_timer = coyote_time_max
 		_double_jump_is_ready = true
 		_roll_coyote_timer = roll_coyote_time_max
 	else:
-		_coyote_timer = max(_coyote_timer - delta, 0.0)
 		_roll_coyote_timer = max(_roll_coyote_timer - delta, 0.0)
-
-	if _jump_buffer_timer > 0.0:
-		_jump_buffer_timer -= delta
 
 	if _roll_buffer_timer > 0.0:
 		_roll_buffer_timer -= delta
@@ -192,46 +175,16 @@ func _update_timers(delta: float, on_floor: bool) -> void:
 	elif _roll_cooldown_timer > 0.0:
 		_roll_cooldown_timer = max(_roll_cooldown_timer - delta, 0.0)
 
-func _apply_gravity(delta: float) -> void:
-	var gravity_mult := fall_gravity_mult if velocity.y >= 0.0 else rise_gravity_mult
-
-	if absf(velocity.y) < apex_threshold:
-		gravity_mult *= apex_gravity_mult
-
-	var gravity := base_gravity() * gravity_mult
-
-	velocity.y += gravity * delta
-	velocity.y  = min(velocity.y, terminal_velocity)
-
-	if _is_jumping and velocity.y >= 0.0:
-		_is_jumping = false
-
 func _try_jump(on_floor: bool) -> void:
-	if is_recovering() or _jump_buffer_timer <= 0.0:
+	if is_recovering() or not _jump.has_buffered_jump():
 		return
-
-	if on_floor or _coyote_timer > 0.0:
-		velocity.y = _jump_force(jump_height)
-		_is_jumping = true
+	if _jump.try_ground_jump(on_floor):
 		_is_wall_sliding = false
-		_coyote_timer = 0.0
-		_jump_buffer_timer = -1.0
-		jumped.emit(global_position)
 	elif _has_unlocked(Enums.PlayerSkill.DOUBLE_JUMP) and _double_jump_is_ready:
-		velocity.y = _jump_force(double_jump_height)
-		_is_jumping = true
+		_jump.launch(double_jump_height)
 		_is_wall_sliding = false
 		_double_jump_is_ready = false
-		_jump_buffer_timer = -1.0
 		double_jumped.emit(global_position)
-
-func _cut_jump() -> void:
-	if _is_jumping and velocity.y < 0.0:
-		velocity.y *= jump_cut_mult
-
-func _jump_force(height: float) -> float:
-	var gravity_rise := base_gravity() * rise_gravity_mult
-	return sqrt(gravity_rise * height * 2.0) * -1.0
 
 #############################################
 ##  L A N D I N G                          ##
@@ -261,7 +214,7 @@ func _wall_slide(delta: float) -> bool:
 			_is_wall_sliding = false
 		else:
 			velocity.y += base_gravity() * delta * wall_gravity_mult
-			_coyote_timer = coyote_time_max
+			_jump.refresh_coyote()
 			_double_jump_is_ready = true
 	elif (
 		_has_unlocked(Enums.PlayerSkill.WALL_CLIMB)
@@ -270,7 +223,7 @@ func _wall_slide(delta: float) -> bool:
 		and sign(move_axis() * -1) == sign(get_wall_normal().x)
 	):
 		_is_wall_sliding = true
-		_coyote_timer = coyote_time_max
+		_jump.refresh_coyote()
 		_double_jump_is_ready = true
 		velocity.y = min(velocity.y, 0)
 
