@@ -10,7 +10,7 @@ var _contents_node: Node2D
 func load_contents() -> void:
 	if not _contents_node:
 		_contents_node = contents_scene.instantiate()
-		add_child(_contents_node)
+		call_deferred("add_child", _contents_node)
 
 func unload_contents() -> void:
 	if _contents_node:
