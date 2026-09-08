@@ -66,6 +66,7 @@ roll={
 
 2d_physics/layer_1="Terrain"
 2d_physics/layer_9="Player"
+2d_physics/layer_10="Player Hurtbox"
 
 [physics]
 
