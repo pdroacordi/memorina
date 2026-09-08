@@ -34,8 +34,11 @@ signal hard_landed(position: Vector2, impact_speed: float)
 @export var wall_gravity_mult : float = 0.1
 
 @export_category("Roll")
-@export var roll_time         : float = 0.3
-@export var roll_distance     : float = 128
+@export var roll_time            : float = 0.3
+@export var roll_distance        : float = 128
+@export var roll_cooldown        : float = 0.5
+@export var roll_coyote_time_max : float = 0.12
+@export var roll_buffer_max      : float = 0.12
 
 var facing                    : int   = 1
 
@@ -47,17 +50,23 @@ var _was_on_floor             : bool  = true
 var _last_fall_speed          : float = 0.0
 var _recovery_timer           : float = 0.0
 var _roll_timer               : float = 0.0
+var _roll_cooldown_timer      : float = 0.0
+var _roll_coyote_timer        : float = 0.0
+var _roll_buffer_timer        : float = -1.0
 var _double_jump_is_ready     : bool  = false
 
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
+@onready var _hurtbox         : Hurtbox     = $Hurtbox
 @onready var _base_gravity    : float = PhysicsServer2D.area_get_param(get_world_2d().space, PhysicsServer2D.AREA_PARAM_GRAVITY)
-@onready var roll_speed       : float = roll_distance / roll_time
+@onready var _roll_speed       : float = roll_distance / roll_time
 
 func _ready() -> void:
 	_input.jump_pressed.connect(_on_jump_pressed)
 	_input.jump_canceled.connect(_on_jump_canceled)
 	_input.roll_pressed.connect(_on_roll_pressed)
+	
+	_hurtbox.hit_received.connect(_on_hit_received)
 
 func _physics_process(delta: float) -> void:
 	var on_floor := is_on_floor()
@@ -73,6 +82,7 @@ func _physics_process(delta: float) -> void:
 		_air_physics(delta)
 
 	_try_jump(on_floor)
+	_try_roll(on_floor)
 	move_and_slide()
 
 	# Must run after move_and_slide(): that is what refreshes is_on_floor().
@@ -146,7 +156,10 @@ func _on_jump_canceled() -> void:
 	_cut_jump()
 	
 func _on_roll_pressed() -> void:
-	_roll()
+	_roll_buffer_timer = roll_buffer_max
+	
+func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
+	print("Hit received! %d damage from %s" % [damage, source])
 
 #############################################
 ##  L O C O M O T I O N                    ##
@@ -195,17 +208,26 @@ func _update_timers(delta: float, on_floor: bool) -> void:
 	if on_floor:
 		_coyote_timer = coyote_time_max
 		_double_jump_is_ready = true
+		_roll_coyote_timer = roll_coyote_time_max
 	else:
 		_coyote_timer = max(_coyote_timer - delta, 0.0)
+		_roll_coyote_timer = max(_roll_coyote_timer - delta, 0.0)
 
 	if _jump_buffer_timer > 0.0:
 		_jump_buffer_timer -= delta
+
+	if _roll_buffer_timer > 0.0:
+		_roll_buffer_timer -= delta
 
 	if _recovery_timer > 0.0:
 		_recovery_timer = _recovery_timer - delta if on_floor else 0.0
 	
 	if _roll_timer > 0.0:
 		_roll_timer = max(_roll_timer - delta, 0.0)
+		if _roll_timer == 0.0:
+			_roll_cooldown_timer = roll_cooldown
+	elif _roll_cooldown_timer > 0.0:
+		_roll_cooldown_timer = max(_roll_cooldown_timer - delta, 0.0)
 
 func _apply_gravity(delta: float) -> void:
 	var gravity_mult := fall_gravity_mult if velocity.y >= 0.0 else rise_gravity_mult
@@ -291,16 +313,24 @@ func _wall_slide(delta: float) -> bool:
 
 	return _is_wall_sliding
 
-func _roll() -> void:
+func is_roll_on_cooldown() -> bool:
+	return _roll_cooldown_timer > 0.0
+
+func _try_roll(on_floor: bool) -> void:
+	if _roll_buffer_timer <= 0.0:
+		return
+	if not (on_floor or _roll_coyote_timer > 0.0):
+		return
 	if not _has_unlocked(Enums.PLAYER_SKILLS.ROLL):
 		return
-	if not is_on_floor():
+	if is_rolling() or is_roll_on_cooldown():
 		return
-	if is_rolling():
-		return
+
+	_roll_buffer_timer = -1.0
+	_roll_coyote_timer = 0.0
 
 	var direction: float = move_axis()
 	var roll_direction: float = sign(direction) if direction else facing
 
-	velocity.x = roll_direction * roll_speed
+	velocity.x = roll_direction * _roll_speed
 	_roll_timer = roll_time

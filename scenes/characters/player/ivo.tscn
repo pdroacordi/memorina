@@ -14,6 +14,7 @@
 [ext_resource type="PackedScene" uid="uid://cbam77lyl5m76" path="res://scenes/particles/dust/jump_dust_particles.tscn" id="9_soiyk"]
 [ext_resource type="PackedScene" uid="uid://b2a63w0vkfy3a" path="res://scenes/particles/dust/landing_dust_particles.tscn" id="10_466qv"]
 [ext_resource type="Script" uid="uid://do4mak343gtp6" path="res://scenes/characters/player/player_animator.gd" id="11_animator"]
+[ext_resource type="PackedScene" path="res://scenes/combat/hurtbox/hurtbox.tscn" id="12_hurtbox"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -56,6 +57,18 @@ tracks/2/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [10]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hurtbox:monitorable")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
 }
 
 [sub_resource type="Animation" id="Animation_ip35x"]
@@ -388,6 +401,18 @@ tracks/2/keys = {
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5, 6]
 }
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Hurtbox:monitorable")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.5833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, false]
+}
 
 [sub_resource type="Animation" id="Animation_ra23q"]
 resource_name = "run"
@@ -702,6 +727,10 @@ switch_mode = 2
 advance_mode = 2
 advance_expression = "not is_rolling() and not wants_to_move()"
 
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_a81t5"]
+advance_mode = 2
+advance_expression = "is_rolling()"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ks11i"]
 states/End/position = Vector2(1012, 205)
 states/Start/position = Vector2(129, 100)
@@ -727,8 +756,8 @@ states/wall_landing/node = SubResource("AnimationNodeAnimation_ip35x")
 states/wall_landing/position = Vector2(531.967, 389)
 states/wall_slide/node = SubResource("AnimationNodeAnimation_lk6ox")
 states/wall_slide/position = Vector2(704.967, 389)
-transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_ks11i"), "run", "jump_start", SubResource("AnimationNodeStateMachineTransition_u6vj4"), "idle", "jump_start", SubResource("AnimationNodeStateMachineTransition_nvoeu"), "idle", "fall_start", SubResource("AnimationNodeStateMachineTransition_u3kw3"), "run", "fall_start", SubResource("AnimationNodeStateMachineTransition_yfpja"), "jump_start", "jump_idle", SubResource("AnimationNodeStateMachineTransition_ikop2"), "jump_idle", "fall_start", SubResource("AnimationNodeStateMachineTransition_oke38"), "fall_start", "fall_idle", SubResource("AnimationNodeStateMachineTransition_srgfu"), "fall_idle", "land", SubResource("AnimationNodeStateMachineTransition_c86r7"), "fall_start", "land", SubResource("AnimationNodeStateMachineTransition_s01jl"), "jump_idle", "land", SubResource("AnimationNodeStateMachineTransition_snax1"), "land", "idle", SubResource("AnimationNodeStateMachineTransition_0i31r"), "land", "run", SubResource("AnimationNodeStateMachineTransition_a0pwy"), "land", "jump_start", SubResource("AnimationNodeStateMachineTransition_gxeod"), "jump_start", "fall_start", SubResource("AnimationNodeStateMachineTransition_bj5at"), "idle", "run", SubResource("AnimationNodeStateMachineTransition_yxci8"), "run", "idle", SubResource("AnimationNodeStateMachineTransition_dk131"), "air_spin", "fall_idle", SubResource("AnimationNodeStateMachineTransition_air_spin_to_fall"), "jump_start", "wall_landing", SubResource("AnimationNodeStateMachineTransition_ckagk"), "jump_idle", "wall_landing", SubResource("AnimationNodeStateMachineTransition_k2haj"), "fall_start", "wall_landing", SubResource("AnimationNodeStateMachineTransition_sq1et"), "fall_idle", "wall_landing", SubResource("AnimationNodeStateMachineTransition_ulas0"), "air_spin", "wall_landing", SubResource("AnimationNodeStateMachineTransition_8sfvt"), "wall_landing", "wall_slide", SubResource("AnimationNodeStateMachineTransition_dmnti"), "wall_landing", "land", SubResource("AnimationNodeStateMachineTransition_d0c3k"), "wall_landing", "fall_start", SubResource("AnimationNodeStateMachineTransition_ihn2p"), "wall_slide", "land", SubResource("AnimationNodeStateMachineTransition_0rdik"), "wall_slide", "fall_start", SubResource("AnimationNodeStateMachineTransition_oqtj6"), "wall_slide", "jump_start", SubResource("AnimationNodeStateMachineTransition_ip35x"), "wall_landing", "jump_start", SubResource("AnimationNodeStateMachineTransition_lk6ox"), "idle", "roll", SubResource("AnimationNodeStateMachineTransition_313fb"), "run", "roll", SubResource("AnimationNodeStateMachineTransition_g7pxd"), "roll", "run", SubResource("AnimationNodeStateMachineTransition_pgvca"), "roll", "idle", SubResource("AnimationNodeStateMachineTransition_3nkyv")]
-graph_offset = Vector2(-157.03302, 155.9749)
+transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition_ks11i"), "run", "jump_start", SubResource("AnimationNodeStateMachineTransition_u6vj4"), "idle", "jump_start", SubResource("AnimationNodeStateMachineTransition_nvoeu"), "idle", "fall_start", SubResource("AnimationNodeStateMachineTransition_u3kw3"), "run", "fall_start", SubResource("AnimationNodeStateMachineTransition_yfpja"), "jump_start", "jump_idle", SubResource("AnimationNodeStateMachineTransition_ikop2"), "jump_idle", "fall_start", SubResource("AnimationNodeStateMachineTransition_oke38"), "fall_start", "fall_idle", SubResource("AnimationNodeStateMachineTransition_srgfu"), "fall_idle", "land", SubResource("AnimationNodeStateMachineTransition_c86r7"), "fall_start", "land", SubResource("AnimationNodeStateMachineTransition_s01jl"), "jump_idle", "land", SubResource("AnimationNodeStateMachineTransition_snax1"), "land", "idle", SubResource("AnimationNodeStateMachineTransition_0i31r"), "land", "run", SubResource("AnimationNodeStateMachineTransition_a0pwy"), "land", "jump_start", SubResource("AnimationNodeStateMachineTransition_gxeod"), "jump_start", "fall_start", SubResource("AnimationNodeStateMachineTransition_bj5at"), "idle", "run", SubResource("AnimationNodeStateMachineTransition_yxci8"), "run", "idle", SubResource("AnimationNodeStateMachineTransition_dk131"), "air_spin", "fall_idle", SubResource("AnimationNodeStateMachineTransition_air_spin_to_fall"), "jump_start", "wall_landing", SubResource("AnimationNodeStateMachineTransition_ckagk"), "jump_idle", "wall_landing", SubResource("AnimationNodeStateMachineTransition_k2haj"), "fall_start", "wall_landing", SubResource("AnimationNodeStateMachineTransition_sq1et"), "fall_idle", "wall_landing", SubResource("AnimationNodeStateMachineTransition_ulas0"), "air_spin", "wall_landing", SubResource("AnimationNodeStateMachineTransition_8sfvt"), "wall_landing", "wall_slide", SubResource("AnimationNodeStateMachineTransition_dmnti"), "wall_landing", "land", SubResource("AnimationNodeStateMachineTransition_d0c3k"), "wall_landing", "fall_start", SubResource("AnimationNodeStateMachineTransition_ihn2p"), "wall_slide", "land", SubResource("AnimationNodeStateMachineTransition_0rdik"), "wall_slide", "fall_start", SubResource("AnimationNodeStateMachineTransition_oqtj6"), "wall_slide", "jump_start", SubResource("AnimationNodeStateMachineTransition_ip35x"), "wall_landing", "jump_start", SubResource("AnimationNodeStateMachineTransition_lk6ox"), "idle", "roll", SubResource("AnimationNodeStateMachineTransition_313fb"), "run", "roll", SubResource("AnimationNodeStateMachineTransition_g7pxd"), "roll", "run", SubResource("AnimationNodeStateMachineTransition_pgvca"), "roll", "idle", SubResource("AnimationNodeStateMachineTransition_3nkyv"), "land", "roll", SubResource("AnimationNodeStateMachineTransition_a81t5")]
+graph_offset = Vector2(-123.03302, -7.0251007)
 
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
 collision_layer = 256
@@ -772,6 +801,8 @@ script = ExtResource("3_pinput")
 script = ExtResource("8_45amr")
 jump_particles = ExtResource("9_soiyk")
 land_particles = ExtResource("10_466qv")
+
+[node name="Hurtbox" parent="." unique_id=184682534 instance=ExtResource("12_hurtbox")]
 
 [connection signal="double_jumped" from="." to="AnimationTree" method="play_air_spin"]
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]
