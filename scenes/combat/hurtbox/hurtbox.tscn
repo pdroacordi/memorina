@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/combat/hurtbox/hurtbox.gd" id="1_hurtbox"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hurtbox"]
+radius = 8.0
+height = 44.0
+
+[node name="Hurtbox" type="Area2D"]
+collision_layer = 512
+collision_mask = 0
+monitoring = false
+script = ExtResource("1_hurtbox")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -28)
+shape = SubResource("CapsuleShape2D_hurtbox")
+debug_color = Color(0.9999997, 0.0014152366, 0.09820508, 0.41960785)
