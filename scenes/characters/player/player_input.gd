@@ -5,6 +5,7 @@ extends Node
 
 signal jump_pressed
 signal jump_canceled
+signal roll_pressed
 
 var direction: float:
 	get: return Input.get_axis("move_left", "move_right")
@@ -17,3 +18,5 @@ func _input(event: InputEvent) -> void:
 		jump_pressed.emit()
 	elif event.is_action_released("jump"):
 		jump_canceled.emit()
+	if event.is_action_pressed("roll"):
+		roll_pressed.emit()
