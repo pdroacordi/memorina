@@ -9,10 +9,6 @@ signal hard_landed(position: Vector2, impact_speed: float)
 @export_category("Jumping")
 @export var double_jump_height: float = 64
 
-@export_category("Landing")
-@export var hard_land_speed   : float = 400.0
-@export var hard_land_time    : float = 0.75
-
 @export_category("Wall Slide")
 @export var wall_gravity_mult : float = 0.1
 
@@ -24,9 +20,6 @@ signal hard_landed(position: Vector2, impact_speed: float)
 @export var roll_buffer_max      : float = 0.12
 
 var _is_wall_sliding          : bool  = false
-var _was_on_floor             : bool  = true
-var _last_fall_speed          : float = 0.0
-var _recovery_timer           : float = 0.0
 var _roll_timer               : float = 0.0
 var _roll_cooldown_timer      : float = 0.0
 var _roll_coyote_timer        : float = 0.0
@@ -37,6 +30,7 @@ var _double_jump_is_ready     : bool  = false
 @onready var _input           : PlayerInput = $PlayerInput
 @onready var _locomotion      : LocomotionComponent = $Locomotion
 @onready var _jump            : JumpComponent = $Jump
+@onready var _landing         : LandingComponent = $Landing
 @onready var _roll_speed       : float = roll_distance / roll_time
 
 func _ready() -> void:
@@ -44,10 +38,11 @@ func _ready() -> void:
 
 	_input.jump_pressed.connect(_jump.buffer_jump)
 	_input.jump_canceled.connect(_jump.cut_jump)
-	# Player must re-emit the component's signal because ivo.tscn wires
-	# DustEmitter.spawn_jump_dust to Player's own `jumped` signal (from="."),
-	# and that scene connection needs to keep working untouched.
+	# Components emit these, but ivo.tscn wires its DustEmitter to Player's own
+	# signals with from=".". Re-emitting keeps those scene connections working
+	# untouched, so moving logic into a component never costs a scene edit.
 	_jump.jumped.connect(jumped.emit)
+	_landing.hard_landed.connect(hard_landed.emit)
 	_input.roll_pressed.connect(_on_roll_pressed)
 
 	facing_changed.connect(_on_facing_changed)
@@ -58,6 +53,7 @@ func _process_motion(delta: float) -> void:
 	face_towards(move_axis())
 	_jump.tick_timers(delta, on_floor)
 	_update_timers(delta, on_floor)
+	_landing.tick_timer(delta, on_floor)
 
 	if is_in_knockback():
 		_jump.apply_gravity(delta)
@@ -73,7 +69,10 @@ func _process_motion(delta: float) -> void:
 	_try_roll(on_floor)
 
 func _after_move(_delta: float) -> void:
-	_check_landing()
+	var on_floor := is_on_floor()
+	_landing.check_landing(on_floor)
+	if on_floor:
+		_is_wall_sliding = false
 
 #############################################
 ##  A N I M A T I O N   C O N T R A C T    ##
@@ -98,7 +97,7 @@ func is_falling() -> bool:
 	return not is_on_floor() and not _jump.is_jumping
 
 func is_recovering() -> bool:
-	return _recovery_timer > 0.0
+	return _landing.is_recovering()
 
 func is_wall_sliding() -> bool:
 	return _is_wall_sliding
@@ -149,7 +148,7 @@ func _air_physics(delta: float) -> void:
 	if not _wall_slide(delta):
 		_jump.apply_gravity(delta)
 	_locomotion.air_update(delta, move_axis())
-	_last_fall_speed = maxf(velocity.y, 0.0)
+	_landing.sample_fall_speed(velocity.y)
 
 #############################################
 ##  J U M P I N G                          ##
@@ -165,9 +164,6 @@ func _update_timers(delta: float, on_floor: bool) -> void:
 	if _roll_buffer_timer > 0.0:
 		_roll_buffer_timer -= delta
 
-	if _recovery_timer > 0.0:
-		_recovery_timer = _recovery_timer - delta if on_floor else 0.0
-	
 	if _roll_timer > 0.0:
 		_roll_timer = max(_roll_timer - delta, 0.0)
 		if _roll_timer == 0.0:
@@ -185,21 +181,6 @@ func _try_jump(on_floor: bool) -> void:
 		_is_wall_sliding = false
 		_double_jump_is_ready = false
 		double_jumped.emit(global_position)
-
-#############################################
-##  L A N D I N G                          ##
-#############################################
-
-func _check_landing() -> void:
-	var on_floor := is_on_floor()
-
-	if on_floor and not _was_on_floor and _last_fall_speed >= hard_land_speed:
-		_recovery_timer = hard_land_time
-		hard_landed.emit(global_position, _last_fall_speed)
-	_was_on_floor = on_floor
-
-	if on_floor:
-		_is_wall_sliding = false
 
 #############################################
 ##  A B I L I T I E S                      ##

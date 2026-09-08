@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="LandingStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/characters/landing_stats.gd" id="1_landstats"]
+
+[resource]
+script = ExtResource("1_landstats")
+hard_land_speed = 800.0
+hard_land_time = 0.75
