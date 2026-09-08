@@ -17,7 +17,7 @@
 | Ação | Tecla |
 |---|---|
 | Movimento | Setas |
-| Dash | Shift |
+| Rolar | Shift |
 | Pular | Z |
 | Atacar | X |
 | Abrir caderno de campo | E |
@@ -58,7 +58,7 @@
  
 Estilo fluido e rápido — referência Hollow Knight com tempero de jogo de ação rítmico (Hi-Fi Rush), nunca modelo tanque-e-pare (Souls).
  
-- **Movimento é arma:** dash com i-frames, ataque aéreo que cancela em dash, wall-jump. Repertório clássico de metroidvania, construído para permitir combo fluido entre mobilidade e ataque, sem pausas.
+- **Movimento é arma:** rolamento com i-frames — restrito ao chão, ferramenta de esquiva ofensiva no combate, não de mobilidade aérea —, ataque aéreo, wall-jump. Repertório clássico de metroidvania, construído para permitir combo fluido entre mobilidade e ataque, sem pausas.
 - **Combo leve/pesado simples**, não árvore de combo profunda — dois ou três inputs que se encadeiam, priorizando ritmo de execução sobre memorização de combo.
 - **Parry como ferramenta central**, não nicho — usa o mesmo timing que a Memorina pede, reforçando a coerência entre os dois sistemas.
 ### Inimigos comuns
@@ -78,7 +78,7 @@ Estações não limitam o número de guardiões — múltiplos guardiões por es
  
 **Decisão fechada:** habilidades físicas não vêm do ambiente restaurado nem são recompensa por vencer o guardião. Vêm do próprio herói recuperando, sob pressão extrema, uma capacidade física que ele já tinha antes do luto — o corpo lembrando o que a mente esqueceu. Coerente com o tema central de memória.
  
-Cada habilidade deveria ecoar algo específico da vida do herói antes do luto (a definir em sessão de lore): um dash que lembra correr atrás da filha, um golpe carregado ligado a um ofício antigo, a última habilidade — perto do fim — mais carregada emocionalmente, talvez ligada à esposa.
+Cada habilidade deveria ecoar algo específico da vida do herói antes do luto (a definir em sessão de lore): um rolamento que lembra correr atrás da filha, um golpe carregado ligado a um ofício antigo, a última habilidade — perto do fim — mais carregada emocionalmente, talvez ligada à esposa.
  
 #### O QTE de emergência — versão final
  

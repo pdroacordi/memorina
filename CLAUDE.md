@@ -46,4 +46,4 @@ Rename and move files **from inside the Godot editor** (FileSystem dock), so it 
 
 ## Known gaps (not yet implemented)
 
-- Input map (`project.godot`) only defines `move_left`, `move_right`, `jump`. The design calls for dash, attack, open-notebook, pause, "sacar Memorina," open-map, and directional ocarina input — add these when that work actually starts, matching the existing signal-based `PlayerInput` pattern.
+- Input map (`project.godot`) only defines `move_left`, `move_right`, `jump`. The design calls for attack, open-notebook, pause, "sacar Memorina," open-map, and directional ocarina input — add these when that work actually starts, matching the existing signal-based `PlayerInput` pattern.
