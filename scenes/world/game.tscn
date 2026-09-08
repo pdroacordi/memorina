@@ -1,10 +1,11 @@
 [gd_scene format=3 uid="uid://ccbpf3johlglr"]
 
-[ext_resource type="PackedScene" uid="uid://d3yi3wnqg8gub" path="res://scenes/world/rooms/home_village/downtown.tscn" id="1_3iwug"]
 [ext_resource type="PackedScene" uid="uid://cxmds8nc576iu" path="res://scenes/characters/player/ivo.tscn" id="1_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://d05regasxpdje" path="res://scenes/world/rooms/home_village.tscn" id="2_h30v7"]
 [ext_resource type="Script" uid="uid://drh8ksb1dbina" path="res://scenes/world/spawner.gd" id="2_hqfqh"]
 [ext_resource type="Script" uid="uid://c0gjegnydjn44" path="res://scenes/world/camera.gd" id="3_r5nxa"]
 [ext_resource type="Script" uid="uid://dudvwafpfnf4a" path="res://scenes/world/game.gd" id="4_game"]
+[ext_resource type="Script" uid="uid://be0v2br7tupo7" path="res://scenes/world/fade.gd" id="6_sarsd"]
 
 [node name="Game" type="Node2D" unique_id=585377483]
 script = ExtResource("4_game")
@@ -12,12 +13,14 @@ script = ExtResource("4_game")
 [node name="World" type="Node2D" parent="." unique_id=870631150]
 process_mode = 1
 
-[node name="Level" parent="World" unique_id=463950041 instance=ExtResource("1_3iwug")]
+[node name="HomeVillage" parent="World" unique_id=587601713 instance=ExtResource("2_h30v7")]
 
 [node name="Ivo" parent="World" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
+unique_name_in_owner = true
 position = Vector2(-173, -4)
 
 [node name="Camera2D" type="Camera2D" parent="World" unique_id=1746271803]
+unique_name_in_owner = true
 position = Vector2(1, -122)
 script = ExtResource("3_r5nxa")
 framing_offset_y = -48.0
@@ -25,6 +28,7 @@ look_ahead_duration = 1.5
 look_ahead_transition = 7
 look_ahead_ease = 2
 peek_distance = 128.0
+air_lead_distance = 128.0
 vertical_smooth_time = 0.5
 
 [node name="Spawner" type="Node2D" parent="World" unique_id=1572119967]
@@ -38,3 +42,15 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 metadata/_edit_use_anchors_ = true
+
+[node name="Fade" type="ColorRect" parent="CanvasLayer" unique_id=1302556381]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("6_sarsd")

@@ -467,6 +467,7 @@ transitions = ["Start", "idle", SubResource("AnimationNodeStateMachineTransition
 graph_offset = Vector2(-137, 40)
 
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
+collision_layer = 256
 script = ExtResource("1_ynyct")
 move_speed = 192.0
 acceleration = 2048.0
@@ -506,5 +507,5 @@ script = ExtResource("8_45amr")
 jump_particles = ExtResource("9_soiyk")
 land_particles = ExtResource("10_466qv")
 
-[connection signal="jumped" from="." to="DustEmitter" method="spawn_jump_dust"]
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]
+[connection signal="jumped" from="." to="DustEmitter" method="spawn_jump_dust"]
