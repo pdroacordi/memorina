@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ccbpf3johlglr"]
 
-[ext_resource type="PackedScene" uid="uid://cxmds8nc576iu" path="res://scenes/characters/player/ivo.tscn" id="1_e2o6t"]
+[ext_resource type="PackedScene" uid="uid://cxmds8nc576iu" path="res://scenes/characters/ivo/ivo.tscn" id="1_e2o6t"]
 [ext_resource type="PackedScene" uid="uid://d05regasxpdje" path="res://scenes/world/rooms/home_village.tscn" id="2_h30v7"]
 [ext_resource type="Script" uid="uid://drh8ksb1dbina" path="res://scenes/world/spawner.gd" id="2_hqfqh"]
 [ext_resource type="Script" uid="uid://c0gjegnydjn44" path="res://scenes/world/camera.gd" id="3_r5nxa"]
@@ -15,7 +15,7 @@ process_mode = 1
 
 [node name="HomeVillage" parent="World" unique_id=587601713 instance=ExtResource("2_h30v7")]
 
-[node name="Ivo" parent="World" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
+[node name="Player" parent="World" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
 unique_name_in_owner = true
 position = Vector2(-173, 0)
 double_jump_height = 96.0

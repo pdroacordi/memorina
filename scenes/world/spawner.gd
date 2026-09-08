@@ -15,6 +15,9 @@ func clear() -> void:
 func spawn(scene: PackedScene, global_pos: Vector2 = Vector2.ZERO) -> Node:
 	var instance := scene.instantiate()
 
+	# global_pos only applies when the scene's root is spatial: a non-Node2D
+	# root (e.g. a bare Node orchestrating other nodes) has no position to set,
+	# so the caller's global_pos is silently ignored in that case.
 	var node_2d := instance as Node2D
 	if node_2d != null:
 		node_2d.position = to_local(global_pos)

@@ -20,4 +20,12 @@ func save_game() -> void:
 		push_error("Failed to save game: %s" % error_string(err))
 
 func load_game() -> void:
-	player_data = ResourceLoader.load(PATH + SAVE_FILE_NAME)
+	var loaded: Resource = ResourceLoader.load(PATH + SAVE_FILE_NAME)
+	if loaded == null or not (loaded is PlayerData):
+		push_error("Failed to load save file, falling back to a new game: %s" % (PATH + SAVE_FILE_NAME))
+		new_game()
+		return
+	player_data = loaded
+
+func has_skill(skill: Enums.PlayerSkill) -> bool:
+	return player_data.unlocked_player_skills[skill]

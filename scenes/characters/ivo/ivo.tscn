@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://cxmds8nc576iu"]
 
-[ext_resource type="Script" uid="uid://cu1c1mo6x7ca6" path="res://scenes/characters/player/player.gd" id="1_ynyct"]
+[ext_resource type="Script" uid="uid://cu1c1mo6x7ca6" path="res://scenes/characters/ivo/player.gd" id="1_ynyct"]
 [ext_resource type="Texture2D" uid="uid://c0bfcw6louuhh" path="res://assets/sprites/characters/ivo/player_idle_96x96.png" id="2_45amr"]
 [ext_resource type="Texture2D" uid="uid://ltw6fbmosvx8" path="res://assets/sprites/characters/ivo/player_air_spin_96x96.png" id="3_466qv"]
-[ext_resource type="Script" uid="uid://c1uo8k8aac7gw" path="res://scenes/characters/player/player_input.gd" id="3_pinput"]
+[ext_resource type="Script" uid="uid://c1uo8k8aac7gw" path="res://scenes/characters/ivo/player_input.gd" id="3_pinput"]
 [ext_resource type="Texture2D" uid="uid://cvsmwfqcpsebp" path="res://assets/sprites/characters/ivo/player_jump_96x96.png" id="3_soiyk"]
 [ext_resource type="Texture2D" uid="uid://6web0uujory8" path="res://assets/sprites/characters/ivo/player_land_96x96.png" id="4_466qv"]
 [ext_resource type="Texture2D" uid="uid://bn6x0lpukduy8" path="res://assets/sprites/characters/ivo/player_run_96x96.png" id="5_ip35x"]
@@ -13,8 +13,9 @@
 [ext_resource type="Texture2D" uid="uid://ipnytibg7u74" path="res://assets/sprites/characters/ivo/player_wall_slide_96x96.png" id="8_lk6ox"]
 [ext_resource type="PackedScene" uid="uid://cbam77lyl5m76" path="res://scenes/particles/dust/jump_dust_particles.tscn" id="9_soiyk"]
 [ext_resource type="PackedScene" uid="uid://b2a63w0vkfy3a" path="res://scenes/particles/dust/landing_dust_particles.tscn" id="10_466qv"]
-[ext_resource type="Script" uid="uid://do4mak343gtp6" path="res://scenes/characters/player/player_animator.gd" id="11_animator"]
+[ext_resource type="Script" uid="uid://do4mak343gtp6" path="res://scenes/characters/ivo/player_animator.gd" id="11_animator"]
 [ext_resource type="PackedScene" path="res://scenes/combat/hurtbox/hurtbox.tscn" id="12_hurtbox"]
+[ext_resource type="Script" uid="uid://dsp4w4pojjffd" path="res://scenes/combat/health/health.gd" id="16_uw5th"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -803,6 +804,10 @@ jump_particles = ExtResource("9_soiyk")
 land_particles = ExtResource("10_466qv")
 
 [node name="Hurtbox" parent="." unique_id=184682534 instance=ExtResource("12_hurtbox")]
+invulnerability_time = 2.0
+
+[node name="Health" type="Node" parent="." unique_id=2140526938]
+script = ExtResource("16_uw5th")
 
 [connection signal="double_jumped" from="." to="AnimationTree" method="play_air_spin"]
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]

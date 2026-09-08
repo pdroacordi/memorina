@@ -1,21 +1,15 @@
 extends Node2D
 
-@onready var _world  : Node2D    = $World
-@onready var _fade   : ColorRect = %Fade
-@onready var _camera : Camera2D  = %Camera2D
-@onready var _player : Node2D    = %Ivo
+@onready var _fade   : Fade   = %Fade
+@onready var _camera : GameCamera = %Camera2D
+@onready var _player : Node2D = %Player
 var _current_room    : Room
 var _is_transitioning: bool      = false
 
 func _ready() -> void:
 	_camera.follow(_player)
-	_connect_rooms(_world)
-
-func _connect_rooms(node: Node) -> void:
-	if node is Room:
-		node.room_entered.connect(_on_player_entered_room)
-	for child in node.get_children():
-		_connect_rooms(child)
+	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
+		room.room_entered.connect(_on_player_entered_room)
 
 func _on_player_entered_room(room: Room) -> void:
 	if room == _current_room or _is_transitioning:

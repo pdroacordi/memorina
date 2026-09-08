@@ -3,9 +3,14 @@ extends Area2D
 
 signal room_entered(room: Room)
 
+const GROUP := "room"
+
 @export var contents_scene : PackedScene
 @onready var _shape_node: CollisionShape2D = $CollisionShape2D
 var _contents_node: Node2D
+
+func _enter_tree() -> void:
+	add_to_group(GROUP)
 
 func load_contents() -> void:
 	if not _contents_node:

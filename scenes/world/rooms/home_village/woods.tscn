@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://b2y7r7eq4pq7r"]
 
 [ext_resource type="Script" uid="uid://bpd45kolxse8x" path="res://scenes/world/rooms/room.gd" id="1_2qnvr"]
-[ext_resource type="PackedScene" uid="uid://bv0bdl8376vvh" path="res://scenes/world/rooms/home_village/contents/woods.tscn" id="2_2qnvr"]
+[ext_resource type="PackedScene" uid="uid://bv0bdl8376vvh" path="res://scenes/world/rooms/home_village/contents/woods_contents.tscn" id="2_2qnvr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rxs28"]
 size = Vector2(1920, 602)

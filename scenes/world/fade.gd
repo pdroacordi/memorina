@@ -1,3 +1,4 @@
+class_name Fade
 extends ColorRect
 
 const CLEAR    : Color = Color(0,0,0,0)

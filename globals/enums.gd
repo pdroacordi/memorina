@@ -1,6 +1,6 @@
 class_name Enums
 
-enum PLAYER_SKILLS {
+enum PlayerSkill {
 	DOUBLE_JUMP,
 	WALL_CLIMB,
 	ROLL

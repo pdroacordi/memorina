@@ -58,6 +58,7 @@ var _double_jump_is_ready     : bool  = false
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
 @onready var _hurtbox         : Hurtbox     = $Hurtbox
+@onready var _health          : Health      = $Health
 @onready var _base_gravity    : float = PhysicsServer2D.area_get_param(get_world_2d().space, PhysicsServer2D.AREA_PARAM_GRAVITY)
 @onready var _roll_speed       : float = roll_distance / roll_time
 
@@ -158,8 +159,9 @@ func _on_jump_canceled() -> void:
 func _on_roll_pressed() -> void:
 	_roll_buffer_timer = roll_buffer_max
 	
-func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
-	print("Hit received! %d damage from %s" % [damage, source])
+func _on_hit_received(damage: int, knockback: Vector2, _source: Node2D) -> void:
+	_health.take_damage(damage)
+	velocity += knockback
 
 #############################################
 ##  L O C O M O T I O N                    ##
@@ -254,7 +256,7 @@ func _try_jump(on_floor: bool) -> void:
 		_coyote_timer = 0.0
 		_jump_buffer_timer = -1.0
 		jumped.emit(global_position)
-	elif _has_unlocked(Enums.PLAYER_SKILLS.DOUBLE_JUMP) and _double_jump_is_ready:
+	elif _has_unlocked(Enums.PlayerSkill.DOUBLE_JUMP) and _double_jump_is_ready:
 		velocity.y = _jump_force(double_jump_height)
 		_is_jumping = true
 		_is_wall_sliding = false
@@ -289,8 +291,8 @@ func _check_landing() -> void:
 ##  A B I L I T I E S                      ##
 #############################################
 
-func _has_unlocked(skill: Enums.PLAYER_SKILLS) -> bool:
-	return SaveSystem.player_data.unlocked_player_skills[skill]
+func _has_unlocked(skill: Enums.PlayerSkill) -> bool:
+	return SaveSystem.has_skill(skill)
 	
 func _wall_slide(delta: float) -> bool:
 	if _is_wall_sliding:
@@ -301,7 +303,7 @@ func _wall_slide(delta: float) -> bool:
 			_coyote_timer = coyote_time_max
 			_double_jump_is_ready = true
 	elif (
-		_has_unlocked(Enums.PLAYER_SKILLS.WALL_CLIMB)
+		_has_unlocked(Enums.PlayerSkill.WALL_CLIMB)
 		and is_on_wall()
 		and velocity.y >= 0
 		and sign(move_axis() * -1) == sign(get_wall_normal().x)
@@ -321,7 +323,7 @@ func _try_roll(on_floor: bool) -> void:
 		return
 	if not (on_floor or _roll_coyote_timer > 0.0):
 		return
-	if not _has_unlocked(Enums.PLAYER_SKILLS.ROLL):
+	if not _has_unlocked(Enums.PlayerSkill.ROLL):
 		return
 	if is_rolling() or is_roll_on_cooldown():
 		return

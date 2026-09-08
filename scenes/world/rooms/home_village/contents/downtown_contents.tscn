@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://xtavq4w4pv8j" path="res://assets/sprites/world/background/spring/spring_background_layer_2.png" id="4_wn0cq"]
 [ext_resource type="Texture2D" uid="uid://b33j4n76avvnu" path="res://assets/sprites/world/background/spring/spring_background_layer_1.png" id="5_vl0g8"]
 [ext_resource type="Texture2D" uid="uid://c1f07twoye2wx" path="res://assets/sprites/world/tilesets/floor_tiles.png" id="6_se3n3"]
-[ext_resource type="Script" uid="uid://c48gltemnipkf" path="res://scenes/world/rooms/home_village/contents/hitbox_test.gd" id="7_tva0m"]
+[ext_resource type="Script" uid="uid://86g8661q6om0" path="res://scenes/combat/hitbox/hitbox.gd" id="7_0rmqy"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_forc5"]
 texture = ExtResource("6_se3n3")
@@ -272,7 +272,7 @@ tile_set = SubResource("TileSet_rxs28")
 collision_layer = 0
 collision_mask = 512
 monitorable = false
-script = ExtResource("7_tva0m")
+script = ExtResource("7_0rmqy")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=2121098931]
 position = Vector2(0, -32)

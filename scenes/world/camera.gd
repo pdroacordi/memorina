@@ -1,3 +1,4 @@
+class_name GameCamera
 extends Camera2D
 ## Follows a subject, leading horizontally toward its facing and vertically
 ## toward its look intent and fall speed, without showing outside the room.
