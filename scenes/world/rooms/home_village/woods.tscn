@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://b2y7r7eq4pq7r"]
+
+[ext_resource type="Script" uid="uid://bpd45kolxse8x" path="res://scenes/world/rooms/room.gd" id="1_2qnvr"]
+[ext_resource type="PackedScene" uid="uid://bv0bdl8376vvh" path="res://scenes/world/rooms/home_village/contents/woods.tscn" id="2_2qnvr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rxs28"]
+size = Vector2(1920, 602)
+
+[node name="Woods" type="Area2D" unique_id=2037857167]
+collision_mask = 256
+script = ExtResource("1_2qnvr")
+contents_scene = ExtResource("2_2qnvr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1198537871]
+position = Vector2(-399.5, -237)
+shape = SubResource("RectangleShape2D_rxs28")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

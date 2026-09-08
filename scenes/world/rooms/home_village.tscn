@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://d05regasxpdje"]
+
+[ext_resource type="PackedScene" uid="uid://d3yi3wnqg8gub" path="res://scenes/world/rooms/home_village/downtown.tscn" id="1_vmbir"]
+[ext_resource type="PackedScene" uid="uid://b2y7r7eq4pq7r" path="res://scenes/world/rooms/home_village/woods.tscn" id="2_6d0dj"]
+
+[node name="HomeVillage" type="Node2D" unique_id=587601713]
+
+[node name="Downtown" parent="." unique_id=2037857167 instance=ExtResource("1_vmbir")]
+
+[node name="Woods" parent="." unique_id=594702678 instance=ExtResource("2_6d0dj")]
+position = Vector2(1952, 0)
