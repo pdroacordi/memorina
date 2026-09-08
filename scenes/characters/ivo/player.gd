@@ -1,7 +1,6 @@
 class_name Player
-extends CharacterBody2D
+extends Character
 
-signal facing_changed(facing: int)
 signal jumped(position: Vector2)
 signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
@@ -40,8 +39,6 @@ signal hard_landed(position: Vector2, impact_speed: float)
 @export var roll_coyote_time_max : float = 0.12
 @export var roll_buffer_max      : float = 0.12
 
-var facing                    : int   = 1
-
 var _is_jumping               : bool  = false
 var _is_wall_sliding          : bool  = false
 var _coyote_timer             : float = 0.0
@@ -57,25 +54,27 @@ var _double_jump_is_ready     : bool  = false
 
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
-@onready var _hurtbox         : Hurtbox     = $Hurtbox
-@onready var _health          : Health      = $Health
-@onready var _base_gravity    : float = PhysicsServer2D.area_get_param(get_world_2d().space, PhysicsServer2D.AREA_PARAM_GRAVITY)
 @onready var _roll_speed       : float = roll_distance / roll_time
 
 func _ready() -> void:
+	super()
+
 	_input.jump_pressed.connect(_on_jump_pressed)
 	_input.jump_canceled.connect(_on_jump_canceled)
 	_input.roll_pressed.connect(_on_roll_pressed)
-	
-	_hurtbox.hit_received.connect(_on_hit_received)
 
-func _physics_process(delta: float) -> void:
+	facing_changed.connect(_on_facing_changed)
+
+func _process_motion(delta: float) -> void:
 	var on_floor := is_on_floor()
 
-	_update_facing()
+	face_towards(move_axis())
 	_update_timers(delta, on_floor)
 
-	if is_rolling():
+	if is_in_knockback():
+		_apply_gravity(delta)
+		apply_knockback_decay(delta)
+	elif is_rolling():
 		pass
 	elif on_floor:
 		_ground_physics(delta)
@@ -84,12 +83,8 @@ func _physics_process(delta: float) -> void:
 
 	_try_jump(on_floor)
 	_try_roll(on_floor)
-	move_and_slide()
 
-	# Must run after move_and_slide(): that is what refreshes is_on_floor().
-	# _recovery_timer must also be set before the AnimationTree evaluates, which
-	# holds structurally — AnimationTree is a child of this node, and Godot
-	# processes parents before their children.
+func _after_move(_delta: float) -> void:
 	_check_landing()
 
 #############################################
@@ -100,7 +95,7 @@ func _physics_process(delta: float) -> void:
 ## compile error. Update both together.
 
 func move_axis() -> float:
-	return 0.0 if is_recovering() or is_rolling() else _input.direction
+	return 0.0 if is_recovering() or is_rolling() or is_in_knockback() else _input.direction
 
 func wants_to_move() -> bool:
 	return not is_zero_approx(move_axis())
@@ -158,27 +153,15 @@ func _on_jump_canceled() -> void:
 	
 func _on_roll_pressed() -> void:
 	_roll_buffer_timer = roll_buffer_max
-	
-func _on_hit_received(damage: int, knockback: Vector2, _source: Node2D) -> void:
-	_health.take_damage(damage)
-	velocity += knockback
+
+## The base owns the facing VALUE; the sprite flip is a per-character visual,
+## so Player is the one that reacts to the signal rather than the base.
+func _on_facing_changed(new_facing: int) -> void:
+	_sprite.flip_h = new_facing < 0
 
 #############################################
 ##  L O C O M O T I O N                    ##
 #############################################
-
-func _update_facing() -> void:
-	var axis: float = move_axis()
-	if is_zero_approx(axis):
-		return
-
-	var new_facing: int = -1 if axis < 0.0 else 1
-	if new_facing == facing:
-		return
-
-	facing = new_facing
-	_sprite.flip_h = facing < 0
-	facing_changed.emit(facing)
 
 func _ground_physics(delta: float) -> void:
 	var axis: float = move_axis()
@@ -237,7 +220,7 @@ func _apply_gravity(delta: float) -> void:
 	if absf(velocity.y) < apex_threshold:
 		gravity_mult *= apex_gravity_mult
 
-	var gravity := _base_gravity * gravity_mult
+	var gravity := base_gravity() * gravity_mult
 
 	velocity.y += gravity * delta
 	velocity.y  = min(velocity.y, terminal_velocity)
@@ -269,7 +252,7 @@ func _cut_jump() -> void:
 		velocity.y *= jump_cut_mult
 
 func _jump_force(height: float) -> float:
-	var gravity_rise := _base_gravity * rise_gravity_mult
+	var gravity_rise := base_gravity() * rise_gravity_mult
 	return sqrt(gravity_rise * height * 2.0) * -1.0
 
 #############################################
@@ -299,7 +282,7 @@ func _wall_slide(delta: float) -> bool:
 		if not is_on_wall() or sign(get_wall_normal().x) == sign(move_axis()):
 			_is_wall_sliding = false
 		else:
-			velocity.y += _base_gravity * delta * wall_gravity_mult
+			velocity.y += base_gravity() * delta * wall_gravity_mult
 			_coyote_timer = coyote_time_max
 			_double_jump_is_ready = true
 	elif (
