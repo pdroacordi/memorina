@@ -16,6 +16,8 @@
 [ext_resource type="Script" uid="uid://do4mak343gtp6" path="res://scenes/characters/ivo/player_animator.gd" id="11_animator"]
 [ext_resource type="PackedScene" path="res://scenes/combat/hurtbox/hurtbox.tscn" id="12_hurtbox"]
 [ext_resource type="Script" uid="uid://dsp4w4pojjffd" path="res://scenes/combat/health/health.gd" id="16_uw5th"]
+[ext_resource type="Script" uid="uid://dfbu5a2uchyf5" path="res://scenes/characters/components/locomotion_component.gd" id="17_locomo"]
+[ext_resource type="Resource" path="res://resources/characters/ivo_locomotion_stats.tres" id="18_locsta"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -763,9 +765,6 @@ graph_offset = Vector2(-123.03302, -7.0251007)
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
 collision_layer = 256
 script = ExtResource("1_ynyct")
-move_speed = 192.0
-acceleration = 2048.0
-deceleration = 4096.0
 jump_height = 144.0
 terminal_velocity = 1000.0
 apex_threshold = 80.0
@@ -808,6 +807,10 @@ invulnerability_time = 0.6
 
 [node name="Health" type="Node" parent="." unique_id=2140526938]
 script = ExtResource("16_uw5th")
+
+[node name="Locomotion" type="Node" parent="." unique_id=1774390216]
+script = ExtResource("17_locomo")
+stats = ExtResource("18_locsta")
 
 [connection signal="double_jumped" from="." to="AnimationTree" method="play_air_spin"]
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]

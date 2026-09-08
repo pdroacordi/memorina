@@ -6,13 +6,6 @@ signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
 
 
-@export_category("Locomotion")
-@export var move_speed        : float = 96
-@export var acceleration      : float = 1024
-@export var deceleration      : float = 2048
-@export var air_control       : float = 0.8
-@export var air_brakes        : float = 0.8
-
 @export_category("Jumping")
 @export var jump_height       : float = 80
 @export var rise_gravity_mult : float = 0.85
@@ -54,6 +47,7 @@ var _double_jump_is_ready     : bool  = false
 
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
+@onready var _locomotion      : LocomotionComponent = $Locomotion
 @onready var _roll_speed       : float = roll_distance / roll_time
 
 func _ready() -> void:
@@ -77,7 +71,7 @@ func _process_motion(delta: float) -> void:
 	elif is_rolling():
 		pass
 	elif on_floor:
-		_ground_physics(delta)
+		_locomotion.ground_update(delta, move_axis())
 	else:
 		_air_physics(delta)
 
@@ -163,26 +157,10 @@ func _on_facing_changed(new_facing: int) -> void:
 ##  L O C O M O T I O N                    ##
 #############################################
 
-func _ground_physics(delta: float) -> void:
-	var axis: float = move_axis()
-
-	if is_zero_approx(axis):
-		velocity.x = move_toward(velocity.x, 0.0, deceleration * delta)
-	elif is_zero_approx(velocity.x) or signf(velocity.x) == signf(axis):
-		velocity.x = move_toward(velocity.x, axis * move_speed, acceleration * delta)
-	else:
-		velocity.x = move_toward(velocity.x, axis * move_speed, deceleration * delta)
-
 func _air_physics(delta: float) -> void:
 	if not _wall_slide(delta):
 		_apply_gravity(delta)
-
-	var axis: float = move_axis()
-
-	if is_zero_approx(axis):
-		velocity.x = move_toward(velocity.x, 0.0, deceleration * air_brakes * delta)
-	else:
-		velocity.x = move_toward(velocity.x, axis * move_speed, acceleration * air_control * delta)
+	_locomotion.air_update(delta, move_axis())
 	_last_fall_speed = maxf(velocity.y, 0.0)
 
 #############################################
