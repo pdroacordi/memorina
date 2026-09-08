@@ -3,6 +3,7 @@ extends CharacterBody2D
 
 signal facing_changed(facing: int)
 signal jumped(position: Vector2)
+signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
 
 
@@ -23,6 +24,7 @@ signal hard_landed(position: Vector2, impact_speed: float)
 @export var jump_cut_mult     : float = 0.5
 @export var apex_threshold    : float = 40.0
 @export var apex_gravity_mult : float = 0.5
+@export var double_jump_height: float = 64
 
 @export_category("Landing")
 @export var hard_land_speed   : float = 400.0
@@ -36,6 +38,7 @@ var _jump_buffer_timer        : float = -1.0
 var _was_on_floor             : bool  = true
 var _last_fall_speed          : float = 0.0
 var _recovery_timer           : float = 0.0
+var _double_jump_is_ready     : bool  = false
 
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
@@ -168,6 +171,7 @@ func _air_physics(delta: float) -> void:
 func _update_timers(delta: float, on_floor: bool) -> void:
 	if on_floor:
 		_coyote_timer = coyote_time_max
+		_double_jump_is_ready = true
 	else:
 		_coyote_timer = max(_coyote_timer - delta, 0.0)
 
@@ -192,15 +196,21 @@ func _apply_gravity(delta: float) -> void:
 		_is_jumping = false
 
 func _try_jump(on_floor: bool) -> void:
-	var can_jump := (on_floor or _coyote_timer > 0.0) and not is_recovering()
-	var wants_jump := _jump_buffer_timer > 0.0
+	if is_recovering() or _jump_buffer_timer <= 0.0:
+		return
 
-	if can_jump and wants_jump:
+	if on_floor or _coyote_timer > 0.0:
 		velocity.y = _jump_force(jump_height)
 		_is_jumping = true
 		_coyote_timer = 0.0
 		_jump_buffer_timer = -1.0
 		jumped.emit(global_position)
+	elif _has_unlocked(Enums.PLAYER_SKILLS.DOUBLE_JUMP) and _double_jump_is_ready:
+		velocity.y = _jump_force(double_jump_height)
+		_is_jumping = true
+		_double_jump_is_ready = false
+		_jump_buffer_timer = -1.0
+		double_jumped.emit(global_position)
 
 func _cut_jump() -> void:
 	if _is_jumping and velocity.y < 0.0:
@@ -221,3 +231,10 @@ func _check_landing() -> void:
 		_recovery_timer = hard_land_time
 		hard_landed.emit(global_position, _last_fall_speed)
 	_was_on_floor = on_floor
+	
+#############################################
+##  A B I L I T I E S                      ##
+#############################################
+
+func _has_unlocked(skill: Enums.PLAYER_SKILLS) -> bool:
+	return SaveSystem.player_data.unlocked_player_skills[skill]
