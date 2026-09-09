@@ -18,10 +18,11 @@
 [ext_resource type="Script" uid="uid://dsp4w4pojjffd" path="res://scenes/combat/health/health.gd" id="16_uw5th"]
 [ext_resource type="Script" uid="uid://dfbu5a2uchyf5" path="res://scenes/characters/components/locomotion_component.gd" id="17_locomo"]
 [ext_resource type="Resource" path="res://resources/characters/ivo_locomotion_stats.tres" id="18_locsta"]
-[ext_resource type="Script" path="res://scenes/characters/components/jump_component.gd" id="19_jumpco"]
+[ext_resource type="Script" uid="uid://daaq7eenqes6" path="res://scenes/characters/components/jump_component.gd" id="19_jumpco"]
 [ext_resource type="Resource" path="res://resources/characters/ivo_jump_stats.tres" id="20_jumpst"]
-[ext_resource type="Script" path="res://scenes/characters/components/landing_component.gd" id="21_landco"]
+[ext_resource type="Script" uid="uid://by2j228ab5ujm" path="res://scenes/characters/components/landing_component.gd" id="21_landco"]
 [ext_resource type="Resource" path="res://resources/characters/ivo_landing_stats.tres" id="22_landst"]
+[ext_resource type="Script" uid="uid://dhivn75pxqxkr" path="res://scenes/characters/ivo/abilities/double_jump_component.gd" id="23_dbljmp"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -769,7 +770,6 @@ graph_offset = Vector2(-123.03302, -7.0251007)
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
 collision_layer = 256
 script = ExtResource("1_ynyct")
-double_jump_height = 128.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1693411011]
 position = Vector2(0, -32)
@@ -779,6 +779,9 @@ hframes = 10
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=64234537]
 position = Vector2(-1, -27)
 shape = SubResource("CapsuleShape2D_ynyct")
+
+[node name="Hurtbox" parent="." unique_id=184682534 instance=ExtResource("12_hurtbox")]
+invulnerability_time = 0.6
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1964201661]
 libraries/ = SubResource("AnimationLibrary_ra23q")
@@ -802,9 +805,6 @@ script = ExtResource("8_45amr")
 jump_particles = ExtResource("9_soiyk")
 land_particles = ExtResource("10_466qv")
 
-[node name="Hurtbox" parent="." unique_id=184682534 instance=ExtResource("12_hurtbox")]
-invulnerability_time = 0.6
-
 [node name="Health" type="Node" parent="." unique_id=2140526938]
 script = ExtResource("16_uw5th")
 
@@ -819,6 +819,10 @@ stats = ExtResource("20_jumpst")
 [node name="Landing" type="Node" parent="." unique_id=1938265104]
 script = ExtResource("21_landco")
 stats = ExtResource("22_landst")
+
+[node name="DoubleJump" type="Node" parent="." unique_id=1455903872]
+script = ExtResource("23_dbljmp")
+height = 96.0
 
 [connection signal="double_jumped" from="." to="AnimationTree" method="play_air_spin"]
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]

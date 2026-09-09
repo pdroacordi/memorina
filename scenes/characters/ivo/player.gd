@@ -6,9 +6,6 @@ signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
 
 
-@export_category("Jumping")
-@export var double_jump_height: float = 64
-
 @export_category("Wall Slide")
 @export var wall_gravity_mult : float = 0.1
 
@@ -24,13 +21,13 @@ var _roll_timer               : float = 0.0
 var _roll_cooldown_timer      : float = 0.0
 var _roll_coyote_timer        : float = 0.0
 var _roll_buffer_timer        : float = -1.0
-var _double_jump_is_ready     : bool  = false
 
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
 @onready var _locomotion      : LocomotionComponent = $Locomotion
 @onready var _jump            : JumpComponent = $Jump
 @onready var _landing         : LandingComponent = $Landing
+@onready var _double_jump     : DoubleJumpComponent = $DoubleJump
 @onready var _roll_speed       : float = roll_distance / roll_time
 
 func _ready() -> void:
@@ -43,9 +40,12 @@ func _ready() -> void:
 	# untouched, so moving logic into a component never costs a scene edit.
 	_jump.jumped.connect(jumped.emit)
 	_landing.hard_landed.connect(hard_landed.emit)
+	_double_jump.double_jumped.connect(double_jumped.emit)
 	_input.roll_pressed.connect(_on_roll_pressed)
 
 	facing_changed.connect(_on_facing_changed)
+
+	_double_jump.jump = _jump
 
 func _process_motion(delta: float) -> void:
 	var on_floor := is_on_floor()
@@ -156,7 +156,7 @@ func _air_physics(delta: float) -> void:
 
 func _update_timers(delta: float, on_floor: bool) -> void:
 	if on_floor:
-		_double_jump_is_ready = true
+		_double_jump.refresh()
 		_roll_coyote_timer = roll_coyote_time_max
 	else:
 		_roll_coyote_timer = max(_roll_coyote_timer - delta, 0.0)
@@ -174,13 +174,13 @@ func _update_timers(delta: float, on_floor: bool) -> void:
 func _try_jump(on_floor: bool) -> void:
 	if is_recovering() or not _jump.has_buffered_jump():
 		return
+
+	_refresh_abilities()
+
 	if _jump.try_ground_jump(on_floor):
 		_is_wall_sliding = false
-	elif _has_unlocked(Enums.PlayerSkill.DOUBLE_JUMP) and _double_jump_is_ready:
-		_jump.launch(double_jump_height)
+	elif _double_jump.try_jump():
 		_is_wall_sliding = false
-		_double_jump_is_ready = false
-		double_jumped.emit(global_position)
 
 #############################################
 ##  A B I L I T I E S                      ##
@@ -188,7 +188,15 @@ func _try_jump(on_floor: bool) -> void:
 
 func _has_unlocked(skill: Enums.PlayerSkill) -> bool:
 	return SaveSystem.has_skill(skill)
-	
+
+## Pushes the save-game skill gate onto the ability components, so they never
+## learn SaveSystem exists and stay reusable by anything that wants to switch
+## an ability off. Called at the moment an ability is attempted rather than
+## every frame or cached at unlock time: the first is wasteful, and the second
+## goes stale whenever a skill changes by a path that forgot to announce it.
+func _refresh_abilities() -> void:
+	_double_jump.enabled = _has_unlocked(Enums.PlayerSkill.DOUBLE_JUMP)
+
 func _wall_slide(delta: float) -> bool:
 	if _is_wall_sliding:
 		if not is_on_wall() or sign(get_wall_normal().x) == sign(move_axis()):
@@ -196,7 +204,7 @@ func _wall_slide(delta: float) -> bool:
 		else:
 			velocity.y += base_gravity() * delta * wall_gravity_mult
 			_jump.refresh_coyote()
-			_double_jump_is_ready = true
+			_double_jump.refresh()
 	elif (
 		_has_unlocked(Enums.PlayerSkill.WALL_CLIMB)
 		and is_on_wall()
@@ -205,7 +213,7 @@ func _wall_slide(delta: float) -> bool:
 	):
 		_is_wall_sliding = true
 		_jump.refresh_coyote()
-		_double_jump_is_ready = true
+		_double_jump.refresh()
 		velocity.y = min(velocity.y, 0)
 
 	return _is_wall_sliding
