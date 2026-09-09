@@ -5,4 +5,5 @@
 [resource]
 script = ExtResource("1_rollstats")
 roll_time = 0.3703703
-roll_recovery_time = 0.1
+roll_recovery_time = 0.25
+roll_cooldown = 0.2
