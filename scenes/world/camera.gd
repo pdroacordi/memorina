@@ -55,16 +55,19 @@ func set_bounds(bounds: Rect2) -> void:
 	_bounds = bounds
 	_is_bound = true
 
+# subject stays Node2D rather than narrowing to Character: cutscenes can point
+# the camera at a plain Marker2D with no facing, and the `is Character` checks
+# below already degrade gracefully for that case.
 func follow(subject: Node2D) -> void:
 	if subject == _subject:
 		return
 
-	if _subject is Player:
+	if _subject is Character:
 		_subject.facing_changed.disconnect(_on_subject_facing_changed)
 
 	_subject = subject
 
-	if _subject is Player:
+	if _subject is Character:
 		_subject.facing_changed.connect(_on_subject_facing_changed)
 		# An edge-triggered signal delivers nothing on connect, so seed the
 		# current facing directly rather than waiting for the first turn.
@@ -85,19 +88,29 @@ func _on_subject_facing_changed(facing: int) -> void:
 # axis: two sources feed this axis and the fall-speed one changes every frame,
 # which a tween cannot track without being restarted constantly.
 func _update_vertical(delta: float) -> void:
-	if not (_subject is Player):
+	if not (_subject is Character):
 		return
 
 	_update_peek_axis(delta)
 
+	# GDScript has no interfaces, and air_axis()/look_axis() are camera-intent
+	# accessors that deliberately live on the one character that has camera
+	# intent, not on Character itself or a shared component — forcing every
+	# future enemy to implement camera intent it will never use would be
+	# worse. has_method() is Godot's idiom for an optional capability: a
+	# subject without it simply contributes 0.0.
+	var air_lead: float = _subject.air_axis() if _subject.has_method("air_axis") else 0.0
+
 	var target: float = framing_offset_y \
 		+ peek_distance * _peek_axis \
-		+ air_lead_distance * _subject.air_axis()
+		+ air_lead_distance * air_lead
 
 	offset.y = lerpf(offset.y, target, 1.0 - exp(-delta / vertical_smooth_time))
 
 func _update_peek_axis(delta: float) -> void:
-	var desired: float = _subject.look_axis()
+	# See the has_method note in _update_vertical(): look_axis() is optional
+	# camera intent, not part of Character.
+	var desired: float = _subject.look_axis() if _subject.has_method("look_axis") else 0.0
 
 	if is_equal_approx(desired, _peek_axis):
 		_peek_hold = 0.0

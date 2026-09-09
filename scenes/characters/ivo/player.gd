@@ -5,6 +5,8 @@ signal jumped(position: Vector2)
 signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
 
+enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
+
 
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
@@ -14,6 +16,8 @@ signal hard_landed(position: Vector2, impact_speed: float)
 @onready var _double_jump     : DoubleJumpComponent = $DoubleJump
 @onready var _wall_mobility   : WallMobilityComponent = $WallMobility
 @onready var _roll            : RollComponent = $Roll
+
+var _states: CharacterStateMachine
 
 func _ready() -> void:
 	super()
@@ -34,6 +38,12 @@ func _ready() -> void:
 	_wall_mobility.jump = _jump
 	_wall_mobility.double_jump = _double_jump
 
+	_states = CharacterStateMachine.new()
+	_states.add_state(MotionState.KNOCKBACK, _knockback_motion)
+	_states.add_state(MotionState.ROLL, _roll_motion)
+	_states.add_state(MotionState.GROUND, _ground_motion)
+	_states.add_state(MotionState.AIR, _air_physics)
+
 func _process_motion(delta: float) -> void:
 	var on_floor := is_on_floor()
 
@@ -44,15 +54,8 @@ func _process_motion(delta: float) -> void:
 		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
 
-	if is_in_knockback():
-		_jump.apply_gravity(delta)
-		apply_knockback_decay(delta)
-	elif is_rolling():
-		pass
-	elif on_floor:
-		_locomotion.ground_update(delta, move_axis())
-	else:
-		_air_physics(delta)
+	_states.transition_to(_select_motion_state(on_floor))
+	_states.update(delta)
 
 	_try_jump(on_floor)
 	_try_roll(on_floor)
@@ -66,9 +69,14 @@ func _after_move(_delta: float) -> void:
 #############################################
 ##  A N I M A T I O N   C O N T R A C T    ##
 #############################################
-## Bound by advance_expression strings in ivo.tscn. Renaming or changing the
-## semantics of anything below breaks animation SILENTLY at runtime, with no
-## compile error. Update both together.
+## ivo.tscn's AnimationTree calls these by NAME, from advance_expression
+## strings. Renaming one, or changing what it means, breaks animation SILENTLY
+## at runtime — no compile error, no warning. Change the scene and the script
+## together. The bound names are exactly:
+##   wants_to_move, is_jumping, is_rising, is_falling, is_wall_sliding,
+##   is_rolling, and the built-in is_on_floor.
+## move_axis() and is_recovering() are NOT bound directly — they feed the ones
+## that are, so renaming those two fails loudly at compile time instead.
 
 func move_axis() -> float:
 	return 0.0 if is_recovering() or is_rolling() or is_in_knockback() else _input.direction
@@ -130,6 +138,30 @@ func _on_facing_changed(new_facing: int) -> void:
 ##  L O C O M O T I O N                    ##
 #############################################
 
+## Mirrors the original branch order exactly: knockback overrides
+## everything, then rolling, then ground vs air.
+func _select_motion_state(on_floor: bool) -> MotionState:
+	if is_in_knockback():
+		return MotionState.KNOCKBACK
+	if is_rolling():
+		return MotionState.ROLL
+	return MotionState.GROUND if on_floor else MotionState.AIR
+
+func _knockback_motion(delta: float) -> void:
+	_jump.apply_gravity(delta)
+	apply_knockback_decay(delta)
+
+## The roll component owns horizontal velocity for its whole duration, but
+## vertical still belongs to gravity — otherwise rolling off a ledge hangs in
+## the air until the roll expires. The component decelerates horizontally on
+## its own once its movement phase ends, sliding to a stop through recovery.
+func _roll_motion(delta: float) -> void:
+	_jump.apply_gravity(delta)
+	_roll.update(delta)
+
+func _ground_motion(delta: float) -> void:
+	_locomotion.ground_update(delta, move_axis())
+
 func _air_physics(delta: float) -> void:
 	_wall_mobility.enabled = _has_unlocked(Enums.PlayerSkill.WALL_CLIMB)
 	if not _wall_mobility.update(delta, move_axis()):
@@ -142,7 +174,11 @@ func _air_physics(delta: float) -> void:
 #############################################
 
 func _try_jump(on_floor: bool) -> void:
-	if is_recovering() or not _jump.has_buffered_jump():
+	# Rolling commits: the roll owns velocity for its whole duration, so
+	# jumping out of it mid-way would fight that and skip the recovery the
+	# cooldown is meant to enforce. The buffer keeps ticking during the roll,
+	# so a jump pressed near the end still fires the moment it finishes.
+	if is_recovering() or is_rolling() or not _jump.has_buffered_jump():
 		return
 
 	# The gate is pushed onto the component at the moment its ability is

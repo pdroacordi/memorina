@@ -7,8 +7,9 @@ extends Node
 ## The owner drives this from the save-game skill gate; the component itself
 ## must never know SaveSystem exists, so it stays reusable.
 @export var enabled: bool = true
-## A single scalar, so a plain export rather than a one-field Resource, which
-## would be ceremony without benefit.
+## Multiplier on base gravity while clinging to a wall. Low values give a slow,
+## controlled slide; 0.0 would stick to the wall entirely. A single scalar, so
+## a plain export rather than a one-field Resource, which would be ceremony.
 @export var wall_gravity_mult: float = 0.1
 
 ## Public: read by the owner's animation contract.

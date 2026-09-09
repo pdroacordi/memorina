@@ -1,11 +1,8 @@
-[gd_resource type="Resource" script_class="RollStats" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="RollStats" format=3 uid="uid://bt1aa5s6xblif"]
 
-[ext_resource type="Script" path="res://resources/characters/roll_stats.gd" id="1_rollstats"]
+[ext_resource type="Script" uid="uid://cb7qs4ofj7kqt" path="res://resources/characters/roll_stats.gd" id="1_rollstats"]
 
 [resource]
 script = ExtResource("1_rollstats")
-roll_time = 0.3
-roll_distance = 128.0
-roll_cooldown = 0.5
-roll_coyote_time_max = 0.12
-roll_buffer_max = 0.12
+roll_time = 0.3703703
+roll_recovery_time = 0.1

@@ -9,6 +9,10 @@ extends Node
 func spawn_jump_dust(at: Vector2) -> void:
 	_spawn(jump_particles, at)
 
+# _impact_speed is unused, but must stay in the signature: ivo.tscn connects
+# Player's hard_landed(position, impact_speed) signal directly to this method,
+# and trimming the parameter would silently break that editor connection.
+# TODO: scale the landing dust (size/count) by impact speed for harder landings.
 func spawn_land_dust(at: Vector2, _impact_speed: float) -> void:
 	_spawn(land_particles, at)
 

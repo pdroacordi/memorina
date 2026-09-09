@@ -13,6 +13,10 @@ Bias hard toward object-oriented design and SOLID/KISS. Concretely, in Godot ter
 - **Resources for interchangeable data/behavior (Strategy).** Data-driven variation (e.g. per-guardian attack patterns, per-season note-sequence definitions) belongs in custom `Resource` subclasses, not in branching logic inside a single script.
 - **Shallow scene trees.** If a scene's node hierarchy is growing deep to express behavior rather than actual spatial/rendering structure, that's a sign to extract a script or sub-scene instead.
 - **No god-classes, no god-autoloads.** Autoload singletons are for genuinely global state (e.g. game progress) — keep them thin, delegate logic elsewhere.
+- **The character substrate.** `Character extends CharacterBody2D` (`scenes/characters/character.gd`) is the shared base. It owns only what every character has: facing, gravity, health/hurtbox wiring, knockback, and `_physics_process` as a template method (`_process_motion` -> `move_and_slide()` -> `_after_move`). Subclasses override those two hooks rather than `_physics_process`.
+- `CharacterController extends Node` (`scenes/characters/character_controller.gd`) supplies movement intent. `PlayerInput` is one; enemy AI will be another. A `Character` never learns where its intent comes from. Its `direction` property uses the `get = _get_direction` form rather than an inline getter, because an inline getter cannot be overridden by a subclass.
+- Behaviour split rule: generic behaviour goes in `scenes/characters/components/`; anything gated by `Enums.PlayerSkill` is a player ABILITY and goes in `scenes/characters/ivo/abilities/` instead, so enemies never inherit abilities they cannot use.
+- The skill gate is pushed onto ability components via a plain `enabled` flag at the moment the ability is attempted. Components never reference `SaveSystem`.
 
 ## GDScript conventions
 
@@ -21,6 +25,13 @@ Bias hard toward object-oriented design and SOLID/KISS. Concretely, in Godot ter
 - **Code identifiers are English**, even where they name a design concept described in Portuguese in `docs/design/` (e.g. the "Congelar" sequence → `freeze_sequence`, not `congelar`). Keep a mental (or eventually written) glossary mapping design-doc terms to their code names as they get implemented.
 - **Class body order** (official GDScript style guide): annotations → `class_name` → `extends` → docstring → signals/enums/consts → exported vars → other vars → `@onready` vars → `_init()`/static methods → virtual methods (`_ready`, `_process`, etc.) → public methods → private methods → inner classes.
 - Tabs for indentation, double quotes for strings, trailing commas in multi-line literals — standard Godot style guide.
+
+## The animation contract
+
+- `ivo.tscn`'s `AnimationTree` drives its transitions through `advance_expression` strings that call methods on the `Player` node by name: `wants_to_move`, `is_jumping`, `is_rising`, `is_falling`, `is_wall_sliding`, `is_rolling`, plus the built-in `is_on_floor`. (`move_axis()` and `is_recovering()` feed `wants_to_move()` and the rest of `player.gd` internally, but are not themselves bound as `advance_expression` strings.)
+- Renaming, removing or changing the semantics of any of the directly-bound methods breaks animation SILENTLY at runtime — no compile error, no warning. The scene and the script must be changed together.
+- Roll i-frames come from a `Hurtbox:monitorable` keyframe baked into the roll animation, not from script. So the roll animation's LENGTH and `roll_time + roll_recovery_time` are coupled and must be kept equal; if they drift, the character is either invulnerable while back in control or vulnerable while still visibly rolling.
+- When a component takes over logic that previously emitted a signal from `Player`, `Player` must RE-EMIT that signal, because `ivo.tscn`'s connections are declared with `from="."`. This is why `Player` relays `jumped`, `double_jumped` and `hard_landed`.
 
 ## Internationalization
 
@@ -33,17 +44,32 @@ Bias hard toward object-oriented design and SOLID/KISS. Concretely, in Godot ter
 
 **Every file and folder is lowercase `snake_case`** — no spaces, no PascalCase, no kebab-case. `res://` paths are case-sensitive on Linux/web exports, so mixed casing produces builds that work on Windows and break everywhere else.
 
-- `scenes/characters/<name>/` — one folder per character, containing its scene(s) *and* its scripts (e.g. `scenes/characters/player/`).
+- `globals/` — autoload singletons and global enums (`save_system.gd`, `enums.gd`, `player_data.gd`). These are scripts with no owning scene, which is why they are exempt from the "scripts live beside their scene" rule below.
+- `scenes/characters/` (the root itself) — the generic character substrate shared by every character: `character.gd`, `character_controller.gd`, `character_state_machine.gd`.
+- `scenes/characters/components/` — reusable behaviour components any character can mount (locomotion, jump, landing).
+- `scenes/characters/<name>/` — one folder per character, containing its scene(s) *and* its scripts (e.g. `scenes/characters/ivo/`).
+- `scenes/characters/<name>/abilities/` — components specific to ONE character, e.g. gated player abilities.
+- `scenes/combat/<kind>/` — hurtbox, hitbox, health.
 - `scenes/world/` — `game.tscn`, the main scene: the composition root holding player, camera and HUD, and swapping levels underneath.
 - `scenes/particles/<kind>/` — reusable one-shot effect scenes, spawned by whoever triggers them.
 - `assets/sprites/<category>/<name>/` — art, mirroring the `scenes/` layout (e.g. `assets/sprites/characters/ivo/`).
-- `resources/` — custom `Resource` data assets (currently placeholders).
+- `resources/` — custom `Resource` SCRIPTS defining tuning data plus the `.tres` instances of them, e.g. `resources/characters/`. Both the class definitions and their data live here; the exception is `player_data.gd`, which is the save-file schema owned by the `SaveSystem` autoload and so lives in `globals/` instead.
 - `docs/design/` — design docs (lore, mechanics), source of truth for game intent.
 
 **Scripts live beside the scene they belong to — never in a shared `scripts/` folder.** Grouping is by feature, not by file type. A `scripts/` directory would make every new file a coin flip between two conventions.
+
+**Rooms are a three-level pattern** — easy to get wrong, so spelled out explicitly:
+
+```
+scenes/world/rooms/<region>.tscn                            composition: places the rooms
+scenes/world/rooms/<region>/<room>.tscn                     the Room trigger (Area2D, room.gd), with contents_scene exported
+scenes/world/rooms/<region>/contents/<room>_contents.tscn   the actual tilemap/background, loaded lazily
+```
+
+The `_contents` suffix exists specifically so the two `<room>.tscn` files are distinguishable by filename alone.
 
 Rename and move files **from inside the Godot editor** (FileSystem dock), so it rewrites `uid://` references, `path=` entries and `.import` sidecars for you.
 
 ## Known gaps (not yet implemented)
 
-- Input map (`project.godot`) only defines `move_left`, `move_right`, `jump`. The design calls for attack, open-notebook, pause, "sacar Memorina," open-map, and directional ocarina input — add these when that work actually starts, matching the existing signal-based `PlayerInput` pattern.
+- Input map (`project.godot`) currently defines `move_left`, `move_right`, `jump`, `look_up`, `look_down`, and `roll`. The design still calls for attack, open-notebook, pause, "sacar Memorina," open-map, and directional ocarina input — add these when that work actually starts, matching the existing signal-based `PlayerInput` pattern.
