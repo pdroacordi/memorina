@@ -6,29 +6,14 @@ signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
 
 
-@export_category("Wall Slide")
-@export var wall_gravity_mult : float = 0.1
-
-@export_category("Roll")
-@export var roll_time            : float = 0.3
-@export var roll_distance        : float = 128
-@export var roll_cooldown        : float = 0.5
-@export var roll_coyote_time_max : float = 0.12
-@export var roll_buffer_max      : float = 0.12
-
-var _is_wall_sliding          : bool  = false
-var _roll_timer               : float = 0.0
-var _roll_cooldown_timer      : float = 0.0
-var _roll_coyote_timer        : float = 0.0
-var _roll_buffer_timer        : float = -1.0
-
 @onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
 @onready var _locomotion      : LocomotionComponent = $Locomotion
 @onready var _jump            : JumpComponent = $Jump
 @onready var _landing         : LandingComponent = $Landing
 @onready var _double_jump     : DoubleJumpComponent = $DoubleJump
-@onready var _roll_speed       : float = roll_distance / roll_time
+@onready var _wall_mobility   : WallMobilityComponent = $WallMobility
+@onready var _roll            : RollComponent = $Roll
 
 func _ready() -> void:
 	super()
@@ -41,18 +26,22 @@ func _ready() -> void:
 	_jump.jumped.connect(jumped.emit)
 	_landing.hard_landed.connect(hard_landed.emit)
 	_double_jump.double_jumped.connect(double_jumped.emit)
-	_input.roll_pressed.connect(_on_roll_pressed)
+	_input.roll_pressed.connect(_roll.buffer_roll)
 
 	facing_changed.connect(_on_facing_changed)
 
 	_double_jump.jump = _jump
+	_wall_mobility.jump = _jump
+	_wall_mobility.double_jump = _double_jump
 
 func _process_motion(delta: float) -> void:
 	var on_floor := is_on_floor()
 
 	face_towards(move_axis())
 	_jump.tick_timers(delta, on_floor)
-	_update_timers(delta, on_floor)
+	_roll.tick_timers(delta, on_floor)
+	if on_floor:
+		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
 
 	if is_in_knockback():
@@ -72,7 +61,7 @@ func _after_move(_delta: float) -> void:
 	var on_floor := is_on_floor()
 	_landing.check_landing(on_floor)
 	if on_floor:
-		_is_wall_sliding = false
+		_wall_mobility.stop()
 
 #############################################
 ##  A N I M A T I O N   C O N T R A C T    ##
@@ -100,10 +89,10 @@ func is_recovering() -> bool:
 	return _landing.is_recovering()
 
 func is_wall_sliding() -> bool:
-	return _is_wall_sliding
+	return _wall_mobility.is_sliding
 
 func is_rolling() -> bool:
-	return _roll_timer > 0.0
+	return _roll.is_rolling()
 
 #############################################
 ##  C A M E R A   I N T E N T              ##
@@ -132,9 +121,6 @@ func air_axis() -> float:
 ##  E V E N T S                            ##
 #############################################
 
-func _on_roll_pressed() -> void:
-	_roll_buffer_timer = roll_buffer_max
-
 ## The base owns the facing VALUE; the sprite flip is a per-character visual,
 ## so Player is the one that reacts to the signal rather than the base.
 func _on_facing_changed(new_facing: int) -> void:
@@ -145,7 +131,8 @@ func _on_facing_changed(new_facing: int) -> void:
 #############################################
 
 func _air_physics(delta: float) -> void:
-	if not _wall_slide(delta):
+	_wall_mobility.enabled = _has_unlocked(Enums.PlayerSkill.WALL_CLIMB)
+	if not _wall_mobility.update(delta, move_axis()):
 		_jump.apply_gravity(delta)
 	_locomotion.air_update(delta, move_axis())
 	_landing.sample_fall_speed(velocity.y)
@@ -154,33 +141,27 @@ func _air_physics(delta: float) -> void:
 ##  J U M P I N G                          ##
 #############################################
 
-func _update_timers(delta: float, on_floor: bool) -> void:
-	if on_floor:
-		_double_jump.refresh()
-		_roll_coyote_timer = roll_coyote_time_max
-	else:
-		_roll_coyote_timer = max(_roll_coyote_timer - delta, 0.0)
-
-	if _roll_buffer_timer > 0.0:
-		_roll_buffer_timer -= delta
-
-	if _roll_timer > 0.0:
-		_roll_timer = max(_roll_timer - delta, 0.0)
-		if _roll_timer == 0.0:
-			_roll_cooldown_timer = roll_cooldown
-	elif _roll_cooldown_timer > 0.0:
-		_roll_cooldown_timer = max(_roll_cooldown_timer - delta, 0.0)
-
 func _try_jump(on_floor: bool) -> void:
 	if is_recovering() or not _jump.has_buffered_jump():
 		return
 
-	_refresh_abilities()
+	# The gate is pushed onto the component at the moment its ability is
+	# attempted, so the component never learns SaveSystem exists, nothing is
+	# cached that could go stale, and nothing is queried on frames where it
+	# is not needed.
+	_double_jump.enabled = _has_unlocked(Enums.PlayerSkill.DOUBLE_JUMP)
 
 	if _jump.try_ground_jump(on_floor):
-		_is_wall_sliding = false
+		_wall_mobility.stop()
 	elif _double_jump.try_jump():
-		_is_wall_sliding = false
+		_wall_mobility.stop()
+
+func _try_roll(on_floor: bool) -> void:
+	if not _roll.has_buffered_roll():
+		return
+
+	_roll.enabled = _has_unlocked(Enums.PlayerSkill.ROLL)
+	_roll.try_roll(on_floor, move_axis(), facing)
 
 #############################################
 ##  A B I L I T I E S                      ##
@@ -188,54 +169,3 @@ func _try_jump(on_floor: bool) -> void:
 
 func _has_unlocked(skill: Enums.PlayerSkill) -> bool:
 	return SaveSystem.has_skill(skill)
-
-## Pushes the save-game skill gate onto the ability components, so they never
-## learn SaveSystem exists and stay reusable by anything that wants to switch
-## an ability off. Called at the moment an ability is attempted rather than
-## every frame or cached at unlock time: the first is wasteful, and the second
-## goes stale whenever a skill changes by a path that forgot to announce it.
-func _refresh_abilities() -> void:
-	_double_jump.enabled = _has_unlocked(Enums.PlayerSkill.DOUBLE_JUMP)
-
-func _wall_slide(delta: float) -> bool:
-	if _is_wall_sliding:
-		if not is_on_wall() or sign(get_wall_normal().x) == sign(move_axis()):
-			_is_wall_sliding = false
-		else:
-			velocity.y += base_gravity() * delta * wall_gravity_mult
-			_jump.refresh_coyote()
-			_double_jump.refresh()
-	elif (
-		_has_unlocked(Enums.PlayerSkill.WALL_CLIMB)
-		and is_on_wall()
-		and velocity.y >= 0
-		and sign(move_axis() * -1) == sign(get_wall_normal().x)
-	):
-		_is_wall_sliding = true
-		_jump.refresh_coyote()
-		_double_jump.refresh()
-		velocity.y = min(velocity.y, 0)
-
-	return _is_wall_sliding
-
-func is_roll_on_cooldown() -> bool:
-	return _roll_cooldown_timer > 0.0
-
-func _try_roll(on_floor: bool) -> void:
-	if _roll_buffer_timer <= 0.0:
-		return
-	if not (on_floor or _roll_coyote_timer > 0.0):
-		return
-	if not _has_unlocked(Enums.PlayerSkill.ROLL):
-		return
-	if is_rolling() or is_roll_on_cooldown():
-		return
-
-	_roll_buffer_timer = -1.0
-	_roll_coyote_timer = 0.0
-
-	var direction: float = move_axis()
-	var roll_direction: float = sign(direction) if direction else facing
-
-	velocity.x = roll_direction * _roll_speed
-	_roll_timer = roll_time

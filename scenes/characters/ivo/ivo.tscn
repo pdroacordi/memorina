@@ -23,6 +23,9 @@
 [ext_resource type="Script" uid="uid://by2j228ab5ujm" path="res://scenes/characters/components/landing_component.gd" id="21_landco"]
 [ext_resource type="Resource" path="res://resources/characters/ivo_landing_stats.tres" id="22_landst"]
 [ext_resource type="Script" uid="uid://dhivn75pxqxkr" path="res://scenes/characters/ivo/abilities/double_jump_component.gd" id="23_dbljmp"]
+[ext_resource type="Script" path="res://scenes/characters/ivo/abilities/wall_mobility_component.gd" id="24_wallmo"]
+[ext_resource type="Script" path="res://scenes/characters/ivo/abilities/roll_component.gd" id="25_rollco"]
+[ext_resource type="Resource" path="res://resources/characters/ivo_roll_stats.tres" id="26_rollst"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -822,6 +825,13 @@ stats = ExtResource("22_landst")
 
 [node name="DoubleJump" type="Node" parent="." unique_id=1455903872]
 script = ExtResource("23_dbljmp")
+
+[node name="WallMobility" type="Node" parent="." unique_id=1620774391]
+script = ExtResource("24_wallmo")
+
+[node name="Roll" type="Node" parent="." unique_id=1287449605]
+script = ExtResource("25_rollco")
+stats = ExtResource("26_rollst")
 height = 96.0
 
 [connection signal="double_jumped" from="." to="AnimationTree" method="play_air_spin"]
