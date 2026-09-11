@@ -18,10 +18,10 @@ signal died
 var facing: int = 1
 var _knockback_timer: float = 0.0
 
-@onready var health: Health = $Health
-@onready var hurtbox: Hurtbox = $Hurtbox
-@onready var _base_gravity: float = PhysicsServer2D.area_get_param(get_world_2d().space, PhysicsServer2D.AREA_PARAM_GRAVITY)
-
+@onready var health           : Health = $Health
+@onready var hurtbox          : Hurtbox = $Hurtbox
+@onready var _base_gravity    : float = PhysicsServer2D.area_get_param(get_world_2d().space, PhysicsServer2D.AREA_PARAM_GRAVITY)
+@onready var _sprite          : Sprite2D    = $Sprite2D
 
 func _ready() -> void:
 	hurtbox.hit_received.connect(_on_hit_received)
@@ -49,6 +49,7 @@ func face_towards(axis: float) -> void:
 		return
 
 	facing = new_facing
+	_sprite.flip_h = facing < 0
 	facing_changed.emit(facing)
 
 func base_gravity() -> float:

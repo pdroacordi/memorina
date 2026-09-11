@@ -4,6 +4,10 @@ extends CharacterController
 ## Continuous state is exposed as read-only properties; discrete actions are
 ## signals inherited from CharacterController (see that class for the rule).
 
+signal jump_pressed
+signal jump_canceled
+signal roll_pressed
+
 # Camera-peek intent, deliberately player-only: enemies have no camera, so
 # this stays an inline getter on PlayerInput rather than moving to the base.
 var look_direction: float:

@@ -10,9 +10,6 @@ extends Node
 ## carrying a level value fires every frame and forces consumers to keep a
 ## shadow copy, while a polled property sampled on read never goes stale.
 
-signal jump_pressed
-signal jump_canceled
-signal roll_pressed
 
 # Declared with the overridable getter form (`get = _get_direction`) rather
 # than an inline `get:` block. An inline getter cannot be overridden by a
