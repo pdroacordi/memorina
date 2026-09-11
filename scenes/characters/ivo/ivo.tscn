@@ -17,15 +17,15 @@
 [ext_resource type="PackedScene" path="res://scenes/combat/hurtbox/hurtbox.tscn" id="12_hurtbox"]
 [ext_resource type="Script" uid="uid://dsp4w4pojjffd" path="res://scenes/combat/health/health.gd" id="16_uw5th"]
 [ext_resource type="Script" uid="uid://dfbu5a2uchyf5" path="res://scenes/characters/components/locomotion_component.gd" id="17_locomo"]
-[ext_resource type="Resource" path="res://resources/characters/ivo_locomotion_stats.tres" id="18_locsta"]
+[ext_resource type="Resource" path="res://resources/characters/ivo/ivo_locomotion_stats.tres" id="18_locsta"]
 [ext_resource type="Script" uid="uid://daaq7eenqes6" path="res://scenes/characters/components/jump_component.gd" id="19_jumpco"]
-[ext_resource type="Resource" path="res://resources/characters/ivo_jump_stats.tres" id="20_jumpst"]
+[ext_resource type="Resource" path="res://resources/characters/ivo/ivo_jump_stats.tres" id="20_jumpst"]
 [ext_resource type="Script" uid="uid://by2j228ab5ujm" path="res://scenes/characters/components/landing_component.gd" id="21_landco"]
-[ext_resource type="Resource" path="res://resources/characters/ivo_landing_stats.tres" id="22_landst"]
+[ext_resource type="Resource" path="res://resources/characters/ivo/ivo_landing_stats.tres" id="22_landst"]
 [ext_resource type="Script" uid="uid://dhivn75pxqxkr" path="res://scenes/characters/ivo/abilities/double_jump_component.gd" id="23_dbljmp"]
 [ext_resource type="Script" uid="uid://bfmaiomoodp63" path="res://scenes/characters/ivo/abilities/wall_mobility_component.gd" id="24_wallmo"]
 [ext_resource type="Script" uid="uid://2atcgqadtkah" path="res://scenes/characters/ivo/abilities/roll_component.gd" id="25_rollco"]
-[ext_resource type="Resource" uid="uid://bt1aa5s6xblif" path="res://resources/characters/ivo_roll_stats.tres" id="26_rollst"]
+[ext_resource type="Resource" uid="uid://bt1aa5s6xblif" path="res://resources/characters/ivo/ivo_roll_stats.tres" id="26_rollst"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -832,3 +832,5 @@ stats = ExtResource("26_rollst")
 [connection signal="double_jumped" from="." to="AnimationTree" method="play_air_spin"]
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]
 [connection signal="jumped" from="." to="DustEmitter" method="spawn_jump_dust"]
+
+[editable path="Hurtbox"]
