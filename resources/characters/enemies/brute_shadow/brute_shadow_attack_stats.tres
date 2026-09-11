@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="BruteShadowAttackStats" format=3 uid="uid://dv3deti47enn3"]
+
+[ext_resource type="Script" uid="uid://bru4yr6h3ccgl" path="res://resources/characters/enemies/brute_shadow/brute_shadow_attack_stats.gd" id="1_attack_stats"]
+
+[resource]
+script = ExtResource("1_attack_stats")
+attack_range = 90.0

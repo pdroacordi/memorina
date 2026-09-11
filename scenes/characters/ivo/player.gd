@@ -5,10 +5,11 @@ signal jumped(position: Vector2)
 signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
 
+const GROUP := "player"
+
 enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 
 
-@onready var _sprite          : Sprite2D    = $Sprite2D
 @onready var _input           : PlayerInput = $PlayerInput
 @onready var _locomotion      : LocomotionComponent = $Locomotion
 @onready var _jump            : JumpComponent = $Jump
@@ -18,6 +19,9 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 @onready var _roll            : RollComponent = $Roll
 
 var _states: CharacterStateMachine
+
+func _enter_tree() -> void:
+	add_to_group(GROUP)
 
 func _ready() -> void:
 	super()
@@ -31,8 +35,6 @@ func _ready() -> void:
 	_landing.hard_landed.connect(hard_landed.emit)
 	_double_jump.double_jumped.connect(double_jumped.emit)
 	_input.roll_pressed.connect(_roll.buffer_roll)
-
-	facing_changed.connect(_on_facing_changed)
 
 	_double_jump.jump = _jump
 	_wall_mobility.jump = _jump
@@ -124,15 +126,6 @@ func air_axis() -> float:
 	if is_on_floor():
 		return 0.0
 	return clampf(velocity.y / _jump.terminal_velocity(), -1.0, 1.0)
-
-#############################################
-##  E V E N T S                            ##
-#############################################
-
-## The base owns the facing VALUE; the sprite flip is a per-character visual,
-## so Player is the one that reacts to the signal rather than the base.
-func _on_facing_changed(new_facing: int) -> void:
-	_sprite.flip_h = new_facing < 0
 
 #############################################
 ##  L O C O M O T I O N                    ##

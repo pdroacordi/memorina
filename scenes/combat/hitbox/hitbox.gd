@@ -4,6 +4,8 @@ extends Area2D
 ## projectile and configure damage/knockback per instance instead of writing
 ## a new script for each one.
 
+@onready var _shape : CollisionShape2D = $CollisionShape2D
+
 @export var damage: int = 1
 @export var knockback_strength: float = 0.0
 ## Upward component, in px/s, added on top of the directional push. Separates
@@ -22,3 +24,7 @@ func _on_area_entered(area: Area2D) -> void:
 		knockback.y -= knockback_lift
 
 	area.receive_hit(damage, knockback, self)
+
+
+func _on_character_facing_changed(facing: int) -> void:
+	_shape.position.x = abs(_shape.position.x) * facing

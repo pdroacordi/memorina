@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="EnemyAIStats" format=3 uid="uid://ddu5nmbx7ign7"]
+
+[ext_resource type="Script" uid="uid://c0p41u7ij06kj" path="res://resources/characters/enemy_ai_stats.gd" id="1_ai_stats"]
+
+[resource]
+script = ExtResource("1_ai_stats")
+max_wander_duration = 5.0
+max_idle_duration = 10.0
