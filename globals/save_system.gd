@@ -36,6 +36,9 @@ func load_game() -> void:
 func has_skill(skill: Enums.PlayerSkill) -> bool:
 	return player_data.unlocked_player_skills[skill]
 
+func has_item(item: Enums.PlayerItem) -> bool:
+	return player_data.owned_items[item]
+
 func is_enemy_defeated(save_id: String) -> bool:
 	return _defeated_enemies.has(save_id)
 

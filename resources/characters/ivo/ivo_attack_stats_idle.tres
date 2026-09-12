@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="AttackStats" format=3 uid="uid://cgqoorymjd3tj"]
+
+[ext_resource type="Script" uid="uid://c74a2eg5c0050" path="res://resources/characters/combat/attack_stats.gd" id="1_stats"]
+[ext_resource type="Script" uid="uid://cbvmufoadl5xd" path="res://resources/characters/combat/attack_phase_data.gd" id="2_phase"]
+
+[sub_resource type="Resource" id="Resource_idle1"]
+script = ExtResource("2_phase")
+state_name = &"attack_idle_1"
+duration = 0.41666666
+combo_window = 0.4
+knockback_strength = 300.0
+knockback_lift = 50.0
+
+[sub_resource type="Resource" id="Resource_idle2"]
+script = ExtResource("2_phase")
+state_name = &"attack_idle_2"
+duration = 0.33333334
+combo_window = 0.0
+damage = 2
+knockback_strength = 600.0
+knockback_lift = 60.0
+
+[resource]
+script = ExtResource("1_stats")
+phases = Array[ExtResource("2_phase")]([SubResource("Resource_idle1"), SubResource("Resource_idle2")])

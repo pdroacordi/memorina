@@ -4,6 +4,7 @@ extends CharacterController
 ## Continuous state is exposed as read-only properties; discrete actions are
 ## signals inherited from CharacterController (see that class for the rule).
 
+signal attack_pressed
 signal jump_pressed
 signal jump_canceled
 signal roll_pressed
@@ -20,6 +21,8 @@ func _input(event: InputEvent) -> void:
 		jump_canceled.emit()
 	if event.is_action_pressed("roll"):
 		roll_pressed.emit()
+	if event.is_action_pressed("attack"):
+		attack_pressed.emit()
 
 func _get_direction() -> float:
 	return Input.get_axis("move_left", "move_right")

@@ -12,3 +12,11 @@ enum PlayerSkill {
 	WALL_CLIMB,
 	ROLL
 }
+
+## Possessions, as opposed to PlayerSkill's permanent unlocks: an item can be
+## granted and later taken away, so unlike skills this array's values are NOT
+## expected to be monotonic. Member order is still append-only for the same
+## reason as PlayerSkill - it indexes PlayerData.owned_items in the save file.
+enum PlayerItem {
+	SWORD
+}
