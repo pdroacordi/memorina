@@ -19,6 +19,12 @@
 [ext_resource type="Script" uid="uid://bfq1y7u2miaut" path="res://scenes/characters/components/player_proximity_trigger.gd" id="20_spawntrigger"]
 [ext_resource type="Resource" uid="uid://dv3deti47enn3" path="res://resources/characters/enemies/brute_shadow/brute_shadow_attack_stats.tres" id="21_attackstats"]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rxs28"]
+radius = 18.0
+height = 52.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3v0ji"]
+
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 18.0
 height = 50.0
@@ -526,12 +532,11 @@ radius = 366.0123
 [sub_resource type="CircleShape2D" id="CircleShape2D_spawn"]
 radius = 200.0
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_3v0ji"]
-
 [node name="BruteShadow" type="CharacterBody2D" unique_id=1573815107]
 collision_layer = 65536
 script = ExtResource("1_hrlur")
 save_id = "downtown_brute_shadow"
+knockback_time = 1.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1693411011]
 position = Vector2(0, -64)
@@ -539,11 +544,40 @@ scale = Vector2(-1, 1)
 texture = ExtResource("2_2j62b")
 hframes = 6
 
+[node name="CollisionHitbox" type="Area2D" parent="." unique_id=1060329776]
+collision_layer = 0
+collision_mask = 512
+monitorable = false
+script = ExtResource("17_jk4e0")
+knockback_strength = 400.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CollisionHitbox" unique_id=1318055383]
+position = Vector2(1, -25)
+shape = SubResource("CapsuleShape2D_rxs28")
+debug_color = Color(1.4439226e-07, 0.6322211, 0.4572487, 0.41960785)
+
+[node name="Hitbox" type="Area2D" parent="." unique_id=264723052]
+visible = false
+collision_layer = 0
+collision_mask = 512
+monitoring = false
+monitorable = false
+script = ExtResource("17_jk4e0")
+knockback_strength = 500.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1440730385]
+position = Vector2(36.000008, -35)
+rotation = -1.6755161
+scale = Vector2(3.475, 6.685)
+shape = SubResource("CircleShape2D_3v0ji")
+debug_color = Color(0.930275, 0.2307421, 0.33968982, 0.41960785)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=64234537]
 position = Vector2(1, -25)
 shape = SubResource("CapsuleShape2D_ynyct")
 
 [node name="Hurtbox" parent="." unique_id=1960028172 instance=ExtResource("3_mycaq")]
+collision_layer = 65536
 
 [node name="CollisionShape2D" parent="Hurtbox" index="0"]
 position = Vector2(-2, -25)
@@ -568,6 +602,7 @@ script = ExtResource("17_locomo")
 stats = ExtResource("12_l4ju7")
 
 [node name="EnemySight" type="Area2D" parent="." unique_id=2061902140]
+visible = false
 collision_layer = 0
 collision_mask = 256
 monitorable = false
@@ -580,6 +615,7 @@ shape = SubResource("CircleShape2D_sight")
 position = Vector2(0, -27)
 
 [node name="SpawnTrigger" type="Area2D" parent="." unique_id=184875856]
+visible = false
 collision_layer = 0
 collision_mask = 256
 monitorable = false
@@ -593,23 +629,8 @@ script = ExtResource("13_i1ww4")
 attack_stats = ExtResource("21_attackstats")
 stats = ExtResource("19_aistats")
 
-[node name="Hitbox" type="Area2D" parent="." unique_id=264723052]
-visible = false
-collision_layer = 0
-collision_mask = 512
-monitoring = false
-monitorable = false
-script = ExtResource("17_jk4e0")
-knockback_strength = 500.0
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1440730385]
-position = Vector2(36.000008, -35)
-rotation = -1.6755161
-scale = Vector2(3.475, 6.685)
-shape = SubResource("CircleShape2D_3v0ji")
-debug_color = Color(0.930275, 0.2307421, 0.33968982, 0.41960785)
-
 [connection signal="facing_changed" from="." to="Hitbox" method="_on_character_facing_changed"]
+[connection signal="area_entered" from="CollisionHitbox" to="CollisionHitbox" method="_on_area_entered"]
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]
 
 [editable path="Hurtbox"]
