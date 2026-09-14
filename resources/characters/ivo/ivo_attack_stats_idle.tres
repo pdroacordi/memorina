@@ -8,7 +8,7 @@ script = ExtResource("2_phase")
 state_name = &"attack_idle_1"
 duration = 0.41666666
 combo_window = 0.4
-knockback_strength = 300.0
+knockback_strength = 200.0
 knockback_lift = 50.0
 
 [sub_resource type="Resource" id="Resource_idle2"]
@@ -17,7 +17,7 @@ state_name = &"attack_idle_2"
 duration = 0.33333334
 combo_window = 0.0
 damage = 2
-knockback_strength = 600.0
+knockback_strength = 300.0
 knockback_lift = 60.0
 
 [resource]

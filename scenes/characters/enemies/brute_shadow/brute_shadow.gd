@@ -1,29 +1,19 @@
 class_name BruteShadow
 extends Enemy
-## BruteShadow doesn't exist to the player until they wander close enough.
-## The actual "play the spawn animation now" decision lives entirely in the
-## AnimationTree's own Start -> spawn transition (advance_expression =
-## "should_spawn()", see brute_shadow.tscn) — this script only flips the flag
-## that expression reads, plus handles what isn't animation-graph business:
-## staying hidden/inert until then, and resuming physics once the spawn
-## clip's known duration has elapsed. Not on Enemy/EnemyAI since this isn't
-## true of every common enemy.
-
-## Matches the "spawn" animation's length (brute_shadow.tscn). Timer-based
-## rather than AnimationPlayer.animation_finished: that signal reflects
-## direct play() calls on the AnimationPlayer, not animations driven through
-## the AnimationNodeStateMachine, so it never fires for this.
-@export var spawn_duration: float = 0.75
+## BruteShadow doesn't exist to the player until they wander close enough:
+## hidden and inert until the spawn trigger fires, rooted in place while the
+## spawn clip plays, and only then handed to the AI. Not on Enemy/EnemyAI
+## since this isn't true of every common enemy.
 
 @onready var _spawn_trigger : PlayerProximityTrigger = $SpawnTrigger
-@onready var _anim_tree     : AnimationTree = $AnimationTree
+@onready var _anim_tree     : AnimationTree = %AnimationTree
 ## Enemy already holds $AI as the generic AIController; this is a second,
-## more specific reference so BruteShadow's own animation contract (below)
-## can read attack state without widening AIController's generic contract.
+## more specific reference for the attack state the animation needs.
 @onready var _brute_ai      : BruteShadowAI = $AI
+## Likewise a concrete view of Character's generic resolver, for spawn.
+@onready var _brute_resolver: BruteShadowAnimationResolver = $AnimationResolver
 
-var _player_near: bool = false
-var _spawn_timer: float = 0.0
+var _spawn_done: bool = false
 
 
 func _ready() -> void:
@@ -31,39 +21,38 @@ func _ready() -> void:
 	if is_queued_for_deletion():
 		return
 	hide()
+	# Hurtbox:monitorable has a RESET track, so the tree would own it — it is
+	# kept inactive until spawn precisely so this write sticks while hidden.
 	hurtbox.monitorable = false
 	set_physics_process(false)
-	set_process(false)
-	_anim_tree.active = true
 	_spawn_trigger.player_entered.connect(_on_player_entered)
+	_assert_clip_length(BruteShadowAnimationResolver.ATTACK, _brute_ai.attack_stats.attack_duration)
 
-## Only running during the spawn window (see set_process calls below) — the
-## "wait for the spawn clip to finish" clock.
-func _process(delta: float) -> void:
-	_spawn_timer -= delta
-	if _spawn_timer <= 0.0:
-		set_physics_process(true)
-		set_process(false)
+func is_spawning() -> bool:
+	return not _spawn_done
 
-## Read by the Start -> spawn transition's advance_expression in
-## brute_shadow.tscn. Renaming this or changing what it means breaks that
-## transition SILENTLY, same rule as Player's animation contract.
-func should_spawn() -> bool:
-	return _player_near
+func is_attacking() -> bool:
+	return _brute_ai.is_attacking
+
+func wants_to_move() -> bool:
+	return not is_zero_approx(_brute_ai.direction)
+
+func _process_motion(delta: float) -> void:
+	if is_spawning():
+		return
+	super(delta)
+
+func _after_move(delta: float) -> void:
+	if is_spawning():
+		_spawn_done = _brute_resolver.is_spawn_finished()
+		return
+	super(delta)
 
 func _on_player_entered() -> void:
-	_player_near = true
 	show()
-	_spawn_timer = spawn_duration
-	set_process(true)
+	_anim_tree.active = true
+	set_physics_process(true)
 
-#############################################
-##  A N I M A T I O N   C O N T R A C T    ##
-#############################################
-## brute_shadow.tscn's AnimationTree calls these by NAME from
-## advance_expression strings. Renaming one, or changing what it means,
-## breaks animation SILENTLY at runtime — no compile error, no warning.
-## Change the scene and this script together.
-
-func should_attack() -> bool:
-	return _brute_ai.is_attacking
+func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
+	super(damage, knockback, source)
+	_brute_ai.cancel_attack()

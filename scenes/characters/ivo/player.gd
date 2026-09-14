@@ -7,6 +7,16 @@ signal hard_landed(position: Vector2, impact_speed: float)
 
 const GROUP := "player"
 
+## Which AttackStats a sequence was started with. Gameplay, not animation:
+## one context spans several clips (a combo), and the resolver maps between.
+const CTX_IDLE := &"idle"
+const CTX_RUN := &"run"
+const CTX_JUMP := &"jump"
+const CTX_FALL := &"fall"
+const CTX_POGO := &"pogo"
+const ATTACK_CONTEXTS: Array[StringName] = [CTX_IDLE, CTX_RUN, CTX_JUMP, CTX_FALL, CTX_POGO]
+const AIR_ATTACK_CONTEXTS: Array[StringName] = [CTX_JUMP, CTX_FALL, CTX_POGO]
+
 enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 
 
@@ -20,6 +30,8 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 @onready var _attack          : AttackComponent = $Attack
 @onready var _pogo            : PogoComponent = $Pogo
 @onready var _hitbox          : Hitbox = $Hitbox
+## A concrete view of Character's generic resolver, for the duration assert.
+@onready var _player_resolver : PlayerAnimationResolver = $AnimationResolver
 
 ## Per-sequence tuning data Ivo picks from at attack-start; a boss composing
 ## the same AttackComponent would never need this idle/run/air split.
@@ -31,12 +43,16 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 
 var _states: CharacterStateMachine
 ## Which AttackStats the current sequence started with, held fixed for its
-## whole duration - the AnimationTree polls this to pick idle vs run vs the
+## whole duration - _attack_clip() reads it to pick idle vs run vs the
 ## single-phase air states. Empty string while not attacking.
 var _attack_context: StringName = &""
 ## Overlapping safe-room/NPC zones must combine additively: exiting an inner
 ## zone while still inside an outer one must not re-enable combat.
 var _combat_disable_count: int = 0
+## A double jump has no lasting gameplay state of its own — afterwards Ivo is
+## simply rising — so the event is exposed as a one-frame pulse. It fires
+## inside _process_motion, so it is cleared at the top of the next one.
+var _just_double_jumped: bool = false
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -51,7 +67,7 @@ func _ready() -> void:
 	# untouched, so moving logic into a component never costs a scene edit.
 	_jump.jumped.connect(jumped.emit)
 	_landing.hard_landed.connect(hard_landed.emit)
-	_double_jump.double_jumped.connect(double_jumped.emit)
+	_double_jump.double_jumped.connect(_on_double_jumped)
 	_input.roll_pressed.connect(_roll.buffer_roll)
 	_input.attack_pressed.connect(_attack.buffer_attack)
 	_attack.phase_started.connect(_on_attack_phase_started)
@@ -71,7 +87,15 @@ func _ready() -> void:
 	_states.add_state(MotionState.GROUND, _ground_motion)
 	_states.add_state(MotionState.AIR, _air_physics)
 
+	_assert_clip_durations()
+
 func _process_motion(delta: float) -> void:
+	_just_double_jumped = false
+	if is_dead():
+		# A corpse still falls and stops sliding; nothing else.
+		_knockback_motion(delta)
+		return
+
 	var on_floor := is_on_floor()
 
 	face_towards(move_axis())
@@ -97,25 +121,21 @@ func _after_move(_delta: float) -> void:
 		_wall_mobility.stop()
 
 #############################################
-##  A N I M A T I O N   C O N T R A C T    ##
+##  S T A T E   Q U E R I E S              ##
 #############################################
-## ivo.tscn's AnimationTree calls these by NAME, from advance_expression
-## strings. Renaming one, or changing what it means, breaks animation SILENTLY
-## at runtime — no compile error, no warning. Change the scene and the script
-## together. The bound names are exactly:
-##   wants_to_move, is_jumping, is_rising, is_falling, is_wall_sliding,
-##   is_rolling, is_attacking, attack_phase_index, attack_context, and the
-##   built-in is_on_floor.
-## move_axis() and is_recovering() are NOT bound directly — they feed the ones
-## that are, so renaming those two fails loudly at compile time instead.
+## Read by PlayerAnimationResolver (and the camera); no animation logic here.
+
+func _assert_clip_durations() -> void:
+	_assert_clip_length(PlayerAnimationResolver.ROLL, _roll.stats.roll_time + _roll.stats.roll_recovery_time)
+	for context in ATTACK_CONTEXTS:
+		var stats := _attack_stats_for(context)
+		for i in stats.phases.size():
+			_assert_clip_length(_player_resolver.attack_clip_for(context, i), stats.phases[i].duration)
 
 func move_axis() -> float:
 	if is_recovering() or is_rolling() or is_in_knockback():
 		return 0.0
-	# Only the standing-still combo plants Ivo in place; the run-context combo
-	# already keeps moving, and all three air attacks (jump/fall/pogo) must
-	# keep horizontal control too, or landing a pogo chain becomes impossible.
-	if is_attacking() and _attack_context == &"idle":
+	if is_attacking() and _attack_context == CTX_IDLE:
 		return 0.0
 	return _input.direction
 
@@ -127,9 +147,6 @@ func is_jumping() -> bool:
 
 func is_rising() -> bool:
 	return velocity.y < 0.0
-
-func is_falling() -> bool:
-	return not is_on_floor() and not _jump.is_jumping
 
 func is_recovering() -> bool:
 	return _landing.is_recovering()
@@ -149,6 +166,12 @@ func attack_phase_index() -> int:
 func attack_context() -> StringName:
 	return _attack_context
 
+func just_landed() -> bool:
+	return _landing.just_landed()
+
+func just_double_jumped() -> bool:
+	return _just_double_jumped
+
 #############################################
 ##  C A M E R A   I N T E N T              ##
 #############################################
@@ -164,9 +187,6 @@ func look_axis() -> float:
 		return 0.0
 	return _input.look_direction
 
-## Automatic vertical lead in [-1, 1], proportional to fall speed — negative
-## while rising, positive while falling, 0.0 on the ground. Lets the camera show
-## where the character is heading rather than where they are.
 func air_axis() -> float:
 	if is_on_floor():
 		return 0.0
@@ -176,8 +196,6 @@ func air_axis() -> float:
 ##  L O C O M O T I O N                    ##
 #############################################
 
-## Mirrors the original branch order exactly: knockback overrides
-## everything, then rolling, then ground vs air.
 func _select_motion_state(on_floor: bool) -> MotionState:
 	if is_in_knockback():
 		return MotionState.KNOCKBACK
@@ -189,10 +207,6 @@ func _knockback_motion(delta: float) -> void:
 	_jump.apply_gravity(delta)
 	apply_knockback_decay(delta)
 
-## The roll component owns horizontal velocity for its whole duration, but
-## vertical still belongs to gravity — otherwise rolling off a ledge hangs in
-## the air until the roll expires. The component decelerates horizontally on
-## its own once its movement phase ends, sliding to a stop through recovery.
 func _roll_motion(delta: float) -> void:
 	_jump.apply_gravity(delta)
 	_roll.update(delta)
@@ -212,23 +226,19 @@ func _air_physics(delta: float) -> void:
 #############################################
 
 func _try_jump(on_floor: bool) -> void:
-	# Rolling commits: the roll owns velocity for its whole duration, so
-	# jumping out of it mid-way would fight that and skip the recovery the
-	# cooldown is meant to enforce. The buffer keeps ticking during the roll,
-	# so a jump pressed near the end still fires the moment it finishes.
 	if is_recovering() or is_rolling() or not _jump.has_buffered_jump() or is_attacking():
 		return
 
-	# The gate is pushed onto the component at the moment its ability is
-	# attempted, so the component never learns SaveSystem exists, nothing is
-	# cached that could go stale, and nothing is queried on frames where it
-	# is not needed.
 	_double_jump.enabled = _has_unlocked(Enums.PlayerSkill.DOUBLE_JUMP)
 
 	if _jump.try_ground_jump(on_floor):
 		_wall_mobility.stop()
 	elif _double_jump.try_jump():
 		_wall_mobility.stop()
+
+func _on_double_jumped(jump_position: Vector2) -> void:
+	_just_double_jumped = true
+	double_jumped.emit(jump_position)
 
 func _try_roll(on_floor: bool) -> void:
 	if is_attacking() or not _roll.has_buffered_roll():
@@ -241,13 +251,6 @@ func _try_roll(on_floor: bool) -> void:
 ##  A T T A C K I N G                      ##
 #############################################
 
-## Resolved here rather than inside the attack_pressed signal handler: the
-## buffer (see AttackComponent.buffer_attack/has_buffered_attack) survives
-## across frames exactly like RollComponent's/JumpComponent's own buffers, so
-## a press that lands mid-roll/recovery/knockback isn't dropped - it fires
-## the instant the gate clears - and reading the movement axis here, after
-## this frame's input events are fully settled, avoids a same-frame race
-## where a key release and the attack press could otherwise be read out of order.
 func _try_attack() -> void:
 	if not _attack.has_buffered_attack():
 		return
@@ -260,16 +263,23 @@ func _try_attack() -> void:
 	if _attack.try_attack(_attack_stats_for(context)):
 		_attack_context = context
 
+func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
+	super(damage, knockback, source)
+	_attack.cancel()
+
 func _on_attack_phase_started(_phase_index: int, phase: AttackPhaseData) -> void:
 	_hitbox.damage = phase.damage
 	_hitbox.knockback_strength = phase.knockback_strength
 	_hitbox.knockback_lift = phase.knockback_lift
+	# A sequence can end and a new one begin in the same frame (a pogo chain),
+	# leaving the clip name unchanged — the swing still has to restart.
+	_animation_driver.request_replay()
 
 ## Only the pogo attack's hit should bounce Ivo upward - the same shared
 ## Hitbox also lands every ground-combo and other air-attack hit, so this is
 ## the one place that knows which attack is currently connecting.
 func _on_hitbox_connected(_target: Hurtbox) -> void:
-	if _attack_context == &"pogo":
+	if _attack_context == CTX_POGO:
 		_pogo.try_bounce()
 
 ## Context is resolved once, at the moment a NEW sequence starts (see
@@ -278,19 +288,19 @@ func _on_hitbox_connected(_target: Hurtbox) -> void:
 func _current_attack_context() -> StringName:
 	if not is_on_floor():
 		if _input.look_direction > 0.0:
-			return &"pogo"
-		return &"jump" if is_rising() else &"fall"
-	return &"run" if wants_to_move() else &"idle"
+			return CTX_POGO
+		return CTX_JUMP if is_rising() else CTX_FALL
+	return CTX_RUN if wants_to_move() else CTX_IDLE
 
 func _attack_stats_for(context: StringName) -> AttackStats:
 	match context:
-		&"run":
+		CTX_RUN:
 			return attack_stats_run
-		&"jump":
+		CTX_JUMP:
 			return attack_stats_jump
-		&"fall":
+		CTX_FALL:
 			return attack_stats_fall
-		&"pogo":
+		CTX_POGO:
 			return attack_stats_pogo
 		_:
 			return attack_stats_idle

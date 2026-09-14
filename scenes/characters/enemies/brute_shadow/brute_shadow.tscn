@@ -8,7 +8,6 @@
 [ext_resource type="Texture2D" uid="uid://cc0sric23bykr" path="res://assets/sprites/characters/enemies/brute_shadow/brute_shadow_death.png" id="5_1blup"]
 [ext_resource type="Texture2D" uid="uid://ttorvnps8n7d" path="res://assets/sprites/characters/enemies/brute_shadow/brute_shadow_hurt.png" id="5_46hrj"]
 [ext_resource type="Texture2D" uid="uid://cmjd5lkytjv1w" path="res://assets/sprites/characters/enemies/brute_shadow/brute_shadow_walk.png" id="5_ndwoh"]
-[ext_resource type="Script" uid="uid://do4mak343gtp6" path="res://scenes/characters/ivo/player_animator.gd" id="11_a2svh"]
 [ext_resource type="Resource" uid="uid://bmxoq34wf0ej8" path="res://resources/characters/enemies/brute_shadow/brute_shadow_locomotion_stats.tres" id="12_l4ju7"]
 [ext_resource type="Script" uid="uid://dyw7rpwpgjhq4" path="res://scenes/characters/enemies/brute_shadow/brute_shadow_ai.gd" id="13_i1ww4"]
 [ext_resource type="Script" uid="uid://dsp4w4pojjffd" path="res://scenes/combat/health/health.gd" id="16_7stmt"]
@@ -18,6 +17,8 @@
 [ext_resource type="Resource" uid="uid://ddu5nmbx7ign7" path="res://resources/characters/enemies/brute_shadow/brute_shadow_ai_stats.tres" id="19_aistats"]
 [ext_resource type="Script" uid="uid://bfq1y7u2miaut" path="res://scenes/characters/components/player_proximity_trigger.gd" id="20_spawntrigger"]
 [ext_resource type="Resource" uid="uid://dv3deti47enn3" path="res://resources/characters/enemies/brute_shadow/brute_shadow_attack_stats.tres" id="21_attackstats"]
+[ext_resource type="Script" uid="uid://cbjw3eoynfrex" path="res://scenes/characters/components/animation_driver.gd" id="22_animdrv"]
+[ext_resource type="Script" path="res://scenes/characters/enemies/brute_shadow/brute_shadow_animation_resolver.gd" id="23_animres"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rxs28"]
 radius = 18.0
@@ -130,6 +131,18 @@ tracks/7/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [false]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("CollisionHitbox:monitoring")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
 }
 
 [sub_resource type="Animation" id="Animation_46hrj"]
@@ -259,6 +272,18 @@ tracks/3/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [true, false]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("CollisionHitbox:monitoring")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_1blup"]
@@ -480,34 +505,6 @@ animation = &"spawn"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_hrlur"]
 animation = &"walk"
 
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_2j62b"]
-switch_mode = 2
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5gp6u"]
-switch_mode = 2
-advance_mode = 2
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8i3fe"]
-advance_mode = 2
-advance_expression = "velocity.x != 0"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_8fs23"]
-advance_mode = 2
-advance_expression = "velocity.x == 0"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_mvcqq"]
-advance_mode = 2
-advance_expression = "should_spawn()"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_attack_in"]
-advance_mode = 2
-advance_expression = "should_attack()"
-
-[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_attack_out"]
-switch_mode = 2
-advance_mode = 2
-
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ks11i"]
 states/End/position = Vector2(895, 102.67212)
 states/Start/position = Vector2(129, 100)
@@ -523,7 +520,6 @@ states/spawn/node = SubResource("AnimationNodeAnimation_bfs2o")
 states/spawn/position = Vector2(255.96698, 100)
 states/walk/node = SubResource("AnimationNodeAnimation_hrlur")
 states/walk/position = Vector2(585.967, 79.67212)
-transitions = ["spawn", "idle", SubResource("AnimationNodeStateMachineTransition_2j62b"), "death", "End", SubResource("AnimationNodeStateMachineTransition_5gp6u"), "idle", "walk", SubResource("AnimationNodeStateMachineTransition_8i3fe"), "walk", "idle", SubResource("AnimationNodeStateMachineTransition_8fs23"), "Start", "spawn", SubResource("AnimationNodeStateMachineTransition_mvcqq"), "idle", "attack", SubResource("AnimationNodeStateMachineTransition_attack_in"), "walk", "attack", SubResource("AnimationNodeStateMachineTransition_attack_in"), "attack", "idle", SubResource("AnimationNodeStateMachineTransition_attack_out")]
 graph_offset = Vector2(-86.03302, -28.32788)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_sight"]
@@ -587,11 +583,17 @@ shape = SubResource("CapsuleShape2D_hrlur")
 libraries/ = SubResource("AnimationLibrary_ra23q")
 
 [node name="AnimationTree" type="AnimationTree" parent="." unique_id=902993815]
+unique_name_in_owner = true
+root_node = NodePath("%AnimationTree/..")
 callback_mode_process = 0
 tree_root = SubResource("AnimationNodeStateMachine_ks11i")
-advance_expression_base_node = NodePath("..")
 anim_player = NodePath("../AnimationPlayer")
-script = ExtResource("11_a2svh")
+
+[node name="AnimationDriver" type="Node" parent="." unique_id=309593944]
+script = ExtResource("22_animdrv")
+
+[node name="AnimationResolver" type="Node" parent="."]
+script = ExtResource("23_animres")
 
 [node name="Health" type="Node" parent="." unique_id=2140526938]
 script = ExtResource("16_7stmt")

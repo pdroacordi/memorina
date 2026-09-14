@@ -4,15 +4,13 @@ extends EnemyAI
 ## melee ATTACK state that takes over once the player is within melee range,
 ## holding direction at 0.0 for the swing's full duration so it can't move or
 ## turn mid-attack. The swing itself (Hitbox timing, sprite frames) is
-## entirely the AnimationTree's business — see brute_shadow.tscn's
-## idle/walk -> attack transitions, gated by BruteShadow.should_attack(),
-## which just reads `is_attacking` below.
+## entirely the attack clip's business; BruteShadowAnimationResolver just
+## reads `is_attacking` below (via BruteShadow.is_attacking()) to pick it.
 
 const ATTACK := 2
 
 @export var attack_stats: BruteShadowAttackStats
 
-## Read by BruteShadow.should_attack() for the animation contract.
 var is_attacking: bool = false
 
 var _attack_timer: float = 0.0
@@ -61,6 +59,13 @@ func _start_attack() -> void:
 	is_attacking = true
 	_attack_timer = attack_stats.attack_duration
 	_current_direction = 0.0
+
+## A hit interrupts the swing; the cooldown still applies so the next one
+## doesn't come the instant the flinch ends.
+func cancel_attack() -> void:
+	if is_attacking:
+		is_attacking = false
+		_attack_cooldown = attack_stats.attack_cooldown
 
 func _in_melee_range() -> bool:
 	return _sight.player != null and _body.global_position.distance_to(_sight.player.global_position) <= attack_stats.attack_range

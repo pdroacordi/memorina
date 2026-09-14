@@ -73,9 +73,14 @@ func tick_timers(delta: float) -> void:
 	if _buffered_next and next_index < _active_stats.phases.size():
 		_start_phase(_active_stats, next_index)
 	else:
-		current_phase_index = -1
-		_active_stats = null
-		attack_finished.emit()
+		_finish()
+
+## Drops the sequence mid-phase (e.g. the owner got hit): otherwise the phase
+## timer keeps running through the interruption and the swing's hitbox timing
+## ends up out of step with whatever clip resumes afterwards.
+func cancel() -> void:
+	if is_attacking():
+		_finish()
 
 func _start_phase(stats: AttackStats, index: int) -> void:
 	_active_stats = stats
@@ -85,3 +90,9 @@ func _start_phase(stats: AttackStats, index: int) -> void:
 	var phase: AttackPhaseData = stats.phases[index]
 	_phase_timer = phase.duration
 	phase_started.emit(index, phase)
+
+func _finish() -> void:
+	current_phase_index = -1
+	_active_stats = null
+	_buffered_next = false
+	attack_finished.emit()
