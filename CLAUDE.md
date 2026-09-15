@@ -37,6 +37,37 @@ Bias hard toward object-oriented design and SOLID/KISS. Concretely, in Godot ter
 - **Durations that must equal a clip's length are asserted at startup** in debug builds (`Character._assert_clip_length`): `roll_time + roll_recovery_time` vs the roll clip, every `AttackPhaseData.duration` vs its swing, `BruteShadowAttackStats.attack_duration` vs `attack`. Retune either side and the assert says which pair drifted.
 - When a component takes over logic that previously emitted a signal from `Player`, `Player` must RE-EMIT that signal, because `ivo.tscn`'s connections are declared with `from="."`. This is why `Player` relays `jumped`, `double_jumped` and `hard_landed`.
 
+## The greyhush (memory field)
+
+The world's state at any point is a memory value from 0 to 1 (`docs/design/03_mundo_e_ambiente.md` sections 2-4). **It is not a colour filter.** A place at 0 is not merely grey, it is STOPPED — a branch caught mid-sway stays caught, and resumes from exactly there when colour returns. Lowering an animation's amplitude would be the wrong fix: that still leaves a cycle running.
+
+- **`MemoryField` (in `game.tscn`, found by group) answers the CPU side; `GreyhushRenderer` feeds the GPU side.** The field never learns it is being drawn, and the renderer is the only place that converts world coordinates into game pixels.
+- **`MemoryFieldMath.disc_influence()` and `disc_influence()` in `greyhush.gdshader` are the same formula written twice**, because GDScript and GLSL cannot share code. Change one and you MUST change the other. Every tunable reaches the shader as a uniform from `MemoryFieldMath`'s constants — never re-type a number into the shader.
+- **The dithered, ragged edge is GPU-only.** The CPU field is a clean disc. Nothing in gameplay may depend on where a ragged sector happened to fall.
+- **The boundary is an ordered (Bayer) dither, never a gradient**, computed in game-pixel space via `UV * game_size` rather than `FRAGCOORD` — the project stretches with integer scaling, so `FRAGCOORD` would dither at window resolution and the speckle would change size with the window.
+- **Environment freezes; characters never.** `MemoryClock` drives a neighbour's `speed_scale` from the field and asserts in `_ready()` that its target has no `Character` ancestor.
+- New field sources (death marks, flashbacks, the hero's aura in the final fight) compose `MemorySource`. New world effects compose `SongReceiver`. Neither requires touching the song, pulse or field code.
+
+## Songs and the Memorina
+
+- **A song is data** (`resources/songs/*.tres`): its id, its season palette, its note sequence and its pulse tuning. Adding one is a `.tres` plus an `Enums.Song` member appended at the end.
+- **`SongMatcher` is pure logic and carries no timing.** The guardian call-and-response needs the same matching with a window on top; that will wrap the matcher and call `reset()`, rather than the matcher growing two modes.
+- **No song's note sequence may be a prefix of another's** — the longer one would become unreachable. `SongCatalog.validate()` asserts this at startup in debug builds.
+- **`MemorinaComponent` holds the instrument's state and nothing else.** Whether Ivo is standing still enough is the body's judgement, pushed in through `try_draw(can_play)` and `interrupt()`, the same way `enabled` carries the item gate.
+- **Interruption reuses the failure vocabulary that already exists.** Being hit or stepping off a ledge mid-sequence emits `sequence_failed`, exactly as a wrong note does — no second kind of failure for the player to learn.
+
+## Testing
+
+gdUnit4 lives in `addons/gdUnit4/`. Pure logic goes in a `RefCounted` class and gets a suite under `tests/`, mirroring its source path.
+
+```
+"<godot>" --headless --path . -s res://addons/gdUnit4/bin/GdUnitCmdTool.gd --ignoreHeadlessMode -a res://tests
+```
+
+`--ignoreHeadlessMode` is required: gdUnit4 refuses headless runs by default because input-driven tests cannot work there. None of these suites use input.
+
+After adding a script with a new `class_name`, run `--headless --path . --import` once, or nothing else will resolve the new type.
+
 ## Internationalization
 
 **This game ships in multiple languages — build for that from the start, don't retrofit it.**
@@ -56,9 +87,18 @@ Bias hard toward object-oriented design and SOLID/KISS. Concretely, in Godot ter
 - `scenes/combat/<kind>/` — hurtbox, hitbox, health.
 - `scenes/world/` — `game.tscn`, the main scene: the composition root holding player, camera and HUD, and swapping levels underneath.
 - `scenes/particles/<kind>/` — reusable one-shot effect scenes, spawned by whoever triggers them.
+- `scenes/world/memory/` — the greyhush: the memory field, its sources, the screen shader that draws it, the clock that stops time inside it, and the colour pulse a song lights.
+- `scenes/world/environment/<kind>/` — ambient set dressing that answers to the memory field (drifting motes, swaying growth). Distinct from `scenes/particles/`, which is fire-and-forget feedback for an action.
+- `scenes/world/interactables/<kind>/` — world objects a song acts on. Each composes a `SongReceiver`; none of them is known to the song system.
+- `scenes/ui/<screen>/` — HUD and menu scenes.
+- `i18n/` — `translations.csv` and the `.translation` files Godot imports from it.
+- `tests/` — gdUnit4 suites, mirroring the path of what they test (`tests/scenes/world/memory/...`).
+- `addons/` — vendored third-party plugins (gdUnit4). Committed, not fetched at build time.
 - `assets/sprites/<category>/<name>/` — art, mirroring the `scenes/` layout (e.g. `assets/sprites/characters/ivo/`).
 - `resources/` — custom `Resource` SCRIPTS defining tuning data plus the `.tres` instances of them, e.g. `resources/characters/`. Both the class definitions and their data live here; the exception is `player_data.gd`, which is the save-file schema owned by the `SaveSystem` autoload and so lives in `globals/` instead.
 - `docs/design/` — design docs (lore, mechanics), source of truth for game intent.
+
+Song and pulse data lives under `resources/songs/` and `resources/memory/`, following the same schema-plus-`.tres` rule as `resources/characters/`.
 
 **Scripts live beside the scene they belong to — never in a shared `scripts/` folder.** Grouping is by feature, not by file type. A `scripts/` directory would make every new file a coin flip between two conventions.
 
@@ -76,4 +116,29 @@ Rename and move files **from inside the Godot editor** (FileSystem dock), so it 
 
 ## Known gaps (not yet implemented)
 
-- Input map (`project.godot`) currently defines `move_left`, `move_right`, `jump`, `look_up`, `look_down`, and `roll`. The design still calls for attack, open-notebook, pause, "sacar Memorina," open-map, and directional ocarina input — add these when that work actually starts, matching the existing signal-based `PlayerInput` pattern.
+- Input map (`project.godot`) defines `move_left`, `move_right`, `jump`, `look_up`, `look_down`, `roll`, `attack`, `draw_memorina` and `note_up`/`note_down`/`note_left`/`note_right`. The design still calls for open-notebook, pause and open-map — add these when that work actually starts, matching the existing signal-based `PlayerInput` pattern.
+- Only `FREEZE` has a world effect (`FreezableWater`). The other seven songs light a pulse and nothing more.
+- Nothing grants `PlayerItem.MEMORINA` or calls `SaveSystem.learn_song()` in-game yet; there are no pickups and no benches, and `save_game()` is still never called. Testing the instrument means granting it from a script or editing `user://save.tres`.
+- The freeze placeholder is on-while-lit. The design's thaw-from-the-origin front, hardening-before-solid, and water reflections are not built.
+- The greyhush shader is screen-space, so it desaturates Ivo along with the world. The lore wants colour to originate from the body in flashbacks and the QTE; excluding characters means giving them their own CanvasLayer, which is not done.
+- `docs/design/03_mundo_e_ambiente.md` section 7 records an unresolved conflict: Winter is described with three sequences (Congelar, Ventania/Nevasca, Hibernação) but the instrument has a fixed eight-slot grid, two per season. `Enums.Song` omits Hibernação until that is settled.
+
+## Glossary (design term → code identifier)
+
+The design docs are written in Portuguese; code identifiers are English. Extend this table whenever a design concept gets implemented.
+
+| Design doc (pt) | Code |
+|---|---|
+| cinzesquecimento / the Greyhush | `greyhush` |
+| campo de memória | `MemoryField` |
+| pulso de cor | `ColorPulse` |
+| sacar / guardar (o instrumento) | `draw` / `sheathe` |
+| Congelar | `Enums.Song.FREEZE` |
+| Ventania / Nevasca | `Enums.Song.BLIZZARD` |
+| Sol Concentrado | `Enums.Song.CONCENTRATED_SUN` |
+| Tempestade Repentina | `Enums.Song.SUDDEN_STORM` |
+| Fragilizar | `Enums.Song.WEAKEN` |
+| Despir | `Enums.Song.STRIP` |
+| Brotar | `Enums.Song.SPROUT` |
+| Eclodir | `Enums.Song.HATCH` |
+| Inverno / Verão / Outono / Primavera | `Enums.Season.WINTER` / `SUMMER` / `AUTUMN` / `SPRING` |
