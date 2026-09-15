@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/memory/color_pulse/color_pulse.gd" id="1"]
+[ext_resource type="Script" path="res://scenes/world/memory/memory_source.gd" id="2"]
+[ext_resource type="Script" path="res://scenes/world/memory/color_pulse/song_area.gd" id="3"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_1"]
+; Local to scene: a PackedScene sub-resource is SHARED by every instantiation,
+; and ColorPulse writes this radius every physics frame. Without this, two
+; overlapping pulses stomp each other's reach and the mutation leaks into the
+; next pulse spawned.
+resource_local_to_scene = true
+radius = 1.0
+
+[node name="ColorPulse" type="Node2D"]
+script = ExtResource("1")
+
+[node name="Source" type="Node2D" parent="."]
+script = ExtResource("2")
+radius = 0.0
+strength = 1.0
+
+[node name="SongArea" type="Area2D" parent="."]
+collision_layer = 1048576
+collision_mask = 0
+monitoring = false
+script = ExtResource("3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SongArea"]
+shape = SubResource("CircleShape2D_1")
