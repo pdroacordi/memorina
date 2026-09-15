@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="SeasonPalette" load_steps=2 format=3 uid="uid://egz8rxapfxb1"]
+
+[ext_resource type="Script" path="res://resources/songs/season_palette.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+season = 0
+tint = Color(0.667, 0.82, 0.95, 1)
+name_key = "SEASON_WINTER"

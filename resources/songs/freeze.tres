@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Song" format=3 uid="uid://ba5q1orby23yt"]
+
+[ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1"]
+[ext_resource type="Resource" uid="uid://eg08rxapfxb1" path="res://resources/songs/palettes/winter_palette.tres" id="2"]
+[ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+palette = ExtResource("2")
+notes = Array[int]([0, 2, 1])
+name_key = "SONG_FREEZE"
+pulse_stats = ExtResource("3")

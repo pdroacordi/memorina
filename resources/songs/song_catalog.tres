@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SongCatalog" format=3 uid="uid://ytstn8cm81ql"]
+
+[ext_resource type="Script" uid="uid://cmm340l563rqh" path="res://resources/songs/song_catalog.gd" id="1"]
+[ext_resource type="Resource" uid="uid://ba5q1orby23yt" path="res://resources/songs/freeze.tres" id="2"]
+[ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="2_exn1g"]
+[ext_resource type="Resource" uid="uid://h68npu3cwi7o" path="res://resources/songs/blizzard.tres" id="3"]
+[ext_resource type="Resource" uid="uid://kulcaftdni1t" path="res://resources/songs/concentrated_sun.tres" id="4"]
+[ext_resource type="Resource" uid="uid://43dahiptpwla" path="res://resources/songs/sudden_storm.tres" id="5"]
+[ext_resource type="Resource" uid="uid://m27ob21mr6ce" path="res://resources/songs/weaken.tres" id="6"]
+[ext_resource type="Resource" uid="uid://0j3wcso7mea4" path="res://resources/songs/strip.tres" id="7"]
+[ext_resource type="Resource" uid="uid://8g3or0qm08xb" path="res://resources/songs/sprout.tres" id="8"]
+[ext_resource type="Resource" uid="uid://cwjko0dgf278" path="res://resources/songs/hatch.tres" id="9"]
+
+[resource]
+script = ExtResource("1")
+songs = Array[ExtResource("2_exn1g")]([ExtResource("2"), ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9")])

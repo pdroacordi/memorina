@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Song" load_steps=4 format=3 uid="uid://0j3wcso7md94"]
+
+[ext_resource type="Script" path="res://resources/songs/song.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/songs/palettes/autumn_palette.tres" id="2"]
+[ext_resource type="Resource" path="res://resources/memory/default_pulse_stats.tres" id="3"]
+
+[resource]
+script = ExtResource("1")
+id = 5
+palette = ExtResource("2")
+notes = Array[int]([1,3,0])
+name_key = "SONG_STRIP"
+pulse_stats = ExtResource("3")
