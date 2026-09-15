@@ -1,0 +1,26 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/memory/memory_clock.gd" id="1"]
+
+[sub_resource type="Gradient" id="Gradient_1"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.7, 1, 1, 1, 0)
+
+[node name="DustMotes" type="CPUParticles2D"]
+amount = 48
+lifetime = 6.0
+preprocess = 3.0
+randomness = 1.0
+emission_shape = 3
+emission_rect_extents = Vector2(220, 90)
+direction = Vector2(1, -0.2)
+spread = 40.0
+gravity = Vector2(0, -3)
+initial_velocity_min = 2.0
+initial_velocity_max = 9.0
+scale_amount_min = 1.0
+scale_amount_max = 2.0
+color_ramp = SubResource("Gradient_1")
+
+[node name="MemoryClock" type="Node" parent="."]
+script = ExtResource("1")
