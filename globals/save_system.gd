@@ -32,12 +32,27 @@ func load_game() -> void:
 		new_game()
 		return
 	player_data = loaded
+	player_data.migrate()
 
 func has_skill(skill: Enums.PlayerSkill) -> bool:
 	return player_data.unlocked_player_skills[skill]
 
 func has_item(item: Enums.PlayerItem) -> bool:
 	return player_data.owned_items[item]
+
+func has_song(song: Enums.Song) -> bool:
+	return player_data.learned_songs[song]
+
+## Restoring a guardian teaches a song. Deliberately does not save: benches are
+## the only save point, so an unsaved death rewinds the lesson along with
+## everything else that happened after the last bench.
+func learn_song(song: Enums.Song) -> void:
+	player_data.learned_songs[song] = true
+
+## Items, unlike skills, can be taken away again - hence the explicit value
+## rather than a grant-only setter. Same no-autosave rule as learn_song().
+func set_item_owned(item: Enums.PlayerItem, owned: bool) -> void:
+	player_data.owned_items[item] = owned
 
 func is_enemy_defeated(save_id: String) -> bool:
 	return _defeated_enemies.has(save_id)
