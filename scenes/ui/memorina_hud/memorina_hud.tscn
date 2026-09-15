@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/memorina_hud/memorina_hud.gd" id="1"]
+[ext_resource type="Resource" path="res://resources/songs/song_catalog.tres" id="2"]
+
+[node name="MemorinaHud" type="Control"]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1")
+catalog = ExtResource("2")
+
+[node name="Panel" type="VBoxContainer" parent="."]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -196.0
+offset_top = -76.0
+offset_right = 196.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+
+[node name="Grid" type="GridContainer" parent="Panel"]
+layout_mode = 2
+columns = 4
+mouse_filter = 2
+
+[node name="Buffer" type="Label" parent="Panel"]
+layout_mode = 2
+horizontal_alignment = 1
+mouse_filter = 2

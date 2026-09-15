@@ -1,0 +1,18 @@
+keys,en,pt_BR
+SEASON_WINTER,Winter,Inverno
+SEASON_SUMMER,Summer,Verão
+SEASON_AUTUMN,Autumn,Outono
+SEASON_SPRING,Spring,Primavera
+SONG_FREEZE,Freeze,Congelar
+SONG_BLIZZARD,Blizzard,Nevasca
+SONG_CONCENTRATED_SUN,Concentrated Sun,Sol Concentrado
+SONG_SUDDEN_STORM,Sudden Storm,Tempestade Repentina
+SONG_WEAKEN,Weaken,Fragilizar
+SONG_STRIP,Strip,Despir
+SONG_SPROUT,Sprout,Brotar
+SONG_HATCH,Hatch,Eclodir
+SONG_LOCKED,---,---
+NOTE_UP,↑,↑
+NOTE_DOWN,↓,↓
+NOTE_LEFT,←,←
+NOTE_RIGHT,→,→
