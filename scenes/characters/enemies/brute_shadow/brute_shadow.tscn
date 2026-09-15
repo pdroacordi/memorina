@@ -18,7 +18,8 @@
 [ext_resource type="Script" uid="uid://bfq1y7u2miaut" path="res://scenes/characters/components/player_proximity_trigger.gd" id="20_spawntrigger"]
 [ext_resource type="Resource" uid="uid://dv3deti47enn3" path="res://resources/characters/enemies/brute_shadow/brute_shadow_attack_stats.tres" id="21_attackstats"]
 [ext_resource type="Script" uid="uid://cbjw3eoynfrex" path="res://scenes/characters/components/animation_driver.gd" id="22_animdrv"]
-[ext_resource type="Script" path="res://scenes/characters/enemies/brute_shadow/brute_shadow_animation_resolver.gd" id="23_animres"]
+[ext_resource type="Script" uid="uid://detcqnxolsw5v" path="res://scenes/characters/enemies/brute_shadow/brute_shadow_animation_resolver.gd" id="23_animres"]
+[ext_resource type="Script" uid="uid://bxrbxt0jji8yt" path="res://scenes/world/memory/greyhush_shield.gd" id="90_shield"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rxs28"]
 radius = 18.0
@@ -592,7 +593,7 @@ anim_player = NodePath("../AnimationPlayer")
 [node name="AnimationDriver" type="Node" parent="." unique_id=309593944]
 script = ExtResource("22_animdrv")
 
-[node name="AnimationResolver" type="Node" parent="."]
+[node name="AnimationResolver" type="Node" parent="." unique_id=435815919]
 script = ExtResource("23_animres")
 
 [node name="Health" type="Node" parent="." unique_id=2140526938]
@@ -630,6 +631,15 @@ shape = SubResource("CircleShape2D_spawn")
 script = ExtResource("13_i1ww4")
 attack_stats = ExtResource("21_attackstats")
 stats = ExtResource("19_aistats")
+
+[node name="GreyhushShield" type="Node2D" parent="." unique_id=576011501]
+position = Vector2(0, -30)
+script = ExtResource("90_shield")
+mode = 0
+radius = 16.0
+height = 18.0
+feather = 12.0
+amount = 0.422
 
 [connection signal="facing_changed" from="." to="Hitbox" method="_on_character_facing_changed"]
 [connection signal="area_entered" from="CollisionHitbox" to="CollisionHitbox" method="_on_area_entered"]

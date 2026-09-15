@@ -1,0 +1,20 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3]
+
+[ext_resource type="Shader" path="res://scenes/world/memory/greyhush_creatures.gdshader" id="1"]
+
+[resource]
+shader = ExtResource("1")
+shader_parameter/baseline = 1.0
+shader_parameter/source_count = 0
+shader_parameter/shield_count = 0
+shader_parameter/game_size = Vector2(640, 360)
+shader_parameter/edge_jaggedness = 0.12
+shader_parameter/edge_sectors = 12.0
+shader_parameter/memory_levels = 6
+shader_parameter/tint_weight = 0.35
+shader_parameter/haze_strength = 0.22
+shader_parameter/haze_color = Color(0.34, 0.37, 0.43, 1)
+shader_parameter/contrast_loss = 0.35
+shader_parameter/vignette_strength = 0.35
+shader_parameter/vignette_start = 0.45
+shader_parameter/vignette_grey_boost = 0.6
