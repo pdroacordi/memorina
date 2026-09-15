@@ -43,6 +43,14 @@ func evict() -> void:
 		_contents_node.queue_free()
 		_contents_node = null
 
+## The region this room belongs to. Rooms are always direct children of their
+## region's composition scene - that is the middle layer of the three-level
+## room pattern - so the parent IS the region.
+func get_region() -> Region:
+	var region := get_parent() as Region
+	assert(region != null, "Room %s is not a child of a Region." % name)
+	return region
+
 ## World-space rectangle the camera is allowed to show.
 func get_bounds() -> Rect2:
 	var shape: RectangleShape2D = _shape_node.shape

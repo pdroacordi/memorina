@@ -9,6 +9,7 @@ const MAX_RESIDENT_ROOMS := 2
 @onready var _fade   : Fade   = %Fade
 @onready var _camera : GameCamera = %Camera2D
 @onready var _player : Node2D = %Player
+@onready var _memory_field : MemoryField = %MemoryField
 var _current_room    : Room
 var _is_transitioning: bool      = false
 
@@ -32,6 +33,9 @@ func _on_player_entered_room(room: Room) -> void:
 		_current_room.deactivate()
 	_current_room = room
 	_current_room.activate()
+	# The greyhush is a regional property, so it follows the room the player is
+	# standing in rather than being set once at startup.
+	_memory_field.baseline = _current_room.get_region().memory_baseline
 	_touch_resident(room)
 	_camera.set_bounds(_current_room.get_bounds())
 	await _fade.to_clear()
