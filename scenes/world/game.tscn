@@ -6,6 +6,15 @@
 [ext_resource type="Script" uid="uid://c0gjegnydjn44" path="res://scenes/world/camera.gd" id="3_r5nxa"]
 [ext_resource type="Script" uid="uid://dudvwafpfnf4a" path="res://scenes/world/game.gd" id="4_game"]
 [ext_resource type="Script" uid="uid://be0v2br7tupo7" path="res://scenes/world/fade.gd" id="6_sarsd"]
+[ext_resource type="Script" path="res://scenes/world/memory/memory_field.gd" id="7_mfield"]
+[ext_resource type="Script" path="res://scenes/world/memory/greyhush_renderer.gd" id="8_greyh"]
+[ext_resource type="Material" path="res://scenes/world/memory/greyhush_material.tres" id="9_greym"]
+[ext_resource type="PackedScene" path="res://scenes/ui/memorina_hud/memorina_hud.tscn" id="10_hud"]
+[ext_resource type="Script" path="res://scenes/world/memory/creature_mask.gd" id="11_cmask"]
+[ext_resource type="Material" path="res://scenes/world/memory/greyhush_creatures_material.tres" id="12_cmat"]
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
+viewport_path = NodePath("CreatureMask")
 
 [node name="Game" type="Node2D" unique_id=585377483]
 script = ExtResource("4_game")
@@ -34,6 +43,17 @@ vertical_smooth_time = 0.5
 [node name="Spawner" type="Node2D" parent="World" unique_id=1572119967]
 script = ExtResource("2_hqfqh")
 
+[node name="MemoryField" type="Node" parent="World" unique_id=1572119968]
+unique_name_in_owner = true
+script = ExtResource("7_mfield")
+
+[node name="CreatureMask" type="SubViewport" parent="." unique_id=873140420]
+size = Vector2i(640, 360)
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+script = ExtResource("11_cmask")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=873140419]
 
 [node name="Control" type="Control" parent="CanvasLayer" unique_id=1191215520]
@@ -42,6 +62,31 @@ anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
 metadata/_edit_use_anchors_ = true
+
+[node name="Greyhush" type="ColorRect" parent="CanvasLayer" unique_id=1302556382]
+unique_name_in_owner = true
+material = ExtResource("9_greym")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("8_greyh")
+creature_pass_path = NodePath("../Creatures")
+
+[node name="Creatures" type="TextureRect" parent="CanvasLayer" unique_id=1302556384]
+texture_filter = 1
+material = ExtResource("12_cmat")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("ViewportTexture_creatures")
+
+[node name="MemorinaHud" parent="CanvasLayer" unique_id=1302556383 instance=ExtResource("10_hud")]
 
 [node name="Fade" type="ColorRect" parent="CanvasLayer" unique_id=1302556381]
 unique_name_in_owner = true
@@ -53,3 +98,9 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 script = ExtResource("6_sarsd")
+
+[connection signal="memorina_drawn" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_drawn"]
+[connection signal="memorina_sheathed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sheathed"]
+[connection signal="note_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_note_played"]
+[connection signal="sequence_failed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_failed"]
+[connection signal="song_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_song_played"]
