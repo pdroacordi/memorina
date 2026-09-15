@@ -41,7 +41,12 @@
 [ext_resource type="Resource" uid="uid://cvtee14vmix4u" path="res://resources/characters/ivo/ivo_attack_stats_fall.tres" id="33_atkfall"]
 [ext_resource type="Resource" uid="uid://beuu286jyddtb" path="res://resources/characters/ivo/ivo_attack_stats_pogo.tres" id="34_atkpogo"]
 [ext_resource type="Script" uid="uid://cbjw3eoynfrex" path="res://scenes/characters/components/animation_driver.gd" id="35_animdrv"]
-[ext_resource type="Script" path="res://scenes/characters/ivo/player_animation_resolver.gd" id="36_animres"]
+[ext_resource type="Script" uid="uid://thow0ds8ajf5" path="res://scenes/characters/ivo/player_animation_resolver.gd" id="36_animres"]
+[ext_resource type="Script" uid="uid://8gecmeed8egy" path="res://scenes/characters/ivo/abilities/memorina_component.gd" id="37_memoco"]
+[ext_resource type="Resource" uid="uid://ytstn8cm81ql" path="res://resources/songs/song_catalog.tres" id="38_songcat"]
+[ext_resource type="Script" uid="uid://bhuyfpecwqve" path="res://scenes/world/memory/color_pulse/pulse_emitter.gd" id="39_pulsem"]
+[ext_resource type="PackedScene" path="res://scenes/world/memory/color_pulse/color_pulse.tscn" id="40_pulsesc"]
+[ext_resource type="Script" uid="uid://bxrbxt0jji8yt" path="res://scenes/world/memory/greyhush_shield.gd" id="41_shield"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -1159,6 +1164,89 @@ tracks/2/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6, 7, 8]
 }
 
+[sub_resource type="Animation" id="Animation_memodraw"]
+resource_name = "memorina_draw"
+length = 0.25
+step = 0.083333336
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_45amr")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.083333336, 0.16666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:hframes")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [10]
+}
+
+[sub_resource type="Animation" id="Animation_memoidle"]
+resource_name = "memorina_idle"
+length = 0.6666667
+loop_mode = 1
+step = 0.083333336
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("2_45amr")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.16666667, 0.33333334, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [2, 3, 4, 3]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:hframes")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [10]
+}
+
 [sub_resource type="Animation" id="Animation_lk6ox"]
 resource_name = "roll"
 length = 0.5833333
@@ -1555,6 +1643,8 @@ _data = {
 &"jump_idle": SubResource("Animation_yxci8"),
 &"jump_start": SubResource("Animation_nvoeu"),
 &"land": SubResource("Animation_u3kw3"),
+&"memorina_draw": SubResource("Animation_memodraw"),
+&"memorina_idle": SubResource("Animation_memoidle"),
 &"roll": SubResource("Animation_lk6ox"),
 &"run": SubResource("Animation_ra23q"),
 &"run_attack_swing_in": SubResource("Animation_7obig"),
@@ -1611,6 +1701,12 @@ animation = &"jump_start"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ikop2"]
 animation = &"land"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_memodraw"]
+animation = &"memorina_draw"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_memoidle"]
+animation = &"memorina_idle"
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ckagk"]
 animation = &"roll"
 
@@ -1658,6 +1754,10 @@ states/jump_start/node = SubResource("AnimationNodeAnimation_yxci8")
 states/jump_start/position = Vector2(119, 245)
 states/land/node = SubResource("AnimationNodeAnimation_ikop2")
 states/land/position = Vector2(697, 245)
+states/memorina_draw/node = SubResource("AnimationNodeAnimation_memodraw")
+states/memorina_draw/position = Vector2(129, 583)
+states/memorina_idle/node = SubResource("AnimationNodeAnimation_memoidle")
+states/memorina_idle/position = Vector2(129, 660)
 states/roll/node = SubResource("AnimationNodeAnimation_ckagk")
 states/roll/position = Vector2(386.96698, 166.9749)
 states/run/node = SubResource("AnimationNodeAnimation_ks11i")
@@ -1676,6 +1776,7 @@ attack_stats_run = ExtResource("31_atkrun")
 attack_stats_jump = ExtResource("32_atkjump")
 attack_stats_fall = ExtResource("33_atkfall")
 attack_stats_pogo = ExtResource("34_atkpogo")
+song_catalog = ExtResource("38_songcat")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1693411011]
 position = Vector2(0, -32)
@@ -1703,7 +1804,7 @@ anim_player = NodePath("../AnimationPlayer")
 [node name="AnimationDriver" type="Node" parent="." unique_id=903881790]
 script = ExtResource("35_animdrv")
 
-[node name="AnimationResolver" type="Node" parent="."]
+[node name="AnimationResolver" type="Node" parent="." unique_id=1767848476]
 script = ExtResource("36_animres")
 
 [node name="PlayerInput" type="Node" parent="." unique_id=985844870]
@@ -1745,6 +1846,21 @@ script = ExtResource("27_atkco")
 [node name="Pogo" type="Node" parent="." unique_id=1260112728]
 script = ExtResource("28_pogoco")
 
+[node name="Memorina" type="Node" parent="." unique_id=1260112729]
+script = ExtResource("37_memoco")
+
+[node name="PulseEmitter" type="Node" parent="." unique_id=1260112730]
+script = ExtResource("39_pulsem")
+pulse_scene = ExtResource("40_pulsesc")
+
+[node name="GreyhushShield" type="Node2D" parent="." unique_id=1260112731]
+position = Vector2(0, -29)
+script = ExtResource("41_shield")
+radius = 26.0
+height = 16.0
+feather = 12.0
+amount = 1.0
+
 [node name="Hitbox" type="Area2D" parent="." unique_id=275061916]
 visible = false
 collision_layer = 0
@@ -1761,6 +1877,7 @@ debug_color = Color(0.930275, 0.2307421, 0.33968982, 0.41960785)
 [connection signal="facing_changed" from="." to="Hitbox" method="_on_character_facing_changed"]
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]
 [connection signal="jumped" from="." to="DustEmitter" method="spawn_jump_dust"]
+[connection signal="song_played" from="." to="PulseEmitter" method="spawn_pulse"]
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]
 
 [editable path="Hurtbox"]

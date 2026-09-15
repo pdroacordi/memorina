@@ -4,6 +4,11 @@ extends Character
 signal jumped(position: Vector2)
 signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
+signal memorina_drawn(known_songs: Array[Song])
+signal memorina_sheathed
+signal note_played(note: Enums.Note)
+signal sequence_failed
+signal song_played(song: Song, position: Vector2)
 
 const GROUP := "player"
 
@@ -17,6 +22,11 @@ const CTX_POGO := &"pogo"
 const ATTACK_CONTEXTS: Array[StringName] = [CTX_IDLE, CTX_RUN, CTX_JUMP, CTX_FALL, CTX_POGO]
 const AIR_ATTACK_CONTEXTS: Array[StringName] = [CTX_JUMP, CTX_FALL, CTX_POGO]
 
+## What counts as standing still. Not zero: releasing a direction leaves Ivo
+## decelerating for a few frames, and the design asks for "parado", not for
+## frame-perfect stillness.
+const STILL_SPEED_EPSILON := 1.0
+
 enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 
 
@@ -29,6 +39,7 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 @onready var _roll            : RollComponent = $Roll
 @onready var _attack          : AttackComponent = $Attack
 @onready var _pogo            : PogoComponent = $Pogo
+@onready var _memorina        : MemorinaComponent = $Memorina
 @onready var _hitbox          : Hitbox = $Hitbox
 ## A concrete view of Character's generic resolver, for the duration assert.
 @onready var _player_resolver : PlayerAnimationResolver = $AnimationResolver
@@ -40,6 +51,10 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 @export var attack_stats_jump : AttackStats
 @export var attack_stats_fall : AttackStats
 @export var attack_stats_pogo : AttackStats
+
+## Every song in the game. Ivo filters it by what the save says he has learned;
+## the component is handed the result rather than looking anything up itself.
+@export var song_catalog      : SongCatalog
 
 var _states: CharacterStateMachine
 ## Which AttackStats the current sequence started with, held fixed for its
@@ -70,6 +85,13 @@ func _ready() -> void:
 	_double_jump.double_jumped.connect(_on_double_jumped)
 	_input.roll_pressed.connect(_roll.buffer_roll)
 	_input.attack_pressed.connect(_attack.buffer_attack)
+	_input.draw_memorina_pressed.connect(_memorina.buffer_toggle)
+	_input.note_pressed.connect(_memorina.receive_note)
+	_memorina.drawn.connect(memorina_drawn.emit)
+	_memorina.sheathed.connect(memorina_sheathed.emit)
+	_memorina.note_played.connect(note_played.emit)
+	_memorina.sequence_failed.connect(sequence_failed.emit)
+	_memorina.song_played.connect(_on_song_played)
 	_attack.phase_started.connect(_on_attack_phase_started)
 	_hitbox.connected.connect(_on_hitbox_connected)
 	# facing_changed only fires on a CHANGE, so without this the hitbox would
@@ -88,6 +110,8 @@ func _ready() -> void:
 	_states.add_state(MotionState.AIR, _air_physics)
 
 	_assert_clip_durations()
+	if OS.is_debug_build() and song_catalog:
+		song_catalog.validate()
 
 func _process_motion(delta: float) -> void:
 	_just_double_jumped = false
@@ -102,6 +126,12 @@ func _process_motion(delta: float) -> void:
 	_jump.tick_timers(delta, on_floor)
 	_roll.tick_timers(delta, on_floor)
 	_attack.tick_timers(delta)
+	_memorina.tick_timers(delta)
+	# Checked every frame rather than hooked to one event, because everything
+	# that ends a performance - stepping off a ledge, being knocked back, ice
+	# melting underfoot - is simply "no longer standing still".
+	if _memorina.is_drawn() and not is_still():
+		_memorina.interrupt()
 	_pogo.enabled = _can_use_sword()
 	if on_floor:
 		_double_jump.refresh()
@@ -110,6 +140,7 @@ func _process_motion(delta: float) -> void:
 	_states.transition_to(_select_motion_state(on_floor))
 	_states.update(delta)
 
+	_try_memorina()
 	_try_jump(on_floor)
 	_try_roll(on_floor)
 	_try_attack()
@@ -134,6 +165,10 @@ func _assert_clip_durations() -> void:
 
 func move_axis() -> float:
 	if is_recovering() or is_rolling() or is_in_knockback():
+		return 0.0
+	# The arrows are note keys while the instrument is out, so they must not
+	# also walk. This is what keeps the double duty of the keys unambiguous.
+	if is_memorina_drawn():
 		return 0.0
 	if is_attacking() and _attack_context == CTX_IDLE:
 		return 0.0
@@ -172,6 +207,25 @@ func just_landed() -> bool:
 func just_double_jumped() -> bool:
 	return _just_double_jumped
 
+func is_memorina_drawn() -> bool:
+	return _memorina.is_drawn()
+
+## "Completamente parado, em chao firme" - the precondition the whole musical
+## track rests on (docs/design/02_mecanicas.md section 6.2). Checked against
+## real velocity, not just input intent, so a slide-to-stop does not count.
+##
+## Note this is about Ivo not COMMANDING movement. When weather lands, being
+## shoved by wind will still break a performance, but through the accumulated
+## force crossing a threshold - not through this predicate.
+func is_still() -> bool:
+	if not is_on_floor() or is_dead():
+		return false
+	if is_rolling() or is_attacking() or is_recovering() or is_in_knockback() or is_wall_sliding():
+		return false
+	if wants_to_move():
+		return false
+	return absf(velocity.x) < STILL_SPEED_EPSILON
+
 #############################################
 ##  C A M E R A   I N T E N T              ##
 #############################################
@@ -184,6 +238,9 @@ func just_double_jumped() -> bool:
 ## moving or recovering.
 func look_axis() -> float:
 	if not is_on_floor() or wants_to_move() or is_recovering():
+		return 0.0
+	# Up and Down are notes while playing; the camera must not peek along.
+	if is_memorina_drawn():
 		return 0.0
 	return _input.look_direction
 
@@ -222,11 +279,45 @@ func _air_physics(delta: float) -> void:
 	_landing.sample_fall_speed(velocity.y)
 
 #############################################
+##  M E M O R I N A                        ##
+#############################################
+
+func _try_memorina() -> void:
+	if not _memorina.has_buffered_toggle():
+		return
+	if _memorina.is_drawn():
+		_memorina.sheathe()
+		return
+	if is_attacking() or is_rolling() or is_recovering() or is_in_knockback():
+		return
+	_memorina.enabled = _has_item(Enums.PlayerItem.MEMORINA)
+	_memorina.try_draw(is_still(), _known_songs())
+
+## The component reports WHAT was played; Ivo adds WHERE, because a pulse is
+## born at the instrument. Same shape as jumped(position), and for the same
+## reason: ivo.tscn wires its emitters to Player with from=".".
+func _on_song_played(song: Song) -> void:
+	song_played.emit(song, global_position)
+
+## Only what the player has actually learned is a candidate - an unlearned
+## sequence has to read as noise, not as a locked door.
+func _known_songs() -> Array[Song]:
+	var known: Array[Song] = []
+	if song_catalog == null:
+		return known
+	for song: Song in song_catalog.songs:
+		if SaveSystem.has_song(song.id):
+			known.append(song)
+	return known
+
+#############################################
 ##  J U M P I N G                          ##
 #############################################
 
 func _try_jump(on_floor: bool) -> void:
 	if is_recovering() or is_rolling() or not _jump.has_buffered_jump() or is_attacking():
+		return
+	if is_memorina_drawn():
 		return
 
 	_double_jump.enabled = _has_unlocked(Enums.PlayerSkill.DOUBLE_JUMP)
@@ -241,7 +332,7 @@ func _on_double_jumped(jump_position: Vector2) -> void:
 	double_jumped.emit(jump_position)
 
 func _try_roll(on_floor: bool) -> void:
-	if is_attacking() or not _roll.has_buffered_roll():
+	if is_attacking() or not _roll.has_buffered_roll() or is_memorina_drawn():
 		return
 
 	_roll.enabled = _has_unlocked(Enums.PlayerSkill.ROLL)
@@ -254,7 +345,7 @@ func _try_roll(on_floor: bool) -> void:
 func _try_attack() -> void:
 	if not _attack.has_buffered_attack():
 		return
-	if is_recovering() or is_rolling() or is_in_knockback():
+	if is_recovering() or is_rolling() or is_in_knockback() or is_memorina_drawn():
 		return
 
 	_attack.enabled = _can_use_sword()
@@ -266,6 +357,9 @@ func _try_attack() -> void:
 func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
 	super(damage, knockback, source)
 	_attack.cancel()
+	# Not covered by the is_still() check: a hit that deals no knockback
+	# leaves Ivo standing perfectly still.
+	_memorina.interrupt()
 
 func _on_attack_phase_started(_phase_index: int, phase: AttackPhaseData) -> void:
 	_hitbox.damage = phase.damage

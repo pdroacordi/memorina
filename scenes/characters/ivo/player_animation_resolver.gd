@@ -19,6 +19,8 @@ const ATTACK_RUN_2 := &"attack_run_2"
 const ATTACK_JUMP := &"attack_jump"
 const ATTACK_FALL := &"attack_fall"
 const ATTACK_POGO := &"attack_pogo"
+const MEMORINA_DRAW := &"memorina_draw"
+const MEMORINA_IDLE := &"memorina_idle"
 const HURT := &"hurt"
 const DEATH := &"death"
 
@@ -56,6 +58,12 @@ func resolve() -> StringName:
 		if _player.is_jumping():
 			return driver.sequence(JUMP_START, JUMP_IDLE, skip_intro or driver.current in FALL_CLIPS)
 		return driver.sequence(FALL_START, FALL_IDLE, skip_intro)
+
+	# Below the airborne block because being drawn already implies standing on
+	# the floor, and above locomotion because holding the instrument outranks
+	# idling. Hurt and death still win, which is the point of interruption.
+	if _player.is_memorina_drawn():
+		return driver.sequence(MEMORINA_DRAW, MEMORINA_IDLE)
 
 	if _player.wants_to_move():
 		return RUN
