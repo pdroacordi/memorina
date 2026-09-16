@@ -35,7 +35,9 @@ func _on_player_entered_room(room: Room) -> void:
 	_current_room.activate()
 	# The greyhush is a regional property, so it follows the room the player is
 	# standing in rather than being set once at startup.
-	_memory_field.baseline = _current_room.get_region().memory_baseline
+	var region := _current_room.get_region()
+	_memory_field.baseline = region.memory_baseline
+	_memory_field.season = region.season
 	_touch_resident(room)
 	_camera.set_bounds(_current_room.get_bounds())
 	await _fade.to_clear()

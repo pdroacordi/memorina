@@ -64,12 +64,25 @@ class_name MemorySource extends Node2D
 ## entry when left at zero, so authored patches do not wobble in lockstep.
 @export var edge_seed: float = 0.0
 
+@export_group("Season")
+## Whether this source repaints the world in a season's art (a song pulse), or
+## only changes how remembered it is (an authored patch, a death mark).
+@export var carries_season: bool = false
+## The season whose art shows inside this source. Ignored unless
+## carries_season is on.
+@export var season: Enums.Season = Enums.Season.SPRING
+
 @export_group("Editor")
 ## Draw the zone in the editor viewport. Never drawn in a running game.
 @export var show_in_editor: bool = true:
 	set(value):
 		show_in_editor = value
 		_refresh()
+
+## Brightness, 0..1, of the leading ring drawn just inside this source's edge.
+## Not exported: it is a moment in a pulse's life, driven by ColorPulse from
+## its timeline, and means nothing on an authored zone.
+var ring: float = 0.0
 
 func _ready() -> void:
 	if Engine.is_editor_hint():

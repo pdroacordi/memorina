@@ -14,6 +14,12 @@ class_name GreyhushRenderer extends ColorRect
 ## Atmosphere. Exported here rather than left on the material so a region, a
 ## cutscene or an options screen can drive them at runtime, and so they show up
 ## in the scene rather than buried in a shared .tres.
+## Width of one row of the shield_falloff atlas; see _falloff_image.
+const FALLOFF_SAMPLES := 64
+## What source_seasons carries for a source that has no season. The shader
+## tests `< 0`, so any negative value works; this is the one it gets.
+const NO_SEASON := -1.0
+
 @export_group("Atmosphere")
 ## Discrete desaturation steps between grey and remembered. Low reads as a
 ## limited palette, high reads almost smooth.
@@ -25,6 +31,24 @@ class_name GreyhushRenderer extends ColorRect
 @export var haze_color: Color = Color(0.34, 0.37, 0.43): set = _set_haze_color
 ## Forgotten areas also lose contrast, which is what reads as distance.
 @export_range(0.0, 1.0) var contrast_loss: float = 0.35: set = _set_contrast
+## The faded print: how far the forgotten world's blacks rise toward
+## black_lift_color. White stays white, so the grey thins instead of darkening.
+@export_range(0.0, 1.0) var black_lift: float = 0.55: set = _set_black_lift
+@export var black_lift_color: Color = Color(0.24, 0.26, 0.32): set = _set_black_lift_color
+## How hard forgotten distance dissolves into the haze. Each seasonal material
+## declares its own `distance`; this scales all of them at once.
+@export_range(0.0, 1.0) var distance_fade: float = 0.8: set = _set_distance_fade
+
+@export_group("Living grey")
+## Seconds between one sector of a ragged edge re-rolling its bite. Each
+## sector keeps its own clock, so the boundary re-forms piece by piece. 0
+## freezes every edge where it was seeded.
+@export_range(0.0, 10.0) var edge_reroll_period: float = 1.6: set = _set_reroll
+@export_group("Leading ring")
+## Width in game pixels of the bright front that runs outward while a pulse
+## opens (design 3.1). Its brightness over time is the pulse's business.
+@export_range(0.0, 64.0) var ring_width: float = 10.0: set = _set_ring_width
+@export_range(0.0, 1.0) var ring_strength: float = 0.8: set = _set_ring_strength
 
 @export_group("Vignette")
 @export_range(0.0, 1.0) var vignette_strength: float = 0.35: set = _set_vig
@@ -42,14 +66,20 @@ class_name GreyhushRenderer extends ColorRect
 ## leaves the creature material on its .tres defaults, so every creature renders
 ## fully coloured and silently ignores `amount`.
 @export var creature_pass_path: NodePath
+## The SeasonMask viewport. Its material gets the same uniforms, and its
+## texture is published as the `greyhush_season_mask` global so any seasonal
+## material in the world can read which pulse season owns a pixel.
+@export var season_mask_path: NodePath
 
 var creature_pass: CanvasItem
+var season_mask: SeasonMask
 
 @onready var _field: MemoryField = MemoryField.find_in(self)
 
 var _centers := PackedVector4Array()
 var _params := PackedVector4Array()
 var _tints := PackedColorArray()
+var _seasons := PackedFloat32Array()
 var _shields := PackedVector4Array()
 var _shield_params := PackedVector4Array()
 
@@ -57,7 +87,6 @@ var _shield_params := PackedVector4Array()
 ## curve. Allocated once and rewritten in place - a Curve cannot be handed to a
 ## shader directly, and baking it here keeps the inspector as the single source
 ## of truth for the gradient's shape.
-const FALLOFF_SAMPLES := 64
 var _falloff_image: Image
 var _falloff_texture: ImageTexture
 
@@ -67,9 +96,17 @@ func _ready() -> void:
 		creature_pass = get_node_or_null(creature_pass_path) as CanvasItem
 	assert(creature_pass_path.is_empty() or creature_pass != null,
 		"GreyhushRenderer.creature_pass_path does not resolve to a CanvasItem; creatures would render at full colour.")
+	if not season_mask_path.is_empty():
+		season_mask = get_node_or_null(season_mask_path) as SeasonMask
+	assert(season_mask_path.is_empty() or season_mask != null,
+		"GreyhushRenderer.season_mask_path does not resolve to a SeasonMask; no art would ever change season.")
+	if season_mask:
+		RenderingServer.global_shader_parameter_set(&"greyhush_season_mask", season_mask.get_texture())
 	_centers.resize(MemoryField.MAX_SOURCES)
 	_params.resize(MemoryField.MAX_SOURCES)
 	_tints.resize(MemoryField.MAX_SOURCES)
+	_seasons.resize(MemoryField.MAX_SOURCES)
+	_seasons.fill(NO_SEASON)
 	_shields.resize(MemoryField.MAX_SHIELDS)
 	_shield_params.resize(MemoryField.MAX_SHIELDS)
 	_falloff_image = Image.create_empty(FALLOFF_SAMPLES, MemoryField.MAX_SHIELDS, false, Image.FORMAT_RF)
@@ -87,14 +124,16 @@ func _ready() -> void:
 	_push_constants()
 	_push_atmosphere()
 
-## Every uniform goes to BOTH passes. They share one include and must agree on
+## Every uniform goes to EVERY pass. They share one include and must agree on
 ## the field exactly, or a creature would read at a different depth of grey than
-## the ground under its feet.
+## the ground under its feet, and snow would stop a pixel short of the colour.
 func _set_param(name: StringName, value: Variant) -> void:
 	if material:
 		material.set_shader_parameter(name, value)
 	if creature_pass and creature_pass.material:
 		creature_pass.material.set_shader_parameter(name, value)
+	if season_mask and season_mask.mask_material():
+		season_mask.mask_material().set_shader_parameter(name, value)
 
 func _exit_tree() -> void:
 	# The cull mask is global viewport state. Leaving it clipped after this
@@ -103,6 +142,9 @@ func _exit_tree() -> void:
 	var tree := get_tree()
 	if tree:
 		tree.root.canvas_cull_mask = 0xFFFFFFFF
+	# Same for the mask global: the viewport dies with this scene, and any
+	# seasonal material drawn afterwards would sample a freed texture.
+	RenderingServer.global_shader_parameter_set(&"greyhush_season_mask", null)
 
 func _process(_delta: float) -> void:
 	if _field == null or material == null:
@@ -123,6 +165,10 @@ func _process(_delta: float) -> void:
 
 	_set_param("baseline", _field.baseline)
 	_set_param("game_size", size)
+	# The region's own season is world state like the baseline, so it travels
+	# the same road, but as a global: it is read by world materials, not by the
+	# passes this node owns.
+	RenderingServer.global_shader_parameter_set(&"greyhush_region_season", int(_field.season))
 
 func _pack_sources(canvas: Transform2D, scale: float, visible_world: Rect2) -> void:
 	var sources := _field.sources_intersecting(visible_world)
@@ -142,11 +188,17 @@ func _pack_sources(canvas: Transform2D, scale: float, visible_world: Rect2) -> v
 			source.effective_feather() * scale,
 			float(source.shape),
 			source.edge_seed)
-		_tints[i] = source.tint
+		# The tint's alpha is not a colour: it carries the leading ring's
+		# brightness, so an opening pulse lights its front and a patch does not.
+		var tint: Color = source.tint
+		tint.a = source.ring
+		_tints[i] = tint
+		_seasons[i] = float(source.season) if source.carries_season else NO_SEASON
 
 	_set_param("sources", _centers)
 	_set_param("source_params", _params)
 	_set_param("tints", _tints)
+	_set_param("source_seasons", _seasons)
 	_set_param("source_count", count)
 
 func _pack_shields(canvas: Transform2D, scale: float) -> void:
@@ -197,6 +249,15 @@ func _push_atmosphere() -> void:
 	_set_param("haze_strength", haze_strength)
 	_set_param("haze_color", haze_color)
 	_set_param("contrast_loss", contrast_loss)
+	_set_param("black_lift", black_lift)
+	_set_param("black_lift_color", black_lift_color)
+	# World materials fog toward the same haze the passes do; as globals, since
+	# they are read by sprites this node never meets.
+	RenderingServer.global_shader_parameter_set(&"greyhush_haze_color", Vector3(haze_color.r, haze_color.g, haze_color.b))
+	RenderingServer.global_shader_parameter_set(&"greyhush_distance_fade", distance_fade)
+	_set_param("edge_reroll_period", edge_reroll_period)
+	_set_param("ring_width", ring_width)
+	_set_param("ring_strength", ring_strength)
 	_set_param("vignette_strength", vignette_strength)
 	_set_param("vignette_start", vignette_start)
 	_set_param("vignette_grey_boost", vignette_grey_boost)
@@ -219,6 +280,30 @@ func _set_haze_color(value: Color) -> void:
 
 func _set_contrast(value: float) -> void:
 	contrast_loss = value
+	_push_atmosphere()
+
+func _set_black_lift(value: float) -> void:
+	black_lift = value
+	_push_atmosphere()
+
+func _set_black_lift_color(value: Color) -> void:
+	black_lift_color = value
+	_push_atmosphere()
+
+func _set_distance_fade(value: float) -> void:
+	distance_fade = value
+	_push_atmosphere()
+
+func _set_reroll(value: float) -> void:
+	edge_reroll_period = value
+	_push_atmosphere()
+
+func _set_ring_width(value: float) -> void:
+	ring_width = value
+	_push_atmosphere()
+
+func _set_ring_strength(value: float) -> void:
+	ring_strength = value
 	_push_atmosphere()
 
 func _set_vig(value: float) -> void:

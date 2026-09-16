@@ -19,6 +19,7 @@ script = ExtResource("1")
 script = ExtResource("2")
 radius = 0.0
 strength = 1.0
+carries_season = true
 
 [node name="SongArea" type="Area2D" parent="."]
 collision_layer = 1048576

@@ -1,0 +1,9 @@
+[gd_resource type="ShaderMaterial" format=4]
+
+[ext_resource type="Shader" path="res://scenes/world/memory/seasonal/seasonal_art.gdshader" id="1"]
+
+[resource]
+shader = ExtResource("1")
+shader_parameter/band_count = 3
+shader_parameter/band_of_season = Vector4i(2, 0, 1, 0)
+shader_parameter/distance = 0.15

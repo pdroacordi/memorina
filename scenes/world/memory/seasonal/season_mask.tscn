@@ -1,0 +1,16 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scenes/world/memory/seasonal/season_mask.gd" id="1"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/season_mask_material.tres" id="2"]
+
+[node name="SeasonMask" type="SubViewport"]
+disable_3d = true
+size = Vector2i(640, 360)
+render_target_update_mode = 4
+script = ExtResource("1")
+
+[node name="Surface" type="ColorRect" parent="."]
+material = ExtResource("2")
+offset_right = 640.0
+offset_bottom = 360.0
+mouse_filter = 2

@@ -9,3 +9,7 @@ class_name SeasonPalette extends Resource
 @export var tint: Color = Color.WHITE
 ## Translation key for the season's displayed name. Never a literal.
 @export var name_key: String = ""
+## Particles a pulse of this season spawns inside itself - snow, leaves,
+## petals. Optional; the scene must clip itself to the season mask (see
+## seasonal_particles.gdshader) so it never shows outside the pulse.
+@export var pulse_particles: PackedScene

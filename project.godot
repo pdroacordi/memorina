@@ -124,3 +124,22 @@ rendering_device/driver.windows="d3d12"
 2d/sdf/scale=0
 2d/snap_2d_transforms_to_pixel=true
 2d/snap_2d_vertices_to_pixel=true
+
+[shader_globals]
+
+greyhush_season_mask={
+"type": "sampler2D",
+"value": ""
+}
+greyhush_region_season={
+"type": "int",
+"value": 3
+}
+greyhush_haze_color={
+"type": "vec3",
+"value": Vector3(0.34, 0.37, 0.43)
+}
+greyhush_distance_fade={
+"type": "float",
+"value": 0.0
+}

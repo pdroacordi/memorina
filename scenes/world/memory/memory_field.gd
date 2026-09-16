@@ -17,6 +17,9 @@ const MAX_SOURCES := 32
 ## How much of this region is still remembered, before any source. Pushed in by
 ## Game on room entry; see docs/design/03_mundo_e_ambiente.md section 4.1.
 @export_range(0.0, 1.0) var baseline: float = 1.0
+## The season this region's art shows wherever no pulse overrides it - its
+## "estacao nativa". Pushed in by Game alongside the baseline.
+var season: Enums.Season = Enums.Season.SPRING
 
 var _sources: Array[MemorySource] = []
 ## Creatures that hold back the grey around themselves. Kept separate from

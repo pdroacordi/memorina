@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" format=4]
+
+[ext_resource type="Shader" path="res://scenes/world/memory/seasonal/season_mask.gdshader" id="1"]
+
+[resource]
+shader = ExtResource("1")
+shader_parameter/source_count = 0
+shader_parameter/game_size = Vector2(640, 360)

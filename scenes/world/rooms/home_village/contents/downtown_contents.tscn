@@ -1,15 +1,21 @@
 [gd_scene format=4 uid="uid://qdwa768i6puy"]
 
-[ext_resource type="Texture2D" uid="uid://hh8ukq1uhtvv" path="res://assets/sprites/world/background/spring/spring_background_layer_5.png" id="1_ofp0t"]
-[ext_resource type="Texture2D" uid="uid://do7ra6wtptt64" path="res://assets/sprites/world/background/spring/spring_background_layer_4.png" id="2_0rmqy"]
-[ext_resource type="Texture2D" uid="uid://cuntjhxc5npr7" path="res://assets/sprites/world/background/spring/spring_background_layer_3.png" id="3_70x0p"]
-[ext_resource type="Texture2D" uid="uid://xtavq4w4pv8j" path="res://assets/sprites/world/background/spring/spring_background_layer_2.png" id="4_wn0cq"]
-[ext_resource type="Texture2D" uid="uid://b33j4n76avvnu" path="res://assets/sprites/world/background/spring/spring_background_layer_1.png" id="5_vl0g8"]
+[ext_resource type="Texture2D" uid="uid://ctcr1slm3ueh7" path="res://assets/sprites/world/background/seasonal/background_layer_5.png" id="1_ofp0t"]
+[ext_resource type="Texture2D" uid="uid://b0fk3acferid4" path="res://assets/sprites/world/background/seasonal/background_layer_4.png" id="2_0rmqy"]
+[ext_resource type="Texture2D" uid="uid://c5anhmds5qpr" path="res://assets/sprites/world/background/seasonal/background_layer_3.png" id="3_70x0p"]
+[ext_resource type="Texture2D" uid="uid://b03120e0cnvej" path="res://assets/sprites/world/background/seasonal/background_layer_2.png" id="4_wn0cq"]
+[ext_resource type="Texture2D" uid="uid://dcdrjuov1vtyl" path="res://assets/sprites/world/background/seasonal/background_layer_1.png" id="5_vl0g8"]
 [ext_resource type="Texture2D" uid="uid://c1f07twoye2wx" path="res://assets/sprites/world/tilesets/floor_tiles.png" id="6_se3n3"]
 [ext_resource type="PackedScene" uid="uid://dfusgysqr55sw" path="res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn" id="8_70x0p"]
 [ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="9_msrc"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/dust_motes/dust_motes.tscn" id="10_motes"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/freezable_water/freezable_water.tscn" id="11_water"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_1_material.tres" id="bg_season_1"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_2_material.tres" id="bg_season_2"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_3_material.tres" id="bg_season_3"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_4_material.tres" id="bg_season_4"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_5_material.tres" id="bg_season_5"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/floor_tiles_seasonal_material.tres" id="tiles_season"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_forc5"]
 texture = ExtResource("6_se3n3")
@@ -218,17 +224,20 @@ sources/1 = SubResource("TileSetAtlasSource_forc5")
 scroll_scale = Vector2(0.1, 1)
 
 [node name="SpringBackgroundLayer5" type="Sprite2D" parent="Sky" unique_id=1587981936]
+texture_repeat = 2
+material = ExtResource("bg_season_5")
 position = Vector2(-443, -318)
-scale = Vector2(2.1621094, 1.2745665)
+scale = Vector2(2.1621094, 2.549133)
 texture = ExtResource("1_ofp0t")
 region_enabled = true
-region_rect = Rect2(0, 0, 3072, 692)
+region_rect = Rect2(0, 0, 3072, 346)
 
 [node name="Moutains" type="Parallax2D" parent="." unique_id=1152233631]
 scroll_scale = Vector2(0.2, 1)
 
 [node name="SpringBackgroundLayer4" type="Sprite2D" parent="Moutains" unique_id=1405953379]
 texture_repeat = 2
+material = ExtResource("bg_season_4")
 position = Vector2(-367, -109)
 texture = ExtResource("2_0rmqy")
 region_enabled = true
@@ -239,6 +248,7 @@ scroll_scale = Vector2(0.4, 1)
 
 [node name="SpringBackgroundLayer3" type="Sprite2D" parent="Deeper Trees" unique_id=1723534403]
 texture_repeat = 2
+material = ExtResource("bg_season_3")
 position = Vector2(-367, -109)
 texture = ExtResource("3_70x0p")
 region_enabled = true
@@ -249,6 +259,7 @@ scroll_scale = Vector2(0.6, 1)
 
 [node name="SpringBackgroundLayer2" type="Sprite2D" parent="Deep Trees" unique_id=110676561]
 texture_repeat = 2
+material = ExtResource("bg_season_2")
 position = Vector2(-367, -109)
 texture = ExtResource("4_wn0cq")
 region_enabled = true
@@ -259,12 +270,14 @@ scroll_scale = Vector2(0.8, 1)
 
 [node name="SpringBackgroundLayer1" type="Sprite2D" parent="Front Trees" unique_id=385731632]
 texture_repeat = 2
+material = ExtResource("bg_season_1")
 position = Vector2(-367, -109)
 texture = ExtResource("5_vl0g8")
 region_enabled = true
 region_rect = Rect2(0, 0, 3072, 346)
 
 [node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=232441547]
+material = ExtResource("tiles_season")
 tile_map_data = PackedByteArray("AAD//wAAAQABAAAAAAAAAAAAAQABAAAAAAABAAAAAQABAAAAAAACAAAAAQABAAAAAAADAAAAAQABAAAAAAD+/wAAAQABAAAAAAD9/wAAAQABAAAAAAD8/wAAAQABAAAAAAD7/wAAAQABAAAAAAD6/wAAAQABAAAAAAD5/wAAAQABAAAAAAAFAAAAAQABAAAAAAD4/wAAAQABAAAAAAD3/wAAAQABAAAAAAAQAAAAAQABAAAAAAARAAAAAQACAAAAAAANAAAAAQABAAAAAAAOAAAAAQABAAAAAAAPAAAAAQABAAAAAAAMAAEAAQABAAEAAAANAAEAAQABAAEAAAAOAAEAAQABAAEAAAAPAAEAAQABAAEAAAAQAAEAAQABAAEAAAARAAEAAQACAAEAAAALAAEAAQABAAEAAAAKAAEAAQABAAEAAAAJAAEAAQABAAEAAAAIAAEAAQABAAEAAAAHAAEAAQABAAEAAAAGAAEAAQABAAEAAAAFAAEAAQABAAEAAAAEAAEAAQABAAEAAAADAAEAAQABAAEAAAACAAEAAQABAAEAAAABAAEAAQABAAEAAAAAAAEAAQABAAEAAAD//wEAAQABAAEAAAD+/wEAAQABAAEAAAD9/wEAAQABAAEAAAD8/wEAAQABAAEAAAD7/wEAAQABAAEAAAD6/wEAAQABAAEAAAD5/wEAAQABAAEAAAD4/wEAAQABAAEAAAD3/wEAAQABAAEAAAD4/wIAAQABAAEAAAD5/wIAAQABAAEAAAD3/wIAAQABAAEAAAD6/wIAAQABAAEAAAD7/wIAAQABAAEAAAD8/wIAAQABAAEAAAD9/wIAAQABAAEAAAD+/wIAAQABAAEAAAD//wIAAQABAAEAAAAAAAIAAQABAAEAAAABAAIAAQABAAEAAAACAAIAAQABAAEAAAADAAIAAQABAAEAAAAEAAIAAQABAAEAAAAFAAIAAQABAAEAAAAGAAIAAQABAAEAAAAHAAIAAQABAAEAAAAIAAIAAQABAAEAAAAJAAIAAQABAAEAAAAKAAIAAQABAAEAAAALAAIAAQABAAEAAAAMAAIAAQABAAEAAAANAAIAAQABAAEAAAAOAAIAAQABAAEAAAAPAAIAAQABAAEAAAAQAAIAAQABAAEAAAARAAIAAQACAAEAAAAEAAAAAQABAAAAAAAEAPr/AQAGAAUAAAAGAPr/AQAIAAUAAAAFAPr/AQAHAAUAAAD2/wAAAQABAAAAAAD1/wAAAQABAAAAAAD0/wAAAQABAAAAAADz/wAAAQABAAAAAADy/wAAAQABAAAAAADx/wAAAQABAAAAAADw/wAAAQABAAAAAADv/wAAAQABAAAAAADu/wAAAQABAAAAAADt/wAAAQABAAAAAADs/wAAAQABAAAAAADr/wAAAQABAAAAAADq/wAAAQABAAAAAADp/wAAAQABAAAAAADo/wAAAQABAAAAAADn/wAAAQABAAAAAADm/wAAAQABAAAAAADl/wAAAQABAAAAAADk/wAAAQABAAAAAADj/wAAAQABAAAAAADi/wAAAQABAAAAAADh/wAAAQABAAAAAADg/wAAAQABAAAAAADf/wAAAQABAAAAAADe/wAAAQABAAAAAADd/wAAAQABAAAAAADc/wAAAQABAAAAAADb/wAAAQABAAAAAADa/wAAAQABAAAAAADZ/wAAAQABAAAAAADY/wAAAQABAAAAAADX/wAAAQABAAAAAADW/wAAAQABAAAAAADV/wAAAQAAAAAAAADV/wEAAQAAAAEAAADW/wEAAQABAAEAAADX/wEAAQABAAEAAADY/wEAAQABAAEAAADZ/wEAAQABAAEAAADa/wEAAQABAAEAAADb/wEAAQABAAEAAADc/wEAAQABAAEAAADd/wEAAQABAAEAAADe/wEAAQABAAEAAADf/wEAAQABAAEAAADg/wEAAQABAAEAAADh/wEAAQABAAEAAADi/wEAAQABAAEAAADj/wEAAQABAAEAAADk/wEAAQABAAEAAADl/wEAAQABAAEAAADm/wEAAQABAAEAAADn/wEAAQABAAEAAADo/wEAAQABAAEAAADp/wEAAQABAAEAAADq/wEAAQABAAEAAADr/wEAAQABAAEAAADs/wEAAQABAAEAAADt/wEAAQABAAEAAADu/wEAAQABAAEAAADv/wEAAQABAAEAAADw/wEAAQABAAEAAADx/wEAAQABAAEAAADy/wEAAQABAAEAAADz/wEAAQABAAEAAAD0/wEAAQABAAEAAAD1/wEAAQABAAEAAAD2/wEAAQABAAEAAAD2/wIAAQABAAEAAAD1/wIAAQABAAEAAAD0/wIAAQABAAEAAADz/wIAAQABAAEAAADy/wIAAQABAAEAAAALAAAAAQABAAAAAAAMAAAAAQABAAAAAAAKAAAAAQAFAAMAAAAGAAAAAQABAAAAAAAHAAAAAQAEAAMAAAAIAAAAAQABAAEAAAAJAAAAAQABAAEAAAAHAP//AQAAAAEAAAAHAP7/AQAAAAAAAAAIAP7/AQABAAAAAAAJAP7/AQABAAAAAAAKAP7/AQACAAAAAAAKAP//AQACAAEAAAAIAP//AQABAAEAAAAJAP//AQABAAEAAAA=")
 tile_set = SubResource("TileSet_rxs28")
 
@@ -275,7 +288,7 @@ position = Vector2(-387, -2)
 script = ExtResource("9_msrc")
 radius = 500.0
 feather = 140.0
-strength = -0.743
+strength = -0.7
 edge_seed = 137.0
 
 [node name="DustMotesInPatch" parent="." unique_id=745078319 instance=ExtResource("10_motes")]

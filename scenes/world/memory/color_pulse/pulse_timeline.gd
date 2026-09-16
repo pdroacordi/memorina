@@ -10,6 +10,11 @@ class_name PulseTimeline extends RefCounted
 
 enum Phase { ATTACK, SUSTAIN, CONTRACT, DONE }
 
+## How far into SUSTAIN the leading ring takes to fade out, as a fraction of
+## the sustain time. The front has arrived; the ring lingers a moment, then the
+## pulse is just light.
+const RING_FADE := 0.25
+
 var phase: Phase = Phase.ATTACK
 
 var _max_radius: float
@@ -52,6 +57,21 @@ func radius() -> float:
 			# Squared, so the grey comes back faster the longer it has been coming.
 			var t := (_elapsed - _attack_time - _sustain_time) / _contract_time
 			return _max_radius * (1.0 - t * t)
+		_:
+			return 0.0
+
+## Brightness of the leading ring, 0..1: full while the front is moving out,
+## fading once it stops, gone for the rest of the pulse's life.
+func ring() -> float:
+	match phase:
+		Phase.ATTACK:
+			return 1.0
+		Phase.SUSTAIN:
+			var fade_time := _sustain_time * RING_FADE
+			if fade_time <= 0.0:
+				return 0.0
+			var t := (_elapsed - _attack_time) / fade_time
+			return clampf(1.0 - t, 0.0, 1.0)
 		_:
 			return 0.0
 

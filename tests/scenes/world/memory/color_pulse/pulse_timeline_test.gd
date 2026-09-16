@@ -110,3 +110,32 @@ func test_advancing_past_the_end_stays_finished() -> void:
 	timeline.advance(10.0)
 	assert_bool(timeline.is_finished()).is_true()
 	assert_float(timeline.radius()).is_equal_approx(0.0, 0.0001)
+
+## The leading ring (design 3.1): bright while the front is moving, lingering
+## a moment once it has arrived, then gone.
+func test_the_ring_is_full_while_the_front_moves() -> void:
+	var timeline := _timeline()
+	assert_float(timeline.ring()).is_equal_approx(1.0, 0.0001)
+	timeline.advance(ATTACK * 0.5)
+	assert_float(timeline.ring()).is_equal_approx(1.0, 0.0001)
+
+func test_the_ring_fades_early_in_the_sustain() -> void:
+	var timeline := _timeline()
+	timeline.advance(ATTACK + SUSTAIN * PulseTimeline.RING_FADE * 0.5)
+	assert_float(timeline.ring()).is_between(0.01, 0.99)
+	timeline.advance(SUSTAIN * PulseTimeline.RING_FADE * 0.5 + 0.001)
+	assert_float(timeline.ring()).is_equal_approx(0.0, 0.0001)
+
+func test_the_ring_is_gone_by_the_contraction() -> void:
+	var timeline := _timeline()
+	timeline.advance(ATTACK + SUSTAIN + CONTRACT * 0.5)
+	assert_float(timeline.ring()).is_equal_approx(0.0, 0.0001)
+
+func test_the_ring_never_brightens_again() -> void:
+	var timeline := _timeline()
+	var previous := timeline.ring()
+	for i: int in 40:
+		timeline.advance(timeline.total_time() / 41.0)
+		var current := timeline.ring()
+		assert_float(current).is_less_equal(previous + 0.0001)
+		previous = current

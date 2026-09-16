@@ -15,11 +15,13 @@ void fragment() {
 
 	vec3 tint_rgb;
 	float tint_amount;
-	float memory = gh_memory(px, tint_rgb, tint_amount);
+	float ring;
+	float smooth_memory;
+	float memory = gh_memory(px, smooth_memory, tint_rgb, tint_amount, ring);
 	float lit_amount = gh_quantise(memory, px);
 
-	vec3 col = gh_shade(screen, lit_amount, tint_rgb, tint_amount);
-	col = gh_vignette(col, UV, lit_amount);
+	vec3 col = gh_shade(screen, lit_amount, smooth_memory, tint_rgb, tint_amount, ring, px);
+	col = gh_vignette(col, UV, smooth_memory);
 
 	COLOR = vec4(col, 1.0);
 }
