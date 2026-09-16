@@ -42,7 +42,7 @@ Bias hard toward object-oriented design and SOLID/KISS. Concretely, in Godot ter
 The world's state at any point is a memory value from 0 to 1 (`docs/design/03_mundo_e_ambiente.md` sections 2-4). **It is not a colour filter.** A place at 0 is not merely grey, it is STOPPED — a branch caught mid-sway stays caught, and resumes from exactly there when colour returns. Lowering an animation's amplitude would be the wrong fix: that still leaves a cycle running.
 
 - **`MemoryField` (in `game.tscn`, found by group) answers the CPU side; `GreyhushRenderer` feeds the GPU side.** The field never learns it is being drawn, and the renderer is the only place that converts world coordinates into game pixels.
-- **`MemoryFieldMath.disc_influence()` and `disc_influence()` in `greyhush.gdshader` are the same formula written twice**, because GDScript and GLSL cannot share code. Change one and you MUST change the other. Every tunable reaches the shader as a uniform from `MemoryFieldMath`'s constants — never re-type a number into the shader.
+- **`MemoryFieldMath.source_distance()` / `disc_influence()` and `gh_shape_distance()` / `gh_influence()` in `greyhush_common.gdshaderinc` are the same formulas written twice**, because GDScript and GLSL cannot share code. Change one and you MUST change the other. Every tunable reaches the shader as a uniform from `MemoryFieldMath`'s constants — never re-type a number into the shader.
 - **The dithered, ragged edge is GPU-only.** The CPU field is a clean disc. Nothing in gameplay may depend on where a ragged sector happened to fall.
 - **The boundary is an ordered (Bayer) dither, never a gradient**, computed in game-pixel space via `UV * game_size` rather than `FRAGCOORD` — the project stretches with integer scaling, so `FRAGCOORD` would dither at window resolution and the speckle would change size with the window.
 - **Environment freezes; characters never.** `MemoryClock` drives a neighbour's `speed_scale` from the field and asserts in `_ready()` that its target has no `Character` ancestor.
@@ -55,6 +55,18 @@ The world's state at any point is a memory value from 0 to 1 (`docs/design/03_mu
 - **No song's note sequence may be a prefix of another's** — the longer one would become unreachable. `SongCatalog.validate()` asserts this at startup in debug builds.
 - **`MemorinaComponent` holds the instrument's state and nothing else.** Whether Ivo is standing still enough is the body's judgement, pushed in through `try_draw(can_play)` and `interrupt()`, the same way `enabled` carries the item gate.
 - **Interruption reuses the failure vocabulary that already exists.** Being hit or stepping off a ledge mid-sequence emits `sequence_failed`, exactly as a wrong note does — no second kind of failure for the player to learn.
+
+## Seasonal art
+
+A pulse does not tint the world into its season; it **redraws** it. Every seasonal drawable is a **stacked sheet**: the same drawing repeated in equal vertical bands, one per season, and the scene always references **band 0** (`floor_tiles.png` rows 0–5; a background `region_rect` inside the top 346 px). Which band is which season is declared on the material, not by a global rule — `floor_tiles.png` and the backgrounds are both spring / autumn / winter top to bottom, so both materials carry `band_of_season = (2, 0, 1, 0)` in `Enums.Season` order. Summer has no art and points at spring's band; a summer pulse is spring art plus summer's tint.
+
+- **`SeasonMask` (`scenes/world/memory/seasonal/`) evaluates the field once per frame** into a 640×360 texture: one byte per game pixel saying which pulse season owns it, dithered across the feather with the same Bayer cell as the greyhush. `GreyhushRenderer` feeds it the same uniforms as the two colour passes and publishes its texture as the `greyhush_season_mask` global, plus `MemoryField.season` (the region's native season, from `Region.season`) as `greyhush_region_season`. Giving a sprite or `TileMapLayer` seasons is assigning `seasonal_art.gdshader` in a material with `band_count` and `band_of_season` — no script, no registration.
+- **`gh_source_influence()` in the include is the only place a source's geometry is evaluated.** The mask and the colour passes call it, so the snow cannot stop a pixel short of the colour.
+- **In a canvas_item fragment `COLOR` already holds `texture(TEXTURE, UV) * modulate`.** Any shader that samples the texture elsewhere must carry modulate as a varying from `vertex()`, or it multiplies its sample by the band-0 texel.
+- Backgrounds are authored one season per file under `assets/sprites/world/background/<season>/` and stacked by `tools/stack_seasonal_sheets.gd` (`"<godot>" --headless --path . -s res://tools/stack_seasonal_sheets.gd`) into `background/seasonal/`, which is what the scenes reference. Rerun it after touching a source PNG; a missing season stands in with spring. Tiles are stacked by hand in the sheet itself.
+- **The grey is empty, not dark.** Two things sell it, both static: `black_lift` (the faded print — forgotten blacks rise toward a cold tone, white stays white) in the greyhush pass, and `distance` on each seasonal material (the sky is 1, the ground 0), which dissolves far layers into the haze by how forgotten the pixel is, so a dead place loses its horizon before its floor. The mask's G channel carries the SMOOTH memory for that — never the dithered value, or the world material and the screen pass dither the same pixels twice and every rounded-up pixel pops out as a bright square; `greyhush_haze_color` / `greyhush_distance_fade` are globals pushed by the renderer so one knob rules every layer. Backgrounds therefore have one material per layer (`background_layer_N_material.tres`), differing only in `distance`.
+- The pulse's leading ring (`PulseTimeline.ring()`, packed into `tints[i].a`) and the slow per-sector re-roll of the ragged edge (`edge_reroll_period`) are `GreyhushRenderer` exports; at 0 the frame is what it was before them. **Do not add high-frequency texture to the grey**: a per-pixel "deserting pixels" speckle was tried and cut — at any density that registers it reads as static and is tiring to look at. Emptiness is low-frequency.
+- A season's particles are a `CPUParticles2D` scene on `SeasonPalette.pulse_particles`, mounted under the pulse, wearing `seasonal_particles.gdshader` so they are clipped to the mask: they exist exactly where the art has swapped, and nowhere else.
 
 ## Testing
 
@@ -87,7 +99,8 @@ After adding a script with a new `class_name`, run `--headless --path . --import
 - `scenes/combat/<kind>/` — hurtbox, hitbox, health.
 - `scenes/world/` — `game.tscn`, the main scene: the composition root holding player, camera and HUD, and swapping levels underneath.
 - `scenes/particles/<kind>/` — reusable one-shot effect scenes, spawned by whoever triggers them.
-- `scenes/world/memory/` — the greyhush: the memory field, its sources, the screen shader that draws it, the clock that stops time inside it, and the colour pulse a song lights.
+- `scenes/world/memory/` — the greyhush: the memory field, its sources, the screen shader that draws it, the clock that stops time inside it, and the colour pulse a song lights. `memory/seasonal/` is the season mask and the shaders/materials that swap art by season.
+- `tools/` — headless Godot scripts run by hand from the project root (asset pipeline steps like stacking seasonal sheets). Never referenced by a scene.
 - `scenes/world/environment/<kind>/` — ambient set dressing that answers to the memory field (drifting motes, swaying growth). Distinct from `scenes/particles/`, which is fire-and-forget feedback for an action.
 - `scenes/world/interactables/<kind>/` — world objects a song acts on. Each composes a `SongReceiver`; none of them is known to the song system.
 - `scenes/ui/<screen>/` — HUD and menu scenes.
@@ -117,7 +130,7 @@ Rename and move files **from inside the Godot editor** (FileSystem dock), so it 
 ## Known gaps (not yet implemented)
 
 - Input map (`project.godot`) defines `move_left`, `move_right`, `jump`, `look_up`, `look_down`, `roll`, `attack`, `draw_memorina` and `note_up`/`note_down`/`note_left`/`note_right`. The design still calls for open-notebook, pause and open-map — add these when that work actually starts, matching the existing signal-based `PlayerInput` pattern.
-- Only `FREEZE` has a world effect (`FreezableWater`). The other seven songs light a pulse and nothing more.
+- Only `FREEZE` has a world effect (`FreezableWater`). The other seven songs light a pulse, swap the seasonal art and spawn their season's particles, and nothing more.
 - Nothing grants `PlayerItem.MEMORINA` or calls `SaveSystem.learn_song()` in-game yet; there are no pickups and no benches, and `save_game()` is still never called. Testing the instrument means granting it from a script or editing `user://save.tres`.
 - The freeze placeholder is on-while-lit. The design's thaw-from-the-origin front, hardening-before-solid, and water reflections are not built.
 - The greyhush shader is screen-space, so it desaturates Ivo along with the world. The lore wants colour to originate from the body in flashbacks and the QTE; excluding characters means giving them their own CanvasLayer, which is not done.
@@ -142,3 +155,4 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | Brotar | `Enums.Song.SPROUT` |
 | Eclodir | `Enums.Song.HATCH` |
 | Inverno / Verão / Outono / Primavera | `Enums.Season.WINTER` / `SUMMER` / `AUTUMN` / `SPRING` |
+| estação nativa (de uma região) | `Region.season` / `MemoryField.season` |
