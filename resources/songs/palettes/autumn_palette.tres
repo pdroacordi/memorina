@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="SeasonPalette" load_steps=2 format=3 uid="uid://umn45o2fgypm"]
+[gd_resource type="Resource" script_class="SeasonPalette" format=3 uid="uid://umn45o2fgypm"]
 
-[ext_resource type="Script" path="res://resources/songs/season_palette.gd" id="1"]
+[ext_resource type="Script" uid="uid://bjg886gu3n6a2" path="res://resources/songs/season_palette.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/world/memory/color_pulse/particles/autumn_pulse_particles.tscn" id="2_particles"]
 
 [resource]
 script = ExtResource("1")
 season = 2
 tint = Color(0.85, 0.5, 0.27, 1)
 name_key = "SEASON_AUTUMN"
+pulse_particles = ExtResource("2_particles")

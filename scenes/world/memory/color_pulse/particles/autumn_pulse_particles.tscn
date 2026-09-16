@@ -1,0 +1,41 @@
+[gd_scene format=4]
+
+[ext_resource type="Shader" path="res://scenes/world/memory/seasonal/seasonal_particles.gdshader" id="1_shader"]
+
+[sub_resource type="ShaderMaterial" id="material"]
+shader = ExtResource("1_shader")
+shader_parameter/season = 2
+
+[sub_resource type="Gradient" id="pixel_gradient"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="pixel"]
+gradient = SubResource("pixel_gradient")
+width = 3
+height = 3
+
+[sub_resource type="Gradient" id="colors"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(0.85, 0.5, 0.27, 1, 0.72, 0.36, 0.16, 1, 0.94, 0.68, 0.3, 1)
+
+[node name="AutumnPulseParticles" type="CPUParticles2D"]
+texture_filter = 1
+material = SubResource("material")
+amount = 70
+lifetime = 12.0
+preprocess = 8.0
+randomness = 0.6
+local_coords = false
+texture = SubResource("pixel")
+emission_shape = 3
+emission_rect_extents = Vector2(680, 6)
+position = Vector2(0, -360)
+direction = Vector2(0.5, 1)
+spread = 25.0
+gravity = Vector2(0, 10)
+initial_velocity_min = 24.0
+initial_velocity_max = 56.0
+angular_velocity_min = -90.0
+angular_velocity_max = 90.0
+color_initial_ramp = SubResource("colors")

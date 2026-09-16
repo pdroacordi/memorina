@@ -1,9 +1,10 @@
-[gd_resource type="Resource" script_class="SeasonPalette" load_steps=2 format=3 uid="uid://egz8rxapfxb1"]
+[gd_resource type="Resource" script_class="SeasonPalette" format=3 uid="uid://eg08rxapfxb1"]
 
-[ext_resource type="Script" path="res://resources/songs/season_palette.gd" id="1"]
+[ext_resource type="Script" uid="uid://bjg886gu3n6a2" path="res://resources/songs/season_palette.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/world/memory/color_pulse/particles/winter_pulse_particles.tscn" id="2_particles"]
 
 [resource]
 script = ExtResource("1")
-season = 0
 tint = Color(0.667, 0.82, 0.95, 1)
 name_key = "SEASON_WINTER"
+pulse_particles = ExtResource("2_particles")
