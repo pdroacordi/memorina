@@ -54,6 +54,7 @@
 [ext_resource type="AudioStream" uid="uid://4ci6801k1fq0" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="46_note_right"]
 [ext_resource type="AudioStream" uid="uid://dukqiaa0dgpkr" path="res://assets/audios/sfx/memorina/mistake.mp3" id="47_mistake"]
 [ext_resource type="Script" uid="uid://bwhf6qt1sq1qu" path="res://scenes/characters/components/song_performance.gd" id="48_perf"]
+[ext_resource type="Script" uid="uid://cd0iolsgg5fll" path="res://scenes/characters/ivo/abilities/ability_recall_component.gd" id="49_recall"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -1856,6 +1857,9 @@ script = ExtResource("28_pogoco")
 
 [node name="Memorina" type="Node" parent="." unique_id=1260112729]
 script = ExtResource("37_memoco")
+
+[node name="AbilityRecall" type="Node" parent="."]
+script = ExtResource("49_recall")
 
 [node name="MemorinaVoice" type="Node" parent="."]
 process_mode = 3

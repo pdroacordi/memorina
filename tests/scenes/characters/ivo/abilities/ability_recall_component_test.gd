@@ -32,7 +32,7 @@ func test_the_right_action_recalls_the_skill() -> void:
 	_recall.arm(_roll)
 	var monitor := monitor_signals(_recall)
 	assert_bool(_recall.notify(&"roll")).is_true()
-	await assert_signal(monitor).is_emitted("recalled", [Enums.PlayerSkill.ROLL])
+	await assert_signal(monitor).is_emitted("recalled", [_roll])
 	assert_bool(_recall.is_armed()).is_false()
 
 func test_the_wrong_action_is_ignored() -> void:
@@ -53,7 +53,7 @@ func test_an_expired_window_is_a_miss() -> void:
 	_recall.tick(0.5)
 	await assert_signal(monitor).is_not_emitted("missed")
 	_recall.tick(0.6)
-	await assert_signal(monitor).is_emitted("missed", [Enums.PlayerSkill.ROLL])
+	await assert_signal(monitor).is_emitted("missed", [_roll])
 	assert_bool(_recall.is_armed()).is_false()
 
 func test_a_press_after_the_window_does_nothing() -> void:

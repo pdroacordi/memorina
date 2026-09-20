@@ -17,12 +17,14 @@ func _ready() -> void:
 	else:
 		new_game()
 
-## A fresh save owns nothing. Debug builds start with the sword so a guardian
-## can be fought from a clean launch; nothing in the world grants it yet.
+## A fresh save owns nothing. Debug builds start with the sword and the
+## instrument so a guardian can be fought from a clean launch; nothing in the
+## world grants either yet (the mentor will hand over the Memorina).
 func new_game() -> void:
 	player_data = PlayerData.new()
 	if OS.is_debug_build():
 		set_item_owned(Enums.PlayerItem.SWORD, true)
+		set_item_owned(Enums.PlayerItem.MEMORINA, true)
 
 func save_game() -> void:
 	var err := ResourceSaver.save(player_data, PATH + SAVE_FILE_NAME)

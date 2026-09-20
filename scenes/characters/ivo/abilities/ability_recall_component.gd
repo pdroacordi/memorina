@@ -11,10 +11,11 @@ class_name AbilityRecallComponent extends Node
 ## one: it reports `recalled` and the owner touches the save, exactly as the
 ## roll's `enabled` gate keeps SaveSystem out of RollComponent.
 
-## The right action was pressed in time.
-signal recalled(skill: Enums.PlayerSkill)
+## The right action was pressed in time. Carries what it was armed with, so
+## the owner learns both the skill and the grace it earns.
+signal recalled(stats: AbilityRecallStats)
 ## The window closed on nothing.
-signal missed(skill: Enums.PlayerSkill)
+signal missed(stats: AbilityRecallStats)
 
 var _stats: AbilityRecallStats
 var _left: float = -1.0
@@ -38,9 +39,9 @@ func arm(stats: AbilityRecallStats) -> bool:
 func notify(action: StringName) -> bool:
 	if not is_armed() or action != _stats.action:
 		return false
-	var skill := _stats.skill
+	var stats := _stats
 	_disarm()
-	recalled.emit(skill)
+	recalled.emit(stats)
 	return true
 
 ## `real_delta` is wall-clock seconds, already corrected for the time scale.
@@ -50,9 +51,9 @@ func tick(real_delta: float) -> void:
 	_left -= real_delta
 	if _left > 0.0:
 		return
-	var skill := _stats.skill
+	var stats := _stats
 	_disarm()
-	missed.emit(skill)
+	missed.emit(stats)
 
 func _disarm() -> void:
 	_stats = null

@@ -22,9 +22,16 @@ class_name MemorinaHud extends Control
 ## Screen y the frame is centred on, roughly Ivo's body once the camera has
 ## eased in.
 @export var frame_center_y: float = 224.0
+## Screen y of the frame's top edge while it shows a guardian's call. The
+## call sheet sits at the top of the screen, not beside Ivo: he is not holding
+## the instrument yet, and the camera has not eased in on him.
+@export var call_frame_top: float = 12.0
 @export var fade_in_time: float = 0.15
 
 var _facing: int = 1
+## Whether the instrument is out. A call closing while it is out leaves the
+## frame to the sheathe that follows.
+var _drawn: bool = false
 var _fade_tween: Tween
 
 @onready var _frame: TextureRect = $Frame
@@ -41,8 +48,10 @@ func _ready() -> void:
 
 func on_drawn(_known_songs: Array[Song], facing: int) -> void:
 	_facing = facing
+	_drawn = true
 	# Cleared here as well as on sheathe, so the sheet never inherits what an
-	# earlier session left behind however the HUD came to be open.
+	# earlier session left behind however the HUD came to be open. A call's
+	# phrase goes too: the answer is played from memory.
 	_sheet.clear()
 	_banner.dismiss()
 	_frame.hide()
@@ -61,8 +70,30 @@ func on_camera_focused(subject_screen_position: Vector2) -> void:
 	_fade_tween.tween_property(_frame, "modulate:a", 1.0, fade_in_time)
 
 func on_sheathed() -> void:
+	_drawn = false
 	_sheet.clear()
 	_banner.dismiss()
+	hide()
+
+## A guardian calls: the phrase's revealed notes appear at the top of the
+## screen, unlit, and light up one by one as the guardian sounds them.
+func on_call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet) -> void:
+	if _drawn:
+		return
+	_sheet.show_notes(song.notes, glyph_sets[glyph_set], revealed)
+	_banner.dismiss()
+	_frame.position = Vector2(roundf((size.x - _frame.size.x) / 2.0), call_frame_top)
+	_frame.modulate.a = 1.0
+	_frame.show()
+	show()
+
+func on_call_note_sounded(index: int) -> void:
+	_sheet.light(index)
+
+func on_call_closed() -> void:
+	if _drawn:
+		return
+	_sheet.clear()
 	hide()
 
 func on_note_played(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:

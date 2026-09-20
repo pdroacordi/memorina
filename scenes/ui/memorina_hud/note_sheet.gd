@@ -59,11 +59,13 @@ func push_note(note: Enums.Note, glyphs: NoteGlyphSet) -> void:
 	_glyphs.append(glyphs)
 	_show(index, false)
 
-## Fills the whole sheet at once, unlit, for a lesson.
-func show_notes(notes: Array[Enums.Note], glyphs: NoteGlyphSet) -> void:
+## Fills the sheet at once, unlit: the whole song for a lesson, or only the
+## first `count` notes of a guardian's fragmented call. Negative means all.
+func show_notes(notes: Array[Enums.Note], glyphs: NoteGlyphSet, count: int = -1) -> void:
 	clear()
-	for note: Enums.Note in notes:
-		push_note(note, glyphs)
+	var shown := notes.size() if count < 0 else mini(count, notes.size())
+	for i: int in shown:
+		push_note(notes[i], glyphs)
 
 ## Swaps the slot at `index` to its lit texture.
 func light(index: int) -> void:

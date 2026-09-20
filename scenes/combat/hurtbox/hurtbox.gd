@@ -14,6 +14,11 @@ func _physics_process(delta: float) -> void:
 func is_invulnerable() -> bool:
 	return _invulnerability_timer > 0.0
 
+## Opens a grace window on demand - a recalled skill's first use, say - on top
+## of whatever a hit would grant. Never shortens one already running.
+func grant_invulnerability(seconds: float) -> void:
+	_invulnerability_timer = maxf(_invulnerability_timer, seconds)
+
 func receive_hit(damage: int, knockback: Vector2 = Vector2.ZERO, source: Node2D = null) -> void:
 	if is_invulnerable():
 		return

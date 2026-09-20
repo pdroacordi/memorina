@@ -64,6 +64,16 @@ func test_an_expired_window_fails_the_answer() -> void:
 	assert_int(_fight.phase()).is_equal(GuardianFight.Phase.PRESSURE)
 	assert_int(_fight.aggression()).is_equal(1)
 
+## The answer cannot be played faster than the call was sounded, so the
+## phrase's own length is added to the slack.
+func test_the_window_is_the_calls_length_plus_the_slack() -> void:
+	_fight.begin()
+	_hit_until_open()
+	_fight.open_window(10.0)
+	assert_float(_fight.window_left()).is_equal_approx(14.0, 0.001)
+	assert_bool(_fight.tick(13.9)).is_false()
+	assert_bool(_fight.tick(0.2)).is_true()
+
 func test_a_good_answer_returns_to_pressure_until_the_last_cycle() -> void:
 	_fight.begin()
 	_hit_until_open()

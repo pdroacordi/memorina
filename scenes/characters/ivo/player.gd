@@ -22,6 +22,19 @@ signal note_cue_reached(index: int)
 ## A song was just learned; its whole track is about to be performed.
 signal lesson_started(song: Song, glyph_set: Enums.GlyphSet)
 signal song_played(song: Song, position: Vector2)
+## A guardian is calling: its phrase, how many of its notes the sheet may show,
+## and the glyphs to show them with. The instrument is not out yet.
+signal call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet)
+## The guardian's call sounded the note at `index`.
+signal call_note_sounded(index: int)
+signal call_closed
+## The phrase was played back whole, in time. Relayed from the instrument.
+signal call_answered(song: Song)
+## The emergency QTE opened: the prompt asks for `action`. The world slows.
+signal recall_started(action: StringName)
+signal recall_ended
+signal skill_recalled(skill: Enums.PlayerSkill)
+signal skill_recall_missed(skill: Enums.PlayerSkill)
 
 const GROUP := "player"
 
@@ -55,6 +68,10 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 @onready var _memorina        : MemorinaComponent = $Memorina
 @onready var _voice           : MemorinaVoice = $MemorinaVoice
 @onready var _performance     : SongPerformance = $SongPerformance
+@onready var _recall          : AbilityRecallComponent = $AbilityRecall
+## The colour Ivo holds against the grey. Raised to full during a recall: the
+## design has colour born at the head, not at the instrument.
+@onready var _shield          : GreyhushShield = $GreyhushShield
 @onready var _hitbox          : Hitbox = $Hitbox
 ## A concrete view of Character's generic resolver, for the duration assert.
 @onready var _player_resolver : PlayerAnimationResolver = $AnimationResolver
@@ -74,6 +91,8 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 ## the draw clip has reached memorina_idle before the world freezes - a
 ## frozen resolver cannot switch clips.
 @export var lesson_lead_in    : float = 0.5
+## Seconds the shield takes to bloom to full colour when a recall opens.
+@export var recall_glow_time  : float = 0.2
 
 var _states: CharacterStateMachine
 ## Which AttackStats the current sequence started with, held fixed for its
@@ -93,6 +112,9 @@ var _just_double_jumped: bool = false
 var _last_glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
 ## A matched song whose last note is still ringing; performed on note_finished.
 var _pending_performance: Song = null
+## The shield's authored amount, restored when a recall ends.
+var _resting_shield_amount: float = 0.0
+var _glow_tween: Tween
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -109,6 +131,13 @@ func _ready() -> void:
 	_landing.hard_landed.connect(hard_landed.emit)
 	_double_jump.double_jumped.connect(_on_double_jumped)
 	_input.roll_pressed.connect(_roll.buffer_roll)
+	# The recall hears the same presses the abilities buffer, and unlocks the
+	# skill in the same frame, before _try_roll/_try_jump run - so the press
+	# that remembers the roll is also the roll that dodges the attack.
+	_input.roll_pressed.connect(_recall.notify.bind(&"roll"))
+	_input.jump_pressed.connect(_recall.notify.bind(&"jump"))
+	_recall.recalled.connect(_on_skill_recalled)
+	_recall.missed.connect(_on_skill_recall_missed)
 	_input.attack_pressed.connect(_attack.buffer_attack)
 	_input.draw_memorina_pressed.connect(_memorina.buffer_toggle)
 	_input.note_pressed.connect(_on_note_pressed)
@@ -120,6 +149,7 @@ func _ready() -> void:
 	_memorina.sequence_failed.connect(_on_sequence_failed)
 	_memorina.song_matched.connect(_on_song_matched)
 	_memorina.song_played.connect(_on_song_played)
+	_memorina.call_answered.connect(call_answered.emit)
 	_voice.note_finished.connect(_on_note_finished)
 	_voice.mistake_finished.connect(sequence_reset.emit)
 	_performance.started.connect(performance_started.emit)
@@ -141,6 +171,7 @@ func _ready() -> void:
 	_states.add_state(MotionState.ROLL, _roll_motion)
 	_states.add_state(MotionState.GROUND, _ground_motion)
 	_states.add_state(MotionState.AIR, _air_physics)
+	_resting_shield_amount = _shield.amount
 
 	_assert_clip_durations()
 	if OS.is_debug_build() and song_catalog:
@@ -160,6 +191,9 @@ func _process_motion(delta: float) -> void:
 	_roll.tick_timers(delta, on_floor)
 	_attack.tick_timers(delta)
 	_memorina.tick_timers(delta)
+	# The recall's window is real seconds: the world is slowed while it is open,
+	# and `delta` is game time.
+	_recall.tick(delta / maxf(Engine.time_scale, 0.001))
 	# Checked every frame rather than hooked to one event, because everything
 	# that ends a performance - stepping off a ledge, being knocked back, ice
 	# melting underfoot - is simply "no longer standing still".
@@ -394,27 +428,104 @@ func _on_memorina_sheathed() -> void:
 func _on_song_played(song: Song) -> void:
 	song_played.emit(song, global_position)
 
-## Stand-in for the guardian's lesson until guardians exist: learns the first
-## song the save does not have and performs its whole track. Ignored unless
-## Ivo could draw right now and the instrument is quiet, so the lesson never
-## starts mid-air, mid-run, mid-performance or over a mistake that would then
-## clear its sheet - and the save is only touched once it will really start.
-func _on_debug_learn_song_pressed() -> void:
-	var song := _next_unknown_song()
-	if song == null or _memorina.is_performing() or _voice.is_busy() or not is_still():
-		return
+## The lesson: the song is learned and its whole track performed, the sheet
+## carrying the banner. A restored guardian calls this; F9 stands in for the
+## guardians that do not exist yet. Refused unless Ivo could draw right now
+## and the instrument is not saying no, so a lesson never starts mid-air,
+## mid-run, mid-performance or over a mistake that would then clear its sheet
+## - and the save is only touched once it will really start. A note still
+## ringing (the last of a guardian's answer) is let finish before the track.
+func learn_song(song: Song) -> bool:
+	if song == null or _memorina.is_performing() or _voice.is_faulting() or not is_still():
+		return false
 	if not _has_item(Enums.PlayerItem.MEMORINA):
 		SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 	SaveSystem.learn_song(song.id)
+	# A call that was still open has been answered for good.
+	_memorina.call_song = null
 	if not _memorina.is_drawn():
 		_memorina.enabled = true
 		_memorina.try_draw(true, _known_songs())
 	_memorina.start_performance(song)
 	lesson_started.emit(song, _last_glyph_set)
+	_await_lesson_track(song)
+	return true
+
+## Kept as a coroutine only because both waits always end: a timer fires, and a
+## ringing note always finishes. A hit meanwhile sheathes the instrument, and
+## the check below then lets the lesson lapse.
+func _await_lesson_track(song: Song) -> void:
 	await get_tree().create_timer(lesson_lead_in).timeout
+	if _voice.is_busy():
+		await _voice.note_finished
 	if _memorina.performing_song() != song:
 		return
 	_performance.play(song.track, song.cues())
+
+func _on_debug_learn_song_pressed() -> void:
+	learn_song(_next_unknown_song())
+
+#############################################
+##  A   G U A R D I A N ' S   C A L L      ##
+#############################################
+## The guardian drives these directly; Ivo relays them as signals so the HUD
+## keeps listening to one node.
+
+## A lucidity window opened: from now until close_call(), the instrument
+## listens for `song` alone.
+func open_call(song: Song, revealed: int) -> void:
+	_memorina.call_song = song
+	call_opened.emit(song, revealed, _last_glyph_set)
+
+func sound_call_note(index: int) -> void:
+	call_note_sounded.emit(index)
+
+## The window is over. A good answer ends the gesture quietly, the way a
+## finished performance does; anything else is the interruption the player
+## already knows - the sheet flashes and the instrument goes away.
+func close_call(success: bool) -> void:
+	if _memorina.call_song == null:
+		return
+	_memorina.call_song = null
+	if success:
+		_memorina.sheathe()
+	else:
+		_memorina.interrupt()
+	call_closed.emit()
+
+#############################################
+##  A B I L I T Y   R E C A L L            ##
+#############################################
+
+## The guardian's unavoidable attack has begun and the body has a moment to
+## remember. Nothing happens if a recall is already open.
+func begin_recall(stats: AbilityRecallStats) -> void:
+	if not _recall.arm(stats):
+		return
+	_glow_shield(1.0)
+	recall_started.emit(stats.action)
+
+## The body remembered: the skill is Ivo's for good, and the attack that
+## forced it does not land while he finishes the move.
+func _on_skill_recalled(stats: AbilityRecallStats) -> void:
+	SaveSystem.unlock_skill(stats.skill)
+	hurtbox.grant_invulnerability(stats.grace_time)
+	_end_recall()
+	skill_recalled.emit(stats.skill)
+
+func _on_skill_recall_missed(stats: AbilityRecallStats) -> void:
+	_end_recall()
+	skill_recall_missed.emit(stats.skill)
+
+func _end_recall() -> void:
+	_glow_shield(_resting_shield_amount)
+	recall_ended.emit()
+
+func _glow_shield(amount: float) -> void:
+	if _glow_tween:
+		_glow_tween.kill()
+	_glow_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_glow_tween.tween_property(_shield, "amount", amount, recall_glow_time)
 
 func _next_unknown_song() -> Song:
 	if song_catalog == null:

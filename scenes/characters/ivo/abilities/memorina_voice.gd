@@ -47,6 +47,11 @@ func play_mistake_after_note() -> void:
 func is_busy() -> bool:
 	return _player.playing or _mistake_pending or _sounding_mistake
 
+## True while a mistake sounds or waits its turn: the instrument is in the
+## middle of saying no, and a lesson must not begin over it.
+func is_faulting() -> bool:
+	return _mistake_pending or _sounding_mistake
+
 func stop() -> void:
 	_mistake_pending = false
 	_sounding_mistake = false
