@@ -55,6 +55,14 @@ func tick(real_delta: float) -> void:
 	_disarm()
 	missed.emit(stats)
 
+## Drops an open window without a verdict, for an owner that can no longer
+## answer (it died). True when there was one to drop.
+func cancel() -> bool:
+	if not is_armed():
+		return false
+	_disarm()
+	return true
+
 func _disarm() -> void:
 	_stats = null
 	_left = -1.0

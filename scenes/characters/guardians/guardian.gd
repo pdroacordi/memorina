@@ -65,6 +65,14 @@ func _after_move(delta: float) -> void:
 		_close_call(false)
 	_update_shield(delta)
 
+## A room being left deactivates (or evicts) its contents, and a guardian
+## stopped mid-call would otherwise leave its phrase on Ivo's instrument for
+## good - known songs noise, the answer going to no one. Walking out of a
+## lucidity window is the answer failing.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_DISABLED or what == NOTIFICATION_EXIT_TREE:
+		_abandon_call()
+
 #############################################
 ##  S T A T E   Q U E R I E S              ##
 #############################################
@@ -151,6 +159,12 @@ func _close_call(success: bool) -> void:
 	_player.close_call(success)
 	_ai.cooldown_scale = _fight.cooldown_scale()
 	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE
+
+func _abandon_call() -> void:
+	if _fight == null or _player == null or _fight.phase() != GuardianFight.Phase.LUCIDITY:
+		return
+	_fight.answer_failed()
+	_close_call(false)
 
 ## The sync: the guardian remembers itself, the region remembers its season,
 ## and the player learns the song through the same lesson a bench would give.

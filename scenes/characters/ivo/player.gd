@@ -112,6 +112,8 @@ var _just_double_jumped: bool = false
 var _last_glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
 ## A matched song whose last note is still ringing; performed on note_finished.
 var _pending_performance: Song = null
+## An answered call whose last note is still ringing; sheathed on note_finished.
+var _pending_sheathe: bool = false
 ## The shield's authored amount, restored when a recall ends.
 var _resting_shield_amount: float = 0.0
 var _glow_tween: Tween
@@ -395,6 +397,9 @@ func _on_song_matched(song: Song) -> void:
 func _on_note_finished() -> void:
 	if _pending_performance != null:
 		_begin_pending_performance()
+	if _pending_sheathe:
+		_pending_sheathe = false
+		_memorina.sheathe()
 
 ## Only the song the instrument is still performing may be heard; anything
 ## that sheathed or re-drew it in the meantime has already cleared the way.
@@ -417,6 +422,7 @@ func _on_memorina_drawn(known_songs: Array[Song]) -> void:
 ## must also release the world, or it would stay frozen with nothing to thaw it.
 func _on_memorina_sheathed() -> void:
 	_pending_performance = null
+	_pending_sheathe = false
 	if _performance.is_playing():
 		_performance.stop()
 		performance_finished.emit()
@@ -452,10 +458,14 @@ func learn_song(song: Song) -> bool:
 	return true
 
 ## Kept as a coroutine only because both waits always end: a timer fires, and a
-## ringing note always finishes. A hit meanwhile sheathes the instrument, and
-## the check below then lets the lesson lapse.
+## ringing note always finishes. A hit meanwhile sheathes the instrument at
+## once, which is checked before the second wait: after a hit the voice may be
+## sounding the MISTAKE, which ends with mistake_finished and would leave a
+## wait on note_finished hanging until some later, unrelated note.
 func _await_lesson_track(song: Song) -> void:
 	await get_tree().create_timer(lesson_lead_in).timeout
+	if _memorina.performing_song() != song:
+		return
 	if _voice.is_busy():
 		await _voice.note_finished
 	if _memorina.performing_song() != song:
@@ -481,16 +491,26 @@ func sound_call_note(index: int) -> void:
 	call_note_sounded.emit(index)
 
 ## The window is over. A good answer ends the gesture quietly, the way a
-## finished performance does; anything else is the interruption the player
-## already knows - the sheet flashes and the instrument goes away.
+## finished performance does - once its last note has rung out, so the whole
+## phrase is seen; anything else is the interruption the player already knows,
+## the sheet flashing and the instrument going away. The instrument is
+## interrupted BEFORE the call is cleared: clearing it resets the matcher, and
+## an interruption only reports what was still in the buffer.
 func close_call(success: bool) -> void:
 	if _memorina.call_song == null:
 		return
-	_memorina.call_song = null
 	if success:
-		_memorina.sheathe()
+		if _voice.is_busy():
+			_pending_sheathe = true
+		else:
+			_memorina.sheathe()
 	else:
 		_memorina.interrupt()
+		# A window that ran out with nothing played has nothing to flash; the
+		# mistake still sounds, so every failure is heard the same way.
+		if not _voice.is_faulting():
+			_voice.play_mistake_after_note()
+	_memorina.call_song = null
 	call_closed.emit()
 
 #############################################
@@ -520,6 +540,14 @@ func _on_skill_recall_missed(stats: AbilityRecallStats) -> void:
 func _end_recall() -> void:
 	_glow_shield(_resting_shield_amount)
 	recall_ended.emit()
+
+## Death does not tick the recall, so an open window would leave the world
+## slowed forever; it is dropped here, without a miss - there is no one left
+## to miss.
+func _on_health_died() -> void:
+	super()
+	if _recall.cancel():
+		_end_recall()
 
 func _glow_shield(amount: float) -> void:
 	if _glow_tween:

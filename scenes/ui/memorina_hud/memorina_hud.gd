@@ -88,6 +88,8 @@ func on_call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet) -> voi
 	show()
 
 func on_call_note_sounded(index: int) -> void:
+	if _drawn:
+		return
 	_sheet.light(index)
 
 func on_call_closed() -> void:

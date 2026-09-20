@@ -29,4 +29,5 @@ func _key_name(action: StringName) -> String:
 	for event: InputEvent in InputMap.action_get_events(action):
 		if event is InputEventKey:
 			return (event as InputEventKey).as_text_physical_keycode()
-	return String(action)
+	# Nothing bound: better an empty prompt than an internal action id on screen.
+	return ""

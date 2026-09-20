@@ -67,3 +67,16 @@ func test_ticking_while_unarmed_does_nothing() -> void:
 	var monitor := monitor_signals(_recall)
 	_recall.tick(10.0)
 	await assert_signal(monitor).is_not_emitted("missed")
+
+## The owner died: the window is dropped without a verdict either way.
+func test_cancelling_drops_the_window_silently() -> void:
+	_recall.arm(_roll)
+	var monitor := monitor_signals(_recall)
+	assert_bool(_recall.cancel()).is_true()
+	assert_bool(_recall.is_armed()).is_false()
+	_recall.tick(5.0)
+	await assert_signal(monitor).is_not_emitted("missed")
+	await assert_signal(monitor).is_not_emitted("recalled")
+
+func test_cancelling_while_unarmed_reports_nothing_to_drop() -> void:
+	assert_bool(_recall.cancel()).is_false()
