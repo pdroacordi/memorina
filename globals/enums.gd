@@ -41,6 +41,17 @@ enum Note {
 	RIGHT
 }
 
+## Which physical buttons the player pressed a note with, so the sheet can
+## draw the key that was actually under the thumb. PlayerInput is the only
+## place that derives one from an InputEvent; MemorinaHud maps it to a
+## NoteGlyphSet. Indexes MemorinaHud.glyph_sets, so append only.
+enum GlyphSet {
+	KEYBOARD_ARROWS,
+	KEYBOARD_WASD,
+	XBOX,
+	PLAYSTATION
+}
+
 ## The eight note sequences, two per season, in season order (Winter, Summer,
 ## Autumn, Spring). English identifiers for the Portuguese design-doc names:
 ## FREEZE=Congelar, BLIZZARD=Ventania/Nevasca, CONCENTRATED_SUN=Sol
