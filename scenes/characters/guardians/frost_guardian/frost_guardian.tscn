@@ -26,12 +26,12 @@
 [ext_resource type="Resource" uid="uid://bq5froststat" path="res://resources/characters/guardians/frost_guardian/frost_guardian_stats.tres" id="21_stats"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
-radius = 30.0
-height = 110.0
+radius = 34.0
+height = 176.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hurt"]
-radius = 30.0
-height = 110.0
+radius = 34.0
+height = 176.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hit"]
 
@@ -731,7 +731,7 @@ texture = ExtResource("tex_1")
 hframes = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -92)
+position = Vector2(0, -88)
 shape = SubResource("CapsuleShape2D_body")
 
 [node name="Hurtbox" parent="." instance=ExtResource("3_hurtbox")]
@@ -739,7 +739,7 @@ collision_layer = 65536
 invulnerability_time = 0.2
 
 [node name="CollisionShape2D" parent="Hurtbox" index="0"]
-position = Vector2(0, -92)
+position = Vector2(0, -88)
 shape = SubResource("CapsuleShape2D_hurt")
 
 [node name="Hitbox" type="Area2D" parent="."]

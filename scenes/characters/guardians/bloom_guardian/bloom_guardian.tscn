@@ -27,12 +27,12 @@
 [ext_resource type="Resource" uid="uid://bq1bloomstat" path="res://resources/characters/guardians/bloom_guardian/bloom_guardian_stats.tres" id="21_stats"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
-radius = 26.0
-height = 44.0
+radius = 28.0
+height = 84.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hurt"]
-radius = 26.0
-height = 44.0
+radius = 28.0
+height = 84.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hit"]
 
@@ -732,7 +732,7 @@ texture = ExtResource("tex_1")
 hframes = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -44)
+position = Vector2(0, -42)
 shape = SubResource("CapsuleShape2D_body")
 
 [node name="Hurtbox" parent="." instance=ExtResource("3_hurtbox")]
@@ -740,7 +740,7 @@ collision_layer = 65536
 invulnerability_time = 0.2
 
 [node name="CollisionShape2D" parent="Hurtbox" index="0"]
-position = Vector2(0, -44)
+position = Vector2(0, -42)
 shape = SubResource("CapsuleShape2D_hurt")
 
 [node name="Hitbox" type="Area2D" parent="."]
