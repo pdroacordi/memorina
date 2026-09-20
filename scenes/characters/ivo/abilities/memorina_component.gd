@@ -18,6 +18,11 @@ class_name MemorinaComponent extends Node
 ## PERFORMANCE, during which the instrument is locked, and the owner reports
 ## the performance's end with finish_performance(). Only then is the song
 ## played. A lesson is a performance the owner starts by hand.
+##
+## A guardian's CALL (docs/design/02_mecanicas.md section 3) borrows the
+## instrument: while `call_song` is set, its phrase is the only candidate, and
+## playing it back answers the call instead of performing anything - the
+## instrument stays out, and the guardian decides what the answer earns.
 
 signal drawn(known_songs: Array[Song])
 signal sheathed
@@ -35,6 +40,8 @@ signal sequence_failed
 signal song_matched(song: Song)
 ## The performance ran its course; the world may answer now.
 signal song_played(song: Song)
+## The guardian's phrase was played back whole. No performance follows.
+signal call_answered(song: Song)
 
 enum State { SHEATHED, DRAWN, PERFORMING }
 
@@ -44,9 +51,21 @@ enum State { SHEATHED, DRAWN, PERFORMING }
 ## Forgiveness window for pressing C a hair before landing or stopping.
 @export var toggle_buffer_max: float = 0.12
 
+## The phrase a guardian is waiting to hear, or null. While set it replaces
+## the known songs as the only candidate; changing it mid-sequence starts the
+## sequence over, because the old notes were an answer to nothing.
+var call_song: Song = null:
+	set(value):
+		if value == call_song:
+			return
+		call_song = value
+		if _state == State.DRAWN:
+			_matcher.set_candidates(_candidates())
+
 var _matcher := SongMatcher.new()
 var _state := State.SHEATHED
 var _performing: Song = null
+var _known_songs: Array[Song] = []
 var _toggle_buffer: float = 0.0
 
 func tick_timers(delta: float) -> void:
@@ -75,7 +94,8 @@ func try_draw(can_play: bool, known_songs: Array[Song]) -> bool:
 		return false
 	_toggle_buffer = 0.0
 	_state = State.DRAWN
-	_matcher.set_candidates(known_songs)
+	_known_songs = known_songs
+	_matcher.set_candidates(_candidates())
 	drawn.emit(known_songs)
 	return true
 
@@ -113,6 +133,9 @@ func receive_note(note: Enums.Note) -> void:
 		SongMatcher.Result.MATCHED:
 			note_played.emit(note)
 			var song := _matcher.matched_song()
+			if song == call_song:
+				call_answered.emit(song)
+				return
 			start_performance(song)
 			song_matched.emit(song)
 		SongMatcher.Result.FAILED:
@@ -143,3 +166,10 @@ func finish_performance() -> void:
 	_state = State.DRAWN
 	song_played.emit(song)
 	sheathe()
+
+## What the matcher listens for: the guardian's phrase alone while a call is
+## open, otherwise everything the player has learned.
+func _candidates() -> Array[Song]:
+	if call_song != null:
+		return [call_song]
+	return _known_songs

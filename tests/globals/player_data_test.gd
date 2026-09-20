@@ -47,3 +47,11 @@ func test_migrate_on_an_up_to_date_save_changes_nothing() -> void:
 	data.migrate()
 	assert_int(data.learned_songs.size()).is_equal(Enums.Song.size())
 	assert_bool(data.learned_songs[Enums.Song.HATCH]).is_true()
+
+## Saves written before guardians existed have no restored_guardians at all.
+func test_migrate_adds_the_guardian_flags_an_old_save_lacks() -> void:
+	var data := PlayerData.new()
+	data.restored_guardians = []
+	data.migrate()
+	assert_int(data.restored_guardians.size()).is_equal(Enums.Guardian.size())
+	assert_bool(data.restored_guardians[Enums.Guardian.FROST]).is_false()

@@ -228,3 +228,55 @@ func test_drawing_consumes_the_buffered_toggle() -> void:
 	_memorina.buffer_toggle()
 	_draw()
 	assert_bool(_memorina.has_buffered_toggle()).is_false()
+
+#############################################
+##  A   G U A R D I A N ' S   C A L L      ##
+#############################################
+
+func _sprout() -> Song:
+	var song := Song.new()
+	song.id = Enums.Song.SPROUT
+	song.notes = [DOWN, DOWN, UP, LEFT, RIGHT, UP]
+	return song
+
+## Answering the call is not a performance: the instrument stays out and the
+## world does not answer - the guardian does.
+func test_playing_the_call_back_answers_it_instead_of_performing() -> void:
+	var sprout := _sprout()
+	_memorina.call_song = sprout
+	_draw()
+	var monitor := monitor_signals(_memorina)
+	for note: Enums.Note in sprout.notes:
+		_memorina.receive_note(note)
+	await assert_signal(monitor).is_emitted("call_answered", [sprout])
+	await assert_signal(monitor).is_not_emitted("song_matched")
+	assert_bool(_memorina.is_performing()).is_false()
+	assert_bool(_memorina.is_drawn()).is_true()
+
+## While a guardian calls, only its phrase counts - a known song is noise.
+func test_known_songs_are_not_candidates_during_a_call() -> void:
+	_memorina.call_song = _sprout()
+	_draw()
+	var monitor := monitor_signals(_memorina)
+	_memorina.receive_note(UP)
+	await assert_signal(monitor).is_emitted("sequence_failed")
+
+## The call can open while the instrument is already out.
+func test_a_call_opened_while_drawn_replaces_the_candidates() -> void:
+	_draw()
+	_memorina.receive_note(UP)
+	var sprout := _sprout()
+	_memorina.call_song = sprout
+	var monitor := monitor_signals(_memorina)
+	for note: Enums.Note in sprout.notes:
+		_memorina.receive_note(note)
+	await assert_signal(monitor).is_emitted("call_answered", [sprout])
+
+## Once the call closes, the player's own songs are candidates again.
+func test_closing_the_call_restores_the_known_songs() -> void:
+	_memorina.call_song = _sprout()
+	_draw()
+	_memorina.call_song = null
+	var monitor := monitor_signals(_memorina)
+	_play_freeze()
+	await assert_signal(monitor).is_emitted("song_matched", [_freeze])

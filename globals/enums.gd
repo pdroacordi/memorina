@@ -74,3 +74,11 @@ enum Song {
 	SPROUT,
 	HATCH
 }
+
+## The guardians whose restoration the save file remembers. Named after the
+## guardian, not its region: a region may hold several. Indexes
+## PlayerData.restored_guardians, so append only.
+enum Guardian {
+	FROST,
+	BLOOM
+}

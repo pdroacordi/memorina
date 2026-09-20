@@ -13,3 +13,15 @@ class_name Region extends Node2D
 ## 4.2). Every seasonal sheet in its rooms shows this season's band unless a
 ## pulse paints another over it.
 @export var season: Enums.Season = Enums.Season.SPRING
+## Whether a guardian keeps this region, and which. Restoring it lifts the
+## region's memory to 1.0 for good (section 4.1, "estacao de repouso
+## permanente"); the flag exists because an enum has no "none".
+@export var has_guardian: bool = false
+@export var guardian: Enums.Guardian = Enums.Guardian.FROST
+
+## The baseline as it stands now: the authored value until the region's
+## guardian has been restored, then full memory.
+func current_baseline() -> float:
+	if has_guardian and SaveSystem.is_guardian_restored(guardian):
+		return 1.0
+	return memory_baseline

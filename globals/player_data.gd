@@ -3,6 +3,7 @@ class_name PlayerData extends Resource
 @export var unlocked_player_skills: Array[bool]
 @export var owned_items: Array[bool]
 @export var learned_songs: Array[bool]
+@export var restored_guardians: Array[bool]
 
 func _init() -> void:
 	migrate()
@@ -17,6 +18,7 @@ func migrate() -> void:
 	_grow(unlocked_player_skills, Enums.PlayerSkill.size())
 	_grow(owned_items, Enums.PlayerItem.size())
 	_grow(learned_songs, Enums.Song.size())
+	_grow(restored_guardians, Enums.Guardian.size())
 
 func _grow(flags: Array[bool], size: int) -> void:
 	if flags.size() < size:
