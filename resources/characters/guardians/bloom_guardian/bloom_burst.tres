@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3 uid="uid://bq0bloombrst"]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Resource" uid="uid://bq7bloomreca" path="res://resources/characters/guardians/bloom_guardian/recall_double_jump.tres" id="2_recall"]
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 1
+duration = 0.6
+attack_range = 150.0
+cooldown = 2.2
+lunge_speed = 0.0
+weight = 1.0
+recall = ExtResource("2_recall")

@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cfrostedge01"]
+
+[ext_resource type="PackedScene" uid="uid://clighthouse1" path="res://scenes/world/rooms/frost_edge/lighthouse.tscn" id="1_lighthouse"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="2_region"]
+
+[node name="FrostEdge" type="Node2D"]
+script = ExtResource("2_region")
+memory_baseline = 0.2
+season = 0
+has_guardian = true
+guardian = 0
+
+[node name="Lighthouse" parent="." instance=ExtResource("1_lighthouse")]

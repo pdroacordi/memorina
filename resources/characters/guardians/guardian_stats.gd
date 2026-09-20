@@ -16,8 +16,9 @@ extends Resource
 @export var hits_to_open: int = 5
 ## Good answers needed to restore the guardian.
 @export var cycles_to_restore: int = 2
-## Seconds the player has to answer once the call has been heard.
-@export var window: float = 6.0
+## Seconds of slack the player has to answer beyond the phrase's own length:
+## the window is the time the call took to sound, plus this.
+@export var window: float = 3.0
 ## How many of the phrase's notes are drawn on the sheet as the call sounds.
 ## The full count is a literal call; fewer is the fragmented call of a more
 ## corrupted guardian, whose tail must be caught by ear.

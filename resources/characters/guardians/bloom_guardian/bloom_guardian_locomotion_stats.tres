@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="LocomotionStats" format=3 uid="uid://bq6bloomloc3"]
+
+[ext_resource type="Script" uid="uid://bqrx4u18ndwb2" path="res://resources/characters/locomotion_stats.gd" id="1_locstats"]
+
+[resource]
+script = ExtResource("1_locstats")
+move_speed = 56.0
+acceleration = 768.0
+deceleration = 1536.0
+air_control = 0.0
+air_brakes = 0.0

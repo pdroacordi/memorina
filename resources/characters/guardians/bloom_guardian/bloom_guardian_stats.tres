@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="GuardianStats" format=3 uid="uid://bq1bloomstat"]
+
+[ext_resource type="Script" uid="uid://bidtpnbfxl8an" path="res://resources/characters/guardians/guardian_stats.gd" id="1_stats"]
+[ext_resource type="Resource" uid="uid://qmmyie1nnc9w" path="res://resources/songs/sprout.tres" id="2_song"]
+[ext_resource type="Resource" uid="uid://bq8bloomlash" path="res://resources/characters/guardians/bloom_guardian/bloom_lash.tres" id="3_lash"]
+[ext_resource type="Resource" uid="uid://bq0bloombrst" path="res://resources/characters/guardians/bloom_guardian/bloom_burst.tres" id="4_burst"]
+
+[resource]
+script = ExtResource("1_stats")
+id = 1
+song = ExtResource("2_song")
+attacks = Array[Resource]([ExtResource("3_lash"), ExtResource("4_burst")])
+hits_to_open = 5
+cycles_to_restore = 2
+window = 3.0
+revealed_notes = 4
+extra_hits_per_failure = 1
+window_scale_per_failure = 0.8
+cooldown_scale_per_failure = 0.8
+max_aggression = 3
+corrupted_shield_amount = 0.3
+tremble_hz = 6.0

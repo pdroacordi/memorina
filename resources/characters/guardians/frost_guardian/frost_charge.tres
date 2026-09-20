@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3 uid="uid://bq4frostchar"]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Resource" uid="uid://bq2frostreca" path="res://resources/characters/guardians/frost_guardian/recall_roll.tres" id="2_recall"]
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 0
+duration = 1.1666667
+attack_range = 300.0
+cooldown = 2.6
+lunge_speed = 240.0
+weight = 1.0
+recall = ExtResource("2_recall")

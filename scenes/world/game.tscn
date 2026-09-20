@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cxmds8nc576iu" path="res://scenes/characters/ivo/ivo.tscn" id="1_e2o6t"]
 [ext_resource type="PackedScene" uid="uid://d05regasxpdje" path="res://scenes/world/rooms/home_village.tscn" id="2_h30v7"]
+[ext_resource type="PackedScene" uid="uid://cfrostedge01" path="res://scenes/world/rooms/frost_edge.tscn" id="16_frost"]
 [ext_resource type="Script" uid="uid://drh8ksb1dbina" path="res://scenes/world/spawner.gd" id="2_hqfqh"]
 [ext_resource type="Script" uid="uid://c0gjegnydjn44" path="res://scenes/world/camera.gd" id="3_r5nxa"]
 [ext_resource type="Script" uid="uid://dudvwafpfnf4a" path="res://scenes/world/game.gd" id="4_game"]
@@ -14,6 +15,7 @@
 [ext_resource type="Script" uid="uid://b2arxmilugwhb" path="res://scenes/world/memory/creature_mask.gd" id="11_cmask"]
 [ext_resource type="Material" path="res://scenes/world/memory/greyhush_creatures_material.tres" id="12_cmat"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/seasonal/season_mask.tscn" id="13_smask"]
+[ext_resource type="PackedScene" uid="uid://c3q0k2vjhr8y" path="res://scenes/ui/recall_prompt/recall_prompt.tscn" id="15_prompt"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -25,6 +27,9 @@ script = ExtResource("4_game")
 process_mode = 1
 
 [node name="HomeVillage" parent="World" unique_id=587601713 instance=ExtResource("2_h30v7")]
+
+[node name="FrostEdge" parent="World" instance=ExtResource("16_frost")]
+position = Vector2(5856, 0)
 
 [node name="Player" parent="World" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
 unique_name_in_owner = true
@@ -97,6 +102,9 @@ texture = SubResource("ViewportTexture_creatures")
 [node name="MemorinaHud" parent="CanvasLayer" unique_id=1302556383 instance=ExtResource("10_hud")]
 layout_mode = 3
 
+[node name="RecallPrompt" parent="CanvasLayer" instance=ExtResource("15_prompt")]
+layout_mode = 3
+
 [node name="Fade" type="ColorRect" parent="CanvasLayer" unique_id=1302556381]
 unique_name_in_owner = true
 visible = false
@@ -122,3 +130,10 @@ script = ExtResource("6_sarsd")
 [connection signal="sequence_failed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_failed"]
 [connection signal="sequence_reset" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_reset"]
 [connection signal="song_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_song_played"]
+[connection signal="call_opened" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_opened"]
+[connection signal="call_note_sounded" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_note_sounded"]
+[connection signal="call_closed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_closed"]
+[connection signal="recall_started" from="World/Player" to="WorldFreeze" method="slow" unbinds=1]
+[connection signal="recall_ended" from="World/Player" to="WorldFreeze" method="restore"]
+[connection signal="recall_started" from="World/Player" to="CanvasLayer/RecallPrompt" method="show_for"]
+[connection signal="recall_ended" from="World/Player" to="CanvasLayer/RecallPrompt" method="dismiss"]

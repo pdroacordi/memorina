@@ -52,10 +52,12 @@ func register_hit() -> bool:
 	_transition(Phase.LUCIDITY)
 	return true
 
-## The call has been heard; the player's window starts now.
-func open_window() -> void:
+## The call has been heard; the player's window starts now. `call_length` is
+## how long the phrase itself took: the answer cannot be played any faster
+## than the call was, so the window is that plus the stats' slack.
+func open_window(call_length: float = 0.0) -> void:
 	if _phase == Phase.LUCIDITY:
-		_window_left = window_duration()
+		_window_left = maxf(call_length, 0.0) + window_duration()
 
 func is_window_open() -> bool:
 	return _phase == Phase.LUCIDITY and _window_left >= 0.0

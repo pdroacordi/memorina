@@ -3,12 +3,18 @@
 [ext_resource type="PackedScene" uid="uid://d3yi3wnqg8gub" path="res://scenes/world/rooms/home_village/downtown.tscn" id="1_vmbir"]
 [ext_resource type="PackedScene" uid="uid://b2y7r7eq4pq7r" path="res://scenes/world/rooms/home_village/woods.tscn" id="2_6d0dj"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="3_region"]
+[ext_resource type="PackedScene" uid="uid://cbloomholl01" path="res://scenes/world/rooms/home_village/bloom_hollow.tscn" id="4_bloom"]
 
 [node name="HomeVillage" type="Node2D" unique_id=587601713]
 script = ExtResource("3_region")
 memory_baseline = 0.8
+has_guardian = true
+guardian = 1
 
 [node name="Downtown" parent="." unique_id=2037857167 instance=ExtResource("1_vmbir")]
 
 [node name="Woods" parent="." unique_id=594702678 instance=ExtResource("2_6d0dj")]
 position = Vector2(1952, 0)
+
+[node name="BloomHollow" parent="." instance=ExtResource("4_bloom")]
+position = Vector2(3904, 0)

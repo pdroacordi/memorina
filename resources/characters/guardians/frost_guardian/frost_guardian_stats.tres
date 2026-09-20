@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="GuardianStats" format=3 uid="uid://bq5froststat"]
+
+[ext_resource type="Script" uid="uid://bidtpnbfxl8an" path="res://resources/characters/guardians/guardian_stats.gd" id="1_stats"]
+[ext_resource type="Resource" uid="uid://ba5q1orby23yt" path="res://resources/songs/freeze.tres" id="2_song"]
+[ext_resource type="Resource" uid="uid://bq3frostswip" path="res://resources/characters/guardians/frost_guardian/frost_swipe.tres" id="3_swipe"]
+[ext_resource type="Resource" uid="uid://bq4frostchar" path="res://resources/characters/guardians/frost_guardian/frost_charge.tres" id="4_charge"]
+
+[resource]
+script = ExtResource("1_stats")
+id = 0
+song = ExtResource("2_song")
+attacks = Array[Resource]([ExtResource("3_swipe"), ExtResource("4_charge")])
+hits_to_open = 6
+cycles_to_restore = 3
+window = 3.0
+revealed_notes = 6
+extra_hits_per_failure = 1
+window_scale_per_failure = 0.8
+cooldown_scale_per_failure = 0.8
+max_aggression = 3
+corrupted_shield_amount = 0.3
+tremble_hz = 6.0
