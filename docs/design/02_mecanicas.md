@@ -42,7 +42,7 @@
  
 ## Interface de Usuário (UI/HUD)
  
-- **Memorina (grade de 8 posições):** aparece apenas quando o jogador saca o instrumento (tecla C); tubos não aprendidos aparecem bloqueados/cinzas. Some ao guardar. (Ver seção 6.2 para a regra de execução.)
+- **Memorina (partitura):** aparece apenas quando o jogador saca o instrumento (tecla C), com um zoom suave da câmera sobre o herói, no espaço livre à frente dele (ou atrás, se ele já estiver encostado nesse lado). É uma pauta: cada nota tocada é desenhada na linha da sua altura (G4 em cima, C4 embaixo) com o ícone do botão físico usado — seta, WASD, Xbox ou PlayStation. Some ao guardar. (Ver seção 6.2 para a regra de execução.)
 - **Caderno de campo (tecla E):** dividido em seções — Lore (diário do personagem + fragmentos de portador), Canções aprendidas, Itens colecionáveis, Guardiões (registro de guardiões conhecidos e estado de corrupção).
 - **Mapa (tecla M):** elemento separado do caderno. Estilo Metroid clássico — contorno se desenha por exploração. Deliberadamente pouco detalhado mesmo depois de revelado, sem indicar posição exata ou rota ótima — reforça a intenção de tentativa e erro na navegação.
 - **Indicador de vida:** ícone temático (estilo máscara/coração), sempre visível, não barra.
@@ -150,11 +150,12 @@ Isso testa a lição central do jogo (aceitar, soltar, não insistir em reter co
 - **Reativação livre:** a Memorina nunca foi limitada por região. O jogador pode tocar qualquer sequência já aprendida em qualquer lugar do mapa, independente da estação nativa daquele local — mesmo depois de um guardião restaurar a estação natural da região permanentemente. Restaurar um guardião adiciona a estação de repouso permanente do local; não remove a possibilidade de pulsos temporários de qualquer outra sequência por cima.
 ### 6.2 Regra de execução — como o jogador toca
  
-- **UI:** grade de 8 posições fixas (2 por estação), sempre visíveis. Tubos ainda não aprendidos aparecem bloqueados/cinzas — reforça visualmente a lore do instrumento remendado se completando ao longo da jornada.
-- **Execução em tempo real, sem pausa do mundo** — mesma implementação usada no call-and-response de guardião. Sistema único, não dois modelos diferentes.
+- **UI:** uma partitura de seis posições, preenchida nota a nota conforme o jogador toca. Nenhuma indicação de quais canções existem ou estão travadas — a UI mostra o que foi tocado, não o que pode ser. (A grade de 8 tubos foi descartada; a lore do instrumento remendado fica para o caderno de campo.)
+- **Execução em tempo real, sem pausa do mundo** — mesma implementação usada no call-and-response de guardião. Sistema único, não dois modelos diferentes. Cada nota tem seu som, e a próxima só pode ser tocada quando o som da anterior termina — o ritmo do instrumento é o ritmo do jogador.
+- **Resposta do instrumento:** completada a sequência, a última nota soa até o fim e então o mundo congela enquanto o instrumento responde com um trecho curto da canção (o motivo, as mesmas seis notas), acendendo na partitura cada nota conforme ela soa. O pulso de cor nasce exatamente quando o trecho termina, o mundo volta a andar e a Memorina é guardada sozinha — a resposta encerra o gesto. A canção completa só é ouvida uma vez, ao ser aprendida, com o mesmo congelamento e a mensagem "Você aprendeu a tocar" mais o título da peça no topo da partitura.
 - **Restrição obrigatória: a Memorina só é tocada com o personagem completamente parado, em chão firme.** Nunca no ar, nunca em movimento. Essa regra existe antes de qualquer outra consideração de puzzle — puzzles que dependeriam de tocar durante queda ou salto foram redesenhados para respeitá-la (ver seção 7.4).
 - **Input:** sequência de botões direcionais (referência: Ocarina of Time), não seleção de item por menu ou lista.
-- **Erro de sequência:** reseta silenciosamente — a sequência tocada até ali pisca brevemente e volta a vazio, sem popup, sem penalidade de recurso (vida, tempo). O jogador tenta de novo imediatamente.
+- **Erro de sequência:** a nota errada não soa — o som de erro da Memorina toca no lugar dela, o ícone é desenhado e a partitura pisca; só então a sequência volta a vazio. Sem popup, sem penalidade de recurso (vida, tempo). O jogador tenta de novo assim que o som de erro termina. Uma sequência que não corresponde a nenhuma canção aprendida falha da mesma forma.
 - **Apoio de memória:** o caderno de campo registra as sequências já aprendidas, consultável fora do momento de execução — decorar é necessário para jogar fluido, mas existe rede de segurança contra esquecimento.
 - **Nenhuma sugestão contextual na UI.** O ambiente (cor, textura do material) é responsável por comunicar qual sequência resolve o quê — coerente com a filosofia geral de não expor mecânica.
 ## 7. Sistema de sequências de notas — as 8 sequências
