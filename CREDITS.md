@@ -13,3 +13,9 @@ Third-party art used in Memorina, with the terms it was taken under.
   (Craftpix)**, https://free-game-assets.itch.io/free-forest-bosses-pixel-art-sprite-sheet-pack,
   under the [Craftpix free licence](https://craftpix.net/file-licenses/) (commercial
   use permitted, redistribution of the source files is not).
+
+## UI
+
+- **Key prompts, frames and banners** (`assets/sprites/hud/memorina/input_*.png`,
+  `assets/sprites/hud/recall/`, the `memorina_*` fonts) — from the *RPG UI pack* by
+  **Franuka**, https://franuka.itch.io/ (free for commercial use; a link back is asked for).

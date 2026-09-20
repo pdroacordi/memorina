@@ -3,7 +3,7 @@ class_name MemorinaHud extends Control
 ## The sheet the instrument is read from: appears when the Memorina is drawn,
 ## shows each note as it is pressed with the button it was pressed on, blinks
 ## on a mistake, lights up as a performance replays the song, and carries the
-## lesson banner. An observer of Player's signals (wired in game.tscn) that
+## notes of a lesson as its track plays. An observer of Player's signals (wired in game.tscn) that
 ## decides nothing.
 ##
 ## process_mode is ALWAYS in the scene, because the world is frozen while a
@@ -29,7 +29,6 @@ var _fade_tween: Tween
 
 @onready var _frame: TextureRect = $Frame
 @onready var _sheet: NoteSheet = $Frame/NoteSheet
-@onready var _banner: LearnBanner = $Frame/LearnBanner
 
 func _ready() -> void:
 	assert(glyph_sets.size() == Enums.GlyphSet.size(),
@@ -44,7 +43,6 @@ func on_drawn(_known_songs: Array[Song], facing: int) -> void:
 	# Cleared here as well as on sheathe, so the sheet never inherits what an
 	# earlier session left behind however the HUD came to be open.
 	_sheet.clear()
-	_banner.dismiss()
 	_frame.hide()
 	show()
 
@@ -62,7 +60,6 @@ func on_camera_focused(subject_screen_position: Vector2) -> void:
 
 func on_sheathed() -> void:
 	_sheet.clear()
-	_banner.dismiss()
 	hide()
 
 func on_note_played(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
@@ -80,13 +77,12 @@ func on_sequence_reset() -> void:
 func on_note_cue_reached(index: int) -> void:
 	_sheet.light(index)
 
+## The title card is LessonCinematic's; here only the notes to be lit.
 func on_lesson_started(song: Song, glyph_set: Enums.GlyphSet) -> void:
 	_sheet.show_notes(song.notes, glyph_sets[glyph_set])
-	_banner.show_for(song)
 
 func on_song_played(_song: Song, _position: Vector2) -> void:
 	_sheet.clear()
-	_banner.dismiss()
 
 ## The frame goes to the side Ivo faces, unless he already stands in that half
 ## (the camera clamped against a room edge), in which case the room is behind

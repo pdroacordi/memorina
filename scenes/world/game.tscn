@@ -16,6 +16,7 @@
 [ext_resource type="Script" uid="uid://c1anfmns84gaa" path="res://scenes/world/world_freeze.gd" id="14_freeze"]
 [ext_resource type="PackedScene" uid="uid://c3q0k2vjhr8y" path="res://scenes/ui/recall_prompt/recall_prompt.tscn" id="15_prompt"]
 [ext_resource type="PackedScene" uid="uid://cguardcallhud" path="res://scenes/ui/guardian_call_hud/guardian_call_hud.tscn" id="17_callhud"]
+[ext_resource type="PackedScene" uid="uid://clessoncinem" path="res://scenes/ui/lesson_cinematic/lesson_cinematic.tscn" id="18_cine"]
 [ext_resource type="PackedScene" uid="uid://cfrostedge01" path="res://scenes/world/rooms/frost_edge.tscn" id="16_frost"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
@@ -89,6 +90,9 @@ script = ExtResource("8_greyh")
 creature_pass_path = NodePath("../Creatures")
 season_mask_path = NodePath("../../SeasonMask")
 
+[node name="LessonCinematic" parent="CanvasLayer" instance=ExtResource("18_cine")]
+layout_mode = 3
+
 [node name="Creatures" type="TextureRect" parent="CanvasLayer" unique_id=1302556384]
 texture_filter = 1
 material = ExtResource("12_cmat")
@@ -128,9 +132,9 @@ script = ExtResource("6_sarsd")
 [connection signal="performance_finished" from="World/Player" to="WorldFreeze" method="thaw"]
 [connection signal="performance_started" from="World/Player" to="WorldFreeze" method="freeze"]
 [connection signal="recall_ended" from="World/Player" to="WorldFreeze" method="restore"]
-[connection signal="recall_ended" from="World/Player" to="CanvasLayer/RecallPrompt" method="dismiss"]
+[connection signal="recall_ended" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_recall_ended"]
 [connection signal="recall_started" from="World/Player" to="CanvasLayer/RecallPrompt" method="show_for"]
-[connection signal="recall_started" from="World/Player" to="WorldFreeze" method="slow" unbinds=1]
+[connection signal="recall_started" from="World/Player" to="WorldFreeze" method="slow" unbinds=2]
 [connection signal="sequence_failed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_failed"]
 [connection signal="sequence_reset" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_reset"]
 [connection signal="song_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_song_played"]
@@ -142,3 +146,8 @@ script = ExtResource("6_sarsd")
 [connection signal="call_answered" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_answered"]
 [connection signal="call_closed" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_closed"]
 [connection signal="sequence_failed" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_sequence_failed"]
+[connection signal="skill_recalled" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_recalled"]
+[connection signal="skill_recall_missed" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_missed"]
+[connection signal="hit_landed" from="World/Player" to="WorldFreeze" method="hit_stop"]
+[connection signal="lesson_started" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_lesson_started"]
+[connection signal="performance_finished" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_lesson_finished"]

@@ -6,7 +6,11 @@
 script = ExtResource("1_attack")
 clip_index = 0
 duration = 1.1666667
-attack_range = 120.0
+telegraph = 0.4
+attack_range = 110.0
 cooldown = 1.8
 lunge_speed = 0.0
 weight = 2.0
+damage = 1
+knockback_strength = 460.0
+knockback_lift = 140.0

@@ -7,4 +7,6 @@ script = ExtResource("1_recall")
 skill = 2
 action = &"roll"
 window = 1.2
-grace_time = 0.6
+grace_time = 0.7
+requires_airborne = false
+miss_damage = 0

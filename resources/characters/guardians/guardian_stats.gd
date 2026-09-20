@@ -24,6 +24,12 @@ extends Resource
 ## corrupted guardian, whose tail must be caught by ear.
 @export_range(0, 6) var revealed_notes: int = 6
 
+@export_group("Recall")
+## How many ordinary attacks the guardian makes before its unavoidable move
+## comes: the recall is a phase of the fight, not a roll of the dice. It keeps
+## coming at this cadence until the skill is remembered.
+@export var recall_after_attacks: int = 3
+
 @export_group("Aggression")
 ## Every failed answer adds this many hits to the next window's threshold...
 @export var extra_hits_per_failure: int = 1

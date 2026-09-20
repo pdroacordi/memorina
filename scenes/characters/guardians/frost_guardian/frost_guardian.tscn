@@ -24,6 +24,8 @@
 [ext_resource type="AudioStream" uid="uid://dukqiaa0dgpkr" path="res://assets/audios/sfx/memorina/mistake.mp3" id="19_mistake"]
 [ext_resource type="Script" uid="uid://bxrbxt0jji8yt" path="res://scenes/world/memory/greyhush_shield.gd" id="20_shield"]
 [ext_resource type="Resource" uid="uid://bq5froststat" path="res://resources/characters/guardians/frost_guardian/frost_guardian_stats.tres" id="21_stats"]
+[ext_resource type="Script" uid="uid://bhuyfpecwqve" path="res://scenes/world/memory/color_pulse/pulse_emitter.gd" id="22_pulsem"]
+[ext_resource type="PackedScene" path="res://scenes/world/memory/color_pulse/color_pulse.tscn" id="23_pulsesc"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 34.0
@@ -815,6 +817,10 @@ note_streams = Array[AudioStream]([ExtResource("15_note_up"), ExtResource("16_no
 mistake_stream = ExtResource("19_mistake")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Call/Voice"]
+
+[node name="PulseEmitter" type="Node" parent="."]
+script = ExtResource("22_pulsem")
+pulse_scene = ExtResource("23_pulsesc")
 
 [node name="GreyhushShield" type="Node2D" parent="."]
 position = Vector2(0, -90)

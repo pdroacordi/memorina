@@ -15,3 +15,11 @@ extends Resource
 ## Seconds of invulnerability granted on success, so the attack that forced
 ## the memory does not land while the body is still finishing the move.
 @export var grace_time: float = 0.6
+## Only open the moment once Ivo is off the ground: a double jump remembered
+## with both feet planted would be nonsense. The attack that carries this
+## must launch him (see GuardianAttack.knockback_lift); if he never leaves
+## the ground before the attack ends, the moment simply does not come.
+@export var requires_airborne: bool = false
+## Damage taken when the window closes on nothing - the design's "custo
+## tatico real". Zero when the attack itself already lands on a miss.
+@export var miss_damage: int = 0

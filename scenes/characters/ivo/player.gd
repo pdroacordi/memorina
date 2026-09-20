@@ -35,10 +35,12 @@ signal call_closed
 ## The phrase was played back whole, in time. Relayed from the instrument.
 signal call_answered(song: Song)
 ## The emergency QTE opened: the prompt asks for `action`. The world slows.
-signal recall_started(action: StringName)
+signal recall_started(action: StringName, seconds: float)
 signal recall_ended
 signal skill_recalled(skill: Enums.PlayerSkill)
 signal skill_recall_missed(skill: Enums.PlayerSkill)
+## The sword connected with something. Feedback hooks (hit-stop) listen here.
+signal hit_landed
 
 const GROUP := "player"
 
@@ -123,6 +125,10 @@ var _pending_sheathe: bool = false
 ## The shield's authored amount, restored when a recall ends.
 var _resting_shield_amount: float = 0.0
 var _glow_tween: Tween
+## A recall that must wait for Ivo to leave the ground, and how long it may
+## wait: the attack that launches him is still in flight.
+var _pending_recall: AbilityRecallStats = null
+var _pending_recall_left: float = 0.0
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -202,6 +208,7 @@ func _process_motion(delta: float) -> void:
 	# The recall's window is real seconds: the world is slowed while it is open,
 	# and `delta` is game time.
 	_recall.tick(delta / maxf(Engine.time_scale, 0.001))
+	_tick_pending_recall(delta)
 	# Checked every frame rather than hooked to one event, because everything
 	# that ends a performance - stepping off a ledge, being knocked back, ice
 	# melting underfoot - is simply "no longer standing still".
@@ -460,7 +467,9 @@ func learn_song(song: Song) -> bool:
 		SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 	SaveSystem.learn_song(song.id)
 	# A call that was still open has been answered for good.
-	_memorina.call_song = null
+	if _memorina.call_song != null:
+		_memorina.call_song = null
+		call_closed.emit()
 	if not _memorina.is_drawn():
 		_memorina.enabled = true
 		_memorina.try_draw(true, _known_songs())
@@ -536,12 +545,34 @@ func close_call(success: bool) -> void:
 #############################################
 
 ## The guardian's unavoidable attack has begun and the body has a moment to
-## remember. Nothing happens if a recall is already open.
-func begin_recall(stats: AbilityRecallStats) -> void:
+## remember. A recall that only makes sense in the air (a double jump) waits
+## for the attack to put Ivo there, for at most `attack_duration`; if it never
+## does, the moment does not come. Nothing happens if a recall is already open.
+func begin_recall(stats: AbilityRecallStats, attack_duration: float = 0.0) -> void:
+	if _recall.is_armed() or _pending_recall != null:
+		return
+	if stats.requires_airborne and is_on_floor():
+		_pending_recall = stats
+		_pending_recall_left = maxf(attack_duration, 0.1)
+		return
+	_open_recall(stats)
+
+func _tick_pending_recall(delta: float) -> void:
+	if _pending_recall == null:
+		return
+	_pending_recall_left -= delta
+	if not is_on_floor() and not is_dead():
+		var stats := _pending_recall
+		_pending_recall = null
+		_open_recall(stats)
+	elif _pending_recall_left <= 0.0:
+		_pending_recall = null
+
+func _open_recall(stats: AbilityRecallStats) -> void:
 	if not _recall.arm(stats):
 		return
 	_glow_shield(1.0)
-	recall_started.emit(stats.action)
+	recall_started.emit(stats.action, stats.window)
 
 ## The body remembered: the skill is Ivo's for good, and the attack that
 ## forced it does not land while he finishes the move.
@@ -551,8 +582,15 @@ func _on_skill_recalled(stats: AbilityRecallStats) -> void:
 	_end_recall()
 	skill_recalled.emit(stats.skill)
 
+## The window closed on nothing: the design's tactical cost, then the fight
+## goes on and the same attack will come again.
 func _on_skill_recall_missed(stats: AbilityRecallStats) -> void:
 	_end_recall()
+	# Straight to health, not through the hurtbox: the launch that set the moment
+	# up may have left i-frames running, and the cost must not hide behind them.
+	if stats.miss_damage > 0 and not is_dead():
+		health.take_damage(stats.miss_damage)
+		_just_hit = health.is_alive()
 	skill_recall_missed.emit(stats.skill)
 
 func _end_recall() -> void:
@@ -564,6 +602,7 @@ func _end_recall() -> void:
 ## to miss.
 func _on_health_died() -> void:
 	super()
+	_pending_recall = null
 	if _recall.cancel():
 		_end_recall()
 
@@ -655,6 +694,7 @@ func _on_attack_phase_started(_phase_index: int, phase: AttackPhaseData) -> void
 ## Hitbox also lands every ground-combo and other air-attack hit, so this is
 ## the one place that knows which attack is currently connecting.
 func _on_hitbox_connected(_target: Hurtbox) -> void:
+	hit_landed.emit()
 	if _attack_context == CTX_POGO:
 		_pogo.try_bounce()
 

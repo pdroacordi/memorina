@@ -26,8 +26,11 @@ func resolve() -> StringName:
 			return RESTORED
 		GuardianFight.Phase.LUCIDITY:
 			return LUCID
-	if _guardian.is_attacking():
+	if _guardian.is_swinging():
 		return attack_clip_for(_guardian.current_attack().clip_index)
+	# The wind-up is the idle pose held still; the telegraph tint does the rest.
+	if _guardian.is_telegraphing():
+		return IDLE
 	if _guardian.just_hit() or driver.holding(HURT):
 		return HURT
 	if _guardian.wants_to_move():
