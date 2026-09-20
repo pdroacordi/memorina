@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="NoteGlyphSet" format=3 uid="uid://cejhyc0gmatyf"]
+
+[ext_resource type="Script" uid="uid://4xryj0q84ggy" path="res://resources/ui/memorina/note_glyph_set.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://b0qeelo17oown" path="res://assets/sprites/hud/memorina/input_key_up_normal.png" id="2_key_up_normal"]
+[ext_resource type="Texture2D" uid="uid://bwh15uv0tiab8" path="res://assets/sprites/hud/memorina/input_key_down_normal.png" id="3_key_down_normal"]
+[ext_resource type="Texture2D" uid="uid://c6mwmaxujrl03" path="res://assets/sprites/hud/memorina/input_key_left_normal.png" id="4_key_left_normal"]
+[ext_resource type="Texture2D" uid="uid://2rked35igr61" path="res://assets/sprites/hud/memorina/input_key_right_normal.png" id="5_key_right_normal"]
+[ext_resource type="Texture2D" uid="uid://u7uq8uneibce" path="res://assets/sprites/hud/memorina/input_key_up_selected.png" id="6_key_up_selected"]
+[ext_resource type="Texture2D" uid="uid://c3vxfvy1axywq" path="res://assets/sprites/hud/memorina/input_key_down_selected.png" id="7_key_down_selected"]
+[ext_resource type="Texture2D" uid="uid://cxw3ihva4psng" path="res://assets/sprites/hud/memorina/input_key_left_selected.png" id="8_key_left_selected"]
+[ext_resource type="Texture2D" uid="uid://d35gpysyv4kw7" path="res://assets/sprites/hud/memorina/input_key_right_selected.png" id="9_key_right_selected"]
+
+[resource]
+script = ExtResource("1")
+normal = Array[Texture2D]([ExtResource("2_key_up_normal"), ExtResource("3_key_down_normal"), ExtResource("4_key_left_normal"), ExtResource("5_key_right_normal")])
+selected = Array[Texture2D]([ExtResource("6_key_up_selected"), ExtResource("7_key_down_selected"), ExtResource("8_key_left_selected"), ExtResource("9_key_right_selected")])

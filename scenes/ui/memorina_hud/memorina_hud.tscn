@@ -1,39 +1,79 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://cgemp6dv20p04"]
 
-[ext_resource type="Script" path="res://scenes/ui/memorina_hud/memorina_hud.gd" id="1"]
-[ext_resource type="Resource" path="res://resources/songs/song_catalog.tres" id="2"]
+[ext_resource type="Script" uid="uid://dhc8ahepa2nuo" path="res://scenes/ui/memorina_hud/memorina_hud.gd" id="1_hud"]
+[ext_resource type="Script" uid="uid://c5qar8k7xv8sp" path="res://scenes/ui/memorina_hud/note_sheet.gd" id="2_sheet"]
+[ext_resource type="Script" uid="uid://cqyna7sxbhhor" path="res://scenes/ui/memorina_hud/learn_banner.gd" id="3_banner"]
+[ext_resource type="Texture2D" uid="uid://bt2f25c8mps4u" path="res://assets/sprites/hud/memorina/memorina_hud.png" id="4_frame"]
+[ext_resource type="Resource" uid="uid://cejhyc0gmatyf" path="res://resources/ui/memorina/glyphs_keyboard_arrows.tres" id="5_arrows"]
+[ext_resource type="Resource" uid="uid://b7ydybckw6b6" path="res://resources/ui/memorina/glyphs_keyboard_wasd.tres" id="6_wasd"]
+[ext_resource type="Resource" uid="uid://cnf3aoe4h2el5" path="res://resources/ui/memorina/glyphs_xbox.tres" id="7_xbox"]
+[ext_resource type="Resource" uid="uid://de6c0f56tdvha" path="res://resources/ui/memorina/glyphs_playstation.tres" id="8_ps"]
+[ext_resource type="FontFile" uid="uid://dsutvchk6baqt" path="res://assets/fonts/memorina_text_font_size_8.ttf" id="9_text_font"]
+[ext_resource type="FontFile" uid="uid://dwda2yqceaac8" path="res://assets/fonts/memorina_title_font_size_17.ttf" id="10_title_font"]
+[ext_resource type="Script" uid="uid://4xryj0q84ggy" path="res://resources/ui/memorina/note_glyph_set.gd" id="12_glyph_script"]
 
-[node name="MemorinaHud" type="Control"]
+[node name="MemorinaHud" type="Control" unique_id=2082579967]
+process_mode = 3
 visible = false
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-script = ExtResource("1")
-catalog = ExtResource("2")
+script = ExtResource("1_hud")
+glyph_sets = Array[ExtResource("12_glyph_script")]([ExtResource("5_arrows"), ExtResource("6_wasd"), ExtResource("7_xbox"), ExtResource("8_ps")])
 
-[node name="Panel" type="VBoxContainer" parent="."]
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
+[node name="Frame" type="TextureRect" parent="." unique_id=1274828971]
+layout_mode = 0
+offset_right = 256.0
+offset_bottom = 128.0
+mouse_filter = 2
+texture = ExtResource("4_frame")
+
+[node name="NoteSheet" type="Control" parent="Frame" unique_id=1678051198]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -196.0
-offset_top = -76.0
-offset_right = 196.0
-offset_bottom = -6.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
 mouse_filter = 2
+script = ExtResource("2_sheet")
 
-[node name="Grid" type="GridContainer" parent="Panel"]
-layout_mode = 2
-columns = 4
+[node name="LearnBanner" type="Control" parent="Frame" unique_id=1549801994]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 mouse_filter = 2
+script = ExtResource("3_banner")
 
-[node name="Buffer" type="Label" parent="Panel"]
-layout_mode = 2
+[node name="Message" type="Label" parent="Frame/LearnBanner" unique_id=7770189]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 240.0
+offset_bottom = 22.0
+theme_override_fonts/font = ExtResource("9_text_font")
+theme_override_font_sizes/font_size = 8
 horizontal_alignment = 1
-mouse_filter = 2
+vertical_alignment = 1
+
+[node name="Title" type="Label" parent="Frame/LearnBanner" unique_id=310407075]
+layout_mode = 0
+offset_left = 16.0
+offset_top = 14.0
+offset_right = 240.0
+offset_bottom = 40.0
+theme_override_colors/font_color = Color(0.96, 0.9, 0.72, 1)
+theme_override_colors/font_outline_color = Color(0.13, 0.08, 0.05, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("10_title_font")
+theme_override_font_sizes/font_size = 17
+horizontal_alignment = 1
+vertical_alignment = 1
