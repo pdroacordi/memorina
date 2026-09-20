@@ -3,6 +3,12 @@ extends Camera2D
 ## Follows a subject, leading horizontally toward its facing and vertically
 ## toward its look intent and fall speed, without showing outside the room.
 
+## The focus zoom has landed and no look-ahead is still in flight: the frame
+## is final. `subject_screen_position` is the subject in canvas pixels, for
+## whoever must lay out around it (the Memorina's sheet) - the camera is the
+## one node that legitimately turns world into screen.
+signal focused(subject_screen_position: Vector2)
+
 @export_category("Framing")
 ## Constant vertical bias, so the character sits below centre. Exported rather
 ## than read from the node's own offset, which this script overwrites at runtime.
@@ -29,8 +35,19 @@ extends Camera2D
 ## Seconds to close most of the gap to the vertical target. 0 snaps instantly.
 @export var vertical_smooth_time  : float = 0.25
 
+@export_category("Focus")
+## Zoom while the Memorina is drawn. Non-integer values draw uneven pixels;
+## retune to 2.0 if that shows.
+@export var focus_zoom            : float = 1.5
+@export var focus_duration        : float = 0.5
+@export var focus_transition      : Tween.TransitionType = Tween.TRANS_QUAD
+@export var focus_ease            : Tween.EaseType = Tween.EASE_OUT
+
 var _subject: Node2D
 var _look_ahead_tween: Tween
+var _focus_tween: Tween
+## True between focus() and the `focused` it owes.
+var _focus_pending: bool = false
 var _peek_axis: float = 0.0
 var _peek_hold: float = 0.0
 var _bounds: Rect2
@@ -73,16 +90,54 @@ func follow(subject: Node2D) -> void:
 		# current facing directly rather than waiting for the first turn.
 		offset.x = look_ahead_distance * _subject.facing
 
+## Eases in on the subject while the instrument is out. The tween runs through
+## a paused tree, because the world is frozen while a performance plays and
+## the lesson's draw may still be easing in when it starts.
+func focus() -> void:
+	_focus_pending = true
+	_tween_zoom(Vector2.ONE * focus_zoom)
+
+func unfocus() -> void:
+	_focus_pending = false
+	_tween_zoom(Vector2.ONE)
+
+func _tween_zoom(target: Vector2) -> void:
+	if _focus_tween:
+		_focus_tween.kill()
+	_focus_tween = create_tween() \
+		.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
+		.set_trans(focus_transition) \
+		.set_ease(focus_ease)
+	_focus_tween.tween_property(self, "zoom", target, focus_duration)
+	_focus_tween.finished.connect(_check_focused)
+
 func _on_subject_facing_changed(facing: int) -> void:
 	if _look_ahead_tween:
 		_look_ahead_tween.kill()
 
+	# Pause-independent like the zoom: a lesson freezes the world moments after
+	# the draw, and a look-ahead stuck mid-flight would never report `focused`.
 	_look_ahead_tween = create_tween() \
 		.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS) \
+		.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
 		.set_trans(look_ahead_transition) \
 		.set_ease(look_ahead_ease)
 	_look_ahead_tween.tween_property(self, "offset:x",
 		look_ahead_distance * facing, look_ahead_duration)
+	_look_ahead_tween.finished.connect(_check_focused)
+
+## Called as each tween lands; `focused` fires once both have. A look-ahead
+## begun by a turn just before the draw is the case that matters: the sheet
+## laid out before it lands would sit where the subject is about to be.
+func _check_focused() -> void:
+	if not _focus_pending or _subject == null \
+			or _is_running(_focus_tween) or _is_running(_look_ahead_tween):
+		return
+	_focus_pending = false
+	focused.emit(get_viewport().get_canvas_transform() * _subject.global_position)
+
+func _is_running(tween: Tween) -> bool:
+	return tween != null and tween.is_valid() and tween.is_running()
 
 # Smoothed toward a computed target rather than tweened like the horizontal
 # axis: two sources feed this axis and the fall-speed one changes every frame,
