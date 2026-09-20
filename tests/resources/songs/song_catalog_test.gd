@@ -45,3 +45,38 @@ func test_every_song_and_season_has_a_translation_key() -> void:
 	for song: Song in _catalog().songs:
 		assert_str(song.name_key).is_not_empty()
 		assert_str(song.palette.name_key).is_not_empty()
+
+func test_every_song_is_six_notes_long() -> void:
+	for song: Song in _catalog().songs:
+		assert_array(song.notes).override_failure_message(
+			"song %d is not %d notes long" % [song.id, Song.NOTE_COUNT]).has_size(Song.NOTE_COUNT)
+
+func test_every_song_has_a_title_and_a_track() -> void:
+	for song: Song in _catalog().songs:
+		assert_str(song.title_key).override_failure_message("song %d has no title_key" % song.id).is_not_empty()
+		assert_object(song.track).override_failure_message("song %d has no track" % song.id).is_not_null()
+		assert_object(song.performance_stream()).is_not_null()
+
+## cues() always yields one time per note, in playback order and before the
+## excerpt is cut - whether authored or spaced evenly by the fallback - so the
+## sheet lights every slot in order.
+func test_every_song_yields_one_ascending_cue_per_note_inside_the_excerpt() -> void:
+	for song: Song in _catalog().songs:
+		var cues := song.cues()
+		assert_int(cues.size()).override_failure_message(
+			"song %d yields %d cues for %d notes" % [song.id, cues.size(), song.notes.size()]).is_equal(song.notes.size())
+		for i: int in range(1, cues.size()):
+			assert_float(cues[i]).override_failure_message(
+				"song %d cue %d is not after cue %d" % [song.id, i, i - 1]).is_greater(cues[i - 1])
+		if song.excerpt_duration > 0.0:
+			assert_float(cues[-1]).override_failure_message(
+				"song %d's last cue is after the excerpt cut" % song.id).is_less(song.excerpt_duration)
+
+## An untuned or editor-stripped song still lights up: no cues in the data,
+## six evenly-spaced ones out of cues().
+func test_a_song_without_authored_cues_falls_back_to_even_spacing() -> void:
+	var song := Song.new()
+	song.notes = [Enums.Note.UP, Enums.Note.DOWN, Enums.Note.LEFT]
+	song.excerpt_duration = 8.0
+	assert_int(song.cues().size()).is_equal(3)
+	assert_array(song.cues()).is_equal(PackedFloat32Array([2.0, 4.0, 6.0]))

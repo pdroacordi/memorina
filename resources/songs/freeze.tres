@@ -3,10 +3,13 @@
 [ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1"]
 [ext_resource type="Resource" uid="uid://eg08rxapfxb1" path="res://resources/songs/palettes/winter_palette.tres" id="2"]
 [ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
+[ext_resource type="AudioStream" uid="uid://cdp7wqyp54efu" path="res://assets/audios/soundtrack/hymn_of_frost.mp3" id="4"]
 
 [resource]
 script = ExtResource("1")
 palette = ExtResource("2")
-notes = Array[int]([0, 2, 1])
+notes = Array[int]([0, 3, 2, 1, 1, 1])
 name_key = "SONG_FREEZE"
+title_key = "SONG_TITLE_FREEZE"
 pulse_stats = ExtResource("3")
+track = ExtResource("4")

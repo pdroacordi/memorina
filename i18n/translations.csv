@@ -11,8 +11,12 @@ SONG_WEAKEN,Weaken,Fragilizar
 SONG_STRIP,Strip,Despir
 SONG_SPROUT,Sprout,Brotar
 SONG_HATCH,Hatch,Eclodir
-SONG_LOCKED,---,---
-NOTE_UP,↑,↑
-NOTE_DOWN,↓,↓
-NOTE_LEFT,←,←
-NOTE_RIGHT,→,→
+SONG_TITLE_FREEZE,Hymn of Frost,Hino do Gelo
+SONG_TITLE_BLIZZARD,Song of the Restless Wind,Canção do Vento Inquieto
+SONG_TITLE_CONCENTRATED_SUN,Chant of the Waking Sun,Canto do Sol que Desperta
+SONG_TITLE_SUDDEN_STORM,Call of the Lightning,Chamado do Relâmpago
+SONG_TITLE_WEAKEN,Dirge of Hollow Bark,Lamento da Casca Oca
+SONG_TITLE_STRIP,Song of Bare Branches,Canção dos Galhos Nus
+SONG_TITLE_SPROUT,Song of the Green Reaching,Canção do Verde que Alcança
+SONG_TITLE_HATCH,Song of the Cracking Shell,Canção da Casca que Racha
+MEMORINA_LEARNED,You learned how to play,Você aprendeu a tocar

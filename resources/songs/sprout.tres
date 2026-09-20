@@ -1,13 +1,19 @@
-[gd_resource type="Resource" script_class="Song" load_steps=4 format=3 uid="uid://8g3or0qmz8xb"]
+[gd_resource type="Resource" script_class="Song" load_steps=5 format=3 uid="uid://qmmyie1nnc9w"]
 
-[ext_resource type="Script" path="res://resources/songs/song.gd" id="1"]
-[ext_resource type="Resource" path="res://resources/songs/palettes/spring_palette.tres" id="2"]
-[ext_resource type="Resource" path="res://resources/memory/default_pulse_stats.tres" id="3"]
+[ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1"]
+[ext_resource type="Resource" uid="uid://01ev38nb1dau" path="res://resources/songs/palettes/spring_palette.tres" id="2"]
+[ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
+[ext_resource type="AudioStream" uid="uid://bn033mkk2647j" path="res://assets/audios/soundtrack/song_of_the_green_reaching.mp3" id="4"]
 
 [resource]
 script = ExtResource("1")
 id = 6
 palette = ExtResource("2")
-notes = Array[int]([2,0,0])
+notes = Array[int]([1, 2, 1, 3, 1, 0])
 name_key = "SONG_SPROUT"
+title_key = "SONG_TITLE_SPROUT"
 pulse_stats = ExtResource("3")
+track = ExtResource("4")
+excerpt_duration = 7.0
+excerpt_fade = 0.5
+note_cues = PackedFloat32Array(0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
