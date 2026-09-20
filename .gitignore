@@ -2,3 +2,5 @@
 .godot/
 /android/
 reports/
+# Godot editor save leftovers (scene.tscn<digits>.tmp)
+*.tmp
