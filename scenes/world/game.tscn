@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://drctauu53sv3r" path="res://scenes/world/memory/greyhush_renderer.gd" id="8_greyh"]
 [ext_resource type="Material" uid="uid://djxjnd6bwmmlx" path="res://scenes/world/memory/greyhush_material.tres" id="9_greym"]
 [ext_resource type="PackedScene" path="res://scenes/ui/memorina_hud/memorina_hud.tscn" id="10_hud"]
+[ext_resource type="Script" path="res://scenes/world/world_freeze.gd" id="14_freeze"]
 [ext_resource type="Script" uid="uid://b2arxmilugwhb" path="res://scenes/world/memory/creature_mask.gd" id="11_cmask"]
 [ext_resource type="Material" path="res://scenes/world/memory/greyhush_creatures_material.tres" id="12_cmat"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/seasonal/season_mask.tscn" id="13_smask"]
@@ -56,6 +57,9 @@ render_target_update_mode = 3
 script = ExtResource("11_cmask")
 
 [node name="SeasonMask" parent="." unique_id=1997444878 instance=ExtResource("13_smask")]
+
+[node name="WorldFreeze" type="Node" parent="."]
+script = ExtResource("14_freeze")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=873140419]
 
@@ -104,8 +108,17 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 script = ExtResource("6_sarsd")
 
+[connection signal="lesson_started" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_lesson_started"]
+[connection signal="focused" from="World/Camera2D" to="CanvasLayer/MemorinaHud" method="on_camera_focused"]
+[connection signal="memorina_drawn" from="World/Player" to="World/Camera2D" method="focus" unbinds=2]
 [connection signal="memorina_drawn" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_drawn"]
+[connection signal="memorina_sheathed" from="World/Player" to="World/Camera2D" method="unfocus"]
 [connection signal="memorina_sheathed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sheathed"]
+[connection signal="note_cue_reached" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_note_cue_reached"]
 [connection signal="note_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_note_played"]
+[connection signal="note_rejected" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_note_rejected"]
+[connection signal="performance_finished" from="World/Player" to="WorldFreeze" method="thaw"]
+[connection signal="performance_started" from="World/Player" to="WorldFreeze" method="freeze"]
 [connection signal="sequence_failed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_failed"]
+[connection signal="sequence_reset" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_reset"]
 [connection signal="song_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_song_played"]

@@ -14,7 +14,7 @@ var _freeze: Song
 func before_test() -> void:
 	_freeze = Song.new()
 	_freeze.id = Enums.Song.FREEZE
-	_freeze.notes = [UP, LEFT, DOWN]
+	_freeze.notes = [UP, RIGHT, LEFT, DOWN, DOWN, DOWN]
 	_memorina = auto_free(MemorinaComponent.new())
 
 func _known() -> Array[Song]:
@@ -22,6 +22,10 @@ func _known() -> Array[Song]:
 
 func _draw() -> void:
 	_memorina.try_draw(true, _known())
+
+func _play_freeze() -> void:
+	for note: Enums.Note in _freeze.notes:
+		_memorina.receive_note(note)
 
 func test_it_starts_sheathed() -> void:
 	assert_bool(_memorina.is_drawn()).is_false()
@@ -51,13 +55,82 @@ func test_notes_are_ignored_while_sheathed() -> void:
 	_memorina.receive_note(UP)
 	await assert_signal(monitor).is_not_emitted("note_played")
 
-func test_a_complete_sequence_plays_the_song() -> void:
+## The last note does not play the song yet: it starts the performance, and
+## the song is played only once the owner has heard it out.
+func test_a_complete_sequence_starts_a_performance() -> void:
 	_draw()
 	var monitor := monitor_signals(_memorina)
+	_play_freeze()
+	await assert_signal(monitor).is_emitted("song_matched", [_freeze])
+	await assert_signal(monitor).is_not_emitted("song_played")
+	assert_bool(_memorina.is_performing()).is_true()
+	assert_object(_memorina.performing_song()).is_same(_freeze)
+
+## The answer ends the gesture: the song is played and the instrument is put
+## away, in that order (the HUD clears on the first and hides on the second).
+func test_finishing_the_performance_plays_the_song_then_sheathes() -> void:
+	_draw()
+	_play_freeze()
+	var order: Array[String] = []
+	_memorina.song_played.connect(func(_song: Song) -> void: order.append("played"))
+	_memorina.sheathed.connect(func() -> void: order.append("sheathed"))
+	_memorina.finish_performance()
+	assert_array(order).is_equal(["played", "sheathed"])
+	assert_bool(_memorina.is_performing()).is_false()
+	assert_bool(_memorina.is_drawn()).is_false()
+
+func test_finishing_when_nothing_is_performing_does_nothing() -> void:
+	_draw()
+	var monitor := monitor_signals(_memorina)
+	_memorina.finish_performance()
+	await assert_signal(monitor).is_not_emitted("song_played")
+
+func test_notes_are_ignored_while_performing() -> void:
+	_draw()
+	_play_freeze()
+	var monitor := monitor_signals(_memorina)
 	_memorina.receive_note(UP)
-	_memorina.receive_note(LEFT)
-	_memorina.receive_note(DOWN)
-	await assert_signal(monitor).is_emitted("song_played", [_freeze])
+	await assert_signal(monitor).is_not_emitted("note_played")
+
+## The world is answering; putting the instrument away has to wait. The
+## toggle is still consumed so it cannot fire once the answer ends.
+func test_sheathing_while_performing_is_ignored() -> void:
+	_draw()
+	_play_freeze()
+	_memorina.buffer_toggle()
+	var monitor := monitor_signals(_memorina)
+	_memorina.sheathe()
+	await assert_signal(monitor).is_not_emitted("sheathed")
+	assert_bool(_memorina.is_performing()).is_true()
+	assert_bool(_memorina.has_buffered_toggle()).is_false()
+
+## A hit while the last note still rings: the performance dies the way a wrong
+## note does, in the same order the HUD relies on.
+func test_an_interruption_while_performing_fails_then_sheathes() -> void:
+	_draw()
+	_play_freeze()
+	var order: Array[String] = []
+	_memorina.sequence_failed.connect(func() -> void: order.append("failed"))
+	_memorina.sheathed.connect(func() -> void: order.append("sheathed"))
+	_memorina.interrupt()
+	assert_array(order).is_equal(["failed", "sheathed"])
+	assert_bool(_memorina.is_drawn()).is_false()
+	assert_bool(_memorina.is_performing()).is_false()
+
+## A lesson starts a performance by hand, and whatever was half-played is gone.
+func test_a_performance_can_be_started_by_hand_while_drawn() -> void:
+	_draw()
+	_memorina.receive_note(UP)
+	assert_bool(_memorina.start_performance(_freeze)).is_true()
+	_memorina.finish_performance()
+	_draw()
+	var monitor := monitor_signals(_memorina)
+	_memorina.receive_note(RIGHT)
+	await assert_signal(monitor).is_emitted("sequence_failed")
+
+func test_a_performance_cannot_be_started_while_sheathed() -> void:
+	assert_bool(_memorina.start_performance(_freeze)).is_false()
+	assert_bool(_memorina.is_performing()).is_false()
 
 func test_every_note_is_announced_for_the_hud() -> void:
 	_draw()
@@ -65,12 +138,16 @@ func test_every_note_is_announced_for_the_hud() -> void:
 	_memorina.receive_note(UP)
 	await assert_signal(monitor).is_emitted("note_played", [UP])
 
-func test_a_wrong_note_fails_silently() -> void:
+## The wrong note is announced as rejected rather than played, so it can be
+## drawn without being sounded.
+func test_a_wrong_note_is_rejected_and_fails_the_sequence() -> void:
 	_draw()
-	var monitor := monitor_signals(_memorina)
 	_memorina.receive_note(UP)
-	_memorina.receive_note(RIGHT)
+	var monitor := monitor_signals(_memorina)
+	_memorina.receive_note(DOWN)
+	await assert_signal(monitor).is_emitted("note_rejected", [DOWN])
 	await assert_signal(monitor).is_emitted("sequence_failed")
+	await assert_signal(monitor).is_not_emitted("note_played")
 	await assert_signal(monitor).is_not_emitted("song_played")
 
 ## Failing must not put the instrument away - the design says try again
@@ -138,10 +215,8 @@ func test_redrawing_starts_from_an_empty_sequence() -> void:
 	_memorina.interrupt()
 	_draw()
 	var monitor := monitor_signals(_memorina)
-	_memorina.receive_note(UP)
-	_memorina.receive_note(LEFT)
-	_memorina.receive_note(DOWN)
-	await assert_signal(monitor).is_emitted("song_played", [_freeze])
+	_play_freeze()
+	await assert_signal(monitor).is_emitted("song_matched", [_freeze])
 
 func test_the_toggle_buffer_expires() -> void:
 	_memorina.buffer_toggle()

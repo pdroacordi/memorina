@@ -4,10 +4,23 @@ extends Character
 signal jumped(position: Vector2)
 signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
-signal memorina_drawn(known_songs: Array[Song])
+## `facing` lets the sheet pick the side with open space without knowing Ivo.
+signal memorina_drawn(known_songs: Array[Song], facing: int)
 signal memorina_sheathed
-signal note_played(note: Enums.Note)
+## A note sounded, drawn with the buttons it was pressed on.
+signal note_played(note: Enums.Note, glyph_set: Enums.GlyphSet)
+## A wrong note: drawn with its buttons, never sounded.
+signal note_rejected(note: Enums.Note, glyph_set: Enums.GlyphSet)
 signal sequence_failed
+## The mistake finished sounding; what was played so far may be forgotten.
+signal sequence_reset
+## The instrument is answering: the world holds still until performance_finished.
+signal performance_started
+signal performance_finished
+## Playback of the performance crossed the cue of the note at `index`.
+signal note_cue_reached(index: int)
+## A song was just learned; its whole track is about to be performed.
+signal lesson_started(song: Song, glyph_set: Enums.GlyphSet)
 signal song_played(song: Song, position: Vector2)
 
 const GROUP := "player"
@@ -40,6 +53,8 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 @onready var _attack          : AttackComponent = $Attack
 @onready var _pogo            : PogoComponent = $Pogo
 @onready var _memorina        : MemorinaComponent = $Memorina
+@onready var _voice           : MemorinaVoice = $MemorinaVoice
+@onready var _performance     : SongPerformance = $SongPerformance
 @onready var _hitbox          : Hitbox = $Hitbox
 ## A concrete view of Character's generic resolver, for the duration assert.
 @onready var _player_resolver : PlayerAnimationResolver = $AnimationResolver
@@ -55,6 +70,10 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 ## Every song in the game. Ivo filters it by what the save says he has learned;
 ## the component is handed the result rather than looking anything up itself.
 @export var song_catalog      : SongCatalog
+## Seconds between a lesson drawing the instrument and the track starting, so
+## the draw clip has reached memorina_idle before the world freezes - a
+## frozen resolver cannot switch clips.
+@export var lesson_lead_in    : float = 0.5
 
 var _states: CharacterStateMachine
 ## Which AttackStats the current sequence started with, held fixed for its
@@ -68,6 +87,12 @@ var _combat_disable_count: int = 0
 ## simply rising — so the event is exposed as a one-frame pulse. It fires
 ## inside _process_motion, so it is cleared at the top of the next one.
 var _just_double_jumped: bool = false
+## The buttons the last note was pressed on. MemorinaComponent never sees
+## glyphs; this rides beside its `note_played` when Ivo relays it, and a lesson
+## draws its sheet with it.
+var _last_glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
+## A matched song whose last note is still ringing; performed on note_finished.
+var _pending_performance: Song = null
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -86,12 +111,20 @@ func _ready() -> void:
 	_input.roll_pressed.connect(_roll.buffer_roll)
 	_input.attack_pressed.connect(_attack.buffer_attack)
 	_input.draw_memorina_pressed.connect(_memorina.buffer_toggle)
-	_input.note_pressed.connect(_memorina.receive_note)
-	_memorina.drawn.connect(memorina_drawn.emit)
-	_memorina.sheathed.connect(memorina_sheathed.emit)
-	_memorina.note_played.connect(note_played.emit)
-	_memorina.sequence_failed.connect(sequence_failed.emit)
+	_input.note_pressed.connect(_on_note_pressed)
+	_input.debug_learn_song_pressed.connect(_on_debug_learn_song_pressed)
+	_memorina.drawn.connect(_on_memorina_drawn)
+	_memorina.sheathed.connect(_on_memorina_sheathed)
+	_memorina.note_played.connect(_on_note_played)
+	_memorina.note_rejected.connect(_on_note_rejected)
+	_memorina.sequence_failed.connect(_on_sequence_failed)
+	_memorina.song_matched.connect(_on_song_matched)
 	_memorina.song_played.connect(_on_song_played)
+	_voice.note_finished.connect(_on_note_finished)
+	_voice.mistake_finished.connect(sequence_reset.emit)
+	_performance.started.connect(performance_started.emit)
+	_performance.cue_reached.connect(note_cue_reached.emit)
+	_performance.finished.connect(_on_performance_finished)
 	_attack.phase_started.connect(_on_attack_phase_started)
 	_hitbox.connected.connect(_on_hitbox_connected)
 	# facing_changed only fires on a CHANGE, so without this the hitbox would
@@ -293,11 +326,103 @@ func _try_memorina() -> void:
 	_memorina.enabled = _has_item(Enums.PlayerItem.MEMORINA)
 	_memorina.try_draw(is_still(), _known_songs())
 
+## A note may not sound over the one before it - the voice's verdict, pushed
+## in here the same way is_still() gates the draw. The glyph is remembered so
+## the relayed note_played can carry it.
+func _on_note_pressed(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
+	if _voice.is_busy():
+		return
+	_last_glyph_set = glyph_set
+	_memorina.receive_note(note)
+
+func _on_note_played(note: Enums.Note) -> void:
+	_voice.play_note(note)
+	note_played.emit(note, _last_glyph_set)
+
+func _on_note_rejected(note: Enums.Note) -> void:
+	note_rejected.emit(note, _last_glyph_set)
+
+## One failure, one sound. A wrong note never sounded, so the mistake plays at
+## once; an interruption lets the note that was ringing finish first.
+func _on_sequence_failed() -> void:
+	_voice.play_mistake_after_note()
+	sequence_failed.emit()
+
+## The last note rings out first, and only then does the instrument answer.
+## The world is frozen from `started` on, never at match time, so a hit that
+## lands while the note rings still aborts cleanly through interrupt(). Kept
+## as state rather than an await: a signal the voice never gets to emit would
+## leave a coroutine suspended forever.
+func _on_song_matched(song: Song) -> void:
+	_pending_performance = song
+	if not _voice.is_busy():
+		_begin_pending_performance()
+
+func _on_note_finished() -> void:
+	if _pending_performance != null:
+		_begin_pending_performance()
+
+## Only the song the instrument is still performing may be heard; anything
+## that sheathed or re-drew it in the meantime has already cleared the way.
+func _begin_pending_performance() -> void:
+	var song := _pending_performance
+	_pending_performance = null
+	if _memorina.performing_song() != song:
+		return
+	_performance.play(song.performance_stream(), song.cues(), song.excerpt_duration, song.excerpt_fade)
+
+## Thaw before the song is played, so the pulse is born into a moving world.
+func _on_performance_finished() -> void:
+	performance_finished.emit()
+	_memorina.finish_performance()
+
+func _on_memorina_drawn(known_songs: Array[Song]) -> void:
+	memorina_drawn.emit(known_songs, facing)
+
+## Sheathing mid-performance (a hit during the ring-out or the lesson's lead-in)
+## must also release the world, or it would stay frozen with nothing to thaw it.
+func _on_memorina_sheathed() -> void:
+	_pending_performance = null
+	if _performance.is_playing():
+		_performance.stop()
+		performance_finished.emit()
+	memorina_sheathed.emit()
+
 ## The component reports WHAT was played; Ivo adds WHERE, because a pulse is
 ## born at the instrument. Same shape as jumped(position), and for the same
 ## reason: ivo.tscn wires its emitters to Player with from=".".
 func _on_song_played(song: Song) -> void:
 	song_played.emit(song, global_position)
+
+## Stand-in for the guardian's lesson until guardians exist: learns the first
+## song the save does not have and performs its whole track. Ignored unless
+## Ivo could draw right now and the instrument is quiet, so the lesson never
+## starts mid-air, mid-run, mid-performance or over a mistake that would then
+## clear its sheet - and the save is only touched once it will really start.
+func _on_debug_learn_song_pressed() -> void:
+	var song := _next_unknown_song()
+	if song == null or _memorina.is_performing() or _voice.is_busy() or not is_still():
+		return
+	if not _has_item(Enums.PlayerItem.MEMORINA):
+		SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
+	SaveSystem.learn_song(song.id)
+	if not _memorina.is_drawn():
+		_memorina.enabled = true
+		_memorina.try_draw(true, _known_songs())
+	_memorina.start_performance(song)
+	lesson_started.emit(song, _last_glyph_set)
+	await get_tree().create_timer(lesson_lead_in).timeout
+	if _memorina.performing_song() != song:
+		return
+	_performance.play(song.track, song.cues())
+
+func _next_unknown_song() -> Song:
+	if song_catalog == null:
+		return null
+	for song: Song in song_catalog.songs:
+		if not SaveSystem.has_song(song.id):
+			return song
+	return null
 
 ## Only what the player has actually learned is a candidate - an unlearned
 ## sequence has to read as noise, not as a locked door.

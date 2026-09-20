@@ -47,6 +47,13 @@
 [ext_resource type="Script" uid="uid://bhuyfpecwqve" path="res://scenes/world/memory/color_pulse/pulse_emitter.gd" id="39_pulsem"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/color_pulse/color_pulse.tscn" id="40_pulsesc"]
 [ext_resource type="Script" uid="uid://bxrbxt0jji8yt" path="res://scenes/world/memory/greyhush_shield.gd" id="41_shield"]
+[ext_resource type="Script" uid="uid://bnttag3vs2ax6" path="res://scenes/characters/ivo/abilities/memorina_voice.gd" id="42_voice"]
+[ext_resource type="AudioStream" uid="uid://c8aq76pxwx3ne" path="res://assets/audios/sfx/memorina/note_up_g4.mp3" id="43_note_up"]
+[ext_resource type="AudioStream" uid="uid://d08lps65r0y32" path="res://assets/audios/sfx/memorina/note_down_c4.mp3" id="44_note_down"]
+[ext_resource type="AudioStream" uid="uid://dptbpb61tc207" path="res://assets/audios/sfx/memorina/note_low_mid_d4.mp3" id="45_note_left"]
+[ext_resource type="AudioStream" uid="uid://4ci6801k1fq0" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="46_note_right"]
+[ext_resource type="AudioStream" uid="uid://dukqiaa0dgpkr" path="res://assets/audios/sfx/memorina/mistake.mp3" id="47_mistake"]
+[ext_resource type="Script" uid="uid://bwhf6qt1sq1qu" path="res://scenes/characters/components/song_performance.gd" id="48_perf"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -1796,6 +1803,7 @@ libraries/ = SubResource("AnimationLibrary_ra23q")
 
 [node name="AnimationTree" type="AnimationTree" parent="." unique_id=902993815]
 unique_name_in_owner = true
+process_mode = 3
 root_node = NodePath("%AnimationTree/..")
 callback_mode_process = 0
 tree_root = SubResource("AnimationNodeStateMachine_ks11i")
@@ -1848,6 +1856,20 @@ script = ExtResource("28_pogoco")
 
 [node name="Memorina" type="Node" parent="." unique_id=1260112729]
 script = ExtResource("37_memoco")
+
+[node name="MemorinaVoice" type="Node" parent="."]
+process_mode = 3
+script = ExtResource("42_voice")
+note_streams = Array[AudioStream]([ExtResource("43_note_up"), ExtResource("44_note_down"), ExtResource("45_note_left"), ExtResource("46_note_right")])
+mistake_stream = ExtResource("47_mistake")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="MemorinaVoice"]
+
+[node name="SongPerformance" type="Node" parent="."]
+process_mode = 3
+script = ExtResource("48_perf")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="SongPerformance"]
 
 [node name="PulseEmitter" type="Node" parent="." unique_id=1260112730]
 script = ExtResource("39_pulsem")
