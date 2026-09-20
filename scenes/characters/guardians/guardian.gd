@@ -18,10 +18,16 @@ signal restored(guardian: Guardian)
 
 @export var stats: GuardianStats
 @export var terminal_velocity: float = 500.0
+## The hit flash: the sprite is tinted to this and eased back, so a hit reads
+## even mid-swing, when the flinch clip yields to the attack. Sprite2D:modulate
+## has no RESET track, so this write is the script's to make.
+@export var hit_flash_color: Color = Color(1.0, 0.55, 0.45)
+@export var hit_flash_time: float = 0.12
 
 var _fight: GuardianFight
 var _player: Player
 var _tremble_time: float = 0.0
+var _flash_tween: Tween
 
 @onready var _ai                : GuardianAI = $AI
 @onready var _locomotion        : LocomotionComponent = $Locomotion
@@ -111,8 +117,16 @@ func _on_hit_received(_damage: int, _knockback: Vector2, _source: Node2D) -> voi
 	if _fight.phase() != GuardianFight.Phase.PRESSURE:
 		return
 	_just_hit = true
+	_flash()
 	if _fight.register_hit():
 		_open_lucidity()
+
+func _flash() -> void:
+	if _flash_tween != null:
+		_flash_tween.kill()
+	_sprite.modulate = hit_flash_color
+	_flash_tween = create_tween()
+	_flash_tween.tween_property(_sprite, "modulate", Color.WHITE, hit_flash_time)
 
 ## The unavoidable move: while the player lacks the skill it teaches, starting
 ## it opens the recall instead of simply landing.
@@ -135,6 +149,7 @@ func _on_call_note_sounded(index: int) -> void:
 
 func _on_call_finished() -> void:
 	_fight.open_window(_call.duration())
+	_player.open_call_window(_fight.window_left())
 
 func _on_call_answered(song: Song) -> void:
 	if song != stats.song or _fight.phase() != GuardianFight.Phase.LUCIDITY:

@@ -72,6 +72,11 @@ func light(index: int) -> void:
 	if index < _notes.size():
 		_show(index, true)
 
+## Puts every slot back to its unlit texture, keeping the notes.
+func dim_all() -> void:
+	for i: int in _notes.size():
+		_show(i, false)
+
 ## The failure blink: the sheet tints and settles back, notes left in place
 ## for the caller to clear when the mistake has been heard.
 func flash() -> void:

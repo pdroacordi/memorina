@@ -27,6 +27,10 @@ signal song_played(song: Song, position: Vector2)
 signal call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet)
 ## The guardian's call sounded the note at `index`.
 signal call_note_sounded(index: int)
+## The call has been heard; Ivo has `seconds` to answer.
+signal call_window_opened(seconds: float)
+## `count` notes of the answer have landed right so far.
+signal call_progress(count: int)
 signal call_closed
 ## The phrase was played back whole, in time. Relayed from the instrument.
 signal call_answered(song: Song)
@@ -110,6 +114,8 @@ var _just_double_jumped: bool = false
 ## glyphs; this rides beside its `note_played` when Ivo relays it, and a lesson
 ## draws its sheet with it.
 var _last_glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
+## How much of the guardian's phrase the current attempt has got right.
+var _call_progress: int = 0
 ## A matched song whose last note is still ringing; performed on note_finished.
 var _pending_performance: Song = null
 ## An answered call whose last note is still ringing; sheathed on note_finished.
@@ -362,11 +368,12 @@ func _try_memorina() -> void:
 	_memorina.enabled = _has_item(Enums.PlayerItem.MEMORINA)
 	_memorina.try_draw(is_still(), _known_songs())
 
-## A note may not sound over the one before it - the voice's verdict, pushed
-## in here the same way is_still() gates the draw. The glyph is remembered so
-## the relayed note_played can carry it.
+## Whether a note may sound yet is the voice's verdict (never over the mistake,
+## never inside the gap after the last note), pushed in here the same way
+## is_still() gates the draw. The glyph is remembered so the relayed
+## note_played can carry it.
 func _on_note_pressed(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
-	if _voice.is_busy():
+	if not _voice.can_play_note():
 		return
 	_last_glyph_set = glyph_set
 	_memorina.receive_note(note)
@@ -374,6 +381,9 @@ func _on_note_pressed(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
 func _on_note_played(note: Enums.Note) -> void:
 	_voice.play_note(note)
 	note_played.emit(note, _last_glyph_set)
+	if _memorina.call_song != null:
+		_call_progress += 1
+		call_progress.emit(_call_progress)
 
 func _on_note_rejected(note: Enums.Note) -> void:
 	note_rejected.emit(note, _last_glyph_set)
@@ -381,6 +391,7 @@ func _on_note_rejected(note: Enums.Note) -> void:
 ## One failure, one sound. A wrong note never sounded, so the mistake plays at
 ## once; an interruption lets the note that was ringing finish first.
 func _on_sequence_failed() -> void:
+	_call_progress = 0
 	_voice.play_mistake_after_note()
 	sequence_failed.emit()
 
@@ -416,6 +427,7 @@ func _on_performance_finished() -> void:
 	_memorina.finish_performance()
 
 func _on_memorina_drawn(known_songs: Array[Song]) -> void:
+	_call_progress = 0
 	memorina_drawn.emit(known_songs, facing)
 
 ## Sheathing mid-performance (a hit during the ring-out or the lesson's lead-in)
@@ -485,10 +497,16 @@ func _on_debug_learn_song_pressed() -> void:
 ## listens for `song` alone.
 func open_call(song: Song, revealed: int) -> void:
 	_memorina.call_song = song
+	_call_progress = 0
 	call_opened.emit(song, revealed, _last_glyph_set)
 
 func sound_call_note(index: int) -> void:
 	call_note_sounded.emit(index)
+
+## The call has been heard out; the guardian reports how long the answer may
+## take so the sheet can show the time draining.
+func open_call_window(seconds: float) -> void:
+	call_window_opened.emit(seconds)
 
 ## The window is over. A good answer ends the gesture quietly, the way a
 ## finished performance does - once its last note has rung out, so the whole

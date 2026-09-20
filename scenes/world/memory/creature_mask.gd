@@ -39,6 +39,10 @@ func _ready() -> void:
 	canvas_cull_mask = LAYER
 	transparent_bg = true
 	render_target_update_mode = SubViewport.UPDATE_ALWAYS
+	# A SubViewport does NOT inherit the project's default texture filter: it
+	# defaults to LINEAR on its own, so every creature drawn through this pass
+	# came out bilinear-blurred while the world stayed crisp. Mirror the root.
+	canvas_item_default_texture_filter = get_tree().root.canvas_item_default_texture_filter
 
 func _process(_delta: float) -> void:
 	# No Camera2D of its own. Copying the main viewport's canvas transform is
