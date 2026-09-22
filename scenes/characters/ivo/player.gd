@@ -493,16 +493,20 @@ func _on_song_played(song: Song) -> void:
 
 ## The lesson: the song is learned and its whole track performed, the sheet
 ## carrying the banner. A restored guardian calls this; F9 stands in for the
-## guardians that do not exist yet. Refused unless Ivo could draw right now
-## and the instrument is not saying no, so a lesson never starts mid-air,
-## mid-run, mid-performance or over a mistake that would then clear its sheet
-## - and the save is only touched once it will really start. A note still
+## guardians that do not exist yet. Refused unless Ivo OWNS the instrument
+## and could draw it right now, and it is not saying no, so a lesson never
+## starts without a Memorina, mid-air, mid-run, mid-performance or over a
+## mistake that would then clear its sheet - and the save is only touched
+## once it will really start. A note still
 ## ringing (the last of a guardian's answer) is let finish before the track.
 func learn_song(song: Song) -> bool:
 	if song == null or _memorina.is_performing() or _voice.is_faulting() or not is_still():
 		return false
+	# No instrument, no lesson. Handing one over is the WORLD's to do - a
+	# pickup, the mentor - and a body that granted itself an item on the way
+	# into a cutscene would skip that scene entirely.
 	if not _has_item(Enums.PlayerItem.MEMORINA):
-		SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
+		return false
 	SaveSystem.learn_song(song.id)
 	# A call that was still open has been answered for good.
 	if _memorina.call_song != null:
