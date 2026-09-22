@@ -26,6 +26,10 @@ const LEARNED_KEY := "MEMORINA_LEARNED"
 @export var title_rise: float = 10.0
 
 var _tween: Tween
+## True from a lesson's first frame to the moment its frame has closed. The
+## lesson OWNS the layer while it is set: a guardian unstages its call when
+## the performance ends, and that must not cut the lesson's own way out.
+var _lesson_active: bool = false
 
 @onready var _top_bar: ColorRect = $TopBar
 @onready var _bottom_bar: ColorRect = $BottomBar
@@ -42,6 +46,7 @@ func _ready() -> void:
 ## The dim is not reset first: restoration unstages the call and starts the
 ## lesson in the same breath, and the light must not flicker up between.
 func on_lesson_started(song: Song, _glyph_set: Enums.GlyphSet) -> void:
+	_lesson_active = true
 	_title.text = song.title_key
 	var dim := _dim.color.a
 	_reset()
@@ -67,26 +72,39 @@ func on_lesson_finished() -> void:
 	_tween.tween_property(_bottom_bar, "position:y", size.y, ease_out_time)
 	_tween.tween_property(_dim, "color:a", 0.0, ease_out_time)
 	_tween.tween_property(_card, "modulate:a", 0.0, ease_out_time * 0.6)
-	_tween.chain().tween_callback(hide)
+	_tween.chain().tween_callback(_finish)
 
-## A guardian went lucid: the lights come down on it and Ivo.
+## A guardian went lucid: the lights come down on it and Ivo. A call names no
+## piece, so the card starts hidden - never inherited from the last lesson.
 func on_call_staged() -> void:
+	_card.modulate.a = 0.0
 	show()
 	_kill()
 	_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	_tween.tween_property(_dim, "color:a", call_dim_alpha, ease_in_time)
 
-## The relapse has run its course, or the guardian was restored (in which
-## case the lesson takes the stage right after this, and its own tween wins).
+## The relapse has run its course, or the guardian was restored. In the second
+## case the lesson has the layer - it is started in the same breath, and a
+## guardian also unstages when the track ENDS, which is mid-way through the
+## lesson's own way out. Cutting that short left the title card at full alpha
+## on a hidden node, and the next call put the last song's name back on
+## screen (docs/knowledge/bugs/lesson-title-card-survives-a-cut-fade.md).
 func on_call_unstaged() -> void:
-	if not visible:
+	if _lesson_active or not visible:
 		return
 	_kill()
 	_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
 	_tween.tween_property(_dim, "color:a", 0.0, ease_out_time)
-	_tween.tween_callback(hide)
+	_tween.tween_callback(_finish)
+
+## Off screen and back to the authored state. Every way out ends here, so no
+## half-finished fade can leave something visible for the next moment to show.
+func _finish() -> void:
+	_lesson_active = false
+	hide()
+	_reset()
 
 func _reset() -> void:
 	_top_bar.size = Vector2(size.x, bar_height)

@@ -4,7 +4,7 @@
 [ext_resource type="Resource" uid="uid://qmmyie1nnc9w" path="res://resources/songs/sprout.tres" id="2_song"]
 [ext_resource type="Resource" uid="uid://bq8bloomlash" path="res://resources/characters/guardians/bloom_guardian/bloom_lash.tres" id="3_lash"]
 [ext_resource type="Resource" uid="uid://bq0bloombrst" path="res://resources/characters/guardians/bloom_guardian/bloom_burst.tres" id="4_burst"]
-[ext_resource type="Resource" uid="uid://bq9bloompnc" path="res://resources/characters/guardians/bloom_guardian/bloom_pounce.tres" id="5_pounce"]
+[ext_resource type="Resource" uid="uid://brabloompnc" path="res://resources/characters/guardians/bloom_guardian/bloom_pounce.tres" id="5_pounce"]
 
 [resource]
 script = ExtResource("1_stats")
