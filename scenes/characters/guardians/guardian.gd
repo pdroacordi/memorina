@@ -240,6 +240,10 @@ func _on_attack_started(attack: GuardianAttack) -> void:
 	_hitbox.damage = attack.damage
 	_hitbox.knockback_strength = attack.knockback_strength
 	_hitbox.knockback_lift = attack.knockback_lift
+	# A leap: the swing carries it over the player (lunge_speed does the
+	# horizontal half). Gravity brings it down inside the same clip.
+	if attack.leap_impulse > 0.0 and is_on_floor():
+		velocity.y = -attack.leap_impulse
 	if attack.recall == null or _player == null:
 		return
 	if SaveSystem.has_skill(attack.recall.skill):

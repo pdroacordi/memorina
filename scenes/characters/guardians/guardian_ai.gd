@@ -1,20 +1,28 @@
 class_name GuardianAI
 extends AIController
-## The pressure phase's movement and attack picking. Walks toward the player
-## until the next chosen move is in range, telegraphs it (holds still so the
-## wind-up can be read), swings, waits out its cooldown, picks another, and
-## repeats. Which moves exist is data (GuardianAttack); whether the AI may act
-## at all is pushed in through `active` by the guardian, which is the only
-## node that knows the fight's phase. Never instantiated on its own: a
-## Guardian mounts it as $AI.
+## The pressure phase's movement and attack picking. Which moves exist is data
+## (GuardianAttack); whether the AI may act at all is pushed in through
+## `active` by the guardian, which is the only node that knows the fight's
+## phase. Never instantiated on its own: a Guardian mounts it as $AI.
 ##
-## IT NEVER STANDS STILL UNDER PRESSURE. A move only reaches inside its own
-## box (range x height), so a guardian cannot swing at someone hovering on its
-## head - it LUNGES OUT from under them (step_out_speed) and punishes the
-## landing. Between moves, while a cooldown runs, it holds its spacing
-## (comfort_distance): gives ground to a player who closes in, drifts back in
-## when they back off, and paces when neither. A boss waiting out its cooldown
-## on the spot is a target, not a fight.
+## IT NEVER STANDS STILL, AND IT NEVER DITHERS. Two rules carry that:
+##
+## 1. It picks the move that SUITS the moment - one that reaches a player
+##    overhead when it owns one, its longest when they are far, whatever the
+##    roll says otherwise (`_situational_pick`).
+## 2. Every decision taken from a distance is COMMITTED for a while. A player
+##    bouncing on a guardian's head crosses the reach of its moves several
+##    times a second, and an AI that re-decides on each crossing turns on the
+##    spot: the escape from under them is a state with a minimum dwell and a
+##    wider exit band, the spacing is a mode entered and left at different
+##    distances, and the chase and the facing keep their side inside a dead
+##    band.
+##
+## What it does between swings is therefore: escape a player standing on it
+## (fast, committed, and punished the moment they land), hold its spacing
+## while a cooldown runs (give ground, drift back in, or pace), wait out a
+## player it cannot reach rather than walking under them, and otherwise close
+## in and swing.
 ##
 ## The move carrying a recall is not left to chance: it is scheduled every
 ## `recall_after_attacks` ordinary moves (a phase the player can learn to
@@ -31,11 +39,20 @@ signal attack_finished(attack: GuardianAttack)
 ## side to walk or look at. Inside this band it keeps what it had: someone
 ## standing exactly overhead must not make it turn every frame.
 const TURN_BAND := 10.0
-## Horizontal reach of "overhead": within this, a player above the move's box
-## is standing on the guardian rather than in front of it.
-const OVERHEAD_BAND := 56.0
-## Seconds the guardian lunges to get out from under such a player.
+## Horizontal reach of "on top of me", and how far it must get before it
+## considers itself clear. Two different numbers on purpose.
+const OVERHEAD_BAND := 64.0
+const ESCAPED_BAND := 150.0
+## Seconds the guardian lunges to get clear, and the shortest time it stays in
+## the escape however the player bounces.
 const STEP_OUT_TIME := 0.55
+const ESCAPE_MIN_TIME := 0.9
+## Seconds a player must be back within reach before the escape ends: a pogo
+## dips inside it a few times a second and must not cancel anything.
+const ESCAPE_RELEASE_TIME := 0.3
+## How far back inside its reach a player must come before the guardian
+## believes they are down: a fraction of the tallest move's height.
+const REACH_RELEASE := 0.8
 ## How much closer than its comfort distance a player may come before the
 ## guardian gives ground, and how much further before it drifts back in.
 const COMFORT_NEAR := 0.7
@@ -75,17 +92,22 @@ var _cooldown: float = 0.0
 var _swinging: bool = false
 ## Ordinary moves made since the last scheduled recall move.
 var _since_recall: int = 0
-## Which way the guardian is looking when it is not walking, and how much of
-## the step out from under an overhead player is left.
+## Which way the guardian is looking when it is not walking.
 var _look_direction: float = 1.0
-var _step_out_direction: float = 0.0
-var _step_out_left: float = 0.0
+## The escape from under a player: which way, how much lunge is left, how long
+## it has run, and how long the player has been back within reach.
+var _escaping: bool = false
+var _escape_direction: float = 0.0
+var _escape_lunge_left: float = 0.0
+var _escape_time: float = 0.0
+var _escape_release: float = 0.0
+## Whether the player is out of reach overhead, held sticky: see _update_reach.
+var _above_reach: bool = false
+var _above_release: float = 0.0
 ## Which way it is pacing while it waits out a cooldown, and for how long.
 var _spacing: int = PACE
 var _pace_direction: float = 1.0
 var _pace_left: float = 0.0
-## True while the player is standing on its head, to punish the landing.
-var _overhead: bool = false
 ## The guardian asked for the recall move next, cadence or not.
 var _recall_requested: bool = false
 
@@ -115,13 +137,6 @@ func facing_intent() -> float:
 		return _current_direction
 	return _look_direction
 
-func _update_look() -> void:
-	if _sight.player == null:
-		return
-	var dx := _sight.player.global_position.x - _body.global_position.x
-	if absf(dx) > TURN_BAND:
-		_look_direction = signf(dx)
-
 ## True from the telegraph's start to the swing's end.
 func is_attacking() -> bool:
 	return current_attack != null
@@ -131,6 +146,10 @@ func is_telegraphing() -> bool:
 
 func is_swinging() -> bool:
 	return _swinging
+
+## Getting out from under a player standing on it.
+func is_escaping() -> bool:
+	return _escaping
 
 ## The next move is the recall move, whatever the cadence says: the player
 ## has done their part and is not kept waiting for it.
@@ -161,42 +180,98 @@ func cancel_attack() -> void:
 
 func _select_state() -> int:
 	if not active or _sight.player == null or attacks.is_empty():
+		_escaping = false
 		return HOLD
 	if is_attacking():
 		return ATTACK if _swinging else TELEGRAPH
-	if _next == null:
-		_pick_next()
-	if _cooldown <= 0.0 and _in_range(_next):
+	_refresh_next()
+	if not _escaping and _cooldown <= 0.0 and _in_range(_next):
 		_start_telegraph(_next)
 		return TELEGRAPH
 	return APPROACH
 
-## Everything the guardian does between swings. A player standing on its head
-## is lunged out from under and punished on the way down; a cooldown is spent
-## holding spacing rather than standing still; otherwise it closes in, and
-## stops once the chosen move is in range rather than walking into the
-## player's collider (the BruteShadowAI fix).
+#############################################
+##  M A N O E U V R E                      ##
+#############################################
+
+## Everything the guardian does between swings.
 func _approach_tick(delta: float) -> void:
 	var to_player := _sight.player.global_position - _body.global_position
-	var overhead := _is_overhead(to_player, _next)
-	if overhead:
-		_overhead = true
-		_step_out(to_player, delta)
+	_update_reach(to_player, delta)
+	if _update_escape(to_player, delta):
 		return
-	if _overhead:
-		# They came down. The move it could not make while they were up there
-		# lands now, with no cooldown left to hide behind.
-		_overhead = false
-		_cancel_step_out()
-		_cooldown = 0.0
-	_cancel_step_out()
 	if _cooldown > 0.0:
 		_hold_spacing(to_player, delta)
 		return
-	if _next != null and _in_range(_next):
+	if _in_range(_next):
 		_current_direction = 0.0
 		return
+	# Walking under a player it cannot reach is how a guardian becomes a
+	# trampoline; it keeps its distance and waits for them to come down.
+	if _above_reach:
+		_hold_spacing(to_player, delta)
+		return
 	_close_in(to_player)
+
+## Is the player out of reach overhead? Held with hysteresis in BOTH axes: it
+## becomes true the moment they rise past the tallest move, and false only
+## once they have been clearly back inside it (REACH_RELEASE of the height,
+## for ESCAPE_RELEASE_TIME seconds). A pogo crosses that line three times a
+## second, and an answer taken from the raw height each frame is the whole of
+## the dithering this AI is written to avoid.
+func _update_reach(to_player: Vector2, delta: float) -> void:
+	var above := -to_player.y
+	var tallest := _tallest_reach()
+	if above > tallest:
+		_above_reach = true
+		_above_release = 0.0
+		return
+	if not _above_reach:
+		return
+	if above > tallest * REACH_RELEASE:
+		_above_release = 0.0
+		return
+	_above_release += delta
+	if _above_release >= ESCAPE_RELEASE_TIME:
+		_above_reach = false
+		_above_release = 0.0
+
+## The escape from under a player standing on the guardian: entered inside
+## OVERHEAD_BAND, left only once it is ESCAPED_BAND clear or the player has
+## been back within reach for ESCAPE_RELEASE_TIME, and never before
+## ESCAPE_MIN_TIME. True while it owns the movement.
+func _update_escape(to_player: Vector2, delta: float) -> bool:
+	var on_top := absf(to_player.x) <= OVERHEAD_BAND and _above_reach
+	if not _escaping:
+		if not on_top:
+			return false
+		_escaping = true
+		_escape_direction = -signf(to_player.x) if absf(to_player.x) > 1.0 else _look_direction
+		_escape_lunge_left = STEP_OUT_TIME
+		_escape_time = 0.0
+		_escape_release = 0.0
+
+	_escape_time += delta
+	# A pogo dips in and out of reach several times a second; only a player
+	# who STAYS down ends the escape.
+	_escape_release = 0.0 if _above_reach else _escape_release + delta
+	if _escape_time >= ESCAPE_MIN_TIME:
+		var clear := absf(to_player.x) >= ESCAPED_BAND
+		var landed := _escape_release >= ESCAPE_RELEASE_TIME
+		if clear or landed:
+			_escaping = false
+			if landed:
+				# They came down. The move it could not make while they were up
+				# there lands now, with no cooldown left to hide behind.
+				_cooldown = 0.0
+			return false
+
+	if _escape_lunge_left > 0.0:
+		_escape_lunge_left -= delta
+		_current_direction = _escape_direction * step_out_speed
+	else:
+		_hold_spacing(to_player, delta)
+	return true
 
 ## Walks toward the player, keeping the last side inside the dead band:
 ## sign() of an x that sits on the guardian's own is the flip-flop this avoids.
@@ -262,6 +337,17 @@ func _attack_tick(delta: float) -> void:
 func _hold_tick(_delta: float) -> void:
 	_current_direction = 0.0
 
+func _update_look() -> void:
+	if _sight.player == null:
+		return
+	var dx := _sight.player.global_position.x - _body.global_position.x
+	if absf(dx) > TURN_BAND:
+		_look_direction = signf(dx)
+
+#############################################
+##  T H E   M O V E S                      ##
+#############################################
+
 func _start_telegraph(attack: GuardianAttack) -> void:
 	current_attack = attack
 	_swinging = false
@@ -292,55 +378,91 @@ func _finish_attack() -> void:
 ## A move reaches inside a box, not a radius: `attack_range` to the side and
 ## `attack_height` up or down from its own feet.
 func _in_range(attack: GuardianAttack) -> bool:
+	if attack == null:
+		return false
 	var to_player := _sight.player.global_position - _body.global_position
 	return absf(to_player.x) <= attack.attack_range and absf(to_player.y) <= attack.attack_height
 
-## Standing on the guardian rather than in front of it, and out of the reach
-## of the move it was about to make.
-func _is_overhead(to_player: Vector2, attack: GuardianAttack) -> bool:
-	if attack == null or absf(to_player.x) > OVERHEAD_BAND:
-		return false
-	return -to_player.y > attack.attack_height
+func _tallest_reach() -> float:
+	var tallest := 0.0
+	for attack: GuardianAttack in attacks:
+		tallest = maxf(tallest, attack.attack_height)
+	return tallest
 
-## Lunges out from under for STEP_OUT_TIME - faster than it walks, because
-## standing under someone bouncing on its head is the one place it must not
-## be - and then keeps its distance, facing them, until they come down.
-## Walking back in would only put it under the same feet again.
-func _step_out(to_player: Vector2, delta: float) -> void:
-	if is_zero_approx(_step_out_direction):
-		_step_out_direction = -signf(to_player.x) if absf(to_player.x) > 1.0 else _look_direction
-		_step_out_left = STEP_OUT_TIME
-	if _step_out_left > 0.0:
-		_step_out_left -= delta
-		_current_direction = _step_out_direction * step_out_speed
-	else:
-		_hold_spacing(to_player, delta)
-
-func _cancel_step_out() -> void:
-	_step_out_direction = 0.0
-	_step_out_left = 0.0
-
-## The recall move when its turn has come or was asked for; otherwise a
-## weighted random pick among the rest. A move with weight 0 is only ever scheduled.
+## A fresh choice: the recall move when its turn has come or was asked for,
+## otherwise the move that suits where the player is, with a weighted roll to
+## break ties. A move with weight 0 is only ever scheduled.
 func _pick_next() -> void:
 	var recall_move := _recall_move()
 	var due := recall_after_attacks > 0 and _since_recall >= recall_after_attacks
 	if recall_move != null and (due or _recall_requested):
 		_next = recall_move
 		return
+	var situational := _situational_pick()
+	_next = situational if situational != null else _weighted_pick()
+
+## Between swings the choice is KEPT, and only a strong opinion changes it -
+## the player went overhead, or moved out past its spacing. Re-rolling every
+## frame instead looks like variety and is the opposite: the guardian throws
+## whichever move happens to be in range NOW, so the longest one wins every
+## race and the short ones are never seen again.
+func _refresh_next() -> void:
+	if _next == null:
+		_pick_next()
+		return
+	var recall_move := _recall_move()
+	var due := recall_after_attacks > 0 and _since_recall >= recall_after_attacks
+	if recall_move != null and (due or _recall_requested):
+		_next = recall_move
+		return
+	var opinion := _situational_pick()
+	if opinion != null:
+		_next = opinion
+
+## Most of a guardian's intelligence: a player overhead is answered by a move
+## that reaches up there IF it owns one, a player beyond its comfort distance
+## by the longest move it has, and anything else by the roll. Null means "no
+## strong opinion".
+func _situational_pick() -> GuardianAttack:
+	var to_player := _sight.player.global_position - _body.global_position
+	var above := -to_player.y
+	var distance := absf(to_player.x)
+	if above > 0.0:
+		var reaches_up: GuardianAttack = null
+		for attack: GuardianAttack in attacks:
+			if attack.weight <= 0.0 or attack.attack_height < above:
+				continue
+			if distance > attack.attack_range:
+				continue
+			if reaches_up == null or attack.attack_height > reaches_up.attack_height:
+				reaches_up = attack
+		if reaches_up != null:
+			return reaches_up
+	# Well beyond its spacing - not merely at the edge of it, or the move it
+	# keeps backing away to would be the only one it ever threw.
+	if comfort_distance > 0.0 and distance > comfort_distance * COMFORT_FAR:
+		var longest: GuardianAttack = null
+		for attack: GuardianAttack in attacks:
+			if attack.weight <= 0.0:
+				continue
+			if longest == null or attack.attack_range > longest.attack_range:
+				longest = attack
+		if longest != null and longest.attack_range >= distance:
+			return longest
+	return null
+
+func _weighted_pick() -> GuardianAttack:
 	var total := 0.0
 	for attack: GuardianAttack in attacks:
 		total += maxf(attack.weight, 0.0)
 	if total <= 0.0:
-		_next = attacks[0]
-		return
+		return attacks[0]
 	var roll := randf() * total
 	for attack: GuardianAttack in attacks:
 		roll -= maxf(attack.weight, 0.0)
 		if attack.weight > 0.0 and roll <= 0.0:
-			_next = attack
-			return
-	_next = attacks[attacks.size() - 1]
+			return attack
+	return attacks[attacks.size() - 1]
 
 func _recall_move() -> GuardianAttack:
 	for attack: GuardianAttack in attacks:

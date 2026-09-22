@@ -24,6 +24,12 @@ extends Resource
 ## Horizontal speed held for the whole swing, in the facing direction. Zero
 ## for a standing swing; a charge sets it high.
 @export var lunge_speed: float = 0.0
+## Upward impulse at the start of the swing, in px/s. With lunge_speed this
+## is a LEAP: the guardian jumps at the player and lands past them, which is
+## how a light, animal guardian changes sides. A heavy one leaves it at 0 -
+## not every boss should jump. Tune it against the clip: the swing and the
+## airtime (2 * impulse / gravity) should end together.
+@export var leap_impulse: float = 0.0
 ## Relative likelihood of this move being picked next. Ignored for the
 ## recall move, which is scheduled (GuardianStats.recall_after_attacks).
 @export var weight: float = 1.0

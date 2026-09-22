@@ -4,12 +4,13 @@
 [ext_resource type="Resource" uid="uid://qmmyie1nnc9w" path="res://resources/songs/sprout.tres" id="2_song"]
 [ext_resource type="Resource" uid="uid://bq8bloomlash" path="res://resources/characters/guardians/bloom_guardian/bloom_lash.tres" id="3_lash"]
 [ext_resource type="Resource" uid="uid://bq0bloombrst" path="res://resources/characters/guardians/bloom_guardian/bloom_burst.tres" id="4_burst"]
+[ext_resource type="Resource" uid="uid://bq9bloompnc" path="res://resources/characters/guardians/bloom_guardian/bloom_pounce.tres" id="5_pounce"]
 
 [resource]
 script = ExtResource("1_stats")
 id = 1
 song = ExtResource("2_song")
-attacks = Array[Resource]([ExtResource("3_lash"), ExtResource("4_burst")])
+attacks = Array[Resource]([ExtResource("3_lash"), ExtResource("4_burst"), ExtResource("5_pounce")])
 hits_to_open = 7
 cycles_to_restore = 2
 window = 3.0
