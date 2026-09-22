@@ -16,6 +16,8 @@ const WARM := Color(0.98, 0.78, 0.35)
 const HOT := Color(1.0, 0.97, 0.85)
 const FAIL := Color(1.0, 0.4, 0.35)
 const VERDICT_TIME := 0.35
+## How long a press of a chain brightens the crown, in real seconds.
+const STEP_FLASH_TIME := 0.25
 
 ## Ray geometry in Ivo's pixels.
 @export var inner_radius: float = 10.0
@@ -31,6 +33,8 @@ var _time: float = 0.0
 var _window_total: float = 1.0
 var _window_left: float = 0.0
 var _verdict_left: float = 0.0
+## 1 right after a press of a chain landed, decaying back to 0.
+var _step_flash: float = 0.0
 
 func _ready() -> void:
 	set_process(false)
@@ -42,6 +46,7 @@ func _process(delta: float) -> void:
 	match _state:
 		State.ARMED:
 			_window_left = maxf(_window_left - real, 0.0)
+			_step_flash = maxf(_step_flash - real / STEP_FLASH_TIME, 0.0)
 		State.FLARE, State.DROP:
 			_verdict_left -= real
 			if _verdict_left <= 0.0:
@@ -55,9 +60,19 @@ func begin(_action: StringName, seconds: float) -> void:
 	_time = 0.0
 	_window_total = maxf(seconds, 0.001)
 	_window_left = seconds
+	_step_flash = 0.0
 	show()
 	set_process(true)
 	queue_redraw()
+
+## One press of a chained memory landed: the crown flares a moment and
+## settles back into its trembling, on the clock that press bought.
+func step(_remaining: int, seconds: float) -> void:
+	if _state != State.ARMED:
+		return
+	_step_flash = 1.0
+	_window_total = maxf(seconds, 0.001)
+	_window_left = seconds
 
 ## The body remembered.
 func flare(_skill: Enums.PlayerSkill) -> void:
@@ -98,8 +113,9 @@ func _draw() -> void:
 		State.ARMED:
 			# Brighter and longer as the window runs out: the moment sharpens.
 			var urgency := 1.0 - _window_left / _window_total
-			reach = 1.0 + 0.5 * urgency
+			reach = 1.0 + 0.5 * urgency + 0.9 * _step_flash
 			alpha = 0.7 + 0.3 * tremble
+			color = color.lerp(HOT, _step_flash)
 		State.FLARE:
 			color = HOT
 			reach = 1.5 + 2.5 * verdict

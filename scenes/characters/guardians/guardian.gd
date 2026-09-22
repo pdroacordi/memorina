@@ -159,6 +159,13 @@ func _notification(what: int) -> void:
 func phase() -> GuardianFight.Phase:
 	return _fight.phase()
 
+## How tall the body standing there is, in world pixels: the stage asks, so
+## a sheet hung above the pair is never hung on a golem's head.
+func body_height() -> float:
+	var collision := $CollisionShape2D as CollisionShape2D
+	var capsule := collision.shape as CapsuleShape2D
+	return capsule.height if capsule != null else 0.0
+
 func is_attacking() -> bool:
 	return _ai.is_attacking()
 
@@ -411,7 +418,7 @@ func _stage() -> void:
 	if _staged:
 		return
 	_staged = true
-	_player.stage_call(self)
+	_player.stage_call(self, body_height())
 
 func _unstage() -> void:
 	if not _staged:

@@ -13,6 +13,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_prompt")
+head_offset = Vector2(0, -96)
 
 [node name="Ring" type="Control" parent="."]
 layout_mode = 0

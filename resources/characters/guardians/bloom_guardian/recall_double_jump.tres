@@ -6,7 +6,10 @@
 script = ExtResource("1_recall")
 skill = 0
 action = &"jump"
-window = 2.0
+window = 1.6
 grace_time = 0.9
-requires_airborne = true
+grounded_steps = 2
+airborne_finish = true
+step_window = 1.0
+trigger_distance = 120.0
 miss_damage = 1

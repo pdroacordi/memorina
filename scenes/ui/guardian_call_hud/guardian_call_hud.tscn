@@ -42,9 +42,9 @@ script = ExtResource("2_sheet")
 
 [node name="Message" type="Label" parent="Frame"]
 layout_mode = 0
-offset_left = 16.0
+offset_left = 80.0
 offset_top = 14.0
-offset_right = 240.0
+offset_right = 244.0
 offset_bottom = 26.0
 theme_override_colors/font_color = Color(0.96, 0.9, 0.72, 1)
 theme_override_colors/font_outline_color = Color(0.13, 0.08, 0.05, 1)
@@ -57,8 +57,8 @@ vertical_alignment = 1
 [node name="CurePips" type="Control" parent="Frame"]
 layout_mode = 0
 offset_left = 96.0
-offset_top = 28.0
+offset_top = 100.0
 offset_right = 228.0
-offset_bottom = 40.0
+offset_bottom = 112.0
 mouse_filter = 2
 script = ExtResource("10_pips")

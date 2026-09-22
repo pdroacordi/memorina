@@ -112,6 +112,30 @@ func _show(index: int, lit: bool) -> void:
 	slot.position.y = _slot_y(note)
 	slot.show()
 
+## Where the staff's middle falls inside the frame, in frame pixels. The
+## ornament takes the frame's left third, so centring the BOX on screen
+## leaves the notes - the part anyone reads - sitting off to the right; an
+## encounter's slot centres this instead.
+func staff_center() -> float:
+	return _to_frame((STAFF_LEFT + STAFF_RIGHT) / 2.0)
+
+## A guardian taller than this, in world pixels, would wear a centred sheet
+## as a hat: the camera frames the pair with their feet near the bottom of
+## the screen, so height alone decides whether the sky above them is free.
+const CENTRE_CLEARANCE := 140.0
+## The gap from the screen edge when the sheet has to stand aside instead.
+const SIDE_MARGIN := 24.0
+
+## Where an encounter's frame goes, in the HUD's pixels: above the pair with
+## the staff on the screen's axis when the guardian's head clears it, beside
+## it - on the side away from the guardian - when it does not. Both HUDs ask
+## this, and they ask it ONCE per encounter: a sheet that hops between the
+## listening and the answer is what made these moments read as clutter.
+func encounter_x(screen_width: float, guardian_side: int, guardian_height: float) -> float:
+	if guardian_height <= CENTRE_CLEARANCE:
+		return roundf(screen_width / 2.0 - staff_center())
+	return SIDE_MARGIN if guardian_side > 0 else roundf(screen_width - size.x - SIDE_MARGIN)
+
 ## Places and sizes every slot for the frame's current size; re-run whenever
 ## it changes.
 func _layout() -> void:

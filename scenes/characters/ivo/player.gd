@@ -31,7 +31,7 @@ signal call_unstaged
 ## the glyphs to show them with, how far its cure has come (`cure_done` of
 ## `cure_total` answers) and which side of Ivo it stands on (`side`, -1 or 1),
 ## so the sheet can keep off it. The instrument is not out yet.
-signal call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet, cure_done: int, cure_total: int, side: int)
+signal call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet, cure_done: int, cure_total: int, side: int, caller_height: float)
 ## The guardian's call sounded the note at `index`.
 signal call_note_sounded(index: int)
 ## The call has been heard; Ivo has `seconds` to answer.
@@ -42,7 +42,9 @@ signal call_closed
 ## The phrase was played back whole, in time. Relayed from the instrument.
 signal call_answered(song: Song)
 ## The emergency QTE opened: the prompt asks for `action`. The world slows.
-signal recall_started(action: StringName, seconds: float)
+signal recall_started(action: StringName, seconds: float, steps: int)
+## A press of a chained memory landed and more are wanted.
+signal recall_step_taken(remaining: int, seconds: float)
 signal recall_ended
 signal skill_recalled(skill: Enums.PlayerSkill)
 signal skill_recall_missed(skill: Enums.PlayerSkill)
@@ -127,6 +129,8 @@ var _just_double_jumped: bool = false
 var _last_glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
 ## How much of the guardian's phrase the current attempt has got right.
 var _call_progress: int = 0
+## How tall it is, for a sheet that must not cover it.
+var _staged_height: float = 0.0
 ## The guardian the stage is set around, between stage_call and unstage_call.
 var _staged_caller: Node2D
 ## True while the guardian is still singing its phrase: the instrument stays
@@ -165,9 +169,10 @@ func _ready() -> void:
 	# The recall hears the same presses the abilities buffer, and unlocks the
 	# skill in the same frame, before _try_roll/_try_jump run - so the press
 	# that remembers the roll is also the roll that dodges the attack.
-	_input.roll_pressed.connect(_recall.notify.bind(&"roll"))
-	_input.jump_pressed.connect(_recall.notify.bind(&"jump"))
+	_input.roll_pressed.connect(_notify_recall.bind(&"roll"))
+	_input.jump_pressed.connect(_notify_recall.bind(&"jump"))
 	_recall.recalled.connect(_on_skill_recalled)
+	_recall.step_taken.connect(recall_step_taken.emit)
 	_recall.missed.connect(_on_skill_recall_missed)
 	_input.attack_pressed.connect(_attack.buffer_attack)
 	_input.draw_memorina_pressed.connect(_memorina.buffer_toggle)
@@ -524,8 +529,11 @@ func _on_debug_learn_song_pressed() -> void:
 ## keeps listening to one node.
 
 ## The guardian went lucid: the stage is set around it until unstage_call().
-func stage_call(caller: Node2D) -> void:
+## `caller_height` is how tall the body on stage is, in world pixels; the
+## sheet needs it to know whether it can hang above the pair.
+func stage_call(caller: Node2D, caller_height: float = 0.0) -> void:
 	_staged_caller = caller
+	_staged_height = caller_height
 	call_staged.emit(caller)
 
 func unstage_call() -> void:
@@ -543,7 +551,7 @@ func open_call(song: Song, revealed: int, cure_done: int, cure_total: int) -> vo
 	var side := facing
 	if is_instance_valid(_staged_caller):
 		side = 1 if _staged_caller.global_position.x >= global_position.x else -1
-	call_opened.emit(song, revealed, _last_glyph_set, cure_done, cure_total, side)
+	call_opened.emit(song, revealed, _last_glyph_set, cure_done, cure_total, side, _staged_height)
 
 func sound_call_note(index: int) -> void:
 	call_note_sounded.emit(index)
@@ -584,10 +592,9 @@ func close_call(success: bool) -> void:
 
 ## The guardian's unavoidable attack has begun and the body has a moment to
 ## remember. The moment waits for its cue, for at most `attack_duration`: a
-## recall that only makes sense in the air (a double jump) waits for the
-## attack to put Ivo there, and one with a `trigger_distance` waits for
-## `source` (the body throwing the move) to come that close, so the world
-## slows when the blow is about to land and not while it is still far off.
+## recall with a `trigger_distance` waits for `source` (the body throwing the
+## move) to come that close, so the world slows when the blow is about to land
+## and not while it is still far off.
 ## If the cue never comes, the moment does not come. Nothing happens if a
 ## recall is already open.
 func begin_recall(stats: AbilityRecallStats, attack_duration: float = 0.0, source: Node2D = null) -> void:
@@ -613,8 +620,6 @@ func _tick_pending_recall(delta: float) -> void:
 
 ## Every cue the stats ask for, met.
 func _recall_cue_met(stats: AbilityRecallStats) -> bool:
-	if stats.requires_airborne and is_on_floor():
-		return false
 	if stats.trigger_distance > 0.0:
 		if not is_instance_valid(_pending_recall_source):
 			return false
@@ -622,11 +627,20 @@ func _recall_cue_met(stats: AbilityRecallStats) -> bool:
 			return false
 	return true
 
+## How many presses the memory asks for is settled here, by where the body
+## is standing at the instant the moment opens: a double jump caught with the
+## feet planted is jump and then jump again.
 func _open_recall(stats: AbilityRecallStats) -> void:
-	if not _recall.arm(stats):
+	if not _recall.arm(stats, is_on_floor()):
 		return
 	_glow_shield(1.0)
-	recall_started.emit(stats.action, stats.window)
+	recall_started.emit(stats.action, stats.window, _recall.steps_left())
+
+## The recall hears the presses the abilities buffer, and is told where the
+## body was when they came: the last press of a double jump only counts off
+## the ground, and one given standing is left to the jump that gets him there.
+func _notify_recall(action: StringName) -> void:
+	_recall.notify(action, not is_on_floor())
 
 ## The body remembered: the skill is Ivo's for good, and the attack that
 ## forced it does not land while he finishes the move.

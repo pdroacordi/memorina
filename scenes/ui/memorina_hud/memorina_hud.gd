@@ -6,11 +6,16 @@ class_name MemorinaHud extends Control
 ## notes of a lesson as its track plays. During a guardian's call it is where
 ## the ANSWER is given: while the guardian sings it stays out of the way (the
 ## phrase is on the guardian's own sheet at the top); when the window opens
-## it appears beside Ivo pre-filled with the phrase, dimmed, the time draining
-## under the staff and the draw key blinking until the instrument is out, and
-## lights the phrase back up as the answer lands each note. The familiar
-## sheet, in the familiar place, so the player knows what to do with it. An
+## the same sheet stays put and becomes Ivo's: pre-filled with the phrase,
+## dimmed, the time draining under the staff and the draw key blinking under
+## the frame until the instrument is out, and the phrase lighting back up as
+## the answer lands each note. The same sheet, in the same place, so the
+## player knows what to do with it. An
 ## observer of Player's signals (wired in game.tscn) that decides nothing.
+##
+## An encounter has ONE slot for the sheet, authored and centred: the phrase
+## the guardian sang, the answer and the lesson all happen in the same place,
+## so the frame never hops across the screen between one beat and the next.
 ##
 ## process_mode is ALWAYS in the scene, because the world is frozen while a
 ## performance plays and the sheet has to keep lighting up through it.
@@ -22,8 +27,10 @@ class_name MemorinaHud extends Control
 
 const DRAW_ACTION := &"draw_memorina"
 const SUCCESS_COLOR := Color(0.55, 1.0, 0.6)
-const BAR_COLOR := Color(0.96, 0.9, 0.72)
-const BAR_LOW_COLOR := Color(0.95, 0.4, 0.3)
+## Ink on parchment: the sheet's own gold is what the bar drains across, so a
+## gold bar on it was invisible.
+const BAR_COLOR := Color(0.3, 0.2, 0.13)
+const BAR_LOW_COLOR := Color(0.72, 0.16, 0.12)
 ## Seconds the answered sheet lingers green before it goes.
 const LINGER_TIME := 0.6
 ## A lesson's track runs far longer than its notes: once the last one has
@@ -41,12 +48,11 @@ const LESSON_SHEET_FADE := 0.6
 ## eased in.
 @export var frame_center_y: float = 224.0
 @export var fade_in_time: float = 0.15
-## Screen y the sheet is centred on while answering a guardian: higher than
-## the usual sheet, because with the camera holding the pair Ivo stands off
-## centre and the frame must sit clear of his head on the side away from the
-## guardian.
-@export var answer_center_y: float = 150.0
-@export var screen_margin: float = 8.0
+## Screen y of the frame's top edge in an encounter, where it is centred
+## horizontally: the camera holds the pair in the lower band, so the sheet
+## owns the upper one. Shared with GuardianCallHud, which must be the same
+## number or the sheet jumps when the turn passes to Ivo.
+@export var encounter_top: float = 40.0
 
 var _facing: int = 1
 var _fade_tween: Tween
@@ -55,9 +61,12 @@ var _linger_tween: Tween
 var _call_staged: bool = false
 ## The phrase the guardian is calling, kept for the answer.
 var _call_notes: Array[Enums.Note] = []
+## The stage the call chose: which side the guardian stands on and how tall
+## it is. Kept for the whole encounter, so the answer and the lesson land in
+## the very slot the guardian's own sheet sang from.
+var _call_side: int = 1
+var _call_height: float = 0.0
 var _call_glyphs: NoteGlyphSet
-## Which side of Ivo the answer sheet takes: away from the guardian.
-var _answer_side: int = -1
 ## The window is open: the sheet shows the phrase to be answered.
 var _answering: bool = false
 var _drawn: bool = false
@@ -102,6 +111,10 @@ func on_drawn(_known_songs: Array[Song], facing: int) -> void:
 		_key.stop_blink()
 		_key.hide()
 		return
+	if _call_staged:
+		# The lesson takes the instrument out by itself; the sheet is already
+		# in its slot and must not be cleared out from under the piece.
+		return
 	# Cleared here as well as on sheathe, so the sheet never inherits what an
 	# earlier session left behind however the HUD came to be open.
 	_sheet.clear()
@@ -110,18 +123,11 @@ func on_drawn(_known_songs: Array[Song], facing: int) -> void:
 
 ## The camera has settled; now the open side is known for certain.
 func on_camera_focused(subject_screen_position: Vector2) -> void:
-	if not visible or _frame.visible or (_call_staged and not _answering):
+	# An encounter's sheet has a slot of its own and never waits for a camera.
+	if not visible or _frame.visible or _call_staged:
 		return
-	if _answering:
-		_place_answer_frame(_answer_side, subject_screen_position)
-	else:
-		_place_frame(_facing, subject_screen_position)
-	_frame.modulate.a = 0.0
-	_frame.show()
-	if _fade_tween:
-		_fade_tween.kill()
-	_fade_tween = create_tween()
-	_fade_tween.tween_property(_frame, "modulate:a", 1.0, fade_in_time)
+	_place_frame(_facing, subject_screen_position)
+	_fade_frame_in()
 
 func on_sheathed() -> void:
 	_drawn = false
@@ -165,6 +171,8 @@ func on_lesson_started(song: Song, glyph_set: Enums.GlyphSet) -> void:
 	modulate = Color.WHITE
 	_lesson_notes = song.notes.size()
 	_sheet.show_notes(song.notes, glyph_sets[glyph_set])
+	show()
+	_show_in_slot()
 
 func on_song_played(_song: Song, _position: Vector2) -> void:
 	_lesson_notes = 0
@@ -182,17 +190,18 @@ func on_call_unstaged() -> void:
 	_call_staged = false
 
 ## The guardian starts singing: remember the phrase, stay out of the way.
-func on_call_opened(song: Song, _revealed: int, glyph_set: Enums.GlyphSet, _cure_done: int, _cure_total: int, side: int) -> void:
+func on_call_opened(song: Song, _revealed: int, glyph_set: Enums.GlyphSet, _cure_done: int, _cure_total: int, side: int, caller_height: float) -> void:
 	_call_notes = song.notes
 	_call_glyphs = glyph_sets[glyph_set]
-	_answer_side = -side
+	_call_side = side
+	_call_height = caller_height
 	_stop_linger()
 	_leave_answer()
 	_frame.hide()
 
 ## Ivo's turn: the phrase comes to his sheet, dimmed, with the time to answer
-## it and the key that takes the instrument out. The frame is placed once the
-## camera reports `focused` (game.tscn asks it to on this same signal).
+## it and the key that takes the instrument out - in the encounter's slot,
+## exactly where the guardian's own sheet just sang it.
 func on_call_window_opened(seconds: float) -> void:
 	_stop_linger()
 	_answering = true
@@ -211,8 +220,8 @@ func on_call_window_opened(seconds: float) -> void:
 		_key.show()
 		_key.start_blink()
 	modulate = Color.WHITE
-	_frame.hide()
 	show()
+	_show_in_slot()
 
 ## `count` notes of the answer are right so far: light them back up, the
 ## newest with a beat.
@@ -263,6 +272,21 @@ func _close_lesson_sheet() -> void:
 	_fade_tween.tween_property(_frame, "modulate:a", 0.0, LESSON_SHEET_FADE)
 	_fade_tween.tween_callback(_frame.hide)
 
+## The encounter's slot: centred, under the letterbox a lesson closes in.
+func _show_in_slot() -> void:
+	_frame.position = Vector2(_sheet.encounter_x(size.x, _call_side, _call_height), roundf(encounter_top))
+	if _frame.visible:
+		return
+	_fade_frame_in()
+
+func _fade_frame_in() -> void:
+	_frame.modulate.a = 0.0
+	_frame.show()
+	if _fade_tween:
+		_fade_tween.kill()
+	_fade_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_fade_tween.tween_property(_frame, "modulate:a", 1.0, fade_in_time)
+
 func _leave_answer() -> void:
 	_answering = false
 	_window_total = 0.0
@@ -279,14 +303,6 @@ func _stop_linger() -> void:
 ## The frame goes to the side Ivo faces, unless he already stands in that half
 ## (the camera clamped against a room edge), in which case the room is behind
 ## him and so is the space.
-## The answer sheet: beside Ivo on the side away from the guardian, kept on
-## screen, and high enough to clear his head where the two overlap.
-func _place_answer_frame(side: int, screen_position: Vector2) -> void:
-	var x := screen_position.x + frame_gap if side > 0 else screen_position.x - frame_gap - _frame.size.x
-	x = clampf(x, screen_margin, size.x - _frame.size.x - screen_margin)
-	var y := answer_center_y - _frame.size.y / 2.0
-	_frame.position = Vector2(roundf(x), roundf(y))
-
 func _place_frame(facing: int, screen_position: Vector2) -> void:
 	var center_x := size.x / 2.0
 	var ahead := facing if signf(screen_position.x - center_x) != signf(facing) else -facing
