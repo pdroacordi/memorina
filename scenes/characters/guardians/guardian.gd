@@ -87,7 +87,6 @@ const RELAPSE_HOLD := 0.3
 var _fight: GuardianFight
 var _player: Player
 var _tremble_time: float = 0.0
-var _flash_tween: Tween
 var _telegraph_tween: Tween
 var _breath_tween: Tween
 var _bob_tween: Tween
@@ -279,11 +278,7 @@ func _on_hit_received(_damage: int, _knockback: Vector2, _source: Node2D) -> voi
 		_ai.provoke()
 
 func _flash(color: Color) -> void:
-	if _flash_tween != null:
-		_flash_tween.kill()
-	_sprite.modulate = color
-	_flash_tween = create_tween()
-	_flash_tween.tween_property(_sprite, "modulate", Color.WHITE, hit_flash_time)
+	flash(color, hit_flash_time)
 
 ## A move winds up: the guardian squares up to Ivo (a charge thrown the way
 ## it happened to be facing goes into a wall) and the sprite pulses until the

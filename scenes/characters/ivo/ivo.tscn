@@ -1780,6 +1780,8 @@ graph_offset = Vector2(-165.03302, 191.97491)
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
 collision_layer = 256
 script = ExtResource("1_ynyct")
+knockback_time = 0.3
+knockback_damping = 4.0
 attack_stats_idle = ExtResource("30_atkidle")
 attack_stats_run = ExtResource("31_atkrun")
 attack_stats_jump = ExtResource("32_atkjump")
@@ -1798,7 +1800,7 @@ shape = SubResource("CapsuleShape2D_ynyct")
 
 [node name="Hurtbox" parent="." unique_id=184682534 instance=ExtResource("12_hurtbox")]
 visible = false
-invulnerability_time = 0.6
+invulnerability_time = 0.85
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1964201661]
 libraries/ = SubResource("AnimationLibrary_ra23q")

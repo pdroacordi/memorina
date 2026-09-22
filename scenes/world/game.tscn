@@ -162,6 +162,7 @@ script = ExtResource("6_sarsd")
 [connection signal="skill_recall_missed" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_missed"]
 [connection signal="hit_landed" from="World/Player" to="WorldFreeze" method="hit_stop"]
 [connection signal="hit_landed" from="World/Player" to="World/Camera2D" method="shake" binds= [2.0]]
+[connection signal="hurt" from="World/Player" to="WorldFreeze" method="hit_stop"]
 [connection signal="hurt" from="World/Player" to="World/Camera2D" method="shake" binds= [4.0]]
 [connection signal="call_staged" from="World/Player" to="World/Camera2D" method="frame_pair"]
 [connection signal="call_unstaged" from="World/Player" to="World/Camera2D" method="release_pair"]

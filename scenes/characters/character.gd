@@ -9,10 +9,16 @@ signal died
 @export_category("Knockback")
 @export var knockback_time: float = 0.18
 @export var knockback_damping: float = 6.0
+## The colour a body wears for a moment when something lands on it, and for
+## how long. Script-owned: nothing keys Sprite2D:modulate, so no RESET track
+## fights this.
+@export var hurt_flash_color: Color = Color(1.0, 0.5, 0.5)
+@export var hurt_flash_time: float = 0.18
 
 var facing: int = 1
 var _knockback_timer: float = 0.0
 var _just_hit: bool = false
+var _flash_tween: Tween
 
 @onready var health             : Health = $Health
 @onready var hurtbox            : Hurtbox = $Hurtbox
@@ -58,6 +64,15 @@ func is_dead() -> bool:
 func just_hit() -> bool:
 	return _just_hit
 
+## A body wearing a colour for a beat: being hit, a guardian telegraphing, a
+## guardian going lucid. One implementation, whatever the reason.
+func flash(color: Color, seconds: float) -> void:
+	if _flash_tween != null:
+		_flash_tween.kill()
+	_sprite.modulate = color
+	_flash_tween = create_tween()
+	_flash_tween.tween_property(_sprite, "modulate", Color.WHITE, seconds)
+
 func apply_knockback(impulse: Vector2) -> void:
 	if impulse.is_zero_approx():
 		return
@@ -92,6 +107,7 @@ func _on_hit_received(damage: int, knockback: Vector2, _source: Node2D) -> void:
 		return
 	health.take_damage(damage)
 	apply_knockback(knockback)
+	flash(hurt_flash_color, hurt_flash_time)
 	# A killing blow shows death, not a flinch.
 	_just_hit = health.is_alive()
 

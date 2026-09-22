@@ -19,6 +19,18 @@ signal connected(target: Hurtbox)
 ## each physics frame; the hurtbox's own invulnerability sets the cadence.
 @export var continuous: bool = false
 
+## Below this much sideways, a target counts as standing INSIDE the box
+## rather than beside it: barely offset from its centre, so the direction to
+## it comes out nearly vertical. Popped straight up, it lands back in the
+## same box to be hit again the moment its i-frames lapse - which is exactly
+## how a guardian lands on someone and hits them twice.
+const INSIDE_PUSH_X := 0.5
+## What a shove looks like in that case: decisively out to one side, with
+## only a trace of the original up or down left in it. A half-sideways push
+## of a 380 px/s knockback moved a body 29 px - not even clear of the bulk
+## that threw it. Sideways, the same number moves it 66.
+const INSIDE_PUSH_Y := 0.35
+
 
 func _physics_process(_delta: float) -> void:
 	if not continuous or not monitoring:
@@ -38,12 +50,24 @@ func _hit(area: Area2D) -> void:
 
 	var knockback: Vector2 = Vector2.ZERO
 	if knockback_strength > 0.0 or knockback_lift > 0.0:
-		knockback = global_position.direction_to(area.global_position) * knockback_strength
+		knockback = _push_direction(area) * knockback_strength
 		# Godot 2D y is down-positive, so lift is subtracted to push upward.
 		knockback.y -= knockback_lift
 
 	area.receive_hit(damage, knockback, self)
 	connected.emit(area)
+
+## Out to one side: whichever side the target is already leaning, or this
+## box's own facing when it is dead centre. `knockback_lift` is what gets
+## them off the floor, so the shove itself does not need the height.
+func _push_direction(area: Area2D) -> Vector2:
+	var away := global_position.direction_to(area.global_position)
+	if absf(away.x) >= INSIDE_PUSH_X:
+		return away
+	var side := signf(area.global_position.x - global_position.x)
+	if is_zero_approx(side):
+		side = signf(scale.x)
+	return Vector2(side, clampf(away.y, -INSIDE_PUSH_Y, INSIDE_PUSH_Y)).normalized()
 
 ## Mirrors THIS node's own transform rather than repositioning a child shape.
 ## Attack animations may keyframe the child CollisionShape2D's position,
