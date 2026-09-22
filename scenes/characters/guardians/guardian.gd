@@ -75,6 +75,14 @@ const RELAPSE_HOLD := 0.3
 ## because the camera is clamped by those same edges: landing right against
 ## one puts the guardian half out of the frame for the whole call.
 @export var lucidity_leap_margin: float = 96.0
+## Where the fight happens, pointed at the room's own Arena node on the
+## guardian's instance in the contents scene. The leap needs to know where
+## the ground runs out, and that is a property of the PLACE: asking the
+## camera what it is allowed to show made a rendering clamp decide where a
+## boss comes down. A NodePath rather than a typed Arena export because a
+## node export cannot be assigned across a scene-instance boundary - the
+## deferred resolution happens before the guardian is in the room's tree.
+@export var arena_path: NodePath
 ## How hard the landing hits the camera.
 @export var lucidity_leap_shake: float = 6.0
 ## The shape of the guardian's pulse during the lesson: slow and wide, so the
@@ -117,6 +125,7 @@ var _sprite_rest: Vector2 = Vector2.ZERO
 @onready var _hitbox            : Hitbox = $Hitbox
 @onready var _contact           : Hitbox = $ContactHitbox
 @onready var _pulse_emitter     : PulseEmitter = $PulseEmitter
+@onready var _arena             : Arena = get_node_or_null(arena_path) as Arena
 ## A concrete view of Character's generic resolver, for the duration assert.
 @onready var _guardian_resolver : GuardianAnimationResolver = $AnimationResolver
 
@@ -349,26 +358,37 @@ func _begin_lucidity_leap() -> void:
 ## for its own sake.
 func _leap_target_x() -> float:
 	var here := _player.global_position.x
-	var arena := _arena_bounds()
+	var walls := _arena_bounds()
 	var low := here - lucidity_leap_distance
 	var high := here + lucidity_leap_distance
-	if arena.size.x > 0.0:
-		var edge_low := arena.position.x + lucidity_leap_margin
-		var edge_high := arena.end.x - lucidity_leap_margin
+	if walls.size.x > 0.0:
+		var edge_low := walls.position.x + lucidity_leap_margin
+		var edge_high := walls.end.x - lucidity_leap_margin
 		if edge_low > edge_high:
-			return arena.get_center().x
+			return walls.get_center().x
 		low = clampf(low, edge_low, edge_high)
 		high = clampf(high, edge_low, edge_high)
 	if is_equal_approx(here - low, high - here):
 		return low if global_position.x <= here else high
 	return low if here - low > high - here else high
 
-## What the camera is allowed to show is what the arena is, as far as a leap
-## is concerned; an unbounded room answers an empty rect and the leap simply
-## takes its full distance.
+## Where the ground runs out. A guardian with no arena assigned answers an
+## empty rect and the leap simply takes its full distance - wrong, but it
+## still lands, so it says so rather than stalling the fight.
 func _arena_bounds() -> Rect2:
+	if _arena == null:
+		push_warning("%s has no arena: its lucidity leap cannot see the walls." % name)
+		return Rect2()
+	return _arena.bounds()
+
+## Presentation, not gameplay: a landing this heavy is felt through whatever
+## camera is showing it. The engine's own accessor for the active camera, and
+## nothing is read back out of it - where the guardian LANDS comes from the
+## arena above.
+func _shake_camera(strength: float) -> void:
 	var camera := get_viewport().get_camera_2d() as GameCamera
-	return camera.bounds() if camera != null else Rect2()
+	if camera != null:
+		camera.shake(strength)
 
 func _finish_lucidity_leap() -> void:
 	_leaping = false
@@ -376,9 +396,7 @@ func _finish_lucidity_leap() -> void:
 	var impact := velocity.y
 	velocity = Vector2.ZERO
 	landed.emit(global_position, impact)
-	var camera := get_viewport().get_camera_2d() as GameCamera
-	if camera != null:
-		camera.shake(lucidity_leap_shake)
+	_shake_camera(lucidity_leap_shake)
 	face_towards(_player.global_position.x - global_position.x)
 	_stage()
 	_player.open_call(stats.song, stats.revealed_notes, _fight.cycles(), stats.cycles_to_restore)
