@@ -26,6 +26,11 @@ const BAR_COLOR := Color(0.96, 0.9, 0.72)
 const BAR_LOW_COLOR := Color(0.95, 0.4, 0.3)
 ## Seconds the answered sheet lingers green before it goes.
 const LINGER_TIME := 0.6
+## A lesson's track runs far longer than its notes: once the last one has
+## lit, the sheet has nothing left to show, so it holds a beat and goes,
+## leaving the picture. Both in seconds.
+const LESSON_SHEET_HOLD := 1.4
+const LESSON_SHEET_FADE := 0.6
 
 ## Indexed by Enums.GlyphSet: which textures each input device draws with.
 @export var glyph_sets: Array[NoteGlyphSet] = []
@@ -58,6 +63,8 @@ var _answering: bool = false
 var _drawn: bool = false
 var _window_total: float = 0.0
 var _window_left: float = 0.0
+## How many notes the lesson under way will light; 0 when none is.
+var _lesson_notes: int = 0
 ## The bar's full width, read from the scene.
 var _bar_width: float = 0.0
 
@@ -118,6 +125,7 @@ func on_camera_focused(subject_screen_position: Vector2) -> void:
 
 func on_sheathed() -> void:
 	_drawn = false
+	_lesson_notes = 0
 	if _answering:
 		# Interrupted mid-answer: the failure has flashed; the call closing
 		# takes the sheet away.
@@ -147,15 +155,19 @@ func on_sequence_reset() -> void:
 
 func on_note_cue_reached(index: int) -> void:
 	_sheet.light(index)
+	if _lesson_notes > 0 and index >= _lesson_notes - 1:
+		_close_lesson_sheet()
 
 ## The title card is LessonCinematic's; here only the notes to be lit.
 func on_lesson_started(song: Song, glyph_set: Enums.GlyphSet) -> void:
 	_stop_linger()
 	_leave_answer()
 	modulate = Color.WHITE
+	_lesson_notes = song.notes.size()
 	_sheet.show_notes(song.notes, glyph_sets[glyph_set])
 
 func on_song_played(_song: Song, _position: Vector2) -> void:
+	_lesson_notes = 0
 	_sheet.clear()
 
 #############################################
@@ -238,6 +250,18 @@ func _on_linger_done() -> void:
 	_leave_answer()
 	_sheet.clear()
 	hide()
+
+## The sheet has shown the whole piece: it bows out, and the scene is the
+## guardian, Ivo and the title alone for the rest of the track. Pause-process,
+## like everything else in a lesson.
+func _close_lesson_sheet() -> void:
+	_lesson_notes = 0
+	if _fade_tween:
+		_fade_tween.kill()
+	_fade_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_fade_tween.tween_interval(LESSON_SHEET_HOLD)
+	_fade_tween.tween_property(_frame, "modulate:a", 0.0, LESSON_SHEET_FADE)
+	_fade_tween.tween_callback(_frame.hide)
 
 func _leave_answer() -> void:
 	_answering = false

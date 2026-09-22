@@ -4,9 +4,9 @@ type: architecture
 title: A lesson freezes time, not memory - the memory layer runs through a pause
 status: active
 tags: [pause, process-mode, greyhush, lesson, cinematic]
-related: [architecture/memory-field-cpu-gpu-split, features/regional-weather, playtests/2026-09-21-lesson-scene-and-answer]
+related: [architecture/memory-field-cpu-gpu-split, features/regional-weather, bugs/creature-pass-frozen-transform-floats-bodies]
 created: 2026-09-21
-updated: 2026-09-21
+updated: 2026-09-22
 source_files:
   - scenes/world/game.tscn
   - scenes/world/memory/color_pulse/color_pulse.tscn
@@ -32,6 +32,10 @@ but MEMORY may move. `SeasonMask`, the `Greyhush` renderer, every `ColorPulse` a
   the guardian's own pulse is born at the first cue with `lesson_pulse_stats` (12 s
   attack) so colour spreads for the whole track; `RegionWeather.speed_scale` follows the
   baseline, so petals frozen mid-air start to fall; `GameCamera.push_in` zooms slowly.
+- `CreatureMask` belongs to the layer for a different reason: it MIRRORS the main
+  viewport's canvas transform every frame, so a pausable copy renders every creature at
+  the transform the pause froze - bodies floating off the floor as the lesson pushes in
+  (`bugs/creature-pass-frozen-transform-floats-bodies`).
 - What stays frozen: every `Character`, `MemoryClock`-driven environment, `SongArea`
   receivers (they catch up on thaw). `MemoryClock` remains pausable on purpose.
 - The boundary is the rule to keep: a node joins the memory layer only if what it

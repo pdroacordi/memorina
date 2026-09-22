@@ -50,9 +50,11 @@ signal focused(subject_screen_position: Vector2)
 
 @export_category("Lesson")
 ## The slow push toward the pair while a lesson's track plays, and how long
-## it takes to get there. Released with the letterbox.
+## it takes to get there. Long on purpose: the frame must still be closing
+## in at the end of the track, or the scene stops moving halfway through and
+## goes back to being a still picture. Released with the letterbox.
 @export var lesson_zoom           : float = 1.15
-@export var lesson_push_time      : float = 14.0
+@export var lesson_push_time      : float = 45.0
 
 @export_category("Shake")
 ## The shake decays over its time; strength is the first frame's reach in px.

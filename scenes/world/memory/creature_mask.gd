@@ -18,6 +18,12 @@ class_name CreatureMask extends SubViewport
 ##     else
 ##   - a TextureRect above the world pass composites them back
 ##
+## PAUSE. This pass mirrors the main viewport every frame, so it must run
+## through a pause like the rest of the memory layer: the camera still moves
+## while the world is frozen (a lesson pushes in), and a creature pass left on
+## the last transform draws every creature where it USED to be - bodies
+## floating off the floor. PROCESS_MODE_ALWAYS is set in game.tscn.
+##
 ## COST AND CONSEQUENCE. One extra render pass over the creature layer, which is
 ## a handful of sprites. The consequence worth knowing is Z ORDER: creatures are
 ## composited above the finished world, so they draw in front of everything,
