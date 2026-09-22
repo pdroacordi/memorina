@@ -99,6 +99,13 @@ func set_bounds(bounds: Rect2) -> void:
 	_bounds = bounds
 	_is_bound = true
 
+## What the room lets the frame show, world-space; an empty rect when the
+## room has not bound it. Read by anything that needs to know where the arena
+## ENDS - a guardian choosing where to come down from its leap - rather than
+## re-deriving the room's extent from the tilemap.
+func bounds() -> Rect2:
+	return _bounds if _is_bound else Rect2()
+
 # subject stays Node2D rather than narrowing to Character: cutscenes can point
 # the camera at a plain Marker2D with no facing, and the `is Character` checks
 # below already degrade gracefully for that case.

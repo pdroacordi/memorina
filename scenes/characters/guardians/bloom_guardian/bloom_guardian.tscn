@@ -29,6 +29,9 @@
 [ext_resource type="PackedScene" path="res://scenes/world/memory/color_pulse/color_pulse.tscn" id="23_pulsesc"]
 [ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="24_source"]
 [ext_resource type="Resource" uid="uid://clessonpulse" path="res://resources/memory/lesson_pulse_stats.tres" id="25_lesson"]
+[ext_resource type="Script" uid="uid://branmbikueiyl" path="res://scenes/particles/dust/dust_emitter.gd" id="90_dust"]
+[ext_resource type="PackedScene" uid="uid://cbam77lyl5m76" path="res://scenes/particles/dust/jump_dust_particles.tscn" id="91_jumpdust"]
+[ext_resource type="PackedScene" uid="uid://b2a63w0vkfy3a" path="res://scenes/particles/dust/landing_dust_particles.tscn" id="92_landdust"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 28.0
@@ -857,7 +860,14 @@ radius = 30.0
 height = 14.0
 feather = 12.0
 
+[node name="DustEmitter" type="Node" parent="."]
+script = ExtResource("90_dust")
+jump_particles = ExtResource("91_jumpdust")
+land_particles = ExtResource("92_landdust")
+
 [connection signal="facing_changed" from="." to="Hitbox" method="_on_character_facing_changed"]
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]
 
 [editable path="Hurtbox"]
+[connection signal="leapt" from="." to="DustEmitter" method="spawn_jump_dust"]
+[connection signal="landed" from="." to="DustEmitter" method="spawn_land_dust"]

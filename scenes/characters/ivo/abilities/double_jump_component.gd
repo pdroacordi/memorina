@@ -14,6 +14,13 @@ signal double_jumped(position: Vector2)
 ## A single scalar, so a plain export rather than a one-field Resource, which
 ## would be ceremony without benefit.
 @export var height: float = 128.0
+## How much of the launch is ADDED rather than assigned when the body is
+## still rising. An air jump that assigns the speed is right at the apex and
+## wrong on the way up: pressed at -184 px/s a 222 px/s launch is a gain of
+## 38, a jump nobody can see. A recalled double jump forces exactly that
+## press - the slowed world makes waiting for the apex impossible - so it is
+## the one case the rule has to answer. 0 restores the plain assignment.
+@export_range(0.0, 1.0, 0.05) var rising_boost: float = 0.5
 
 ## Injected by the owner, which as composition root is the only thing that
 ## should know the full wiring graph; the component does not go looking for
@@ -35,7 +42,10 @@ func try_jump() -> bool:
 	if not enabled or not _is_ready:
 		return false
 
+	var rising := minf(_body.velocity.y, 0.0)
 	jump.launch(height)
+	if rising < 0.0:
+		_body.velocity.y = minf(_body.velocity.y, rising + _body.velocity.y * rising_boost)
 	_is_ready = false
 	double_jumped.emit(_body.global_position)
 	return true

@@ -21,6 +21,10 @@ extends Character
 ## relapses - until it is restored and keeps it all.
 
 signal restored(guardian: Guardian)
+## The lucidity leap left the ground / came back down, for the dust the
+## scene mounts (wired to a DustEmitter exactly as ivo.tscn does).
+signal leapt(position: Vector2)
+signal landed(position: Vector2, impact_speed: float)
 
 ## The failure's tremble: hard and brief, then the colour is gone.
 const FAIL_BURST_TIME := 0.3
@@ -50,6 +54,25 @@ const RELAPSE_HOLD := 0.3
 ## Seconds the well of forgetting takes to fill in and the region's memory to
 ## climb to 1.0 once the guardian is restored - the first act of the lesson.
 @export var corruption_lift_time: float = 6.0
+
+## Lucidity does not begin where the fighting stopped. The guardian breaks
+## off, throws itself clear over the top of the frame and comes down at the
+## far side of the arena, and only then does it call - so the phase change is
+## something you WATCH, not something the HUD announces. How high the arc
+## goes (it must clear the top of the screen) and how far from Ivo it lands,
+## in world pixels: far enough that the camera holding the pair puts them at
+## opposite edges.
+@export var lucidity_leap_height: float = 340.0
+@export var lucidity_leap_distance: float = 300.0
+## Seconds before a leap that never lands (a pit, a missing floor) gives up
+## and calls from where it is: the fight must not be able to stall.
+@export var lucidity_leap_timeout: float = 3.0
+## Kept clear of the arena's edges when choosing where to come down. Wide,
+## because the camera is clamped by those same edges: landing right against
+## one puts the guardian half out of the frame for the whole call.
+@export var lucidity_leap_margin: float = 96.0
+## How hard the landing hits the camera.
+@export var lucidity_leap_shake: float = 6.0
 ## The shape of the guardian's pulse during the lesson: slow and wide, so the
 ## colour spreads from it for as long as the track plays.
 @export var lesson_pulse: PulseStats
@@ -71,6 +94,13 @@ var _answered_notes: int = 0
 var _relapse_from: float = 0.0
 ## The camera and the lights are on this guardian.
 var _staged: bool = false
+## In the air on the way to lucidity: the AI is off and physics owns it.
+var _leaping: bool = false
+var _leap_left: float = 0.0
+## The floor it left, and the mask it collides with when it is not in the
+## air: everything ABOVE that line is passed through on the way up.
+var _leap_floor_y: float = 0.0
+var _leap_mask: int = 0
 var _shield_rest_radius: float = 0.0
 var _sprite_rest: Vector2 = Vector2.ZERO
 
@@ -118,6 +148,14 @@ func _ready() -> void:
 	_update_shield(0.0)
 
 func _process_motion(delta: float) -> void:
+	if _leaping:
+		# Ballistic: the horizontal speed set at take-off carries it across.
+		velocity.y = minf(velocity.y + base_gravity() * delta, terminal_velocity)
+		# An arena has a ceiling, and this arc is meant to leave the frame
+		# through it: above the floor it left, the guardian passes through the
+		# world, and takes it back on the way down so it lands on real ground.
+		collision_mask = 0 if global_position.y < _leap_floor_y - 8.0 else _leap_mask
+		return
 	if _fight.phase() == GuardianFight.Phase.PRESSURE:
 		_ai.tick(delta)
 		# Where it LOOKS, not where it walks: a guardian backing out from under
@@ -134,6 +172,12 @@ func _process_motion(delta: float) -> void:
 		velocity.y = minf(velocity.y + base_gravity() * delta, terminal_velocity)
 
 func _after_move(delta: float) -> void:
+	if _leaping:
+		_leap_left -= delta
+		# velocity.y >= 0 keeps the take-off frame, where the feet have not
+		# left the floor yet, from reading as an arrival.
+		if (is_on_floor() and velocity.y >= 0.0) or _leap_left <= 0.0:
+			_finish_lucidity_leap()
 	# The window ran out: the same failure as a wrong note, closed the same way.
 	if _fight.tick(delta):
 		_close_call(false)
@@ -280,6 +324,57 @@ func _open_lucidity() -> void:
 	_tremble_time = 0.0
 	_answered_notes = 0
 	_breath = 0.0
+	_begin_lucidity_leap()
+
+## It breaks off and throws itself clear: up over the top of the frame and
+## down at the far side, away from Ivo. The call waits for the landing.
+func _begin_lucidity_leap() -> void:
+	var gravity := base_gravity()
+	var speed := sqrt(2.0 * gravity * lucidity_leap_height)
+	var flight := 2.0 * speed / gravity
+	var target := _leap_target_x()
+	velocity = Vector2((target - global_position.x) / flight, -speed)
+	face_towards(_player.global_position.x - global_position.x)
+	_leap_floor_y = global_position.y
+	_leap_mask = collision_mask
+	_leaping = true
+	_leap_left = lucidity_leap_timeout
+	leapt.emit(global_position)
+
+## Away from Ivo, on the side it already stands, unless the arena has run out
+## there - then it goes over his head to the other side, which is the more
+## cinematic answer anyway.
+func _leap_target_x() -> float:
+	var side := signf(global_position.x - _player.global_position.x)
+	if is_zero_approx(side):
+		side = -float(facing)
+	var target := _player.global_position.x + side * lucidity_leap_distance
+	var arena := _arena_bounds()
+	if arena.size.x <= 0.0:
+		return target
+	var low := arena.position.x + lucidity_leap_margin
+	var high := arena.end.x - lucidity_leap_margin
+	if target < low or target > high:
+		target = _player.global_position.x - side * lucidity_leap_distance
+	return clampf(target, low, high) if low <= high else arena.get_center().x
+
+## What the camera is allowed to show is what the arena is, as far as a leap
+## is concerned; an unbounded room answers an empty rect and the leap simply
+## takes its full distance.
+func _arena_bounds() -> Rect2:
+	var camera := get_viewport().get_camera_2d() as GameCamera
+	return camera.bounds() if camera != null else Rect2()
+
+func _finish_lucidity_leap() -> void:
+	_leaping = false
+	collision_mask = _leap_mask
+	var impact := velocity.y
+	velocity = Vector2.ZERO
+	landed.emit(global_position, impact)
+	var camera := get_viewport().get_camera_2d() as GameCamera
+	if camera != null:
+		camera.shake(lucidity_leap_shake)
+	face_towards(_player.global_position.x - global_position.x)
 	_stage()
 	_player.open_call(stats.song, stats.revealed_notes, _fight.cycles(), stats.cycles_to_restore)
 	_call.play(stats.song.notes, stats.call_lead_in)
@@ -337,6 +432,9 @@ func _close_call(success: bool) -> void:
 func _abandon_call() -> void:
 	if _fight == null or _player == null:
 		return
+	if _leaping:
+		_leaping = false
+		collision_mask = _leap_mask
 	if _fight.phase() == GuardianFight.Phase.LUCIDITY:
 		_fight.answer_failed()
 		_close_call(false)
