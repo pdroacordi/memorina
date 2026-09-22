@@ -14,8 +14,16 @@ extends Resource
 @export_group("Lucidity")
 ## Hits taken in the pressure phase before a lucidity window opens.
 @export var hits_to_open: int = 5
-## Good answers needed to restore the guardian.
+## Good answers needed to restore the guardian. Each one short of the last is
+## followed by a relapse: the madness returns, on a shorter leash.
 @export var cycles_to_restore: int = 2
+## Seconds the guardian stands lost between an answer and the pressure that
+## follows it, its colour draining; a failed answer takes
+## GuardianFight.FAILED_RELAPSE_SCALE of this. 0 is straight back to pressure.
+@export var relapse_time: float = 1.4
+## Seconds between lucidity opening and the first note of the call, so the
+## camera and the stage land before the phrase starts.
+@export var call_lead_in: float = 0.7
 ## Seconds of slack the player has to answer beyond the phrase's own length:
 ## the window is the time the call took to sound, plus this.
 @export var window: float = 3.0
@@ -27,8 +35,15 @@ extends Resource
 @export_group("Recall")
 ## How many ordinary attacks the guardian makes before its unavoidable move
 ## comes: the recall is a phase of the fight, not a roll of the dice. It keeps
-## coming at this cadence until the skill is remembered.
+## coming at this cadence until the skill is remembered - and at once, cadence
+## or not, as soon as the hits are in and only the recall stands between them
+## and the window.
 @export var recall_after_attacks: int = 3
+
+@export_group("Counter")
+## Hits taken in a row, while not already mid-move, that the guardian answers
+## with an immediate move: mashing is not free. 0 never counters.
+@export var counter_after_hits: int = 3
 
 @export_group("Aggression")
 ## Every failed answer adds this many hits to the next window's threshold...
@@ -44,5 +59,6 @@ extends Resource
 ## How much colour the corrupted guardian still holds (GreyhushShield.amount).
 ## It climbs toward 1.0 as the cure advances and flickers to 1.0 while lucid.
 @export_range(0.0, 1.0) var corrupted_shield_amount: float = 0.3
-## Flicker rate of the corrupted<->lucid tremble in a lucidity window.
-@export var tremble_hz: float = 6.0
+## Rate of the slow tremble between the cure so far and full colour while the
+## answer window is open (a sine, not a flicker).
+@export var tremble_hz: float = 2.0

@@ -9,6 +9,7 @@
 [ext_resource type="Resource" uid="uid://de6c0f56tdvha" path="res://resources/ui/memorina/glyphs_playstation.tres" id="7_ps"]
 [ext_resource type="FontFile" uid="uid://dsutvchk6baqt" path="res://assets/fonts/memorina_text_font_size_8.ttf" id="8_text_font"]
 [ext_resource type="Script" uid="uid://4xryj0q84ggy" path="res://resources/ui/memorina/note_glyph_set.gd" id="9_glyph_script"]
+[ext_resource type="Script" path="res://scenes/ui/guardian_call_hud/cure_pips.gd" id="10_pips"]
 
 [node name="GuardianCallHud" type="Control"]
 visible = false
@@ -52,6 +53,15 @@ theme_override_fonts/font = ExtResource("8_text_font")
 theme_override_font_sizes/font_size = 8
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="CurePips" type="Control" parent="Frame"]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 28.0
+offset_right = 228.0
+offset_bottom = 40.0
+mouse_filter = 2
+script = ExtResource("10_pips")
 
 [node name="TimeBar" type="ColorRect" parent="Frame"]
 visible = false

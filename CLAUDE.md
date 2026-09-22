@@ -54,9 +54,10 @@ The world's state at any point is a memory value from 0 to 1 (`docs/design/03_mu
 - **`SongMatcher` is pure logic and carries no timing.** The guardian call-and-response needs the same matching with a window on top; that will wrap the matcher and call `reset()`, rather than the matcher growing two modes.
 - **No song's note sequence may be a prefix of another's** — the longer one would become unreachable. `SongCatalog.validate()` asserts this at startup in debug builds.
 - **`MemorinaComponent` holds the instrument's state and nothing else.** Whether Ivo is standing still enough is the body's judgement, pushed in through `try_draw(can_play)` and `interrupt()`, the same way `enabled` carries the item gate.
+- **A new note cuts the one still ringing.** The samples ring ~1.6 s, far longer than a phrase is played at, so `MemorinaVoice.play_note()` retriggers once `min_note_gap` (0.25 s) has passed and `Player` gates presses on `MemorinaVoice.can_play_note()`; presses inside the gap are mashing and are dropped. Never gate on `is_busy()` for a press - a silently swallowed press reads as "the game got it wrong" (see `docs/knowledge/bugs/memorina-notes-dropped-while-previous-rings.md`).
 - **Interruption reuses the failure vocabulary that already exists.** Being hit or stepping off a ledge mid-sequence emits `sequence_failed`, exactly as a wrong note does — no second kind of failure for the player to learn. A wrong note never sounds: the component emits `note_rejected` (drawn, not played) and then `sequence_failed`, and the mistake SFX plays in its place; an interruption lets the ringing note finish first (`MemorinaVoice.play_mistake_after_note()`). `sequence_reset` (the sheet clears) fires when the mistake has been heard.
 - **A completed sequence starts a PERFORMANCE, not the song.** `MemorinaComponent` emits `song_matched` and locks; `Player` lets the last note ring out (`MemorinaVoice.note_finished`), then `SongPerformance.play()`s the song's `performance_stream()` (the excerpt, or the track cut at `excerpt_duration`). `performance_started` → `WorldFreeze.freeze()` (`get_tree().paused`), `cue_reached(i)` lights sheet slot `i`, `finished` → thaw → `finish_performance()` → `song_played` → the pulse, then the component sheathes itself (the answer ends the gesture). The freeze is never set at match time, so a hit during the ring-out aborts through `interrupt()` and nothing is left paused. A lesson (`debug_learn_song`, F9, debug builds) is a performance started by hand on the whole track.
-- **Pause-mode map.** `World` is PAUSABLE. `PROCESS_MODE_ALWAYS` on exactly: `MemorinaHud` (in its own scene), `Ivo/AnimationTree` (so `memorina_idle` keeps looping on a frozen body; it also means Ivo animates under any future pause menu), `Ivo/MemorinaVoice`, `Ivo/SongPerformance`. Never the whole `CanvasLayer` — `GreyhushRenderer` would re-push uniforms from a frozen field. Camera zoom tweens use `TWEEN_PAUSE_PROCESS`.
+- **Pause-mode map.** `World` is PAUSABLE. `PROCESS_MODE_ALWAYS` on exactly: `MemorinaHud` (in its own scene), `Ivo/AnimationTree` (so `memorina_idle` keeps looping on a frozen body; it also means Ivo animates under any future pause menu), `Ivo/MemorinaVoice`, `Ivo/SongPerformance`, `LessonCinematic`. Never the whole `CanvasLayer` — `GreyhushRenderer` would re-push uniforms from a frozen field. Camera zoom tweens use `TWEEN_PAUSE_PROCESS`.
 - **`SongPerformance` and `CueTracker` carry no song knowledge.** They play a stream and report crossed cue times; `Song.note_cues` (seconds, one per note, hand-tuned against the audio) is the only place timing lives. A future reduced excerpt must start at the same instant as the track so the cues stay shared; adding `excerpt_cues` later is an additive change.
 - **The glyph a note is drawn with is decided in `PlayerInput`** (`glyph_set_for(event, joy_name)`, pure and tested) and travels as `Enums.GlyphSet` beside the note. `MemorinaComponent` never sees it — `Player` remembers the pressed glyph and relays `note_played(note, glyph_set)`. The HUD maps a set to textures through `NoteGlyphSet` resources (`resources/ui/memorina/`); no script names a glyph PNG.
 - **The sheet is geometry, not layout.** `NoteSheet` authors the staff in `memorina_hud.png`'s own pixels (`LINE_Y`, `STAFF_LEFT/RIGHT`) and scales them by the `Frame` TextureRect's actual width, so the frame's offsets in `memorina_hud.tscn` are the one place that picks 1× (128×64) or 2× (256×128, current); the glyphs have their own `icon_scale` (1.5). The frame is placed by code on the side Ivo faces (`MemorinaHud._place_frame`), but only once `GameCamera.focused` reports the zoom and any in-flight look-ahead have landed, with Ivo's final screen position — a frame laid out earlier would cover where he is about to be. The camera is the one node that converts world to screen for UI. The title's outline is the Label's `outline_size`, not the outline `.ttf` (two fonts never overlay glyph for glyph). No nested `scale`, so nothing is left for pixel snapping to round.
@@ -65,15 +66,20 @@ The world's state at any point is a memory value from 0 to 1 (`docs/design/03_mu
 
 A guardian encounter is `docs/design/02_mecanicas.md` sections 3 and 4: pressure → lucidity window (call-and-response) → consequence, with the emergency QTE riding on one unavoidable attack, and restoration as the sync that teaches the song. Everything generic lives in `scenes/characters/guardians/`; **a concrete guardian is a scene plus a `GuardianStats`** (`resources/characters/guardians/<name>/`), never a subclass, unless it does something no resource can describe.
 
-- **`GuardianFight` is the phase logic and is pure** (`RefCounted`, tested): `DORMANT → PRESSURE → LUCIDITY → RESTORED`, the hit threshold, the answer window and the aggression that every failure adds. `Guardian` drives it and does all the sounding, moving and saving; nothing else reads the phase except the resolver.
-- **Hits destabilise, they never wound.** `Guardian._on_hit_received` skips `Health` and knockback and counts the hit into the fight. `Health` on a guardian is inert.
-- **The call borrows Ivo's instrument.** `Guardian` calls `Player.open_call(song, revealed)`, which sets `MemorinaComponent.call_song`: while it is set the phrase is the only candidate, and matching it emits `call_answered` and leaves the instrument out instead of starting a performance. `Player.close_call(success)` sheathes silently on success and `interrupt()`s otherwise, so a failed answer is the wrong-note vocabulary the player already knows. `GuardianCall` sounds the phrase through its own `MemorinaVoice` and reports its length; **the answer window is that length plus `GuardianStats.window`**, because the reply cannot be played faster than the call was.
-- **The Player↔Guardian contract is small**: the guardian calls `open_call` / `sound_call_note` / `close_call` / `begin_recall` / `learn_song`; it listens to `call_answered`, `sequence_failed`, `skill_recalled`, `skill_recall_missed`. Ivo relays the call to the HUD (`call_opened`, `call_note_sounded`, `call_closed`) so the HUD keeps listening to one node.
-- **The ability recall (QTE) is `AbilityRecallComponent`**, a player ability armed with the attack's `AbilityRecallStats` and ticked in **real** seconds (`delta / Engine.time_scale`). `WorldFreeze.slow()` / `restore()` are the only writers of `Engine.time_scale`. The same press that recalls the skill performs it: `PlayerInput.roll_pressed`/`jump_pressed` feed the recall before `_try_roll`/`_try_jump` run, and `SaveSystem.unlock_skill` happens in that handler. `RecallPrompt` shows the bound key's name (`as_text_physical_keycode()`), a placeholder until jump/roll glyphs exist.
+- **`GuardianFight` is the phase logic and is pure** (`RefCounted`, tested): `DORMANT → PRESSURE → LUCIDITY → RELAPSE → PRESSURE … → RESTORED`, the hit threshold, the answer window, the relapse clock and the aggression that every failure adds. `Guardian` drives it and does all the sounding, moving and saving; nothing else reads the phase except the resolver. **The recall is a gate**: `set_recall_pending(true)` (the guardian reads the save for it) makes hits saturate at the threshold without opening a window, and `skill_recalled()` is then the blow that opens it - the design's guarantee that no one leaves without the skill. Every answer short of the last passes through `RELAPSE` (`GuardianStats.relapse_time`, `FAILED_RELAPSE_SCALE` of it after a failure): the guardian stands lost, hits do not count, and pressure resumes on its own clock.
+- **Hits destabilise, they never wound.** `Guardian._on_hit_received` skips `Health` and knockback and counts the hit into the fight. `Health` on a guardian is inert. **Touching a fighting guardian hurts**: `ContactHitbox` (a `Hitbox` with `continuous = true`, re-applied to whoever stays inside as their i-frames lapse) is phase-owned - `monitoring` is written by the script every frame, on under PRESSURE only, never keyed in a clip. Mashing is answered: every `counter_after_hits` hits between moves, `GuardianAI.provoke()` drops the cooldown and the next move comes at once; and once the hits saturate on a pending recall, `request_recall()` makes the recall move the next one, cadence or not.
+- **The call borrows Ivo's instrument.** `Guardian` calls `Player.open_call(song, revealed)`, which sets `MemorinaComponent.call_song`: while it is set the phrase is the only candidate, and matching it emits `call_answered` and leaves the instrument out instead of starting a performance. `Player.close_call(success)` sheathes silently on success and `interrupt()`s otherwise, so a failed answer is the wrong-note vocabulary the player already knows. `GuardianCall` sounds the phrase through its own `MemorinaVoice` on a fixed `note_interval` (0.55 s, a melody rather than six ringing tones) and reports its length; **the answer window is that length plus `GuardianStats.window`**, because the reply cannot be played faster than the call was.
+- **The Player↔Guardian contract is small**: the guardian calls `open_call` / `sound_call_note` / `close_call` / `begin_recall` / `learn_song`; it listens to `call_answered`, `sequence_failed`, `skill_recalled`, `skill_recall_missed`. Ivo relays the call to the HUD (`call_opened`, `call_note_sounded`, `call_window_opened`, `call_progress`, `call_answered`, `call_closed`) so the HUD keeps listening to one node.
+- **The encounter is staged by `LessonCinematic` and the camera.** `Player.stage_call(caller)` / `unstage_call()` (relayed as `call_staged` / `call_unstaged`) bracket one lucid moment from the window opening to the end of its relapse (or restoration): `GameCamera.frame_pair(other)` eases the frame to the midpoint of Ivo and the guardian (no zoom - `focus()` while paired only settles `focused`), `LessonCinematic.on_call_staged` dims the world to `call_dim_alpha`, and `MemorinaHud` hides its sheet. The lesson goes further (`scenes/ui/lesson_cinematic/`, PROCESS_MODE_ALWAYS, sits UNDER the `Creatures` pass in `game.tscn` so the dim spotlights Ivo and the guardian): letterbox bars, a dimmed world and the piece's title card (`MEMORINA_LEARNED` + `Song.title_key`) for the whole track; the guardian answers the finished lesson with its own colour pulse (`Guardian._on_lesson_song_played`). `MemorinaHud` shows only the notes lighting; it no longer carries a banner.
+- **Hit feedback**: guardians flash on every hit (`hit_flash_color`), Ivo's landed blows call `WorldFreeze.hit_stop()` (`Player.hit_landed`), a few real milliseconds at near-zero time scale that always return to whatever the recall had set, and both `hit_landed` and `Player.hurt` shake the camera (`GameCamera.shake`, bound strengths in `game.tscn`).
+- **The call has ONE sheet.** `GuardianCallHud` (`scenes/ui/guardian_call_hud/`) slides in at the top on the side away from the guardian (`call_opened` carries `side`, so a tall guardian's head is never covered), tinted in its season: "Listen" while the revealed notes light and pop as they sound, then "Answer on the Memorina" with a time bar draining gold to red and the notes lighting again as the answer lands each one; `CurePips` under the message show `cure_done` of `cure_total` answers; green linger and the next pip filling on success, red on any failure. While a guardian is staged `MemorinaHud` stays hidden - Ivo's answer is read on the guardian's sheet, never on two. Labels are translation keys (`GUARDIAN_CALL_*`).
+- **The recall (QTE) is a phase, not a dice roll.** `GuardianAI` schedules the move carrying an `AbilityRecallStats` every `GuardianStats.recall_after_attacks` ordinary moves (its `weight` is 0, so it is never picked at random), and every move first TELEGRAPHS (`GuardianAttack.telegraph` seconds standing still while the sprite pulses `telegraph_color`) before it swings - a swing nobody could read is a sucker punch, not a challenge. The hitbox takes each move's `damage`/`knockback_*` at swing start. The recall only opens when it makes sense: `AbilityRecallStats.requires_airborne` makes `Player.begin_recall` wait for the launch (the Bloom burst does no damage and lifts Ivo) and never opens if Ivo stays grounded; a miss costs `miss_damage` straight through `Health` (i-frames must not hide it). **A move's `attack_range` must not exceed the reach its clip's hitbox keys** - the burst was thrown from 140 px with a 70 px hitbox and the recall never came (`docs/knowledge/bugs/recall-move-range-exceeds-hitbox-reach.md`).
+- **`AbilityRecallComponent`** is the player ability itself, armed with the attack's stats and ticked in **real** seconds (`delta / Engine.time_scale`). `WorldFreeze.slow()` / `restore()` / `hit_stop()` are the only writers of `Engine.time_scale`. The same press that recalls the skill performs it: `PlayerInput.roll_pressed`/`jump_pressed` feed the recall before `_try_roll`/`_try_jump` run, and `SaveSystem.unlock_skill` happens in that handler. `RecallPrompt` (Franuka medallion + key glyph, `assets/sprites/hud/recall/`) blinks the bound key's name inside a ring that drains with the real-time window, green on success, red on a miss; `RECALL_PROMPT` is its banner key.
 - **`GuardianAnimationResolver` is shared**: `IDLE, WALK, ATTACK_1..3, HURT, LUCID, RESTORED`. `GuardianAttack.clip_index` maps to `attack_clip_for()`, and `Guardian._assert_clip_durations` walks that mapping. The phase outranks everything in `resolve()`.
-- **A guardian's `GreyhushShield.amount` is script-owned, never keyed in a clip**: corrupted under pressure, climbing with `lucidity()`, trembling to full while lucid, full once restored. Keying it in the tree would fight this every frame (see the RESET rule above).
+- **A guardian's colour is the fight made visible, script-owned, never keyed in a clip** (`Guardian._update_shield`): the rest level is `lerp(corrupted, 1.0, lucidity())`, hits climb a little above it under pressure, each note of the call *breathes* the shield to full and swells its radius (`note_swell`) with the sprite bobbing, the open window trembles slowly (`tremble_hz`, a sine) above a floor that climbs with every note answered, a relapse holds bright then drains to the new rest (or snaps to it with a hard burst after a failure), and restoration keeps it all. The guardian's voice is the same notes an octave down (`Call/Voice/AudioStreamPlayer.pitch_scale = 0.5`) and it groans the mistake sound as it relapses. **Every guardian carries a well of forgetting** (`Corruption`, a negative `MemorySource`, `top_level` so it stays put while the guardian paces): in a mostly remembered region a shield only lifts memory toward 1, so without the well none of this reads; the well is hidden for a restored guardian and tweened out (`corruption_lift_time`) at restoration.
 - **Restoration is persistent** (`Enums.Guardian`, `PlayerData.restored_guardians`, `SaveSystem.restore_guardian`). `Region.current_baseline()` answers 1.0 once its guardian is restored, and `Guardian._restore()` sets `MemoryField.baseline` for the current visit. A restored guardian starts in `RESTORED` on every later visit and never fights again.
 - Arenas: `home_village/bloom_hollow` (Bloom Guardian, SPROUT + DOUBLE_JUMP) and the `frost_edge` region's `lighthouse` (Frost Guardian, FREEZE + ROLL). Sprite credits in `CREDITS.md`.
+- Guardian sheets: frames side by side, body **centred in the frame** (`flip_h` mirrors about the frame centre; an off-centre body jumps on every turn), authored facing left. Missing clips (`lucid`, `restored` are idle frames today) can be generated with the `pixellab` skill (`tools/pixellab/pixellab.ps1`, key only ever in `PIXELLAB_API_KEY`).
 
 ## Seasonal art
 
@@ -99,6 +105,41 @@ gdUnit4 lives in `addons/gdUnit4/`. Pure logic goes in a `RefCounted` class and 
 
 After adding a script with a new `class_name`, run `--headless --path . --import` once, or nothing else will resolve the new type.
 
+## Engineering knowledge base (self-improving)
+
+`docs/knowledge/` (start at `docs/knowledge/README.md`) is a separate, English,
+RAG-shaped knowledge base for **engineering** memory — architecture decisions, confirmed
+bugs, Godot/GDScript engine gotchas, and playtest reports. It is not `docs/design/`:
+`docs/design/` is the Portuguese design source of truth (lore, mechanics); `docs/knowledge/`
+is how the project's own agents get smarter about *this codebase and this engine* over
+time instead of re-deriving the same lessons every session.
+
+The rule that makes this self-improving: **every agent reads the relevant part of
+`docs/knowledge/` before acting, and writes a new entry after learning something not
+already captured there.** `godot-architect` checks and contributes to `architecture/`;
+`godot-reviewer` checks and contributes to `bugs/` and `gotchas/`; `godot-playtester`
+(below) always writes a `playtests/` entry. Skipping the write step because a task felt
+small defeats the entire point — the next agent (or the next session) pays the same cost
+again if it isn't written down.
+
+## Playtesting
+
+A green test suite and a clean `godot-reviewer` pass verify correctness, not whether a
+gameplay-visible change is actually fun, fluid, or looks right in motion — those require
+watching the game run. `tools/playtest/` (see `tools/playtest/README.md`) is a capture
+harness: it runs the real game windowed (not headless — screenshots need a real rendering
+device), drives it through a scripted, data-driven input timeline
+(`tools/playtest/scripts/*.json`) via `Input.action_press`/`action_release` — the same
+calls a live keyboard/pad produces — and saves viewport screenshots at chosen moments.
+
+Use the `godot-playtester` agent (directly, or via the `godot-playtest` skill) after
+implementing or changing anything gameplay-visible: movement, abilities, a guardian fight,
+HUD, seasonal art, the Memorina. It reports fun/fluidity/aesthetics with an honest
+accounting of what a screenshot sequence can and can't actually establish (see the agent's
+"What this cannot judge" section — camera feel and input latency are not visible in a
+still frame, and the report says so rather than guessing a confident number), and files
+any confirmed bug it finds to `docs/knowledge/bugs/`.
+
 ## Internationalization
 
 **This game ships in multiple languages — build for that from the start, don't retrofit it.**
@@ -119,7 +160,7 @@ After adding a script with a new `class_name`, run `--headless --path . --import
 - `scenes/world/` — `game.tscn`, the main scene: the composition root holding player, camera and HUD, and swapping levels underneath.
 - `scenes/particles/<kind>/` — reusable one-shot effect scenes, spawned by whoever triggers them.
 - `scenes/world/memory/` — the greyhush: the memory field, its sources, the screen shader that draws it, the clock that stops time inside it, and the colour pulse a song lights. `memory/seasonal/` is the season mask and the shaders/materials that swap art by season.
-- `tools/` — headless Godot scripts run by hand from the project root (asset pipeline steps like stacking seasonal sheets). Never referenced by a scene.
+- `tools/` — Godot scripts run by hand from the project root: headless asset-pipeline steps (stacking seasonal sheets), plus `tools/playtest/` (see Playtesting above), whose runner is the one exception that IS a scene, because screenshot capture needs a real rendering device — this is a dev-only tool, never shipped, never referenced from game scenes.
 - `scenes/world/environment/<kind>/` — ambient set dressing that answers to the memory field (drifting motes, swaying growth). Distinct from `scenes/particles/`, which is fire-and-forget feedback for an action.
 - `scenes/world/interactables/<kind>/` — world objects a song acts on. Each composes a `SongReceiver`; none of them is known to the song system.
 - `scenes/ui/<screen>/` — HUD and menu scenes.
@@ -156,6 +197,16 @@ Rename and move files **from inside the Godot editor** (FileSystem dock), so it 
 - The freeze placeholder is on-while-lit. The design's thaw-from-the-origin front, hardening-before-solid, and water reflections are not built.
 - The greyhush shader is screen-space, so it desaturates Ivo along with the world. The lore wants colour to originate from the body in flashbacks and the QTE; excluding characters means giving them their own CanvasLayer, which is not done.
 - `docs/design/03_mundo_e_ambiente.md` section 7 records an unresolved conflict: Winter is described with three sequences (Congelar, Ventania/Nevasca, Hibernação) but the instrument has a fixed eight-slot grid, two per season. `Enums.Song` omits Hibernação until that is settled.
+- The `tools/playtest/` capture harness (see Playtesting above) was shaken down against a
+  real Godot 4.7.2 launch on 2026-09-20 (`D:\Godot_v4.7.2-stable_win64.exe` — not on PATH;
+  located by filesystem search, so an agent needing it should search rather than assume a
+  fixed path). That run found and fixed a real bug: input must be simulated via
+  `Input.parse_input_event()`, not `Input.action_press()`/`action_release()` (see
+  `docs/knowledge/gotchas/input-action-press-does-not-reach-input-callbacks.md`). The
+  harness now reliably drives movement, jump, and roll and captures correct frames — see
+  `docs/knowledge/playtests/2026-09-20-harness-shakedown.md`. `tools/playtest/scripts/bloom_guardian_call.json` drives a full Bloom Guardian
+  call-and-response (report: `docs/knowledge/playtests/2026-09-20-bloom-guardian-call.md`);
+  Ivo must be spawned near the arena for it. Seasonal art has no run yet; the Frost fight's opening acts (contact, the charge with the roll recall, lucidity) were driven state by state in `docs/knowledge/playtests/2026-09-21-bloom-fight-acts.md`, its later cycles have not been played.
 
 ## Glossary (design term → code identifier)
 
@@ -182,6 +233,17 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | congelar o mundo (durante a resposta) | `WorldFreeze` |
 | guardião / fase de pressão / janela de lucidez | `Guardian` / `GuardianFight.Phase.PRESSURE` / `GuardianFight.Phase.LUCIDITY` |
 | chamado (call-and-response) / resposta | `GuardianCall`, `MemorinaComponent.call_song` / `call_answered` |
+
+### Terms no longer used
+
+When a code identifier or design term is renamed or retired, add it here instead of just
+deleting the old row above — a stale name showing up in an old comment, commit message, or
+someone's memory of the project is exactly what causes an accidental regression back to it.
+
+*(none yet — nothing in this project has been renamed since this table started. Add an
+entry the first time something is.)*
 | QTE de emergência / habilidade recuperada | `AbilityRecallComponent`, `AbilityRecallStats` / `SaveSystem.unlock_skill` |
 | restaurar o guardião | `SaveSystem.restore_guardian`, `Region.current_baseline()` |
 | tempo desacelera | `WorldFreeze.slow()` |
+| recaída (o guardião volta à loucura) | `GuardianFight.Phase.RELAPSE` |
+| poço de esquecimento (em volta do guardião) | `Guardian` `Corruption` (`MemorySource` negativo) |

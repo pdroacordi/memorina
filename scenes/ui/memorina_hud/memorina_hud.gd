@@ -25,6 +25,10 @@ class_name MemorinaHud extends Control
 @export var fade_in_time: float = 0.15
 
 var _facing: int = 1
+## While a guardian is staged its sheet at the top is the score for both
+## sides, and this one stays out of the way; it comes back when the stage
+## clears, if the instrument is still out.
+var _call_staged: bool = false
 var _fade_tween: Tween
 
 @onready var _frame: TextureRect = $Frame
@@ -48,7 +52,7 @@ func on_drawn(_known_songs: Array[Song], facing: int) -> void:
 
 ## The camera has settled; now the open side is known for certain.
 func on_camera_focused(subject_screen_position: Vector2) -> void:
-	if not visible or _frame.visible:
+	if not visible or _frame.visible or _call_staged:
 		return
 	_place_frame(_facing, subject_screen_position)
 	_frame.modulate.a = 0.0
@@ -61,6 +65,13 @@ func on_camera_focused(subject_screen_position: Vector2) -> void:
 func on_sheathed() -> void:
 	_sheet.clear()
 	hide()
+
+func on_call_staged() -> void:
+	_call_staged = true
+	_frame.hide()
+
+func on_call_unstaged() -> void:
+	_call_staged = false
 
 func on_note_played(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
 	_sheet.push_note(note, glyph_sets[glyph_set])

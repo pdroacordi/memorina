@@ -27,6 +27,8 @@ const LINE_Y: Dictionary[Enums.Note, float] = {
 }
 const FLASH_COLOR := Color(0.85, 0.4, 0.4)
 const FLASH_TIME := 0.25
+const POP_SCALE := 1.3
+const POP_TIME := 0.18
 
 ## How large the glyphs are drawn, in multiples of their 16px art. Non-integer
 ## values draw uneven pixels; 1.5 was judged the best trade against legibility.
@@ -71,6 +73,17 @@ func show_notes(notes: Array[Enums.Note], glyphs: NoteGlyphSet, count: int = -1)
 func light(index: int) -> void:
 	if index < _notes.size():
 		_show(index, true)
+
+## A beat on the slot at `index`: it swells and settles, for a note that has
+## just sounded or just landed.
+func pop(index: int) -> void:
+	if index >= _notes.size():
+		return
+	var slot := _slots[index]
+	slot.pivot_offset = slot.size / 2.0
+	slot.scale = Vector2.ONE * POP_SCALE
+	var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	tween.tween_property(slot, "scale", Vector2.ONE, POP_TIME)
 
 ## Puts every slot back to its unlit texture, keeping the notes.
 func dim_all() -> void:

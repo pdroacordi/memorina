@@ -13,9 +13,26 @@ signal connected(target: Hurtbox)
 ## Upward component, in px/s, added on top of the directional push. Separates
 ## the character from the floor so the shove reads as a hit rather than a slide.
 @export var knockback_lift: float = 0.0
+## A swing hits on entry and is over before anyone's i-frames lapse. A body
+## that stays dangerous (a guardian's bulk) must keep hitting whoever stays
+## inside it, so a continuous hitbox re-applies to every overlapping hurtbox
+## each physics frame; the hurtbox's own invulnerability sets the cadence.
+@export var continuous: bool = false
 
+
+func _physics_process(_delta: float) -> void:
+	if not continuous or not monitoring:
+		return
+	for area: Area2D in get_overlapping_areas():
+		# Only a hit that can land is reported: a body inside the box during its
+		# i-frames is not being hit sixty times a second.
+		if area is Hurtbox and not (area as Hurtbox).is_invulnerable():
+			_hit(area)
 
 func _on_area_entered(area: Area2D) -> void:
+	_hit(area)
+
+func _hit(area: Area2D) -> void:
 	if not (area is Hurtbox):
 		return
 

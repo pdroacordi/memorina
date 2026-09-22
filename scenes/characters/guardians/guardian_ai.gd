@@ -10,8 +10,10 @@ extends AIController
 ##
 ## The move carrying a recall is not left to chance: it is scheduled every
 ## `recall_after_attacks` ordinary moves (a phase the player can learn to
-## expect), whether or not the skill has been remembered yet - the guardian
-## decides if a recall opens; the AI only supplies the rhythm.
+## expect), or at once when the guardian asks for it (request_recall), whether
+## or not the skill has been remembered yet - the guardian decides if a recall
+## opens; the AI only supplies the rhythm. A guardian being mashed asks for a
+## counter the same way (provoke).
 
 signal attack_telegraphed(attack: GuardianAttack)
 signal attack_started(attack: GuardianAttack)
@@ -41,6 +43,8 @@ var _cooldown: float = 0.0
 var _swinging: bool = false
 ## Ordinary moves made since the last scheduled recall move.
 var _since_recall: int = 0
+## The guardian asked for the recall move next, cadence or not.
+var _recall_requested: bool = false
 
 @onready var _body: Node2D = get_parent()
 @onready var _sight: EnemySight = get_parent().get_node("EnemySight") as EnemySight
@@ -68,6 +72,22 @@ func is_telegraphing() -> bool:
 
 func is_swinging() -> bool:
 	return _swinging
+
+## The next move is the recall move, whatever the cadence says: the player
+## has done their part and is not kept waiting for it.
+func request_recall() -> void:
+	if _recall_move() == null:
+		return
+	_recall_requested = true
+	if not is_attacking():
+		_pick_next()
+
+## A counter: the cooldown is dropped so the next move starts as soon as it is
+## in range. Nothing while a move is already under way.
+func provoke() -> void:
+	if is_attacking():
+		return
+	_cooldown = 0.0
 
 ## Drops the move without a cooldown: lucidity interrupts, it does not rest.
 func cancel_attack() -> void:
@@ -136,6 +156,7 @@ func _finish_attack() -> void:
 	_cooldown = attack.cooldown * cooldown_scale
 	if attack.recall != null:
 		_since_recall = 0
+		_recall_requested = false
 	else:
 		_since_recall += 1
 	_pick_next()
@@ -144,11 +165,12 @@ func _finish_attack() -> void:
 func _in_range(attack: GuardianAttack) -> bool:
 	return _body.global_position.distance_to(_sight.player.global_position) <= attack.attack_range
 
-## The recall move when its turn has come; otherwise a weighted random pick
-## among the rest. A move with weight 0 is only ever scheduled.
+## The recall move when its turn has come or was asked for; otherwise a
+## weighted random pick among the rest. A move with weight 0 is only ever scheduled.
 func _pick_next() -> void:
 	var recall_move := _recall_move()
-	if recall_move != null and recall_after_attacks > 0 and _since_recall >= recall_after_attacks:
+	var due := recall_after_attacks > 0 and _since_recall >= recall_after_attacks
+	if recall_move != null and (due or _recall_requested):
 		_next = recall_move
 		return
 	var total := 0.0

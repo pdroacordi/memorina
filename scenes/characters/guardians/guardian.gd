@@ -12,9 +12,23 @@ extends Character
 ## component, it may read SaveSystem.
 ##
 ## A guardian is never killed. Hits do not hurt it, they destabilise it;
-## its Health is inert and it takes no knockback.
+## its Health is inert and it takes no knockback. Its bulk hurts to touch
+## while it fights (ContactHitbox, phase-owned, never keyed in a clip).
+##
+## The colour it holds is the fight made visible: corrupted under pressure,
+## a little more with every blow, breathing to full with every note it
+## sings, climbing with every note answered, and draining away again as it
+## relapses - until it is restored and keeps it all.
 
 signal restored(guardian: Guardian)
+
+## The failure's tremble: hard and brief, then the colour is gone.
+const FAIL_BURST_TIME := 0.3
+const FAIL_BURST_HZ := 12.0
+## How much of the way to full the pressure's hits bring the colour.
+const PRESSURE_CLIMB := 0.35
+## The beat a good answer holds the guardian bright before it drains.
+const RELAPSE_HOLD := 0.3
 
 @export var stats: GuardianStats
 @export var terminal_velocity: float = 500.0
@@ -27,12 +41,34 @@ signal restored(guardian: Guardian)
 ## swing that follows was announced. Read it, and the fight is fair.
 @export var telegraph_color: Color = Color(1.0, 0.85, 0.35)
 @export var telegraph_pulse_time: float = 0.12
+## Lucidity opening: a flash brighter than white.
+@export var lucid_flash_color: Color = Color(1.6, 1.6, 1.6)
+## Each note of the call swells the shield's radius by this factor and lifts
+## the sprite by `note_bob` pixels, both easing back before the next note.
+@export var note_swell: float = 1.5
+@export var note_bob: float = 4.0
+## Seconds the well of forgetting takes to fill in once the guardian is restored.
+@export var corruption_lift_time: float = 2.0
 
 var _fight: GuardianFight
 var _player: Player
 var _tremble_time: float = 0.0
 var _flash_tween: Tween
 var _telegraph_tween: Tween
+var _breath_tween: Tween
+var _bob_tween: Tween
+## 1.0 on the note, easing to 0.0 before the next: the call's breathing.
+var _breath: float = 0.0
+## Hits taken since the guardian last made a move; the counter reads it.
+var _hits_since_move: int = 0
+## Notes of the answer landed right so far.
+var _answered_notes: int = 0
+## Shield amount as the relapse began, to drain from.
+var _relapse_from: float = 0.0
+## The camera and the lights are on this guardian.
+var _staged: bool = false
+var _shield_rest_radius: float = 0.0
+var _sprite_rest: Vector2 = Vector2.ZERO
 
 @onready var _ai                : GuardianAI = $AI
 @onready var _locomotion        : LocomotionComponent = $Locomotion
@@ -40,7 +76,12 @@ var _telegraph_tween: Tween
 @onready var _arena_trigger     : PlayerProximityTrigger = $ArenaTrigger
 @onready var _shield            : GreyhushShield = $GreyhushShield
 @onready var _hitbox            : Hitbox = $Hitbox
+@onready var _contact           : Hitbox = $ContactHitbox
 @onready var _pulse_emitter     : PulseEmitter = $PulseEmitter
+## The well of forgetting around the guardian: an authored negative
+## MemorySource, top_level so it stays where the fight is while the guardian
+## paces. Gone once the guardian is restored.
+@onready var _corruption        : MemorySource = $Corruption
 ## A concrete view of Character's generic resolver, for the duration assert.
 @onready var _guardian_resolver : GuardianAnimationResolver = $AnimationResolver
 
@@ -49,6 +90,8 @@ func _ready() -> void:
 	super()
 	assert(stats != null and stats.song != null, "%s has no GuardianStats with a song." % name)
 	_fight = GuardianFight.new(stats)
+	_fight.phase_changed.connect(_on_phase_changed)
+	_fight.set_recall_pending(_recall_still_needed())
 	_ai.attacks = stats.attacks
 	_ai.recall_after_attacks = stats.recall_after_attacks
 	_ai.attack_telegraphed.connect(_on_attack_telegraphed)
@@ -57,8 +100,12 @@ func _ready() -> void:
 	_call.note_sounded.connect(_on_call_note_sounded)
 	_call.finished.connect(_on_call_finished)
 	_arena_trigger.player_entered.connect(_on_player_entered)
+	_shield_rest_radius = _shield.radius
+	_sprite_rest = _sprite.position
+	_corruption.global_position = global_position
 	if SaveSystem.is_guardian_restored(stats.id):
 		_fight.restore_silently()
+		_corruption.hide()
 	_assert_clip_durations()
 	_update_shield(0.0)
 
@@ -79,12 +126,16 @@ func _after_move(delta: float) -> void:
 	# The window ran out: the same failure as a wrong note, closed the same way.
 	if _fight.tick(delta):
 		_close_call(false)
+	# Dangerous to touch only while it fights; a lucid or restored guardian can
+	# be walked up to. Not RESET-owned, so this write is the script's.
+	_contact.monitoring = _fight.phase() == GuardianFight.Phase.PRESSURE
 	_update_shield(delta)
 
 ## A room being left deactivates (or evicts) its contents, and a guardian
 ## stopped mid-call would otherwise leave its phrase on Ivo's instrument for
-## good - known songs noise, the answer going to no one. Walking out of a
-## lucidity window is the answer failing.
+## good - known songs noise, the answer going to no one - and the camera on
+## a guardian that is no longer there. Walking out of a lucidity window is
+## the answer failing.
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DISABLED or what == NOTIFICATION_EXIT_TREE:
 		_abandon_call()
@@ -124,29 +175,43 @@ func _on_player_entered() -> void:
 	if _player == null:
 		return
 	_player.call_answered.connect(_on_call_answered)
+	_player.call_progress.connect(_on_call_progress)
 	_player.sequence_failed.connect(_on_player_sequence_failed)
+	_player.skill_recalled.connect(_on_skill_recalled)
 	_fight.begin()
 	_ai.active = true
 
 ## A hit destabilises rather than wounds: no damage, no knockback, just the
-## flinch - and, once enough have landed, a lucidity window.
+## flinch - and, once enough have landed, a lucidity window. While a skill is
+## still to be remembered the hits wait on the recall move, which is asked
+## for at once; and a guardian hit too many times between moves answers with
+## one.
 func _on_hit_received(_damage: int, _knockback: Vector2, _source: Node2D) -> void:
 	if _fight.phase() != GuardianFight.Phase.PRESSURE:
 		return
 	_just_hit = true
-	_flash()
+	_flash(hit_flash_color)
 	if _fight.register_hit():
 		_open_lucidity()
+		return
+	if _fight.is_saturated():
+		_ai.request_recall()
+	_hits_since_move += 1
+	if stats.counter_after_hits > 0 and _hits_since_move >= stats.counter_after_hits \
+			and not _ai.is_attacking():
+		_hits_since_move = 0
+		_ai.provoke()
 
-func _flash() -> void:
+func _flash(color: Color) -> void:
 	if _flash_tween != null:
 		_flash_tween.kill()
-	_sprite.modulate = hit_flash_color
+	_sprite.modulate = color
 	_flash_tween = create_tween()
 	_flash_tween.tween_property(_sprite, "modulate", Color.WHITE, hit_flash_time)
 
 ## A move winds up: the sprite pulses until the swing begins.
 func _on_attack_telegraphed(_attack: GuardianAttack) -> void:
+	_hits_since_move = 0
 	_stop_telegraph()
 	_telegraph_tween = create_tween().set_loops()
 	_telegraph_tween.tween_property(_sprite, "modulate", telegraph_color, telegraph_pulse_time)
@@ -175,19 +240,49 @@ func _stop_telegraph() -> void:
 		_telegraph_tween = null
 		_sprite.modulate = Color.WHITE
 
+## The body remembered. If the hits were already in, that is the blow that
+## opens the window: the guardian is shaken by what it forced.
+func _on_skill_recalled(_skill: Enums.PlayerSkill) -> void:
+	if _fight.skill_recalled():
+		_open_lucidity()
+
 func _open_lucidity() -> void:
 	_ai.cancel_attack()
 	_ai.active = false
+	_stop_telegraph()
+	_flash(lucid_flash_color)
 	_tremble_time = 0.0
-	_player.open_call(stats.song, stats.revealed_notes)
-	_call.play(stats.song.notes)
+	_answered_notes = 0
+	_breath = 0.0
+	_stage()
+	_player.open_call(stats.song, stats.revealed_notes, _fight.cycles(), stats.cycles_to_restore)
+	_call.play(stats.song.notes, stats.call_lead_in)
 
+## A note of the call: the colour comes with it.
 func _on_call_note_sounded(index: int) -> void:
 	_player.sound_call_note(index)
+	_breathe()
+
+func _breathe() -> void:
+	if _breath_tween != null:
+		_breath_tween.kill()
+	_breath = 1.0
+	_breath_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_breath_tween.tween_property(self, "_breath", 0.0, _call.note_interval)
+	if _bob_tween != null:
+		_bob_tween.kill()
+	_sprite.position = _sprite_rest + Vector2(0.0, -note_bob)
+	_bob_tween = create_tween().set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	_bob_tween.tween_property(_sprite, "position", _sprite_rest, _call.note_interval * 0.6)
 
 func _on_call_finished() -> void:
 	_fight.open_window(_call.duration())
 	_player.open_call_window(_fight.window_left())
+
+## `count` notes of the answer are right so far: the cure shows note by note.
+func _on_call_progress(count: int) -> void:
+	if _fight.phase() == GuardianFight.Phase.LUCIDITY:
+		_answered_notes = count
 
 func _on_call_answered(song: Song) -> void:
 	if song != stats.song or _fight.phase() != GuardianFight.Phase.LUCIDITY:
@@ -214,10 +309,37 @@ func _close_call(success: bool) -> void:
 	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE
 
 func _abandon_call() -> void:
-	if _fight == null or _player == null or _fight.phase() != GuardianFight.Phase.LUCIDITY:
+	if _fight == null or _player == null:
 		return
-	_fight.answer_failed()
-	_close_call(false)
+	if _fight.phase() == GuardianFight.Phase.LUCIDITY:
+		_fight.answer_failed()
+		_close_call(false)
+	_unstage()
+
+## The fight's own transitions, as opposed to the ones this node drives: the
+## relapse begins at an answer and ends on its own clock.
+func _on_phase_changed(from: GuardianFight.Phase, to: GuardianFight.Phase) -> void:
+	match to:
+		GuardianFight.Phase.RELAPSE:
+			_begin_relapse()
+		GuardianFight.Phase.PRESSURE:
+			if from == GuardianFight.Phase.RELAPSE:
+				_hits_since_move = 0
+				_ai.active = true
+				_unstage()
+
+## The madness returns: the guardian staggers, groans in its own voice, and
+## its colour goes - snapped away with the hit's tint after a failure, drained
+## slowly after a good answer that was not the last.
+func _begin_relapse() -> void:
+	_just_hit = true
+	_tremble_time = 0.0
+	_relapse_from = _shield.amount
+	if _fight.relapse_failed():
+		_flash(hit_flash_color)
+	# Deferred: the call is stopped right after this by _close_call, and the
+	# groan must come after that stop, not under it.
+	_call.groan.call_deferred()
 
 ## The sync: the guardian remembers itself, the region remembers its season,
 ## and the player learns the song through the same lesson a bench would give.
@@ -228,8 +350,11 @@ func _restore() -> void:
 	var field := MemoryField.find_in(self)
 	if field != null:
 		field.baseline = 1.0
+	_lift_corruption()
 	# The guardian answers the lesson with its own colour, born where it stands.
 	_player.song_played.connect(_on_lesson_song_played, CONNECT_ONE_SHOT)
+	# Unstaged first: the lesson's own staging takes over in the same breath.
+	_unstage()
 	if not _player.learn_song(stats.song):
 		# The answer left Ivo still and the instrument out, so this should not
 		# happen; if it does, the song is still learned on the next bench-less
@@ -241,19 +366,79 @@ func _restore() -> void:
 func _on_lesson_song_played(song: Song, _position: Vector2) -> void:
 	_pulse_emitter.spawn_pulse(song, global_position)
 
-## The colour the guardian holds is gameplay-driven, never keyed in a clip:
-## corrupted while under pressure, climbing with each good answer, trembling
-## to full while lucid, full for good once restored.
+## The well fills back in as the lesson begins: the place remembers with it.
+func _lift_corruption() -> void:
+	var tween := create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	tween.tween_property(_corruption, "strength", 0.0, corruption_lift_time)
+	tween.tween_callback(_corruption.hide)
+
+func _stage() -> void:
+	if _staged:
+		return
+	_staged = true
+	_player.stage_call(self)
+
+func _unstage() -> void:
+	if not _staged:
+		return
+	_staged = false
+	if is_instance_valid(_player):
+		_player.unstage_call()
+
+## True while any of this guardian's moves still has a skill to teach.
+func _recall_still_needed() -> bool:
+	for attack: GuardianAttack in stats.attacks:
+		if attack.recall != null and not SaveSystem.has_skill(attack.recall.skill):
+			return true
+	return false
+
+#############################################
+##  T H E   C O L O U R                    ##
+#############################################
+## Gameplay-driven, never keyed in a clip (the tree would fight it every frame).
+
 func _update_shield(delta: float) -> void:
+	_tremble_time += delta
+	var rest := _rest_amount()
 	match _fight.phase():
 		GuardianFight.Phase.RESTORED:
 			_shield.amount = 1.0
+			_shield.radius = _shield_rest_radius
 		GuardianFight.Phase.LUCIDITY:
-			_tremble_time += delta
-			var on := fmod(_tremble_time * stats.tremble_hz, 1.0) < 0.5
-			_shield.amount = 1.0 if on else stats.corrupted_shield_amount
+			_shield.amount = _lucid_amount(rest)
+			_shield.radius = _shield_rest_radius * lerpf(1.0, note_swell, _breath)
+		GuardianFight.Phase.RELAPSE:
+			_shield.amount = _relapse_amount(rest)
+			_shield.radius = _shield_rest_radius
 		_:
-			_shield.amount = lerpf(stats.corrupted_shield_amount, 1.0, _fight.lucidity())
+			_shield.amount = lerpf(rest, rest + PRESSURE_CLIMB * (1.0 - rest), _fight.pressure_progress())
+			_shield.radius = _shield_rest_radius
+
+## What the guardian keeps between windows: the cure so far.
+func _rest_amount() -> float:
+	return lerpf(stats.corrupted_shield_amount, 1.0, _fight.lucidity())
+
+## Breathing to full with each note of the call; once the window is open, a
+## slow tremble above a floor that climbs with every note answered.
+func _lucid_amount(rest: float) -> float:
+	if not _fight.is_window_open():
+		return lerpf(rest, 1.0, _breath)
+	var notes := maxi(stats.song.notes.size(), 1)
+	var floor_amount := lerpf(rest, 1.0, float(_answered_notes) / notes)
+	var tremble := 0.5 + 0.5 * sin(TAU * stats.tremble_hz * _tremble_time)
+	return lerpf(floor_amount, 1.0, tremble)
+
+## After a failure the colour is already gone, shaking hard for a moment;
+## after a good answer it holds bright for a beat and drains to the new rest.
+func _relapse_amount(rest: float) -> float:
+	var t := _fight.relapse_progress() * _fight.relapse_duration()
+	if _fight.relapse_failed():
+		if t >= FAIL_BURST_TIME:
+			return rest
+		var burst := 0.5 + 0.5 * sin(TAU * FAIL_BURST_HZ * t)
+		return lerpf(rest, _relapse_from, burst)
+	var drain := clampf((t - RELAPSE_HOLD) / maxf(_fight.relapse_duration() - RELAPSE_HOLD, 0.001), 0.0, 1.0)
+	return lerpf(maxf(_relapse_from, rest), rest, drain)
 
 func _assert_clip_durations() -> void:
 	for attack: GuardianAttack in stats.attacks:

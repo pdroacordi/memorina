@@ -26,6 +26,7 @@
 [ext_resource type="Resource" uid="uid://bq5froststat" path="res://resources/characters/guardians/frost_guardian/frost_guardian_stats.tres" id="21_stats"]
 [ext_resource type="Script" uid="uid://bhuyfpecwqve" path="res://scenes/world/memory/color_pulse/pulse_emitter.gd" id="22_pulsem"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/color_pulse/color_pulse.tscn" id="23_pulsesc"]
+[ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="24_source"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 34.0
@@ -744,6 +745,21 @@ invulnerability_time = 0.2
 position = Vector2(0, -88)
 shape = SubResource("CapsuleShape2D_hurt")
 
+[node name="ContactHitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 512
+monitoring = false
+monitorable = false
+script = ExtResource("5_hitbox")
+knockback_strength = 380.0
+knockback_lift = 120.0
+continuous = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ContactHitbox"]
+position = Vector2(0, -88)
+shape = SubResource("CapsuleShape2D_body")
+debug_color = Color(0.9, 0.5, 0.2, 0.3)
+
 [node name="Hitbox" type="Area2D" parent="."]
 visible = false
 collision_layer = 0
@@ -817,10 +833,19 @@ note_streams = Array[AudioStream]([ExtResource("15_note_up"), ExtResource("16_no
 mistake_stream = ExtResource("19_mistake")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Call/Voice"]
+pitch_scale = 0.5
 
 [node name="PulseEmitter" type="Node" parent="."]
 script = ExtResource("22_pulsem")
 pulse_scene = ExtResource("23_pulsesc")
+
+[node name="Corruption" type="Node2D" parent="."]
+top_level = true
+script = ExtResource("24_source")
+shape = 1
+rect_size = Vector2(1600, 480)
+feather = 140.0
+strength = -0.2
 
 [node name="GreyhushShield" type="Node2D" parent="."]
 position = Vector2(0, -90)

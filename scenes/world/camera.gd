@@ -2,6 +2,7 @@ class_name GameCamera
 extends Camera2D
 ## Follows a subject, leading horizontally toward its facing and vertically
 ## toward its look intent and fall speed, without showing outside the room.
+## Can hold a pair (a guardian and Ivo, for a call) and shake for a hit.
 
 ## The focus zoom has landed and no look-ahead is still in flight: the frame
 ## is final. `subject_screen_position` is the subject in canvas pixels, for
@@ -43,7 +44,21 @@ signal focused(subject_screen_position: Vector2)
 @export var focus_transition      : Tween.TransitionType = Tween.TRANS_QUAD
 @export var focus_ease            : Tween.EaseType = Tween.EASE_OUT
 
+@export_category("Pair")
+## Seconds the frame takes to settle between the subject and a pair.
+@export var pair_duration         : float = 0.8
+
+@export_category("Shake")
+## The shake decays over its time; strength is the first frame's reach in px.
+@export var shake_time            : float = 0.18
+
 var _subject: Node2D
+## The other body the frame holds, with how far toward it the frame sits.
+var _pair: Node2D
+var _pair_blend: float = 0.0
+var _pair_tween: Tween
+var _shake_strength: float = 0.0
+var _shake_left: float = 0.0
 var _look_ahead_tween: Tween
 var _focus_tween: Tween
 ## True between focus() and the `focused` it owes.
@@ -64,8 +79,12 @@ func _physics_process(delta: float) -> void:
 		return
 
 	global_position = _subject.global_position
+	if is_instance_valid(_pair) and _pair_blend > 0.0:
+		var midpoint := (_subject.global_position.x + _pair.global_position.x) / 2.0
+		global_position.x = lerpf(global_position.x, midpoint, _pair_blend)
 	_update_vertical(delta)
 	_apply_bounds()
+	_update_shake(delta)
 
 ## Confines the visible rectangle to a world-space area.
 func set_bounds(bounds: Rect2) -> void:
@@ -95,11 +114,53 @@ func follow(subject: Node2D) -> void:
 ## the lesson's draw may still be easing in when it starts.
 func focus() -> void:
 	_focus_pending = true
+	# Holding a pair, the frame is already the call's: no zoom, just the report.
+	if _pair != null:
+		_check_focused.call_deferred()
+		return
 	_tween_zoom(Vector2.ONE * focus_zoom)
 
 func unfocus() -> void:
 	_focus_pending = false
 	_tween_zoom(Vector2.ONE)
+
+## Holds the frame between the subject and `other`, easing there. No zoom: a
+## guardian already fills half the frame, and the call's sheet sits over the
+## top of it.
+func frame_pair(other: Node2D) -> void:
+	_pair = other
+	_tween_pair(1.0)
+
+func release_pair() -> void:
+	_tween_pair(0.0)
+
+## A decaying random offset; a stronger call while one runs replaces it.
+func shake(strength: float) -> void:
+	if strength < _shake_strength * (_shake_left / maxf(shake_time, 0.001)):
+		return
+	_shake_strength = strength
+	_shake_left = shake_time
+
+func _tween_pair(target: float) -> void:
+	if _pair_tween:
+		_pair_tween.kill()
+	_pair_tween = create_tween() \
+		.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS) \
+		.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
+		.set_trans(focus_transition) \
+		.set_ease(focus_ease)
+	_pair_tween.tween_property(self, "_pair_blend", target, pair_duration)
+	if target <= 0.0:
+		_pair_tween.tween_callback(func() -> void: _pair = null)
+
+## Applied last, on top of bounds: a shake may show a sliver past the room's
+## edge for a frame, which is the point of a shake.
+func _update_shake(delta: float) -> void:
+	if _shake_left <= 0.0:
+		return
+	_shake_left = maxf(_shake_left - delta, 0.0)
+	var reach := _shake_strength * (_shake_left / maxf(shake_time, 0.001))
+	global_position += Vector2(randf_range(-reach, reach), randf_range(-reach, reach)).round()
 
 func _tween_zoom(target: Vector2) -> void:
 	if _focus_tween:

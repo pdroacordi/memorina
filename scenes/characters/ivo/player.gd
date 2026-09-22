@@ -22,9 +22,16 @@ signal note_cue_reached(index: int)
 ## A song was just learned; its whole track is about to be performed.
 signal lesson_started(song: Song, glyph_set: Enums.GlyphSet)
 signal song_played(song: Song, position: Vector2)
+## A guardian has gone lucid and the encounter is staged around it: the camera
+## and the lights hold `caller` and Ivo until `call_unstaged`, across every
+## call and relapse of one lucid moment.
+signal call_staged(caller: Node2D)
+signal call_unstaged
 ## A guardian is calling: its phrase, how many of its notes the sheet may show,
-## and the glyphs to show them with. The instrument is not out yet.
-signal call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet)
+## the glyphs to show them with, how far its cure has come (`cure_done` of
+## `cure_total` answers) and which side of Ivo it stands on (`side`, -1 or 1),
+## so the sheet can keep off it. The instrument is not out yet.
+signal call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet, cure_done: int, cure_total: int, side: int)
 ## The guardian's call sounded the note at `index`.
 signal call_note_sounded(index: int)
 ## The call has been heard; Ivo has `seconds` to answer.
@@ -41,6 +48,8 @@ signal skill_recalled(skill: Enums.PlayerSkill)
 signal skill_recall_missed(skill: Enums.PlayerSkill)
 ## The sword connected with something. Feedback hooks (hit-stop) listen here.
 signal hit_landed
+## Ivo was hit. The same feedback hooks, from the other side.
+signal hurt
 
 const GROUP := "player"
 
@@ -118,6 +127,8 @@ var _just_double_jumped: bool = false
 var _last_glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
 ## How much of the guardian's phrase the current attempt has got right.
 var _call_progress: int = 0
+## The guardian the stage is set around, between stage_call and unstage_call.
+var _staged_caller: Node2D
 ## A matched song whose last note is still ringing; performed on note_finished.
 var _pending_performance: Song = null
 ## An answered call whose last note is still ringing; sheathed on note_finished.
@@ -502,12 +513,24 @@ func _on_debug_learn_song_pressed() -> void:
 ## The guardian drives these directly; Ivo relays them as signals so the HUD
 ## keeps listening to one node.
 
+## The guardian went lucid: the stage is set around it until unstage_call().
+func stage_call(caller: Node2D) -> void:
+	_staged_caller = caller
+	call_staged.emit(caller)
+
+func unstage_call() -> void:
+	_staged_caller = null
+	call_unstaged.emit()
+
 ## A lucidity window opened: from now until close_call(), the instrument
 ## listens for `song` alone.
-func open_call(song: Song, revealed: int) -> void:
+func open_call(song: Song, revealed: int, cure_done: int, cure_total: int) -> void:
 	_memorina.call_song = song
 	_call_progress = 0
-	call_opened.emit(song, revealed, _last_glyph_set)
+	var side := facing
+	if is_instance_valid(_staged_caller):
+		side = 1 if _staged_caller.global_position.x >= global_position.x else -1
+	call_opened.emit(song, revealed, _last_glyph_set, cure_done, cure_total, side)
 
 func sound_call_note(index: int) -> void:
 	call_note_sounded.emit(index)
@@ -677,6 +700,7 @@ func _try_attack() -> void:
 
 func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
 	super(damage, knockback, source)
+	hurt.emit()
 	_attack.cancel()
 	# Not covered by the is_still() check: a hit that deals no knockback
 	# leaves Ivo standing perfectly still.

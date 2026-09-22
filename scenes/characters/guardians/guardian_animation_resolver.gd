@@ -3,7 +3,8 @@ extends AnimationResolver
 ## The clip vocabulary every guardian shares. A guardian scene must author
 ## all of these; one with moves of its own beyond three attack clips
 ## subclasses this and extends the chain. The phase outranks everything:
-## a restored guardian is never seen flinching, and a lucid one never swings.
+## a restored guardian is never seen flinching, a lucid one never swings, and
+## a relapsing one staggers (Guardian pulses just_hit() as the relapse starts).
 
 const IDLE := &"idle"
 const WALK := &"walk"
@@ -26,6 +27,9 @@ func resolve() -> StringName:
 			return RESTORED
 		GuardianFight.Phase.LUCIDITY:
 			return LUCID
+		GuardianFight.Phase.RELAPSE:
+			# The stagger of a mind slipping back, then the guardian stands lost.
+			return HURT if _guardian.just_hit() or driver.holding(HURT) else IDLE
 	if _guardian.is_swinging():
 		return attack_clip_for(_guardian.current_attack().clip_index)
 	# The wind-up is the idle pose held still; the telegraph tint does the rest.

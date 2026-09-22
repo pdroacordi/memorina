@@ -1,10 +1,12 @@
 class_name LessonCinematic extends Control
 
-## The moment a song is learned, staged: letterbox bars close in, the world
-## dims, and the piece's title rises at the top while the whole track plays
-## and the sheet beside Ivo lights up note by note. Everything eases back
-## out when the performance ends. An observer of Player's signals (wired in
-## game.tscn) that decides nothing.
+## The encounter's stage lights. A guardian's call dims the world a little
+## under the creature pass, so Ivo and the guardian stand lit in it, for as
+## long as the guardian is staged. The moment a song is learned goes further:
+## letterbox bars close in, the dim deepens, and the piece's title rises at
+## the top while the whole track plays and the sheet beside Ivo lights up note
+## by note. Everything eases back out when the performance ends. An observer
+## of Player's signals (wired in game.tscn) that decides nothing.
 ##
 ## process_mode is ALWAYS in the scene: the world is frozen for the whole
 ## lesson, and every tween here runs through the pause.
@@ -15,6 +17,8 @@ const LEARNED_KEY := "MEMORINA_LEARNED"
 
 @export var bar_height: float = 36.0
 @export var dim_alpha: float = 0.45
+## The lighter dim of a call, where the player still has to play.
+@export var call_dim_alpha: float = 0.28
 @export var ease_in_time: float = 0.6
 @export var ease_out_time: float = 0.4
 ## How far the title rises into place as it fades in.
@@ -34,9 +38,13 @@ func _ready() -> void:
 	_reset()
 	hide()
 
+## The dim is not reset first: restoration unstages the call and starts the
+## lesson in the same breath, and the light must not flicker up between.
 func on_lesson_started(song: Song, _glyph_set: Enums.GlyphSet) -> void:
 	_title.text = song.title_key
+	var dim := _dim.color.a
 	_reset()
+	_dim.color.a = dim
 	show()
 	_kill()
 	_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_parallel(true) \
@@ -59,6 +67,25 @@ func on_lesson_finished() -> void:
 	_tween.tween_property(_dim, "color:a", 0.0, ease_out_time)
 	_tween.tween_property(_card, "modulate:a", 0.0, ease_out_time * 0.6)
 	_tween.chain().tween_callback(hide)
+
+## A guardian went lucid: the lights come down on it and Ivo.
+func on_call_staged() -> void:
+	show()
+	_kill()
+	_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	_tween.tween_property(_dim, "color:a", call_dim_alpha, ease_in_time)
+
+## The relapse has run its course, or the guardian was restored (in which
+## case the lesson takes the stage right after this, and its own tween wins).
+func on_call_unstaged() -> void:
+	if not visible:
+		return
+	_kill()
+	_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
+		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN)
+	_tween.tween_property(_dim, "color:a", 0.0, ease_out_time)
+	_tween.tween_callback(hide)
 
 func _reset() -> void:
 	_top_bar.size = Vector2(size.x, bar_height)

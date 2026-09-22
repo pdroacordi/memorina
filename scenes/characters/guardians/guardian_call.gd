@@ -29,11 +29,20 @@ func is_calling() -> bool:
 func duration() -> float:
 	return note_interval * _notes.size()
 
-func play(notes: Array[Enums.Note]) -> void:
+## `lead_in` is a silence before the first note, for the stage to land.
+func play(notes: Array[Enums.Note], lead_in: float = 0.0) -> void:
 	stop()
 	_notes = notes.duplicate()
 	set_process(true)
-	_sound_next()
+	if lead_in > 0.0:
+		_countdown = lead_in
+	else:
+		_sound_next()
+
+## The guardian forgetting again, heard: the instrument's own mistake sound
+## in the guardian's voice, after any note still ringing.
+func groan() -> void:
+	_voice.play_mistake_after_note()
 
 ## Cuts the phrase short. The window never opens for a call that was not
 ## heard out; the guardian decides what that means.
