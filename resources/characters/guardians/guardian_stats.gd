@@ -40,6 +40,20 @@ extends Resource
 ## and the window.
 @export var recall_after_attacks: int = 3
 
+@export_group("Movement")
+## The spacing a guardian keeps while its move is on cooldown. It does not
+## stand still waiting to be hit: closer than this it gives ground, further
+## it drifts back in, and at it it paces. 0 keeps the old statue.
+@export var comfort_distance: float = 140.0
+## Seconds a sidestep lasts before it changes its mind.
+@export var pace_time: float = 0.9
+## Fraction of its walking speed used while pacing - it is circling, not
+## charging.
+@export_range(0.0, 1.0) var pace_speed: float = 0.5
+## Multiplier on its walking speed while getting out from under a player
+## standing on its head: this one is a lunge, not a stroll.
+@export var step_out_speed: float = 1.7
+
 @export_group("Counter")
 ## Hits taken in a row, while not already mid-move, that the guardian answers
 ## with an immediate move: mashing is not free. 0 never counters.

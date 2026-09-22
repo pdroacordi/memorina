@@ -98,6 +98,10 @@ func _ready() -> void:
 	_fight.set_recall_pending(_recall_still_needed())
 	_ai.attacks = stats.attacks
 	_ai.recall_after_attacks = stats.recall_after_attacks
+	_ai.comfort_distance = stats.comfort_distance
+	_ai.pace_time = stats.pace_time
+	_ai.pace_speed = stats.pace_speed
+	_ai.step_out_speed = stats.step_out_speed
 	_ai.attack_telegraphed.connect(_on_attack_telegraphed)
 	_ai.attack_started.connect(_on_attack_started)
 	_ai.attack_finished.connect(_on_attack_finished)

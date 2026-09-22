@@ -4,7 +4,7 @@
 
 [resource]
 script = ExtResource("1_locstats")
-move_speed = 64.0
+move_speed = 78.0
 acceleration = 512.0
 deceleration = 1024.0
 air_control = 0.0

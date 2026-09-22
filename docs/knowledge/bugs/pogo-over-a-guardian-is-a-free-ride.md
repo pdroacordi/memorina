@@ -1,7 +1,7 @@
 ---
 id: bugs/pogo-over-a-guardian-is-a-free-ride
 type: bug
-title: Pogoing on a guardian was endless - it could not swing upward and shuffled left and right under the player's feet
+title: Pogoing on a guardian was endless - it could not reach upward and shuffled left and right under the player's feet
 status: fixed
 severity: high
 tags: [guardians, ai, pogo, qte, recall, exploit]
@@ -46,17 +46,27 @@ move still never fired because it could not reach.
 - `TURN_BAND` (10 px) dead band on both the chase and the facing; `Guardian` faces
   `GuardianAI.facing_intent()` - where it walks, or where the player is when it stands
   still - so a guardian that has backed away keeps watching.
-- A player overhead and out of the move's box is answered, not chased: the guardian
-  walks out from under for `STEP_OUT_TIME` and then stands off (`_step_out`).
-- The Bloom burst is given `attack_height = 160`: it is a harmless launcher whose recall
-  wants Ivo airborne, so pogoing the flower now triggers the double-jump QTE instead of
-  being free. Frost's moves stay low, and that guardian steps out instead.
+- The guardian ANSWERS the situation rather than the QTE doing it for them (the first
+  attempt let the Bloom burst reach 160 px up so a pogo triggered the double-jump recall;
+  the user's correction was that the boss should be smart enough to leave, not that the
+  QTE should rescue it). A player overhead is lunged out from under at `step_out_speed`,
+  and the landing is punished: the cooldown is zeroed the frame they stop being overhead.
+- While a cooldown runs the guardian holds spacing (`GuardianStats.comfort_distance`)
+  instead of standing there: gives ground to a player who closes in, drifts back toward
+  one who backs off, paces when neither.
+- Every one of those decisions is held with HYSTERESIS. The first spacing pass re-decided
+  from the raw distance each frame and the guardian turned 47 times in 10 s standing next
+  to a stationary player - the same bug as the `sign()` flip, one level up.
 
-Measured after the fix: Bloom opens the recall 1.9 s into a pogo chain with one facing
-flip; Frost steps out 213 px, holds, and charges 0.7 s after the player lands.
+Measured after the fix (throwaway harness, both guardians): standing fight - moving 63-68%
+of frames, ~500 px walked in 10 s, 9-10 facing flips; player on its head - moving 85-100%
+of frames, 1-2 flips, no move thrown upward; landing punished by an attack within the
+watch window in every run.
 
 ## Prevention
 
-Two rules worth carrying: reach is a box, not a radius, whenever a character's moves are
-authored in a side view; and any AI that takes `sign()` of a distance needs a dead band,
-because the one place the player WILL stand is exactly on top of it.
+Three rules worth carrying. Reach is a box, not a radius, whenever a character's moves
+are authored in a side view. Any AI decision taken from a raw distance - a `sign()`, a
+threshold, a mode - needs hysteresis, because the one place the player WILL stand is
+exactly on the boundary. And when an exploit shows up, ask what the AI should DO about
+it before reaching for the mechanic that would paper over it.
