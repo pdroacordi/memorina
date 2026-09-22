@@ -23,6 +23,10 @@ const LEARNED_KEY := "MEMORINA_LEARNED"
 @export var ease_out_time: float = 0.4
 ## How far the title rises into place as it fades in.
 @export var title_rise: float = 10.0
+## Seconds the title card holds before it fades, leaving the picture alone:
+## the world remembering is the scene, the card only names it.
+@export var title_hold: float = 4.0
+@export var title_fade_time: float = 1.0
 
 var _tween: Tween
 
@@ -54,6 +58,7 @@ func on_lesson_started(song: Song, _glyph_set: Enums.GlyphSet) -> void:
 	_tween.tween_property(_dim, "color:a", dim_alpha, ease_in_time)
 	_tween.tween_property(_card, "modulate:a", 1.0, ease_in_time).set_delay(ease_in_time * 0.5)
 	_tween.tween_property(_card, "position:y", _card_rest_y(), ease_in_time).set_delay(ease_in_time * 0.5)
+	_tween.tween_property(_card, "modulate:a", 0.0, title_fade_time).set_delay(ease_in_time * 1.5 + title_hold)
 
 ## The performance is over, whichever way: the frame opens back up.
 func on_lesson_finished() -> void:

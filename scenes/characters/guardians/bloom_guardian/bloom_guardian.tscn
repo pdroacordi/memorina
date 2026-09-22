@@ -28,6 +28,7 @@
 [ext_resource type="Script" uid="uid://bhuyfpecwqve" path="res://scenes/world/memory/color_pulse/pulse_emitter.gd" id="22_pulsem"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/color_pulse/color_pulse.tscn" id="23_pulsesc"]
 [ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="24_source"]
+[ext_resource type="Resource" uid="uid://clessonpulse" path="res://resources/memory/lesson_pulse_stats.tres" id="25_lesson"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 28.0
@@ -727,6 +728,7 @@ states/restored/position = Vector2(1080, 100)
 collision_layer = 65536
 script = ExtResource("1_guardian")
 stats = ExtResource("21_stats")
+lesson_pulse = ExtResource("25_lesson")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(0, -96)

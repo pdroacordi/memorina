@@ -3,8 +3,14 @@ class_name MemorinaHud extends Control
 ## The sheet the instrument is read from: appears when the Memorina is drawn,
 ## shows each note as it is pressed with the button it was pressed on, blinks
 ## on a mistake, lights up as a performance replays the song, and carries the
-## notes of a lesson as its track plays. An observer of Player's signals (wired in game.tscn) that
-## decides nothing.
+## notes of a lesson as its track plays. During a guardian's call it is where
+## the ANSWER is given: while the guardian sings it stays out of the way (the
+## phrase is on the guardian's own sheet at the top); when the window opens
+## it appears beside Ivo pre-filled with the phrase, dimmed, the time draining
+## under the staff and the draw key blinking until the instrument is out, and
+## lights the phrase back up as the answer lands each note. The familiar
+## sheet, in the familiar place, so the player knows what to do with it. An
+## observer of Player's signals (wired in game.tscn) that decides nothing.
 ##
 ## process_mode is ALWAYS in the scene, because the world is frozen while a
 ## performance plays and the sheet has to keep lighting up through it.
@@ -13,6 +19,13 @@ class_name MemorinaHud extends Control
 ## after a turn leaves the look-ahead still travelling, and a frame placed
 ## before it lands covers where Ivo is about to be. Notes played meanwhile
 ## are kept by the sheet and shown when it appears.
+
+const DRAW_ACTION := &"draw_memorina"
+const SUCCESS_COLOR := Color(0.55, 1.0, 0.6)
+const BAR_COLOR := Color(0.96, 0.9, 0.72)
+const BAR_LOW_COLOR := Color(0.95, 0.4, 0.3)
+## Seconds the answered sheet lingers green before it goes.
+const LINGER_TIME := 0.6
 
 ## Indexed by Enums.GlyphSet: which textures each input device draws with.
 @export var glyph_sets: Array[NoteGlyphSet] = []
@@ -23,16 +36,35 @@ class_name MemorinaHud extends Control
 ## eased in.
 @export var frame_center_y: float = 224.0
 @export var fade_in_time: float = 0.15
+## Screen y the sheet is centred on while answering a guardian: higher than
+## the usual sheet, because with the camera holding the pair Ivo stands off
+## centre and the frame must sit clear of his head on the side away from the
+## guardian.
+@export var answer_center_y: float = 150.0
+@export var screen_margin: float = 8.0
 
 var _facing: int = 1
-## While a guardian is staged its sheet at the top is the score for both
-## sides, and this one stays out of the way; it comes back when the stage
-## clears, if the instrument is still out.
-var _call_staged: bool = false
 var _fade_tween: Tween
+var _linger_tween: Tween
+## A guardian is staged: the sheet stays hidden while it sings.
+var _call_staged: bool = false
+## The phrase the guardian is calling, kept for the answer.
+var _call_notes: Array[Enums.Note] = []
+var _call_glyphs: NoteGlyphSet
+## Which side of Ivo the answer sheet takes: away from the guardian.
+var _answer_side: int = -1
+## The window is open: the sheet shows the phrase to be answered.
+var _answering: bool = false
+var _drawn: bool = false
+var _window_total: float = 0.0
+var _window_left: float = 0.0
+## The bar's full width, read from the scene.
+var _bar_width: float = 0.0
 
 @onready var _frame: TextureRect = $Frame
 @onready var _sheet: NoteSheet = $Frame/NoteSheet
+@onready var _bar: ColorRect = $Frame/TimeBar
+@onready var _key: KeyGlyph = $Frame/KeyPrompt
 
 func _ready() -> void:
 	assert(glyph_sets.size() == Enums.GlyphSet.size(),
@@ -40,10 +72,29 @@ func _ready() -> void:
 	if OS.is_debug_build():
 		for glyphs: NoteGlyphSet in glyph_sets:
 			glyphs.validate()
+	_bar_width = _bar.size.x
 	hide()
+
+func _process(delta: float) -> void:
+	if not _answering or _window_total <= 0.0 or get_tree().paused:
+		return
+	_window_left = maxf(_window_left - delta, 0.0)
+	var fraction := _window_left / _window_total
+	_bar.size.x = roundf(_bar_width * fraction)
+	_bar.color = BAR_COLOR.lerp(BAR_LOW_COLOR, 1.0 - fraction)
+
+#############################################
+##  I V O ' S   O W N   S H E E T          ##
+#############################################
 
 func on_drawn(_known_songs: Array[Song], facing: int) -> void:
 	_facing = facing
+	_drawn = true
+	if _answering:
+		# The phrase is already on the sheet; only the ask to draw goes.
+		_key.stop_blink()
+		_key.hide()
+		return
 	# Cleared here as well as on sheathe, so the sheet never inherits what an
 	# earlier session left behind however the HUD came to be open.
 	_sheet.clear()
@@ -52,9 +103,12 @@ func on_drawn(_known_songs: Array[Song], facing: int) -> void:
 
 ## The camera has settled; now the open side is known for certain.
 func on_camera_focused(subject_screen_position: Vector2) -> void:
-	if not visible or _frame.visible or _call_staged:
+	if not visible or _frame.visible or (_call_staged and not _answering):
 		return
-	_place_frame(_facing, subject_screen_position)
+	if _answering:
+		_place_answer_frame(_answer_side, subject_screen_position)
+	else:
+		_place_frame(_facing, subject_screen_position)
 	_frame.modulate.a = 0.0
 	_frame.show()
 	if _fade_tween:
@@ -63,8 +117,50 @@ func on_camera_focused(subject_screen_position: Vector2) -> void:
 	_fade_tween.tween_property(_frame, "modulate:a", 1.0, fade_in_time)
 
 func on_sheathed() -> void:
+	_drawn = false
+	if _answering:
+		# Interrupted mid-answer: the failure has flashed; the call closing
+		# takes the sheet away.
+		return
 	_sheet.clear()
 	hide()
+
+func on_note_played(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
+	# During an answer the sheet already holds the phrase; call_progress
+	# lights it instead.
+	if _answering:
+		return
+	_sheet.push_note(note, glyph_sets[glyph_set])
+
+func on_note_rejected(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
+	if _answering:
+		return
+	_sheet.push_note(note, glyph_sets[glyph_set])
+
+func on_sequence_failed() -> void:
+	_sheet.flash()
+
+func on_sequence_reset() -> void:
+	if _answering:
+		return
+	_sheet.clear()
+
+func on_note_cue_reached(index: int) -> void:
+	_sheet.light(index)
+
+## The title card is LessonCinematic's; here only the notes to be lit.
+func on_lesson_started(song: Song, glyph_set: Enums.GlyphSet) -> void:
+	_stop_linger()
+	_leave_answer()
+	modulate = Color.WHITE
+	_sheet.show_notes(song.notes, glyph_sets[glyph_set])
+
+func on_song_played(_song: Song, _position: Vector2) -> void:
+	_sheet.clear()
+
+#############################################
+##  A   G U A R D I A N ' S   C A L L      ##
+#############################################
 
 func on_call_staged() -> void:
 	_call_staged = true
@@ -73,31 +169,100 @@ func on_call_staged() -> void:
 func on_call_unstaged() -> void:
 	_call_staged = false
 
-func on_note_played(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
-	_sheet.push_note(note, glyph_sets[glyph_set])
+## The guardian starts singing: remember the phrase, stay out of the way.
+func on_call_opened(song: Song, _revealed: int, glyph_set: Enums.GlyphSet, _cure_done: int, _cure_total: int, side: int) -> void:
+	_call_notes = song.notes
+	_call_glyphs = glyph_sets[glyph_set]
+	_answer_side = -side
+	_stop_linger()
+	_leave_answer()
+	_frame.hide()
 
-func on_note_rejected(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
-	_sheet.push_note(note, glyph_sets[glyph_set])
+## Ivo's turn: the phrase comes to his sheet, dimmed, with the time to answer
+## it and the key that takes the instrument out. The frame is placed once the
+## camera reports `focused` (game.tscn asks it to on this same signal).
+func on_call_window_opened(seconds: float) -> void:
+	_stop_linger()
+	_answering = true
+	_sheet.modulate = Color.WHITE
+	_sheet.show_notes(_call_notes, _call_glyphs)
+	_sheet.dim_all()
+	_window_total = maxf(seconds, 0.001)
+	_window_left = seconds
+	_bar.size.x = _bar_width
+	_bar.color = BAR_COLOR
+	_bar.show()
+	_key.show_action(DRAW_ACTION)
+	if _drawn:
+		_key.hide()
+	else:
+		_key.show()
+		_key.start_blink()
+	modulate = Color.WHITE
+	_frame.hide()
+	show()
 
-func on_sequence_failed() -> void:
-	_sheet.flash()
+## `count` notes of the answer are right so far: light them back up, the
+## newest with a beat.
+func on_call_progress(count: int) -> void:
+	if not _answering:
+		return
+	_sheet.dim_all()
+	for i: int in count:
+		_sheet.light(i)
+	_sheet.pop(count - 1)
 
-func on_sequence_reset() -> void:
+func on_call_answered(_song: Song) -> void:
+	if not _answering:
+		return
+	_bar.hide()
+	_sheet.modulate = SUCCESS_COLOR
+	_stop_linger()
+	_linger_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_linger_tween.tween_interval(LINGER_TIME)
+	_linger_tween.tween_property(self, "modulate:a", 0.0, 0.2)
+	_linger_tween.tween_callback(_on_linger_done)
+
+## The call is over, answered or not. A verdict still lingering finishes on
+## its own; otherwise the sheet goes now (a failure has flashed already).
+func on_call_closed() -> void:
+	if _linger_tween != null and _linger_tween.is_valid():
+		return
+	_leave_answer()
+	if not _drawn:
+		_sheet.clear()
+		hide()
+
+func _on_linger_done() -> void:
+	_linger_tween = null
+	_leave_answer()
 	_sheet.clear()
+	hide()
 
-func on_note_cue_reached(index: int) -> void:
-	_sheet.light(index)
+func _leave_answer() -> void:
+	_answering = false
+	_window_total = 0.0
+	_bar.hide()
+	_key.stop_blink()
+	_key.hide()
+	_sheet.modulate = Color.WHITE
 
-## The title card is LessonCinematic's; here only the notes to be lit.
-func on_lesson_started(song: Song, glyph_set: Enums.GlyphSet) -> void:
-	_sheet.show_notes(song.notes, glyph_sets[glyph_set])
-
-func on_song_played(_song: Song, _position: Vector2) -> void:
-	_sheet.clear()
+func _stop_linger() -> void:
+	if _linger_tween != null:
+		_linger_tween.kill()
+		_linger_tween = null
 
 ## The frame goes to the side Ivo faces, unless he already stands in that half
 ## (the camera clamped against a room edge), in which case the room is behind
 ## him and so is the space.
+## The answer sheet: beside Ivo on the side away from the guardian, kept on
+## screen, and high enough to clear his head where the two overlap.
+func _place_answer_frame(side: int, screen_position: Vector2) -> void:
+	var x := screen_position.x + frame_gap if side > 0 else screen_position.x - frame_gap - _frame.size.x
+	x = clampf(x, screen_margin, size.x - _frame.size.x - screen_margin)
+	var y := answer_center_y - _frame.size.y / 2.0
+	_frame.position = Vector2(roundf(x), roundf(y))
+
 func _place_frame(facing: int, screen_position: Vector2) -> void:
 	var center_x := size.x / 2.0
 	var ahead := facing if signf(screen_position.x - center_x) != signf(facing) else -facing

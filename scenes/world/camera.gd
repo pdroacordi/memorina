@@ -48,6 +48,12 @@ signal focused(subject_screen_position: Vector2)
 ## Seconds the frame takes to settle between the subject and a pair.
 @export var pair_duration         : float = 0.8
 
+@export_category("Lesson")
+## The slow push toward the pair while a lesson's track plays, and how long
+## it takes to get there. Released with the letterbox.
+@export var lesson_zoom           : float = 1.15
+@export var lesson_push_time      : float = 14.0
+
 @export_category("Shake")
 ## The shake decays over its time; strength is the first frame's reach in px.
 @export var shake_time            : float = 0.18
@@ -134,6 +140,15 @@ func frame_pair(other: Node2D) -> void:
 func release_pair() -> void:
 	_tween_pair(0.0)
 
+## A lesson began: the frame closes in on the pair, slowly, for as long as
+## the track plays. Through the pause, like every lesson tween.
+func push_in() -> void:
+	_focus_pending = false
+	_tween_zoom(Vector2.ONE * lesson_zoom, lesson_push_time, Tween.TRANS_SINE, Tween.EASE_IN_OUT)
+
+func release_push() -> void:
+	_tween_zoom(Vector2.ONE, focus_duration)
+
 ## A decaying random offset; a stronger call while one runs replaces it.
 func shake(strength: float) -> void:
 	if strength < _shake_strength * (_shake_left / maxf(shake_time, 0.001)):
@@ -162,14 +177,15 @@ func _update_shake(delta: float) -> void:
 	var reach := _shake_strength * (_shake_left / maxf(shake_time, 0.001))
 	global_position += Vector2(randf_range(-reach, reach), randf_range(-reach, reach)).round()
 
-func _tween_zoom(target: Vector2) -> void:
+func _tween_zoom(target: Vector2, seconds: float = focus_duration,
+		trans: Tween.TransitionType = focus_transition, ease_type: Tween.EaseType = focus_ease) -> void:
 	if _focus_tween:
 		_focus_tween.kill()
 	_focus_tween = create_tween() \
 		.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
-		.set_trans(focus_transition) \
-		.set_ease(focus_ease)
-	_focus_tween.tween_property(self, "zoom", target, focus_duration)
+		.set_trans(trans) \
+		.set_ease(ease_type)
+	_focus_tween.tween_property(self, "zoom", target, seconds)
 	_focus_tween.finished.connect(_check_focused)
 
 func _on_subject_facing_changed(facing: int) -> void:

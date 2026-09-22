@@ -1,117 +1,107 @@
 class_name RecallPrompt extends Control
 
 ## The button prompt of the emergency QTE (docs/design/02_mecanicas.md
-## section 4): "prompt de botao claro, ensinado na hora". A medallion with the
-## key the body must remember blinking inside it, a ring draining with the
-## real-time window, and a banner saying what this is. Pressed and green on
-## success, red on a miss, then gone. An observer of Player's signals, wired
-## in game.tscn, that decides nothing.
-##
-## The key's label is its own name from the InputMap (`as_text()`), not
-## prose, so it carries no translation key; the banner does.
+## section 4): "prompt de botao claro, ensinado na hora". The key the body
+## must remember, blinking inside a ring that drains with the real-time
+## window, floating just above Ivo's head - where the colour is born
+## (RecallAura does that part; this is only the button). Pressed and green
+## on success, red on a miss, then gone. Says nothing in words: the aura and
+## the slowed world are the signal, the key is the answer. An observer of
+## Player's signals, wired in game.tscn, that decides nothing.
 
-const PROMPT_KEY := "RECALL_PROMPT"
 const RING_COLOR := Color(0.98, 0.78, 0.35)
 const RING_LOW_COLOR := Color(0.95, 0.4, 0.3)
 const SUCCESS_COLOR := Color(0.6, 1.0, 0.65)
 const FAIL_COLOR := Color(1.0, 0.4, 0.35)
 const LINGER_TIME := 0.35
-const BLINK_TIME := 0.14
 
-@export var key_normal: Texture2D
-@export var key_selected: Texture2D
-@export var key_pressed: Texture2D
-## Ring geometry, in this Control's pixels: centred on the medallion.
-@export var ring_radius: float = 42.0
-@export var ring_width: float = 4.0
+## Ring geometry, in this Control's pixels: centred on the key.
+@export var ring_radius: float = 22.0
+@export var ring_width: float = 3.0
+## Where the prompt sits relative to Ivo, in world pixels: above the head.
+@export var head_offset: Vector2 = Vector2(0.0, -78.0)
 
 var _window_total: float = 0.0
 var _window_left: float = 0.0
 var _counting: bool = false
-var _blink: float = 0.0
-var _blink_on: bool = false
 var _linger_tween: Tween
+var _subject: Node2D
 
-@onready var _banner_label: Label = $Banner/Label
-@onready var _medallion: Control = $Medallion
-@onready var _key: TextureRect = $Medallion/Key
-@onready var _key_label: Label = $Medallion/Key/Label
+@onready var _ring: Control = $Ring
+@onready var _key: KeyGlyph = $Ring/Key
 
 func _ready() -> void:
-	_banner_label.text = PROMPT_KEY
-	_medallion.draw.connect(_draw_ring)
+	_ring.draw.connect(_draw_ring)
 	hide()
 
 func _process(delta: float) -> void:
+	_follow_subject()
 	if not _counting:
 		return
 	# The window is real time: the world is slowed while it is open.
 	var real := delta / maxf(Engine.time_scale, 0.001)
 	_window_left = maxf(_window_left - real, 0.0)
-	_blink += real
-	if _blink >= BLINK_TIME:
-		_blink = 0.0
-		_blink_on = not _blink_on
-		_key.texture = key_selected if _blink_on else key_normal
-	_medallion.queue_redraw()
+	_ring.queue_redraw()
 
 func show_for(action: StringName, seconds: float) -> void:
 	_stop_linger()
-	_key_label.text = _key_name(action)
-	_key.texture = key_normal
+	_key.show_action(action)
 	_key.modulate = Color.WHITE
+	_key.start_blink()
 	_window_total = maxf(seconds, 0.001)
 	_window_left = seconds
-	_blink = 0.0
-	_blink_on = false
 	_counting = true
 	modulate = Color.WHITE
+	_follow_subject()
 	show()
-	_medallion.queue_redraw()
+	_ring.queue_redraw()
 
 ## The body remembered: the key reads as pressed and glows.
 func on_recalled(_skill: Enums.PlayerSkill) -> void:
 	_counting = false
-	_key.texture = key_pressed
+	_key.stop_blink(KeyGlyph.Look.PRESSED)
 	_key.modulate = SUCCESS_COLOR
-	_medallion.queue_redraw()
+	_ring.queue_redraw()
 	_linger_then_hide()
 
 func on_missed(_skill: Enums.PlayerSkill) -> void:
 	_counting = false
+	_key.stop_blink()
 	_key.modulate = FAIL_COLOR
-	_medallion.queue_redraw()
+	_ring.queue_redraw()
 	_linger_then_hide()
 
 ## The recall ended with no verdict (Ivo died): nothing to linger on.
 func on_recall_ended() -> void:
 	if _counting:
 		_counting = false
+		_key.stop_blink()
 		call_deferred("_hide_unless_lingering")
 
 func _hide_unless_lingering() -> void:
 	if _linger_tween == null:
 		hide()
 
+## Pinned above Ivo every frame. Turning world into screen is the camera's
+## job for layout that must be settled (the sheet); a prompt that rides on a
+## moving body has to sample the canvas transform itself.
+func _follow_subject() -> void:
+	if not is_instance_valid(_subject):
+		_subject = get_tree().get_first_node_in_group(Player.GROUP) as Node2D
+		if _subject == null:
+			return
+	var screen := get_viewport().get_canvas_transform() * (_subject.global_position + head_offset)
+	_ring.position = (screen - _ring.size / 2.0).round()
+
 func _draw_ring() -> void:
 	var fraction := _window_left / _window_total if _window_total > 0.0 else 0.0
 	if not _counting and fraction <= 0.0:
 		return
-	var centre := _medallion.size / 2.0
+	var centre := _ring.size / 2.0
 	var color := RING_COLOR.lerp(RING_LOW_COLOR, 1.0 - fraction)
 	if not _counting:
 		color = _key.modulate
-	_medallion.draw_arc(centre, ring_radius, -PI / 2.0, -PI / 2.0 + TAU * maxf(fraction, 0.02), 64, color, ring_width, false)
-
-## The first keyboard event bound to `action`, as the OS names it. Joypad
-## bindings are skipped: the design's control table is keyboard-first and the
-## notes are the only actions with pad bindings today.
-func _key_name(action: StringName) -> String:
-	for event: InputEvent in InputMap.action_get_events(action):
-		if event is InputEventKey:
-			return (event as InputEventKey).as_text_physical_keycode()
-	# Nothing bound: better an empty key than an internal action id on screen.
-	return ""
+	_ring.draw_arc(centre, ring_radius, -PI / 2.0, -PI / 2.0 + TAU * maxf(fraction, 0.02), 48, color, ring_width, false)
 
 func _linger_then_hide() -> void:
 	_stop_linger()

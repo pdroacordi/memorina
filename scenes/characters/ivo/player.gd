@@ -129,6 +129,9 @@ var _last_glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
 var _call_progress: int = 0
 ## The guardian the stage is set around, between stage_call and unstage_call.
 var _staged_caller: Node2D
+## True while the guardian is still singing its phrase: the instrument stays
+## in until the window opens, so the call is heard out before it is answered.
+var _call_listening: bool = false
 ## A matched song whose last note is still ringing; performed on note_finished.
 var _pending_performance: Song = null
 ## An answered call whose last note is still ringing; sheathed on note_finished.
@@ -140,6 +143,9 @@ var _glow_tween: Tween
 ## wait: the attack that launches him is still in flight.
 var _pending_recall: AbilityRecallStats = null
 var _pending_recall_left: float = 0.0
+## Who is throwing the move the pending recall rides on, for a trigger that
+## waits on distance.
+var _pending_recall_source: Node2D
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -378,6 +384,10 @@ func _air_physics(delta: float) -> void:
 func _try_memorina() -> void:
 	if not _memorina.has_buffered_toggle():
 		return
+	# The guardian is still singing: the press is dropped, not kept for later.
+	if _call_listening:
+		_memorina.sheathe()
+		return
 	if _memorina.is_drawn():
 		_memorina.sheathe()
 		return
@@ -523,10 +533,13 @@ func unstage_call() -> void:
 	call_unstaged.emit()
 
 ## A lucidity window opened: from now until close_call(), the instrument
-## listens for `song` alone.
+## listens for `song` alone - and stays in until the phrase has been heard.
 func open_call(song: Song, revealed: int, cure_done: int, cure_total: int) -> void:
+	if _memorina.is_drawn():
+		_memorina.sheathe()
 	_memorina.call_song = song
 	_call_progress = 0
+	_call_listening = true
 	var side := facing
 	if is_instance_valid(_staged_caller):
 		side = 1 if _staged_caller.global_position.x >= global_position.x else -1
@@ -538,6 +551,7 @@ func sound_call_note(index: int) -> void:
 ## The call has been heard out; the guardian reports how long the answer may
 ## take so the sheet can show the time draining.
 func open_call_window(seconds: float) -> void:
+	_call_listening = false
 	call_window_opened.emit(seconds)
 
 ## The window is over. A good answer ends the gesture quietly, the way a
@@ -549,6 +563,7 @@ func open_call_window(seconds: float) -> void:
 func close_call(success: bool) -> void:
 	if _memorina.call_song == null:
 		return
+	_call_listening = false
 	if success:
 		if _voice.is_busy():
 			_pending_sheathe = true
@@ -568,28 +583,44 @@ func close_call(success: bool) -> void:
 #############################################
 
 ## The guardian's unavoidable attack has begun and the body has a moment to
-## remember. A recall that only makes sense in the air (a double jump) waits
-## for the attack to put Ivo there, for at most `attack_duration`; if it never
-## does, the moment does not come. Nothing happens if a recall is already open.
-func begin_recall(stats: AbilityRecallStats, attack_duration: float = 0.0) -> void:
+## remember. The moment waits for its cue, for at most `attack_duration`: a
+## recall that only makes sense in the air (a double jump) waits for the
+## attack to put Ivo there, and one with a `trigger_distance` waits for
+## `source` (the body throwing the move) to come that close, so the world
+## slows when the blow is about to land and not while it is still far off.
+## If the cue never comes, the moment does not come. Nothing happens if a
+## recall is already open.
+func begin_recall(stats: AbilityRecallStats, attack_duration: float = 0.0, source: Node2D = null) -> void:
 	if _recall.is_armed() or _pending_recall != null:
 		return
-	if stats.requires_airborne and is_on_floor():
-		_pending_recall = stats
-		_pending_recall_left = maxf(attack_duration, 0.1)
-		return
-	_open_recall(stats)
+	_pending_recall = stats
+	_pending_recall_source = source
+	_pending_recall_left = maxf(attack_duration, 0.1)
+	_tick_pending_recall(0.0)
 
 func _tick_pending_recall(delta: float) -> void:
 	if _pending_recall == null:
 		return
 	_pending_recall_left -= delta
-	if not is_on_floor() and not is_dead():
+	if _recall_cue_met(_pending_recall) and not is_dead():
 		var stats := _pending_recall
 		_pending_recall = null
+		_pending_recall_source = null
 		_open_recall(stats)
 	elif _pending_recall_left <= 0.0:
 		_pending_recall = null
+		_pending_recall_source = null
+
+## Every cue the stats ask for, met.
+func _recall_cue_met(stats: AbilityRecallStats) -> bool:
+	if stats.requires_airborne and is_on_floor():
+		return false
+	if stats.trigger_distance > 0.0:
+		if not is_instance_valid(_pending_recall_source):
+			return false
+		if global_position.distance_to(_pending_recall_source.global_position) > stats.trigger_distance:
+			return false
+	return true
 
 func _open_recall(stats: AbilityRecallStats) -> void:
 	if not _recall.arm(stats):

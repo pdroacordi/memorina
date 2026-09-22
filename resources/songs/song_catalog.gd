@@ -18,6 +18,15 @@ func songs_for_season(season: Enums.Season) -> Array[Song]:
 			result.append(song)
 	return result
 
+## The look of a season - its tint, its weather - as shared by its songs. A
+## region's atmosphere is looked up here so it is authored once, on the
+## palette, and never re-typed on the region.
+func palette_for(season: Enums.Season) -> SeasonPalette:
+	for song: Song in songs:
+		if song.season() == season:
+			return song.palette
+	return null
+
 ## Debug-only integrity check, called from _ready() by whoever holds the
 ## catalog. Catches the authoring mistakes that would otherwise show up as a
 ## song that can never be played: a missing entry, a duplicate id, or a

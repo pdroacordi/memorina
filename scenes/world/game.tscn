@@ -18,12 +18,15 @@
 [ext_resource type="PackedScene" uid="uid://cguardcallhud" path="res://scenes/ui/guardian_call_hud/guardian_call_hud.tscn" id="17_callhud"]
 [ext_resource type="PackedScene" uid="uid://clessoncinem" path="res://scenes/ui/lesson_cinematic/lesson_cinematic.tscn" id="18_cine"]
 [ext_resource type="PackedScene" uid="uid://cfrostedge01" path="res://scenes/world/rooms/frost_edge.tscn" id="16_frost"]
+[ext_resource type="Resource" uid="uid://ytstn8cm81ql" path="res://resources/songs/song_catalog.tres" id="19_songcat"]
+[ext_resource type="PackedScene" uid="uid://cregweather1" path="res://scenes/world/environment/region_weather/region_weather.tscn" id="20_weather"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
 
 [node name="Game" type="Node2D" unique_id=585377483]
 script = ExtResource("4_game")
+song_catalog = ExtResource("19_songcat")
 
 [node name="World" type="Node2D" parent="." unique_id=870631150]
 process_mode = 1
@@ -32,6 +35,8 @@ process_mode = 1
 
 [node name="FrostEdge" parent="World" unique_id=2108025702 instance=ExtResource("16_frost")]
 position = Vector2(5856, 0)
+
+[node name="RegionWeather" parent="World" instance=ExtResource("20_weather")]
 
 [node name="Player" parent="World" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
 unique_name_in_owner = true
@@ -64,6 +69,7 @@ render_target_update_mode = 3
 script = ExtResource("11_cmask")
 
 [node name="SeasonMask" parent="." unique_id=1997444878 instance=ExtResource("13_smask")]
+process_mode = 3
 
 [node name="WorldFreeze" type="Node" parent="." unique_id=1632330468]
 script = ExtResource("14_freeze")
@@ -78,6 +84,7 @@ offset_bottom = 40.0
 metadata/_edit_use_anchors_ = true
 
 [node name="Greyhush" type="ColorRect" parent="CanvasLayer" unique_id=1302556382]
+process_mode = 3
 unique_name_in_owner = true
 material = ExtResource("9_greym")
 anchors_preset = 15
@@ -142,10 +149,13 @@ script = ExtResource("6_sarsd")
 [connection signal="call_opened" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_opened"]
 [connection signal="call_note_sounded" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_note_sounded"]
 [connection signal="call_window_opened" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_window_opened"]
-[connection signal="call_progress" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_progress"]
-[connection signal="call_answered" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_answered"]
 [connection signal="call_closed" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_closed"]
-[connection signal="sequence_failed" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_sequence_failed"]
+[connection signal="call_opened" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_opened"]
+[connection signal="call_window_opened" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_window_opened"]
+[connection signal="call_window_opened" from="World/Player" to="World/Camera2D" method="focus" unbinds=1]
+[connection signal="call_progress" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_progress"]
+[connection signal="call_answered" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_answered"]
+[connection signal="call_closed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_closed"]
 [connection signal="skill_recalled" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_recalled"]
 [connection signal="skill_recall_missed" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_missed"]
 [connection signal="hit_landed" from="World/Player" to="WorldFreeze" method="hit_stop"]
@@ -158,4 +168,6 @@ script = ExtResource("6_sarsd")
 [connection signal="call_staged" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_staged" unbinds=1]
 [connection signal="call_unstaged" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_unstaged"]
 [connection signal="lesson_started" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_lesson_started"]
+[connection signal="lesson_started" from="World/Player" to="World/Camera2D" method="push_in" unbinds=2]
+[connection signal="performance_finished" from="World/Player" to="World/Camera2D" method="release_push"]
 [connection signal="performance_finished" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_lesson_finished"]

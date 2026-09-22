@@ -8,6 +8,7 @@
 [ext_resource type="Resource" uid="uid://cnf3aoe4h2el5" path="res://resources/ui/memorina/glyphs_xbox.tres" id="7_xbox"]
 [ext_resource type="Resource" uid="uid://de6c0f56tdvha" path="res://resources/ui/memorina/glyphs_playstation.tres" id="8_ps"]
 [ext_resource type="Script" uid="uid://4xryj0q84ggy" path="res://resources/ui/memorina/note_glyph_set.gd" id="12_glyph_script"]
+[ext_resource type="PackedScene" uid="uid://ckeyglyph001" path="res://scenes/ui/key_glyph/key_glyph.tscn" id="13_key"]
 
 [node name="MemorinaHud" type="Control" unique_id=2082579967]
 process_mode = 3
@@ -38,3 +39,21 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("2_sheet")
+
+[node name="TimeBar" type="ColorRect" parent="Frame"]
+visible = false
+layout_mode = 0
+offset_left = 96.0
+offset_top = 104.0
+offset_right = 228.0
+offset_bottom = 108.0
+mouse_filter = 2
+color = Color(0.96, 0.9, 0.72, 1)
+
+[node name="KeyPrompt" parent="Frame" instance=ExtResource("13_key")]
+visible = false
+layout_mode = 0
+offset_left = 112.0
+offset_top = 6.0
+offset_right = 144.0
+offset_bottom = 38.0

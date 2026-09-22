@@ -55,6 +55,7 @@
 [ext_resource type="AudioStream" uid="uid://dukqiaa0dgpkr" path="res://assets/audios/sfx/memorina/mistake.mp3" id="47_mistake"]
 [ext_resource type="Script" uid="uid://bwhf6qt1sq1qu" path="res://scenes/characters/components/song_performance.gd" id="48_perf"]
 [ext_resource type="Script" uid="uid://cd0iolsgg5fll" path="res://scenes/characters/ivo/abilities/ability_recall_component.gd" id="49_recall"]
+[ext_resource type="Script" path="res://scenes/characters/ivo/recall_aura/recall_aura.gd" id="50_aura"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -1887,6 +1888,11 @@ height = 16.0
 feather = 12.0
 amount = 1.0
 
+[node name="RecallAura" type="Node2D" parent="."]
+visible = false
+position = Vector2(0, -46)
+script = ExtResource("50_aura")
+
 [node name="Hitbox" type="Area2D" parent="." unique_id=275061916]
 visible = false
 collision_layer = 0
@@ -1904,6 +1910,10 @@ debug_color = Color(0.930275, 0.2307421, 0.33968982, 0.41960785)
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]
 [connection signal="jumped" from="." to="DustEmitter" method="spawn_jump_dust"]
 [connection signal="song_played" from="." to="PulseEmitter" method="spawn_pulse"]
+[connection signal="recall_started" from="." to="RecallAura" method="begin"]
+[connection signal="skill_recalled" from="." to="RecallAura" method="flare"]
+[connection signal="skill_recall_missed" from="." to="RecallAura" method="drop"]
+[connection signal="recall_ended" from="." to="RecallAura" method="end"]
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]
 
 [editable path="Hurtbox"]

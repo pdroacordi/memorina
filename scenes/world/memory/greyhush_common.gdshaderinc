@@ -90,6 +90,12 @@ uniform float edge_reroll_period = 0.0;
 
 uniform int memory_levels : hint_range(2, 16) = 6;
 uniform float tint_weight : hint_range(0.0, 1.0) = 0.35;
+// The region's own season, worn by whatever is remembered and no pulse tints:
+// its palette colour, at tint_weight scaled by the region's baseline, so a
+// restored region carries its season in full and a forgotten one barely at
+// all. A source's tint always wins where it reaches.
+uniform vec3 region_tint : source_color = vec3(1.0);
+uniform float region_tint_amount : hint_range(0.0, 1.0) = 0.0;
 
 uniform float haze_strength : hint_range(0.0, 1.0) = 0.0;
 uniform vec3 haze_color : source_color = vec3(0.34, 0.37, 0.43);
@@ -306,6 +312,8 @@ vec3 gh_shade(vec3 base, float lit_amount, float memory, vec3 tint_rgb, float ti
 	vec3 lit = base;
 	if (tint_amount > 0.0) {
 		lit = mix(base, base * tint_rgb, tint_weight);
+	} else if (region_tint_amount > 0.0) {
+		lit = mix(base, base * region_tint, tint_weight * region_tint_amount);
 	}
 
 	vec3 col = mix(grey, lit, lit_amount);

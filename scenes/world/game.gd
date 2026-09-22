@@ -6,6 +6,10 @@ extends Node2D
 ## older gets evicted (see Room.evict()) and comes back fresh next visit.
 const MAX_RESIDENT_ROOMS := 2
 
+## Where a region's season is turned into a look: the palette of that
+## season's songs.
+@export var song_catalog: SongCatalog
+
 @onready var _fade   : Fade   = %Fade
 @onready var _camera : GameCamera = %Camera2D
 @onready var _player : Node2D = %Player
@@ -38,6 +42,7 @@ func _on_player_entered_room(room: Room) -> void:
 	var region := _current_room.get_region()
 	_memory_field.baseline = region.current_baseline()
 	_memory_field.season = region.season
+	_memory_field.palette = song_catalog.palette_for(region.season) if song_catalog else null
 	_touch_resident(room)
 	_camera.set_bounds(_current_room.get_bounds())
 	await _fade.to_clear()

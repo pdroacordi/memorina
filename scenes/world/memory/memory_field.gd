@@ -20,6 +20,12 @@ const MAX_SOURCES := 32
 ## The season this region's art shows wherever no pulse overrides it - its
 ## "estacao nativa". Pushed in by Game alongside the baseline.
 var season: Enums.Season = Enums.Season.SPRING
+## The look of that season (docs/design/03_mundo_e_ambiente.md section 5.2):
+## its tint on whatever is remembered and its weather, both in proportion to
+## the baseline - a restored region wears its season in full, a forgotten
+## one holds it frozen. Pushed in by Game with the season; null is no
+## atmosphere.
+var palette: SeasonPalette
 
 var _sources: Array[MemorySource] = []
 ## Creatures that hold back the grey around themselves. Kept separate from

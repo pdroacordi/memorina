@@ -62,13 +62,3 @@ offset_right = 228.0
 offset_bottom = 40.0
 mouse_filter = 2
 script = ExtResource("10_pips")
-
-[node name="TimeBar" type="ColorRect" parent="Frame"]
-visible = false
-layout_mode = 0
-offset_left = 96.0
-offset_top = 104.0
-offset_right = 228.0
-offset_bottom = 108.0
-mouse_filter = 2
-color = Color(0.96, 0.9, 0.72, 1)

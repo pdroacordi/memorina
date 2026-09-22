@@ -20,6 +20,11 @@ extends Resource
 ## must launch him (see GuardianAttack.knockback_lift); if he never leaves
 ## the ground before the attack ends, the moment simply does not come.
 @export var requires_airborne: bool = false
+## Only open the moment once the body throwing the move is this close, in
+## pixels: a charge from across the arena slows the world with nothing to
+## dodge yet, and the blow lands at full speed after the window closes. 0
+## opens at the swing's start.
+@export var trigger_distance: float = 0.0
 ## Damage taken when the window closes on nothing - the design's "custo
 ## tatico real". Zero when the attack itself already lands on a miss.
 @export var miss_damage: int = 0

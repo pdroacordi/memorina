@@ -11,8 +11,9 @@ class_name PulseEmitter extends Node
 
 @onready var _spawner: Spawner = get_tree().get_first_node_in_group(Spawner.GROUP)
 
-func spawn_pulse(song: Song, at: Vector2) -> void:
+## `stats` overrides the song's pulse shape (a lesson's slow, wide pulse).
+func spawn_pulse(song: Song, at: Vector2, stats: PulseStats = null) -> void:
 	if _spawner == null or pulse_scene == null or song == null:
 		return
 	var pulse: ColorPulse = _spawner.spawn(pulse_scene, at)
-	pulse.start(song)
+	pulse.start(song, stats)

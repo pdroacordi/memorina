@@ -15,8 +15,10 @@ class_name ColorPulse extends Node2D
 var _timeline: PulseTimeline
 var _particles: CPUParticles2D
 
-## Called by whoever spawned it, immediately after it enters the tree.
-func start(song: Song) -> void:
+## Called by whoever spawned it, immediately after it enters the tree. `stats`
+## overrides the song's own shape in time - a lesson's pulse is the same
+## song, opened slowly across its whole track.
+func start(song: Song, stats: PulseStats = null) -> void:
 	_source.tint = song.tint()
 	_source.season = song.season()
 	_source.radius = 0.0
@@ -32,7 +34,7 @@ func start(song: Song) -> void:
 	var field := MemoryField.find_in(self)
 	if field:
 		local_memory = field.sample(global_position, _source)
-	_timeline = PulseTimeline.new(song.pulse_stats, local_memory)
+	_timeline = PulseTimeline.new(stats if stats != null else song.pulse_stats, local_memory)
 	_apply_radius()
 
 func _physics_process(delta: float) -> void:

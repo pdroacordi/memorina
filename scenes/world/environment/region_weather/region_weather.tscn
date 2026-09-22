@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://cregweather1"]
+
+[ext_resource type="Script" path="res://scenes/world/environment/region_weather/region_weather.gd" id="1_weather"]
+
+[node name="RegionWeather" type="Node2D"]
+process_mode = 3
+script = ExtResource("1_weather")

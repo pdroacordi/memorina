@@ -47,8 +47,12 @@ const RELAPSE_HOLD := 0.3
 ## the sprite by `note_bob` pixels, both easing back before the next note.
 @export var note_swell: float = 1.5
 @export var note_bob: float = 4.0
-## Seconds the well of forgetting takes to fill in once the guardian is restored.
-@export var corruption_lift_time: float = 2.0
+## Seconds the well of forgetting takes to fill in and the region's memory to
+## climb to 1.0 once the guardian is restored - the first act of the lesson.
+@export var corruption_lift_time: float = 6.0
+## The shape of the guardian's pulse during the lesson: slow and wide, so the
+## colour spreads from it for as long as the track plays.
+@export var lesson_pulse: PulseStats
 
 var _fight: GuardianFight
 var _player: Player
@@ -209,9 +213,13 @@ func _flash(color: Color) -> void:
 	_flash_tween = create_tween()
 	_flash_tween.tween_property(_sprite, "modulate", Color.WHITE, hit_flash_time)
 
-## A move winds up: the sprite pulses until the swing begins.
+## A move winds up: the guardian squares up to Ivo (a charge thrown the way
+## it happened to be facing goes into a wall) and the sprite pulses until the
+## swing begins.
 func _on_attack_telegraphed(_attack: GuardianAttack) -> void:
 	_hits_since_move = 0
+	if _player != null:
+		face_towards(signf(_player.global_position.x - global_position.x))
 	_stop_telegraph()
 	_telegraph_tween = create_tween().set_loops()
 	_telegraph_tween.tween_property(_sprite, "modulate", telegraph_color, telegraph_pulse_time)
@@ -229,7 +237,7 @@ func _on_attack_started(attack: GuardianAttack) -> void:
 		return
 	if SaveSystem.has_skill(attack.recall.skill):
 		return
-	_player.begin_recall(attack.recall, attack.duration)
+	_player.begin_recall(attack.recall, attack.duration, self)
 
 func _on_attack_finished(_attack: GuardianAttack) -> void:
 	_stop_telegraph()
@@ -343,34 +351,50 @@ func _begin_relapse() -> void:
 
 ## The sync: the guardian remembers itself, the region remembers its season,
 ## and the player learns the song through the same lesson a bench would give.
+## The lesson is a scene: time is frozen for the track, memory is not. The
+## well of forgetting fills in and the region's memory climbs to 1.0 across
+## `corruption_lift_time`, the guardian's own colour is born at the first
+## note and spreads slowly (lesson_pulse), the weather wakes with the
+## baseline, and the camera holds the pair until the track ends.
 func _restore() -> void:
 	_call.stop()
 	_ai.active = false
 	SaveSystem.restore_guardian(stats.id)
-	var field := MemoryField.find_in(self)
-	if field != null:
-		field.baseline = 1.0
-	_lift_corruption()
-	# The guardian answers the lesson with its own colour, born where it stands.
+	_lift_region()
+	# The guardian's colour: born at the first note, slow and wide, then the
+	# usual pulse answers the finished lesson from where it stands.
+	_player.note_cue_reached.connect(_on_lesson_cue)
 	_player.song_played.connect(_on_lesson_song_played, CONNECT_ONE_SHOT)
-	# Unstaged first: the lesson's own staging takes over in the same breath.
-	_unstage()
+	_player.performance_finished.connect(_unstage, CONNECT_ONE_SHOT)
 	if not _player.learn_song(stats.song):
 		# The answer left Ivo still and the instrument out, so this should not
 		# happen; if it does, the song is still learned on the next bench-less
 		# visit because the save already remembers the guardian.
 		push_warning("%s was restored but the lesson could not start." % name)
+		_player.note_cue_reached.disconnect(_on_lesson_cue)
 		_player.close_call(true)
+		_unstage()
 	restored.emit(self)
+
+func _on_lesson_cue(index: int) -> void:
+	if index != 0:
+		return
+	_player.note_cue_reached.disconnect(_on_lesson_cue)
+	_pulse_emitter.spawn_pulse(stats.song, global_position, lesson_pulse)
 
 func _on_lesson_song_played(song: Song, _position: Vector2) -> void:
 	_pulse_emitter.spawn_pulse(song, global_position)
 
-## The well fills back in as the lesson begins: the place remembers with it.
-func _lift_corruption() -> void:
-	var tween := create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+## The place remembers with the guardian: the well fills back in and the
+## region's memory climbs to 1.0 (Region.current_baseline() answers 1.0 on
+## every later visit), both across the lesson.
+func _lift_region() -> void:
+	var tween := create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_parallel(true)
 	tween.tween_property(_corruption, "strength", 0.0, corruption_lift_time)
-	tween.tween_callback(_corruption.hide)
+	var field := MemoryField.find_in(self)
+	if field != null:
+		tween.tween_property(field, "baseline", 1.0, corruption_lift_time)
+	tween.chain().tween_callback(_corruption.hide)
 
 func _stage() -> void:
 	if _staged:

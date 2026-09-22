@@ -164,6 +164,12 @@ func _process(_delta: float) -> void:
 	_pack_shields(canvas, scale)
 
 	_set_param("baseline", _field.baseline)
+	# The season's tint rides on the baseline: the more a region remembers, the
+	# more it wears its season (docs/design/03_mundo_e_ambiente.md section 5.2).
+	var palette := _field.palette
+	var tint := palette.tint if palette != null else Color.WHITE
+	_set_param("region_tint", Vector3(tint.r, tint.g, tint.b))
+	_set_param("region_tint_amount", _field.baseline if palette != null else 0.0)
 	_set_param("game_size", size)
 	# The region's own season is world state like the baseline, so it travels
 	# the same road, but as a global: it is read by world materials, not by the
