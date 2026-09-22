@@ -1,11 +1,6 @@
 [gd_scene format=3 uid="uid://cbloomguard1"]
 
 [ext_resource type="Script" uid="uid://cho63d53me466" path="res://scenes/characters/guardians/guardian.gd" id="1_guardian"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_hurt.png" id="tex_5"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_idle.png" id="tex_1"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_walk.png" id="tex_2"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_attack_1.png" id="tex_3"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_attack_2.png" id="tex_4"]
 [ext_resource type="PackedScene" path="res://scenes/combat/hurtbox/hurtbox.tscn" id="3_hurtbox"]
 [ext_resource type="Script" uid="uid://dsp4w4pojjffd" path="res://scenes/combat/health/health.gd" id="4_health"]
 [ext_resource type="Script" uid="uid://86g8661q6om0" path="res://scenes/combat/hitbox/hitbox.gd" id="5_hitbox"]
@@ -27,27 +22,26 @@
 [ext_resource type="Resource" uid="uid://bq1bloomstat" path="res://resources/characters/guardians/bloom_guardian/bloom_guardian_stats.tres" id="21_stats"]
 [ext_resource type="Script" uid="uid://bhuyfpecwqve" path="res://scenes/world/memory/color_pulse/pulse_emitter.gd" id="22_pulsem"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/color_pulse/color_pulse.tscn" id="23_pulsesc"]
-[ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="24_source"]
 [ext_resource type="Resource" uid="uid://clessonpulse" path="res://resources/memory/lesson_pulse_stats.tres" id="25_lesson"]
 [ext_resource type="Script" uid="uid://branmbikueiyl" path="res://scenes/particles/dust/dust_emitter.gd" id="90_dust"]
 [ext_resource type="PackedScene" uid="uid://cbam77lyl5m76" path="res://scenes/particles/dust/jump_dust_particles.tscn" id="91_jumpdust"]
 [ext_resource type="PackedScene" uid="uid://b2a63w0vkfy3a" path="res://scenes/particles/dust/landing_dust_particles.tscn" id="92_landdust"]
+[ext_resource type="Texture2D" uid="uid://bgqmsx8a0hg0x" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_idle.png" id="tex_1"]
+[ext_resource type="Texture2D" uid="uid://b2c1gvbav23vk" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_walk.png" id="tex_2"]
+[ext_resource type="Texture2D" uid="uid://bbv0yjfffdkph" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_attack_1.png" id="tex_3"]
+[ext_resource type="Texture2D" uid="uid://b8f00bxsdcjj8" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_attack_2.png" id="tex_4"]
+[ext_resource type="Texture2D" uid="uid://c043y3ks6wl37" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_hurt.png" id="tex_5"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
-radius = 28.0
-height = 84.0
+radius = 43.0
+height = 86.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_hurt"]
-radius = 28.0
-height = 84.0
+radius = 43.0
+height = 86.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hit"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_sight"]
-radius = 900.0
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_arena"]
-radius = 560.0
+radius = 5.206483
 
 [sub_resource type="Animation" id="Animation_RESET"]
 length = 0.001
@@ -157,91 +151,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(2.6, 2.0)]
-}
-
-[sub_resource type="Animation" id="Animation_idle"]
-resource_name = "idle"
-length = 0.6
-loop_mode = 1
-step = 0.15
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("tex_1")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [4]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.15, 0.3, 0.45),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3]
-}
-
-[sub_resource type="Animation" id="Animation_walk"]
-resource_name = "walk"
-length = 0.6
-loop_mode = 1
-step = 0.1
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("tex_2")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [6]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4, 5]
+"values": [Vector2(2.6, 2)]
 }
 
 [sub_resource type="Animation" id="Animation_attack_1"]
@@ -342,7 +252,7 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(2.6, 2.0)]
+"values": [Vector2(2.6, 2)]
 }
 
 [sub_resource type="Animation" id="Animation_attack_2"]
@@ -428,10 +338,10 @@ tracks/6/path = NodePath("Hitbox/CollisionShape2D:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [Vector2(0, -24)]
+"values": [Vector2(0, -24), Vector2(-3, -16)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -440,10 +350,10 @@ tracks/7/path = NodePath("Hitbox/CollisionShape2D:scale")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [Vector2(7.0, 1.6)]
+"values": [Vector2(7, 1.6), Vector2(7, 1.6)]
 }
 
 [sub_resource type="Animation" id="Animation_attack_3"]
@@ -529,10 +439,10 @@ tracks/6/path = NodePath("Hitbox/CollisionShape2D:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [Vector2(0, -24)]
+"values": [Vector2(0, -24), Vector2(0, -18)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -541,10 +451,10 @@ tracks/7/path = NodePath("Hitbox/CollisionShape2D:scale")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.2),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [Vector2(7.0, 1.6)]
+"values": [Vector2(7, 1.6), Vector2(7, 1.6)]
 }
 
 [sub_resource type="Animation" id="Animation_hurt"]
@@ -583,6 +493,48 @@ tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 0.6
+loop_mode = 1
+step = 0.15
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_1")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3, 0.45),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3]
@@ -672,6 +624,48 @@ tracks/2/keys = {
 "values": [0, 1, 2, 3]
 }
 
+[sub_resource type="Animation" id="Animation_walk"]
+resource_name = "walk"
+length = 0.6
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_2")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [6]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_guardian"]
 _data = {
 &"RESET": SubResource("Animation_RESET"),
@@ -685,12 +679,6 @@ _data = {
 &"walk": SubResource("Animation_walk")
 }
 
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_idle"]
-animation = &"idle"
-
-[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_walk"]
-animation = &"walk"
-
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_attack_1"]
 animation = &"attack_1"
 
@@ -703,17 +691,19 @@ animation = &"attack_3"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_hurt"]
 animation = &"hurt"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_idle"]
+animation = &"idle"
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lucid"]
 animation = &"lucid"
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_restored"]
 animation = &"restored"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_walk"]
+animation = &"walk"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_guardian"]
-states/idle/node = SubResource("AnimationNodeAnimation_idle")
-states/idle/position = Vector2(100, 100)
-states/walk/node = SubResource("AnimationNodeAnimation_walk")
-states/walk/position = Vector2(240, 100)
 states/attack_1/node = SubResource("AnimationNodeAnimation_attack_1")
 states/attack_1/position = Vector2(380, 100)
 states/attack_2/node = SubResource("AnimationNodeAnimation_attack_2")
@@ -722,36 +712,46 @@ states/attack_3/node = SubResource("AnimationNodeAnimation_attack_3")
 states/attack_3/position = Vector2(660, 100)
 states/hurt/node = SubResource("AnimationNodeAnimation_hurt")
 states/hurt/position = Vector2(800, 100)
+states/idle/node = SubResource("AnimationNodeAnimation_idle")
+states/idle/position = Vector2(100, 100)
 states/lucid/node = SubResource("AnimationNodeAnimation_lucid")
 states/lucid/position = Vector2(940, 100)
 states/restored/node = SubResource("AnimationNodeAnimation_restored")
 states/restored/position = Vector2(1080, 100)
+states/walk/node = SubResource("AnimationNodeAnimation_walk")
+states/walk/position = Vector2(240, 100)
 
-[node name="BloomGuardian" type="CharacterBody2D"]
+[sub_resource type="CircleShape2D" id="CircleShape2D_sight"]
+radius = 900.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_arena"]
+radius = 560.0
+
+[node name="BloomGuardian" type="CharacterBody2D" unique_id=572348205]
 collision_layer = 65536
 script = ExtResource("1_guardian")
 stats = ExtResource("21_stats")
 lesson_pulse = ExtResource("25_lesson")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1688833122]
 position = Vector2(0, -96)
 scale = Vector2(-2, 2)
 texture = ExtResource("tex_1")
 hframes = 4
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1479981845]
 position = Vector2(0, -42)
 shape = SubResource("CapsuleShape2D_body")
 
-[node name="Hurtbox" parent="." instance=ExtResource("3_hurtbox")]
+[node name="Hurtbox" parent="." unique_id=104424408 instance=ExtResource("3_hurtbox")]
 collision_layer = 65536
 invulnerability_time = 0.2
 
 [node name="CollisionShape2D" parent="Hurtbox" index="0"]
-position = Vector2(0, -42)
+position = Vector2(-7, -44)
 shape = SubResource("CapsuleShape2D_hurt")
 
-[node name="ContactHitbox" type="Area2D" parent="."]
+[node name="ContactHitbox" type="Area2D" parent="." unique_id=1387402494]
 collision_layer = 0
 collision_mask = 512
 monitoring = false
@@ -761,12 +761,12 @@ knockback_strength = 460.0
 knockback_lift = 120.0
 continuous = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ContactHitbox"]
-position = Vector2(0, -42)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ContactHitbox" unique_id=1032523809]
+position = Vector2(-12, -43)
 shape = SubResource("CapsuleShape2D_body")
 debug_color = Color(0.9, 0.5, 0.2, 0.3)
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" type="Area2D" parent="." unique_id=1843189840]
 visible = false
 collision_layer = 0
 collision_mask = 512
@@ -776,84 +776,76 @@ script = ExtResource("5_hitbox")
 knockback_strength = 420.0
 knockback_lift = 120.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1674031098]
 position = Vector2(72, -50)
-scale = Vector2(2.6, 2.0)
+scale = Vector2(2.6, 2)
 shape = SubResource("CircleShape2D_hit")
 debug_color = Color(0.93, 0.23, 0.34, 0.42)
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1717133613]
 libraries/ = SubResource("AnimationLibrary_guardian")
 
-[node name="AnimationTree" type="AnimationTree" parent="."]
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=167862085]
 unique_name_in_owner = true
 root_node = NodePath("%AnimationTree/..")
 callback_mode_process = 0
 tree_root = SubResource("AnimationNodeStateMachine_guardian")
 anim_player = NodePath("../AnimationPlayer")
 
-[node name="AnimationDriver" type="Node" parent="."]
+[node name="AnimationDriver" type="Node" parent="." unique_id=1328240010]
 script = ExtResource("10_animdrv")
 
-[node name="AnimationResolver" type="Node" parent="."]
+[node name="AnimationResolver" type="Node" parent="." unique_id=635754801]
 script = ExtResource("11_animres")
 
-[node name="Health" type="Node" parent="."]
+[node name="Health" type="Node" parent="." unique_id=2129477091]
 script = ExtResource("4_health")
 max_hp = 999
 
-[node name="Locomotion" type="Node" parent="."]
+[node name="Locomotion" type="Node" parent="." unique_id=1923694466]
 script = ExtResource("6_locomo")
 stats = ExtResource("7_locostats")
 
-[node name="EnemySight" type="Area2D" parent="."]
+[node name="EnemySight" type="Area2D" parent="." unique_id=2113873804]
 collision_layer = 0
 collision_mask = 256
 monitorable = false
 script = ExtResource("8_sight")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySight"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySight" unique_id=429843887]
 shape = SubResource("CircleShape2D_sight")
 
-[node name="RayCast2D" type="RayCast2D" parent="EnemySight"]
+[node name="RayCast2D" type="RayCast2D" parent="EnemySight" unique_id=929734618]
 position = Vector2(0, -44)
 
-[node name="ArenaTrigger" type="Area2D" parent="."]
+[node name="ArenaTrigger" type="Area2D" parent="." unique_id=426954158]
 collision_layer = 0
 collision_mask = 256
 monitorable = false
 script = ExtResource("9_trigger")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="ArenaTrigger"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ArenaTrigger" unique_id=2082142437]
 shape = SubResource("CircleShape2D_arena")
 
-[node name="AI" type="Node" parent="."]
+[node name="AI" type="Node" parent="." unique_id=2078946786]
 script = ExtResource("12_ai")
 
-[node name="Call" type="Node" parent="."]
+[node name="Call" type="Node" parent="." unique_id=1076163826]
 script = ExtResource("13_call")
 
-[node name="Voice" type="Node" parent="Call"]
+[node name="Voice" type="Node" parent="Call" unique_id=321850210]
 script = ExtResource("14_voice")
 note_streams = Array[AudioStream]([ExtResource("15_note_up"), ExtResource("16_note_down"), ExtResource("17_note_left"), ExtResource("18_note_right")])
 mistake_stream = ExtResource("19_mistake")
 
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Call/Voice"]
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Call/Voice" unique_id=1062463141]
 pitch_scale = 0.5
 
-[node name="PulseEmitter" type="Node" parent="."]
+[node name="PulseEmitter" type="Node" parent="." unique_id=2060683163]
 script = ExtResource("22_pulsem")
 pulse_scene = ExtResource("23_pulsesc")
 
-[node name="Corruption" type="Node2D" parent="."]
-top_level = true
-script = ExtResource("24_source")
-shape = 1
-rect_size = Vector2(1600, 480)
-feather = 140.0
-strength = -0.75
-
-[node name="GreyhushShield" type="Node2D" parent="."]
+[node name="GreyhushShield" type="Node2D" parent="." unique_id=1432246297]
 position = Vector2(0, -44)
 script = ExtResource("20_shield")
 radius = 30.0
@@ -866,8 +858,8 @@ jump_particles = ExtResource("91_jumpdust")
 land_particles = ExtResource("92_landdust")
 
 [connection signal="facing_changed" from="." to="Hitbox" method="_on_character_facing_changed"]
+[connection signal="landed" from="." to="DustEmitter" method="spawn_land_dust"]
+[connection signal="leapt" from="." to="DustEmitter" method="spawn_jump_dust"]
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]
 
 [editable path="Hurtbox"]
-[connection signal="leapt" from="." to="DustEmitter" method="spawn_jump_dust"]
-[connection signal="landed" from="." to="DustEmitter" method="spawn_land_dust"]

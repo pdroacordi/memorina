@@ -22,10 +22,15 @@ var _is_transitioning: bool      = false
 ## point of keeping it "warm" instead of destroying it.
 var _resident_rooms: Array[Room] = []
 
+## The regions are reached through the rooms already being walked - a room is
+## always a child of its region - so nothing needs a group of its own.
 func _ready() -> void:
 	_camera.follow(_player)
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
 		room.room_entered.connect(_on_player_entered_room)
+		var region := room.get_region()
+		if not region.memory_changed.is_connected(_on_region_memory_changed):
+			region.memory_changed.connect(_on_region_memory_changed.bind(region))
 
 func _on_player_entered_room(room: Room) -> void:
 	if room == _current_room or _is_transitioning:
@@ -57,3 +62,11 @@ func _touch_resident(room: Room) -> void:
 	_resident_rooms.push_front(room)
 	while _resident_rooms.size() > MAX_RESIDENT_ROOMS:
 		_resident_rooms.pop_back().evict()
+
+## The one place MemoryField.baseline is written. A region lifts its own
+## memory when its guardian is restored, which can happen while the player is
+## standing in it, so the field follows the region it is showing rather than
+## only being refreshed at the next doorway.
+func _on_region_memory_changed(level: float, region: Region) -> void:
+	if _current_room != null and _current_room.get_region() == region:
+		_memory_field.baseline = level

@@ -2,12 +2,25 @@
 
 [ext_resource type="PackedScene" uid="uid://clighthouse1" path="res://scenes/world/rooms/frost_edge/lighthouse.tscn" id="1_lighthouse"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="2_region"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="3_regmem"]
+[ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="4_source"]
 
 [node name="FrostEdge" type="Node2D"]
 script = ExtResource("2_region")
-memory_baseline = 0.2
 season = 0
 has_guardian = true
 guardian = 0
+
+[node name="Memory" type="Node2D" parent="."]
+script = ExtResource("3_regmem")
+authored = 0.2
+
+[node name="LighthouseWell" type="Node2D" parent="Memory"]
+position = Vector2(170, -2)
+script = ExtResource("4_source")
+shape = 1
+rect_size = Vector2(1600, 480)
+feather = 140.0
+strength = -0.2
 
 [node name="Lighthouse" parent="." instance=ExtResource("1_lighthouse")]

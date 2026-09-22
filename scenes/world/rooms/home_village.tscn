@@ -4,12 +4,32 @@
 [ext_resource type="PackedScene" uid="uid://b2y7r7eq4pq7r" path="res://scenes/world/rooms/home_village/woods.tscn" id="2_6d0dj"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="3_region"]
 [ext_resource type="PackedScene" uid="uid://cbloomholl01" path="res://scenes/world/rooms/home_village/bloom_hollow.tscn" id="4_bloom"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="5_regmem"]
+[ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="6_source"]
 
 [node name="HomeVillage" type="Node2D" unique_id=587601713]
 script = ExtResource("3_region")
-memory_baseline = 0.8
 has_guardian = true
 guardian = 1
+
+[node name="Memory" type="Node2D" parent="."]
+script = ExtResource("5_regmem")
+authored = 0.8
+
+[node name="DowntownWell" type="Node2D" parent="Memory"]
+script = ExtResource("6_source")
+radius = 500.0
+feather = 140.0
+strength = -0.7
+edge_seed = 137.0
+
+[node name="BloomHollowWell" type="Node2D" parent="Memory"]
+position = Vector2(4124, -2)
+script = ExtResource("6_source")
+shape = 1
+rect_size = Vector2(1600, 480)
+feather = 140.0
+strength = -0.75
 
 [node name="Downtown" parent="." unique_id=2037857167 instance=ExtResource("1_vmbir")]
 

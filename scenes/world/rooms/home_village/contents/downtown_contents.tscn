@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://dcdrjuov1vtyl" path="res://assets/sprites/world/background/seasonal/background_layer_1.png" id="5_vl0g8"]
 [ext_resource type="Texture2D" uid="uid://c1f07twoye2wx" path="res://assets/sprites/world/tilesets/floor_tiles.png" id="6_se3n3"]
 [ext_resource type="PackedScene" uid="uid://dfusgysqr55sw" path="res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn" id="8_70x0p"]
-[ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="9_msrc"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/dust_motes/dust_motes.tscn" id="10_motes"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/freezable_water/freezable_water.tscn" id="11_water"]
 [ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_1_material.tres" id="bg_season_1"]
@@ -283,13 +282,6 @@ tile_set = SubResource("TileSet_rxs28")
 
 [node name="BruteShadow" parent="." unique_id=1573815107 instance=ExtResource("8_70x0p")]
 position = Vector2(-387, -2)
-
-[node name="GreyhushPatch" type="Node2D" parent="." unique_id=745078318]
-script = ExtResource("9_msrc")
-radius = 500.0
-feather = 140.0
-strength = -0.7
-edge_seed = 137.0
 
 [node name="DustMotesInPatch" parent="." unique_id=745078319 instance=ExtResource("10_motes")]
 position = Vector2(320, -80)

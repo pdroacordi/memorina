@@ -1,5 +1,10 @@
 extends Node
 
+## A guardian was restored. The regions listen for this: the place a guardian
+## kept remembers with it, and nothing else can know whether the arena's room
+## is even loaded when it happens.
+signal guardian_restored(guardian: Enums.Guardian)
+
 const PATH: String = "user://"
 const SAVE_FILE_NAME: String = "save.tres"
 
@@ -72,6 +77,7 @@ func is_guardian_restored(guardian: Enums.Guardian) -> bool:
 ## 1.0, on every later visit. Same no-autosave rule as learn_song().
 func restore_guardian(guardian: Enums.Guardian) -> void:
 	player_data.restored_guardians[guardian] = true
+	guardian_restored.emit(guardian)
 
 func is_enemy_defeated(save_id: String) -> bool:
 	return _defeated_enemies.has(save_id)
