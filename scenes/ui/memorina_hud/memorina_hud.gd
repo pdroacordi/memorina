@@ -48,11 +48,6 @@ const LESSON_SHEET_FADE := 0.6
 ## eased in.
 @export var frame_center_y: float = 224.0
 @export var fade_in_time: float = 0.15
-## Screen y of the frame's top edge in an encounter, where it is centred
-## horizontally: the camera holds the pair in the lower band, so the sheet
-## owns the upper one. Shared with GuardianCallHud, which must be the same
-## number or the sheet jumps when the turn passes to Ivo.
-@export var encounter_top: float = 40.0
 
 var _facing: int = 1
 var _fade_tween: Tween
@@ -271,7 +266,7 @@ func _close_lesson_sheet() -> void:
 
 ## The encounter's slot: centred, under the letterbox a lesson closes in.
 func _show_in_slot() -> void:
-	_frame.position = Vector2(_sheet.encounter_x(size.x, _call_side, _call_height), roundf(encounter_top))
+	_frame.position = Vector2(_sheet.encounter_x(size.x, _call_side, _call_height), _sheet.encounter_y())
 	if _frame.visible:
 		return
 	_fade_frame_in()

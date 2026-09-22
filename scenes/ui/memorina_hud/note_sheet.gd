@@ -125,6 +125,9 @@ func staff_center() -> float:
 const CENTRE_CLEARANCE := 140.0
 ## The gap from the screen edge when the sheet has to stand aside instead.
 const SIDE_MARGIN := 24.0
+## Screen y of an encounter frame's top edge: the camera holds the pair in
+## the lower band, so the sheet owns the upper one.
+const ENCOUNTER_TOP := 40.0
 
 ## Where an encounter's frame goes, in the HUD's pixels: above the pair with
 ## the staff on the screen's axis when the guardian's head clears it, beside
@@ -135,6 +138,12 @@ func encounter_x(screen_width: float, guardian_side: int, guardian_height: float
 	if guardian_height <= CENTRE_CLEARANCE:
 		return roundf(screen_width / 2.0 - staff_center())
 	return SIDE_MARGIN if guardian_side > 0 else roundf(screen_width - size.x - SIDE_MARGIN)
+
+## Where an encounter's frame sits vertically. One owner, like the x: two
+## exports holding the same number in two scenes is how the sheet comes to
+## jump when the turn passes.
+func encounter_y() -> float:
+	return ENCOUNTER_TOP
 
 ## Places and sizes every slot for the frame's current size; re-run whenever
 ## it changes.

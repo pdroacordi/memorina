@@ -7,8 +7,9 @@ class_name GuardianCallHud extends Control
 ## by one, with one pip per answer the cure needs under the message, the ones
 ## already given lit. When the phrase is over it slides away and Ivo's own
 ## sheet (MemorinaHud) takes THE SAME SLOT: the turn passes without the sheet
-## moving an inch. Their two `frame_top` exports must agree. An observer of
-## Player's signals (wired in game.tscn) that decides nothing.
+## moving an inch. Where that slot IS belongs to NoteSheet - both HUDs ask it
+## for the x and the y - not to a number typed into each of them. An observer
+## of Player's signals (wired in game.tscn) that decides nothing.
 ##
 ## The Label is given a translation KEY (a Label auto-translates its text).
 
@@ -17,10 +18,6 @@ const SLIDE_TIME := 0.35
 
 ## Indexed by Enums.GlyphSet, same resources as MemorinaHud's.
 @export var glyph_sets: Array[NoteGlyphSet] = []
-## Screen y of the frame's top edge once it has slid in; it is centred
-## horizontally. The same slot MemorinaHud.encounter_top names.
-@export var frame_top: float = 40.0
-
 var _slide_tween: Tween
 ## The stage: which side the guardian stands on and how tall it is.
 var _guardian_side: int = 1
@@ -75,6 +72,6 @@ func _slide(in_: bool) -> void:
 		_frame.position = Vector2(x, hidden_y)
 	_slide_tween = create_tween().set_trans(Tween.TRANS_CUBIC) \
 		.set_ease(Tween.EASE_OUT if in_ else Tween.EASE_IN)
-	_slide_tween.tween_property(_frame, "position", Vector2(x, frame_top if in_ else hidden_y), SLIDE_TIME)
+	_slide_tween.tween_property(_frame, "position", Vector2(x, _sheet.encounter_y() if in_ else hidden_y), SLIDE_TIME)
 	if not in_:
 		_slide_tween.tween_callback(hide)
