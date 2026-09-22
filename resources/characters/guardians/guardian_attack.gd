@@ -12,8 +12,14 @@ extends Resource
 ## Seconds the guardian holds still and flashes before the swing begins, so
 ## the player can read it coming. The fair-fight knob: 0 is a sucker punch.
 @export var telegraph: float = 0.4
-## Distance to the player at which the guardian starts the swing.
+## Horizontal distance to the player at which the guardian starts the swing.
 @export var attack_range: float = 64.0
+## How far above or below its own feet this move can still catch someone: a
+## ground swing is not thrown at a player hovering overhead, but a move that
+## answers one (a burst that launches) reaches high. Together with
+## attack_range it is a BOX, not a radius - a melee swing landing on someone
+## 60px up because the hypotenuse was short is how a boss looks silly.
+@export var attack_height: float = 96.0
 @export var cooldown: float = 1.5
 ## Horizontal speed held for the whole swing, in the facing direction. Zero
 ## for a standing swing; a charge sets it high.

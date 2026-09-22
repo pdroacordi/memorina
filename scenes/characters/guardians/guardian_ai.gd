@@ -8,6 +8,13 @@ extends AIController
 ## node that knows the fight's phase. Never instantiated on its own: a
 ## Guardian mounts it as $AI.
 ##
+## A player bouncing on its head is not a free ride either: a move only
+## reaches inside its own box (range x height), so a guardian cannot swing at
+## someone hovering overhead - it STEPS OUT from under them instead and
+## stands off until they come down, rather than shuffling on the spot under
+## their feet. Which moves can answer an overhead player is data
+## (GuardianAttack.attack_height).
+##
 ## The move carrying a recall is not left to chance: it is scheduled every
 ## `recall_after_attacks` ordinary moves (a phase the player can learn to
 ## expect), or at once when the guardian asks for it (request_recall), whether
@@ -18,6 +25,16 @@ extends AIController
 signal attack_telegraphed(attack: GuardianAttack)
 signal attack_started(attack: GuardianAttack)
 signal attack_finished(attack: GuardianAttack)
+
+## How far the player must be to one side before the guardian picks a new
+## side to walk or look at. Inside this band it keeps what it had: someone
+## standing exactly overhead must not make it turn every frame.
+const TURN_BAND := 10.0
+## Horizontal reach of "overhead": within this, a player above the move's box
+## is standing on the guardian rather than in front of it.
+const OVERHEAD_BAND := 56.0
+## Seconds the guardian walks to get out from under such a player.
+const STEP_OUT_TIME := 0.7
 
 const APPROACH := 0
 const TELEGRAPH := 1
@@ -43,6 +60,11 @@ var _cooldown: float = 0.0
 var _swinging: bool = false
 ## Ordinary moves made since the last scheduled recall move.
 var _since_recall: int = 0
+## Which way the guardian is looking when it is not walking, and how much of
+## the step out from under an overhead player is left.
+var _look_direction: float = 1.0
+var _step_out_direction: float = 0.0
+var _step_out_left: float = 0.0
 ## The guardian asked for the recall move next, cadence or not.
 var _recall_requested: bool = false
 
@@ -61,7 +83,23 @@ func _ready() -> void:
 ## before _select_state reads it this same frame (see BruteShadowAI).
 func tick(delta: float) -> void:
 	_cooldown = maxf(_cooldown - delta, 0.0)
+	_update_look()
 	super.tick(delta)
+
+## The side the guardian should face: where it walks, or - standing still -
+## where the player is. Read by the guardian instead of `direction`, so it
+## keeps watching a player it has just backed away from.
+func facing_intent() -> float:
+	if not is_zero_approx(_current_direction):
+		return _current_direction
+	return _look_direction
+
+func _update_look() -> void:
+	if _sight.player == null:
+		return
+	var dx := _sight.player.global_position.x - _body.global_position.x
+	if absf(dx) > TURN_BAND:
+		_look_direction = signf(dx)
 
 ## True from the telegraph's start to the swing's end.
 func is_attacking() -> bool:
@@ -113,12 +151,24 @@ func _select_state() -> int:
 	return APPROACH
 
 ## Closes in, and stops once the chosen move is already in range rather than
-## walking into the player's collider (the BruteShadowAI fix).
-func _approach_tick(_delta: float) -> void:
+## walking into the player's collider (the BruteShadowAI fix). A player
+## overhead and out of the move's reach is walked out from under, once, and
+## then waited out: a guardian is not a trampoline, and chasing an x that sits
+## on top of its own would only flip it left and right on the spot.
+func _approach_tick(delta: float) -> void:
+	var to_player := _sight.player.global_position - _body.global_position
 	if _next != null and _in_range(_next):
 		_current_direction = 0.0
-	else:
-		_current_direction = signf(_sight.player.global_position.x - _body.global_position.x)
+		_cancel_step_out()
+		return
+	if _is_overhead(to_player, _next):
+		_step_out(to_player, delta)
+		return
+	_cancel_step_out()
+	# Inside the band the last side is kept; sign() of an x that is ON the
+	# guardian is the flip-flop this avoids.
+	if absf(to_player.x) > TURN_BAND:
+		_current_direction = signf(to_player.x)
 
 func _telegraph_tick(delta: float) -> void:
 	_current_direction = 0.0
@@ -162,8 +212,34 @@ func _finish_attack() -> void:
 	_pick_next()
 	attack_finished.emit(attack)
 
+## A move reaches inside a box, not a radius: `attack_range` to the side and
+## `attack_height` up or down from its own feet.
 func _in_range(attack: GuardianAttack) -> bool:
-	return _body.global_position.distance_to(_sight.player.global_position) <= attack.attack_range
+	var to_player := _sight.player.global_position - _body.global_position
+	return absf(to_player.x) <= attack.attack_range and absf(to_player.y) <= attack.attack_height
+
+## Standing on the guardian rather than in front of it, and out of the reach
+## of the move it was about to make.
+func _is_overhead(to_player: Vector2, attack: GuardianAttack) -> bool:
+	if attack == null or absf(to_player.x) > OVERHEAD_BAND:
+		return false
+	return -to_player.y > attack.attack_height
+
+## Walks out from under for STEP_OUT_TIME, then stands its ground and watches:
+## walking back in would put it under the same feet again.
+func _step_out(to_player: Vector2, delta: float) -> void:
+	if is_zero_approx(_step_out_direction):
+		_step_out_direction = -signf(to_player.x) if absf(to_player.x) > 1.0 else _look_direction
+		_step_out_left = STEP_OUT_TIME
+	if _step_out_left > 0.0:
+		_step_out_left -= delta
+		_current_direction = _step_out_direction
+	else:
+		_current_direction = 0.0
+
+func _cancel_step_out() -> void:
+	_step_out_direction = 0.0
+	_step_out_left = 0.0
 
 ## The recall move when its turn has come or was asked for; otherwise a
 ## weighted random pick among the rest. A move with weight 0 is only ever scheduled.

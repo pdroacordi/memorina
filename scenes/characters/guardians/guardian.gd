@@ -116,7 +116,10 @@ func _ready() -> void:
 func _process_motion(delta: float) -> void:
 	if _fight.phase() == GuardianFight.Phase.PRESSURE:
 		_ai.tick(delta)
-		face_towards(_ai.direction)
+		# Where it LOOKS, not where it walks: a guardian backing out from under
+		# a player keeps watching him, and an x sitting on its own never makes
+		# it turn on the spot.
+		face_towards(_ai.facing_intent())
 		_locomotion.ground_update(delta, _ai.direction)
 		var attack := _ai.current_attack
 		if attack != null and _ai.is_swinging() and attack.lunge_speed > 0.0:
