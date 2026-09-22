@@ -32,6 +32,9 @@ var _recall_pending: bool = false
 var _relapse_failed: bool = false
 ## Seconds left to answer; negative while no window is counting.
 var _window_left: float = -1.0
+## What that window started at, so the fraction left can be reported without
+## anyone else having to remember the number they were told at the start.
+var _window_total: float = 0.0
 ## Seconds left in the relapse before pressure resumes.
 var _relapse_left: float = 0.0
 
@@ -94,12 +97,21 @@ func pressure_progress() -> float:
 func open_window(call_length: float = 0.0) -> void:
 	if _phase == Phase.LUCIDITY:
 		_window_left = maxf(call_length, 0.0) + window_duration()
+		_window_total = _window_left
 
 func is_window_open() -> bool:
 	return _phase == Phase.LUCIDITY and _window_left >= 0.0
 
 func window_left() -> float:
 	return maxf(_window_left, 0.0)
+
+## How much of the window is left, 0..1 - the one number a meter needs, and
+## the only clock there is. A HUD that counted its own down would be a second
+## truth, agreeing with this one only by coincidence.
+func window_fraction() -> float:
+	if _window_total <= 0.0:
+		return 0.0
+	return clampf(_window_left / _window_total, 0.0, 1.0)
 
 ## Advances the window and the relapse. True on the frame the window runs
 ## out, which the owner treats exactly like a wrong note; the relapse ending

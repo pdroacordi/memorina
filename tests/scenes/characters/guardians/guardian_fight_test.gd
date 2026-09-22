@@ -123,6 +123,28 @@ func test_the_window_is_the_calls_length_plus_the_slack() -> void:
 	assert_bool(_fight.tick(13.9)).is_false()
 	assert_bool(_fight.tick(0.2)).is_true()
 
+## The one clock. A meter asks for the fraction rather than counting its own
+## seconds down, so it cannot drift from the deadline it is drawing.
+func test_the_window_reports_the_fraction_it_has_left() -> void:
+	_fight.begin()
+	_hit_until_open()
+	_fight.open_window(4.0)
+	assert_float(_fight.window_fraction()).is_equal_approx(1.0, 0.001)
+	_fight.tick(4.0)
+	assert_float(_fight.window_fraction()).is_equal_approx(0.5, 0.001)
+	_fight.tick(3.9)
+	assert_float(_fight.window_fraction()).is_less(0.03)
+
+## Nothing is draining when nothing is open, and an expired window reads
+## empty rather than negative.
+func test_the_fraction_is_zero_with_no_window_open() -> void:
+	assert_float(_fight.window_fraction()).is_equal(0.0)
+	_fight.begin()
+	_hit_until_open()
+	_fight.open_window()
+	_fight.tick(5.0)
+	assert_float(_fight.window_fraction()).is_equal(0.0)
+
 func test_a_good_answer_relapses_until_the_last_cycle() -> void:
 	_fight.begin()
 	_hit_until_open()

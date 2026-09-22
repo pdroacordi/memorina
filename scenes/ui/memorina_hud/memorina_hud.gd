@@ -70,8 +70,6 @@ var _call_glyphs: NoteGlyphSet
 ## The window is open: the sheet shows the phrase to be answered.
 var _answering: bool = false
 var _drawn: bool = false
-var _window_total: float = 0.0
-var _window_left: float = 0.0
 ## How many notes the lesson under way will light; 0 when none is.
 var _lesson_notes: int = 0
 ## The bar's full width, read from the scene.
@@ -90,14 +88,6 @@ func _ready() -> void:
 			glyphs.validate()
 	_bar_width = _bar.size.x
 	hide()
-
-func _process(delta: float) -> void:
-	if not _answering or _window_total <= 0.0 or get_tree().paused:
-		return
-	_window_left = maxf(_window_left - delta, 0.0)
-	var fraction := _window_left / _window_total
-	_bar.size.x = roundf(_bar_width * fraction)
-	_bar.color = BAR_COLOR.lerp(BAR_LOW_COLOR, 1.0 - fraction)
 
 #############################################
 ##  I V O ' S   O W N   S H E E T          ##
@@ -202,14 +192,12 @@ func on_call_opened(song: Song, _revealed: int, glyph_set: Enums.GlyphSet, _cure
 ## Ivo's turn: the phrase comes to his sheet, dimmed, with the time to answer
 ## it and the key that takes the instrument out - in the encounter's slot,
 ## exactly where the guardian's own sheet just sang it.
-func on_call_window_opened(seconds: float) -> void:
+func on_call_window_opened() -> void:
 	_stop_linger()
 	_answering = true
 	_sheet.modulate = Color.WHITE
 	_sheet.show_notes(_call_notes, _call_glyphs)
 	_sheet.dim_all()
-	_window_total = maxf(seconds, 0.001)
-	_window_left = seconds
 	_bar.size.x = _bar_width
 	_bar.color = BAR_COLOR
 	_bar.show()
@@ -222,6 +210,15 @@ func on_call_window_opened(seconds: float) -> void:
 	modulate = Color.WHITE
 	show()
 	_show_in_slot()
+
+## The window's own clock, drawn as it is reported. The HUD counts nothing
+## down itself: it runs through a pause (the lesson's freeze) while the fight
+## does not, so a second countdown would promise time nobody has.
+func on_call_window_progress(fraction: float) -> void:
+	if not _answering:
+		return
+	_bar.size.x = roundf(_bar_width * fraction)
+	_bar.color = BAR_COLOR.lerp(BAR_LOW_COLOR, 1.0 - fraction)
 
 ## `count` notes of the answer are right so far: light them back up, the
 ## newest with a beat.
@@ -289,7 +286,6 @@ func _fade_frame_in() -> void:
 
 func _leave_answer() -> void:
 	_answering = false
-	_window_total = 0.0
 	_bar.hide()
 	_key.stop_blink()
 	_key.hide()

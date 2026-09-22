@@ -35,7 +35,10 @@ signal call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet, cure_do
 ## The guardian's call sounded the note at `index`.
 signal call_note_sounded(index: int)
 ## The call has been heard; Ivo has `seconds` to answer.
-signal call_window_opened(seconds: float)
+signal call_window_opened()
+## How much of that window is left, 0..1, for whatever is showing it. Relayed
+## every frame it is open: the fight owns the clock, the sheet only draws it.
+signal call_window_progress(fraction: float)
 ## `count` notes of the answer have landed right so far.
 signal call_progress(count: int)
 signal call_closed
@@ -565,11 +568,16 @@ func open_call(song: Song, revealed: int, cure_done: int, cure_total: int) -> vo
 func sound_call_note(index: int) -> void:
 	call_note_sounded.emit(index)
 
-## The call has been heard out; the guardian reports how long the answer may
-## take so the sheet can show the time draining.
-func open_call_window(seconds: float) -> void:
+## The call has been heard out: the turn passes to Ivo. How LONG he has is
+## not carried here - the fight owns that clock and reports it every frame
+## through call_window_progress, so nothing downstream runs a second one.
+func open_call_window() -> void:
 	_call_listening = false
-	call_window_opened.emit(seconds)
+	call_window_opened.emit()
+
+## The guardian's clock, passed straight through. Ivo keeps no copy of it.
+func update_call_window(fraction: float) -> void:
+	call_window_progress.emit(fraction)
 
 ## The window is over. A good answer ends the gesture quietly, the way a
 ## finished performance does - once its last note has rung out, so the whole

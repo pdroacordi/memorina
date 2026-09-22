@@ -268,4 +268,5 @@ someone's memory of the project is exactly what causes an accidental regression 
 | `Guardian`'s `Corruption` node / `corruption_lift_time` | retired 2026-09-22: the well of forgetting is the REGION's (`RegionMemory`), authored in the region scene so it outlives a room |
 | `downtown_contents.tscn`'s ad-hoc `GreyhushPatch` | retired 2026-09-22: became `HomeVillage/Memory/DowntownWell`, so it lifts with the region instead of outliving its restoration |
 | `Region.memory_baseline` | moved 2026-09-22 to `RegionMemory.authored` |
+| `Player.call_window_opened(seconds)` | retired 2026-09-22: the length was only ever feeding a second clock; `call_window_progress(fraction)` reports the fight's own |
 

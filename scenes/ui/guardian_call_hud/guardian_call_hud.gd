@@ -56,7 +56,7 @@ func on_call_note_sounded(index: int) -> void:
 	_sheet.pop(index)
 
 ## The phrase is over: the sheet goes, and Ivo's takes over.
-func on_call_window_opened(_seconds: float) -> void:
+func on_call_window_opened() -> void:
 	_slide(false)
 
 ## The guardian was interrupted before its phrase was heard out.

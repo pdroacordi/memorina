@@ -194,6 +194,10 @@ func _after_move(delta: float) -> void:
 	# The window ran out: the same failure as a wrong note, closed the same way.
 	if _fight.tick(delta):
 		_close_call(false)
+	elif _fight.is_window_open():
+		# The one clock, read where it is ticked. Nothing downstream keeps a
+		# copy of it, so the cadence is nobody's business but the meter's.
+		_player.update_call_window(_fight.window_fraction())
 	# Dangerous to touch only while it fights; a lucid or restored guardian can
 	# be walked up to. Not RESET-owned, so this write is the script's.
 	_contact.monitoring = _fight.phase() == GuardianFight.Phase.PRESSURE
@@ -421,7 +425,7 @@ func _breathe() -> void:
 
 func _on_call_finished() -> void:
 	_fight.open_window(_call.duration())
-	_player.open_call_window(_fight.window_left())
+	_player.open_call_window()
 
 ## `count` notes of the answer are right so far: the cure shows note by note.
 func _on_call_progress(count: int) -> void:
@@ -448,6 +452,7 @@ func _on_player_sequence_failed() -> void:
 
 func _close_call(success: bool) -> void:
 	_call.stop()
+	_player.update_call_window(0.0)
 	_player.close_call(success)
 	_ai.cooldown_scale = _fight.cooldown_scale()
 	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE
