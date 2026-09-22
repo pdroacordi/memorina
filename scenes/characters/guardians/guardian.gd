@@ -63,10 +63,17 @@ const RELAPSE_HOLD := 0.3
 ## in world pixels: far enough that the camera holding the pair puts them at
 ## opposite edges.
 @export var lucidity_leap_height: float = 340.0
-@export var lucidity_leap_distance: float = 300.0
+## How far apart the pair should end up: the camera holds their midpoint, so
+## this is the whole width between them - half a screen each side.
+@export var lucidity_leap_distance: float = 440.0
 ## Seconds before a leap that never lands (a pit, a missing floor) gives up
 ## and calls from where it is: the fight must not be able to stall.
 @export var lucidity_leap_timeout: float = 3.0
+## The beat between the blow that opens lucidity and the leap. A recall is
+## the usual opener, and Ivo is in the middle of the move he just remembered:
+## a guardian that leaps on that same frame jumps WITH him, which reads as a
+## coincidence rather than a consequence. It reels first, then breaks off.
+@export var lucidity_delay: float = 1.0
 ## Kept clear of the arena's edges when choosing where to come down. Wide,
 ## because the camera is clamped by those same edges: landing right against
 ## one puts the guardian half out of the frame for the whole call.
@@ -94,6 +101,8 @@ var _answered_notes: int = 0
 var _relapse_from: float = 0.0
 ## The camera and the lights are on this guardian.
 var _staged: bool = false
+## Counting down the beat between the opening blow and the leap.
+var _lucidity_wait: float = 0.0
 ## In the air on the way to lucidity: the AI is off and physics owns it.
 var _leaping: bool = false
 var _leap_left: float = 0.0
@@ -172,6 +181,11 @@ func _process_motion(delta: float) -> void:
 		velocity.y = minf(velocity.y + base_gravity() * delta, terminal_velocity)
 
 func _after_move(delta: float) -> void:
+	if _lucidity_wait > 0.0:
+		_lucidity_wait = maxf(_lucidity_wait - delta, 0.0)
+		if is_zero_approx(_lucidity_wait):
+			_lucidity_wait = 0.0
+			_begin_lucidity_leap()
 	if _leaping:
 		_leap_left -= delta
 		# velocity.y >= 0 keeps the take-off frame, where the feet have not
@@ -324,7 +338,7 @@ func _open_lucidity() -> void:
 	_tremble_time = 0.0
 	_answered_notes = 0
 	_breath = 0.0
-	_begin_lucidity_leap()
+	_lucidity_wait = lucidity_delay
 
 ## It breaks off and throws itself clear: up over the top of the frame and
 ## down at the far side, away from Ivo. The call waits for the landing.
@@ -341,22 +355,27 @@ func _begin_lucidity_leap() -> void:
 	_leap_left = lucidity_leap_timeout
 	leapt.emit(global_position)
 
-## Away from Ivo, on the side it already stands, unless the arena has run out
-## there - then it goes over his head to the other side, which is the more
-## cinematic answer anyway.
+## The far side, worked out rather than assumed. Each direction is measured
+## for the room the ARENA actually gives it, and the one that ends up further
+## from Ivo wins - so a guardian backed into a corner goes over his head
+## instead of shuffling a few pixels deeper into it. A tie (the usual case,
+## with space both ways) goes to the side it already stands on: no crossing
+## for its own sake.
 func _leap_target_x() -> float:
-	var side := signf(global_position.x - _player.global_position.x)
-	if is_zero_approx(side):
-		side = -float(facing)
-	var target := _player.global_position.x + side * lucidity_leap_distance
+	var here := _player.global_position.x
 	var arena := _arena_bounds()
-	if arena.size.x <= 0.0:
-		return target
-	var low := arena.position.x + lucidity_leap_margin
-	var high := arena.end.x - lucidity_leap_margin
-	if target < low or target > high:
-		target = _player.global_position.x - side * lucidity_leap_distance
-	return clampf(target, low, high) if low <= high else arena.get_center().x
+	var low := here - lucidity_leap_distance
+	var high := here + lucidity_leap_distance
+	if arena.size.x > 0.0:
+		var edge_low := arena.position.x + lucidity_leap_margin
+		var edge_high := arena.end.x - lucidity_leap_margin
+		if edge_low > edge_high:
+			return arena.get_center().x
+		low = clampf(low, edge_low, edge_high)
+		high = clampf(high, edge_low, edge_high)
+	if is_equal_approx(here - low, high - here):
+		return low if global_position.x <= here else high
+	return low if here - low > high - here else high
 
 ## What the camera is allowed to show is what the arena is, as far as a leap
 ## is concerned; an unbounded room answers an empty rect and the leap simply
@@ -432,6 +451,7 @@ func _close_call(success: bool) -> void:
 func _abandon_call() -> void:
 	if _fight == null or _player == null:
 		return
+	_lucidity_wait = 0.0
 	if _leaping:
 		_leaping = false
 		collision_mask = _leap_mask

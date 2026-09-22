@@ -8,23 +8,23 @@ class_name RecallPrompt extends Control
 ## on success, red on a miss, then gone. Says nothing in words: the aura and
 ## the slowed world are the signal, the key is the answer.
 ##
-## A memory that takes more than one press shows one key per press, side by
-## side, and the ring HOPS to the next one as each lands - so a double jump
-## remembered with both feet planted reads as the chain it is without a word
-## of prose. An observer of Player's signals, wired in game.tscn, that
-## decides nothing.
+## A memory that takes more than one press asks for them ONE AT A TIME, in
+## the same place: the key that landed reads as pressed for a beat, then the
+## next one is there asking, on its own fresh ring. Two keys side by side
+## looked like a chord to play at once, which is not what a double jump is.
+## An observer of Player's signals, wired in game.tscn, that decides nothing.
 
 const RING_COLOR := Color(0.98, 0.78, 0.35)
 const RING_LOW_COLOR := Color(0.95, 0.4, 0.3)
 const SUCCESS_COLOR := Color(0.6, 1.0, 0.65)
 const FAIL_COLOR := Color(1.0, 0.4, 0.35)
 const LINGER_TIME := 0.35
-## A key already given: still there, so the chain can be counted, but spent.
-const TAKEN_COLOR := Color(0.75, 0.7, 0.6, 0.65)
+## How long the key that was just pressed is held before the next one asks,
+## in REAL seconds: the world is slowed, and a beat measured in game time
+## would be five times longer than it reads.
+const STEP_HOLD := 0.18
 const KEY_SIZE := 32.0
-## Space between the keys of a chain.
-const KEY_GAP := 10.0
-## Margin around the keys, wide enough for the ring to clear them.
+## Margin around the key, wide enough for the ring to clear it.
 const RING_MARGIN := 12.0
 
 ## Ring geometry, in this Control's pixels: centred on the key it is drained
@@ -39,10 +39,12 @@ var _window_left: float = 0.0
 var _counting: bool = false
 var _linger_tween: Tween
 var _subject: Node2D
-## One per press the memory asks for, left to right; the first is the scene's.
+## One per press the memory asks for; only ONE is ever on screen. The first
+## is the scene's own.
 var _keys: Array[KeyGlyph] = []
-## Which of them the ring is drained around.
+## Which of them is being asked for.
 var _current: int = 0
+var _step_tween: Tween
 
 @onready var _ring: Control = $Ring
 @onready var _key: KeyGlyph = $Ring/Key
@@ -63,29 +65,34 @@ func _process(delta: float) -> void:
 
 func show_for(action: StringName, seconds: float, steps: int = 1) -> void:
 	_stop_linger()
-	_build_keys(maxi(steps, 1), action)
 	_current = 0
+	_build_keys(maxi(steps, 1), action)
 	_start_window(seconds)
 	modulate = Color.WHITE
 	_follow_subject()
 	show()
 	_ring.queue_redraw()
 
-## One press of a chain landed: it is spent, and the ring moves along to the
-## one still owed with whatever time that press bought.
+## One press of a chain landed: it reads as pressed where it stands, and a
+## beat later the next one is asking in the same place, on its own clock.
 func on_step_taken(_remaining: int, seconds: float) -> void:
-	if _current < _keys.size():
-		_keys[_current].stop_blink(KeyGlyph.Look.PRESSED)
-		_keys[_current].modulate = TAKEN_COLOR
+	var spent := _keys[_current]
+	spent.stop_blink(KeyGlyph.Look.PRESSED)
+	spent.modulate = SUCCESS_COLOR
 	_current = mini(_current + 1, _keys.size() - 1)
-	_keys[_current].modulate = Color.WHITE
-	_keys[_current].start_blink()
 	_start_window(seconds)
 	_ring.queue_redraw()
+	_stop_step()
+	# Real time, like everything else in a recall.
+	_step_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_ignore_time_scale(true)
+	_step_tween.tween_interval(STEP_HOLD)
+	_step_tween.tween_callback(_ask_current)
 
 ## The body remembered: the key reads as pressed and glows.
 func on_recalled(_skill: Enums.PlayerSkill) -> void:
 	_counting = false
+	_stop_step()
+	_keys[_current].show()
 	_keys[_current].stop_blink(KeyGlyph.Look.PRESSED)
 	_keys[_current].modulate = SUCCESS_COLOR
 	_ring.queue_redraw()
@@ -93,6 +100,8 @@ func on_recalled(_skill: Enums.PlayerSkill) -> void:
 
 func on_missed(_skill: Enums.PlayerSkill) -> void:
 	_counting = false
+	_stop_step()
+	_keys[_current].show()
 	_keys[_current].stop_blink()
 	_keys[_current].modulate = FAIL_COLOR
 	_ring.queue_redraw()
@@ -102,6 +111,7 @@ func on_missed(_skill: Enums.PlayerSkill) -> void:
 func on_recall_ended() -> void:
 	if _counting:
 		_counting = false
+		_stop_step()
 		for key: KeyGlyph in _keys:
 			key.stop_blink()
 		call_deferred("_hide_unless_lingering")
@@ -111,28 +121,37 @@ func _start_window(seconds: float) -> void:
 	_window_left = seconds
 	_counting = true
 
-## As many keys as the memory takes, laid out in a row the ring walks along.
-## The extras are made from the scene's own, so the art stays in one place.
+## As many keys as the memory takes, all in the same place; only the one
+## being asked for is shown. The extras are made from the scene's own, so the
+## art stays in one place.
 func _build_keys(count: int, action: StringName) -> void:
+	_stop_step()
 	while _keys.size() < count:
 		var extra := _key.duplicate() as KeyGlyph
 		_ring.add_child(extra)
 		_keys.append(extra)
+	_ring.size = Vector2(KEY_SIZE + RING_MARGIN * 2.0, KEY_SIZE + RING_MARGIN * 2.0)
 	for i: int in _keys.size():
 		var key := _keys[i]
-		key.visible = i < count
+		key.position = Vector2(RING_MARGIN, RING_MARGIN)
 		key.modulate = Color.WHITE
 		key.stop_blink()
+		key.hide()
 		if i < count:
 			key.show_action(action)
-	_keys[0].start_blink()
-	_layout_keys(count)
+	_ask_current()
 
-func _layout_keys(count: int) -> void:
-	var row := count * KEY_SIZE + (count - 1) * KEY_GAP
-	_ring.size = Vector2(row + RING_MARGIN * 2.0, KEY_SIZE + RING_MARGIN * 2.0)
-	for i: int in count:
-		_keys[i].position = Vector2(RING_MARGIN + i * (KEY_SIZE + KEY_GAP), RING_MARGIN)
+func _ask_current() -> void:
+	for i: int in _keys.size():
+		_keys[i].visible = i == _current
+	var key := _keys[_current]
+	key.modulate = Color.WHITE
+	key.start_blink()
+
+func _stop_step() -> void:
+	if _step_tween != null:
+		_step_tween.kill()
+		_step_tween = null
 
 ## Pinned above Ivo every frame. Turning world into screen is the camera's
 ## job for layout that must be settled (the sheet); a prompt that rides on a

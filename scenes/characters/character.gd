@@ -68,6 +68,11 @@ func apply_knockback(impulse: Vector2) -> void:
 
 	_knockback_timer = knockback_time
 
+## Lets go of a flinch early, for something that OUTRANKS being hit - a
+## remembered skill performing on the same press that bought it.
+func clear_knockback() -> void:
+	_knockback_timer = 0.0
+
 func apply_knockback_decay(delta: float) -> void:
 	velocity.x = lerpf(velocity.x, 0.0, 1.0 - exp(-knockback_damping * delta))
 

@@ -63,6 +63,9 @@ signal focused(subject_screen_position: Vector2)
 var _subject: Node2D
 ## The other body the frame holds, with how far toward it the frame sits.
 var _pair: Node2D
+## Whether the frame is CURRENTLY meant to hold a pair. Not the same as
+## `_pair`, which outlives a release until its tween has eased back.
+var _pairing: bool = false
 var _pair_blend: float = 0.0
 var _pair_tween: Tween
 var _shake_strength: float = 0.0
@@ -122,7 +125,7 @@ func follow(subject: Node2D) -> void:
 		_subject.facing_changed.connect(_on_subject_facing_changed)
 		# An edge-triggered signal delivers nothing on connect, so seed the
 		# current facing directly rather than waiting for the first turn.
-		offset.x = look_ahead_distance * _subject.facing
+		offset.x = _look_ahead_target()
 
 ## Eases in on the subject while the instrument is out. The tween runs through
 ## a paused tree, because the world is frozen while a performance plays and
@@ -144,10 +147,14 @@ func unfocus() -> void:
 ## top of it.
 func frame_pair(other: Node2D) -> void:
 	_pair = other
+	_pairing = true
 	_tween_pair(1.0)
+	_tween_look_ahead()
 
 func release_pair() -> void:
+	_pairing = false
 	_tween_pair(0.0)
+	_tween_look_ahead()
 
 ## A lesson began: the frame closes in on the pair, slowly, for as long as
 ## the track plays. Through the pause, like every lesson tween.
@@ -197,7 +204,20 @@ func _tween_zoom(target: Vector2, seconds: float = focus_duration,
 	_focus_tween.tween_property(self, "zoom", target, seconds)
 	_focus_tween.finished.connect(_check_focused)
 
-func _on_subject_facing_changed(facing: int) -> void:
+func _on_subject_facing_changed(_facing: int) -> void:
+	_tween_look_ahead()
+
+## While the frame holds a PAIR there is no look-ahead: the shot is composed
+## around two bodies, and 96 px of lead toward one of them is 96 px the other
+## loses at the far edge - measured, it put a guardian that had just leapt to
+## the far side of the arena 5 px OFF the screen while the camera sat exactly
+## on their midpoint.
+func _look_ahead_target() -> float:
+	if _pairing or not (_subject is Character):
+		return 0.0
+	return look_ahead_distance * float((_subject as Character).facing)
+
+func _tween_look_ahead() -> void:
 	if _look_ahead_tween:
 		_look_ahead_tween.kill()
 
@@ -209,7 +229,7 @@ func _on_subject_facing_changed(facing: int) -> void:
 		.set_trans(look_ahead_transition) \
 		.set_ease(look_ahead_ease)
 	_look_ahead_tween.tween_property(self, "offset:x",
-		look_ahead_distance * facing, look_ahead_duration)
+		_look_ahead_target(), look_ahead_duration)
 	_look_ahead_tween.finished.connect(_check_focused)
 
 ## Called as each tween lands; `focused` fires once both have. A look-ahead

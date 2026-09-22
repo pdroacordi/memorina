@@ -35,6 +35,10 @@ func check_landing(on_floor: bool) -> void:
 		hard_landed.emit(_body.global_position, _last_fall_speed)
 	_was_on_floor = on_floor
 
+## Cuts the recovery short for something that outranks a heavy landing.
+func cancel_recovery() -> void:
+	_recovery_timer = 0.0
+
 func is_recovering() -> bool:
 	return _recovery_timer > 0.0
 

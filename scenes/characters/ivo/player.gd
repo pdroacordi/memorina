@@ -69,6 +69,9 @@ const AIR_ATTACK_CONTEXTS: Array[StringName] = [CTX_JUMP, CTX_FALL, CTX_POGO]
 ## decelerating for a few frames, and the design asks for "parado", not for
 ## frame-perfect stillness.
 const STILL_SPEED_EPSILON := 1.0
+## How long after a recall opens a dodge with no direction held still counts
+## as an ESCAPE from whatever forced it, in seconds.
+const RECALL_ESCAPE_TIME := 0.6
 
 enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 
@@ -143,6 +146,11 @@ var _pending_sheathe: bool = false
 ## The shield's authored amount, restored when a recall ends.
 var _resting_shield_amount: float = 0.0
 var _glow_tween: Tween
+## Which way is AWAY from whatever forced the memory, and for how long that
+## still counts: a recalled dodge with no direction held goes clear of the
+## blow rather than into it.
+var _recall_escape_axis: float = 0.0
+var _recall_escape_left: float = 0.0
 ## A recall that must wait for Ivo to leave the ground, and how long it may
 ## wait: the attack that launches him is still in flight.
 var _pending_recall: AbilityRecallStats = null
@@ -231,6 +239,7 @@ func _process_motion(delta: float) -> void:
 	# and `delta` is game time.
 	_recall.tick(delta / maxf(Engine.time_scale, 0.001))
 	_tick_pending_recall(delta)
+	_recall_escape_left = maxf(_recall_escape_left - delta, 0.0)
 	# Checked every frame rather than hooked to one event, because everything
 	# that ends a performance - stepping off a ledge, being knocked back, ice
 	# melting underfoot - is simply "no longer standing still".
@@ -631,8 +640,10 @@ func _recall_cue_met(stats: AbilityRecallStats) -> bool:
 ## is standing at the instant the moment opens: a double jump caught with the
 ## feet planted is jump and then jump again.
 func _open_recall(stats: AbilityRecallStats) -> void:
+	var source := _pending_recall_source
 	if not _recall.arm(stats, is_on_floor()):
 		return
+	_remember_escape(source)
 	_glow_shield(1.0)
 	recall_started.emit(stats.action, stats.window, _recall.steps_left())
 
@@ -647,6 +658,12 @@ func _notify_recall(action: StringName) -> void:
 func _on_skill_recalled(stats: AbilityRecallStats) -> void:
 	SaveSystem.unlock_skill(stats.skill)
 	hurtbox.grant_invulnerability(stats.grace_time)
+	# The blow that forced the memory must not also swallow the move it
+	# bought. A knockback or a landing recovery still running would block
+	# _try_jump / _try_roll on the very frame the press is meant to perform,
+	# and the whole contract is that the press which remembers also acts.
+	clear_knockback()
+	_landing.cancel_recovery()
 	_end_recall()
 	skill_recalled.emit(stats.skill)
 
@@ -716,6 +733,29 @@ func _try_jump(on_floor: bool) -> void:
 	elif _double_jump.try_jump():
 		_wall_mobility.stop()
 
+## Where a roll goes when nothing is held: normally the way Ivo faces (the
+## component's own fallback, from a zero axis), but for the moment after a
+## recall, AWAY from the thing that forced it - he is facing the charge, and
+## a dodge into it is not a dodge.
+func _dodge_axis() -> float:
+	var axis := move_axis()
+	if not is_zero_approx(axis) or _recall_escape_left <= 0.0:
+		return axis
+	return _recall_escape_axis
+
+## `source` is the body throwing the move, remembered as a DIRECTION so the
+## dodge still knows which way to go once the source has moved on.
+func _remember_escape(source: Node2D) -> void:
+	_recall_escape_axis = 0.0
+	_recall_escape_left = 0.0
+	if not is_instance_valid(source):
+		return
+	var away := signf(global_position.x - source.global_position.x)
+	if is_zero_approx(away):
+		return
+	_recall_escape_axis = away
+	_recall_escape_left = RECALL_ESCAPE_TIME
+
 func _on_double_jumped(jump_position: Vector2) -> void:
 	_just_double_jumped = true
 	double_jumped.emit(jump_position)
@@ -725,7 +765,7 @@ func _try_roll(on_floor: bool) -> void:
 		return
 
 	_roll.enabled = _has_unlocked(Enums.PlayerSkill.ROLL)
-	_roll.try_roll(on_floor, move_axis(), facing)
+	_roll.try_roll(on_floor, _dodge_axis(), facing)
 
 #############################################
 ##  A T T A C K I N G                      ##
