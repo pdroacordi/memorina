@@ -29,13 +29,20 @@ var _profile: WaterProfile
 var _heights := PackedFloat32Array()
 var _velocities := PackedFloat32Array()
 var _holds := PackedFloat32Array()
+# Scratch buffers, reused every sub-step rather than allocated in it.
+var _targets := PackedFloat32Array()
+var _accelerations := PackedFloat32Array()
 
 func _init(column_count: int, profile: WaterProfile) -> void:
 	assert(column_count > 0, "A water surface needs at least one column")
 	_profile = profile
+	# One by one: packed arrays are values, so resizing a loop variable over
+	# them would resize a copy.
 	_heights.resize(column_count)
 	_velocities.resize(column_count)
 	_holds.resize(column_count)
+	_targets.resize(column_count)
+	_accelerations.resize(column_count)
 
 func column_count() -> int:
 	return _heights.size()
@@ -90,25 +97,31 @@ func swell(column: int, time: float) -> float:
 		+ 0.1 * sin(2.9 * k * x - 1.9 * w * time + 4.1)
 	)
 
+# The springs couple on each column's distance FROM THE SWELL, not on its raw
+# height: coupling raw heights smooths the swell's own curve away as if it were
+# a ripple, and the waterline would barely leave the flat.
 func _substep(dt: float, rates: PackedFloat32Array, swell_time: float) -> void:
 	var count := _heights.size()
-	var accelerations := PackedFloat32Array()
-	accelerations.resize(count)
 	for i in count:
+		_targets[i] = swell(i, swell_time) * (1.0 - _holds[i])
+	for i in count:
+		_accelerations[i] = 0.0
 		if rates[i] <= 0.0 or _holds[i] >= 1.0:
 			continue
-		var left := _heights[maxi(i - 1, 0)]
-		var right := _heights[mini(i + 1, count - 1)]
-		var target := swell(i, swell_time) * (1.0 - _holds[i])
+		var left := maxi(i - 1, 0)
+		var right := mini(i + 1, count - 1)
+		var offset := _heights[i] - _targets[i]
 		var damping := _profile.damping + HOLD_DAMPING * _holds[i]
-		accelerations[i] = (
-			_profile.stiffness * (target - _heights[i])
-			+ _profile.spread * (left + right - 2.0 * _heights[i])
+		_accelerations[i] = (
+			-_profile.stiffness * offset
+			+ _profile.spread * ((_heights[left] - _targets[left]) + (_heights[right] - _targets[right]) - 2.0 * offset)
 			- damping * _velocities[i]
 		)
 	for i in count:
 		if rates[i] <= 0.0 or _holds[i] >= 1.0:
 			continue
-		var local_dt := dt * rates[i]
-		_velocities[i] += accelerations[i] * local_dt
+		# Clamped: memory never exceeds 1, and a rate much above it would take
+		# the stiff springs past the integrator's stability limit.
+		var local_dt := dt * minf(rates[i], 1.0)
+		_velocities[i] += _accelerations[i] * local_dt
 		_heights[i] += _velocities[i] * local_dt

@@ -14,7 +14,7 @@ class_name IceFront extends RefCounted
 ## pulse contracted, and the timed crossing (design 02, Combinado 1: "começa a
 ## descongelar assim que criada") would not exist.
 ##
-## Three thresholds, read in order as a column sets:
+## Two thresholds, read in order as a column sets:
 ##   hold      - the surface stops answering (harden_at)
 ##   solidity  - the ice is drawn solid and carries weight (solid_at)
 ## so a front visibly calms the water before it looks like ice.
@@ -31,6 +31,10 @@ var _elapsed := 0.0
 
 func _init(column_count: int, column_width: int, profile: IceProfile) -> void:
 	assert(column_count > 0, "Ice needs at least one column")
+	assert(profile.harden_at < profile.solid_at,
+		"Ice must harden before it looks solid: harden_at < solid_at")
+	assert(profile.segment_width % column_width == 0,
+		"A collision segment must be a whole number of columns")
 	_profile = profile
 	_column_width = float(column_width)
 	_ice.resize(column_count)
@@ -86,18 +90,19 @@ func solidity(column: int) -> float:
 func is_solid(column: int) -> bool:
 	return _ice[column] >= _profile.solid_at
 
-## One byte per collision segment of `columns_per_segment` columns: 1 only while
+## One byte per collision segment (IceProfile.segment_width): 1 only while
 ## EVERY column in it is solid. Conservative on purpose - collision that reaches
 ## past the ice you can see reads as a bug; ice that drops you a pixel early
 ## reads as ice.
-func solid_segments(columns_per_segment: int) -> PackedByteArray:
-	var count := ceili(float(_ice.size()) / float(columns_per_segment))
+func solid_segments() -> PackedByteArray:
+	var per_segment := int(_profile.segment_width / _column_width)
+	var count := ceili(float(_ice.size()) / float(per_segment))
 	var out := PackedByteArray()
 	out.resize(count)
 	for segment in count:
 		var solid := true
-		var start := segment * columns_per_segment
-		for i in range(start, mini(start + columns_per_segment, _ice.size())):
+		var start := segment * per_segment
+		for i in range(start, mini(start + per_segment, _ice.size())):
 			if not is_solid(i):
 				solid = false
 				break
@@ -105,18 +110,32 @@ func solid_segments(columns_per_segment: int) -> PackedByteArray:
 	return out
 
 func _grow_fronts(delta: float, rates: PackedFloat32Array) -> void:
-	# Each front moves at the memory of the column it is crossing, so a dead
-	# column stops it exactly at its edge.
-	var step := _profile.grow_speed / _column_width * delta
-	var crossing_left := int(ceil(_left)) - 1
-	if crossing_left >= 0:
-		_left = maxf(_left - step * rates[crossing_left], 0.0)
-	var crossing_right := int(floor(_right)) + 1
-	if crossing_right < _ice.size():
-		_right = minf(_right + step * rates[crossing_right], float(_ice.size() - 1))
+	var budget := _profile.grow_speed / _column_width * delta
+	_left = _advance_front(_left, -1, budget, rates)
+	_right = _advance_front(_right, 1, budget, rates)
 	for i in range(int(ceil(_left)), int(floor(_right)) + 1):
 		if _thawed[i] == 0:
 			_reached[i] = 1
+
+## Spends `budget` columns-at-full-memory of travel one column at a time, each
+## at the memory of the column being crossed. Column by column so a fast front
+## or a long frame can never leap a column nothing remembers.
+func _advance_front(position: float, direction: int, budget: float, rates: PackedFloat32Array) -> float:
+	var remaining := budget
+	while remaining > 0.0:
+		var crossing := int(ceil(position)) - 1 if direction < 0 else int(floor(position)) + 1
+		if crossing < 0 or crossing >= _ice.size():
+			break
+		var rate := rates[crossing]
+		if rate <= 0.0:
+			break
+		var distance := absf(float(crossing) - position)
+		var reach := remaining * rate
+		if reach < distance:
+			return position + float(direction) * reach
+		position = float(crossing)
+		remaining -= distance / rate
+	return position
 
 func _mark_thawed() -> void:
 	var reach := (_elapsed - _profile.thaw_delay) * _profile.thaw_speed / _column_width

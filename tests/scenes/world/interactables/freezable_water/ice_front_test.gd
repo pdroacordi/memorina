@@ -18,6 +18,7 @@ func _profile(thaw_delay: float = 1.5) -> IceProfile:
 	profile.thaw_delay = thaw_delay
 	profile.thaw_speed = 48.0
 	profile.melt_time = 0.5
+	profile.segment_width = 8
 	return profile
 
 func _ice(profile: IceProfile = null) -> IceFront:
@@ -130,7 +131,7 @@ func test_segments_are_conservative() -> void:
 	ice.freeze_from(ORIGIN)
 	for step in 40:
 		_run(ice, _rates(1.0), 0.05)
-		var segments := ice.solid_segments(4)
+		var segments := ice.solid_segments()
 		for s in segments.size():
 			if segments[s] == 1:
 				for i in range(s * 4, mini(s * 4 + 4, COLUMNS)):
@@ -142,8 +143,8 @@ func test_a_segment_with_one_soft_column_does_not_carry() -> void:
 	rates[10] = 0.0
 	ice.freeze_from(ORIGIN)
 	_run(ice, rates, 1.0)
-	assert_int(ice.solid_segments(4)[2]).is_equal(0)
-	assert_int(ice.solid_segments(4)[4]).is_equal(1)
+	assert_int(ice.solid_segments()[2]).is_equal(0)
+	assert_int(ice.solid_segments()[4]).is_equal(1)
 
 func test_refreezing_while_thawing_starts_over_and_keeps_the_ice() -> void:
 	var ice := _ice()
@@ -161,3 +162,33 @@ func test_a_song_from_the_bank_freezes_from_the_nearest_edge() -> void:
 	ice.freeze_from(-15)
 	_run(ice, _rates(1.0), 0.1)
 	assert_float(ice.solidity(0)).is_greater(ice.solidity(10))
+
+## Every dead column stops the front, whichever index it sits on and however
+## long the frame (docs/knowledge/bugs/ice-front-leaps-dead-columns.md).
+func test_no_dead_column_is_ever_leapt() -> void:
+	for frame_time: float in [1.0 / 60.0, 1.0 / 30.0, 0.1]:
+		for dead in range(ORIGIN + 1, COLUMNS):
+			var ice := _ice(_profile(100.0))
+			var rates := _rates(1.0)
+			rates[dead] = 0.0
+			ice.freeze_from(ORIGIN)
+			for step in roundi(2.0 / frame_time):
+				ice.advance(frame_time, rates)
+			for i in range(dead, COLUMNS):
+				assert_float(ice.solidity(i)).is_equal(0.0)
+
+func test_each_side_grows_at_its_own_memory() -> void:
+	var ice := _ice(_profile(100.0))
+	var rates := _rates(1.0)
+	for i in ORIGIN:
+		rates[i] = 0.25
+	ice.freeze_from(ORIGIN)
+	_run(ice, rates, 0.12)
+	var left := 0
+	var right := 0
+	for k in range(1, ORIGIN):
+		if ice.solidity(ORIGIN - k) > 0.0:
+			left += 1
+		if ice.solidity(ORIGIN + k) > 0.0:
+			right += 1
+	assert_int(left).is_less(right)

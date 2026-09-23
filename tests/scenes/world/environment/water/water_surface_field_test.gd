@@ -94,19 +94,37 @@ func test_the_swell_does_nothing_where_nothing_is_remembered() -> void:
 	_run(field, _rates(0.0), 3.0)
 	assert_float(_max_abs(field)).is_equal(0.0)
 
-func test_the_swell_moves_living_water() -> void:
-	var field := _field(2.0)
-	_run(field, _rates(1.0), 3.0)
-	assert_float(_max_abs(field)).is_greater(0.3)
+## At the default profile the waterline must actually carry the swell, not a
+## smoothed-away fraction of it (docs/knowledge/bugs/water-swell-flattened-by-spread.md).
+func test_the_swell_reaches_its_amplitude_at_the_default_profile() -> void:
+	var field := _field(1.0)
+	_run(field, _rates(1.0), 5.0)
+	var peak := 0.0
+	for frame in 180:
+		field.step(FRAME, _rates(1.0), 5.0 + frame * FRAME)
+		peak = maxf(peak, _max_abs(field))
+	assert_float(peak).is_greater(0.85)
 
 ## Half the pool ran inside a pulse and half did not. Once all of it is alive
-## again the scar must heal - analytic per-column waves never would.
+## again the scar must heal back to the water that was never forgotten -
+## analytic per-column waves never would.
 func test_a_scar_heals_once_everything_is_alive() -> void:
-	var field := _field()
+	var scarred := _field(1.0)
+	var control := _field(1.0)
+	var half := _rates(1.0)
+	for i in COLUMNS / 2:
+		half[i] = 0.0
+	var t := 0.0
+	for frame in 180:
+		scarred.step(FRAME, half, t)
+		control.step(FRAME, _rates(1.0), t)
+		t += FRAME
+	for frame in 1200:
+		scarred.step(FRAME, _rates(1.0), t)
+		control.step(FRAME, _rates(1.0), t)
+		t += FRAME
 	for i in COLUMNS:
-		field.disturb(i, 3.0 if i % 2 == 0 else 0.0)
-	_run(field, _rates(1.0), 20.0)
-	assert_float(_max_abs(field)).is_less(0.05)
+		assert_float(scarred.height(i)).is_equal_approx(control.height(i), 0.05)
 
 func test_a_held_column_ignores_a_splash() -> void:
 	var field := _field()

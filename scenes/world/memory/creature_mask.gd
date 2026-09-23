@@ -66,6 +66,11 @@ static func _set_layer(node: Node, layer: int) -> void:
 	for child: Node in node.get_children():
 		_set_layer(child, layer)
 
+# Published on entering rather than in _ready, which runs once: a pass removed
+# and re-added would otherwise leave the global cleared by _exit_tree.
+func _enter_tree() -> void:
+	RenderingServer.global_shader_parameter_set(GLOBAL, get_texture())
+
 func _ready() -> void:
 	# Order matters: world_2d has to be shared before the first draw, or this
 	# viewport spends a frame rendering its own empty world.
@@ -77,7 +82,6 @@ func _ready() -> void:
 	# defaults to LINEAR on its own, so every creature drawn through this pass
 	# came out bilinear-blurred while the world stayed crisp. Mirror the root.
 	canvas_item_default_texture_filter = get_tree().root.canvas_item_default_texture_filter
-	RenderingServer.global_shader_parameter_set(GLOBAL, get_texture())
 
 func _exit_tree() -> void:
 	RenderingServer.global_shader_parameter_set(GLOBAL, null)
