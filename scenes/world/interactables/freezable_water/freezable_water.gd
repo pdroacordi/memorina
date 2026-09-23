@@ -1,32 +1,42 @@
 class_name FreezableWater extends Node2D
 
-## Placeholder water that FREEZE turns into standable ice. The first world
-## object to answer a song, and the template for every later one: it composes
-## a SongReceiver and reacts, and the song system knows nothing about it.
+## Water that FREEZE lays a crossing of ice over. The first world object to
+## answer a song, and still the template for every later one: it composes a
+## SongReceiver and reacts, and the song system knows nothing about it.
 ##
-## It also shows the other half of the greyhush. Its surface bobs on a
-## MemoryClock, so in a dead area the water is not merely grey - it is
-## geometrically flat and still, which is what
-## docs/design/03_mundo_e_ambiente.md section 6.2 asks for.
+## Glue only. The water is a WaterBody, the ice's life is an IceFront, its weight
+## is an IceCollider; this node starts the front where the pulse was lit and,
+## each physics frame, carries the front's state to the other two. Being the
+## parent, it runs before the water it holds, so the water steps and draws with
+## this frame's ice.
 ##
-## Out of scope here, and deliberately: the thaw front that retreats from
-## where the player stood, hardening before it looks solid, and reflections.
-## Freezing is on while the light is on, off when it leaves.
+## Design 03 §6.3-6.4: the ice grows only over living water (the pulse that
+## carried the song is what wakes it), stills the surface before it looks
+## solid, and thaws on its own clock from where the song was played - so it
+## melts behind the player, who must commit forward.
 
-@onready var _ice: CanvasItem = $Ice
-@onready var _ice_shape: CollisionShape2D = $IceBody/CollisionShape2D
+@export var ice: IceProfile
+
+var _front: IceFront
+
+@onready var _water: WaterBody = $Water
+@onready var _collider: IceCollider = $IceCollider
 
 func _ready() -> void:
-	_set_frozen(false)
+	assert(ice != null, "%s needs an IceProfile" % name)
+	_front = IceFront.new(_water.column_count(), _water.profile.column_width, ice)
+	_water.set_ice_thickness(ice.thickness)
+	var left := _water.global_position.x - _water.size.x * 0.5
+	_collider.build(left, _water.size.x, _water.surface_rest_y(), ice.segment_width, ice.thickness)
 
-func _on_song_entered(_song: Song) -> void:
-	_set_frozen(true)
+func _physics_process(delta: float) -> void:
+	if not _front.is_active():
+		return
+	_front.advance(delta, _water.column_rates())
+	for column in _front.column_count():
+		_water.set_hold(column, _front.hold(column))
+		_water.set_solidity(column, _front.solidity(column))
+	_collider.set_solid(_front.solid_segments())
 
-func _on_song_left(_song: Song) -> void:
-	_set_frozen(false)
-
-func _set_frozen(frozen: bool) -> void:
-	_ice.visible = frozen
-	# Deferred because these arrive during the physics flush, when the space is
-	# locked against shape changes.
-	_ice_shape.set_deferred("disabled", not frozen)
+func _on_song_entered(_song: Song, origin: Vector2) -> void:
+	_front.freeze_from(_water.column_of(origin.x))

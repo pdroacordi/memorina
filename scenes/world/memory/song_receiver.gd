@@ -10,7 +10,10 @@ class_name SongReceiver extends Area2D
 ## left me" needs no cooperation from the pulse - and a pulse that shrinks
 ## past this receiver reports the same way.
 
-signal song_entered(song: Song)
+## `origin` is where the pulse was lit - the centre of its song area - so an
+## effect can grow from the point the song was played (ice spreading out from
+## the player, design 03 §6.4).
+signal song_entered(song: Song, origin: Vector2)
 signal song_left(song: Song)
 
 ## The one song this object answers to. Ignoring every other song is what lets
@@ -24,7 +27,7 @@ func _ready() -> void:
 func _on_area_entered(area: Area2D) -> void:
 	var song := _matching_song(area)
 	if song:
-		song_entered.emit(song)
+		song_entered.emit(song, area.global_position)
 
 func _on_area_exited(area: Area2D) -> void:
 	var song := _matching_song(area)
