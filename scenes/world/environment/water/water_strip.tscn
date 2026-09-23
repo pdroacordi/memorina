@@ -16,6 +16,8 @@ profile = ExtResource("4_profile")
 look = ExtResource("5_look")
 
 [node name="Surface" type="Node2D" parent="."]
+z_index = 50
+z_as_relative = false
 material = SubResource("ShaderMaterial_surface")
 script = ExtResource("2_quad")
 

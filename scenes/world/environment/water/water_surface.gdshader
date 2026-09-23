@@ -126,13 +126,15 @@ void fragment() {
 	colour = mix(colour, reflected * tint.rgb, gate);
 
 	// Caustics: coarse vertical bands re-rolled on the water's clock, gone
-	// where the water is forgotten.
+	// where the water is forgotten. The band's own falloff is art (texel grid);
+	// the forgetting is memory (game-pixel grid).
 	if (depth < caustic_depth) {
 		float band = floor(texel.x / float(caustic_band_px));
 		float roll = floor(water_time * caustic_rate + hash11(band * 3.7) * 8.0);
 		float lit = hash11(band * 7.13 + roll * 17.31) < caustic_density ? 1.0 : 0.0;
-		float amount = lit * (1.0 - depth / caustic_depth) * remembered;
-		if (amount > BAYER[wd_bayer_index(texel)]) {
+		bool shown = lit * (1.0 - depth / caustic_depth) > BAYER[wd_bayer_index(texel)]
+			&& remembered > BAYER[wd_bayer_index(game_px)];
+		if (shown) {
 			colour = mix(colour, top_line_color.rgb, caustic_strength);
 		}
 	}

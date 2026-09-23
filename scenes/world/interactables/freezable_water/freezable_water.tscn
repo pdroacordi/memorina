@@ -16,6 +16,7 @@ ice = ExtResource("5_ice")
 [node name="Water" parent="." instance=ExtResource("2_pool")]
 position = Vector2(0, -4)
 size = Vector2i(192, 56)
+mirror_axis_offset = -4
 
 [node name="IceCollider" type="StaticBody2D" parent="."]
 collision_layer = 1

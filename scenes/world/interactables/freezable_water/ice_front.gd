@@ -28,6 +28,8 @@ var _origin := -1
 var _left := 0.0
 var _right := 0.0
 var _elapsed := 0.0
+# Reused by solid_segments() every physics frame.
+var _segments := PackedByteArray()
 
 func _init(column_count: int, column_width: int, profile: IceProfile) -> void:
 	assert(column_count > 0, "Ice needs at least one column")
@@ -97,8 +99,7 @@ func is_solid(column: int) -> bool:
 func solid_segments() -> PackedByteArray:
 	var per_segment := int(_profile.segment_width / _column_width)
 	var count := ceili(float(_ice.size()) / float(per_segment))
-	var out := PackedByteArray()
-	out.resize(count)
+	_segments.resize(count)
 	for segment in count:
 		var solid := true
 		var start := segment * per_segment
@@ -106,8 +107,8 @@ func solid_segments() -> PackedByteArray:
 			if not is_solid(i):
 				solid = false
 				break
-		out[segment] = 1 if solid else 0
-	return out
+		_segments[segment] = 1 if solid else 0
+	return _segments
 
 func _grow_fronts(delta: float, rates: PackedFloat32Array) -> void:
 	var budget := _profile.grow_speed / _column_width * delta

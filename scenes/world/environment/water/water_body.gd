@@ -84,11 +84,14 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint() or _field == null:
 		return
-	if _notifier and not _notifier.is_on_screen():
-		return
+	# The rates are read even off screen: FREEZE's ice is never gated, and a
+	# pulse can reach a pool before the camera does - ice grown on rates read
+	# when it was last seen would ignore the memory it is spreading over.
 	_frames_until_rates -= 1
 	if _frames_until_rates <= 0:
 		_refresh_rates()
+	if _notifier and not _notifier.is_on_screen():
+		return
 	var fastest := 0.0
 	for rate: float in _rates:
 		fastest = maxf(fastest, rate)
@@ -212,5 +215,7 @@ func _layout() -> void:
 	for child: Node in get_children():
 		if child is WaterQuad:
 			(child as WaterQuad).rect = rect
-		elif child is VisibleOnScreenNotifier2D:
+		elif child is VisibleOnScreenNotifier2D and (child as VisibleOnScreenNotifier2D).rect != rect:
+			# Only on change: in the editor an unconditional write resaves every
+			# level that places water.
 			(child as VisibleOnScreenNotifier2D).rect = rect
