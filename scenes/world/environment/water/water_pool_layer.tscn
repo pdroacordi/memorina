@@ -9,4 +9,3 @@ tile_set = ExtResource("2_tiles")
 script = ExtResource("1_layer")
 body_scene = ExtResource("3_pool")
 surface_inset = 8
-mirror_axis_offset = -4

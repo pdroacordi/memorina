@@ -24,7 +24,7 @@ uniform vec4 top_line_color : source_color = vec4(0.78, 0.88, 0.9, 1.0);
 uniform vec4 foam_color : source_color = vec4(0.94, 0.97, 0.98, 1.0);
 
 // World pixels from the rest line to the mirror axis; negative is ABOVE the
-// water. A strip in front of a bank mirrors about the bank's top, not its own.
+// water: water below a bank mirrors about the bank's top, not its own.
 uniform float mirror_axis_offset = 0.0;
 uniform int band_height = 2;
 uniform float band_shift_max = 1.0;

@@ -2,8 +2,8 @@ class_name WaterLook extends Resource
 
 ## How a body of water LOOKS: its palette, its reflection and the texture of
 ## its light. How it moves is a WaterProfile. A clear pond and the dark
-## foreground strip that mirrors the whole scene are two of these .tres files
-## over the same shader (Strategy). See docs/design/03_mundo_e_ambiente.md §6.6:
+## lake in front of the land are two of these .tres files (Strategy); the pool
+## and the lake have a shader each, and only the lake reads the "Lake" group. See docs/design/03_mundo_e_ambiente.md §6.6:
 ## the water must look hand-drawn even though it is computed, so every colour
 ## the water makes itself comes from a LUT painted in the scene's palette, and
 ## every gradient is a Bayer stipple between two of its entries.

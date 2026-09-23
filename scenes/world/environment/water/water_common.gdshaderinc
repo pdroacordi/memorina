@@ -13,7 +13,8 @@
 #include "res://scenes/world/memory/dither_common.gdshaderinc"
 
 // One texel per column (FORMAT_RGBAF, written by WaterSurfaceTexture):
-// r = height above the rest line in world pixels, g = foam 0..1,
+// r = height above the rest line in world pixels (a lake has no height and
+// keeps the column's own clock there instead), g = foam 0..1,
 // b = the floor, world pixels below the rest line,
 // a = ice solidity 0..1 (1 = solid and walkable).
 uniform sampler2D surface_data : filter_nearest, repeat_disable;

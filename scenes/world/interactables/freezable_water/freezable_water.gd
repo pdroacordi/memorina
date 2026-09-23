@@ -28,7 +28,7 @@ var _front: IceFront
 
 func _ready() -> void:
 	assert(ice != null, "%s needs an IceProfile" % name)
-	_front = IceFront.new(_water.column_count(), _water.profile.column_width, ice)
+	_front = IceFront.new(_water.column_count(), _water.column_width(), ice)
 	_water.set_ice_thickness(ice.thickness)
 	var left := _water.global_position.x - _water.size.x * 0.5
 	_collider.build(left, _water.size.x, _water.surface_rest_y(), ice.segment_width, ice.thickness)

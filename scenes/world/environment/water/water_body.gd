@@ -1,19 +1,24 @@
 @tool
 class_name WaterBody extends Node2D
 
-## A body of water: the one node a level places and the one other systems talk
-## to. It composes whatever it finds under it - a Surface always, a Veil and a
-## Volume when the water is one bodies can enter - so a decorative strip and a
-## pool are the same script with different children, never a flag.
+## A body of water: the one node other systems talk to (a level paints it with
+## a WaterLayer, which places these). It composes whatever it finds under it -
+## a Surface always; a Veil, a Volume and a Hazard when the water is one bodies
+## can fall into - so what a body of water does is decided by its scene.
 ##
-## Every frame it reads the memory field over each column, steps the surface
-## (WaterSurfaceField), and hands the result to the shaders as a 1xN texture.
+## It reads the memory field over each column (every few frames), steps the
+## surface (WaterSurfaceField) and hands the result to the shaders as a 1xN
+## texture.
 ##
 ## TWO PROJECTIONS. A pool in a pit is seen EDGE-ON: its waterline is a profile
 ## that waves and splashes, so it has a `profile` and simulates one. A lake in
 ## front of the land is seen FROM ABOVE: its top edge is the far shore and
-## stays straight, and its waves are drawn by the shader on the body's clock.
-## It has no `profile` and simulates nothing - the widest water is the cheapest.
+## stays straight, and its waves are drawn by the shader. It has no `profile`
+## and simulates nothing - the widest water is the cheapest - but each of its
+## columns keeps its own clock, running at the memory over it, because a lake
+## runs the width of a room and one clock for all of it would keep the grey end
+## moving at the pace of the remembered one.
+##
 ## Motion is TIME: this node is pausable, so a performance or a lesson stops
 ## the water with the world. The reflection is MEMORY: the shader reads it from
 ## the season mask, which runs through a pause - so a lesson that returns colour
@@ -29,8 +34,9 @@ const HEADROOM := 12
 const RATE_REFRESH_FRAMES := 3
 ## Columns between two samples of the field; those between are interpolated.
 const RATE_STRIDE := 4
-## Column width of a body with no profile (a lake): it only reads memory.
-const PLANE_COLUMN_WIDTH := 4
+## Column width of a body with no profile (a lake): it only reads memory and
+## keeps a clock per column, so one painted cell (WaterLayer) is one column.
+const PLANE_COLUMN_WIDTH := 16
 
 @export var size := Vector2i(192, 24):
 	set(value):
@@ -56,6 +62,8 @@ var _floors := PackedFloat32Array()
 var _floor_spans := PackedFloat32Array()
 var _floor_span := 0.0
 var _time := 0.0
+# A lake's clock per column (see TWO PROJECTIONS); empty for a pool.
+var _clocks := PackedFloat32Array()
 var _frames_until_rates := 0
 var _memory: MemoryField
 var _materials: Array[ShaderMaterial] = []
@@ -80,6 +88,8 @@ func _ready() -> void:
 	var columns := ceili(float(size.x) / float(column_width()))
 	if profile:
 		_field = WaterSurfaceField.new(columns, profile)
+	else:
+		_clocks.resize(columns)
 	_texture = WaterSurfaceTexture.new(columns)
 	_rates.resize(columns)
 	_solidity.resize(columns)
@@ -112,13 +122,14 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint() or _texture == null:
 		return
-	# The rates are read even off screen: FREEZE's ice is never gated, and a
-	# pulse can reach a pool before the camera does - ice grown on rates read
+	var on_screen := _notifier == null or _notifier.is_on_screen()
+	# A pool's rates are read even off screen: FREEZE's ice is never gated, and
+	# a pulse can reach a pool before the camera does - ice grown on rates read
 	# when it was last seen would ignore the memory it is spreading over.
 	_frames_until_rates -= 1
-	if _frames_until_rates <= 0:
+	if _frames_until_rates <= 0 and (on_screen or _field != null):
 		_refresh_rates()
-	if _notifier and not _notifier.is_on_screen():
+	if not on_screen:
 		return
 	var fastest := 0.0
 	for rate: float in _rates:
@@ -128,9 +139,11 @@ func _physics_process(delta: float) -> void:
 	_time += delta * fastest
 	_set_uniform(&"water_time", _time)
 	if _field == null:
-		return
-	_wade(delta)
-	_field.step(delta, _rates, _time)
+		for column in _clocks.size():
+			_clocks[column] += delta * _rates[column]
+	else:
+		_wade(delta)
+		_field.step(delta, _rates, _time)
 	_upload()
 
 ## The world y of the waterline at rest. The single source every part of the
@@ -229,8 +242,7 @@ func _refresh_rates() -> void:
 		column += RATE_STRIDE
 
 func _upload() -> void:
-	_texture.write(_field, _floors, _solidity)
-	_set_uniform(&"water_time", _time)
+	_texture.write(_field, _clocks, _floors, _solidity)
 
 func _push_look() -> void:
 	var common := {
