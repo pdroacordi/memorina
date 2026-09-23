@@ -61,7 +61,7 @@ void fragment() {
 	int column = wc_column(centre.x);
 	vec4 data = wc_data(column);
 	float surface = wc_surface(data);
-	if (texel.y < surface) {
+	if (texel.y < surface || texel.y >= wc_floor(data)) {
 		discard;
 	}
 	float depth = texel.y - surface;

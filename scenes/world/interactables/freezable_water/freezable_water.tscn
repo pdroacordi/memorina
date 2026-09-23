@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/world/interactables/freezable_water/freezable_water.gd" id="1_freeze"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_pool.tscn" id="2_pool"]
@@ -6,15 +6,11 @@
 [ext_resource type="Script" path="res://scenes/world/memory/song_receiver.gd" id="4_receiver"]
 [ext_resource type="Resource" path="res://resources/world/water/frost_ice.tres" id="5_ice"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_recv"]
-size = Vector2(192, 60)
-
 [node name="FreezableWater" type="Node2D"]
 script = ExtResource("1_freeze")
 ice = ExtResource("5_ice")
 
 [node name="Water" parent="." instance=ExtResource("2_pool")]
-position = Vector2(0, -4)
 size = Vector2i(192, 56)
 mirror_axis_offset = -4
 
@@ -30,7 +26,5 @@ script = ExtResource("4_receiver")
 reacts_to = 0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SongReceiver"]
-position = Vector2(0, 24)
-shape = SubResource("RectangleShape2D_recv")
 
 [connection signal="song_entered" from="SongReceiver" to="." method="_on_song_entered"]

@@ -14,6 +14,7 @@
 
 // One texel per column (FORMAT_RGBAF, written by WaterSurfaceTexture):
 // r = height above the rest line in world pixels, g = foam 0..1,
+// b = the floor, world pixels below the rest line,
 // a = ice solidity 0..1 (1 = solid and walkable).
 uniform sampler2D surface_data : filter_nearest, repeat_disable;
 // World y of the rest waterline, and world x of the body's left edge.
@@ -39,6 +40,12 @@ vec4 wc_data(int column) {
 // the waterline steps a whole pixel at a time - it never slides.
 float wc_surface(vec4 data) {
 	return rest_y - round(data.r);
+}
+
+// The first row below a column's water: a painted basin may be stepped, and
+// under its floor is the bank, never water.
+float wc_floor(vec4 data) {
+	return rest_y + data.b;
 }
 
 // Which entry of an N-entry ramp a depth falls in: the depth gradient

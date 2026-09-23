@@ -24,7 +24,7 @@ void fragment() {
 	vec2 texel = floor(world_pos);
 	vec4 data = wc_data(wc_column(texel.x + 0.5));
 	float surface = wc_surface(data);
-	if (texel.y < surface) {
+	if (texel.y < surface || texel.y >= wc_floor(data)) {
 		COLOR = vec4(1.0);
 	} else {
 		COLOR = vec4(wc_transmit(texel.y - surface, texel), 1.0);

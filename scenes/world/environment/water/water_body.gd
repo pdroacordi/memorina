@@ -50,6 +50,11 @@ var _field: WaterSurfaceField
 var _texture: WaterSurfaceTexture
 var _rates := PackedFloat32Array()
 var _solidity := PackedFloat32Array()
+var _floors := PackedFloat32Array()
+# A stepped floor handed in before _ready (see set_floor): depth in world
+# pixels below the rest line, one per span of _floor_span px from the left.
+var _floor_spans := PackedFloat32Array()
+var _floor_span := 0.0
 var _time := 0.0
 var _frames_until_rates := 0
 var _memory: MemoryField
@@ -76,6 +81,7 @@ func _ready() -> void:
 	_texture = WaterSurfaceTexture.new(columns)
 	_rates.resize(columns)
 	_solidity.resize(columns)
+	_build_floors(columns)
 	_memory = MemoryField.find_in(self)
 	for quad: WaterQuad in [_surface, _veil]:
 		if quad:
@@ -153,6 +159,15 @@ func splash(world_x: float, speed: float) -> void:
 		var x := float(k) / width
 		_field.disturb(centre + k, -depth * (1.0 - 2.0 * x * x) * exp(-x * x))
 
+## Gives the body a stepped floor instead of a flat one at `size.y`: `depths`
+## is the water's depth in world pixels below the rest line for each span of
+## `span` pixels from the left edge. A painted basin (WaterLayer) calls it
+## before the body enters the tree; the shaders clip the water to it.
+func set_floor(span: float, depths: PackedFloat32Array) -> void:
+	assert(_texture == null, "set_floor() must come before %s enters the tree" % name)
+	_floor_span = span
+	_floor_spans = depths
+
 ## How much of a column ice has taken, 0..1 (see WaterSurfaceField.set_hold).
 func set_hold(column: int, hold: float) -> void:
 	assert(_field != null, "%s has no surface to hold: it has no WaterProfile" % name)
@@ -170,6 +185,16 @@ func _wade(delta: float) -> void:
 		return
 	for body: Vector2 in _volume.disturbances():
 		_field.disturb(column_of(body.x), -body.y * profile.wake_per_speed * delta)
+
+func _build_floors(columns: int) -> void:
+	_floors.resize(columns)
+	_floors.fill(float(size.y))
+	if _floor_spans.is_empty():
+		return
+	var width := float(column_width())
+	for column in columns:
+		var span := clampi(floori((column + 0.5) * width / _floor_span), 0, _floor_spans.size() - 1)
+		_floors[column] = minf(_floor_spans[span], float(size.y))
 
 func _refresh_rates() -> void:
 	_frames_until_rates = RATE_REFRESH_FRAMES
@@ -194,7 +219,7 @@ func _refresh_rates() -> void:
 		column += RATE_STRIDE
 
 func _upload() -> void:
-	_texture.write(_field, _solidity)
+	_texture.write(_field, _floors, _solidity)
 	_set_uniform(&"water_time", _time)
 
 func _push_look() -> void:

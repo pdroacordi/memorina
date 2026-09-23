@@ -1,0 +1,13 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/world/environment/water/water_layer.gd" id="1_layer"]
+[ext_resource type="TileSet" path="res://scenes/world/environment/water/water_tiles.tres" id="2_tiles"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/freezable_water/freezable_water.tscn" id="3_freezable"]
+
+[node name="FreezableWaterLayer" type="TileMapLayer"]
+self_modulate = Color(0.75, 0.95, 1, 1)
+tile_set = ExtResource("2_tiles")
+script = ExtResource("1_layer")
+body_scene = ExtResource("3_freezable")
+surface_inset = 8
+mirror_axis_offset = -4

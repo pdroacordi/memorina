@@ -83,7 +83,7 @@ void fragment() {
 
 	vec2 texel = floor(world_pos);
 	vec2 centre = texel + 0.5;
-	if (texel.y < rest_y) {
+	if (texel.y < rest_y || texel.y >= wc_floor(wc_data(wc_column(centre.x)))) {
 		discard;
 	}
 	float depth = texel.y - rest_y;
