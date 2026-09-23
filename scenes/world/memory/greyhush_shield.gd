@@ -129,32 +129,13 @@ func _ready() -> void:
 	if _field:
 		_field.register_shield(self)
 
-## Moves this creature onto the layer the creature pass renders, and opens the
-## path to it.
-##
-## Both halves are required, and the second is the one that is easy to miss:
-## CanvasItem rendering is HIERARCHICAL. If an ancestor fails the creature
-## pass's cull mask, the whole subtree under it is skipped and the creature
-## never draws, however its own layer is set. So every CanvasItem ancestor gets
-## the creature bit OR-ed in - keeping bit 0 so it still renders normally in the
-## world pass - while the creature itself gets the creature bit ALONE, which is
-## what removes it from the world pass.
+## Moves this creature onto the layer the creature pass renders (see
+## CreatureMask.join_layer for why its ancestors are touched too).
 func _move_to_creature_layer() -> void:
-	var creature := get_parent()
+	var creature := get_parent() as CanvasItem
 	if creature == null:
 		return
-	_set_layer(creature, CreatureMask.LAYER)
-	var walker: Node = creature.get_parent()
-	while walker != null and walker is CanvasItem:
-		var item := walker as CanvasItem
-		item.visibility_layer |= CreatureMask.LAYER
-		walker = walker.get_parent()
-
-func _set_layer(node: Node, layer: int) -> void:
-	if node is CanvasItem:
-		(node as CanvasItem).visibility_layer = layer
-	for child: Node in node.get_children():
-		_set_layer(child, layer)
+	CreatureMask.join_layer(creature)
 
 func _exit_tree() -> void:
 	if _field:

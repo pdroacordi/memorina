@@ -153,3 +153,7 @@ greyhush_distance_fade={
 "type": "float",
 "value": 0.0
 }
+greyhush_creature_pass={
+"type": "sampler2D",
+"value": ""
+}

@@ -38,6 +38,34 @@ const LAYER := 2
 ## here and nowhere else.
 const WORLD_CULL_MASK := 0xFFFFFFFF & ~LAYER
 
+## The shader global this pass is published under, so a world shader that must
+## see the creatures (water reflecting Ivo) can sample them without a path to
+## this node. Declared in project.godot [shader_globals].
+const GLOBAL := &"greyhush_creature_pass"
+
+## Moves `item` and its whole subtree onto the creature layer, and opens the
+## path to it.
+##
+## Both halves are required, and the second is the one that is easy to miss:
+## CanvasItem rendering is HIERARCHICAL. If an ancestor fails this pass's cull
+## mask, the whole subtree under it is skipped and the item never draws, however
+## its own layer is set. So every CanvasItem ancestor gets the creature bit
+## OR-ed in - keeping bit 0 so it still renders normally in the world pass -
+## while the item itself gets the creature bit ALONE, which is what removes it
+## from the world pass.
+static func join_layer(item: CanvasItem) -> void:
+	_set_layer(item, LAYER)
+	var walker: Node = item.get_parent()
+	while walker != null and walker is CanvasItem:
+		(walker as CanvasItem).visibility_layer |= LAYER
+		walker = walker.get_parent()
+
+static func _set_layer(node: Node, layer: int) -> void:
+	if node is CanvasItem:
+		(node as CanvasItem).visibility_layer = layer
+	for child: Node in node.get_children():
+		_set_layer(child, layer)
+
 func _ready() -> void:
 	# Order matters: world_2d has to be shared before the first draw, or this
 	# viewport spends a frame rendering its own empty world.
@@ -49,6 +77,10 @@ func _ready() -> void:
 	# defaults to LINEAR on its own, so every creature drawn through this pass
 	# came out bilinear-blurred while the world stayed crisp. Mirror the root.
 	canvas_item_default_texture_filter = get_tree().root.canvas_item_default_texture_filter
+	RenderingServer.global_shader_parameter_set(GLOBAL, get_texture())
+
+func _exit_tree() -> void:
+	RenderingServer.global_shader_parameter_set(GLOBAL, null)
 
 func _process(_delta: float) -> void:
 	# No Camera2D of its own. Copying the main viewport's canvas transform is

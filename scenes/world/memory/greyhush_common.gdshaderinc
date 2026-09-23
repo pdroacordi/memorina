@@ -24,6 +24,8 @@
 // memory is quantised into `memory_levels` bands, and the Bayer matrix decides
 // only whether a pixel rounds to the band below or the band above.
 
+#include "res://scenes/world/memory/dither_common.gdshaderinc"
+
 const int MAX_SOURCES = 32;
 // Mirrored by MemoryField.MAX_SHIELDS / MAX_SOURCES. These are array sizes, so
 // they cannot be uniforms - the one pair of numbers in this file that lives in
@@ -117,13 +119,6 @@ uniform float vignette_strength : hint_range(0.0, 1.0) = 0.0;
 uniform float vignette_start : hint_range(0.0, 1.0) = 0.45;
 uniform float vignette_grey_boost : hint_range(0.0, 2.0) = 0.6;
 
-const float BAYER[16] = {
-	 0.0 / 16.0,  8.0 / 16.0,  2.0 / 16.0, 10.0 / 16.0,
-	12.0 / 16.0,  4.0 / 16.0, 14.0 / 16.0,  6.0 / 16.0,
-	 3.0 / 16.0, 11.0 / 16.0,  1.0 / 16.0,  9.0 / 16.0,
-	15.0 / 16.0,  7.0 / 16.0, 13.0 / 16.0,  5.0 / 16.0
-};
-
 float gh_hash11(float n) {
 	float p = fract(n * 0.1031);
 	p *= p + 33.33;
@@ -134,7 +129,7 @@ float gh_hash11(float n) {
 // The 4x4 Bayer cell a game pixel falls in. Every dithered decision in every
 // pass goes through this, so they all agree on the pattern.
 int gh_bayer_index(vec2 px) {
-	return int(mod(floor(px.y), 4.0)) * 4 + int(mod(floor(px.x), 4.0));
+	return wd_bayer_index(px);
 }
 
 // Distance from a shape's solid core, in game pixels. Zero or negative inside
@@ -282,18 +277,7 @@ float gh_memory(vec2 px, out float smooth_memory, out vec3 tint_rgb, out float t
 // Ordered dither between ADJACENT quantisation steps - see the header. The
 // result takes only `memory_levels` distinct values; there is no interpolation.
 float gh_quantise(float memory, vec2 px) {
-	int index = gh_bayer_index(px);
-	float steps = float(memory_levels - 1);
-	float scaled = memory * steps;
-	float lower = floor(scaled);
-	float frac = scaled - lower;
-	// STRICTLY greater, not step(). GLSL's step(edge, x) is x >= edge, and
-	// BAYER[0] is exactly 0.0 - so a value sitting precisely ON a band (a flat
-	// sky at baseline 0.8, say) would still round one pixel in every 4x4 cell
-	// upward, printing a regular dot grid across an area that should be
-	// perfectly uniform.
-	float rise = frac > BAYER[index] ? 1.0 : 0.0;
-	return clamp((lower + rise) / steps, 0.0, 1.0);
+	return wd_quantise(memory, memory_levels, px);
 }
 
 // Drains a colour to the given quantised memory, then applies aerial
