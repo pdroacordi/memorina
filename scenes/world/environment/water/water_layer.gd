@@ -21,12 +21,11 @@ class_name WaterLayer extends TileMapLayer
 ## (WaterBody.mirror_axis_offset = -inset / 2), so the reflection starts at the
 ## top of the bank whatever the inset.
 @export var surface_inset := 8
-## Optional overrides of the scene's own motion and look.
-@export var profile: WaterProfile
-@export var look: WaterLook
 
-## The WaterBody inside an instance of a body scene.
-static func water_body_of(instance: Node) -> WaterBody:
+# The WaterBody inside an instance of a body scene. A different kind of water
+# is a new preset with its own body scene, never an override here: a profile
+# set on a lake would turn it into a simulation its shader cannot read.
+static func _water_body_of(instance: Node) -> WaterBody:
 	if instance is WaterBody:
 		return instance
 	var water := instance.get_node_or_null("Water") as WaterBody
@@ -48,11 +47,7 @@ func _ready() -> void:
 func _pour(basin: WaterBasins.Basin) -> Node2D:
 	var cell := Vector2(tile_set.tile_size)
 	var instance := body_scene.instantiate() as Node2D
-	var body := water_body_of(instance)
-	if profile:
-		body.profile = profile
-	if look:
-		body.look = look
+	var body := _water_body_of(instance)
 	# A column straddling two cells would take one depth and draw into the bank.
 	assert(tile_set.tile_size.x % body.column_width() == 0,
 		"%s: a water column (%d px) must divide a cell (%d px)" % [name, body.column_width(), tile_set.tile_size.x])

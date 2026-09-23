@@ -120,10 +120,7 @@ uniform float vignette_start : hint_range(0.0, 1.0) = 0.45;
 uniform float vignette_grey_boost : hint_range(0.0, 2.0) = 0.6;
 
 float gh_hash11(float n) {
-	float p = fract(n * 0.1031);
-	p *= p + 33.33;
-	p *= p + p;
-	return fract(p);
+	return wd_hash11(n);
 }
 
 // The 4x4 Bayer cell a game pixel falls in. Every dithered decision in every

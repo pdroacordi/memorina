@@ -42,8 +42,8 @@ script = ExtResource("5_volume")
 [node name="Shape" type="CollisionShape2D" parent="Volume"]
 
 [node name="Hazard" type="Area2D" parent="."]
-collision_layer = 0
-collision_mask = 66048
+collision_layer = 1024
+collision_mask = 65792
 monitorable = false
 script = ExtResource("8_hazard")
 

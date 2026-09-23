@@ -12,16 +12,18 @@ class_name WaterBasins extends RefCounted
 ## surface can reach (under a ceiling of terrain, or below a gap) cannot hold
 ## water in a side view; it is reported, never silently drawn.
 
+const NEIGHBOURS: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
+
 var basins: Array[Basin] = []
 ## Cells that belong to no body, in the order they were found.
 var unreachable: Array[Vector2i] = []
 
 static func build(cells: Array[Vector2i]) -> WaterBasins:
 	var result := WaterBasins.new()
-	var painted := {}
+	var painted: Dictionary[Vector2i, bool] = {}
 	for cell: Vector2i in cells:
 		painted[cell] = true
-	var seen := {}
+	var seen: Dictionary[Vector2i, bool] = {}
 	for cell: Vector2i in _sorted(cells):
 		if seen.has(cell):
 			continue
@@ -31,7 +33,7 @@ static func build(cells: Array[Vector2i]) -> WaterBasins:
 	return result
 
 func _pour(component: Array[Vector2i]) -> void:
-	var cells := {}
+	var cells: Dictionary[Vector2i, bool] = {}
 	var surface := component[0].y
 	for cell: Vector2i in component:
 		cells[cell] = true
@@ -41,7 +43,7 @@ func _pour(component: Array[Vector2i]) -> void:
 		if cell.y == surface:
 			columns.append(cell.x)
 	columns.sort()
-	var claimed := {}
+	var claimed: Dictionary[Vector2i, bool] = {}
 	var run_start := 0
 	for i in columns.size():
 		var last_of_run := i == columns.size() - 1 or columns[i + 1] != columns[i] + 1
@@ -62,14 +64,15 @@ func _pour(component: Array[Vector2i]) -> void:
 		if not claimed.has(cell):
 			unreachable.append(cell)
 
-static func _component(start: Vector2i, painted: Dictionary, seen: Dictionary) -> Array[Vector2i]:
+static func _component(start: Vector2i, painted: Dictionary[Vector2i, bool],
+		seen: Dictionary[Vector2i, bool]) -> Array[Vector2i]:
 	var found: Array[Vector2i] = [start]
 	seen[start] = true
 	var next := 0
 	while next < found.size():
 		var cell := found[next]
 		next += 1
-		for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+		for step: Vector2i in NEIGHBOURS:
 			var neighbour := cell + step
 			if painted.has(neighbour) and not seen.has(neighbour):
 				seen[neighbour] = true

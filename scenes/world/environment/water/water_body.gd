@@ -30,7 +30,8 @@ class_name WaterBody extends Node2D
 ## Rows above the rest line the quads draw, so a crest has somewhere to rise.
 const HEADROOM := 12
 ## Physics frames between two readings of the memory field. Memory changes over
-## seconds; reading it every frame for every column is wasted work.
+## seconds; reading it every frame for every column is wasted work. Read while
+## on screen, and on demand (column_rates()) by whoever needs it off screen.
 const RATE_REFRESH_FRAMES := 3
 ## Columns between two samples of the field; those between are interpolated.
 const RATE_STRIDE := 4
@@ -51,6 +52,10 @@ const PLANE_COLUMN_WIDTH := 16
 ## waterline profile to move.
 @export var profile: WaterProfile
 @export var look: WaterLook
+## World pixels below the rest line where the water TAKES a body (the Hazard
+## begins): enough that a fall visibly goes in before the beat, never so much
+## that standing on ice at the surface counts as being in the water.
+@export var hazard_depth := 4.0
 
 var _field: WaterSurfaceField
 var _texture: WaterSurfaceTexture
@@ -64,7 +69,7 @@ var _floor_span := 0.0
 var _time := 0.0
 # A lake's clock per column (see TWO PROJECTIONS); empty for a pool.
 var _clocks := PackedFloat32Array()
-var _frames_until_rates := 0
+var _rates_frame := -RATE_REFRESH_FRAMES
 var _memory: MemoryField
 var _materials: Array[ShaderMaterial] = []
 
@@ -79,8 +84,10 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	assert(look != null, "%s needs a WaterLook" % name)
-	assert(profile != null or (_volume == null and _hazard == null),
-		"%s: water bodies can enter needs a WaterProfile" % name)
+	# The veil reads r as the waterline's height and the volume splashes the
+	# field: both need a surface that moves.
+	assert(profile != null or (_volume == null and _veil == null),
+		"%s: water bodies can stand in needs a WaterProfile" % name)
 	assert(global_position == global_position.round(), "Water must sit on whole pixels: %s" % name)
 	assert(is_zero_approx(global_rotation) and global_scale.is_equal_approx(Vector2.ONE),
 		"Water is mirrored in world space and must not be rotated or scaled: %s" % name)
@@ -102,19 +109,9 @@ func _ready() -> void:
 			_materials.append(quad.material)
 	if _volume:
 		_volume.min_speed = profile.splash_min_speed
-		var shape := RectangleShape2D.new()
-		shape.size = Vector2(size)
-		var body_shape := _volume.get_node("Shape") as CollisionShape2D
-		body_shape.shape = shape
-		body_shape.position = Vector2(0.0, size.y * 0.5)
+		fit_area(_volume.get_node("Shape") as CollisionShape2D, 0.0)
 	if _hazard:
-		# Water takes a body a little below its surface, so the fall visibly
-		# goes in first - and standing on ice at the surface is not in it.
-		var reach := RectangleShape2D.new()
-		reach.size = Vector2(size.x, maxf(size.y - profile.hazard_depth, 1.0))
-		var hazard_shape := _hazard.get_node("Shape") as CollisionShape2D
-		hazard_shape.shape = reach
-		hazard_shape.position = Vector2(0.0, profile.hazard_depth + reach.size.y * 0.5)
+		fit_area(_hazard.get_node("Shape") as CollisionShape2D, hazard_depth)
 	_push_look()
 	_refresh_rates()
 	_upload()
@@ -122,15 +119,9 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint() or _texture == null:
 		return
-	var on_screen := _notifier == null or _notifier.is_on_screen()
-	# A pool's rates are read even off screen: FREEZE's ice is never gated, and
-	# a pulse can reach a pool before the camera does - ice grown on rates read
-	# when it was last seen would ignore the memory it is spreading over.
-	_frames_until_rates -= 1
-	if _frames_until_rates <= 0 and (on_screen or _field != null):
-		_refresh_rates()
-	if not on_screen:
+	if _notifier and not _notifier.is_on_screen():
 		return
+	_refresh_rates_if_stale()
 	var fastest := 0.0
 	for rate: float in _rates:
 		fastest = maxf(fastest, rate)
@@ -162,9 +153,24 @@ func column_of(world_x: float) -> int:
 	var left := global_position.x - size.x * 0.5
 	return clampi(floori((world_x - left) / column_width()), 0, column_count() - 1)
 
-## The memory over each column, as last read: the rate its time runs at.
+## The memory over each column: the rate its time runs at. Read afresh when
+## stale, even off screen - FREEZE's ice is never gated, and a pulse can reach
+## a pool before the camera does; ice grown on rates read when the pool was
+## last seen would ignore the memory it is spreading over.
 func column_rates() -> PackedFloat32Array:
+	_refresh_rates_if_stale()
 	return _rates
+
+## Sizes a rectangle area to the water, from `top` world pixels below the rest
+## line (negative reaches above it) down to the bottom, across the full width.
+## Everything that must cover this body - its volume, its hazard, a song
+## receiver - is fitted here, in a shape of its own (never shared between
+## bodies of different sizes).
+func fit_area(area_shape: CollisionShape2D, top: float) -> void:
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(size.x, maxf(size.y - top, 1.0))
+	area_shape.shape = rect
+	area_shape.global_position = global_position + Vector2(0.0, top + rect.size.y * 0.5)
 
 ## A body fell in at `world_x` at `speed` pixels per second: the water dents
 ## under it and a crest rises either side. Wired from the Volume in the scene.
@@ -219,8 +225,12 @@ func _build_floors(columns: int) -> void:
 		var span := clampi(floori((column + 0.5) * width / _floor_span), 0, _floor_spans.size() - 1)
 		_floors[column] = minf(_floor_spans[span], float(size.y))
 
+func _refresh_rates_if_stale() -> void:
+	if Engine.get_physics_frames() - _rates_frame >= RATE_REFRESH_FRAMES:
+		_refresh_rates()
+
 func _refresh_rates() -> void:
-	_frames_until_rates = RATE_REFRESH_FRAMES
+	_rates_frame = Engine.get_physics_frames()
 	var count := column_count()
 	if _memory == null:
 		_rates.fill(1.0)
@@ -245,45 +255,23 @@ func _upload() -> void:
 	_texture.write(_field, _clocks, _floors, _solidity)
 
 func _push_look() -> void:
-	var common := {
+	var placement := {
 		&"surface_data": _texture.texture,
 		&"rest_y": surface_rest_y(),
 		&"body_left": global_position.x - size.x * 0.5,
 		&"column_width": column_width(),
-		&"depth_band_px": look.depth_band_px,
-		&"transmit_ramp": look.transmit_ramp,
+		&"mirror_axis_offset": float(mirror_axis_offset),
 	}
-	for key: StringName in common:
-		_set_uniform(key, common[key])
-	var surface := _surface.material as ShaderMaterial
-	surface.set_shader_parameter(&"body_ramp", look.body_ramp)
-	surface.set_shader_parameter(&"reflection_ramp", look.reflection_ramp)
-	surface.set_shader_parameter(&"ice_ramp", look.ice_ramp)
-	surface.set_shader_parameter(&"top_line_color", look.top_line_color)
-	surface.set_shader_parameter(&"foam_color", look.foam_color)
-	surface.set_shader_parameter(&"mirror_axis_offset", float(mirror_axis_offset))
-	surface.set_shader_parameter(&"reflection_strength", look.reflection_strength)
-	surface.set_shader_parameter(&"reflect_levels", look.reflect_levels)
-	surface.set_shader_parameter(&"reflect_memory_low", look.reflect_memory_low)
-	surface.set_shader_parameter(&"reflect_memory_high", look.reflect_memory_high)
-	surface.set_shader_parameter(&"band_height", look.band_height)
-	surface.set_shader_parameter(&"band_shift_max", float(look.band_shift_max))
-	surface.set_shader_parameter(&"band_speed", look.band_speed)
-	surface.set_shader_parameter(&"edge_fade_px", look.edge_fade_px)
-	surface.set_shader_parameter(&"caustic_depth", look.caustic_depth)
-	surface.set_shader_parameter(&"caustic_band_px", look.caustic_band_px)
-	surface.set_shader_parameter(&"caustic_rate", look.caustic_rate)
-	surface.set_shader_parameter(&"caustic_density", look.caustic_density)
-	surface.set_shader_parameter(&"caustic_strength", look.caustic_strength)
-	# The lake's; harmless on a pool's shader, which declares none of them.
-	surface.set_shader_parameter(&"perspective_px", look.perspective_px)
-	surface.set_shader_parameter(&"band_height_near", look.band_height_near)
-	surface.set_shader_parameter(&"band_shift_near", float(look.band_shift_near))
-	surface.set_shader_parameter(&"reflection_stretch", look.reflection_stretch)
-	surface.set_shader_parameter(&"glint_density", look.glint_density)
-	surface.set_shader_parameter(&"glint_length", look.glint_length)
-	surface.set_shader_parameter(&"glint_rate", look.glint_rate)
-	surface.set_shader_parameter(&"glint_color", look.glint_color)
+	for key: StringName in placement:
+		_set_uniform(key, placement[key])
+	# Every WaterLook property is named after the uniform it feeds, so each
+	# material takes exactly the ones its shader declares: the pool never sees
+	# the lake's, the veil only its ramp and bands.
+	for material: ShaderMaterial in _materials:
+		for uniform: Dictionary in material.shader.get_shader_uniform_list():
+			var value: Variant = look.get(uniform[&"name"])
+			if value != null:
+				material.set_shader_parameter(uniform[&"name"], value)
 
 func _set_uniform(uniform: StringName, value: Variant) -> void:
 	for material: ShaderMaterial in _materials:

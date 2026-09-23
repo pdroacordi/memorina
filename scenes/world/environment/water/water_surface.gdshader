@@ -37,16 +37,10 @@ uniform float caustic_density = 0.3;
 uniform float caustic_strength = 0.35;
 
 uniform float ice_thickness = 6.0;
-// The water's own clock (WaterBody): stops with the world under a pause and
-// crawls where the water is forgotten. Never TIME.
+// The pool's own clock (WaterBody): stops with the world under a pause, and
+// runs at the memory of its most remembered column - it stops only where the
+// whole pool is forgotten (the springs, per column, are what crawl). Never TIME.
 uniform float water_time = 0.0;
-
-float hash11(float n) {
-	float p = fract(n * 0.1031);
-	p *= p + 33.33;
-	p *= p + p;
-	return fract(p);
-}
 
 void vertex() {
 	world_pos = (MODEL_MATRIX * vec4(VERTEX, 0.0, 1.0)).xy;
@@ -94,8 +88,8 @@ void fragment() {
 	// memory (game-pixel grid).
 	if (depth < caustic_depth) {
 		float band = floor(texel.x / float(caustic_band_px));
-		float roll = floor(water_time * caustic_rate + hash11(band * 3.7) * 8.0);
-		float lit = hash11(band * 7.13 + roll * 17.31) < caustic_density ? 1.0 : 0.0;
+		float roll = floor(water_time * caustic_rate + wd_hash11(band * 3.7) * 8.0);
+		float lit = wd_hash11(band * 7.13 + roll * 17.31) < caustic_density ? 1.0 : 0.0;
 		bool shown = lit * (1.0 - depth / caustic_depth) > BAYER[wd_bayer_index(texel)]
 			&& awake > BAYER[wd_bayer_index(game_px)];
 		if (shown) {

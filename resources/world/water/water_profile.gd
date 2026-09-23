@@ -50,9 +50,3 @@ class_name WaterProfile extends Resource
 @export_range(1, 8) var splash_half_width: int = 3
 ## Wake raised per pixel-per-second of a body wading through, per second.
 @export var wake_per_speed: float = 0.02
-
-@export_group("Bodies")
-## World pixels below the rest line where the water TAKES a body (its hazard
-## begins): enough that a fall visibly goes in before the beat, never so much
-## that standing on ice at the surface counts as being in the water.
-@export var hazard_depth: float = 4.0

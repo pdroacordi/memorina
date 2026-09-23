@@ -120,6 +120,7 @@ locale/translations=PackedStringArray("res://i18n/translations.en.translation", 
 2d_physics/layer_5="Invisible Walls"
 2d_physics/layer_9="Player"
 2d_physics/layer_10="Player Hurtbox"
+2d_physics/layer_11="Hazard"
 2d_physics/layer_17="Enemy"
 2d_physics/layer_21="Song"
 

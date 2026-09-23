@@ -32,12 +32,8 @@ func _ready() -> void:
 	_water.set_ice_thickness(ice.thickness)
 	var left := _water.global_position.x - _water.size.x * 0.5
 	_collider.build(left, _water.size.x, _water.surface_rest_y(), ice.segment_width, ice.thickness)
-	# Sized from the water, which a WaterLayer may have painted at any size;
-	# a shape of its own, never shared between instances.
-	var reach := RectangleShape2D.new()
-	reach.size = Vector2(_water.size.x, _water.size.y + RECEIVER_HEADROOM)
-	_receiver_shape.shape = reach
-	_receiver_shape.position = _water.position + Vector2(0.0, (_water.size.y - RECEIVER_HEADROOM) * 0.5)
+	# Sized from the water, which a WaterLayer may have painted at any size.
+	_water.fit_area(_receiver_shape, -RECEIVER_HEADROOM)
 
 func _physics_process(delta: float) -> void:
 	if not _front.is_active():

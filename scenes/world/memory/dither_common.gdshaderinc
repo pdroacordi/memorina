@@ -42,4 +42,13 @@ float wd_quantise(float value, int levels, vec2 px) {
 	return clamp((lower + rise) / steps, 0.0, 1.0);
 }
 
+// A cheap 1D hash, 0..1: the one every shader that re-rolls something (the
+// greyhush's ragged sectors, the water's caustics and glints) goes through.
+float wd_hash11(float n) {
+	float p = fract(n * 0.1031);
+	p *= p + 33.33;
+	p *= p + p;
+	return fract(p);
+}
+
 #endif

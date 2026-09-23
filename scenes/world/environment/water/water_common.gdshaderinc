@@ -1,10 +1,11 @@
 // What every water pass must agree on, pixel for pixel: where the surface is,
 // how deep a pixel lies below it, and which band of a ramp that depth falls in.
 //
-// Two shaders include this: water_surface.gdshader draws the water in the
-// world, and water_veil.gdshader tints the creatures standing in it from inside
-// the creature pass. Sharing the source is what makes the waterline cross Ivo on
-// exactly the pixel row where it crosses the ground behind him.
+// Three shaders include this: water_surface (the pool) and water_lake (the
+// lake) draw the water in the world, and water_veil tints the creatures
+// standing in a pool from inside the creature pass. Sharing the source is what
+// makes the waterline cross Ivo on exactly the pixel row where it crosses the
+// ground behind him.
 //
 // Everything here is measured in WORLD TEXELS (floor of the world position), so
 // the waterline, the bands and every stipple move with the art under any camera
@@ -13,8 +14,8 @@
 #include "res://scenes/world/memory/dither_common.gdshaderinc"
 
 // One texel per column (FORMAT_RGBAF, written by WaterSurfaceTexture):
-// r = height above the rest line in world pixels (a lake has no height and
-// keeps the column's own clock there instead), g = foam 0..1,
+// r = height above the rest line in world pixels (0 for a lake: it is flat),
+// g = foam 0..1 (a lake has none and keeps the column's own clock there),
 // b = the floor, world pixels below the rest line,
 // a = ice solidity 0..1 (1 = solid and walkable).
 uniform sampler2D surface_data : filter_nearest, repeat_disable;
@@ -63,6 +64,14 @@ int wc_band(float depth, int entries, vec2 texel) {
 vec4 wc_ramp(sampler2D ramp, float depth, vec2 texel) {
 	int entries = textureSize(ramp, 0).x;
 	return texelFetch(ramp, ivec2(wc_band(depth, entries, texel), 0), 0);
+}
+
+// The same ramp in FLAT steps, depth_band_px deep each, never dithered: rows of
+// one colour, as the lake's reference is drawn. The pool dithers between its
+// steps; a lake's dither made its whole reflection a checkerboard.
+vec4 wc_ramp_flat(sampler2D ramp, float depth) {
+	int entries = textureSize(ramp, 0).x;
+	return texelFetch(ramp, ivec2(clamp(int(depth / depth_band_px), 0, entries - 1), 0), 0);
 }
 
 // What the water does to whatever shows through it at this depth.
