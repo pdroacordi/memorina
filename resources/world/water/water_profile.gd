@@ -21,6 +21,10 @@ class_name WaterProfile extends Resource
 ## Coupling to the neighbouring columns, per second squared. Ripples travel at
 ## roughly sqrt(spread) columns per second.
 @export var spread: float = 2000.0
+## Damping of each column's velocity against its neighbours', per second. It
+## leaves a wave alone and kills the alternating column-by-column zig-zag -
+## the lattice's highest mode - which otherwise rings as a comb of 1 px teeth.
+@export var viscosity: float = 4.0
 ## Longest single integration step. A frame is split into sub-steps no longer
 ## than this, which keeps a stiff, fast-spreading surface stable.
 @export var max_substep: float = 1.0 / 120.0
@@ -40,7 +44,9 @@ class_name WaterProfile extends Resource
 ## Depth of the dent per pixel-per-second of impact speed.
 @export var splash_depth_per_speed: float = 0.012
 @export var splash_max_depth: float = 6.0
-## Columns either side of the impact that rise as the crest.
+## Width of the splash, in columns: the dent spans about this many either side
+## of the impact and the crest rises just beyond it. Wide and smooth on purpose -
+## a dent one column wide is almost all zig-zag and never reads as a mound.
 @export_range(1, 8) var splash_half_width: int = 3
 ## Wake raised per pixel-per-second of a body wading through, per second.
 @export var wake_per_speed: float = 0.02

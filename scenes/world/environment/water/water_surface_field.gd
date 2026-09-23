@@ -115,6 +115,7 @@ func _substep(dt: float, rates: PackedFloat32Array, swell_time: float) -> void:
 		_accelerations[i] = (
 			-_profile.stiffness * offset
 			+ _profile.spread * ((_heights[left] - _targets[left]) + (_heights[right] - _targets[right]) - 2.0 * offset)
+			+ _profile.viscosity * (_velocities[left] + _velocities[right] - 2.0 * _velocities[i])
 			- damping * _velocities[i]
 		)
 	for i in count:

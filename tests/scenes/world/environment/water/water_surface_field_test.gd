@@ -149,3 +149,15 @@ func test_a_partial_hold_settles_the_surface_sooner() -> void:
 	_run(free, _rates(1.0), 0.6)
 	_run(held, _rates(1.0), 0.6)
 	assert_float(_max_abs(held)).is_less(_max_abs(free))
+
+## A notch one column wide is almost all zig-zag; viscosity must kill that mode
+## fast instead of letting it ring as a comb of teeth
+## (docs/knowledge/bugs/splash-rings-the-alternating-column-mode.md).
+func test_the_zig_zag_mode_dies_quickly() -> void:
+	var field := _field()
+	field.disturb(24, -5.0)
+	_run(field, _rates(1.0), 1.0)
+	var worst := 0.0
+	for i in range(1, COLUMNS - 1):
+		worst = maxf(worst, absf(field.height(i) - 0.5 * (field.height(i - 1) + field.height(i + 1))))
+	assert_float(worst).is_less(0.1)

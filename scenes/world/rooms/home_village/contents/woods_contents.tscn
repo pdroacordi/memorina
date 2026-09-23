@@ -279,5 +279,5 @@ tile_map_data = PackedByteArray("AAD//wAAAQABAAAAAAAAAAAAAQABAAAAAAABAAAAAQABAAA
 tile_set = SubResource("TileSet_rxs28")
 
 [node name="WaterStrip" parent="." instance=ExtResource("water_strip")]
-position = Vector2(-400, 16)
-mirror_axis_offset = -8
+position = Vector2(-400, 8)
+mirror_axis_offset = -4

@@ -121,14 +121,18 @@ func column_rates() -> PackedFloat32Array:
 
 ## A body fell in at `world_x` at `speed` pixels per second: the water dents
 ## under it and a crest rises either side. Wired from the Volume in the scene.
+##
+## The shape is a smooth "Mexican hat" (a Ricker wavelet) several columns wide,
+## never a one-column notch: a notch is almost all zig-zag, which the springs
+## ring as a comb of teeth instead of a crest (docs/knowledge/bugs/
+## splash-rings-the-alternating-column-mode.md).
 func splash(world_x: float, speed: float) -> void:
 	var depth := minf(speed * profile.splash_depth_per_speed, profile.splash_max_depth)
 	var centre := column_of(world_x)
-	_field.disturb(centre, -depth)
-	for k in range(1, profile.splash_half_width + 1):
-		var rise := depth * 0.5 * (1.0 - float(k - 1) / float(profile.splash_half_width))
-		_field.disturb(centre - k, rise)
-		_field.disturb(centre + k, rise)
+	var width := float(profile.splash_half_width)
+	for k in range(-3 * profile.splash_half_width, 3 * profile.splash_half_width + 1):
+		var x := float(k) / width
+		_field.disturb(centre + k, -depth * (1.0 - 2.0 * x * x) * exp(-x * x))
 
 ## How much of a column ice has taken, 0..1 (see WaterSurfaceField.set_hold).
 func set_hold(column: int, hold: float) -> void:

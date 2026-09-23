@@ -107,8 +107,10 @@ void fragment() {
 	float shift = round(band_shift_max * sin(row * 1.7 + water_time * band_speed));
 	vec2 mirrored = vec2(centre.x + shift, 2.0 * axis - centre.y);
 	vec2 uv_m = SCREEN_UV + (mirrored - world_pos) * uv_per_world;
-	vec2 inside = min(uv_m, 1.0 - uv_m) * game_size;
-	float edge = clamp(min(inside.x, inside.y) / edge_fade_px, 0.0, 1.0);
+	// A vertical mirror only ever leaves the screen at the TOP: fade on y alone,
+	// and clamp x so a band's 1 px slide at the side reads the edge column.
+	uv_m.x = clamp(uv_m.x, 0.5 * SCREEN_PIXEL_SIZE.x, 1.0 - 0.5 * SCREEN_PIXEL_SIZE.x);
+	float edge = clamp(min(uv_m.y, 1.0 - uv_m.y) * game_size.y / edge_fade_px, 0.0, 1.0);
 	vec3 world_m = texture(screen_texture, output_centre(uv_m, SCREEN_PIXEL_SIZE)).rgb;
 	vec4 creature = texture(greyhush_creature_pass, (floor(uv_m * game_size) + 0.5) / game_size);
 	vec3 reflected = creature.rgb + world_m * (1.0 - creature.a);
@@ -121,19 +123,20 @@ void fragment() {
 	// forgotten water shows nothing at all.
 	float steps = float(reflect_levels - 1);
 	float authored = round(tint.a * reflection_strength * steps) / steps;
-	float fade = clamp((remembered - reflect_memory_low) / (reflect_memory_high - reflect_memory_low), 0.0, 1.0) * edge;
-	float gate = fade > BAYER[wd_bayer_index(game_px)] ? authored : 0.0;
+	float awake = clamp((remembered - reflect_memory_low) / (reflect_memory_high - reflect_memory_low), 0.0, 1.0);
+	float gate = awake * edge > BAYER[wd_bayer_index(game_px)] ? authored : 0.0;
 	colour = mix(colour, reflected * tint.rgb, gate);
 
-	// Caustics: coarse vertical bands re-rolled on the water's clock, gone
-	// where the water is forgotten. The band's own falloff is art (texel grid);
-	// the forgetting is memory (game-pixel grid).
+	// Caustics: coarse vertical bands re-rolled on the water's clock. They wake
+	// with the reflection (the same memory ramp), so grey water is empty rather
+	// than speckled. The band's own falloff is art (texel grid); the waking is
+	// memory (game-pixel grid).
 	if (depth < caustic_depth) {
 		float band = floor(texel.x / float(caustic_band_px));
 		float roll = floor(water_time * caustic_rate + hash11(band * 3.7) * 8.0);
 		float lit = hash11(band * 7.13 + roll * 17.31) < caustic_density ? 1.0 : 0.0;
 		bool shown = lit * (1.0 - depth / caustic_depth) > BAYER[wd_bayer_index(texel)]
-			&& remembered > BAYER[wd_bayer_index(game_px)];
+			&& awake > BAYER[wd_bayer_index(game_px)];
 		if (shown) {
 			colour = mix(colour, top_line_color.rgb, caustic_strength);
 		}
