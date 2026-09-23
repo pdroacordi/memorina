@@ -265,6 +265,11 @@ func _on_player_entered() -> void:
 ## still to be remembered the hits wait on the recall move, which is asked
 ## for at once; and a guardian hit too many times between moves answers with
 ## one.
+## Health on a guardian is inert - hits destabilise, they never wound - so a
+## hazard does nothing to one either.
+func receive_hazard(_hazard: HazardZone) -> void:
+	pass
+
 func _on_hit_received(_damage: int, _knockback: Vector2, _source: Node2D) -> void:
 	if _fight.phase() != GuardianFight.Phase.PRESSURE:
 		return

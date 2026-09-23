@@ -58,8 +58,6 @@ signal hurt
 ## Water (a HazardZone) took him and he is sinking. The composition root
 ## answers by fading out and calling respawn(); he does not swim.
 signal fell_into_hazard
-## Back on firm ground after a hazard.
-signal respawned
 
 const GROUP := "player"
 
@@ -171,12 +169,12 @@ var _recall_escape_left: float = 0.0
 ## A recall that must wait for Ivo to leave the ground, and how long it may
 ## wait: the attack that launches him is still in flight.
 var _pending_recall: AbilityRecallStats = null
-## Water has him: no control until respawn() puts him back on firm ground.
-var _sinking: bool = false
 var _pending_recall_left: float = 0.0
 ## Who is throwing the move the pending recall rides on, for a trigger that
 ## waits on distance.
 var _pending_recall_source: Node2D
+## Water has him: no control until respawn() puts him back on firm ground.
+var _sinking: bool = false
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -246,17 +244,15 @@ func _process_motion(delta: float) -> void:
 		# A corpse still falls and stops sliding; nothing else.
 		_knockback_motion(delta)
 		return
+	var on_floor := is_on_floor()
+	# Ticked while sinking too: a press made under water must expire there,
+	# not fire on the first frame back on the bank.
+	_tick_input_timers(delta, on_floor)
 	if _sinking:
 		_sink_motion(delta)
 		return
 
-	var on_floor := is_on_floor()
-
 	face_towards(move_axis())
-	_jump.tick_timers(delta, on_floor)
-	_roll.tick_timers(delta, on_floor)
-	_attack.tick_timers(delta)
-	_memorina.tick_timers(delta)
 	# The recall's window is real seconds: the world is slowed while it is open,
 	# and `delta` is game time.
 	_recall.tick(delta / maxf(Engine.time_scale, 0.001))
@@ -395,10 +391,18 @@ func _select_motion_state(on_floor: bool) -> MotionState:
 		return MotionState.ROLL
 	return MotionState.GROUND if on_floor else MotionState.AIR
 
+func _tick_input_timers(delta: float, on_floor: bool) -> void:
+	_jump.tick_timers(delta, on_floor)
+	_roll.tick_timers(delta, on_floor)
+	_attack.tick_timers(delta)
+	_memorina.tick_timers(delta)
+
 # Water slows the fall to a sink and stops the drift; no input reaches here.
+# Sampled as the fall speed, so the plunge is not remembered as a hard landing.
 func _sink_motion(delta: float) -> void:
 	apply_knockback_decay(delta)
 	velocity.y = move_toward(velocity.y, sink_speed, sink_drag * delta)
+	_landing.sample_fall_speed(velocity.y)
 
 func _knockback_motion(delta: float) -> void:
 	_jump.apply_gravity(delta)
@@ -826,22 +830,16 @@ func _try_attack() -> void:
 
 func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
 	super(damage, knockback, source)
-	hurt.emit()
-	_attack.cancel()
-	# Not covered by the is_still() check: a hit that deals no knockback
-	# leaves Ivo standing perfectly still.
-	_memorina.interrupt()
+	_react_to_hurt()
 
 ## Ivo does not swim: water costs him health and, if he survives it, he sinks
 ## out of control until the composition root has faded out and respawn()ed
 ## him. A fall that kills him is the ordinary death, sinking as a corpse.
-func _on_hazard_touched(hazard: HazardZone) -> void:
+func receive_hazard(hazard: HazardZone) -> void:
 	if is_dead() or _sinking:
 		return
 	super(hazard)
-	hurt.emit()
-	_attack.cancel()
-	_memorina.interrupt()
+	_react_to_hurt()
 	_drop_recall()
 	if is_dead():
 		return
@@ -853,6 +851,7 @@ func _on_hazard_touched(hazard: HazardZone) -> void:
 ## Puts Ivo back on the last firm ground he stood on (SafeGroundTracker),
 ## still and briefly untouchable. Called behind a fade; nothing here eases.
 func respawn() -> void:
+	assert(not is_dead(), "A corpse is not respawned")
 	global_position = _safe_ground.last_safe_position()
 	velocity = Vector2.ZERO
 	_sinking = false
@@ -860,10 +859,13 @@ func respawn() -> void:
 	clear_knockback()
 	_landing.cancel_recovery()
 	hurtbox.grant_invulnerability(hazard_grace)
-	respawned.emit()
 
-func is_sinking() -> bool:
-	return _sinking
+# What any hurt interrupts. The Memorina is not covered by the is_still()
+# check: a hit that deals no knockback leaves Ivo standing perfectly still.
+func _react_to_hurt() -> void:
+	hurt.emit()
+	_attack.cancel()
+	_memorina.interrupt()
 
 func _on_attack_phase_started(_phase_index: int, phase: AttackPhaseData) -> void:
 	_hitbox.damage = phase.damage

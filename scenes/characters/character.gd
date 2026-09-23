@@ -29,7 +29,6 @@ var _flash_tween: Tween
 
 func _ready() -> void:
 	hurtbox.hit_received.connect(_on_hit_received)
-	hurtbox.hazard_touched.connect(_on_hazard_touched)
 	health.died.connect(_on_health_died)
 	_animation_resolver.driver = _animation_driver
 
@@ -89,6 +88,15 @@ func apply_knockback(impulse: Vector2) -> void:
 func clear_knockback() -> void:
 	_knockback_timer = 0.0
 
+## Somewhere this body cannot be (a HazardZone found it). By default it simply
+## hurts: no knockback, there is nothing to be knocked away from, and no
+## i-frames, which cannot hold anyone above water. A body that must also be put
+## back somewhere (Player), or that is never wounded (Guardian), overrides this.
+func receive_hazard(hazard: HazardZone) -> void:
+	if is_dead():
+		return
+	_wound(hazard.damage)
+
 func apply_knockback_decay(delta: float) -> void:
 	velocity.x = lerpf(velocity.x, 0.0, 1.0 - exp(-knockback_damping * delta))
 
@@ -106,20 +114,14 @@ func _assert_clip_length(state: StringName, duration: float) -> void:
 func _on_hit_received(damage: int, knockback: Vector2, _source: Node2D) -> void:
 	if is_dead():
 		return
-	health.take_damage(damage)
+	_wound(damage)
 	apply_knockback(knockback)
+
+## What every way of being hurt shares: the health, the flash, the flinch.
+func _wound(damage: int) -> void:
+	health.take_damage(damage)
 	flash(hurt_flash_color, hurt_flash_time)
 	# A killing blow shows death, not a flinch.
-	_just_hit = health.is_alive()
-
-## Somewhere this body cannot be. By default it simply hurts - no knockback,
-## there is nothing to be knocked away from; a body that must also be put back
-## somewhere (Player) overrides this.
-func _on_hazard_touched(hazard: HazardZone) -> void:
-	if is_dead():
-		return
-	health.take_damage(hazard.damage)
-	flash(hurt_flash_color, hurt_flash_time)
 	_just_hit = health.is_alive()
 
 func _on_health_died() -> void:
