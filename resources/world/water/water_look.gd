@@ -61,3 +61,29 @@ class_name WaterLook extends Resource
 @export_range(0.0, 1.0) var caustic_density: float = 0.3
 ## How far a lit band lifts toward the top line colour.
 @export_range(0.0, 1.0) var caustic_strength: float = 0.35
+
+@export_group("Lake")
+## Only a lake - water seen from above, in front of the land - reads these. Its
+## waves are not a waterline profile but the reflection tearing into slats that
+## grow toward the viewer, and glints of sky on the ripples.
+##
+## World pixels from the far shore over which the rows grow from band_height to
+## band_height_near and their slide from 0 to band_shift_near.
+@export var perspective_px: float = 48.0
+## Rows per reflection band nearest the viewer.
+@export_range(1, 16) var band_height_near: int = 6
+## Largest sideways slide of a band nearest the viewer, in world pixels.
+@export_range(0, 8) var band_shift_near: int = 3
+## How far each row reaches up the scene beyond a plain mirror: the mirrored
+## distance is d + stretch x d^2, d being the rows below the far shore. Near the
+## shore it stays 1:1 (a body standing there is not stretched); deeper rows
+## reflect the treeline and the sky instead of only what stands at the bank.
+@export_range(0.0, 0.1, 0.001) var reflection_stretch: float = 0.0
+## Share of ripple segments lit at the far shore; toward the viewer they thin.
+@export_range(0.0, 1.0) var glint_density: float = 0.12
+## Longest glint, in world pixels. Each is 1 px tall.
+@export_range(2, 24) var glint_length: int = 10
+## Re-rolls per second of the water's clock.
+@export var glint_rate: float = 0.8
+## A glint's colour; alpha is how far the water lifts toward it.
+@export var glint_color := Color(0.85, 0.92, 0.98, 0.7)

@@ -1,7 +1,0 @@
-[gd_resource type="Resource" script_class="WaterProfile" load_steps=2 format=3]
-
-[ext_resource type="Script" path="res://resources/world/water/water_profile.gd" id="1_profile"]
-
-[resource]
-script = ExtResource("1_profile")
-column_width = 4

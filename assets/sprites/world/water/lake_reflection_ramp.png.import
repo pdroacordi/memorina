@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://1jt4vv3efplg"
-path="res://.godot/imported/strip_body_ramp.png-801f16551fb0c7367589acc356ebb4e6.ctex"
+uid="uid://cbuq4yih3nawl"
+path="res://.godot/imported/lake_reflection_ramp.png-526df98e89b0e7c5edad5702207bb73b.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/sprites/world/water/strip_body_ramp.png"
-dest_files=["res://.godot/imported/strip_body_ramp.png-801f16551fb0c7367589acc356ebb4e6.ctex"]
+source_file="res://assets/sprites/world/water/lake_reflection_ramp.png"
+dest_files=["res://.godot/imported/lake_reflection_ramp.png-526df98e89b0e7c5edad5702207bb73b.ctex"]
 
 [params]
 

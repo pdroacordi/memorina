@@ -8,6 +8,12 @@ class_name WaterBody extends Node2D
 ##
 ## Every frame it reads the memory field over each column, steps the surface
 ## (WaterSurfaceField), and hands the result to the shaders as a 1xN texture.
+##
+## TWO PROJECTIONS. A pool in a pit is seen EDGE-ON: its waterline is a profile
+## that waves and splashes, so it has a `profile` and simulates one. A lake in
+## front of the land is seen FROM ABOVE: its top edge is the far shore and
+## stays straight, and its waves are drawn by the shader on the body's clock.
+## It has no `profile` and simulates nothing - the widest water is the cheapest.
 ## Motion is TIME: this node is pausable, so a performance or a lesson stops
 ## the water with the world. The reflection is MEMORY: the shader reads it from
 ## the season mask, which runs through a pause - so a lesson that returns colour
@@ -23,6 +29,8 @@ const HEADROOM := 12
 const RATE_REFRESH_FRAMES := 3
 ## Columns between two samples of the field; those between are interpolated.
 const RATE_STRIDE := 4
+## Column width of a body with no profile (a lake): it only reads memory.
+const PLANE_COLUMN_WIDTH := 4
 
 @export var size := Vector2i(192, 24):
 	set(value):
@@ -33,6 +41,8 @@ const RATE_STRIDE := 4
 ## halfway up it: the first row of water then mirrors the top of the bank, so
 ## the bank itself is skipped and what stands on it sits close to the water.
 @export var mirror_axis_offset := 0
+## How the surface moves. None for a lake seen from above, which has no
+## waterline profile to move.
 @export var profile: WaterProfile
 @export var look: WaterLook
 
@@ -54,13 +64,15 @@ func _ready() -> void:
 	_layout()
 	if Engine.is_editor_hint():
 		return
-	assert(profile != null and look != null, "%s needs a WaterProfile and a WaterLook" % name)
+	assert(look != null, "%s needs a WaterLook" % name)
+	assert(profile != null or _volume == null, "%s: water bodies can enter needs a WaterProfile" % name)
 	assert(global_position == global_position.round(), "Water must sit on whole pixels: %s" % name)
 	assert(is_zero_approx(global_rotation) and global_scale.is_equal_approx(Vector2.ONE),
 		"Water is mirrored in world space and must not be rotated or scaled: %s" % name)
 	assert(size.x % 2 == 0, "The origin is the centre of the waterline, so the width must be even")
-	var columns := ceili(float(size.x) / float(profile.column_width))
-	_field = WaterSurfaceField.new(columns, profile)
+	var columns := ceili(float(size.x) / float(column_width()))
+	if profile:
+		_field = WaterSurfaceField.new(columns, profile)
 	_texture = WaterSurfaceTexture.new(columns)
 	_rates.resize(columns)
 	_solidity.resize(columns)
@@ -82,7 +94,7 @@ func _ready() -> void:
 	_upload()
 
 func _physics_process(delta: float) -> void:
-	if Engine.is_editor_hint() or _field == null:
+	if Engine.is_editor_hint() or _texture == null:
 		return
 	# The rates are read even off screen: FREEZE's ice is never gated, and a
 	# pulse can reach a pool before the camera does - ice grown on rates read
@@ -98,6 +110,9 @@ func _physics_process(delta: float) -> void:
 	# The water's own clock - the swell, the reflection's bands, the caustics -
 	# stops only where the whole body is forgotten.
 	_time += delta * fastest
+	_set_uniform(&"water_time", _time)
+	if _field == null:
+		return
 	_wade(delta)
 	_field.step(delta, _rates, _time)
 	_upload()
@@ -111,9 +126,12 @@ func surface_rest_y() -> float:
 func column_count() -> int:
 	return _rates.size()
 
+func column_width() -> int:
+	return profile.column_width if profile else PLANE_COLUMN_WIDTH
+
 func column_of(world_x: float) -> int:
 	var left := global_position.x - size.x * 0.5
-	return clampi(floori((world_x - left) / profile.column_width), 0, column_count() - 1)
+	return clampi(floori((world_x - left) / column_width()), 0, column_count() - 1)
 
 ## The memory over each column, as last read: the rate its time runs at.
 func column_rates() -> PackedFloat32Array:
@@ -127,6 +145,7 @@ func column_rates() -> PackedFloat32Array:
 ## ring as a comb of teeth instead of a crest (docs/knowledge/bugs/
 ## splash-rings-the-alternating-column-mode.md).
 func splash(world_x: float, speed: float) -> void:
+	assert(_field != null, "%s has no surface to splash: it has no WaterProfile" % name)
 	var depth := minf(speed * profile.splash_depth_per_speed, profile.splash_max_depth)
 	var centre := column_of(world_x)
 	var width := float(profile.splash_half_width)
@@ -136,6 +155,7 @@ func splash(world_x: float, speed: float) -> void:
 
 ## How much of a column ice has taken, 0..1 (see WaterSurfaceField.set_hold).
 func set_hold(column: int, hold: float) -> void:
+	assert(_field != null, "%s has no surface to hold: it has no WaterProfile" % name)
 	_field.set_hold(column, hold)
 
 ## How solid the ice over a column looks, 0..1; drawn from the next upload.
@@ -158,14 +178,15 @@ func _refresh_rates() -> void:
 		_rates.fill(1.0)
 		return
 	var left := global_position.x - size.x * 0.5
+	var width := column_width()
 	var y := surface_rest_y()
 	var previous := 0
-	var previous_rate := _memory.sample(Vector2(left + profile.column_width * 0.5, y))
+	var previous_rate := _memory.sample(Vector2(left + width * 0.5, y))
 	_rates[0] = previous_rate
 	var column := RATE_STRIDE
 	while previous < count - 1:
 		column = mini(column, count - 1)
-		var rate := _memory.sample(Vector2(left + (column + 0.5) * profile.column_width, y))
+		var rate := _memory.sample(Vector2(left + (column + 0.5) * width, y))
 		for i in range(previous + 1, column + 1):
 			_rates[i] = lerpf(previous_rate, rate, float(i - previous) / float(column - previous))
 		previous = column
@@ -181,7 +202,7 @@ func _push_look() -> void:
 		&"surface_data": _texture.texture,
 		&"rest_y": surface_rest_y(),
 		&"body_left": global_position.x - size.x * 0.5,
-		&"column_width": profile.column_width,
+		&"column_width": column_width(),
 		&"depth_band_px": look.depth_band_px,
 		&"transmit_ramp": look.transmit_ramp,
 	}
@@ -207,6 +228,15 @@ func _push_look() -> void:
 	surface.set_shader_parameter(&"caustic_rate", look.caustic_rate)
 	surface.set_shader_parameter(&"caustic_density", look.caustic_density)
 	surface.set_shader_parameter(&"caustic_strength", look.caustic_strength)
+	# The lake's; harmless on a pool's shader, which declares none of them.
+	surface.set_shader_parameter(&"perspective_px", look.perspective_px)
+	surface.set_shader_parameter(&"band_height_near", look.band_height_near)
+	surface.set_shader_parameter(&"band_shift_near", float(look.band_shift_near))
+	surface.set_shader_parameter(&"reflection_stretch", look.reflection_stretch)
+	surface.set_shader_parameter(&"glint_density", look.glint_density)
+	surface.set_shader_parameter(&"glint_length", look.glint_length)
+	surface.set_shader_parameter(&"glint_rate", look.glint_rate)
+	surface.set_shader_parameter(&"glint_color", look.glint_color)
 
 func _set_uniform(uniform: StringName, value: Variant) -> void:
 	for material: ShaderMaterial in _materials:
