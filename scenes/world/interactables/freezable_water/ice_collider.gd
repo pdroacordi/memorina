@@ -15,6 +15,10 @@ class_name IceCollider extends StaticBody2D
 var _shapes: Array[CollisionShape2D] = []
 var _solid := PackedByteArray()
 
+# Ice thaws: standing on it is never somewhere a hazard sends a body back to.
+func _ready() -> void:
+	add_to_group(SafeGroundTracker.UNSAFE)
+
 ## Lays out one disabled segment per `segment_width` world pixels across
 ## [left, left + width), their tops on `top`.
 func build(left: float, width: float, top: float, segment_width: int, thickness: int) -> void:

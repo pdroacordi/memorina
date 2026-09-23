@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scenes/world/environment/water/water_body.gd" id="1_body"]
 [ext_resource type="Script" path="res://scenes/world/environment/water/water_quad.gd" id="2_quad"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://scenes/world/environment/water/water_volume.gd" id="5_volume"]
 [ext_resource type="Resource" path="res://resources/world/water/still_pool_profile.tres" id="6_profile"]
 [ext_resource type="Resource" path="res://resources/world/water/pool_look.tres" id="7_look"]
+[ext_resource type="Script" path="res://scenes/combat/hazard/hazard_zone.gd" id="8_hazard"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_surface"]
 shader = ExtResource("3_surface")
@@ -39,6 +40,14 @@ monitorable = false
 script = ExtResource("5_volume")
 
 [node name="Shape" type="CollisionShape2D" parent="Volume"]
+
+[node name="Hazard" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 66048
+monitorable = false
+script = ExtResource("8_hazard")
+
+[node name="Shape" type="CollisionShape2D" parent="Hazard"]
 
 [node name="Notifier" type="VisibleOnScreenNotifier2D" parent="."]
 

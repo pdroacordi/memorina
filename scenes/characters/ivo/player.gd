@@ -55,6 +55,11 @@ signal skill_recall_missed(skill: Enums.PlayerSkill)
 signal hit_landed
 ## Ivo was hit. The same feedback hooks, from the other side.
 signal hurt
+## Water (a HazardZone) took him and he is sinking. The composition root
+## answers by fading out and calling respawn(); he does not swim.
+signal fell_into_hazard
+## Back on firm ground after a hazard.
+signal respawned
 
 const GROUP := "player"
 
@@ -96,6 +101,7 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 ## design has colour born at the head, not at the instrument.
 @onready var _shield          : GreyhushShield = $GreyhushShield
 @onready var _hitbox          : Hitbox = $Hitbox
+@onready var _safe_ground     : SafeGroundTracker = $SafeGroundTracker
 ## A concrete view of Character's generic resolver, for the duration assert.
 @onready var _player_resolver : PlayerAnimationResolver = $AnimationResolver
 
@@ -116,6 +122,14 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 @export var lesson_lead_in    : float = 0.5
 ## Seconds the shield takes to bloom to full colour when a recall opens.
 @export var recall_glow_time  : float = 0.2
+
+@export_category("Hazards")
+## How fast Ivo sinks once water has him, in pixels per second, and how quickly
+## the water slows his fall to it.
+@export var sink_speed        : float = 40.0
+@export var sink_drag         : float = 2400.0
+## Invulnerability granted on coming back to firm ground.
+@export var hazard_grace      : float = 1.0
 
 var _states: CharacterStateMachine
 ## Which AttackStats the current sequence started with, held fixed for its
@@ -157,6 +171,8 @@ var _recall_escape_left: float = 0.0
 ## A recall that must wait for Ivo to leave the ground, and how long it may
 ## wait: the attack that launches him is still in flight.
 var _pending_recall: AbilityRecallStats = null
+## Water has him: no control until respawn() puts him back on firm ground.
+var _sinking: bool = false
 var _pending_recall_left: float = 0.0
 ## Who is throwing the move the pending recall rides on, for a trigger that
 ## waits on distance.
@@ -229,6 +245,9 @@ func _process_motion(delta: float) -> void:
 	if is_dead():
 		# A corpse still falls and stops sliding; nothing else.
 		_knockback_motion(delta)
+		return
+	if _sinking:
+		_sink_motion(delta)
 		return
 
 	var on_floor := is_on_floor()
@@ -375,6 +394,11 @@ func _select_motion_state(on_floor: bool) -> MotionState:
 	if is_rolling():
 		return MotionState.ROLL
 	return MotionState.GROUND if on_floor else MotionState.AIR
+
+# Water slows the fall to a sink and stops the drift; no input reaches here.
+func _sink_motion(delta: float) -> void:
+	apply_knockback_decay(delta)
+	velocity.y = move_toward(velocity.y, sink_speed, sink_drag * delta)
 
 func _knockback_motion(delta: float) -> void:
 	_jump.apply_gravity(delta)
@@ -699,6 +723,11 @@ func _end_recall() -> void:
 ## to miss.
 func _on_health_died() -> void:
 	super()
+	_drop_recall()
+
+## An open recall window would leave the world slowed forever if nothing ticks
+## it (death, a hazard): dropped without a miss.
+func _drop_recall() -> void:
 	_pending_recall = null
 	if _recall.cancel():
 		_end_recall()
@@ -802,6 +831,39 @@ func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
 	# Not covered by the is_still() check: a hit that deals no knockback
 	# leaves Ivo standing perfectly still.
 	_memorina.interrupt()
+
+## Ivo does not swim: water costs him health and, if he survives it, he sinks
+## out of control until the composition root has faded out and respawn()ed
+## him. A fall that kills him is the ordinary death, sinking as a corpse.
+func _on_hazard_touched(hazard: HazardZone) -> void:
+	if is_dead() or _sinking:
+		return
+	super(hazard)
+	hurt.emit()
+	_attack.cancel()
+	_memorina.interrupt()
+	_drop_recall()
+	if is_dead():
+		return
+	_sinking = true
+	_safe_ground.enabled = false
+	clear_knockback()
+	fell_into_hazard.emit()
+
+## Puts Ivo back on the last firm ground he stood on (SafeGroundTracker),
+## still and briefly untouchable. Called behind a fade; nothing here eases.
+func respawn() -> void:
+	global_position = _safe_ground.last_safe_position()
+	velocity = Vector2.ZERO
+	_sinking = false
+	_safe_ground.enabled = true
+	clear_knockback()
+	_landing.cancel_recovery()
+	hurtbox.grant_invulnerability(hazard_grace)
+	respawned.emit()
+
+func is_sinking() -> bool:
+	return _sinking
 
 func _on_attack_phase_started(_phase_index: int, phase: AttackPhaseData) -> void:
 	_hitbox.damage = phase.damage

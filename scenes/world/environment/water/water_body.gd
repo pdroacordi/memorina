@@ -63,6 +63,7 @@ var _materials: Array[ShaderMaterial] = []
 @onready var _surface: WaterQuad = $Surface
 @onready var _veil: WaterQuad = get_node_or_null("Veil")
 @onready var _volume: WaterVolume = get_node_or_null("Volume")
+@onready var _hazard: HazardZone = get_node_or_null("Hazard")
 @onready var _notifier: VisibleOnScreenNotifier2D = get_node_or_null("Notifier")
 
 func _ready() -> void:
@@ -70,7 +71,8 @@ func _ready() -> void:
 	if Engine.is_editor_hint():
 		return
 	assert(look != null, "%s needs a WaterLook" % name)
-	assert(profile != null or _volume == null, "%s: water bodies can enter needs a WaterProfile" % name)
+	assert(profile != null or (_volume == null and _hazard == null),
+		"%s: water bodies can enter needs a WaterProfile" % name)
 	assert(global_position == global_position.round(), "Water must sit on whole pixels: %s" % name)
 	assert(is_zero_approx(global_rotation) and global_scale.is_equal_approx(Vector2.ONE),
 		"Water is mirrored in world space and must not be rotated or scaled: %s" % name)
@@ -95,6 +97,14 @@ func _ready() -> void:
 		var body_shape := _volume.get_node("Shape") as CollisionShape2D
 		body_shape.shape = shape
 		body_shape.position = Vector2(0.0, size.y * 0.5)
+	if _hazard:
+		# Water takes a body a little below its surface, so the fall visibly
+		# goes in first - and standing on ice at the surface is not in it.
+		var reach := RectangleShape2D.new()
+		reach.size = Vector2(size.x, maxf(size.y - profile.hazard_depth, 1.0))
+		var hazard_shape := _hazard.get_node("Shape") as CollisionShape2D
+		hazard_shape.shape = reach
+		hazard_shape.position = Vector2(0.0, profile.hazard_depth + reach.size.y * 0.5)
 	_push_look()
 	_refresh_rates()
 	_upload()

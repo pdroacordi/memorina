@@ -12,10 +12,13 @@ const MAX_RESIDENT_ROOMS := 2
 
 @onready var _fade   : Fade   = %Fade
 @onready var _camera : GameCamera = %Camera2D
-@onready var _player : Node2D = %Player
+@onready var _player : Player = %Player
 @onready var _memory_field : MemoryField = %MemoryField
 var _current_room    : Room
 var _is_transitioning: bool      = false
+## A hazard's fade is running: a room entered behind it swaps without a fade
+## of its own, because the screen is already black.
+var _respawning      : bool      = false
 
 ## Most-recently-used first. A room only ever leaves this list via eviction
 ## (_touch_resident below), never just by being left — that's the whole
@@ -26,6 +29,7 @@ var _resident_rooms: Array[Room] = []
 ## always a child of its region - so nothing needs a group of its own.
 func _ready() -> void:
 	_camera.follow(_player)
+	_player.fell_into_hazard.connect(_on_player_fell_into_hazard)
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
 		room.room_entered.connect(_on_player_entered_room)
 		var region := room.get_region()
@@ -38,7 +42,8 @@ func _on_player_entered_room(room: Room) -> void:
 	_is_transitioning = true
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
 	if _current_room:
-		await _fade.to_black()
+		if not _respawning:
+			await _fade.to_black()
 		_current_room.deactivate()
 	_current_room = room
 	_current_room.activate()
@@ -50,9 +55,27 @@ func _on_player_entered_room(room: Room) -> void:
 	_memory_field.palette = song_catalog.palette_for(region.season) if song_catalog else null
 	_touch_resident(room)
 	_camera.set_bounds(_current_room.get_bounds())
-	await _fade.to_clear()
+	if not _respawning:
+		await _fade.to_clear()
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
+
+## Water took Ivo (design: he does not swim). He sinks while the screen fades,
+## comes back on the last firm ground he stood on, and the screen clears.
+func _on_player_fell_into_hazard() -> void:
+	if _respawning:
+		return
+	_respawning = true
+	await _fade.to_black()
+	_player.respawn()
+	_camera.snap()
+	# Firm ground can be in another room: its trigger fires on the next
+	# physics steps, and swaps rooms while the screen is still black.
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	_camera.snap()
+	await _fade.to_clear()
+	_respawning = false
 
 ## Marks `room` as the most recently visited, then evicts whichever
 ## resident room hasn't been touched in the longest time if that pushes the

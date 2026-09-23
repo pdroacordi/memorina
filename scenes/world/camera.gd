@@ -165,6 +165,17 @@ func push_in() -> void:
 func release_push() -> void:
 	_tween_zoom(Vector2.ONE, focus_duration)
 
+## Lands the frame on its subject at once, for a cut nobody watches (a respawn
+## behind a fade): no smoothed axis is left easing across the level after it.
+func snap() -> void:
+	_peek_axis = 0.0
+	_peek_hold = 0.0
+	offset.y = framing_offset_y
+	if _look_ahead_tween:
+		_look_ahead_tween.kill()
+	offset.x = _look_ahead_target()
+	reset_smoothing()
+
 ## A decaying random offset; a stronger call while one runs replaces it.
 func shake(strength: float) -> void:
 	if strength < _shake_strength * (_shake_left / maxf(shake_time, 0.001)):
