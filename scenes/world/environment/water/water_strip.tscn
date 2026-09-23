@@ -1,0 +1,22 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scenes/world/environment/water/water_body.gd" id="1_body"]
+[ext_resource type="Script" path="res://scenes/world/environment/water/water_quad.gd" id="2_quad"]
+[ext_resource type="Shader" path="res://scenes/world/environment/water/water_surface.gdshader" id="3_surface"]
+[ext_resource type="Resource" path="res://resources/world/water/still_pool_profile.tres" id="4_profile"]
+[ext_resource type="Resource" path="res://resources/world/water/reflection_strip_look.tres" id="5_look"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_surface"]
+shader = ExtResource("3_surface")
+
+[node name="WaterStrip" type="Node2D"]
+script = ExtResource("1_body")
+size = Vector2i(320, 40)
+profile = ExtResource("4_profile")
+look = ExtResource("5_look")
+
+[node name="Surface" type="Node2D" parent="."]
+material = SubResource("ShaderMaterial_surface")
+script = ExtResource("2_quad")
+
+[node name="Notifier" type="VisibleOnScreenNotifier2D" parent="."]

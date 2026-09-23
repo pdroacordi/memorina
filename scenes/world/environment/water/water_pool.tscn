@@ -1,0 +1,41 @@
+[gd_scene load_steps=10 format=3]
+
+[ext_resource type="Script" path="res://scenes/world/environment/water/water_body.gd" id="1_body"]
+[ext_resource type="Script" path="res://scenes/world/environment/water/water_quad.gd" id="2_quad"]
+[ext_resource type="Shader" path="res://scenes/world/environment/water/water_surface.gdshader" id="3_surface"]
+[ext_resource type="Shader" path="res://scenes/world/environment/water/water_veil.gdshader" id="4_veil"]
+[ext_resource type="Script" path="res://scenes/world/environment/water/water_volume.gd" id="5_volume"]
+[ext_resource type="Resource" path="res://resources/world/water/still_pool_profile.tres" id="6_profile"]
+[ext_resource type="Resource" path="res://resources/world/water/pool_look.tres" id="7_look"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_surface"]
+shader = ExtResource("3_surface")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_veil"]
+shader = ExtResource("4_veil")
+
+[node name="WaterPool" type="Node2D"]
+script = ExtResource("1_body")
+profile = ExtResource("6_profile")
+look = ExtResource("7_look")
+
+[node name="Surface" type="Node2D" parent="."]
+material = SubResource("ShaderMaterial_surface")
+script = ExtResource("2_quad")
+
+[node name="Veil" type="Node2D" parent="."]
+material = SubResource("ShaderMaterial_veil")
+script = ExtResource("2_quad")
+creature_layer = true
+
+[node name="Volume" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 65792
+monitorable = false
+script = ExtResource("5_volume")
+
+[node name="Shape" type="CollisionShape2D" parent="Volume"]
+
+[node name="Notifier" type="VisibleOnScreenNotifier2D" parent="."]
+
+[connection signal="splashed" from="Volume" to="." method="splash"]
