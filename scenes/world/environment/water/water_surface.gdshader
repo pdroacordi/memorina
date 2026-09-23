@@ -11,23 +11,11 @@ shader_type canvas_item;
 // memory field (the reflection gate, the edge stipple) is decided in GAME
 // PIXELS, on the same Bayer grid as the greyhush. Never FRAGCOORD.
 //
-// THE MIRROR NEEDS NO CAMERA. The mirrored point is found in world space and
-// carried to the screen by the local scale between world and SCREEN_UV, taken
-// from derivatives. Zoom, shake, stretch and a camera moving under a pause all
-// cancel out; nothing is uploaded per frame (a pausable uploader would go stale
-// exactly when the lesson pushes in). Measured against the exact projection:
-// docs/knowledge/gotchas/screen-texture-copy-scope.md.
-//
-// TWO SOURCES. The world comes from the automatic screen copy. Ivo and the
-// guardians are culled out of the world canvas, so they come from the creature
-// pass, published as a global by CreatureMask; its texture is 640x360, which is
-// also where this shader learns the game resolution from.
+// The mirror itself (no camera, two sources) is water_reflection.gdshaderinc.
 
 #include "res://scenes/world/environment/water/water_common.gdshaderinc"
+#include "res://scenes/world/environment/water/water_reflection.gdshaderinc"
 #include "res://scenes/world/memory/seasonal/seasonal_common.gdshaderinc"
-
-global uniform sampler2D greyhush_creature_pass : filter_nearest, repeat_disable;
-uniform sampler2D screen_texture : hint_screen_texture, filter_nearest, repeat_disable;
 
 uniform sampler2D body_ramp : filter_nearest, repeat_disable, hint_default_transparent;
 uniform sampler2D reflection_ramp : filter_nearest, repeat_disable, hint_default_black;
@@ -38,15 +26,9 @@ uniform vec4 foam_color : source_color = vec4(0.94, 0.97, 0.98, 1.0);
 // World pixels from the rest line to the mirror axis; negative is ABOVE the
 // water. A strip in front of a bank mirrors about the bank's top, not its own.
 uniform float mirror_axis_offset = 0.0;
-uniform float reflection_strength = 0.85;
-uniform int reflect_levels = 4;
-// Memory at which the reflection starts to appear, and at which it is whole.
-uniform float reflect_memory_low = 0.15;
-uniform float reflect_memory_high = 0.6;
 uniform int band_height = 2;
 uniform float band_shift_max = 1.0;
 uniform float band_speed = 1.3;
-uniform float edge_fade_px = 12.0;
 
 uniform float caustic_depth = 10.0;
 uniform int caustic_band_px = 3;
@@ -64,12 +46,6 @@ float hash11(float n) {
 	p *= p + 33.33;
 	p *= p + p;
 	return fract(p);
-}
-
-// A screen UV fetched at the centre of the output pixel it lands in, so the
-// sample never straddles two texels of the window-resolution copy.
-vec2 output_centre(vec2 uv, vec2 screen_pixel) {
-	return (floor(uv / screen_pixel) + 0.5) * screen_pixel;
 }
 
 void vertex() {
@@ -90,13 +66,12 @@ void fragment() {
 	}
 	float depth = texel.y - surface;
 
-	vec2 game_size = vec2(textureSize(greyhush_creature_pass, 0));
-	vec2 game_px = floor(SCREEN_UV * game_size);
+	vec2 game_px = floor(SCREEN_UV * wr_game_size());
 	float remembered = 1.0 - gh_forgotten_at(SCREEN_UV);
 
 	// What lies behind the water, seen through it.
-	vec2 here = SCREEN_UV + (centre - world_pos) * uv_per_world;
-	vec3 behind = texture(screen_texture, output_centre(here, SCREEN_PIXEL_SIZE)).rgb;
+	vec2 here = wr_screen_uv(SCREEN_UV, world_pos, uv_per_world, centre);
+	vec3 behind = texture(screen_texture, wr_output_centre(here, SCREEN_PIXEL_SIZE)).rgb;
 	vec4 body = wc_ramp(body_ramp, depth, texel);
 	vec3 colour = mix(behind * wc_transmit(depth, texel), body.rgb, body.a);
 
@@ -106,25 +81,11 @@ void fragment() {
 	float row = floor(depth / float(band_height));
 	float shift = round(band_shift_max * sin(row * 1.7 + water_time * band_speed));
 	vec2 mirrored = vec2(centre.x + shift, 2.0 * axis - centre.y);
-	vec2 uv_m = SCREEN_UV + (mirrored - world_pos) * uv_per_world;
-	// A vertical mirror only ever leaves the screen at the TOP: fade on y alone,
-	// and clamp x so a band's 1 px slide at the side reads the edge column.
-	uv_m.x = clamp(uv_m.x, 0.5 * SCREEN_PIXEL_SIZE.x, 1.0 - 0.5 * SCREEN_PIXEL_SIZE.x);
-	float edge = clamp(min(uv_m.y, 1.0 - uv_m.y) * game_size.y / edge_fade_px, 0.0, 1.0);
-	vec3 world_m = texture(screen_texture, output_centre(uv_m, SCREEN_PIXEL_SIZE)).rgb;
-	vec4 creature = texture(greyhush_creature_pass, (floor(uv_m * game_size) + 0.5) / game_size);
-	vec3 reflected = creature.rgb + world_m * (1.0 - creature.a);
+	vec2 uv_m = wr_clamp_x(wr_screen_uv(SCREEN_UV, world_pos, uv_per_world, mirrored), SCREEN_PIXEL_SIZE);
+	vec3 reflected = wr_sample(uv_m, SCREEN_PIXEL_SIZE);
 	vec4 tint = wc_ramp(reflection_ramp, depth, texel);
-	// The authored strength is posterised, never dithered: a band's interior is
-	// one flat level. The stipple is spent only where the reflection FADES -
-	// with memory, and at the screen's edge - so it reads as the water
-	// forgetting, not as a checkerboard laid over everything. Memory is read at
-	// the WATER's pixel: it is the water that remembers what is above it, and
-	// forgotten water shows nothing at all.
-	float steps = float(reflect_levels - 1);
-	float authored = round(tint.a * reflection_strength * steps) / steps;
-	float awake = clamp((remembered - reflect_memory_low) / (reflect_memory_high - reflect_memory_low), 0.0, 1.0);
-	float gate = awake * edge > BAYER[wd_bayer_index(game_px)] ? authored : 0.0;
+	float awake = wr_awake(remembered);
+	float gate = wr_gate(tint.a, awake, wr_edge(uv_m), game_px);
 	colour = mix(colour, reflected * tint.rgb, gate);
 
 	// Caustics: coarse vertical bands re-rolled on the water's clock. They wake
