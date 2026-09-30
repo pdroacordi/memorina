@@ -1,0 +1,14 @@
+[remap]
+
+importer="memorina.room_map"
+type="Resource"
+uid="uid://cf1byk5qdxlj7"
+path="res://.godot/imported/downtown.room-06cf0ef77cbee779689e9cd371b64109.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/home_village/contents/downtown.room"
+dest_files=["res://.godot/imported/downtown.room-06cf0ef77cbee779689e9cd371b64109.res"]
+
+[params]
+

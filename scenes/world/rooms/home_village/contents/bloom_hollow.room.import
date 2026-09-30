@@ -1,0 +1,14 @@
+[remap]
+
+importer="memorina.room_map"
+type="Resource"
+uid="uid://betc1f756mok"
+path="res://.godot/imported/bloom_hollow.room-e10e41a5f8826977f08d70258ad8101c.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/home_village/contents/bloom_hollow.room"
+dest_files=["res://.godot/imported/bloom_hollow.room-e10e41a5f8826977f08d70258ad8101c.res"]
+
+[params]
+

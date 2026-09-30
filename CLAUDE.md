@@ -127,7 +127,7 @@ gdUnit4 lives in `addons/gdUnit4/`. Pure logic goes in a `RefCounted` class and 
 
 `--ignoreHeadlessMode` is required: gdUnit4 refuses headless runs by default because input-driven tests cannot work there. None of these suites use input.
 
-After adding a script with a new `class_name`, run `--headless --path . --import` once, or nothing else will resolve the new type.
+After adding a script with a new `class_name`, run `--headless --path . --import` once, or nothing else will resolve the new type. The same import is what turns an edited `.room` into its `RoomMap`.
 
 ## Engineering knowledge base (self-improving)
 
@@ -206,10 +206,13 @@ Song and pulse data lives under `resources/songs/` and `resources/memory/`, foll
 ```
 scenes/world/rooms/<region>.tscn                            composition: places the rooms
 scenes/world/rooms/<region>/<room>.tscn                     the Room trigger (Area2D, room.gd), with contents_scene exported
-scenes/world/rooms/<region>/contents/<room>_contents.tscn   the actual tilemap/background, loaded lazily
+scenes/world/rooms/<region>/contents/<room>_contents.tscn   backgrounds + a RoomMap node, loaded lazily
+scenes/world/rooms/<region>/contents/<room>.room            the room's ground, water and entities, as TEXT
 ```
 
 The `_contents` suffix exists specifically so the two `<room>.tscn` files are distinguishable by filename alone.
+
+**Rooms are text** (`docs/maps/README.md`, the `room-map` skill). A `.room` file is an ASCII grid - one character per 32 px cell, `#` earth, `S` stone, `=` a one-way ledge, entity letters - plus an optional `[water]` layer (water can lie OVER ground) and `[entities]` params by grid column,row. `addons/room_maps` imports it ONCE into a `RoomMap` resource with every ground tile already resolved (`GroundAutotile`), so a room's load is one `set_cell` per cell; `RoomMapNode` builds the ground `TileMapLayer`, one `WaterLayer` per kind of water and the entities as SIBLINGS (a lake parented under the ground's TileMapLayer stopped drawing in front of it). Never paint ground in the editor: the `RoomMap` node's children are a preview and are never saved. `resources/world/maps/room_legend.tres` is the only place a character means anything; `EntityParams` applies params by property name (a bare `id` in a NodePath param links to that sibling). `floor_tileset.tres` is the one floor TileSet (`tools/maps/build_floor_tileset.gd`); its `ground` custom data is each tile's `Enums.Ground`, and `RoomMapNode.ground_at()` answers what the ground is made of. The guide's legend, entity params and Ivo's reach (`JumpReach`) are GENERATED (`tools/maps/gen_map_docs.tscn`) and `map_guide_test.gd` fails when they drift; `room_files_test.gd` validates every map against the current legend. Tools that load the legend's entity scenes run as scenes (`res://tools/maps/*.tscn`), not `-s` scripts, because only a running scene has the autoloads those scenes reference.
 
 Rename and move files **from inside the Godot editor** (FileSystem dock), so it rewrites `uid://` references, `path=` entries and `.import` sidecars for you.
 
@@ -253,6 +256,8 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | Chuva | `Enums.Song.RAIN` |
 | o que a canção faz por si (campo, casca, sombra) | `Song.pulse_effect` (`PulseEffect`) |
 | atalho permanente da primeira resolução | `SaveSystem.resolve_shortcut` |
+| terra / pedra (material do chão) | `Enums.Ground.EARTH` / `STONE`, `RoomMapNode.ground_at()` |
+| mapa de sala em texto | `.room`, `RoomMap`, `RoomMapNode`, `room_legend.tres` |
 | Inverno / Verão / Outono / Primavera | `Enums.Season.WINTER` / `SUMMER` / `AUTUMN` / `SPRING` |
 | estação nativa (de uma região) | `Region.season` / `MemoryField.season` |
 | título da canção (Hino do Gelo…) | `Song.title_key` (`SONG_TITLE_*`) |
@@ -302,5 +307,6 @@ someone's memory of the project is exactly what causes an accidental regression 
 | `water_strip.tscn` / `reflection_strip_look.tres` / `strip_profile.tres` (a pool's cross-section drawn in front of the ground) | replaced 2026-09-23 by the lake (`water_lake.tscn`, `lake_look.tres`, no profile) |
 | a `WaterBody` scene placed by hand with a typed `size` | replaced 2026-09-23 by painting a `WaterLayer`; the scenes are still what a layer instances |
 | `Player.call_window_opened(seconds)` | retired 2026-09-22: the length was only ever feeding a second clock; `call_window_progress(fraction)` reports the fight's own |
+| hand-painted room ground (`TileMapLayer` with inline `TileSet` per contents scene), painted `WaterLayer`s and hand-placed enemies in contents scenes | replaced 2026-09-23 by `.room` text maps built by `RoomMapNode` from the one `floor_tileset.tres` (`docs/maps/README.md`) |
 | the first song matrix: `BLIZZARD` (Ventania/Nevasca), `CONCENTRATED_SUN` (Sol Concentrado), `SUDDEN_STORM` (Tempestade Repentina), `WEAKEN` (Fragilizar), `STRIP` (Despir), `SPROUT` (Brotar), `HATCH` (Eclodir), and the unslotted Hibernação | replaced 2026-09-23 by the second matrix, each renamed IN ITS SLOT so the save indices hold: `BELL_JAR`, `SHADOW`, `SOLSTICE`, `RELEASE`, `GALE`, `ROOT`, `RAIN` (design 02 §7.1). The soundtrack files were renamed after the new titles; their music predates the new songs |
 

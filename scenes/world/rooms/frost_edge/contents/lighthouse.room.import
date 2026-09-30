@@ -1,0 +1,14 @@
+[remap]
+
+importer="memorina.room_map"
+type="Resource"
+uid="uid://vd5qrt4ut4w6"
+path="res://.godot/imported/lighthouse.room-0547c83f5d529ed2f6852fbce951a191.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/frost_edge/contents/lighthouse.room"
+dest_files=["res://.godot/imported/lighthouse.room-0547c83f5d529ed2f6852fbce951a191.res"]
+
+[params]
+

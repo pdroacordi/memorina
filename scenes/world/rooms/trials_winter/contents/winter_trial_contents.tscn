@@ -1,4 +1,4 @@
-[gd_scene format=4 uid="uid://clighthouc01"]
+[gd_scene format=4]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_5.png" id="1_hj4u4"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_4.png" id="2_c5g2v"]
@@ -11,14 +11,9 @@
 [ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_4_material.tres" id="bg_season_4"]
 [ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_5_material.tres" id="bg_season_5"]
 [ext_resource type="Material" path="res://scenes/world/memory/seasonal/floor_tiles_seasonal_material.tres" id="tiles_season"]
-[ext_resource type="PackedScene" uid="uid://cfrostguard1" path="res://scenes/characters/guardians/frost_guardian/frost_guardian.tscn" id="20_guardian"]
 
-[ext_resource type="Script" path="res://scenes/world/rooms/arena.gd" id="30_arena"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
-[ext_resource type="Resource" path="res://scenes/world/rooms/frost_edge/contents/lighthouse.room" id="room_map"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_arena"]
-size = Vector2(1920, 602)
+[ext_resource type="Resource" path="res://scenes/world/rooms/trials_winter/contents/winter_trial.room" id="room_map"]
 
 [node name="Contents" type="Node2D"]
 
@@ -83,15 +78,3 @@ script = ExtResource("room_map_node")
 map = ExtResource("room_map")
 ground_material = ExtResource("tiles_season")
 
-[node name="FrostGuardian" parent="." instance=ExtResource("20_guardian")]
-position = Vector2(170, -2)
-arena_path = NodePath("../Arena")
-
-[node name="Arena" type="Area2D" parent="."]
-position = Vector2(-399.5, -237)
-monitoring = false
-monitorable = false
-script = ExtResource("30_arena")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Arena"]
-shape = SubResource("RectangleShape2D_arena")

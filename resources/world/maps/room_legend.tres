@@ -1,0 +1,66 @@
+[gd_resource type="Resource" script_class="RoomLegend" load_steps=14 format=3]
+
+[ext_resource type="Script" path="res://resources/world/maps/room_legend.gd" id="1_legend"]
+[ext_resource type="Script" path="res://resources/world/maps/room_legend_entry.gd" id="2_entry"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_pool_layer.tscn" id="3_pool"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_lake_layer.tscn" id="4_lake"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/freezable_water/freezable_water_layer.tscn" id="5_freezable"]
+[ext_resource type="PackedScene" path="res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn" id="6_brute"]
+
+[sub_resource type="Resource" id="earth"]
+script = ExtResource("2_entry")
+symbol = "#"
+kind = 0
+ground = 1
+description = "Earth: soil with a grassy top (the season's top). Enraizar's roots grow from it."
+
+[sub_resource type="Resource" id="stone"]
+script = ExtResource("2_entry")
+symbol = "S"
+kind = 0
+ground = 2
+description = "Stone: cut masonry. Roots never grow from it - use it where a song must NOT reach."
+
+[sub_resource type="Resource" id="ledge"]
+script = ExtResource("2_entry")
+symbol = "="
+kind = 1
+ground = 1
+description = "One-way earth ledge, one cell high: jump up through it, stand on it, drop through it."
+
+[sub_resource type="Resource" id="pool"]
+script = ExtResource("2_entry")
+symbol = "~"
+kind = 2
+ground = 0
+water_layer = ExtResource("3_pool")
+description = "Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand."
+
+[sub_resource type="Resource" id="lake"]
+script = ExtResource("2_entry")
+symbol = "w"
+kind = 2
+ground = 0
+water_layer = ExtResource("4_lake")
+description = "Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides."
+
+[sub_resource type="Resource" id="freezable"]
+script = ExtResource("2_entry")
+symbol = "f"
+kind = 2
+ground = 0
+water_layer = ExtResource("5_freezable")
+description = "Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there."
+
+[sub_resource type="Resource" id="brute"]
+script = ExtResource("2_entry")
+symbol = "B"
+kind = 3
+ground = 0
+scene = ExtResource("6_brute")
+anchor = 0
+description = "Brute Shadow: a common enemy that wanders, chases and swings. Give it a unique save_id so its defeat is remembered."
+
+[resource]
+script = ExtResource("1_legend")
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute")])

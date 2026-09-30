@@ -1,0 +1,14 @@
+[remap]
+
+importer="memorina.room_map"
+type="Resource"
+uid="uid://c3nxc18boop7l"
+path="res://.godot/imported/autumn_trial.room-af0da4f36089f8b8ad56b4d7a39fff88.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/trials_autumn/contents/autumn_trial.room"
+dest_files=["res://.godot/imported/autumn_trial.room-af0da4f36089f8b8ad56b4d7a39fff88.res"]
+
+[params]
+

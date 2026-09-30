@@ -1,0 +1,14 @@
+[remap]
+
+importer="memorina.room_map"
+type="Resource"
+uid="uid://cn11sibtdj1el"
+path="res://.godot/imported/woods.room-f91e3eb5cfdc7a8551523786c7196d58.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/home_village/contents/woods.room"
+dest_files=["res://.godot/imported/woods.room-f91e3eb5cfdc7a8551523786c7196d58.res"]
+
+[params]
+

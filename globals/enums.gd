@@ -79,3 +79,14 @@ enum Guardian {
 	FROST,
 	BLOOM
 }
+
+## What the ground of a room is made of. Songs read it: Enraizar links EARTH to
+## earth and never touches STONE (docs/design/02_mecanicas.md section 7.1), so
+## the material is gameplay, drawn so the player can read it. Stored in the
+## floor TileSet's `ground` custom data and in RoomMap; indexes nothing in the
+## save file.
+enum Ground {
+	NONE,
+	EARTH,
+	STONE
+}

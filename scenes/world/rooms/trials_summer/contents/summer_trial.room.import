@@ -1,0 +1,14 @@
+[remap]
+
+importer="memorina.room_map"
+type="Resource"
+uid="uid://cspar5ab78ecm"
+path="res://.godot/imported/summer_trial.room-8d949e8538ad4b278e38fec8030f058a.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/trials_summer/contents/summer_trial.room"
+dest_files=["res://.godot/imported/summer_trial.room-8d949e8538ad4b278e38fec8030f058a.res"]
+
+[params]
+

@@ -1,0 +1,204 @@
+# Making rooms: the `.room` text map
+
+Every room's ground, water and placed things are authored as **text**: one
+character per 32 px cell, in a `.room` file beside the room's contents scene.
+The text is the source of truth. The Godot scene only holds what text cannot
+say well (parallax backgrounds, set dressing, a guardian and its arena), plus
+one `RoomMap` node pointing at the `.room` file.
+
+Why text: an ASCII grid can be read, written, diffed and reasoned about by a
+person or an LLM - a gap's width, whether a ledge is stone or earth, whether a
+song can reach both banks - where a painted `TileMapLayer` is an opaque byte
+blob in the `.tscn`. Earth and stone are gameplay (Enraizar only roots in
+earth), and a character can say that; a painted tile could not.
+
+The parts of this guide between `<!-- generated -->` markers are written by
+`tools/maps/gen_map_docs.tscn` from the code itself and checked by
+`tests/scenes/world/rooms/maps/map_guide_test.gd`, so they cannot go stale.
+Everything else is prose: **change it in the same commit as any convention it
+describes.**
+
+## Where a room's files live
+
+Rooms are a three-level pattern (see CLAUDE.md, "Project structure"):
+
+```
+scenes/world/rooms/<region>.tscn                            places the rooms
+scenes/world/rooms/<region>/<room>.tscn                     the Room trigger (Area2D), contents_scene exported
+scenes/world/rooms/<region>/contents/<room>_contents.tscn   backgrounds + a RoomMap node
+scenes/world/rooms/<region>/contents/<room>.room            THIS: ground, water, entities
+```
+
+The contents scene's `RoomMap` node (`scenes/world/rooms/maps/room_map_node.gd`)
+has `map` set to the `.room` file and `ground_material` set to
+`floor_tiles_seasonal_material.tres`, so a pulse redraws the ground in its
+season. It builds, as its children and in this order: the ground
+`TileMapLayer`, one `WaterLayer` per kind of water, then every entity.
+
+## The file
+
+```
+; downtown.room - comments start with ';' outside the grids
+[room]
+origin = -43, -6        ; tile coordinates of the grids' top-left character
+
+[grid]                  ; ground, ledges and entities
+...............................................###...........
+..............................B...................####.......
+############################################......###########
+#############################################################
+
+[water]                 ; optional: kinds of water, same size as [grid]
+.............................................................
+.............................................................
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwffffff...........
+.............................................................
+
+[entities]              ; params for entities, by grid column,row
+30,1 = {"save_id": "downtown_brute"}
+```
+
+- **One character is one 32 px cell.** The world position of grid column `c`,
+  row `r` is `((origin.x + c) * 32, (origin.y + r) * 32)` - its top-left corner.
+  Row 0 is the top. The floor Ivo walks on is the top edge of a ground cell.
+- **`origin`** puts the grid in the room: it is the tile coordinate of the
+  top-left character. Match the room's `Area2D` bounds (in its `<room>.tscn`).
+- **`[water]` is a second layer** because water can lie *over* ground (a lake
+  in front of the land) as well as fill a pit. It has exactly as many rows as
+  `[grid]`. Each 32 px water character becomes 2x2 of the water system's
+  16 px cells (`WaterLayer`), which works out the basins, surfaces and depths
+  itself (`WaterBasins`).
+- **`[entities]`** gives params to entity characters. Keys are **grid**
+  column,row (0-based, from the top-left character), not tile coordinates.
+  An entity without params needs no line.
+- Short rows are padded with `.` and warned about. Keep rows the same width.
+
+### How the ground is drawn
+
+You never pick tiles. `GroundAutotile` chooses each ground cell's tile from
+its eight neighbours at import: a grassy top where the sky is above, rounded
+bottoms, one-wide walls and pillars, one-high ledges, and inner corners where
+a diagonal opens. Past the map's **left, right and bottom** edges counts as
+solid ground (the world runs on beyond the room); past the **top** is open sky.
+
+So: to make a floor, write `#` down to the bottom of the grid. A floor that
+stops above the bottom row shows a rounded underside.
+
+Stone (`S`) uses the same shapes cut in masonry
+(`tools/art/derive_stone_tiles.gd` derives it from the earth art). Every tile
+carries its material in the TileSet's `ground` custom data, and the map answers
+`RoomMapNode.ground_at(point)` for anything that asks.
+
+## The legend
+
+Every character comes from `resources/world/maps/room_legend.tres`. Nothing
+else in the code knows what a character means.
+
+<!-- generated:legend -->
+| Character | Section | Kind | Material | What it is |
+|---|---|---|---|---|
+| `.` | any grid | empty | - | Nothing: air in `[grid]`, no water in `[water]`. |
+| `#` | `[grid]` | ground | earth | Earth: soil with a grassy top (the season's top). Enraizar's roots grow from it. |
+| `S` | `[grid]` | ground | stone | Stone: cut masonry. Roots never grow from it - use it where a song must NOT reach. |
+| `=` | `[grid]` | ledge | earth | One-way earth ledge, one cell high: jump up through it, stand on it, drop through it. |
+| `~` | `[water]` | water | - | Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand. |
+| `w` | `[water]` | water | - | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides. |
+| `f` | `[water]` | water | - | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
+| `B` | `[grid]` | entity | - | Brute Shadow: a common enemy that wanders, chases and swings. Give it a unique save_id so its defeat is remembered. |
+<!-- /generated:legend -->
+
+## Entity params
+
+A param sets a property of the entity's root node, by name, converted to the
+property's type:
+
+| Property type | Write it as |
+|---|---|
+| int / float / bool / String | JSON number / boolean / string |
+| enum | its number (the order in the enum's declaration) |
+| StringName | a string |
+| Vector2 / Vector2i | `[x, y]` |
+| Color | `"#rrggbb"` or `"#rrggbbaa"` |
+| NodePath (a link) | the other entity's `id` - `{"target_path": "gate_a"}` |
+
+**Links.** Give an entity an `id` and it becomes the node's name, unique in
+the room (the importer rejects two entities with the same id). A `NodePath`
+param given a bare id resolves to that sibling (`../gate_a`); a path starting
+with `.` or `/` is used as written.
+
+A param the entity does not have, or a value its type cannot take, fails the
+import (and the room-files test) instead of silently doing nothing.
+
+<!-- generated:entities -->
+#### `B` - BruteShadow
+
+Scene `res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn`, anchored at its cell's bottom centre (standing on the cell below). Brute Shadow: a common enemy that wanders, chases and swings. Give it a unique save_id so its defeat is remembered.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `save_id` | String | `"downtown_brute_shadow"` |
+| `terminal_velocity` | float | `500.0` |
+| `gravity_scale` | float | `1.0` |
+| `knockback_time` | float | `1.0` |
+| `knockback_damping` | float | `6.0` |
+| `hurt_flash_color` | Color | `Color(1, 0.5, 0.5, 1)` |
+| `hurt_flash_time` | float | `0.18` |
+<!-- /generated:entities -->
+
+## Sizing gaps: what Ivo can reach
+
+<!-- generated:reach -->
+| Move | Pixels | Cells |
+|---|---|---|
+| Jump height (holding jump) | 143 | 4.5 |
+| Double-jump height (both jumps) | 270 | 8.5 |
+| Widest gap, running jump, same height | 271 | 8.5 |
+| Widest gap, running double jump, same height | 434 | 13.6 |
+| Widest gap onto a ledge one cell higher | 258 | 8.1 |
+| Widest gap onto a ledge one cell higher, double jump | 425 | 13.3 |
+
+Computed by `JumpReach` from `ivo_jump_stats.tres`, `ivo_locomotion_stats.tres`, the double jump's `height` and Ivo's collision radius. A gap wider than these is a song's job - that is what makes a song useful.
+<!-- /generated:reach -->
+
+A puzzle for a song should be a gap (or a height, or a door) these numbers say
+Ivo cannot clear alone, and the song makes clearable. Each song-trials room
+has a reachability test that checks both halves.
+
+## The loop
+
+1. Edit the `.room` file (any text editor, or ask an agent).
+2. Reimport: switching to the Godot editor reimports it; headless,
+   `"<godot>" --headless --path . --import`. An error names the file, line and
+   column, and the last good import stays in use.
+3. Run the suite (`tests/scenes/world/rooms/maps/room_files_test.gd` parses
+   and validates every `.room` in the project against the current legend).
+4. Look at it: the contents scene previews the room in the editor, or run a
+   playtest timeline with `player_position` in the room (`tools/playtest/`).
+
+## Adding to the legend
+
+1. Add a `RoomLegendEntry` to `room_legend.tres`: one unused character, its
+   kind, and for ground/ledge the material, for water the `WaterLayer` preset,
+   for an entity its scene and anchor. Write a one-line `description` - it
+   becomes this guide's legend row.
+2. An entity's params are its root's exported properties: document them with
+   `##` comments on the export, and keep the root a `Node2D`.
+3. Regenerate this guide:
+   `"<godot>" --headless --path . res://tools/maps/gen_map_docs.tscn`
+4. A legend change does not reimport maps on its own. Reimport them (step 2
+   of the loop); the room-files test already reads them fresh.
+
+## Errors and what they mean
+
+| Message | Meaning |
+|---|---|
+| `unknown character 'X'` | not in the legend (or in the wrong grid) |
+| `water 'w' belongs in [water], not [grid]` | water goes in its own layer |
+| `'#' is not a kind of water` | only water characters go in `[water]` |
+| `[water] has N rows, [grid] has M` | the two layers must line up |
+| `no entity at column C, row R` | an `[entities]` line points at a cell that is not an entity (keys are grid coordinates) |
+| `params must be a JSON object` | the right-hand side is not `{...}` |
+| `id 'X' is used by two entities` | ids name nodes; they must be unique in the room |
+| `'Node' has no param 'X'` | the entity's root has no such exported property |
+| `cannot use V as T` | the value does not convert to the property's type |

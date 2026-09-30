@@ -20,6 +20,11 @@
 [ext_resource type="PackedScene" uid="uid://cfrostedge01" path="res://scenes/world/rooms/frost_edge.tscn" id="16_frost"]
 [ext_resource type="Resource" uid="uid://ytstn8cm81ql" path="res://resources/songs/song_catalog.tres" id="19_songcat"]
 [ext_resource type="PackedScene" uid="uid://cregweather1" path="res://scenes/world/environment/region_weather/region_weather.tscn" id="20_weather"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_winter.tscn" id="30_trials_winter"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_summer.tscn" id="31_trials_summer"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_autumn.tscn" id="32_trials_autumn"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_spring.tscn" id="33_trials_spring"]
+[ext_resource type="Script" path="res://scenes/world/debug/trial_teleport.gd" id="34_teleport"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -35,6 +40,21 @@ process_mode = 1
 
 [node name="FrostEdge" parent="World" unique_id=2108025702 instance=ExtResource("16_frost")]
 position = Vector2(5856, 0)
+
+[node name="TrialsWinter" parent="World" instance=ExtResource("30_trials_winter")]
+position = Vector2(0, 6000)
+
+[node name="TrialsSummer" parent="World" instance=ExtResource("31_trials_summer")]
+position = Vector2(2400, 6000)
+
+[node name="TrialsAutumn" parent="World" instance=ExtResource("32_trials_autumn")]
+position = Vector2(4800, 6000)
+
+[node name="TrialsSpring" parent="World" instance=ExtResource("33_trials_spring")]
+position = Vector2(7200, 6000)
+
+[node name="TrialTeleport" type="Node" parent="."]
+script = ExtResource("34_teleport")
 
 [node name="RegionWeather" parent="World" instance=ExtResource("20_weather")]
 

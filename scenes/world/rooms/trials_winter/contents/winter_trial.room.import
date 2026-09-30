@@ -1,0 +1,14 @@
+[remap]
+
+importer="memorina.room_map"
+type="Resource"
+uid="uid://6g0kq4pdf7dr"
+path="res://.godot/imported/winter_trial.room-db28f84057dbf391c769d364f6a83a6e.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/trials_winter/contents/winter_trial.room"
+dest_files=["res://.godot/imported/winter_trial.room-db28f84057dbf391c769d364f6a83a6e.res"]
+
+[params]
+
