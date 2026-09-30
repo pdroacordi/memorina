@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_spring/contents/spring_trial_contents.tscn" id="2_contents"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_room"]
-size = Vector2(1920, 640)
+size = Vector2(1920, 768)
 
 [node name="SpringTrial" type="Area2D"]
 collision_mask = 256
@@ -12,7 +12,7 @@ script = ExtResource("1_room")
 contents_scene = ExtResource("2_contents")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(960, -192)
+position = Vector2(960, -128)
 shape = SubResource("RectangleShape2D_room")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

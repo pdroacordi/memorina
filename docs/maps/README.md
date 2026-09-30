@@ -113,6 +113,8 @@ else in the code knows what a character means.
 | `H` | `[grid]` | entity | - | A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back. |
 | `F` | `[grid]` | entity | - | A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside. |
 | `D` | `[grid]` | entity | - | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
+| `r` | `[water]` | water | - | A basin Chuva fills: paint it up to where the rain brings the water. It is dry until it rains, rises while a Chuva pulse covers it, sinks back to dry when the last pulse leaves, and freezes like f (Chuva then Congelar: ice where there was no water). |
+| `O` | `[grid]` | entity | - | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -249,6 +251,15 @@ Scene `res://scenes/world/interactables/drawbridge/drawbridge.tscn`, anchored at
 | `length_cells` | int | `4` |
 | `side` | int | `1` |
 | `fall_time` | float | `0.45` |
+
+#### `O` - Floater
+
+Scene `res://scenes/world/interactables/floater/floater.tscn`, anchored at its cell's bottom centre (standing on the cell below). A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `draft` | float | `4.0` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

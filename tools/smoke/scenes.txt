@@ -17,3 +17,5 @@ res://scenes/world/interactables/seesaw/seesaw.tscn
 res://scenes/world/interactables/hanging_load/hanging_load.tscn
 res://scenes/world/interactables/leaf_cover/leaf_cover.tscn
 res://scenes/world/interactables/drawbridge/drawbridge.tscn
+res://scenes/world/interactables/floater/floater.tscn
+res://scenes/world/interactables/rain_basin/rain_basin.tscn
