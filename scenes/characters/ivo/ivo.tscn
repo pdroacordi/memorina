@@ -12,6 +12,9 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_push_96x96.png" id="60_push"]
 [ext_resource type="Script" path="res://scenes/characters/components/airflow_body.gd" id="61_airflow"]
 [ext_resource type="Script" path="res://scenes/world/interactables/weight/weight.gd" id="62_weight"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_climb_96x96.png" id="63_climb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_climb_back_96x96.png" id="64_climbback"]
+[ext_resource type="Script" path="res://scenes/characters/components/climb_component.gd" id="65_climbco"]
 [ext_resource type="Texture2D" uid="uid://dk6l26iest8ah" path="res://assets/sprites/characters/ivo/player_roll_96x96.png" id="6_lk6ox"]
 [ext_resource type="Texture2D" uid="uid://dbcqeejk3rkuc" path="res://assets/sprites/characters/ivo/player_attack.png" id="6_xaiam"]
 [ext_resource type="Texture2D" uid="uid://ncv44x1nf0vl" path="res://assets/sprites/characters/ivo/player_wall_land_96x96.png" id="7_ip35x"]
@@ -60,6 +63,9 @@
 [ext_resource type="Script" uid="uid://cd0iolsgg5fll" path="res://scenes/characters/ivo/abilities/ability_recall_component.gd" id="49_recall"]
 [ext_resource type="Script" path="res://scenes/characters/ivo/recall_aura/recall_aura.gd" id="50_aura"]
 [ext_resource type="Script" path="res://scenes/characters/components/safe_ground_tracker.gd" id="60_safe_ground"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_climbsensor"]
+size = Vector2(12, 28)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
 radius = 11.0
@@ -1355,6 +1361,174 @@ tracks/2/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6, 7]
 }
 
+[sub_resource type="Animation" id="Animation_climb"]
+resource_name = "climb"
+length = 0.6
+loop_mode = 1
+step = 0.15
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("63_climb")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.0, 0.15, 0.3, 0.45),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_climb_hold"]
+resource_name = "climb_hold"
+length = 0.1
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("63_climb")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_climb_back"]
+resource_name = "climb_back"
+length = 0.6
+loop_mode = 1
+step = 0.15
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("64_climbback")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.0, 0.15, 0.3, 0.45),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_climb_back_hold"]
+resource_name = "climb_back_hold"
+length = 0.1
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("64_climbback")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
 [sub_resource type="Animation" id="Animation_brace"]
 resource_name = "brace"
 length = 1.0
@@ -1684,6 +1858,10 @@ tracks/2/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ra23q"]
 _data = {
 &"brace": SubResource("Animation_brace"),
+&"climb": SubResource("Animation_climb"),
+&"climb_hold": SubResource("Animation_climb_hold"),
+&"climb_back": SubResource("Animation_climb_back"),
+&"climb_back_hold": SubResource("Animation_climb_back_hold"),
 &"RESET": SubResource("Animation_knqxj"),
 &"air_downwards_attack": SubResource("Animation_kebpl"),
 &"air_spin": SubResource("Animation_ip35x"),
@@ -1778,6 +1956,18 @@ animation = &"wall_slide"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_brace"]
 animation = &"brace"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_climb"]
+animation = &"climb"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_climb_hold"]
+animation = &"climb_hold"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_climb_back"]
+animation = &"climb_back"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_climb_back_hold"]
+animation = &"climb_back_hold"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ks11i"]
 states/End/position = Vector2(1012, 205)
 states/Start/position = Vector2(129, 100)
@@ -1821,6 +2011,14 @@ states/roll/node = SubResource("AnimationNodeAnimation_ckagk")
 states/roll/position = Vector2(386.96698, 166.9749)
 states/brace/node = SubResource("AnimationNodeAnimation_brace")
 states/brace/position = Vector2(526, 20)
+states/climb/node = SubResource("AnimationNodeAnimation_climb")
+states/climb/position = Vector2(626, 20)
+states/climb_hold/node = SubResource("AnimationNodeAnimation_climb_hold")
+states/climb_hold/position = Vector2(726, 20)
+states/climb_back/node = SubResource("AnimationNodeAnimation_climb_back")
+states/climb_back/position = Vector2(826, 20)
+states/climb_back_hold/node = SubResource("AnimationNodeAnimation_climb_back_hold")
+states/climb_back_hold/position = Vector2(926, 20)
 states/run/node = SubResource("AnimationNodeAnimation_ks11i")
 states/run/position = Vector2(526, 83)
 states/wall_landing/node = SubResource("AnimationNodeAnimation_ip35x")
@@ -1895,6 +2093,18 @@ script = ExtResource("61_airflow")
 
 [node name="Weight" type="Node" parent="."]
 script = ExtResource("62_weight")
+
+[node name="Climb" type="Node" parent="."]
+script = ExtResource("65_climbco")
+
+[node name="ClimbSensor" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 4
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ClimbSensor"]
+position = Vector2(0, -30)
+shape = SubResource("RectangleShape2D_climbsensor")
 
 [node name="Jump" type="Node" parent="." unique_id=1102847533]
 script = ExtResource("19_jumpco")

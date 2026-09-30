@@ -22,6 +22,10 @@ const ATTACK_FALL := &"attack_fall"
 const ATTACK_POGO := &"attack_pogo"
 const MEMORINA_DRAW := &"memorina_draw"
 const MEMORINA_IDLE := &"memorina_idle"
+const CLIMB := &"climb"
+const CLIMB_HOLD := &"climb_hold"
+const CLIMB_BACK := &"climb_back"
+const CLIMB_BACK_HOLD := &"climb_back_hold"
 const HURT := &"hurt"
 const DEATH := &"death"
 
@@ -46,6 +50,13 @@ func resolve() -> StringName:
 		var clip := _attack_clip(on_floor)
 		if clip != &"":
 			return clip
+
+	# Above the airborne block: holding on is not falling.
+	if _player.is_climbing():
+		var moving := _player.velocity.length() > 1.0
+		if _player.climb_grip() == Climbable.Grip.POLE:
+			return CLIMB_BACK if moving else CLIMB_BACK_HOLD
+		return CLIMB if moving else CLIMB_HOLD
 
 	if not on_floor:
 		if _player.is_wall_sliding():

@@ -79,7 +79,7 @@ const STILL_SPEED_EPSILON := 1.0
 ## as an ESCAPE from whatever forced it, in seconds.
 const RECALL_ESCAPE_TIME := 0.6
 
-enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
+enum MotionState { KNOCKBACK, ROLL, GROUND, AIR, CLIMB }
 
 
 @onready var _input           : PlayerInput = $PlayerInput
@@ -89,6 +89,7 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 @onready var _double_jump     : DoubleJumpComponent = $DoubleJump
 @onready var _wall_mobility   : WallMobilityComponent = $WallMobility
 @onready var _roll            : RollComponent = $Roll
+@onready var _climb           : ClimbComponent = $Climb
 @onready var _attack          : AttackComponent = $Attack
 @onready var _pogo            : PogoComponent = $Pogo
 @onready var _memorina        : MemorinaComponent = $Memorina
@@ -243,6 +244,7 @@ func _ready() -> void:
 	_states.add_state(MotionState.ROLL, _roll_motion)
 	_states.add_state(MotionState.GROUND, _ground_motion)
 	_states.add_state(MotionState.AIR, _air_physics)
+	_states.add_state(MotionState.CLIMB, _climb_motion)
 	_resting_shield_amount = _shield.amount
 
 	_assert_clip_durations()
@@ -281,6 +283,7 @@ func _process_motion(delta: float) -> void:
 	if on_floor:
 		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
+	_try_climb()
 
 	_states.transition_to(_select_motion_state(on_floor))
 	_states.update(delta)
@@ -333,6 +336,13 @@ func is_recovering() -> bool:
 
 func is_wall_sliding() -> bool:
 	return _wall_mobility.is_sliding
+
+## On something Enraizar grew (a root web or a pillar).
+func is_climbing() -> bool:
+	return _climb.is_climbing()
+
+func climb_grip() -> Climbable.Grip:
+	return _climb.grip()
 
 func is_rolling() -> bool:
 	return _roll.is_rolling()
@@ -405,9 +415,13 @@ func air_axis() -> float:
 
 func _select_motion_state(on_floor: bool) -> MotionState:
 	if is_in_knockback():
+		# Being hit knocks him off what he was holding.
+		_climb.release()
 		return MotionState.KNOCKBACK
 	if is_rolling():
 		return MotionState.ROLL
+	if _climb.is_climbing():
+		return MotionState.CLIMB
 	return MotionState.GROUND if on_floor else MotionState.AIR
 
 func _tick_input_timers(delta: float, on_floor: bool) -> void:
@@ -415,6 +429,7 @@ func _tick_input_timers(delta: float, on_floor: bool) -> void:
 	_roll.tick_timers(delta, on_floor)
 	_attack.tick_timers(delta)
 	_memorina.tick_timers(delta)
+	_climb.tick(delta)
 
 # Water slows the fall to a sink and stops the drift; no input reaches here.
 # Sampled as the fall speed, so the plunge is not remembered as a hard landing.
@@ -433,6 +448,28 @@ func _roll_motion(delta: float) -> void:
 
 func _ground_motion(delta: float) -> void:
 	_locomotion.ground_update(delta, move_axis(), carry().x)
+
+# Up held grabs something climbable within reach - the body's judgement,
+# like every other gate: not while rolling, hurt or playing.
+func _try_climb() -> void:
+	if _climb.is_climbing() or is_rolling() or is_in_knockback() or is_memorina_drawn():
+		return
+	# A swing or a landing's recovery finishes first: the resolver would show
+	# the attack while the body climbed.
+	if is_attacking() or is_recovering():
+		return
+	if _input.look_direction < -0.5 and _climb.can_grab():
+		_climb.grab()
+		_wall_mobility.stop()
+
+# No gravity and no wind: he holds on. Climbing out of the top hops him onto
+# the ledge; anything else that ends it lets him fall.
+func _climb_motion(delta: float) -> void:
+	match _climb.update(delta, Vector2(move_axis(), _input.look_direction)):
+		ClimbComponent.Exit.OVER_THE_TOP:
+			_jump.launch(_climb.top_hop_height)
+		ClimbComponent.Exit.LET_GO:
+			_jump.apply_gravity(delta)
 
 func _air_physics(delta: float) -> void:
 	_wall_mobility.enabled = _has_unlocked(Enums.PlayerSkill.WALL_CLIMB)
@@ -793,6 +830,11 @@ func _try_jump(on_floor: bool) -> void:
 
 	_double_jump.enabled = _has_unlocked(Enums.PlayerSkill.DOUBLE_JUMP)
 
+	# A jump from what he climbs is a jump from firm ground.
+	if _climb.is_climbing():
+		_climb.release()
+		_jump.try_ground_jump(true)
+		return
 	if _jump.try_ground_jump(on_floor):
 		_wall_mobility.stop()
 	elif _double_jump.try_jump():
