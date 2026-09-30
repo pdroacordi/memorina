@@ -14,6 +14,8 @@ enum Phase { ATTACK, SUSTAIN, CONTRACT, DONE }
 ## the sustain time. The front has arrived; the ring lingers a moment, then the
 ## pulse is just light.
 const RING_FADE := 0.25
+## Seconds a stretched pulse takes to grow to its new reach (Solstice).
+const GROW_TIME := 1.0
 
 var phase: Phase = Phase.ATTACK
 
@@ -22,6 +24,10 @@ var _attack_time: float
 var _sustain_time: float
 var _contract_time: float
 var _elapsed: float = 0.0
+# A stretch (Solstice): the radius it grew from, and when.
+var _stretched := false
+var _grow_from := -1.0
+var _grow_start := 0.0
 
 ## `local_memory` is how alive the ground under the pulse already was. A pulse
 ## lit in a badly corroded place dies sooner, so the danger of a region is
@@ -45,7 +51,32 @@ func advance(delta: float) -> void:
 	else:
 		phase = Phase.DONE
 
+## Makes the pulse reach `reach` times farther and hold `duration` times
+## longer - once, and only while it is still opening or holding (design 02
+## section 7.1: Solstice makes every pulse it overlaps last longer and reach
+## farther). The new reach is grown into over GROW_TIME, not jumped to.
+## Returns whether it took.
+func stretch(reach: float, duration: float) -> bool:
+	if _stretched or phase == Phase.CONTRACT or phase == Phase.DONE:
+		return false
+	_stretched = true
+	_grow_from = radius()
+	_grow_start = _elapsed
+	_max_radius *= reach
+	_sustain_time *= duration
+	return true
+
+func is_stretched() -> bool:
+	return _stretched
+
 func radius() -> float:
+	var natural := _natural_radius()
+	if _grow_from < 0.0 or phase == Phase.CONTRACT or phase == Phase.DONE:
+		return natural
+	var t := clampf((_elapsed - _grow_start) / GROW_TIME, 0.0, 1.0)
+	return lerpf(minf(_grow_from, natural), natural, smoothstep(0.0, 1.0, t))
+
+func _natural_radius() -> float:
 	match phase:
 		Phase.ATTACK:
 			# Ease-out: the front leaps away and settles, rather than creeping.

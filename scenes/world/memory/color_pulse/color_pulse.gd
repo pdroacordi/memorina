@@ -97,6 +97,13 @@ func song() -> Song:
 func radius() -> float:
 	return maxf(_timeline.radius(), 0.0) if _timeline else 0.0
 
+## Lasts longer and reaches farther, once (Solstice; see PulseTimeline.stretch).
+func stretch(reach: float, duration: float) -> bool:
+	return _timeline != null and _timeline.stretch(reach, duration)
+
+func is_stretched() -> bool:
+	return _timeline != null and _timeline.is_stretched()
+
 func phase() -> PulseTimeline.Phase:
 	return _timeline.phase if _timeline else PulseTimeline.Phase.DONE
 

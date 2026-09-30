@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1"]
 [ext_resource type="Resource" uid="uid://haw0km1jwcl3" path="res://resources/songs/palettes/summer_palette.tres" id="2"]
-[ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/memory/shadow_pulse_stats.tres" id="3"]
 [ext_resource type="AudioStream" uid="uid://c4lj7rrklr17n" path="res://assets/audios/soundtrack/chant_of_the_noon_sun.mp3" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/song_effects/shadow/cast_shadow.tscn" id="5_effect"]
 
