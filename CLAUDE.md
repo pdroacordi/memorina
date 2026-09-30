@@ -144,6 +144,10 @@ Design 02 section 7.1: Redoma's one rule is **nothing enters, everything may lea
 - **It holds water out** (`WaterBody.hold_out(holder, centre, radius)` / `release`): every column whose waterline lies in the disc is dry - depth 0 in the data texture, and the hazard rebuilt as one shape per run of wet columns - until the shell shrinks off it. Simplified on purpose: a column is dry top to bottom, not along the arc.
 - **Redoma's pulse is its own** (`bell_jar_pulse_stats.tres`, 192 px, 8 s sustain, 5 s contraction).
 
+## The longest day
+
+Design 02 section 7.1: Solstice acts on memory, not on the world. **`SolsticeAura`** (the song's `PulseEffect`, warm rays turning on the disc's edge) calls `ColorPulse.stretch(reach, duration)` on every other pulse overlapping it; `PulseTimeline.stretch` takes once, only while the pulse still opens or holds, multiplies its reach and its sustain, and grows into the new reach over `GROW_TIME` rather than jumping. So every effect that lives as long as its pulse - the shadow on a plate, a root bridge, the ice's trigger, the rain - lasts longer and reaches farther with no rule of its own. Alone it holds colour long in a dead place (`solstice_pulse_stats.tres`: a 24 s sustain and `contract_min_factor` 1.0). Sombra has its own shorter pulse (`shadow_pulse_stats.tres`, ~9 s) so that the long corridor (a fifth trials region, `trials_solstice`, 80 cells) is Solstice's puzzle: the shadow alone is gone before Ivo reaches the door, stretched it lasts the walk (`solstice_trial_test.gd`).
+
 ## Water
 
 Design 03 §6: water is computed, not drawn. Everything lives in `scenes/world/environment/water/` (the pool's FREEZE glue in `scenes/world/interactables/freezable_water/`), tuned by `WaterProfile` (motion), `WaterLook` (palette LUTs in `assets/sprites/world/water/`, reflection, caustics) and `IceProfile` under `resources/world/water/`.
@@ -174,7 +178,7 @@ After adding a script with a new `class_name`, run `--headless --path . --import
 
 **Smoke test** after each phase, before the slower playtests: `"<godot>" --headless --path . res://tools/smoke/smoke.tscn` opens every scene in `tools/smoke/scenes.txt` for 120 frames and exits 1 on any logged error (a custom `Logger` counts them; warnings arrive through the same callback and are listed, not failed). Add every new playable scene to the list.
 
-**The song trials** (`scenes/world/rooms/trials_<season>.tscn`, one room each) are where every song's puzzles are built and playtested. `DebugTrials` (in `game.tscn`) mounts them below the world in DEBUG builds only - a release build frees it first, so they never ship - and F10 (`debug_trials`) carries Ivo to the next one, snapping the camera. A playtest reaches them with `player_position` (winter at x 0, summer 2400, autumn 4800, spring 7200; y 6000 is the floor).
+**The song trials** (`scenes/world/rooms/trials_<season>.tscn`, one room each) are where every song's puzzles are built and playtested. `DebugTrials` (in `game.tscn`) mounts them below the world in DEBUG builds only - a release build frees it first, so they never ship - and F10 (`debug_trials`) carries Ivo to the next one, snapping the camera. A playtest reaches them with `player_position` (winter at x 0, summer 2400, autumn 4800, spring 7200, Solstice's corridor 9600; y 6000 is the floor).
 
 ## Art pipeline
 
@@ -270,7 +274,7 @@ Rename and move files **from inside the Godot editor** (FileSystem dock), so it 
 ## Known gaps (not yet implemented)
 
 - Input map (`project.godot`) defines `move_left`, `move_right`, `jump`, `look_up`, `look_down`, `roll`, `attack`, `draw_memorina`, `note_up`/`note_down`/`note_left`/`note_right` and the debug-only `debug_learn_song` (F9). Only the notes (face buttons: Y/△ up, A/✕ down, X/□ left, B/○ right) and `draw_memorina` (right shoulder) have joypad bindings; movement, jump, roll and attack are keyboard-only. The design still calls for open-notebook, pause and open-map — add these when that work actually starts, matching the existing signal-based `PlayerInput` pattern.
-- `FREEZE`, `GALE`, `SHADOW`, `RELEASE`, `RAIN`, `ROOT` and `BELL_JAR` act on the world. `SOLSTICE` lights a pulse, swap the seasonal art and spawn their season's particles, and nothing more yet. The burned shadow copies whatever frame Ivo shows, which today is the template's playing pose; there is no ash art beyond particles.
+- All eight songs act; see each song's section. The compositions that need more than shared systems (design 02 section 7.4) are not built: Vendaval then Congelar's frozen crest ramp, Chuva then Congelar's ice outliving the drain, Redoma then Congelar's frozen arc, Soltar then Enraizar's catch. Sombra + Soltar and Solstice + anything need no code and have no dedicated trial beyond the corridor. The burned shadow copies whatever frame Ivo shows, which today is the template's playing pose; there is no ash art beyond particles.
 - Nothing in the world grants `PlayerItem.SWORD` or `PlayerItem.MEMORINA`; there are no pickups and no benches, and `save_game()` is still never called. `Player.learn_song()` REFUSES without the instrument rather than granting one - handing it over is the world's to do (a pickup, the mentor), and a body that granted itself an item on the way into a cutscene would skip that scene entirely. Debug builds start a new game owning both (`SaveSystem.new_game()`), so a guardian can be fought from a clean launch. The debug action `debug_learn_song` (F9, debug builds only) still teaches the next unknown song through `Player.learn_song()`; it stays until every song has a guardian.
 - Redoma: the water is held out column by column, not along the shell's arc, and does not stand against it as a curved wall (so Redoma then Congelar's frozen arc, Inverno Logico 2, is Phase 7's); the trial has no windy-spot puzzle (Inverno Logico 1) - the shelter is unit-level only.
 - Enraizar does not catch a falling load yet (Soltar then Enraizar, Combinado 3 - Phase 7). Climbing exists only on roots; the template's ladder and ledge clips are unused.
@@ -361,6 +365,8 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | Redoma / casca de geada / nada entra, tudo pode sair | `FrostShell` (physics layer 4 "Shell"), collision exceptions until clear |
 | abrigo da Redoma | `DiscShelter` |
 | a água fica de fora | `WaterBody.hold_out` / `release` / `is_held_out` |
+| Solstício / o dia mais longo | `SolsticeAura`, `ColorPulse.stretch`, `PulseTimeline.stretch` |
+| o corredor longo | `trials_solstice`, `solstice_trial_test.gd` |
 
 ### Terms no longer used
 
