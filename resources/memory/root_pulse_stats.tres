@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PulseStats" format=3]
+
+[ext_resource type="Script" uid="uid://c7cosd67tkhh4" path="res://resources/memory/pulse_stats.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+max_radius = 280.0
+attack_time = 1.0
+sustain_time = 12.0
+contract_time = 4.0
