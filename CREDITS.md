@@ -14,7 +14,7 @@ Third-party art used in Memorina, with the terms it was taken under.
   never uploaded to an image generator as a reference (the AI-training clause).
 
 - **Props** (`assets/sprites/world/props/`: pressure plate, stone gate, lift, seesaw plank
-  and fulcrum, drawbridge, hanging cocoon, root strand) - generated for this project with
+  and fulcrum, drawbridge, hanging cocoon, root strand, fallen log) - generated for this project with
   Codex CLI's image tool from the prompts in `tools/art/prompts/`, then keyed, snapped to
   the world palette and packed by `tools/art/process_image.gd`. No third-party art was
   given as a reference. `leaf_wall.png` is drawn by `tools/art/draw_procedural_sprites.gd`.

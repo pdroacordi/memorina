@@ -1,0 +1,42 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scenes/world/interactables/freezable_water/freezable_water.gd" id="1_freeze"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_pool.tscn" id="2_pool"]
+[ext_resource type="Script" path="res://scenes/world/interactables/freezable_water/ice_collider.gd" id="3_collider"]
+[ext_resource type="Script" path="res://scenes/world/memory/song_receiver.gd" id="4_receiver"]
+[ext_resource type="Resource" path="res://resources/world/water/frost_ice.tres" id="5_ice"]
+[ext_resource type="Script" path="res://scenes/world/interactables/rain_basin/rain_basin.gd" id="6_rain"]
+
+[node name="RainBasin" type="Node2D"]
+script = ExtResource("1_freeze")
+ice = ExtResource("5_ice")
+
+[node name="Water" parent="." instance=ExtResource("2_pool")]
+size = Vector2i(192, 56)
+mirror_axis_offset = -4
+
+[node name="IceCollider" type="StaticBody2D" parent="."]
+collision_layer = 1
+collision_mask = 0
+script = ExtResource("3_collider")
+
+[node name="SongReceiver" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1048576
+script = ExtResource("4_receiver")
+reacts_to = 0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SongReceiver"]
+
+[node name="RainReceiver" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1048576
+script = ExtResource("4_receiver")
+reacts_to = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RainReceiver"]
+
+[node name="Rain" type="Node" parent="."]
+script = ExtResource("6_rain")
+
+[connection signal="song_entered" from="SongReceiver" to="." method="_on_song_entered"]

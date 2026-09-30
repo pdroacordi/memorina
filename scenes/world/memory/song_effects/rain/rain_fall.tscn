@@ -1,0 +1,30 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/memory/song_effects/rain/rain_fall.gd" id="1_rain"]
+[ext_resource type="Shader" path="res://scenes/world/memory/seasonal/seasonal_particles.gdshader" id="2_shader"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/wind/wind_streak_radial.png" id="3_streak"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_rain"]
+shader = ExtResource("2_shader")
+shader_parameter/season = 3
+
+[node name="RainFall" type="Node2D"]
+script = ExtResource("1_rain")
+
+[node name="Rain" type="CPUParticles2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_rain")
+emitting = false
+amount = 260
+lifetime = 2.6
+local_coords = false
+texture = ExtResource("3_streak")
+emission_shape = 3
+emission_rect_extents = Vector2(300, 4)
+particle_flag_align_y = true
+direction = Vector2(0.12, 1)
+spread = 3.0
+gravity = Vector2(0, 300)
+initial_velocity_min = 380.0
+initial_velocity_max = 460.0
+color = Color(0.78, 0.88, 0.98, 0.9)
