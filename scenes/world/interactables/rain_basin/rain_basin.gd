@@ -41,12 +41,17 @@ func _ready() -> void:
 	# water in its _ready, which runs after this one.
 	_water.set_level.call_deferred(_dry_y)
 
+## Under a Redoma's closed shell no rain reaches it: the whole painted
+## waterline must be covered, or rain still falls into the part that is not.
 func _sheltered() -> bool:
-	var centre := Vector2(_water.global_position.x, _full_y)
-	for shell: ColorPulse in ColorPulse.lit(self, Enums.Song.BELL_JAR):
-		if shell.contains(centre):
-			return true
-	return false
+	var airflow := Airflow.find_in(self)
+	if airflow == null:
+		return false
+	var half := _water.size.x * 0.5 - 1.0
+	for dx: float in [-half, 0.0, half]:
+		if not airflow.is_sheltered(Vector2(_water.global_position.x + dx, _full_y)):
+			return false
+	return true
 
 ## How full it is: 0 dry, 1 at its painted level.
 func level() -> float:

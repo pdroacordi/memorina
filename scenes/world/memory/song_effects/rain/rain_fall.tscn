@@ -1,30 +1,39 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/world/memory/song_effects/rain/rain_fall.gd" id="1_rain"]
-[ext_resource type="Shader" path="res://scenes/world/memory/seasonal/seasonal_particles.gdshader" id="2_shader"]
-[ext_resource type="Texture2D" path="res://assets/sprites/world/wind/wind_streak_radial.png" id="3_streak"]
+[ext_resource type="Shader" path="res://scenes/world/memory/seasonal/seasonal_particles.gdshader" id="2_clip"]
+[ext_resource type="Shader" path="res://scenes/world/memory/song_effects/rain/rain_sky.gdshader" id="3_sky"]
+[ext_resource type="Script" path="res://scenes/world/memory/song_effects/bursts/sprite_bursts.gd" id="4_bursts"]
+[ext_resource type="Resource" path="res://resources/world/effects/rain_splash.tres" id="5_splash"]
+[ext_resource type="Resource" path="res://resources/world/effects/rain_water_splash.tres" id="6_water"]
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_rain"]
-shader = ExtResource("2_shader")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_drops"]
+shader = ExtResource("2_clip")
 shader_parameter/season = 3
 
-[node name="RainFall" type="Node2D"]
-script = ExtResource("1_rain")
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_splashes"]
+shader = ExtResource("2_clip")
+shader_parameter/season = 3
 
-[node name="Rain" type="CPUParticles2D" parent="."]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
+shader = ExtResource("3_sky")
+
+[node name="RainFall" type="Node2D"]
+z_index = 56
+z_as_relative = false
+material = SubResource("ShaderMaterial_drops")
+script = ExtResource("1_rain")
+splash = ExtResource("5_splash")
+water_splash = ExtResource("6_water")
+
+[node name="Sky" type="Polygon2D" parent="."]
+z_index = 54
+z_as_relative = false
+material = SubResource("ShaderMaterial_sky")
+
+[node name="Splashes" type="Node2D" parent="."]
+z_index = 55
+z_as_relative = false
 texture_filter = 1
-material = SubResource("ShaderMaterial_rain")
-emitting = false
-amount = 260
-lifetime = 2.6
-local_coords = false
-texture = ExtResource("3_streak")
-emission_shape = 3
-emission_rect_extents = Vector2(300, 4)
-particle_flag_align_y = true
-direction = Vector2(0.12, 1)
-spread = 3.0
-gravity = Vector2(0, 300)
-initial_velocity_min = 380.0
-initial_velocity_max = 460.0
-color = Color(0.78, 0.88, 0.98, 0.9)
+material = SubResource("ShaderMaterial_splashes")
+script = ExtResource("4_bursts")

@@ -43,12 +43,20 @@ func register_shelter(shelter: AirflowShelter) -> void:
 func unregister_shelter(shelter: AirflowShelter) -> void:
 	_shelters.erase(shelter)
 
+## Whether a shelter covers `global_point`: no air moves there, and no weather
+## reaches it - the rain asks this too, so the wind and the rain agree on
+## when a Redoma's shell starts to shelter (when it closes).
+func is_sheltered(global_point: Vector2) -> bool:
+	for shelter: AirflowShelter in _shelters:
+		if shelter.is_visible_in_tree() and shelter.covers(global_point):
+			return true
+	return false
+
 ## How the air moves at `global_point`, in px/s. Sources hidden with an
 ## inactive room do not blow.
 func sample(global_point: Vector2) -> Vector2:
-	for shelter: AirflowShelter in _shelters:
-		if shelter.is_visible_in_tree() and shelter.covers(global_point):
-			return Vector2.ZERO
+	if is_sheltered(global_point):
+		return Vector2.ZERO
 	var wind := Vector2.ZERO
 	for source: AirflowSource in _sources:
 		if source.is_visible_in_tree():
