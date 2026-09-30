@@ -15,9 +15,9 @@
 [ext_resource type="PackedScene" path="res://scenes/world/memory/seasonal/season_mask.tscn" id="13_smask"]
 [ext_resource type="Script" uid="uid://c1anfmns84gaa" path="res://scenes/world/world_freeze.gd" id="14_freeze"]
 [ext_resource type="PackedScene" uid="uid://c3q0k2vjhr8y" path="res://scenes/ui/recall_prompt/recall_prompt.tscn" id="15_prompt"]
+[ext_resource type="PackedScene" uid="uid://cfrostedge01" path="res://scenes/world/rooms/frost_edge.tscn" id="16_frost"]
 [ext_resource type="PackedScene" uid="uid://cguardcallhud" path="res://scenes/ui/guardian_call_hud/guardian_call_hud.tscn" id="17_callhud"]
 [ext_resource type="PackedScene" uid="uid://clessoncinem" path="res://scenes/ui/lesson_cinematic/lesson_cinematic.tscn" id="18_cine"]
-[ext_resource type="PackedScene" uid="uid://cfrostedge01" path="res://scenes/world/rooms/frost_edge.tscn" id="16_frost"]
 [ext_resource type="Resource" uid="uid://ytstn8cm81ql" path="res://resources/songs/song_catalog.tres" id="19_songcat"]
 [ext_resource type="PackedScene" uid="uid://cregweather1" path="res://scenes/world/environment/region_weather/region_weather.tscn" id="20_weather"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_winter.tscn" id="30_trials_winter"]
@@ -48,11 +48,11 @@ regions = Array[PackedScene]([ExtResource("30_trials_winter"), ExtResource("31_t
 world_path = NodePath("../World")
 camera_path = NodePath("../World/Camera2D")
 
-[node name="RegionWeather" parent="World" instance=ExtResource("20_weather")]
+[node name="RegionWeather" parent="World" unique_id=1176217791 instance=ExtResource("20_weather")]
 
 [node name="Player" parent="World" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
 unique_name_in_owner = true
-position = Vector2(-173, 0)
+position = Vector2(3277, -69)
 
 [node name="Camera2D" type="Camera2D" parent="World" unique_id=1746271803]
 unique_name_in_owner = true
@@ -100,8 +100,8 @@ offset_bottom = 40.0
 metadata/_edit_use_anchors_ = true
 
 [node name="Greyhush" type="ColorRect" parent="CanvasLayer" unique_id=1302556382]
-process_mode = 3
 unique_name_in_owner = true
+process_mode = 3
 material = ExtResource("9_greym")
 anchors_preset = 15
 anchor_right = 1.0
@@ -113,8 +113,7 @@ script = ExtResource("8_greyh")
 creature_pass_path = NodePath("../Creatures")
 season_mask_path = NodePath("../../SeasonMask")
 
-[node name="LessonCinematic" parent="CanvasLayer" instance=ExtResource("18_cine")]
-layout_mode = 3
+[node name="LessonCinematic" parent="CanvasLayer" unique_id=2033014400 instance=ExtResource("18_cine")]
 
 [node name="Creatures" type="TextureRect" parent="CanvasLayer" unique_id=1302556384]
 texture_filter = 1
@@ -131,7 +130,7 @@ texture = SubResource("ViewportTexture_creatures")
 
 [node name="RecallPrompt" parent="CanvasLayer" unique_id=991755491 instance=ExtResource("15_prompt")]
 
-[node name="GuardianCallHud" parent="CanvasLayer" instance=ExtResource("17_callhud")]
+[node name="GuardianCallHud" parent="CanvasLayer" unique_id=978754071 instance=ExtResource("17_callhud")]
 
 [node name="Fade" type="ColorRect" parent="CanvasLayer" unique_id=1302556381]
 unique_name_in_owner = true
@@ -144,50 +143,50 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 script = ExtResource("6_sarsd")
 
-[connection signal="lesson_started" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_lesson_started"]
-[connection signal="memorina_drawn" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_drawn"]
-[connection signal="memorina_drawn" from="World/Player" to="World/Camera2D" method="focus" unbinds=2]
-[connection signal="memorina_sheathed" from="World/Player" to="World/Camera2D" method="unfocus"]
-[connection signal="memorina_sheathed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sheathed"]
-[connection signal="note_cue_reached" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_note_cue_reached"]
-[connection signal="note_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_note_played"]
-[connection signal="note_rejected" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_note_rejected"]
-[connection signal="performance_finished" from="World/Player" to="WorldFreeze" method="thaw"]
-[connection signal="performance_started" from="World/Player" to="WorldFreeze" method="freeze"]
-[connection signal="recall_ended" from="World/Player" to="WorldFreeze" method="restore"]
-[connection signal="recall_ended" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_recall_ended"]
-[connection signal="recall_started" from="World/Player" to="CanvasLayer/RecallPrompt" method="show_for"]
-[connection signal="recall_step_taken" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_step_taken"]
-[connection signal="recall_started" from="World/Player" to="WorldFreeze" method="slow" unbinds=3]
-[connection signal="sequence_failed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_failed"]
-[connection signal="sequence_reset" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_reset"]
-[connection signal="song_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_song_played"]
-[connection signal="focused" from="World/Camera2D" to="CanvasLayer/MemorinaHud" method="on_camera_focused"]
-[connection signal="call_opened" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_opened"]
-[connection signal="call_note_sounded" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_note_sounded"]
-[connection signal="call_window_opened" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_window_opened"]
-[connection signal="call_closed" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_closed"]
-[connection signal="call_opened" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_opened"]
-[connection signal="call_window_opened" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_window_opened"]
-[connection signal="call_window_progress" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_window_progress"]
-[connection signal="call_window_opened" from="World/Player" to="World/Camera2D" method="focus"]
-[connection signal="call_progress" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_progress"]
 [connection signal="call_answered" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_answered"]
 [connection signal="call_closed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_closed"]
-[connection signal="skill_recalled" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_recalled"]
-[connection signal="skill_recall_missed" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_missed"]
+[connection signal="call_closed" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_closed"]
+[connection signal="call_note_sounded" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_note_sounded"]
+[connection signal="call_opened" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_opened"]
+[connection signal="call_opened" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_opened"]
+[connection signal="call_progress" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_progress"]
+[connection signal="call_staged" from="World/Player" to="World/Camera2D" method="frame_pair"]
+[connection signal="call_staged" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_call_staged" unbinds=1]
+[connection signal="call_staged" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_staged" unbinds=1]
+[connection signal="call_unstaged" from="World/Player" to="World/Camera2D" method="release_pair"]
+[connection signal="call_unstaged" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_call_unstaged"]
+[connection signal="call_unstaged" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_unstaged"]
+[connection signal="call_window_opened" from="World/Player" to="World/Camera2D" method="focus"]
+[connection signal="call_window_opened" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_window_opened"]
+[connection signal="call_window_opened" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_window_opened"]
+[connection signal="call_window_progress" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_window_progress"]
 [connection signal="hit_landed" from="World/Player" to="WorldFreeze" method="hit_stop"]
 [connection signal="hit_landed" from="World/Player" to="World/Camera2D" method="shake" binds= [2.0]]
 [connection signal="hurt" from="World/Player" to="WorldFreeze" method="hit_stop"]
 [connection signal="hurt" from="World/Player" to="World/Camera2D" method="shake" binds= [4.0]]
-[connection signal="call_staged" from="World/Player" to="World/Camera2D" method="frame_pair"]
-[connection signal="call_unstaged" from="World/Player" to="World/Camera2D" method="release_pair"]
-[connection signal="call_staged" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_call_staged" unbinds=1]
-[connection signal="call_unstaged" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_call_unstaged"]
-[connection signal="call_staged" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_staged" unbinds=1]
-[connection signal="call_unstaged" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_unstaged"]
 [connection signal="lesson_started" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_lesson_started"]
-[connection signal="note_cue_reached" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_note_cue_reached"]
+[connection signal="lesson_started" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_lesson_started"]
 [connection signal="lesson_started" from="World/Player" to="World/Camera2D" method="push_in" unbinds=2]
+[connection signal="memorina_drawn" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_drawn"]
+[connection signal="memorina_drawn" from="World/Player" to="World/Camera2D" method="focus" unbinds=2]
+[connection signal="memorina_sheathed" from="World/Player" to="World/Camera2D" method="unfocus"]
+[connection signal="memorina_sheathed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sheathed"]
+[connection signal="note_cue_reached" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_note_cue_reached"]
+[connection signal="note_cue_reached" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_note_cue_reached"]
+[connection signal="note_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_note_played"]
+[connection signal="note_rejected" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_note_rejected"]
 [connection signal="performance_finished" from="World/Player" to="World/Camera2D" method="release_push"]
+[connection signal="performance_finished" from="World/Player" to="WorldFreeze" method="thaw"]
 [connection signal="performance_finished" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_lesson_finished"]
+[connection signal="performance_started" from="World/Player" to="WorldFreeze" method="freeze"]
+[connection signal="recall_ended" from="World/Player" to="WorldFreeze" method="restore"]
+[connection signal="recall_ended" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_recall_ended"]
+[connection signal="recall_started" from="World/Player" to="CanvasLayer/RecallPrompt" method="show_for"]
+[connection signal="recall_started" from="World/Player" to="WorldFreeze" method="slow" unbinds=3]
+[connection signal="recall_step_taken" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_step_taken"]
+[connection signal="sequence_failed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_failed"]
+[connection signal="sequence_reset" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_sequence_reset"]
+[connection signal="skill_recall_missed" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_missed"]
+[connection signal="skill_recalled" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_recalled"]
+[connection signal="song_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_song_played"]
+[connection signal="focused" from="World/Camera2D" to="CanvasLayer/MemorinaHud" method="on_camera_focused"]

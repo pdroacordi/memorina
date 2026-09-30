@@ -610,7 +610,6 @@ script = ExtResource("91_airflow")
 sample_offset = Vector2(0, -40)
 
 [node name="EnemySight" type="Area2D" parent="." unique_id=2061902140]
-visible = false
 collision_layer = 0
 collision_mask = 256
 monitorable = false
@@ -623,7 +622,6 @@ shape = SubResource("CircleShape2D_sight")
 position = Vector2(0, -27)
 
 [node name="SpawnTrigger" type="Area2D" parent="." unique_id=184875856]
-visible = false
 collision_layer = 0
 collision_mask = 256
 monitorable = false
