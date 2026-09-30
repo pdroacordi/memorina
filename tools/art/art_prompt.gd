@@ -27,7 +27,8 @@ var detail := ""
 var action := ""
 ## animate only (or a seed for generate): OUR art, never a third-party pack's.
 var reference := ""
-## Where the art comes from if not PixelLab ("pack: ..."), for the record.
+## Where the art comes from, for the record: "pixellab", "codex" (Codex CLI's
+## image tool, the codex-consult skill), "pack: <file>" or "procedural: <tool>".
 var source := "pixellab"
 var description := ""
 var negative := ""
@@ -77,8 +78,8 @@ func problems(file_id: String) -> PackedStringArray:
 		found.append("%s: command must be generate or animate" % file_id)
 	if command == "animate" and (action.is_empty() or reference.is_empty()):
 		found.append("%s: animate needs an action and a reference" % file_id)
-	if source == "pixellab" and description.is_empty():
-		found.append("%s: a PixelLab prompt needs a description" % file_id)
+	if source in ["pixellab", "codex"] and description.is_empty():
+		found.append("%s: a generated asset's prompt needs a description" % file_id)
 	return found
 
 ## The sheet this contract promises: frames side by side.

@@ -6,8 +6,13 @@ class_name ImageOps extends RefCounted
 
 ## Makes the background transparent by flood-filling from every edge pixel
 ## whose colour is within `tolerance` of `key`. Filling from the edges - not
-## replacing the key colour everywhere - keeps a purple body purple.
-static func key_out(image: Image, key: Color, tolerance: float = 0.1) -> Image:
+## replacing the key colour everywhere - keeps a purple body purple. A
+## generated "flat" background is not flat (Codex's magenta wanders to about
+## 0.1 from #ff00ff and fringes the subject), so the default is loose: the
+## muted earth and slate subjects sit near 0.6 away. `holes` also clears the
+## key colour where the subject encloses it (a ring's eye, the gaps in a
+## braid) - right when the subject was drawn on a key it cannot contain.
+static func key_out(image: Image, key: Color, tolerance: float = 0.25, holes: bool = false) -> Image:
 	var out := image.duplicate() as Image
 	out.convert(Image.FORMAT_RGBA8)
 	var size := out.get_size()
@@ -32,6 +37,11 @@ static func key_out(image: Image, key: Color, tolerance: float = 0.1) -> Image:
 		stack.append(p + Vector2i.LEFT)
 		stack.append(p + Vector2i.DOWN)
 		stack.append(p + Vector2i.UP)
+	if holes:
+		for y: int in size.y:
+			for x: int in size.x:
+				if _distance(out.get_pixel(x, y), key) <= tolerance:
+					out.set_pixel(x, y, Color(0, 0, 0, 0))
 	return out
 
 ## Every opaque pixel snapped to its nearest palette colour; alpha is made
@@ -72,18 +82,71 @@ static func split_strip(strip: Image, count: int) -> Array[Image]:
 		frames.append(strip.get_region(Rect2i(i * width, 0, width, strip.get_height())))
 	return frames
 
-## Lays frames side by side, each resized (nearest neighbour, never
-## smoothed) to exactly `frame_size`, into the strip a Sprite2D with
-## hframes = frames.size() reads.
+## Crops every frame to the UNION of their opaque bounds, so a generated
+## picture's empty margin is not squashed into the sprite while the frames
+## stay aligned with each other (a pressed plate keeps its place under the
+## raised one). Frames with nothing opaque are returned unchanged.
+static func trim_frames(frames: Array[Image]) -> Array[Image]:
+	var bounds := Rect2i()
+	for frame: Image in frames:
+		var used := frame.get_used_rect()
+		if used.has_area():
+			bounds = used if not bounds.has_area() else bounds.merge(used)
+	if not bounds.has_area():
+		return frames
+	var trimmed: Array[Image] = []
+	for frame: Image in frames:
+		trimmed.append(frame.get_region(bounds))
+	return trimmed
+
+## Lays frames side by side into the strip a Sprite2D with hframes =
+## frames.size() reads. Each is scaled (nearest neighbour, never smoothed) by
+## ONE factor, the largest that fits `frame_size`, and stands bottom-centre
+## in its cell like a prop on the ground - a picture a little off the
+## contract's aspect keeps its proportions instead of being stretched.
 static func pack_strip(frames: Array[Image], frame_size: Vector2i) -> Image:
 	var strip := Image.create(frame_size.x * frames.size(), frame_size.y, false, Image.FORMAT_RGBA8)
 	for i: int in frames.size():
 		var frame := frames[i].duplicate() as Image
 		frame.convert(Image.FORMAT_RGBA8)
-		if frame.get_size() != frame_size:
-			frame.resize(frame_size.x, frame_size.y, Image.INTERPOLATE_NEAREST)
-		strip.blit_rect(frame, Rect2i(Vector2i.ZERO, frame_size), Vector2i(i * frame_size.x, 0))
+		var scale := minf(float(frame_size.x) / frame.get_width(), float(frame_size.y) / frame.get_height())
+		var size := Vector2i((Vector2(frame.get_size()) * scale).round()).clamp(Vector2i.ONE, frame_size)
+		if scale <= 0.5:
+			frame = shrink_mode(frame, size)
+		elif frame.get_size() != size:
+			frame.resize(size.x, size.y, Image.INTERPOLATE_NEAREST)
+		var at := Vector2i(i * frame_size.x + (frame_size.x - size.x) / 2, frame_size.y - size.y)
+		strip.blit_rect(frame, Rect2i(Vector2i.ZERO, size), at)
 	return strip
+
+## Shrinks by a large factor keeping pixel-art edges: every target pixel is
+## the MOST COMMON colour of the source block it covers (transparent counts as
+## a colour). Nearest neighbour picks one arbitrary source pixel per block,
+## which at 20x turns an outline into speckle; an average invents midtones.
+## Feed it palette-snapped pixels so the counts gather on a few colours.
+static func shrink_mode(image: Image, size: Vector2i) -> Image:
+	var source := image.duplicate() as Image
+	source.convert(Image.FORMAT_RGBA8)
+	var out := Image.create(size.x, size.y, false, Image.FORMAT_RGBA8)
+	var step := Vector2(source.get_size()) / Vector2(size)
+	for y: int in size.y:
+		for x: int in size.x:
+			var from := Vector2i((Vector2(x, y) * step).floor())
+			var to := Vector2i((Vector2(x + 1, y + 1) * step).ceil()).min(source.get_size())
+			var counts := {}
+			var best := 0
+			var best_count := 0
+			for sy: int in range(from.y, to.y):
+				for sx: int in range(from.x, to.x):
+					var c := source.get_pixel(sx, sy)
+					var key := 0 if c.a < 0.5 else c.to_rgba32()
+					var n: int = counts.get(key, 0) + 1
+					counts[key] = n
+					if n > best_count:
+						best_count = n
+						best = key
+			out.set_pixel(x, y, Color(0, 0, 0, 0) if best == 0 else Color.hex(best))
+	return out
 
 ## Weighted RGB distance: close enough to perceptual for snapping to a
 ## hand-picked palette, and cheap.
