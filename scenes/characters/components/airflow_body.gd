@@ -39,4 +39,7 @@ func _physics_process(_delta: float) -> void:
 		var along := wind.normalized()
 		var slip := wind.length() - rigid.linear_velocity.dot(along)
 		if slip > 0.0:
+			# A force does not wake a sleeping body: a load that came to rest
+			# before the gale arrived would sit through it.
+			rigid.sleeping = false
 			rigid.apply_central_force(along * slip * rigid.mass * rigid_drag)

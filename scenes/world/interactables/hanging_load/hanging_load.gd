@@ -6,6 +6,12 @@ class_name HangingLoad extends RigidBody2D
 ## light thing), and can be stood on (Props layer). When the grey takes the
 ## pulse back it returns to its rope - not while Ivo is standing on it.
 ##
+## It slides rather than tumbles (rotation locked, a slick silk surface):
+## lying on its side it held the floor harder than a gale could drag it, and
+## a cocoon cartwheeling along a ledge reads as a toy, not a weight. Its
+## body's bottom corners are cut: a square corner catches on the seams
+## between floor tiles and stops dead under a full gale.
+##
 ## Placed like a room map entity standing on its cell: the load hangs so its
 ## bottom is `hang_height` above that floor, the rope running up
 ## `rope_length` from its top.
@@ -16,6 +22,9 @@ class_name HangingLoad extends RigidBody2D
 @export var return_time := 0.5
 
 var _rest := Transform2D.IDENTITY
+## The fade back to the rope, killed if another pulse lets it go mid-fade -
+## left running, it would hang the load back up under a pulse still lit.
+var _return: Tween
 
 @onready var _releasable: Releasable = $Releasable
 @onready var _rope: Line2D = $Rope
@@ -36,15 +45,18 @@ func is_released() -> bool:
 	return _releasable.is_released()
 
 func _on_released() -> void:
+	if _return:
+		_return.kill()
+		modulate.a = 1.0
 	_rope.visible = false
 	freeze = false
 	sleeping = false
 
 func _on_restored() -> void:
-	var tween := create_tween()
-	tween.tween_property(self, "modulate:a", 0.0, return_time * 0.5)
-	tween.tween_callback(_back_on_the_rope)
-	tween.tween_property(self, "modulate:a", 1.0, return_time * 0.5)
+	_return = create_tween()
+	_return.tween_property(self, "modulate:a", 0.0, return_time * 0.5)
+	_return.tween_callback(_back_on_the_rope)
+	_return.tween_property(self, "modulate:a", 1.0, return_time * 0.5)
 
 func _back_on_the_rope() -> void:
 	freeze = true
@@ -54,5 +66,4 @@ func _back_on_the_rope() -> void:
 	_rope.visible = true
 
 func _half_height() -> float:
-	var shape := ($CollisionShape2D as CollisionShape2D).shape as RectangleShape2D
-	return shape.size.y * 0.5 if shape else 16.0
+	return ($CollisionShape2D as CollisionShape2D).shape.get_rect().size.y * 0.5

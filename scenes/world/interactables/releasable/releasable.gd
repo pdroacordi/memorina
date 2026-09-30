@@ -6,6 +6,11 @@ class_name Releasable extends Node
 ## ReleaseState - the grey gives the old state back when the pulse has gone,
 ## held back while something holds the released thing (hold / let_go).
 ## What "let go" means is the parent's business; this only decides when.
+##
+## Both signals are emitted DEFERRED: a pulse reaches a receiver from inside
+## the physics flush (an area overlap), where a body may not change its state
+## - a load un-freezing there is refused ("Can't change this state while
+## flushing queries") and simply stays on its rope.
 
 signal released
 signal restored
@@ -34,6 +39,6 @@ func let_go() -> void:
 func _emit(event: ReleaseState.Event) -> void:
 	match event:
 		ReleaseState.Event.RELEASED:
-			released.emit()
+			released.emit.call_deferred()
 		ReleaseState.Event.RESTORED:
-			restored.emit()
+			restored.emit.call_deferred()

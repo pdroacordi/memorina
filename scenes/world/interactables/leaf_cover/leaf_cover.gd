@@ -12,6 +12,8 @@ class_name LeafCover extends StaticBody2D
 @export var size := Vector2(32, 96)
 @export var regrow_time := 0.8
 
+var _fade: Tween
+
 @onready var _releasable: Releasable = $Releasable
 @onready var _leaves: Sprite2D = $Leaves
 @onready var _fall: CPUParticles2D = $Fall
@@ -41,10 +43,16 @@ func is_open() -> bool:
 func _on_released() -> void:
 	_shape.set_deferred("disabled", true)
 	_fall.restart()
-	var tween := create_tween()
-	tween.tween_property(_leaves, "modulate:a", 0.0, 0.35)
+	_fade_leaves(0.0, 0.35)
 
 func _on_restored() -> void:
 	_shape.set_deferred("disabled", false)
-	var tween := create_tween()
-	tween.tween_property(_leaves, "modulate:a", 1.0, regrow_time)
+	_fade_leaves(1.0, regrow_time)
+
+## One fade at a time: a pulse arriving while the leaves grow back must not
+## leave two tweens fighting over them.
+func _fade_leaves(alpha: float, seconds: float) -> void:
+	if _fade:
+		_fade.kill()
+	_fade = create_tween()
+	_fade.tween_property(_leaves, "modulate:a", alpha, seconds)

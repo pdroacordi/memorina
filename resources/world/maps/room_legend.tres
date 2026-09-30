@@ -103,7 +103,7 @@ kind = 3
 ground = 0
 scene = ExtResource("i12_lift")
 anchor = 0
-description = "A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go."
+description = "A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go; while its lock_path holds (a counterweight on the wrong plate) it is jammed down."
 
 [sub_resource type="Resource" id="seesaw"]
 script = ExtResource("2_entry")

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1"]
 [ext_resource type="Resource" uid="uid://umn45o2fgypm" path="res://resources/songs/palettes/autumn_palette.tres" id="2"]
-[ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/memory/release_pulse_stats.tres" id="3"]
 [ext_resource type="AudioStream" uid="uid://bxr60salhqe5s" path="res://assets/audios/soundtrack/song_of_falling_leaves.mp3" id="4"]
 
 [resource]
