@@ -14,6 +14,15 @@ class_name ColorPulse extends Node2D
 ## without anyone keeping a list.
 const GROUP := &"color_pulse"
 
+## Who played the song (the PulseEmitter's body), for an effect that is about
+## them - the burned shadow copies their frame. Null for a pulse nobody
+## played. Set before start().
+var performer: Node2D
+## Whether it holds still while the tree is paused (see PulseEmitter). It stays
+## PROCESS_MODE_ALWAYS either way - a lesson's pulse must spread under the
+## pause - and only its clock and its particles stop. Set before start().
+var holds_in_pause := false
+
 @onready var _source: MemorySource = $Source
 @onready var _area: SongArea = $SongArea
 @onready var _shape: CollisionShape2D = $SongArea/CollisionShape2D
@@ -48,6 +57,8 @@ func start(song: Song, stats: PulseStats = null, with_effect: bool = true) -> vo
 		_particles = song.palette.pulse_particles.instantiate() as CPUParticles2D
 		assert(_particles != null, "SeasonPalette.pulse_particles must be a CPUParticles2D scene.")
 		add_child(_particles)
+		if holds_in_pause:
+			_particles.process_mode = Node.PROCESS_MODE_PAUSABLE
 	# Sampled once, excluding this pulse's own light, so the pulse is judged
 	# against the world it arrived in rather than against itself. Re-sampling
 	# every frame would make a pulse prop itself up.
@@ -65,7 +76,7 @@ func start(song: Song, stats: PulseStats = null, with_effect: bool = true) -> vo
 		add_child(effect)
 
 func _physics_process(delta: float) -> void:
-	if _timeline == null:
+	if _timeline == null or (holds_in_pause and get_tree().paused):
 		return
 	_timeline.advance(delta)
 	if _timeline.is_finished():
