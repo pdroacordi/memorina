@@ -6,6 +6,7 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Architecture
 
+- [the-bell-jar-closes-once](architecture/the-bell-jar-closes-once.md) — Redoma's ring closes when its pulse stops growing and excepts what was inside until it leaves; it shelters the air and rain and holds water out column by column.
 - [roots-join-earth-to-earth](architecture/roots-join-earth-to-earth.md) — Enraizar reads earth faces from the room map (bridge, shaft, pillar), grows strands by the pulse and withers them from the tips; climbing is a generic component on a `Climbable` place.
 - [the-water-level-moves](architecture/the-water-level-moves.md) — a body is painted at its highest level and `set_level` moves its origin; Chuva's basin dries out at load and fills while lit; ice is laid at the level it freezes at.
 - [weight-and-presence](architecture/weight-and-presence.md) — a shadow counts as Ivo by being a `Weight` and a `PRESENCE`; Soltar is one `Releasable` rule; a seesaw needs an off-centre pivot.
@@ -87,6 +88,7 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Playtests
 
+- [2026-09-30-redoma-well](playtests/2026-09-30-redoma-well.md) — the shell dries the side of the well and Ivo walks into the low passage.
 - [2026-09-30-enraizar-shaft-and-bridge](playtests/2026-09-30-enraizar-shaft-and-bridge.md) — the web climbed out of the shaft into its opening, and the bridge crossed from the stone ledge.
 - [2026-09-30-chuva-basin-and-moat](playtests/2026-09-30-chuva-basin-and-moat.md) — the log rides the rain up to the passage (after widening it), and Chuva then Congelar crosses the dry moat ahead of the thaw.
 - [2026-09-30-sombra-and-soltar-trials](playtests/2026-09-30-sombra-and-soltar-trials.md) — door, seesaw, lure, counterweights and the cocoon on the wind all solve with real input; seven bugs found and fixed on the way.

@@ -135,6 +135,15 @@ Design 02 section 7.1: Enraizar's one rule is **roots join earth to earth**.
 - **Enraizar's pulse is its own** (`root_pulse_stats.tres`, 280 px): its radius is the puzzle - the root bridge is covered from one low stone ledge and not from the near bank.
 - **Climbing is a state, not steps** (the user's choice for the shaft): `Climbable` (an Area2D on physics layer 3, `grip` WALL or POLE) is only a place; `ClimbComponent` (generic, in components/ - nothing gates it but the roots) is the holding: climb speed in any direction, no gravity, a pole pulls the body onto its axis, and it reports how it came off (`Exit.LET_GO` falls; `Exit.OVER_THE_TOP`, climbing out of the top with up held, hops `top_hop_height` onto the ledge). `Player` owns the judgement: up held grabs (`_try_climb`, not while rolling, hurt or playing), a jump from a hold is a ground jump, a hit knocks him off (`MotionState.CLIMB`). `PlayerAnimationResolver` has `climb` / `climb_hold` (a wall, from the side) and `climb_back` / `climb_back_hold` (a pole), above the airborne block; the sheets are the template's climb strips at 2x.
 
+## The bell jar
+
+Design 02 section 7.1: Redoma's one rule is **nothing enters, everything may leave**.
+
+- **`FrostShell`** is the song's `PulseEffect`: a thin frost ring drawn on the pulse's CLEAN disc (`draw_arc`, not antialiased, a few rime crystals re-rolled on a slow clock), shrinking with it. Its collider is a ring of `SegmentShape2D` on physics layer 4 ("Shell"), refitted to the radius each physics frame. It **closes when the pulse stops growing** (a growing ring would shove whatever it swept): every Player and Props body inside then gets a collision exception, dropped once it is clear of the ring - so it may leave, and from outside it is solid (what falls on it rolls off, whoever left can stand on it). Ivo and loads collide with layer 4; enemies do not, so the shell bars matter, not creatures, and is never a combat shield.
+- **It shelters**: a `DiscShelter` (an `AirflowShelter`) makes `Airflow.sample` return still air inside it; `RainFall` drops no rain there and a `RainBasin` under it does not fill.
+- **It holds water out** (`WaterBody.hold_out(holder, centre, radius)` / `release`): every column whose waterline lies in the disc is dry - depth 0 in the data texture, and the hazard rebuilt as one shape per run of wet columns - until the shell shrinks off it. Simplified on purpose: a column is dry top to bottom, not along the arc.
+- **Redoma's pulse is its own** (`bell_jar_pulse_stats.tres`, 192 px, 8 s sustain, 5 s contraction).
+
 ## Water
 
 Design 03 §6: water is computed, not drawn. Everything lives in `scenes/world/environment/water/` (the pool's FREEZE glue in `scenes/world/interactables/freezable_water/`), tuned by `WaterProfile` (motion), `WaterLook` (palette LUTs in `assets/sprites/world/water/`, reflection, caustics) and `IceProfile` under `resources/world/water/`.
@@ -261,8 +270,9 @@ Rename and move files **from inside the Godot editor** (FileSystem dock), so it 
 ## Known gaps (not yet implemented)
 
 - Input map (`project.godot`) defines `move_left`, `move_right`, `jump`, `look_up`, `look_down`, `roll`, `attack`, `draw_memorina`, `note_up`/`note_down`/`note_left`/`note_right` and the debug-only `debug_learn_song` (F9). Only the notes (face buttons: Y/△ up, A/✕ down, X/□ left, B/○ right) and `draw_memorina` (right shoulder) have joypad bindings; movement, jump, roll and attack are keyboard-only. The design still calls for open-notebook, pause and open-map — add these when that work actually starts, matching the existing signal-based `PlayerInput` pattern.
-- `FREEZE`, `GALE`, `SHADOW`, `RELEASE`, `RAIN` and `ROOT` act on the world. `BELL_JAR` and `SOLSTICE` light a pulse, swap the seasonal art and spawn their season's particles, and nothing more yet. The burned shadow copies whatever frame Ivo shows, which today is the template's playing pose; there is no ash art beyond particles.
+- `FREEZE`, `GALE`, `SHADOW`, `RELEASE`, `RAIN`, `ROOT` and `BELL_JAR` act on the world. `SOLSTICE` lights a pulse, swap the seasonal art and spawn their season's particles, and nothing more yet. The burned shadow copies whatever frame Ivo shows, which today is the template's playing pose; there is no ash art beyond particles.
 - Nothing in the world grants `PlayerItem.SWORD` or `PlayerItem.MEMORINA`; there are no pickups and no benches, and `save_game()` is still never called. `Player.learn_song()` REFUSES without the instrument rather than granting one - handing it over is the world's to do (a pickup, the mentor), and a body that granted itself an item on the way into a cutscene would skip that scene entirely. Debug builds start a new game owning both (`SaveSystem.new_game()`), so a guardian can be fought from a clean launch. The debug action `debug_learn_song` (F9, debug builds only) still teaches the next unknown song through `Player.learn_song()`; it stays until every song has a guardian.
+- Redoma: the water is held out column by column, not along the shell's arc, and does not stand against it as a curved wall (so Redoma then Congelar's frozen arc, Inverno Logico 2, is Phase 7's); the trial has no windy-spot puzzle (Inverno Logico 1) - the shelter is unit-level only.
 - Enraizar does not catch a falling load yet (Soltar then Enraizar, Combinado 3 - Phase 7). Climbing exists only on roots; the template's ladder and ledge clips are unused.
 - Guardians: only two exist (FREEZE/ROLL and ROOT/DOUBLE_JUMP). The notebook confirmation of a recalled skill is not built (there is no notebook); arenas have no doors, so the player can walk out mid-fight; dying mid-fight has no respawn to return to; the final fight's revelation and dissonance (design section 5) are not started. The Frost Guardian's free sprite tier has one attack clip, so both its moves share it. Regional weather (`RegionWeather`) is visual only - design section 5 wants it to push the player physically - and its only art is each palette's pulse particle scene.
 - No song has a dedicated reduced excerpt yet: `Song.excerpt` is null everywhere and the world hears the full track cut at `excerpt_duration` (7 s). `note_cues` are placeholders (0.5 s apart) awaiting tuning against each track.
@@ -348,6 +358,9 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | ponte de raízes / poço de terra / pilar | `RootSpanFinder.Kind.BRIDGE` / `SHAFT` / `PILLAR` |
 | escalar (as raízes) | `ClimbComponent`, `Climbable` (grip WALL / POLE), `Player.MotionState.CLIMB` |
 | terra molhada (Chuva → Enraizar) | `RootGrower.wet_bridge_cells`, a RAIN pulse at both faces |
+| Redoma / casca de geada / nada entra, tudo pode sair | `FrostShell` (physics layer 4 "Shell"), collision exceptions until clear |
+| abrigo da Redoma | `DiscShelter` |
+| a água fica de fora | `WaterBody.hold_out` / `release` / `is_held_out` |
 
 ### Terms no longer used
 
