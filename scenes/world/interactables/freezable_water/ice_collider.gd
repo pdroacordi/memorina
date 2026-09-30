@@ -14,6 +14,7 @@ class_name IceCollider extends StaticBody2D
 
 var _shapes: Array[CollisionShape2D] = []
 var _solid := PackedByteArray()
+var _thickness := 0
 
 # Ice thaws: standing on it is never somewhere a hazard sends a body back to.
 func _ready() -> void:
@@ -27,6 +28,7 @@ func build(left: float, width: float, top: float, segment_width: int, thickness:
 	var shape := RectangleShape2D.new()
 	shape.size = Vector2(segment_width, thickness)
 	var count := int(width / segment_width)
+	_thickness = thickness
 	for i in count:
 		var segment := CollisionShape2D.new()
 		segment.shape = shape
@@ -36,6 +38,12 @@ func build(left: float, width: float, top: float, segment_width: int, thickness:
 		segment.global_position = Vector2(left + (i + 0.5) * segment_width, top + thickness * 0.5)
 		_shapes.append(segment)
 	_solid.resize(count)
+
+## Lays every segment's top on `top`: the water it freezes over may have risen
+## or sunk (Chuva) since it was built.
+func set_top(top: float) -> void:
+	for segment: CollisionShape2D in _shapes:
+		segment.global_position.y = top + _thickness * 0.5
 
 ## One byte per segment. Only the segments that changed are touched, and
 ## deferred: this runs during the physics step, where a shape must not change.

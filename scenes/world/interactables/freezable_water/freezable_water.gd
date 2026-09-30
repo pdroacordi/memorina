@@ -44,5 +44,15 @@ func _physics_process(delta: float) -> void:
 		_water.set_solidity(column, _front.solidity(column))
 	_collider.set_solid(_front.solid_segments())
 
+## Whether any ice is on it: a basin holds its level while frozen (RainBasin).
+func is_frozen() -> bool:
+	return _front.is_active()
+
 func _on_song_entered(_song: Song, origin: Vector2) -> void:
+	# A dry basin has nothing to freeze; a level that moved (Chuva) freezes
+	# where it stands now.
+	if _water.is_dry():
+		return
+	if not _front.is_active():
+		_collider.set_top(_water.surface_rest_y())
 	_front.freeze_from(_water.column_of(origin.x))

@@ -26,6 +26,12 @@ class_name WaterBody extends Node2D
 ##
 ## ORIGIN: the centre of the rest waterline. `size` is the water below it; the
 ## quads draw HEADROOM rows above as well, for crests to rise into.
+##
+## THE LEVEL CAN MOVE (set_level, driven by Chuva's RainBasin): the body is
+## painted at its HIGHEST level and can sink to dry. Moving it moves the origin,
+## so everything that reads surface_rest_y() follows; the floors keep their
+## world height, so the water gets shallower over the same stepped bed and a
+## column whose floor is above the level is simply dry.
 
 ## Rows above the rest line the quads draw, so a crest has somewhere to rise.
 const HEADROOM := 12
@@ -38,6 +44,11 @@ const RATE_STRIDE := 4
 ## Column width of a body with no profile (a lake): it only reads memory and
 ## keeps a clock per column, so one painted cell (WaterLayer) is one column.
 const PLANE_COLUMN_WIDTH := 16
+## Every body of water at runtime, for what looks for the water under a point
+## (a floating log, the rain).
+const GROUP := &"water_body"
+## Marks a shape fit_area() made, which it may resize in place.
+const FITTED := &"water_fitted"
 
 @export var size := Vector2i(192, 24):
 	set(value):
@@ -75,6 +86,12 @@ var _rates_frame := -RATE_REFRESH_FRAMES
 var _memory: MemoryField
 var _airflow: Airflow
 var _materials: Array[ShaderMaterial] = []
+# The level range (world y): painted top, deepest floor. And each column's
+# floor as a world height, so a moved level keeps the bed where it was.
+var _top_y := 0.0
+var _bottom_y := 0.0
+var _floor_bottoms := PackedFloat32Array()
+var _mirror_top := 0
 
 @onready var _surface: WaterQuad = $Surface
 @onready var _veil: WaterQuad = get_node_or_null("Veil")
@@ -105,6 +122,13 @@ func _ready() -> void:
 	_winds.resize(columns)
 	_solidity.resize(columns)
 	_build_floors(columns)
+	add_to_group(GROUP)
+	_top_y = global_position.y
+	_bottom_y = _top_y + size.y
+	_floor_bottoms = _floors.duplicate()
+	for column in _floor_bottoms.size():
+		_floor_bottoms[column] += _top_y
+	_mirror_top = mirror_axis_offset
 	_memory = MemoryField.find_in(self)
 	_airflow = Airflow.find_in(self)
 	for quad: WaterQuad in [_surface, _veil]:
@@ -149,6 +173,63 @@ func _physics_process(delta: float) -> void:
 func surface_rest_y() -> float:
 	return global_position.y
 
+## The body under `point` at runtime: the one whose columns span its x and
+## whose level range (painted top to deepest floor) holds its y. Null if none.
+static func at(node: Node, point: Vector2) -> WaterBody:
+	for member: Node in node.get_tree().get_nodes_in_group(GROUP):
+		var body := member as WaterBody
+		if body and body.contains_x(point.x):
+			var levels := body.level_range()
+			if point.y >= levels.x - 1.0 and point.y <= levels.y + 1.0:
+				return body
+	return null
+
+## The world y of the waterline at `world_x`, with its waves: what floats sits
+## on this.
+func surface_y(world_x: float) -> float:
+	return surface_rest_y() - (_field.height(column_of(world_x)) if _field else 0.0)
+
+func contains_x(world_x: float) -> bool:
+	return absf(world_x - global_position.x) <= size.x * 0.5
+
+## (highest level, deepest floor) in world y: the level set_level() moves in.
+func level_range() -> Vector2:
+	return Vector2(_top_y, _bottom_y)
+
+## No water left anywhere in the body.
+func is_dry() -> bool:
+	return size.y <= 0
+
+## Moves the waterline to `rest_y` (world), rounded to a whole pixel and held
+## between the level it was painted at and its deepest floor. The depths, the
+## volume, the hazard, the mirror axis and the shaders all follow; a dry body
+## hides and stops taking bodies.
+func set_level(rest_y: float) -> void:
+	var y := clampf(roundf(rest_y), _top_y, _bottom_y)
+	if is_equal_approx(y, global_position.y):
+		return
+	global_position.y = y
+	size = Vector2i(size.x, roundi(_bottom_y - y))
+	for column in _floors.size():
+		_floors[column] = maxf(_floor_bottoms[column] - y, 0.0)
+	# The bank above the water grows as it sinks; the axis stays halfway up it.
+	mirror_axis_offset = _mirror_top - floori((y - _top_y) * 0.5)
+	var dry := is_dry()
+	for quad: WaterQuad in [_surface, _veil]:
+		if quad:
+			quad.visible = not dry
+	if _volume:
+		var volume_shape := _volume.get_node("Shape") as CollisionShape2D
+		fit_area(volume_shape, 0.0)
+		volume_shape.set_deferred(&"disabled", dry)
+	if _hazard:
+		var hazard_shape := _hazard.get_node("Shape") as CollisionShape2D
+		fit_area(hazard_shape, hazard_depth)
+		hazard_shape.set_deferred(&"disabled", size.y <= hazard_depth)
+	_set_uniform(&"rest_y", y)
+	_set_uniform(&"mirror_axis_offset", float(mirror_axis_offset))
+	_upload()
+
 func column_count() -> int:
 	return _rates.size()
 
@@ -171,11 +252,15 @@ func column_rates() -> PackedFloat32Array:
 ## line (negative reaches above it) down to the bottom, across the full width.
 ## Everything that must cover this body - its volume, its hazard, a song
 ## receiver - is fitted here, in a shape of its own (never shared between
-## bodies of different sizes).
+## bodies of different sizes). A shape this has already fitted is resized in
+## place, so a level moving every frame (set_level) allocates nothing.
 func fit_area(area_shape: CollisionShape2D, top: float) -> void:
-	var rect := RectangleShape2D.new()
+	var rect := area_shape.shape as RectangleShape2D
+	if rect == null or not rect.has_meta(FITTED):
+		rect = RectangleShape2D.new()
+		rect.set_meta(FITTED, true)
+		area_shape.shape = rect
 	rect.size = Vector2(size.x, maxf(size.y - top, 1.0))
-	area_shape.shape = rect
 	area_shape.global_position = global_position + Vector2(0.0, top + rect.size.y * 0.5)
 
 ## A body fell in at `world_x` at `speed` pixels per second: the water dents
@@ -192,6 +277,17 @@ func splash(world_x: float, speed: float) -> void:
 	var width := float(profile.splash_half_width)
 	for k in range(-3 * profile.splash_half_width, 3 * profile.splash_half_width + 1):
 		var x := float(k) / width
+		_field.disturb(centre + k, -depth * (1.0 - 2.0 * x * x) * exp(-x * x))
+
+## A raindrop landing at `world_x`: a small dent `depth` px deep, a few columns
+## wide - never a one-column notch, which the springs ring as a comb (see
+## splash()).
+func drip(world_x: float, depth: float) -> void:
+	if _field == null or is_dry():
+		return
+	var centre := column_of(world_x)
+	for k in range(-3, 4):
+		var x := float(k)
 		_field.disturb(centre + k, -depth * (1.0 - 2.0 * x * x) * exp(-x * x))
 
 ## Gives the body a stepped floor instead of a flat one at `size.y`: `depths`
