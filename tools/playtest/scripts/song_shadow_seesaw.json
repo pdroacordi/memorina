@@ -1,6 +1,6 @@
 {
  "scene": "res://scenes/world/game.tscn",
- "max_duration": 18.0,
+ "max_duration": 13.0,
  "player_position": [
   3216.0,
   5890
@@ -80,60 +80,60 @@
    "pressed": false
   },
   {
-   "t": 12.4,
-   "screenshot": "play_12.40"
+   "t": 7.4,
+   "screenshot": "play_07.40"
   },
   {
-   "t": 13.2,
+   "t": 8.2,
    "action": "move_right",
    "pressed": true
   },
   {
-   "t": 14.2,
-   "screenshot": "climb_14.20"
+   "t": 9.2,
+   "screenshot": "climb_09.20"
   },
   {
-   "t": 14.6,
-   "screenshot": "climb_14.60"
+   "t": 9.6,
+   "screenshot": "climb_09.60"
   },
   {
-   "t": 14.7,
+   "t": 9.7,
    "action": "jump",
    "pressed": true
   },
   {
-   "t": 14.8,
-   "screenshot": "climb_14.80"
+   "t": 9.8,
+   "screenshot": "climb_09.80"
   },
   {
-   "t": 15.0,
-   "screenshot": "climb_15.00"
+   "t": 10.0,
+   "screenshot": "climb_10.00"
   },
   {
-   "t": 15.3,
+   "t": 10.3,
    "action": "jump",
    "pressed": false
   },
   {
-   "t": 15.3,
-   "screenshot": "climb_15.30"
+   "t": 10.3,
+   "screenshot": "climb_10.30"
   },
   {
-   "t": 15.6,
-   "screenshot": "climb_15.60"
+   "t": 10.6,
+   "screenshot": "climb_10.60"
   },
   {
-   "t": 16.0,
-   "screenshot": "climb_16.00"
+   "t": 11.0,
+   "screenshot": "climb_11.00"
   },
   {
-   "t": 16.5,
+   "t": 11.5,
    "action": "move_right",
    "pressed": false
   },
   {
-   "t": 16.8,
-   "screenshot": "climb_16.80"
+   "t": 11.8,
+   "screenshot": "climb_11.80"
   }
  ]
 }

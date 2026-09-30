@@ -415,8 +415,6 @@ func air_axis() -> float:
 
 func _select_motion_state(on_floor: bool) -> MotionState:
 	if is_in_knockback():
-		# Being hit knocks him off what he was holding.
-		_climb.release()
 		return MotionState.KNOCKBACK
 	if is_rolling():
 		return MotionState.ROLL
@@ -897,6 +895,10 @@ func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
 ## Ivo does not swim: water costs him health and, if he survives it, he sinks
 ## out of control until the composition root has faded out and respawn()ed
 ## him. A fall that kills him is the ordinary death, sinking as a corpse.
+## Whether the water has him (from the fall until the respawn).
+func is_sinking() -> bool:
+	return _sinking
+
 func receive_hazard(hazard: HazardZone) -> void:
 	if is_dead() or _sinking:
 		return
@@ -928,6 +930,8 @@ func _react_to_hurt() -> void:
 	hurt.emit()
 	_attack.cancel()
 	_memorina.interrupt()
+	# Being hurt knocks him off what he was holding.
+	_climb.release()
 
 func _on_attack_phase_started(_phase_index: int, phase: AttackPhaseData) -> void:
 	_hitbox.damage = phase.damage

@@ -21,6 +21,8 @@ var _water: WaterBody
 var _looked := false
 
 func _ready() -> void:
+	# It moves or goes away: never a place to be sent back to.
+	add_to_group(SafeGroundTracker.UNSAFE)
 	sync_to_physics = true
 	_rest_y = global_position.y
 	_ride_y = _rest_y
@@ -32,7 +34,8 @@ func _physics_process(_delta: float) -> void:
 		_looked = true
 		_water = WaterBody.at(self, global_position)
 	_ride_y = _rest_y
-	if _water and not _water.is_dry():
+	# Water a Redoma holds back is not under it: it rests on the bed.
+	if _water and not _water.is_dry() and not _water.is_held_out(global_position.x):
 		_ride_y = minf(_rest_y, roundf(_water.surface_y(global_position.x) + draft))
 	global_position.y = _ride_y
 

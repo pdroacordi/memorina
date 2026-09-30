@@ -23,6 +23,9 @@ class_name Seesaw extends Node2D
 ## Degrees per second it turns toward where it settles.
 @export var turn_speed := 60.0
 
+# The loads on the plank this frame, reused.
+var _loads: Array[Vector2] = []
+
 @onready var _plank: AnimatableBody2D = $Plank
 @onready var _plank_shape: CollisionShape2D = $Plank/CollisionShape2D
 @onready var _plank_sprite: Sprite2D = $Plank/Sprite2D
@@ -30,6 +33,8 @@ class_name Seesaw extends Node2D
 @onready var _sensor_shape: CollisionShape2D = $Plank/Sensor/CollisionShape2D
 
 func _ready() -> void:
+	# It moves or goes away: never a place to be sent back to.
+	_plank.add_to_group(SafeGroundTracker.UNSAFE)
 	_plank.sync_to_physics = true
 	# The plank's centre, from the pivot (the plank body's origin).
 	var centre := (0.5 - pivot_at) * length
@@ -57,9 +62,9 @@ func end_reach(angle: float) -> Vector2:
 	return Vector2(pivot_at * length, (1.0 - pivot_at) * length) * cos(angle)
 
 func _physics_process(delta: float) -> void:
-	var loads: Array[Vector2] = []
+	_loads.clear()
 	for node: Node2D in _sensor.pressing():
 		var along := _plank.to_local(node.global_position).x
-		loads.append(Vector2(along, Weight.of(node).mass))
-	var target := SeesawBalance.settle_angle(loads, degrees_per_torque, max_degrees)
+		_loads.append(Vector2(along, Weight.of(node).mass))
+	var target := SeesawBalance.settle_angle(_loads, degrees_per_torque, max_degrees)
 	_plank.rotation = move_toward(_plank.rotation, target, deg_to_rad(turn_speed) * delta)

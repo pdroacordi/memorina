@@ -30,13 +30,14 @@ var holds_in_pause := false
 var _timeline: PulseTimeline
 var _particles: CPUParticles2D
 var _song: Song
+var _acts := true
 
 ## Every live pulse of `song_id` in the tree `node` belongs to.
 static func lit(node: Node, song_id: Enums.Song) -> Array[ColorPulse]:
 	var found: Array[ColorPulse] = []
 	for member: Node in node.get_tree().get_nodes_in_group(GROUP):
 		var pulse := member as ColorPulse
-		if pulse and pulse.song() and pulse.song().id == song_id:
+		if pulse and pulse.acts() and pulse.song() and pulse.song().id == song_id:
 			found.append(pulse)
 	return found
 
@@ -53,6 +54,11 @@ func start(song: Song, stats: PulseStats = null, with_effect: bool = true) -> vo
 	_source.radius = 0.0
 	_area.song = song
 	_song = song
+	_acts = with_effect
+	# A pulse that does not act (a guardian's lesson or answer: the song
+	# remembered, not played) reaches no receiver either - the Frost Guardian's
+	# lesson must not freeze its own arena's water.
+	_area.monitorable = with_effect
 	if song.palette.pulse_particles:
 		_particles = song.palette.pulse_particles.instantiate() as CPUParticles2D
 		assert(_particles != null, "SeasonPalette.pulse_particles must be a CPUParticles2D scene.")
@@ -92,6 +98,11 @@ func _physics_process(delta: float) -> void:
 func song() -> Song:
 	return _song
 
+## Whether this pulse carries what its song does: its effect, and the world's
+## answers to it (see PulseEmitter.song_acts).
+func acts() -> bool:
+	return _acts
+
 ## The pulse's current reach. The CLEAN disc: gameplay never asks where the
 ## dithered edge happened to fall (docs/design/02_mecanicas.md section 7.3).
 func radius() -> float:
@@ -103,6 +114,10 @@ func stretch(reach: float, duration: float) -> bool:
 
 func is_stretched() -> bool:
 	return _timeline != null and _timeline.is_stretched()
+
+## The reach it opens to or holds at, stretched or not.
+func max_radius() -> float:
+	return _timeline.max_radius() if _timeline else 0.0
 
 func phase() -> PulseTimeline.Phase:
 	return _timeline.phase if _timeline else PulseTimeline.Phase.DONE

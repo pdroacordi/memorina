@@ -80,7 +80,9 @@ func _physics_process(delta: float) -> void:
 ## Sizes the emitters and the freeze receiver to the box.
 func _fit() -> void:
 	var centre := rect().get_center()
-	var velocity := speed * 1.6
+	# A still current (speed 0) keeps its particles alive rather than dividing
+	# by nothing.
+	var velocity := maxf(speed * 1.6, 1.0)
 	var travel := size.x if absf(direction.x) >= absf(direction.y) else size.y
 	var area := size.x * size.y
 	for emitter: CPUParticles2D in [_streaks, _leaves]:
@@ -95,7 +97,7 @@ func _fit() -> void:
 	_streaks.amount = clampi(roundi(area / 1800.0), 6, 64)
 	_leaves.initial_velocity_min = speed * 0.7
 	_leaves.initial_velocity_max = speed
-	_leaves.lifetime = travel / speed
+	_leaves.lifetime = travel / maxf(speed, 1.0)
 	_leaves.amount = clampi(roundi(area / 7000.0), 2, 18)
 	var shape := RectangleShape2D.new()
 	shape.size = size

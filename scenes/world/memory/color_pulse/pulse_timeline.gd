@@ -28,6 +28,9 @@ var _elapsed: float = 0.0
 var _stretched := false
 var _grow_from := -1.0
 var _grow_start := 0.0
+# How long the leading ring fades once the front stops: fixed at the start,
+# so a stretch that lengthens the sustain does not light a faded ring again.
+var _ring_fade_time := 0.0
 
 ## `local_memory` is how alive the ground under the pulse already was. A pulse
 ## lit in a badly corroded place dies sooner, so the danger of a region is
@@ -37,6 +40,7 @@ func _init(stats: PulseStats, local_memory: float) -> void:
 	_attack_time = maxf(stats.attack_time, 0.0001)
 	_sustain_time = maxf(stats.sustain_time, 0.0)
 	_contract_time = maxf(stats.contract_time * lerpf(stats.contract_min_factor, 1.0, clampf(local_memory, 0.0, 1.0)), 0.0001)
+	_ring_fade_time = _sustain_time * RING_FADE
 
 func advance(delta: float) -> void:
 	if phase == Phase.DONE:
@@ -69,6 +73,10 @@ func stretch(reach: float, duration: float) -> bool:
 func is_stretched() -> bool:
 	return _stretched
 
+## The reach it opens to (or holds at): the stats', times a stretch.
+func max_radius() -> float:
+	return _max_radius
+
 func radius() -> float:
 	var natural := _natural_radius()
 	if _grow_from < 0.0 or phase == Phase.CONTRACT or phase == Phase.DONE:
@@ -98,10 +106,9 @@ func ring() -> float:
 		Phase.ATTACK:
 			return 1.0
 		Phase.SUSTAIN:
-			var fade_time := _sustain_time * RING_FADE
-			if fade_time <= 0.0:
+			if _ring_fade_time <= 0.0:
 				return 0.0
-			var t := (_elapsed - _attack_time) / fade_time
+			var t := (_elapsed - _attack_time) / _ring_fade_time
 			return clampf(1.0 - t, 0.0, 1.0)
 		_:
 			return 0.0

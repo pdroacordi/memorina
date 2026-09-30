@@ -65,10 +65,6 @@ func _physics_process(delta: float) -> void:
 	if not _broken:
 		_material.set_shader_parameter("fade", _fade())
 
-## Whether it still stands for Ivo: false once something has broken it.
-func is_standing() -> bool:
-	return not _broken
-
 ## Finds what it was cast on, in the first physics frame (the space is only
 ## guaranteed current there), and keeps its place on it from then on.
 func _anchor() -> void:

@@ -27,6 +27,8 @@ func setup(span: RootSpanFinder.Span, room: RoomMapNode, strand: Texture2D) -> v
 			var to := Vector2(rb.position.x, rb.position.y)
 			_add_crossing(from, to, strand, STRAND_THICKNESS * 0.5)
 			_floor = StaticBody2D.new()
+			# Roots wither: never a place to be sent back to.
+			_floor.add_to_group(SafeGroundTracker.UNSAFE)
 			var shape := CollisionShape2D.new()
 			var box := RectangleShape2D.new()
 			box.size = Vector2(to.x - from.x, BRIDGE_THICKNESS)

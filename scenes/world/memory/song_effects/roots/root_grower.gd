@@ -25,6 +25,11 @@ class_name RootGrower extends PulseEffect
 var _room: RoomMapNode
 var _field: MemoryField
 var _views: Array[RootSpanView] = []
+# Every span in the room this pulse may grow (one pillar at most), which of
+# them have a view, and the reach those were built for.
+var _spans: Array[RootSpanFinder.Span] = []
+var _built := {}
+var _built_reach := 0.0
 
 func _ready() -> void:
 	top_level = true
@@ -35,19 +40,15 @@ func _ready() -> void:
 	_field = MemoryField.find_in(self)
 	var spans := RootSpanFinder.find(_room.map, wet_bridge_cells, max_shaft_width, min_shaft_rows, max_pillar_cells)
 	var pillar := _nearest_pillar(spans)
-	var reach := pulse.song().pulse_stats.max_radius + float(RoomMapNode.FLOOR_TILESET.tile_size.x)
 	for span: RootSpanFinder.Span in spans:
-		if span.kind == RootSpanFinder.Kind.PILLAR and span != pillar:
-			continue
-		# Only what this pulse could ever reach is built at all.
-		if not _within(span, reach):
-			continue
-		var view := RootSpanView.new()
-		view.setup(span, _room, strand)
-		add_child(view)
-		_views.append(view)
+		if span.kind != RootSpanFinder.Kind.PILLAR or span == pillar:
+			_spans.append(span)
+	_build_within(pulse.max_radius())
 
 func _physics_process(delta: float) -> void:
+	# Solstice can stretch the pulse after it opened: build what it now reaches.
+	if pulse.max_radius() > _built_reach:
+		_build_within(pulse.max_radius())
 	for view: RootSpanView in _views:
 		view.advance(delta, self)
 
@@ -70,6 +71,20 @@ func _wet(point: Vector2) -> bool:
 		if rain.contains(point):
 			return true
 	return false
+
+## Builds a view for every span both of whose faces the pulse can reach at
+## `radius` (plus a cell of slack): only what it could ever reach is built.
+func _build_within(radius: float) -> void:
+	_built_reach = radius
+	var reach := radius + float(RoomMapNode.FLOOR_TILESET.tile_size.x)
+	for span: RootSpanFinder.Span in _spans:
+		if _built.has(span) or not _within(span, reach):
+			continue
+		_built[span] = true
+		var view := RootSpanView.new()
+		view.setup(span, _room, strand)
+		add_child(view)
+		_views.append(view)
 
 ## Whether both of a span's faces lie within `reach` of where the song was
 ## played (a shaft: at its nearest row).

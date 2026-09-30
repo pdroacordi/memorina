@@ -6,10 +6,12 @@ class_name SafeGroundTracker extends Node
 ##
 ## Firm means floor under BOTH probes, a margin either side of the feet, and
 ## neither floor something that will not be there on the way back: a collider
-## in the UNSAFE group (FREEZE's ice, which thaws). And never a spot inside a
-## hazard, whatever is under it - the floor of a pool is firm ground. So the
-## body never comes back on the lip of a ledge it would walk off, on ice that
-## has since melted, or under water.
+## in the UNSAFE group (FREEZE's ice, which thaws; a root bridge, a Redoma
+## shell, anything that moves - a lift, a seesaw, a floating log). And never a
+## spot inside a hazard, whatever is under it - the floor of a pool is firm
+## ground - nor anywhere water can come back to (a well a shell holds dry, a
+## basin the grey has drained). So the body never comes back on the lip of a
+## ledge it would walk off, on ice that has since melted, or under water.
 
 ## Group of colliders that are never ground to come back to.
 const UNSAFE := &"unsafe_ground"
@@ -49,7 +51,7 @@ func _ready() -> void:
 func _physics_process(_delta: float) -> void:
 	if not enabled or not _body.is_on_floor():
 		return
-	if is_firm(_floor_under(-foot_half_width), _floor_under(foot_half_width)) and not _in_hazard():
+	if is_firm(_floor_under(-foot_half_width), _floor_under(foot_half_width)) and not _in_hazard() and not _in_water_bed():
 		_last = _body.global_position
 
 func last_safe_position() -> Vector2:
@@ -61,6 +63,12 @@ func _floor_under(offset_x: float) -> Object:
 		from, from + Vector2(0.0, probe_depth + PROBE_LIFT), _body.collision_mask, [_body.get_rid()])
 	var hit := _body.get_world_2d().direct_space_state.intersect_ray(query)
 	return hit.get("collider") as Object
+
+## Anywhere water CAN be: inside a body's painted level range, even while it
+## is held out by a shell or drained by the grey. A floor the water comes back
+## over would send Ivo back under it, inside a hazard he never enters again.
+func _in_water_bed() -> bool:
+	return WaterBody.at(_body, _body.global_position + Vector2(0.0, -PROBE_LIFT)) != null
 
 func _in_hazard() -> bool:
 	var query := PhysicsPointQueryParameters2D.new()

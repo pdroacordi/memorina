@@ -27,37 +27,24 @@ var _presences: Array[Node2D] = []
 @onready var _ray: RayCast2D = $RayCast2D
 
 
-## Index of the point nearest `from` (the first on a tie), -1 when empty.
-static func nearest_index(from: Vector2, points: PackedVector2Array) -> int:
-	var best := -1
-	var best_distance := INF
-	for i: int in points.size():
-		var d := from.distance_squared_to(points[i])
-		if d < best_distance:
-			best_distance = d
-			best = i
-	return best
-
 func _ready() -> void:
 	body_entered.connect(_on_entered)
 	body_exited.connect(_on_exited)
 	area_entered.connect(_on_entered)
 	area_exited.connect(_on_exited)
 
-func is_player_visible() -> bool:
-	return player != null and can_see(player)
-
 ## The nearest presence in plain sight, or null. A presence that left the
 ## group (a shadow that broke) is no longer anyone.
 func visible_presence() -> Node2D:
-	var seen: Array[Node2D] = []
-	var points := PackedVector2Array()
+	var nearest: Node2D = null
+	var best := INF
 	for node: Node2D in _presences:
-		if node.is_in_group(PRESENCE) and can_see(node):
-			seen.append(node)
-			points.append(node.global_position)
-	var at := nearest_index(global_position, points)
-	return seen[at] if at >= 0 else null
+		var distance := global_position.distance_squared_to(node.global_position)
+		# Distance first: the ray is the expensive part.
+		if distance < best and node.is_in_group(PRESENCE) and can_see(node):
+			nearest = node
+			best = distance
+	return nearest
 
 func can_see(node: Node2D) -> bool:
 	_ray.target_position = _ray.to_local(node.global_position + SIGHT_HEIGHT_OFFSET)

@@ -1,7 +1,7 @@
 class_name DebugTrials extends Node
 
-## The song trials, in debug builds only: mounts the four trials regions (one
-## room per season, where each song's puzzles are built and playtested) far
+## The song trials, in debug builds only: mounts the trials regions (one room
+## per season and Solstice's corridor, where each song's puzzles are built and playtested) far
 ## below the world, and F10 (`debug_trials`) carries Ivo to the next one. A
 ## release build frees this node before it mounts anything, so the trials do
 ## not ship in the world.
@@ -38,7 +38,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	var spawns := get_tree().get_nodes_in_group(SPAWN_GROUP)
 	var player := get_tree().get_first_node_in_group(Player.GROUP) as Player
 	# Same guard as a respawn: a corpse or a body the water has is not moved.
-	if spawns.is_empty() or player == null or player.is_dead() or not player.can_process():
+	if spawns.is_empty() or player == null or player.is_dead() or player.is_sinking():
 		return
 	var spawn := spawns[_next % spawns.size()] as Node2D
 	_next += 1

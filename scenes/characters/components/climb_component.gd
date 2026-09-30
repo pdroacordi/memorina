@@ -53,9 +53,9 @@ func release() -> void:
 ## reports how it came off.
 func update(delta: float, axis: Vector2) -> Exit:
 	if not _still_held():
-		var climbing_up := axis.y < -0.5
+		var over_the_top := axis.y < -0.5 and _above_the_top()
 		release()
-		return Exit.OVER_THE_TOP if climbing_up else Exit.LET_GO
+		return Exit.OVER_THE_TOP if over_the_top else Exit.LET_GO
 	var motion := axis.limit_length(1.0)
 	if _held.grip == Climbable.Grip.POLE:
 		motion.x = 0.0
@@ -71,6 +71,18 @@ func _reachable() -> Climbable:
 
 func _still_held() -> bool:
 	return _held != null and is_instance_valid(_held) and _sensor.get_overlapping_areas().has(_held)
+
+## Whether the hands came off above what is held, rather than off its side or
+## because it withered away under them: only that is climbing out of the top.
+func _above_the_top() -> bool:
+	if _held == null or not is_instance_valid(_held):
+		return false
+	var top := INF
+	for child: Node in _held.get_children():
+		var shape := child as CollisionShape2D
+		if shape and not shape.disabled and shape.shape:
+			top = minf(top, shape.global_position.y - shape.shape.get_rect().size.y * 0.5)
+	return top < INF and _sensor.global_position.y < top
 
 ## A pole is a single thin shape: its axis is where the body lines up.
 func _held_axis_x() -> float:

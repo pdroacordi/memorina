@@ -27,6 +27,8 @@ var _triggered := false
 var _locked := false
 
 func _ready() -> void:
+	# It moves or goes away: never a place to be sent back to.
+	add_to_group(SafeGroundTracker.UNSAFE)
 	sync_to_physics = true
 	_rest = position
 	_triggered = start_moved

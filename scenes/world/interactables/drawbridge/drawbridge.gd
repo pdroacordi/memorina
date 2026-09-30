@@ -22,8 +22,10 @@ class_name Drawbridge extends Node2D
 var _tween: Tween
 
 func _ready() -> void:
+	# It moves or goes away: never a place to be sent back to.
+	_plank.add_to_group(SafeGroundTracker.UNSAFE)
 	_plank.sync_to_physics = true
-	var length := length_cells * 32.0
+	var length := length_cells * float(RoomMapNode.FLOOR_TILESET.tile_size.x)
 	var box := RectangleShape2D.new()
 	box.size = Vector2(length, 10)
 	_plank_shape.shape = box
