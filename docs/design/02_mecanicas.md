@@ -53,7 +53,7 @@
  
 - **Dois domínios mecânicos separados, sem mistura fora do confronto com guardião:** trilha física (combate e mobilidade pessoal) e trilha musical (mundo, exploração, puzzle, lore). Cada uma tem seu próprio verbo — física é para agir rápido no mundo, música é para entender e curar o mundo.
 - **Timing preciso é o fio condutor entre os dois domínios.** Tanto o combate físico (parry) quanto a execução musical (call-and-response, puzzles) pedem a mesma habilidade central do jogador: sentir o tempo certo de agir. Jogador bom em um fica naturalmente melhor no outro, sem serem sistemas didaticamente desconectados.
-- **A Memorina nunca é usada em combate comum.** Só entra em jogo dentro do confronto com guardiões — reservar a fusão física+musical para esse momento único preserva seu peso ritual.
+- **A Memorina nunca é usada em combate comum.** Só entra em jogo dentro do confronto com guardiões — reservar a fusão física+musical para esse momento único preserva seu peso ritual. Única exceção, deliberada e sem ataque: a sombra deixada por **Sombra** é vista pelas criaturas como o herói e pode atraí-las (seção 7.1).
 ## 2. Combate físico (mobs comuns e criaturas-professoras)
  
 Estilo fluido e rápido — referência Hollow Knight com tempero de jogo de ação rítmico (Hi-Fi Rush), nunca modelo tanque-e-pare (Souls).
@@ -159,94 +159,128 @@ Isso testa a lição central do jogo (aceitar, soltar, não insistir em reter co
 - **Apoio de memória:** o caderno de campo registra as sequências já aprendidas, consultável fora do momento de execução — decorar é necessário para jogar fluido, mas existe rede de segurança contra esquecimento.
 - **Nenhuma sugestão contextual na UI.** O ambiente (cor, textura do material) é responsável por comunicar qual sequência resolve o quê — coerente com a filosofia geral de não expor mecânica.
 ## 7. Sistema de sequências de notas — as 8 sequências
- 
+
 Cada estação carrega duas sequências de notas distintas, não uma. Isso amplia o vocabulário de puzzle e evita reciclagem de função disfarçada entre estações.
- 
+
+**Critério de toda sequência (decisão fechada, 2026-09-23):** uma sequência é um **verbo físico sobre um sistema que o mundo já tem** — água, vento, peso, terra, o próprio pulso —, nunca uma chave para uma fechadura feita sob medida para ela. Ela abre uma janela que o jogador então usa com o corpo, antes que o cinza a feche. E ela se relaciona com o tempo: o cinza é o tempo parado, e cada estação lembra um jeito diferente de o tempo correr.
+
 ### 7.1 Matriz de sequências por estação
- 
-**Inverno (galho petrificado)**
-- **Congelar** — solidifica água em movimento, cria plataforma temporária.
-- **Ventania/Nevasca** — rajada de vento gelado que empurra objetos leves ou o próprio jogador.
-- *(Terceira opção discutida e mantida como reserva conceitual: Hibernação — adormece uma criatura ou mecanismo por tempo prolongado, oferecendo alternativa tática ao combate. Adotada como a segunda sequência de Inverno no lugar de Ventania em puzzles que envolvem criaturas — ver seção 7.3.)*
-**Verão (pedra vulcânica furada)**
-- **Sol Concentrado** — evapora água rasa ou seca lama, revelando chão sólido; pode secar umidade que isola outros materiais.
-- **Tempestade Repentina** — invoca um raio pontual, ativa mecanismos elétricos ou atinge alvos à distância.
-**Outono (osso oco e leve)**
-- **Fragilizar** — torna uma estrutura (viva ou morta) oca e quebradiça, destrutível depois por golpe físico simples. Ponte entre trilha musical e trilha física.
-- **Despir** — remove folhagem/casca densa, revelando passagens ou mecanismos camuflados. Efeito permanente assim que aplicado (é revelação, não criação temporária).
-**Primavera (caule vivo)**
-- **Brotar** — faz crescer um caule/planta até virar plataforma ou ponte; altura e direção controláveis sustentando a nota.
-- **Eclodir** — força casulos, sementes endurecidas ou botões fechados a abrir instantaneamente, liberando conteúdo, esporos ou efeito de área.
-*Notas descartadas ao longo do processo de design (registradas para não serem re-propostas): Miragem, Renascer, Florescer, Chamado/Convocar vida, Fermentar/Converter, Polinizar em cadeia, Amolecer, Acelerar ciclo, Brotar em cadeia vertical.*
- 
+
+**Inverno (galho petrificado) — o inverno guarda**
+- **Congelar** — solidifica água em movimento, cria plataforma temporária. Ver `03_mundo_e_ambiente.md`, seções 6.3 e 6.4.
+- **Redoma** — a borda do pulso vira uma casca fina de geada, que encolhe junto com ele. Regra única: **nada entra, tudo pode sair.** Segura a água do lado de fora (tocada na beira de um poço, deixa o fundo seco para atravessar, e a água volta a entrar atrás do jogador conforme a casca encolhe), abriga do vento (Vendaval e clima), da chuva e do que cai. Por fora é sólida: o que cai em cima rola pela curva, e quem saiu pode subir nela. Barra **matéria, não criaturas** — criaturas atravessam, para que a Redoma nunca vire escudo de combate. Nome e imagem: a redoma de vidro que conserva o que está debaixo dela; e sair dela nunca é impedido.
+
+**Outono (osso oco e leve) — o outono solta**
+- **Soltar** — tudo o que está preso dentro do pulso se solta: folhas caem e revelam o que escondiam, frutos, casulos, contrapesos, cargas penduradas e pontes levadiças descem. É o verbo temático do jogo (*aceitar, soltar, não insistir em reter* — seção 5.3) ensinado como mecânica, muito antes da dissonância pedir o mesmo gesto.
+- **Vendaval** — rajada de vento radial, soprando para fora a partir da origem do pulso. Empurra objetos leves e o próprio jogador pelo mesmo canal físico do clima e da correnteza (`03_mundo_e_ambiente.md`, seções 5.3 e 6.1); o jogador, parado no olho, não é arrastado até sair dele. Numa corrente de vento natural, soma-se a ela.
+
+**Primavera (caule vivo) — a primavera liga**
+- **Enraizar** — regra única: **raízes ligam terra a terra.** Onde duas superfícies de terra se encaram e ambas estão dentro do pulso, raízes crescem atravessando o vão. Entre duas margens, uma ponte; entre as paredes de um poço vertical, degraus empilhados; do chão ao teto, um pilar; em volta de um objeto que esteja no vão (um bloco caindo, uma plataforma balançando), raízes que o seguram. Só terra enraíza, nunca pedra — o material diz ao jogador onde a canção serve (seção 6.2). Não se mira: o jogador se posiciona de modo que o pulso cubra as duas pontas. As raízes crescem na velocidade da memória sob elas (como o gelo) e murcham onde o cinza volta, então uma ponte se rompe pelas pontas primeiro.
+- **Chuva** — chove dentro do pulso: poças sobem, bacias secas enchem, nascentes voltam a correr, o que boia sobe junto. Conforme o pulso contrai, a água baixa ao nível de antes. Os níveis que a água alcança são autorais (`03_mundo_e_ambiente.md`, seção 6.5). É também o clima que faltava à Primavera: a garoa.
+
+**Verão (pedra vulcânica furada) — o verão fica**
+- **Sombra** — o sol a pino, a luz mais dura do ano, queima a sombra do herói no chão onde ele tocou. A sombra **conta como o herói estando ali**, até o pulso fechar: pesa o que ele pesa (placas de pressão, balanças, plataformas que afundam, portas que só ficam abertas com alguém em cima) e **é vista pelas criaturas como ele** — elas se viram para ela, vão até ela, atacam-na, enquanto o herói está em outro lugar. É a exceção deliberada à regra da seção 1 (ver nota abaixo). A imagem prepara a Batalha Final: o jogador passa o jogo deixando silhuetas de si mesmo para trás antes de o próprio sprite virar silhueta ambígua (seção 5.1).
+- **Solstício** — o dia mais longo. Age sobre a memória, não sobre o mundo: todo outro pulso que se sobreponha ao seu dura mais e alcança mais longe. Sozinho, segura a cor num lugar morto por mais tempo (a água corre, o relógio anda). É o que torna possíveis as combinações longas da segunda metade do jogo, e por isso é ensinado tarde, por fragmento de portador (seção 7.2).
+
+**Nota de design — Sombra e o combate comum.** A seção 1 diz que a Memorina nunca é usada em combate comum. A Sombra é a única canção que toca nesse limite, e toca de propósito: ela **não fere**, só distrai, e tocá-la exige estar parado em chão firme, então ela é preparada antes do confronto, nunca executada no meio dele. A Memorina continua sem ataque. Atrair uma criatura com a Sombra é uma alternativa tática ao combate, na linha da antiga Hibernação (ver "A isca", seção 8).
+
+*Sequências descartadas ao longo do processo de design (registradas para não serem re-propostas):*
+- *Primeira rodada: Miragem, Renascer, Florescer, Chamado/Convocar vida, Fermentar/Converter, Polinizar em cadeia, Amolecer, Acelerar ciclo, Brotar em cadeia vertical.*
+- *Matriz anterior, substituída em 2026-09-23: **Ventania/Nevasca** (virou Vendaval, no Outono), **Hibernação** (a terceira canção de Inverno, que não cabia na grade), **Sol Concentrado**, **Tempestade Repentina** (mirada à distância, contra a regra de tocar parado com pulso radial), **Fragilizar** e **Despir** (chaves de fechadura; Despir ainda era permanente, contra a seção 6.1; Soltar absorve o que Despir revelava), **Brotar** (absorvida por Enraizar), **Eclodir**.*
+- *Propostas e recusadas na mesma sessão: **Quietude** (parar o que se move — confunde com o cinza, que já é o tempo parado), **Térmica** e **Fervura** (a mesma corrente ascendente com outra aparência), **Rastro** e **Eco** (mostram o passado em vez de mudar o mundo), **Nevar** (três efeitos sem uma ideia única), **Geada** (atrito zero, perto demais do gelo de Congelar), **Queimada**, **Dilatar** (só funciona onde houver metal posto para isso), **Mormaço** (lentidão, parente de Quietude), **Ressonância** (o pulso renascendo em pedras ocas; dependente demais de objetos autorais e inerte sozinha).*
+
 ### 7.2 Distribuição entre guardiões e forma de aprendizado
- 
+
 - Nem toda sequência é ensinada no mesmo guardião/batalha. Com múltiplos guardiões por estação, a sequência "faltante" de um guardião pode vir de outro guardião da mesma estação, em região diferente.
 - **Regra:** pelo menos um guardião de cada estação ensina a sequência base pelo call-and-response do próprio combate. A segunda sequência daquela estação é ensinada através do fragmento de portador — do mesmo guardião ou de outro da mesma estação, a critério do design de cada região.
 - Isso separa claramente "o que aprendo lutando" de "o que aprendo ouvindo a história", e dá ao jogador razão mecânica para visitar todos os guardiões de uma estação, não só o primeiro que encontrar.
-### 7.3 Sequência Hibernação — nota de duração
- 
-Hibernação segue a mesma regra de temporariedade de qualquer sequência: dura enquanto o pulso de cor estiver ativo, contraindo junto com o resto do efeito conforme o cinza reconquista o espaço. Sem duração especial própria.
- 
+- **Solstício é sempre de fragmento**, e tardio: sozinho ele faz pouco, e só se entende depois de o jogador já ter corrido contra o relógio de outras canções.
+
+### 7.3 Regras comuns a todas as sequências
+
+- **Nada vive fora da memória.** Tudo o que uma canção faz cresce na velocidade da memória sob ele (a frente de gelo, as raízes, a água subindo) e termina onde o cinza volta. Nenhuma canção atravessa um trecho morto.
+- **O cinza guarda o estado antigo.** Quando o pulso contrai, o mundo volta a ser como era antes dele: a água volta ao nível, as raízes murcham, as folhas caídas voltam ao galho, a sombra some. É a regra da seção 6.1 (nenhum efeito é permanente) dita em termos do mundo. O que permanece é só o atalho autoral da primeira resolução.
+- **A borda de gameplay é o disco limpo** do campo de memória, nunca o recorte pontilhado que o shader desenha — vale para a casca da Redoma, para as pontas das raízes e para o alcance de toda canção.
+
+### 7.4 Composição
+
+As sequências se compõem porque agem sobre os mesmos sistemas, sem regra especial para cada par:
+
+- **Chuva → Congelar:** uma bacia seca enche e vira chão de gelo — gelo onde nunca houve água.
+- **Chuva → Enraizar:** terra molhada deixa as raízes alcançarem mais longe.
+- **Vendaval sobre água → Congelar:** o vento levanta uma crista, o gelo a prende — uma rampa (a crista parada de `03_mundo_e_ambiente.md`, seção 6.2, agora escalável).
+- **Soltar → Enraizar:** o que foi solto é apanhado no meio da queda, na altura certa. O outono solta, a primavera segura.
+- **Redoma + Congelar:** a água apertada contra a casca congela numa parede curva, que fica quando a casca some.
+- **Redoma + Chuva:** chove em volta, o bolsão continua seco.
+- **Sombra + Soltar:** a sombra segura uma placa enquanto uma carga solta segura outra.
+- **Solstício sob qualquer outra:** mais tempo, mais alcance — a ponte de raízes mais longa, o gelo que dura a travessia inteira, a sombra que segura a porta até o fim do corredor.
+
 ## 8. Puzzles concretos por estação
- 
+
 Dois puzzles espaciais e dois lógicos por estação — base de repertório, não lista fechada.
- 
+
 ### Inverno
- 
-**Espacial 1 — Ponte de gelo cronometrada.** Queda d'água bloqueia passagem horizontal. Congelar cria ponte que descongela progressivamente; travessia contra o tempo. Primeira resolução trava um mecanismo lateral em posição permanente (atalho).
- 
-**Espacial 2 — Empurrado pela Nevasca.** Abismo largo com corrente de vento natural na sala. Tocar Ventania numa rajada existente amplifica-a, empurrando o jogador através do vão — exige posicionamento exato antes de tocar.
- 
-**Lógico 1 — Hibernar ou lutar.** Criatura territorial bloqueia passagem única. Pode ser enfrentada em combate propositalmente mais difícil que o padrão da região, ou hibernada — sem recompensa de combate, reforçando escolha tática, não "a certa".
- 
-**Lógico 2 — Trio de rajadas em sequência.** Três correntes de vento cruzadas, cada uma capaz de arrastar o jogador. Congelar uma corrente específica, na ordem certa, abre passagem segura; ordem errada falha sem dano grave, só reposiciona.
- 
-### Verão
- 
-**Espacial 1 — Secar o lodo.** Extensão de lama funda impede travessia. Sol Concentrado evapora a umidade, endurecendo em chão sólido por tempo limitado.
- 
-**Espacial 2 — Revelar sob a luz.** Plataforma visível apenas por reflexo intenso sob luz forte (cristal ou espelho natural) — Sol Concentrado revela uma passagem que sempre esteve lá, mas invisível sem luz direta.
- 
-**Lógico 1 — Raio no mecanismo distante.** Mecanismo elétrico fora de alcance físico direto. Tempestade Repentina, mirada à distância, ativa-o remotamente.
- 
-**Lógico 2 — Sequência sol-relâmpago.** Porta de metal isolada por umidade residual. Sol Concentrado seca a umidade primeiro; só então Tempestade consegue atingir e ativar a porta — combinação obrigatória das duas sequências de Verão em sequência.
- 
+
+**Espacial 1 — Ponte de gelo cronometrada.** Queda d'água bloqueia passagem horizontal. Congelar cria ponte que descongela progressivamente; travessia contra o tempo. Primeira resolução trava um mecanismo lateral em posição permanente (atalho). *(Depende da pendência das quedas d'água, `03_mundo_e_ambiente.md`, seção 7.)*
+
+**Espacial 2 — O fundo do poço.** Um poço cheio d'água, com uma passagem baixa na parede do fundo. Redoma tocada na beira empurra a água para fora da casca; o jogador desce pelo fundo seco até a passagem enquanto a casca encolhe e a água volta a entrar atrás dele.
+
+**Lógico 1 — Tocar dentro da ventania.** Um mecanismo só responde a uma canção tocada num ponto varrido por rajadas naturais que interrompem qualquer sequência. Redoma primeiro abre um abrigo; dentro dele, o jogador toca a segunda canção. A ordem é a solução.
+
+**Lógico 2 — A parede d'água.** Redoma na beira de um lago segura a água numa parede curva contra a casca; Congelar a prende. Quando a casca some, fica um arco de gelo que serve de rampa até uma saída alta — até derreter. Na ordem inversa não há parede para congelar.
+
 ### Outono
- 
-**Espacial 1 — Atravessar o galho fragilizado.** Galho grosso resistente demais para golpe normal. Fragilizar torna-o quebradiço; ataque físico simples em seguida o destrói.
- 
-**Espacial 2 — Revelar a trilha sob a folhagem.** Parede de vegetação densa esconde passagem lateral. Despir remove a folhagem, revelando a abertura — permanente assim que aplicado uma vez.
- 
-**Lógico 1 — Fragilizar seletivo.** Plataforma elevada sustentada por três pilares; fragilizar o pilar errado a derruba. Exige identificar visualmente qual pilar é estrutural antes de agir.
- 
-**Lógico 2 — Despir em cadeia.** Mecanismo de engrenagens coberto por vegetação parasita em múltiplos pontos; Despir precisa ser aplicado em 2-3 pontos, na ordem certa, para não acionar defesa (espinhos reativos a remoção rápida demais).
- 
+
+**Espacial 1 — A trilha sob a folhagem.** Uma parede de folhas secas esconde uma passagem lateral. Soltar derruba as folhas; a passagem fica aberta enquanto o pulso durar, e as folhas voltam ao lugar quando o cinza retorna.
+
+**Espacial 2 — Empurrado pelo Vendaval.** Abismo largo com corrente de vento natural na sala. Tocar Vendaval na corrente existente soma-se a ela, empurrando o jogador através do vão — exige posicionamento exato antes de tocar.
+
+**Lógico 1 — Os contrapesos.** Um elevador preso por dois contrapesos pendurados; soltar o errado trava o elevador embaixo. O jogador escolhe onde tocar para que o pulso cubra só o contrapeso certo — o raio do pulso é a ferramenta de seleção.
+
+**Lógico 2 — A carga ao vento.** Um casulo pesado pendurado sobre uma borda, uma placa de pressão no fim dela. Soltar derruba o casulo na borda, Vendaval o empurra até a placa. Na ordem inversa, o vento não tem o que empurrar.
+
 ### Primavera
- 
-**Espacial 1 — Escada de caules guiada.** Sementes no chão; sustentar Brotar controla altura e leve inclinação de crescimento, formando escada até ponto exato.
- 
-**Espacial 2 — Eclodir o casulo-ponte.** Casulo grande pende sobre abismo; Eclodir libera filamento/teia elástico que funciona como ponte pênsil temporária.
- 
-**Lógico 1 — Ordem de eclosão.** Múltiplos casulos numa sala, cada um libera efeito diferente ao eclodir; ordem certa necessária para usar o efeito de um antes que outro o apague.
- 
-**Lógico 2 — Brotar sob peso.** Plataforma pesada só se move se algo a empurrar de baixo; Brotar sustentado até altura máxima ergue-a o suficiente para destravar passagem.
- 
+
+**Espacial 1 — A ponte de raízes.** Duas margens de terra sobre um abismo. De quase todo lugar o pulso não cobre as duas; o jogador precisa achar o ressalto de onde ele cobre, e atravessar antes que a ponte se rompa pelas pontas.
+
+**Espacial 2 — O poço de terra.** Um poço vertical com paredes de terra. Enraizar enche o poço de degraus entre as paredes; a subida é por saltos, degrau a degrau, até o pulso contrair.
+
+**Lógico 1 — Terra e pedra.** Uma sala que mistura faces de terra e de pedra. Só alguns pares se ligam; o jogador lê o material e escolhe o ponto de tocar que monta uma rota inteira.
+
+**Lógico 2 — A bacia seca.** Uma bacia vazia com um tronco caído no fundo e uma passagem alta numa das paredes. Chuva enche a bacia e o tronco sobe boiando até a altura da passagem; o jogador sobe nele antes que a água baixe.
+
+### Verão
+
+**Espacial 1 — A porta que precisa de alguém.** Uma porta só fica aberta enquanto houver peso na placa diante dela, e a passagem fica além da porta. Sombra na placa, o herói passa.
+
+**Espacial 2 — A gangorra.** Uma plataforma em gangorra: com peso num lado, o outro sobe até uma borda alta. A sombra fica no lado de baixo, o herói sobe pelo outro.
+
+**Lógico 1 — A isca.** Uma criatura territorial guarda uma passagem única. Pode ser enfrentada em combate propositalmente mais difícil que o padrão da região, ou atraída por uma sombra deixada longe da passagem — sem recompensa de combate, reforçando escolha tática, não "a certa".
+
+**Lógico 2 — O corredor longo.** Placa e porta separadas por um corredor longo demais: a sombra se apaga antes de o jogador chegar. Solstício primeiro, Sombra dentro do seu pulso — a sombra dura o corredor inteiro. É aqui que Solstício se explica sozinho.
+
 ## 8.4 Puzzles combinados (segunda metade do jogo)
- 
-*Nota: um quarto puzzle combinado (Verão + Primavera, "Câmara de Eclosão Solar") foi proposto e depois removido — registrado aqui para não ser re-sugerido.*
- 
-**Combinado 1 — Inverno + Verão: A Passagem Efêmera.**
-Fosso com lodo no fundo. O jogador usa Congelar, parado numa borda, para criar uma plataforma de gelo temporária sobre o lodo — não escala paredes, atravessa por cima a pé. A plataforma começa a descongelar assim que criada; travessia contra o tempo até a borda oposta. Cair no lodo (ainda mole, sem Sol Concentrado aplicado) reposiciona sem ser necessariamente letal.
- 
-**Combinado 2 — Outono + Primavera: O Pilar Vivo.**
-Coluna de pedra com trepadeira seca enrolada (Outono: Despir remove), escondendo brotos dormentes por baixo. Despir revela os brotos; Brotar os faz crescer em degraus espiral ao redor da coluna. Ordem importa: usar Brotar antes de Despir não funciona — matéria morta impede o broto vivo de emergir, sem penalidade de dano, forçando o jogador a entender causalidade material.
- 
-**Combinado 3 — Inverno + Outono: Sala do Pilar Frágil-Congelado.**
-Pilar de apoio coberto de gelo fino por fora, com núcleo de madeira podre por dentro. O jogador usa Congelar numa poça ao lado para alcançar altura e escalar até o topo do pilar — **parado completamente no topo** antes de agir — e de lá usa Fragilizar no núcleo exposto, colapsando o pilar de forma controlada e criando uma rampa de escombros até o andar de baixo. A queda controlada É o transporte — intencional, não falha de design.
+
+*Nota: os combinados da matriz anterior (A Passagem Efêmera, O Pilar Vivo, Sala do Pilar Frágil-Congelado) e a "Câmara de Eclosão Solar", proposta e removida antes deles, saíram junto com as canções de que dependiam — registrados aqui para não serem re-sugeridos.*
+
+**Combinado 1 — Primavera + Inverno: O Lago Que Não Havia.**
+Um fosso seco e largo demais para qualquer salto. Chuva enche o fosso; Congelar, tocado na borda enquanto a água ainda está alta, faz dela um chão. O gelo derrete a partir da origem e a água baixa por baixo dele: travessia contra dois relógios.
+
+**Combinado 2 — Outono + Inverno: A Onda Parada.**
+Um lago diante de uma parede alta. Vendaval tocado na margem levanta uma crista; Congelar, antes que ela assente, prende a crista numa rampa até o topo da parede. O tempo entre as duas canções é o puzzle — tocar Congelar cedo demais congela uma onda baixa.
+
+**Combinado 3 — Outono + Primavera: Apanhar no Ar.**
+Uma plataforma pendurada sobre um poço de paredes de terra, alta demais para alcançar. Soltar a derruba; Enraizar, tocado de modo que o pulso cubra o poço, a apanha entre as paredes na altura de uma saída lateral. Tocar Enraizar primeiro não funciona: as raízes cruzam o vão antes de haver algo para segurar, e a plataforma cai sobre elas longe da saída.
+
+**Combinado 4 — Verão + Outono: A Casa Vazia.**
+Uma porta com duas placas, afastadas uma da outra num corredor longo, e o herói do lado errado de ambas. Solstício, depois Sombra numa placa; Soltar derruba uma carga pendurada sobre a outra. A porta abre com o herói em nenhuma das duas — ninguém está ali, e a casa se lembra de que alguém esteve.
  
 ## 9. Pendências desta sessão
  
 - **Duração exata (em segundos) do descongelamento/dissipação de cada efeito de puzzle** — a ser calibrado em prototipagem, não decidido em design puro.
 - Puzzles concretos ainda não foram testados quanto a variações de dificuldade dentro da mesma categoria (fácil/médio/difícil por estação).
 - Detalhamento visual exato da UI de partitura (layout dos 8 botões, mapeamento físico dos inputs direcionais) — decisão de UI/UX, não fechada aqui.
+- **Sombra atacada:** a sombra se desfaz ao ser atingida (uma isca que se gasta) ou aguenta até o pulso fechar? A primeira é mais tensa; a segunda, mais simples de ler.
+- **Enraizar em poço vertical:** degraus para subir por saltos (ponto de partida, não exige movimento novo) ou um estado de escalada próprio?
+- **Vendaval sobre a água:** o vento precisa levantar crista na superfície (`WaterSurfaceField`) para o Combinado 2 existir — é um acoplamento novo entre o canal de empurrão e a água.
+- **Redoma e a água:** a água precisa respeitar um disco que encolhe (a bacia recortada pela casca) — trabalho real no sistema de água.

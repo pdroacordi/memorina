@@ -147,7 +147,7 @@ Um pulso tocado numa região morta acorda o ambiente **local** (folhas se mexem,
 
 ### 5.3 Gramática visual — separando clima de efeito de nota
 
-Existe risco real de confusão entre a nevasca ambiente e a sequência **Ventania/Nevasca**, e entre a tempestade ambiente e **Tempestade Repentina**. A separação é visual e absoluta:
+Existe risco real de confusão entre o vento ambiente de Outono e a sequência **Vendaval**, e entre a garoa ambiente de Primavera e **Chuva**. A separação é visual e absoluta:
 
 | | Efeito de nota (invocado) | Clima (ambiente) |
 |---|---|---|
@@ -162,7 +162,7 @@ O discriminador que o jogador aprende sem ser ensinado: **radial e contraindo = 
 
 **Regra rígida:** clima ambiente **nunca** emite pulso de cor. Se emitisse, a gramática inteira de "cor = memória verdadeira" (`01_lore_e_narrativa.md`, seção 9.3) desmoronaria.
 
-**Consequência boa e não planejada:** o puzzle Inverno Espacial 2 (`02_mecanicas.md`, seção 8) diz que *"tocar Ventania numa rajada existente amplifica-a"*. Como a nota e o clima empurram o jogador pelo mesmo canal físico, isso acontece **naturalmente**, sem regra especial. Os dois sistemas se compõem sozinhos.
+**Consequência boa e não planejada:** o puzzle Outono Espacial 2 (`02_mecanicas.md`, seção 8) diz que tocar Vendaval numa corrente de vento existente *soma-se a ela*. Como a nota e o clima empurram o jogador pelo mesmo canal físico, isso acontece **naturalmente**, sem regra especial. Os dois sistemas se compõem sozinhos.
 
 ### 5.4 O problema da imobilidade — e sua solução
 
@@ -186,21 +186,21 @@ Isso é tensão excelente e pode ser fúria pura. A solução tem quatro camadas
 
 - **Cansaço de nevasca.** O estado padrão de toda região é calmo; eventos severos são pontuação, não o normal. Nenhum evento severo deve começar logo após o jogador entrar numa região, para que uma transição de sala nunca o jogue numa rajada no meio de um salto.
 - **Clima durante combate de guardião.** Vento alterando o alcance do rolamento no meio de um chefe é injusto. A intensidade do clima cai drasticamente durante confrontos de guardião.
-- **Relâmpago ambiente é armadilha.** A tempestade ambiente de Verão tem relâmpago e trovão **visuais**, atingindo apenas o plano de fundo, e **nunca causa dano nem ativa mecanismos**. Se causasse, colidiria de frente com **Tempestade Repentina** e o jogador perguntaria "quem disparou aquilo?". O raio que age no mundo é exclusivamente invocado pelo jogador.
-- **Vento de Outono versus Ventania.** Diferenciados pela gramática da seção 5.3: o vento ambiente carrega **folhas**, em camadas, sempre na mesma direção durante todo o evento; a nota carrega um **anel de cor** e é radial.
+- **Relâmpago ambiente é armadilha.** A tempestade ambiente de Verão tem relâmpago e trovão **visuais**, atingindo apenas o plano de fundo, e **nunca causa dano nem ativa mecanismos**. Se causasse, o jogador perguntaria "quem disparou aquilo?". Força que mexe em mecanismo é sempre invocada pelo jogador.
+- **Vento de Outono versus Vendaval.** Diferenciados pela gramática da seção 5.3: o vento ambiente carrega **folhas**, em camadas, sempre na mesma direção durante todo o evento; a nota carrega um **anel de cor** e é radial.
 - **Acessibilidade.** O branco-total da nevasca e a quantidade de movimento em tela precisam de um controle de intensidade nas opções desde a primeira versão. Barato agora, caro depois.
 
 ---
 
 ## 6. Água
 
-**Sistema novo.** A água aparecia nos documentos anteriores apenas dentro de puzzles individuais (Congelar, Sol Concentrado, a queda d'água de Inverno Espacial 1, o lodo de Combinado 1). Aqui ela vira sistema.
+**Sistema novo.** A água aparecia nos documentos anteriores apenas dentro de puzzles individuais (Congelar, o antigo Sol Concentrado, a queda d'água de Inverno Espacial 1, o lodo de Combinado 1). Aqui ela vira sistema.
 
 ### 6.1 A água é gerada, não desenhada
 
 A água não é um sprite animado. Ela é calculada: superfície com ondas, reflexo do mundo acima dela, profundidade, refração do que está atrás, e correnteza. Isso vale tanto por beleza quanto por mecânica — uma água desenhada à mão não pode congelar progressivamente nem baixar de nível.
 
-**Correnteza é propriedade de primeira classe desde o início**, porque quedas d'água e água corrente estão planejadas. A correnteza empurra o jogador pelo mesmo canal físico que o vento e a nota Ventania.
+**Correnteza é propriedade de primeira classe desde o início**, porque quedas d'água e água corrente estão planejadas. A correnteza empurra o jogador pelo mesmo canal físico que o vento e a nota Vendaval.
 
 ### 6.2 Água morta não reflete
 
@@ -240,11 +240,13 @@ Comportamento, ainda sem números (pendente de prototipagem, como já registrado
 
 O jogador **realmente cai** quando o pedaço sob os pés dele derrete. A travessia cronometrada só funciona se isso for verdade.
 
-### 6.5 Sol Concentrado
+### 6.5 Chuva e Redoma
 
-O nível da água baixa e volta. A superfície, a área de colisão e o comportamento das ondas acompanham.
+**Chuva:** o nível da água sobe e volta; bacias secas enchem. A superfície, a área de colisão e o comportamento das ondas acompanham, e o que boia sobe junto.
 
-O chão revelado por baixo **não é gerado automaticamente** — é chão autoral, colocado pelo design de nível, que apenas passa a existir fisicamente enquanto a água estiver baixa. Isso mantém o controle na mão de quem desenha a sala, e evita que a geometria do mundo mude de forma imprevisível. Mesma lógica vale para o lodo do Combinado 1.
+O nível que a água alcança **não é gerado automaticamente** — é autoral, posto pelo design de nível, e a água só passa a existir fisicamente até ali enquanto o pulso durar. Isso mantém o controle na mão de quem desenha a sala, e evita que a geometria do mundo mude de forma imprevisível.
+
+**Redoma:** a casca do pulso segura a água do lado de fora — o trecho da bacia dentro do disco fica seco, e a água volta a ocupá-lo conforme a casca encolhe. Recorta pelo disco limpo do campo, nunca pelo recorte pontilhado.
 
 ### 6.6 Disciplina de pixel art
 
@@ -261,5 +263,5 @@ Verificação obrigatória: olhar a água com a janela ampliada, em cada etapa d
 - **Quedas d'água** precisam de uma passada de design própria. Água **vertical** é um caso diferente: não reflete como espelho, tem geometria e colisão diferentes, e a relação dela com Congelar (congelar uma queda d'água inteira? só a base?) não está resolvida. Inverno Espacial 1 depende disso.
 - **Números de clima:** força do vento, duração das rajadas, duração das calmarias, quanto o abrigo do instrumento reduz. Tudo pendente de prototipagem, junto com as durações de efeito já listadas em `02_mecanicas.md`, seção 9.
 - **Valores de memória inicial por região.** Depende do mapa concreto, que continua em aberto (`01_lore_e_narrativa.md`, seção 10). Só a vila está parcialmente decidida: 0.8 na abertura e 1.0 no Retorno; o valor da revisita do meio do jogo fica para a sessão de mapa.
-- **Perfis de clima por estação.** Inverno (nevasca) está descrito. Verão (tempestade), Outono (vento de folhas) e Primavera (garoa? pólen?) estão apenas esboçados. Primavera em particular ainda não tem um clima que a caracterize com a mesma força.
-- **Inconsistência herdada, não resolvida aqui:** `02_mecanicas.md`, seção 7.1, lista Inverno com **Congelar + Ventania/Nevasca**, mas diz que **Hibernação** substitui Ventania em puzzles com criaturas — e a seção 8 usa as três. Com a grade fixa de 8 posições (2 por estação), Inverno teria três sequências. A matriz e a interface não fecham entre si. Não bloqueia este documento, mas bloqueia a construção da interface da Memorina.
+- **Perfis de clima por estação.** Inverno (nevasca) está descrito. Verão (tempestade), Outono (vento de folhas) e Primavera (garoa, a mesma chuva que a sequência **Chuva** invoca) estão apenas esboçados.
+- ~~Inconsistência herdada: Inverno com três sequências (Congelar, Ventania, Hibernação) numa grade de duas.~~ **Resolvida em 2026-09-23** pela nova matriz (`02_mecanicas.md`, seção 7.1): Inverno é Congelar + Redoma, Ventania virou Vendaval no Outono, Hibernação foi descartada.
