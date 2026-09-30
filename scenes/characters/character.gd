@@ -16,6 +16,10 @@ signal died
 @export var hurt_flash_time: float = 0.18
 
 var facing: int = 1
+## The air this body stands in this frame, as a VELOCITY (px/s): wind, a
+## current, a song's gale (Airflow, through AirflowBody). Summed by whatever
+## pushes, steered toward by the body's own motion, cleared after the move.
+var _carry := Vector2.ZERO
 var _knockback_timer: float = 0.0
 var _just_hit: bool = false
 var _flash_tween: Tween
@@ -39,6 +43,7 @@ func _physics_process(delta: float) -> void:
 	_after_move(delta)
 	_animation_driver.play(_animation_resolver.resolve())
 	_just_hit = false
+	_carry = Vector2.ZERO
 
 func face_towards(axis: float) -> void:
 	if is_zero_approx(axis):
@@ -51,6 +56,16 @@ func face_towards(axis: float) -> void:
 	facing = new_facing
 	_sprite.flip_h = facing < 0
 	facing_changed.emit(facing)
+
+## Adds moving air to this frame's carry. Pushers call this before the body
+## moves (AirflowBody runs at a lower physics priority than the body).
+func push(wind: Vector2) -> void:
+	_carry += wind
+
+## The air this body is standing in right now. The body decides what it does
+## with it: locomotion steers toward input plus this, a guardian ignores it.
+func carry() -> Vector2:
+	return _carry
 
 func base_gravity() -> float:
 	return _base_gravity * gravity_scale

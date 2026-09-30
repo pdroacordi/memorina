@@ -1,0 +1,167 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 17.0,
+ "player_position": [
+  5360,
+  5960
+ ],
+ "known_songs": [
+  5
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 2.65,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.05,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.45,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 4.2,
+   "screenshot": "play_04.20"
+  },
+  {
+   "t": 4.25,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 4.6000000000000005,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 6.0,
+   "screenshot": "play_06.00"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "play_09.00"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "play_12.00"
+  },
+  {
+   "t": 12.8,
+   "screenshot": "play_12.80"
+  },
+  {
+   "t": 13.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 13.4,
+   "screenshot": "cross_13.40"
+  },
+  {
+   "t": 13.62,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 13.7,
+   "screenshot": "cross_13.70"
+  },
+  {
+   "t": 13.9,
+   "screenshot": "cross_13.90"
+  },
+  {
+   "t": 14.1,
+   "screenshot": "cross_14.10"
+  },
+  {
+   "t": 14.3,
+   "screenshot": "cross_14.30"
+  },
+  {
+   "t": 14.5,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 14.5,
+   "screenshot": "cross_14.50"
+  },
+  {
+   "t": 14.7,
+   "screenshot": "cross_14.70"
+  },
+  {
+   "t": 14.9,
+   "screenshot": "cross_14.90"
+  },
+  {
+   "t": 15.2,
+   "screenshot": "cross_15.20"
+  },
+  {
+   "t": 15.6,
+   "screenshot": "cross_15.60"
+  },
+  {
+   "t": 16.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 16.2,
+   "screenshot": "cross_16.20"
+  }
+ ]
+}

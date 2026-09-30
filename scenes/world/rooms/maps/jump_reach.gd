@@ -20,6 +20,12 @@ var double_jump_height: float
 ## and land this far short of one, so a gap is this much wider than his arc
 ## twice over.
 var body_radius: float
+## The air along the way, as Airflow would answer it: a Callable taking a
+## point RELATIVE TO THE TAKE-OFF (y up negative) and returning the air's
+## velocity there. Empty: still air. Steered toward exactly as
+## LocomotionComponent.air_update / lift_update do, so a current or a gale is
+## sized with the same numbers the game runs.
+var wind := Callable()
 
 func _init(p_gravity: float, p_jump: JumpStats, p_locomotion: LocomotionStats, p_double_jump_height: float = 0.0, p_body_radius: float = 11.0) -> void:
 	gravity = p_gravity
@@ -65,7 +71,11 @@ func arc(with_double_jump: bool = false) -> PackedVector2Array:
 		if air_jump_left and velocity.y >= 0.0:
 			velocity.y = _launch(double_jump_height)
 			air_jump_left = false
+		var air: Vector2 = wind.call(position) if wind.is_valid() else Vector2.ZERO
+		velocity.x = move_toward(velocity.x, locomotion.move_speed + air.x * locomotion.air_wind,
+			locomotion.acceleration * locomotion.air_control * STEP)
 		velocity.y = minf(velocity.y + gravity * _gravity_mult(velocity.y) * STEP, jump.terminal_velocity)
+		velocity.y += air.y * locomotion.wind_lift * STEP
 		position += velocity * STEP
 		points.append(position)
 		if position.y > jump.jump_height * 2.0:

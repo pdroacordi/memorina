@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_lake_layer.tscn" id="4_lake"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/freezable_water/freezable_water_layer.tscn" id="5_freezable"]
 [ext_resource type="PackedScene" path="res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn" id="6_brute"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/wind/wind_zone.tscn" id="7_wind"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -61,6 +62,15 @@ scene = ExtResource("6_brute")
 anchor = 0
 description = "Brute Shadow: a common enemy that wanders, chases and swings. Give it a unique save_id so its defeat is remembered."
 
+[sub_resource type="Resource" id="wind"]
+script = ExtResource("2_entry")
+symbol = "W"
+kind = 3
+ground = 0
+scene = ExtResource("7_wind")
+anchor = 0
+description = "A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it."
+
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind")])

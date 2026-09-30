@@ -9,6 +9,8 @@
 [ext_resource type="Texture2D" uid="uid://dewrkaj1bjon0" path="res://assets/sprites/characters/ivo/player_katana_air_downwards_attack.png" id="4_g67cj"]
 [ext_resource type="Texture2D" uid="uid://dk57og1213ae6" path="res://assets/sprites/characters/ivo/player_katana_falling_attack.png" id="5_f4vrk"]
 [ext_resource type="Texture2D" uid="uid://bn6x0lpukduy8" path="res://assets/sprites/characters/ivo/player_run_96x96.png" id="5_ip35x"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_push_96x96.png" id="60_push"]
+[ext_resource type="Script" path="res://scenes/characters/components/airflow_body.gd" id="61_airflow"]
 [ext_resource type="Texture2D" uid="uid://dk6l26iest8ah" path="res://assets/sprites/characters/ivo/player_roll_96x96.png" id="6_lk6ox"]
 [ext_resource type="Texture2D" uid="uid://dbcqeejk3rkuc" path="res://assets/sprites/characters/ivo/player_attack.png" id="6_xaiam"]
 [ext_resource type="Texture2D" uid="uid://ncv44x1nf0vl" path="res://assets/sprites/characters/ivo/player_wall_land_96x96.png" id="7_ip35x"]
@@ -1352,6 +1354,48 @@ tracks/2/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6, 7]
 }
 
+[sub_resource type="Animation" id="Animation_brace"]
+resource_name = "brace"
+length = 1.0
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("60_push")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [10]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+}
+
 [sub_resource type="Animation" id="Animation_7obig"]
 resource_name = "run_attack_swing_in"
 length = 0.41666666
@@ -1638,6 +1682,7 @@ tracks/2/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ra23q"]
 _data = {
+&"brace": SubResource("Animation_brace"),
 &"RESET": SubResource("Animation_knqxj"),
 &"air_downwards_attack": SubResource("Animation_kebpl"),
 &"air_spin": SubResource("Animation_ip35x"),
@@ -1729,6 +1774,9 @@ animation = &"wall_landing"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_lk6ox"]
 animation = &"wall_slide"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_brace"]
+animation = &"brace"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_ks11i"]
 states/End/position = Vector2(1012, 205)
 states/Start/position = Vector2(129, 100)
@@ -1770,6 +1818,8 @@ states/memorina_idle/node = SubResource("AnimationNodeAnimation_memoidle")
 states/memorina_idle/position = Vector2(129, 660)
 states/roll/node = SubResource("AnimationNodeAnimation_ckagk")
 states/roll/position = Vector2(386.96698, 166.9749)
+states/brace/node = SubResource("AnimationNodeAnimation_brace")
+states/brace/position = Vector2(526, 20)
 states/run/node = SubResource("AnimationNodeAnimation_ks11i")
 states/run/position = Vector2(526, 83)
 states/wall_landing/node = SubResource("AnimationNodeAnimation_ip35x")
@@ -1837,6 +1887,9 @@ script = ExtResource("16_uw5th")
 [node name="Locomotion" type="Node" parent="." unique_id=1774390216]
 script = ExtResource("17_locomo")
 stats = ExtResource("18_locsta")
+
+[node name="AirflowBody" type="Node" parent="."]
+script = ExtResource("61_airflow")
 
 [node name="Jump" type="Node" parent="." unique_id=1102847533]
 script = ExtResource("19_jumpco")

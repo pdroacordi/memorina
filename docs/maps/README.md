@@ -105,6 +105,7 @@ else in the code knows what a character means.
 | `w` | `[water]` | water | - | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides. |
 | `f` | `[water]` | water | - | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
 | `B` | `[grid]` | entity | - | Brute Shadow: a common enemy that wanders, chases and swings. Give it a unique save_id so its defeat is remembered. |
+| `W` | `[grid]` | entity | - | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -119,6 +120,7 @@ property's type:
 | StringName | a string |
 | Vector2 / Vector2i | `[x, y]` |
 | Color | `"#rrggbb"` or `"#rrggbbaa"` |
+| a Resource (a wind profile, stats) | its path, `"res://resources/world/wind/gusty_wind.tres"` |
 | NodePath (a link) | the other entity's `id` - `{"target_path": "gate_a"}` |
 
 **Links.** Give an entity an `id` and it becomes the node's name, unique in
@@ -144,6 +146,20 @@ Scene `res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn`, anchored
 | `knockback_damping` | float | `6.0` |
 | `hurt_flash_color` | Color | `Color(1, 0.5, 0.5, 1)` |
 | `hurt_flash_time` | float | `0.18` |
+
+#### `W` - WindZone
+
+Scene `res://scenes/world/environment/wind/wind_zone.tscn`, anchored at its cell's bottom centre (standing on the cell below). A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `size` | Vector2 | `Vector2(256, 160)` |
+| `direction` | Vector2 | `Vector2(1, 0)` |
+| `speed` | float | `220.0` |
+| `profile` | WindProfile | `Resource("res://resources/world/wind/gusty_wind.tres")` |
+| `phase` | float | `0.0` |
+| `edge` | float | `24.0` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

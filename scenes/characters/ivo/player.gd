@@ -100,6 +100,7 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 @onready var _shield          : GreyhushShield = $GreyhushShield
 @onready var _hitbox          : Hitbox = $Hitbox
 @onready var _safe_ground     : SafeGroundTracker = $SafeGroundTracker
+@onready var _airflow_body    : AirflowBody = $AirflowBody
 ## A concrete view of Character's generic resolver, for the duration assert.
 @onready var _player_resolver : PlayerAnimationResolver = $AnimationResolver
 
@@ -128,6 +129,14 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR }
 @export var sink_drag         : float = 2400.0
 ## Invulnerability granted on coming back to firm ground.
 @export var hazard_grace      : float = 1.0
+
+@export_category("Wind")
+## How much of the wind reaches Ivo while the instrument is out (design 03
+## section 5.4, item 2: "sacar o instrumento acalma o vento ao redor"). Not
+## zero: at the peak of a gust the performance still breaks.
+@export_range(0.0, 1.0) var memorina_shelter: float = 0.5
+## Walking into a wind at least this fast (px/s) leans him into it.
+@export var brace_wind        : float = 60.0
 
 var _states: CharacterStateMachine
 ## Which AttackStats the current sequence started with, held fixed for its
@@ -264,6 +273,9 @@ func _process_motion(delta: float) -> void:
 	if _memorina.is_drawn() and not is_still():
 		_memorina.interrupt()
 	_pogo.enabled = _can_use_sword()
+	# The body's judgement, pushed into the component like `enabled`: the air
+	# reaching Ivo is his own business, sampled next frame.
+	_airflow_body.exposure = memorina_shelter if _memorina.is_drawn() else 1.0
 	if on_floor:
 		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
@@ -341,6 +353,11 @@ func just_double_jumped() -> bool:
 func is_memorina_drawn() -> bool:
 	return _memorina.is_drawn()
 
+## Walking into a wind hard enough to lean into (the resolver's brace pose).
+func is_bracing() -> bool:
+	var axis := move_axis()
+	return is_on_floor() and not is_zero_approx(axis) and signf(carry().x) == -signf(axis) and absf(carry().x) >= brace_wind
+
 ## "Completamente parado, em chao firme" - the precondition the whole musical
 ## track rests on (docs/design/02_mecanicas.md section 6.2). Checked against
 ## real velocity, not just input intent, so a slide-to-stop does not count.
@@ -413,13 +430,14 @@ func _roll_motion(delta: float) -> void:
 	_roll.update(delta)
 
 func _ground_motion(delta: float) -> void:
-	_locomotion.ground_update(delta, move_axis())
+	_locomotion.ground_update(delta, move_axis(), carry().x)
 
 func _air_physics(delta: float) -> void:
 	_wall_mobility.enabled = _has_unlocked(Enums.PlayerSkill.WALL_CLIMB)
 	if not _wall_mobility.update(delta, move_axis()):
 		_jump.apply_gravity(delta)
-	_locomotion.air_update(delta, move_axis())
+	_locomotion.air_update(delta, move_axis(), carry().x)
+	_locomotion.lift_update(delta, carry().y)
 	_landing.sample_fall_speed(velocity.y)
 
 #############################################

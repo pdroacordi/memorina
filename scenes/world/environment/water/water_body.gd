@@ -60,6 +60,8 @@ const PLANE_COLUMN_WIDTH := 16
 var _field: WaterSurfaceField
 var _texture: WaterSurfaceTexture
 var _rates := PackedFloat32Array()
+## The air's horizontal speed over each column (Airflow), refreshed with _rates.
+var _winds := PackedFloat32Array()
 var _solidity := PackedFloat32Array()
 var _floors := PackedFloat32Array()
 # A stepped floor handed in before _ready (see set_floor): depth in world
@@ -71,6 +73,7 @@ var _time := 0.0
 var _clocks := PackedFloat32Array()
 var _rates_frame := -RATE_REFRESH_FRAMES
 var _memory: MemoryField
+var _airflow: Airflow
 var _materials: Array[ShaderMaterial] = []
 
 @onready var _surface: WaterQuad = $Surface
@@ -99,9 +102,11 @@ func _ready() -> void:
 		_clocks.resize(columns)
 	_texture = WaterSurfaceTexture.new(columns)
 	_rates.resize(columns)
+	_winds.resize(columns)
 	_solidity.resize(columns)
 	_build_floors(columns)
 	_memory = MemoryField.find_in(self)
+	_airflow = Airflow.find_in(self)
 	for quad: WaterQuad in [_surface, _veil]:
 		if quad:
 			# Each body tunes its own uniforms, so it owns its own materials.
@@ -134,6 +139,7 @@ func _physics_process(delta: float) -> void:
 			_clocks[column] += delta * _rates[column]
 	else:
 		_wade(delta)
+		_blow(delta)
 		_field.step(delta, _rates, _time)
 	_upload()
 
@@ -215,6 +221,20 @@ func _wade(delta: float) -> void:
 	for body: Vector2 in _volume.disturbances():
 		_field.disturb(column_of(body.x), -body.y * profile.wake_per_speed * delta)
 
+## Moving air drags the surface downwind: every column is pushed in
+## proportion to the wind over it and to how far downwind of the body's middle
+## it lies, so water piles on the downwind bank and draws off the upwind one.
+## The springs pull it back, so a steady wind holds a slope and a dropping one
+## lets a crest run.
+func _blow(delta: float) -> void:
+	if _airflow == null or is_zero_approx(profile.wind_stress):
+		return
+	var half := maxf((column_count() - 1) * 0.5, 1.0)
+	for column in column_count():
+		var wind := _winds[column]
+		if not is_zero_approx(wind):
+			_field.disturb(column, -wind * profile.wind_stress * delta * ((column - half) / half))
+
 func _build_floors(columns: int) -> void:
 	_floors.resize(columns)
 	_floors.fill(float(size.y))
@@ -238,6 +258,7 @@ func _refresh_rates() -> void:
 	var left := global_position.x - size.x * 0.5
 	var width := column_width()
 	var y := surface_rest_y()
+	_refresh_winds(left, width, y)
 	var previous := 0
 	var previous_rate := _memory.sample(Vector2(left + width * 0.5, y))
 	_rates[0] = previous_rate
@@ -250,6 +271,18 @@ func _refresh_rates() -> void:
 		previous = column
 		previous_rate = rate
 		column += RATE_STRIDE
+
+## The air a few pixels above the waterline, sampled every RATE_STRIDE columns
+## and held between them. Airflow already scales it by memory.
+func _refresh_winds(left: float, width: int, y: float) -> void:
+	if _airflow == null:
+		_winds.fill(0.0)
+		return
+	var wind := 0.0
+	for column in column_count():
+		if column % RATE_STRIDE == 0:
+			wind = _airflow.sample(Vector2(left + (column + 0.5) * width, y - 4.0)).x
+		_winds[column] = wind
 
 func _upload() -> void:
 	_texture.write(_field, _clocks, _floors, _solidity)

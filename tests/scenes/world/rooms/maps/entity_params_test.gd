@@ -47,5 +47,12 @@ func test_a_written_path_is_kept() -> void:
 	var link: Variant = EntityParams._convert("../../x", TYPE_NODE_PATH)
 	assert_str(str(link)).is_equal("../../x")
 
+func test_a_resource_comes_from_its_path() -> void:
+	var loaded: Variant = EntityParams._convert("res://resources/world/wind/gusty_wind.tres", TYPE_OBJECT)
+	assert_object(loaded).is_instanceof(WindProfile)
+
+func test_a_missing_resource_is_reported() -> void:
+	assert_object(EntityParams._convert("res://nowhere.tres", TYPE_OBJECT)).is_null()
+
 func test_a_fraction_is_not_an_int() -> void:
 	assert_object(EntityParams._convert(1.5, TYPE_INT)).is_null()

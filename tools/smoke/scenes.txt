@@ -9,3 +9,4 @@ res://scenes/world/rooms/trials_winter/contents/winter_trial_contents.tscn
 res://scenes/world/rooms/trials_summer/contents/summer_trial_contents.tscn
 res://scenes/world/rooms/trials_autumn/contents/autumn_trial_contents.tscn
 res://scenes/world/rooms/trials_spring/contents/spring_trial_contents.tscn
+res://scenes/world/environment/wind/wind_zone.tscn

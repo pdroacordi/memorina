@@ -20,6 +20,7 @@
 [ext_resource type="Script" uid="uid://cbjw3eoynfrex" path="res://scenes/characters/components/animation_driver.gd" id="22_animdrv"]
 [ext_resource type="Script" uid="uid://detcqnxolsw5v" path="res://scenes/characters/enemies/brute_shadow/brute_shadow_animation_resolver.gd" id="23_animres"]
 [ext_resource type="Script" uid="uid://bxrbxt0jji8yt" path="res://scenes/world/memory/greyhush_shield.gd" id="90_shield"]
+[ext_resource type="Script" path="res://scenes/characters/components/airflow_body.gd" id="91_airflow"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_rxs28"]
 radius = 18.0
@@ -603,6 +604,10 @@ max_hp = 5
 [node name="Locomotion" type="Node" parent="." unique_id=1294180031]
 script = ExtResource("17_locomo")
 stats = ExtResource("12_l4ju7")
+
+[node name="AirflowBody" type="Node" parent="."]
+script = ExtResource("91_airflow")
+sample_offset = Vector2(0, -40)
 
 [node name="EnemySight" type="Area2D" parent="." unique_id=2061902140]
 visible = false

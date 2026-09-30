@@ -3,6 +3,7 @@ extends AnimationResolver
 
 const IDLE := &"idle"
 const RUN := &"run"
+const BRACE := &"brace"
 const JUMP_START := &"jump_start"
 const JUMP_IDLE := &"jump_idle"
 const AIR_SPIN := &"air_spin"
@@ -66,7 +67,7 @@ func resolve() -> StringName:
 		return driver.sequence(MEMORINA_DRAW, MEMORINA_IDLE)
 
 	if _player.wants_to_move():
-		return RUN
+		return BRACE if _player.is_bracing() else RUN
 	if _player.just_landed() or driver.holding(LAND):
 		return LAND
 	return IDLE

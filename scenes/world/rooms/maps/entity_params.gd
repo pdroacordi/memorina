@@ -6,6 +6,7 @@ class_name EntityParams extends RefCounted
 ##   numbers, booleans, strings, StringNames, enums (by their int)
 ##   Vector2 / Vector2i from [x, y]
 ##   Color from "#rrggbb" or "#rrggbbaa"
+##   a Resource (a profile, stats) from its "res://..." path
 ##   NodePath from another entity's `id` - it resolves among the room's
 ##     entities, so {"target_path": "gate_a"} points at the entity whose id is
 ##     "gate_a". A path that already starts with "." or "/" is kept as written.
@@ -74,4 +75,8 @@ static func _convert(value: Variant, type: int) -> Variant:
 			return Vector2(value[0], value[1]) if type == TYPE_VECTOR2 else Vector2i(int(value[0]), int(value[1]))
 		TYPE_COLOR:
 			return Color.html(value) if value is String and Color.html_is_valid(value) else null
+		TYPE_OBJECT:
+			if value is String and (value as String).begins_with("res://") and ResourceLoader.exists(value):
+				return load(value)
+			return null
 	return null

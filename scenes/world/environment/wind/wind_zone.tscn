@@ -1,0 +1,49 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scenes/world/environment/wind/wind_zone.gd" id="1_zone"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/wind/wind_streak.png" id="2_streak"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/wind/wind_leaf.png" id="3_leaf"]
+[ext_resource type="Script" path="res://scenes/world/memory/song_receiver.gd" id="4_receiver"]
+[ext_resource type="Resource" path="res://resources/world/wind/gusty_wind.tres" id="5_profile"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_leaves"]
+particles_animation = true
+particles_anim_h_frames = 3
+particles_anim_v_frames = 1
+particles_anim_loop = true
+
+[sub_resource type="Gradient" id="Gradient_fade"]
+offsets = PackedFloat32Array(0, 0.15, 0.8, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[node name="WindZone" type="Node2D"]
+script = ExtResource("1_zone")
+profile = ExtResource("5_profile")
+
+[node name="Streaks" type="CPUParticles2D" parent="."]
+texture = ExtResource("2_streak")
+emission_shape = 3
+spread = 4.0
+gravity = Vector2(0, 0)
+color_ramp = SubResource("Gradient_fade")
+
+[node name="Leaves" type="CPUParticles2D" parent="."]
+material = SubResource("CanvasItemMaterial_leaves")
+texture = ExtResource("3_leaf")
+emission_shape = 3
+spread = 10.0
+gravity = Vector2(0, 30)
+angular_velocity_min = -220.0
+angular_velocity_max = 220.0
+anim_speed_min = 0.8
+anim_speed_max = 1.6
+anim_offset_max = 1.0
+color_ramp = SubResource("Gradient_fade")
+
+[node name="FreezeReceiver" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1048576
+monitorable = false
+script = ExtResource("4_receiver")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FreezeReceiver"]
