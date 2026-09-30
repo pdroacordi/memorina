@@ -4,6 +4,13 @@ extends CharacterBody2D
 signal facing_changed(facing: int)
 signal died
 
+## What silhouette() copies from the body's sprite: the frame, never its
+## material, script or animation.
+const SILHOUETTE_PROPERTIES: Array[StringName] = [
+	&"texture", &"hframes", &"vframes", &"frame", &"flip_h", &"flip_v",
+	&"centered", &"offset", &"region_enabled", &"region_rect", &"texture_filter",
+]
+
 @export var gravity_scale: float = 1.0
 
 @export_category("Knockback")
@@ -87,6 +94,17 @@ func flash(color: Color, seconds: float) -> void:
 	_sprite.modulate = color
 	_flash_tween = create_tween()
 	_flash_tween.tween_property(_sprite, "modulate", Color.WHITE, seconds)
+
+## A still copy of the frame this body is showing right now - what Sombra
+## burns into the ground. Plain drawing: no script, no animation, and not on
+## the creature pass (it is the world's, so the grey takes it). Its transform
+## is the sprite's GLOBAL one; re-express it under whatever adopts it.
+func silhouette() -> Sprite2D:
+	var copy := Sprite2D.new()
+	for property: StringName in SILHOUETTE_PROPERTIES:
+		copy.set(property, _sprite.get(property))
+	copy.transform = _sprite.global_transform
+	return copy
 
 func apply_knockback(impulse: Vector2) -> void:
 	if impulse.is_zero_approx():

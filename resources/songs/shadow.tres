@@ -4,6 +4,7 @@
 [ext_resource type="Resource" uid="uid://haw0km1jwcl3" path="res://resources/songs/palettes/summer_palette.tres" id="2"]
 [ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
 [ext_resource type="AudioStream" uid="uid://c4lj7rrklr17n" path="res://assets/audios/soundtrack/chant_of_the_noon_sun.mp3" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/world/memory/song_effects/shadow/cast_shadow.tscn" id="5_effect"]
 
 [resource]
 script = ExtResource("1")
@@ -17,3 +18,4 @@ track = ExtResource("4")
 excerpt_duration = 7.0
 excerpt_fade = 0.5
 note_cues = PackedFloat32Array(0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
+pulse_effect = ExtResource("5_effect")

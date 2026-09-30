@@ -187,6 +187,8 @@ var _sinking: bool = false
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
+	# What creatures take for the hero: him, and any shadow he burns.
+	add_to_group(EnemySight.PRESENCE)
 
 func _ready() -> void:
 	super()

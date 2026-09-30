@@ -1,7 +1,7 @@
 class_name BruteShadowAI
 extends EnemyAI
 ## BruteShadow's only addition beyond the common wander/chase baseline: a
-## melee ATTACK state that takes over once the player is within melee range,
+## melee ATTACK state that takes over once its target is within melee range,
 ## holding direction at 0.0 for the swing's full duration so it can't move or
 ## turn mid-attack. The swing itself (Hitbox timing, sprite frames) is
 ## entirely the attack clip's business; BruteShadowAnimationResolver just
@@ -68,4 +68,4 @@ func cancel_attack() -> void:
 		_attack_cooldown = attack_stats.attack_cooldown
 
 func _in_melee_range() -> bool:
-	return _sight.player != null and _body.global_position.distance_to(_sight.player.global_position) <= attack_stats.attack_range
+	return _target != null and _body.global_position.distance_to(_target.global_position) <= attack_stats.attack_range

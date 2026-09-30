@@ -611,7 +611,7 @@ sample_offset = Vector2(0, -40)
 
 [node name="EnemySight" type="Area2D" parent="." unique_id=2061902140]
 collision_layer = 0
-collision_mask = 256
+collision_mask = 768
 monitorable = false
 script = ExtResource("18_sight")
 

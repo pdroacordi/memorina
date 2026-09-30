@@ -1,8 +1,18 @@
 class_name EnemySight
 extends Area2D
-## Broad-phase player detection (this Area2D's CollisionShape2D radius),
-## confirmed by a narrow-phase RayCast2D against Terrain, so a wall between
-## the enemy and the player blocks the chase like it would block real sight.
+## Broad-phase detection (this Area2D's CollisionShape2D radius) of the player
+## and of every PRESENCE - whatever a creature takes for the hero: Ivo's body,
+## and his burned shadow (Sombra, design 02 section 7.1), which is an area,
+## not a body. Each is confirmed by a narrow-phase RayCast2D against Terrain,
+## so a wall between them blocks the chase like it would block real sight.
+##
+## Two answers, because two kinds of mind read this: `player` is Ivo alone (a
+## guardian fights HIM, never a shadow he left), and visible_presence() is the
+## nearest presence in plain sight (a common creature goes for whichever it
+## sees - that is what makes the shadow a lure).
+
+## The group of everything a creature takes for the hero.
+const PRESENCE := &"presence"
 
 ## Both Player and Enemy have their origin at their feet (the collision
 ## capsule sits ~27px above it). A ray cast from/to that raw origin runs
@@ -10,26 +20,57 @@ extends Area2D
 ## both ends are lifted to roughly chest height before casting.
 const SIGHT_HEIGHT_OFFSET := Vector2(0, -27)
 
-@onready var _ray: RayCast2D = $RayCast2D
-
 var player: Node2D = null
 
+var _presences: Array[Node2D] = []
+
+@onready var _ray: RayCast2D = $RayCast2D
+
+
+## Index of the point nearest `from` (the first on a tie), -1 when empty.
+static func nearest_index(from: Vector2, points: PackedVector2Array) -> int:
+	var best := -1
+	var best_distance := INF
+	for i: int in points.size():
+		var d := from.distance_squared_to(points[i])
+		if d < best_distance:
+			best_distance = d
+			best = i
+	return best
 
 func _ready() -> void:
-	body_entered.connect(_on_body_entered)
-	body_exited.connect(_on_body_exited)
+	body_entered.connect(_on_entered)
+	body_exited.connect(_on_exited)
+	area_entered.connect(_on_entered)
+	area_exited.connect(_on_exited)
 
 func is_player_visible() -> bool:
-	if player == null:
-		return false
-	_ray.target_position = _ray.to_local(player.global_position + SIGHT_HEIGHT_OFFSET)
+	return player != null and can_see(player)
+
+## The nearest presence in plain sight, or null. A presence that left the
+## group (a shadow that broke) is no longer anyone.
+func visible_presence() -> Node2D:
+	var seen: Array[Node2D] = []
+	var points := PackedVector2Array()
+	for node: Node2D in _presences:
+		if node.is_in_group(PRESENCE) and can_see(node):
+			seen.append(node)
+			points.append(node.global_position)
+	var at := nearest_index(global_position, points)
+	return seen[at] if at >= 0 else null
+
+func can_see(node: Node2D) -> bool:
+	_ray.target_position = _ray.to_local(node.global_position + SIGHT_HEIGHT_OFFSET)
 	_ray.force_raycast_update()
 	return not _ray.is_colliding()
 
-func _on_body_entered(body: Node2D) -> void:
-	if body.is_in_group(Player.GROUP):
-		player = body
+func _on_entered(node: Node2D) -> void:
+	if node.is_in_group(Player.GROUP):
+		player = node
+	if node.is_in_group(PRESENCE) and not _presences.has(node):
+		_presences.append(node)
 
-func _on_body_exited(body: Node2D) -> void:
-	if body == player:
+func _on_exited(node: Node2D) -> void:
+	if node == player:
 		player = null
+	_presences.erase(node)
