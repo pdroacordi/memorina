@@ -34,5 +34,13 @@ func _drip(delta: float, radius: float) -> void:
 		var x := global_position.x + randf_range(-radius, radius)
 		for member: Node in get_tree().get_nodes_in_group(WaterBody.GROUP):
 			var water := member as WaterBody
-			if water.contains_x(x) and pulse.contains(Vector2(x, water.surface_rest_y())):
+			var point := Vector2(x, water.surface_rest_y())
+			if water.contains_x(x) and pulse.contains(point) and not _sheltered(point):
 				water.drip(x, drip_depth)
+
+## Under a Redoma's shell it does not rain (design 02 section 7.4).
+func _sheltered(point: Vector2) -> bool:
+	for shell: ColorPulse in ColorPulse.lit(self, Enums.Song.BELL_JAR):
+		if shell.contains(point):
+			return true
+	return false

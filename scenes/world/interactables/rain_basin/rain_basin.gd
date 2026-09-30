@@ -41,18 +41,27 @@ func _ready() -> void:
 	# water in its _ready, which runs after this one.
 	_water.set_level.call_deferred(_dry_y)
 
+func _sheltered() -> bool:
+	var centre := Vector2(_water.global_position.x, _full_y)
+	for shell: ColorPulse in ColorPulse.lit(self, Enums.Song.BELL_JAR):
+		if shell.contains(centre):
+			return true
+	return false
+
 ## How full it is: 0 dry, 1 at its painted level.
 func level() -> float:
 	return _level
 
 func _physics_process(delta: float) -> void:
-	if is_equal_approx(_level, _target) or (_freezable and _freezable.is_frozen()):
+	# Under a Redoma's shell it does not rain: the basin stays as it is.
+	var target := 0.0 if _sheltered() else _target
+	if is_equal_approx(_level, target) or (_freezable and _freezable.is_frozen()):
 		return
 	var rates := _water.column_rates()
 	var rate := 0.0
 	for r: float in rates:
 		rate += r
 	rate /= maxf(rates.size(), 1.0)
-	var time := fill_time if _target > _level else drain_time
-	_level = move_toward(_level, _target, delta * rate / maxf(time, 0.001))
+	var time := fill_time if target > _level else drain_time
+	_level = move_toward(_level, target, delta * rate / maxf(time, 0.001))
 	_water.set_level(lerpf(_dry_y, _full_y, smoothstep(0.0, 1.0, _level)))

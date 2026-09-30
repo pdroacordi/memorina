@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1"]
 [ext_resource type="Resource" uid="uid://eg08rxapfxb1" path="res://resources/songs/palettes/winter_palette.tres" id="2"]
-[ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
+[ext_resource type="Resource" path="res://resources/memory/bell_jar_pulse_stats.tres" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/world/memory/song_effects/shell/frost_shell.tscn" id="9_effect"]
 [ext_resource type="AudioStream" uid="uid://rolceu7k1oou" path="res://assets/audios/soundtrack/lullaby_under_glass.mp3" id="4"]
 
 [resource]
@@ -14,3 +15,4 @@ name_key = "SONG_BELL_JAR"
 title_key = "SONG_TITLE_BELL_JAR"
 pulse_stats = ExtResource("3")
 track = ExtResource("4")
+pulse_effect = ExtResource("9_effect")
