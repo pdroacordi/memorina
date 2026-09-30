@@ -17,7 +17,7 @@ Third-party art used in Memorina, with the terms it was taken under.
   and fulcrum, drawbridge, hanging cocoon, root strand, fallen log) - generated for this project with
   Codex CLI's image tool from the prompts in `tools/art/prompts/`, then keyed, snapped to
   the world palette and packed by `tools/art/process_image.gd`. No third-party art was
-  given as a reference. `leaf_wall.png` is drawn by `tools/art/draw_procedural_sprites.gd`.
+  given as a reference. `leaf_wall.png`, the wind gust and dash and the rain splashes are drawn by `tools/art/draw_procedural_sprites.gd`.
 
 ## Ivo
 

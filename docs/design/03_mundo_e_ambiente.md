@@ -187,7 +187,7 @@ Isso é tensão excelente e pode ser fúria pura. A solução tem quatro camadas
 - **Cansaço de nevasca.** O estado padrão de toda região é calmo; eventos severos são pontuação, não o normal. Nenhum evento severo deve começar logo após o jogador entrar numa região, para que uma transição de sala nunca o jogue numa rajada no meio de um salto.
 - **Clima durante combate de guardião.** Vento alterando o alcance do rolamento no meio de um chefe é injusto. A intensidade do clima cai drasticamente durante confrontos de guardião.
 - **Relâmpago ambiente é armadilha.** A tempestade ambiente de Verão tem relâmpago e trovão **visuais**, atingindo apenas o plano de fundo, e **nunca causa dano nem ativa mecanismos**. Se causasse, o jogador perguntaria "quem disparou aquilo?". Força que mexe em mecanismo é sempre invocada pelo jogador.
-- **Vento de Outono versus Vendaval.** Diferenciados pela gramática da seção 5.3: o vento ambiente carrega **folhas**, em camadas, sempre na mesma direção durante todo o evento; a nota carrega um **anel de cor** e é radial.
+- **Vento de Outono versus Vendaval.** Diferenciados pela gramática da seção 5.3: o vento ambiente carrega **folhas**, em camadas, sempre na mesma direção durante todo o evento; a nota carrega um **anel de cor**, vive só dentro do pulso e morre com ele, e suas rajadas se enrolam na cor da estação. Desde 2026-09-30 o Vendaval sopra numa só direção (para onde o herói olha), então a geometria deixou de separá-los: separam-nos a cor, a borda que contrai e a origem no herói.
 - **Acessibilidade.** O branco-total da nevasca e a quantidade de movimento em tela precisam de um controle de intensidade nas opções desde a primeira versão. Barato agora, caro depois.
 
 ---

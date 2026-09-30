@@ -47,9 +47,10 @@ func _gale(point: Vector2) -> Vector2:
 	var eye := gale.eye
 	gale.free()
 	var radius := (load(PULSE_STATS) as PulseStats).max_radius
-	# Take-off is at the edge; the song was played PLAY_CELLS_BACK cells back.
+	# Take-off is at the edge; the song was played PLAY_CELLS_BACK cells back,
+	# facing the chasm, so the gale blows across it.
 	var origin := Vector2(-(PLAY_CELLS_BACK * MapGuide.CELL - MapGuide.CELL * 0.5), 0.0)
-	return GaleShape.wind(origin, point + SAMPLE_OFFSET, radius, eye, speed)
+	return GaleShape.wind(origin, point + SAMPLE_OFFSET, radius, eye, speed, 1.0)
 
 func _reach(wind: Callable) -> float:
 	var reach := MapGuide.ivo_reach()

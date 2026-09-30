@@ -1,7 +1,7 @@
 class_name GaleShapeTest extends GdUnitTestSuite
 
-## Vendaval blows outward, still in an eye around the player, strongest a
-## little way out and gone at the pulse's clean edge.
+## Vendaval blows one way - the way Ivo faces - still in an eye around him,
+## strongest a little way out and gone at the pulse's clean edge.
 
 func test_the_eye_is_still() -> void:
 	assert_float(GaleShape.strength(30.0, 600.0, 48.0)).is_equal(0.0)
@@ -16,16 +16,18 @@ func test_it_peaks_a_little_way_out() -> void:
 	assert_float(GaleShape.strength(peak * 0.6, 600.0, 48.0)).is_less(1.0)
 	assert_float(GaleShape.strength(500.0, 600.0, 48.0)).is_less(1.0)
 
-func test_it_blows_away_from_the_origin() -> void:
-	var right := GaleShape.wind(Vector2(100, 0), Vector2(300, 0), 600.0, 48.0, 260.0)
-	var left := GaleShape.wind(Vector2(100, 0), Vector2(-100, 0), 600.0, 48.0, 260.0)
-	assert_float(right.x).is_greater(0.0)
+func test_it_blows_the_way_it_faces_on_both_sides() -> void:
+	var ahead := GaleShape.wind(Vector2(100, 0), Vector2(300, 0), 600.0, 48.0, 260.0, 1.0)
+	var behind := GaleShape.wind(Vector2(100, 0), Vector2(-100, 0), 600.0, 48.0, 260.0, 1.0)
+	assert_float(ahead.x).is_greater(0.0)
+	assert_float(behind.x).is_greater(0.0)
+	var left := GaleShape.wind(Vector2(100, 0), Vector2(300, 0), 600.0, 48.0, 260.0, -1.0)
 	assert_float(left.x).is_less(0.0)
-	assert_float(right.y).is_equal(0.0)
 
-func test_it_blows_across_the_ground_more_than_up() -> void:
-	var up := GaleShape.wind(Vector2.ZERO, Vector2(200, -200), 600.0, 48.0, 260.0)
-	assert_float(absf(up.y)).is_less(absf(up.x))
+func test_it_blows_along_the_ground_never_up() -> void:
+	var above := GaleShape.wind(Vector2.ZERO, Vector2(200, -200), 600.0, 48.0, 260.0, 1.0)
+	assert_float(above.y).is_equal(0.0)
+	assert_float(above.x).is_greater(0.0)
 
 func test_a_pulse_smaller_than_its_eye_is_still() -> void:
 	assert_float(GaleShape.strength(20.0, 40.0, 48.0)).is_equal(0.0)

@@ -99,6 +99,16 @@
    "pressed": false
   },
   {
+   "t": 8.8,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.84,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
    "t": 9.3,
    "action": "draw_memorina",
    "pressed": true
