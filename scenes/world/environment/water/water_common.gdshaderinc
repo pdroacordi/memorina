@@ -27,6 +27,11 @@ uniform int column_width = 2;
 uniform float depth_band_px = 6.0;
 uniform sampler2D transmit_ramp : filter_nearest, repeat_disable, hint_default_white;
 
+// Discs the water is held out of (Redoma's shells), world px: xy the centre,
+// z the radius. WaterBody._refresh_dry() uses the same test.
+uniform vec4 held_discs[4];
+uniform int held_count = 0;
+
 varying vec2 world_pos;
 
 int wc_column(float world_x) {
@@ -72,6 +77,16 @@ vec4 wc_ramp(sampler2D ramp, float depth, vec2 texel) {
 vec4 wc_ramp_flat(sampler2D ramp, float depth) {
 	int entries = textureSize(ramp, 0).x;
 	return texelFetch(ramp, ivec2(clamp(int(depth / depth_band_px), 0, entries - 1), 0), 0);
+}
+
+// How far `point` lies inside the nearest held disc, px: positive inside,
+// negative outside.
+float wc_held(vec2 point) {
+	float inside = -1e6;
+	for (int i = 0; i < held_count; i++) {
+		inside = max(inside, held_discs[i].z - distance(point, held_discs[i].xy));
+	}
+	return inside;
 }
 
 // What the water does to whatever shows through it at this depth.

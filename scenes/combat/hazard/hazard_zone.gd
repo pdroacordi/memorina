@@ -15,12 +15,31 @@ class_name HazardZone extends Area2D
 ## It also sits on the Hazard physics layer, so SafeGroundTracker can refuse
 ## any spot inside it.
 
+##
+## Its shapes may be rebuilt while a body is inside (water's outline follows a
+## shrinking Redoma every frame), which the physics server reports as leaving
+## and entering again. A body is taken once per time it is IN, so it only
+## counts as gone once a frame has passed without it overlapping.
+
 ## Health a body loses each time it falls in.
 @export var damage := 1
 
+var _inside: Array[Node2D] = []
+
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
+	body_exited.connect(_on_body_exited)
 
 func _on_body_entered(body: Node2D) -> void:
+	if _inside.has(body):
+		return
+	_inside.append(body)
 	if body is Character:
 		(body as Character).receive_hazard(self)
+
+func _on_body_exited(body: Node2D) -> void:
+	_forget.call_deferred(body)
+
+func _forget(body: Node2D) -> void:
+	if not is_instance_valid(body) or not overlaps_body(body):
+		_inside.erase(body)

@@ -29,6 +29,13 @@ func _well() -> Vector2i:
 			return Vector2i(start, col)
 	return Vector2i.ZERO
 
+## Cells from the brim to the well's floor.
+func _depth() -> int:
+	var bottom := FLOOR_ROW
+	while not _solid(_well().x, bottom):
+		bottom += 1
+	return bottom - FLOOR_ROW
+
 func _radius() -> float:
 	return (load(SHELL_STATS) as PulseStats).max_radius
 
@@ -44,7 +51,7 @@ func test_it_is_full_of_water() -> void:
 		var col := int(cell.x) - _map.origin.x
 		if col >= well.x and col < well.y:
 			in_well += 1
-	assert_int(in_well).is_equal((well.y - well.x) * 6)
+	assert_int(in_well).is_equal((well.y - well.x) * _depth())
 
 func test_a_low_passage_opens_at_the_foot_of_the_near_wall() -> void:
 	var well := _well()
@@ -55,11 +62,14 @@ func test_a_low_passage_opens_at_the_foot_of_the_near_wall() -> void:
 	assert_bool(_solid(well.x - 1, bottom - 2)).is_false()
 	assert_bool(_solid(well.x - 1, FLOOR_ROW)).is_true()
 
-## Only the geometry: the shell's reach from the edge. That a shell holds the
-## water out is water_hold_out_test; that the route plays is the
-## song_bell_jar_well timeline.
+## Only the geometry: the shell's reach from the edge. The water stands
+## against the shell's curve, so the whole way down - from the brim to the
+## floor, by the near wall, as wide as Ivo - must lie inside the disc played
+## on the edge. That a shell holds the water out is water_hold_out_test; that
+## the route plays is the song_bell_jar_well timeline.
 func test_redoma_at_the_edge_dries_the_way_down_to_it() -> void:
 	var well := _well()
-	var edge := (well.x - 0.5) * CELL
-	var column := (well.x + 0.5) * CELL
-	assert_float(absf(column - edge)).is_less(_radius())
+	var edge := Vector2((well.x - 0.5) * CELL, FLOOR_ROW * CELL)
+	var floor_y := (FLOOR_ROW + _depth()) * CELL
+	var far_side := well.x * CELL + CELL * 1.5
+	assert_float(Vector2(far_side, floor_y).distance_to(edge)).is_less(_radius())

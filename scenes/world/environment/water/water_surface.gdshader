@@ -55,7 +55,10 @@ void fragment() {
 	int column = wc_column(centre.x);
 	vec4 data = wc_data(column);
 	float surface = wc_surface(data);
-	if (texel.y < surface || texel.y >= wc_floor(data)) {
+	// Held out of a shell's disc, pixel for pixel: the water stands against
+	// the curve, with the lighter line along it (below).
+	float held = wc_held(centre);
+	if (texel.y < surface || texel.y >= wc_floor(data) || held > 0.0) {
 		discard;
 	}
 	float depth = texel.y - surface;
@@ -104,7 +107,7 @@ void fragment() {
 	bool exposed_right = in_column > float(column_width) - 1.0
 		&& column + 1 < textureSize(surface_data, 0).x
 		&& texel.y < wc_surface(wc_data(column + 1));
-	if (depth < 1.0 || exposed_left || exposed_right) {
+	if (depth < 1.0 || exposed_left || exposed_right || held > -1.0) {
 		bool foam = data.g > BAYER[wd_bayer_index(texel)];
 		colour = foam ? foam_color.rgb : top_line_color.rgb;
 	}

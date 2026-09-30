@@ -49,6 +49,12 @@ const PLANE_COLUMN_WIDTH := 16
 const GROUP := &"water_body"
 ## Marks a shape fit_area() made, which it may resize in place.
 const FITTED := &"water_fitted"
+## Discs the water can be held out of at once (the shaders' array size).
+const MAX_HELD := 4
+## Pixels between the points of the hazard's outline around a held disc.
+const HAZARD_STEP := 4.0
+## Thinner water than this under a held disc takes no one.
+const HAZARD_MIN_DEPTH := 3.0
 
 @export var size := Vector2i(192, 24):
 	set(value):
@@ -93,12 +99,11 @@ var _bottom_y := 0.0
 var _floor_bottoms := PackedFloat32Array()
 var _mirror_top := 0
 # Discs the water is held out of (Redoma's shells), by holder, and which
-# columns that leaves dry.
+# columns have their waterline inside one.
 var _held_out := {}
 var _dry := PackedByteArray()
-# The hazard's shapes while some columns are held out: one per run of wet
-# columns, as (shape, first column, end column).
-var _runs: Array[Array] = []
+# The hazard's outlines while a disc is held out, reused as the water moves.
+var _outlines: Array[CollisionPolygon2D] = []
 
 @onready var _surface: WaterQuad = $Surface
 @onready var _veil: WaterQuad = get_node_or_null("Veil")
@@ -208,6 +213,10 @@ func level_range() -> Vector2:
 func is_dry() -> bool:
 	return size.y <= 0
 
+## A lake is seen from above (it has no waterline profile); a pool edge-on.
+func is_lake() -> bool:
+	return profile == null
+
 ## Moves the waterline to `rest_y` (world), rounded to a whole pixel and held
 ## between the level it was painted at and its deepest floor. The depths, the
 ## volume, the hazard, the mirror axis and the shaders all follow; a dry body
@@ -218,9 +227,8 @@ func set_level(rest_y: float) -> void:
 		return
 	global_position.y = y
 	size = Vector2i(size.x, roundi(_bottom_y - y))
-	# A shell's disc holds out the columns whose waterline it covers: the line
-	# has moved, so ask again.
-	_refresh_dry(false)
+	# Which columns have their waterline in a shell's disc: the line has moved.
+	_refresh_dry()
 	_apply_floors()
 	# The bank above the water grows as it sinks; the axis stays halfway up it.
 	mirror_axis_offset = _mirror_top - floori((y - _top_y) * 0.5)
@@ -288,11 +296,15 @@ func splash(world_x: float, speed: float) -> void:
 		var x := float(k) / width
 		_field.disturb(centre + k, -depth * (1.0 - 2.0 * x * x) * exp(-x * x))
 
-## Holds the water out of a disc (Redoma's shell, design 02 section 7.1): every
-## column whose waterline lies inside it is dry - drawn empty, and no hazard
-## there - until the disc shrinks off it or `holder` lets go. A radius of 0
-## lets go.
+## Holds the water out of a disc (Redoma's shell, design 02 section 7.1): no
+## water inside it, pixel for pixel - the water stands against the curve with
+## its lighter line along it, and the hazard's outline follows the same curve
+## - until the disc shrinks off it or `holder` lets go. A radius of 0 lets go.
+## A lake is never held out: it is seen from above, lying in front of the
+## land, and a hole cut in it reads as the water vanishing, not standing back.
 func hold_out(holder: Object, centre: Vector2, radius: float) -> void:
+	if is_lake():
+		return
 	var key := holder.get_instance_id()
 	if radius <= 0.0:
 		release(holder)
@@ -300,14 +312,16 @@ func hold_out(holder: Object, centre: Vector2, radius: float) -> void:
 	var disc := Vector3(centre.x, centre.y, radius)
 	if _held_out.get(key, Vector3.ZERO) == disc:
 		return
+	assert(_held_out.has(key) or _held_out.size() < MAX_HELD, "%s: more held discs than the shaders take" % name)
 	_held_out[key] = disc
-	_refresh_dry()
+	_held_changed()
 
 func release(holder: Object) -> void:
 	if _held_out.erase(holder.get_instance_id()):
-		_refresh_dry()
+		_held_changed()
 
-## Whether the water is held out of the column at `world_x`.
+## Whether the waterline at `world_x` is inside a held disc (nothing to splash
+## or dent there).
 func is_held_out(world_x: float) -> bool:
 	return _dry.size() > 0 and _dry[column_of(world_x)] == 1
 
@@ -318,6 +332,8 @@ func drip(world_x: float, depth: float) -> void:
 	if _field == null or is_dry():
 		return
 	var centre := column_of(world_x)
+	if _dry[centre] == 1:
+		return
 	for k in range(-3, 4):
 		var x := float(k)
 		_field.disturb(centre + k, -depth * (1.0 - 2.0 * x * x) * exp(-x * x))
@@ -363,77 +379,121 @@ func _blow(delta: float) -> void:
 		if not is_zero_approx(wind):
 			_field.disturb(column, -wind * profile.wind_stress * delta * ((column - half) / half))
 
-func _refresh_dry(refit := true) -> void:
+func _held_changed() -> void:
+	_refresh_dry()
+	_push_held()
+	_refit_hazard()
+
+## Which columns have their waterline inside a held disc. The disc test is
+## the same as wc_held() in water_common.gdshaderinc: change one, change the
+## other.
+func _refresh_dry() -> void:
 	var left := global_position.x - size.x * 0.5
 	var width := column_width()
 	var line := surface_rest_y()
-	var changed := false
+	var discs: Array = _held_out.values()
 	for column in _dry.size():
 		var point := Vector2(left + (column + 0.5) * width, line)
 		var dry := 0
-		for disc: Vector3 in _held_out.values():
+		for disc: Vector3 in discs:
 			if point.distance_to(Vector2(disc.x, disc.y)) < disc.z:
 				dry = 1
 				break
-		if _dry[column] != dry:
-			_dry[column] = dry
-			changed = true
-	if changed:
-		_rebuild_runs()
-		if refit:
-			_apply_floors()
-			_refit_hazard()
-			_upload()
+		_dry[column] = dry
 
-## Each column's depth: its bed at its world height under the current level,
-## or nothing where the water is held out.
+func _push_held() -> void:
+	var discs := PackedVector4Array()
+	for disc: Vector3 in _held_out.values():
+		discs.append(Vector4(disc.x, disc.y, disc.z, 0.0))
+	var count := discs.size()
+	discs.resize(MAX_HELD)
+	_set_uniform(&"held_discs", discs)
+	_set_uniform(&"held_count", count)
+
+## Each column's depth: its bed at its world height under the current level.
 func _apply_floors() -> void:
 	var y := global_position.y
 	for column in _floors.size():
-		var dry := _dry.size() > column and _dry[column] == 1
-		_floors[column] = 0.0 if dry else maxf(_floor_bottoms[column] - y, 0.0)
+		_floors[column] = maxf(_floor_bottoms[column] - y, 0.0)
 
-## The hazard follows the water: one shape over the whole body, or one per run
-## of wet columns while some are held out. The runs are rebuilt only when the
-## dry columns change (_rebuild_runs); a moving level only resizes them.
+## The hazard follows the water: one rectangle over the whole body, or - while
+## a disc is held out - outlines of the water left around it (one above the
+## disc where it lies under the surface, one below it), reused in place.
 func _refit_hazard() -> void:
 	if _hazard == null:
 		return
 	var base := _hazard.get_node("Shape") as CollisionShape2D
 	fit_area(base, hazard_depth)
 	var shallow := size.y <= hazard_depth
-	base.set_deferred(&"disabled", not _runs.is_empty() or _dry.has(1) or shallow)
-	var left := global_position.x - size.x * 0.5
-	var width := column_width()
-	for run: Array in _runs:
-		var shape: CollisionShape2D = run[0]
-		var box := shape.shape as RectangleShape2D
-		box.size = Vector2((run[2] - run[1]) * width, maxf(size.y - hazard_depth, 1.0))
-		shape.global_position = Vector2(left + (run[1] + run[2]) * 0.5 * width, global_position.y + hazard_depth + box.size.y * 0.5)
-		shape.set_deferred(&"disabled", shallow)
+	var held := not _held_out.is_empty()
+	base.set_deferred(&"disabled", held or shallow)
+	var outlines: Array[PackedVector2Array] = []
+	if held and not shallow:
+		outlines = _wet_outlines()
+	while _outlines.size() < outlines.size():
+		var outline := CollisionPolygon2D.new()
+		outline.name = "Outline%d" % _outlines.size()
+		_hazard.add_child(outline)
+		_outlines.append(outline)
+	for i in _outlines.size():
+		var used := i < outlines.size()
+		if used:
+			_outlines[i].set_deferred(&"polygon", outlines[i])
+		_outlines[i].set_deferred(&"disabled", not used)
 
-func _rebuild_runs() -> void:
-	if _hazard == null:
-		return
-	for run: Array in _runs:
-		var shape: CollisionShape2D = run[0]
-		_hazard.remove_child(shape)
-		shape.queue_free()
-	_runs.clear()
-	if not _dry.has(1):
-		return
-	var start := -1
-	for column in range(_dry.size() + 1):
-		var wet := column < _dry.size() and _dry[column] == 0
-		if wet and start < 0:
-			start = column
-		elif not wet and start >= 0:
-			var shape := CollisionShape2D.new()
-			shape.name = "Run%d" % start
-			shape.shape = RectangleShape2D.new()
-			_hazard.add_child(shape)
-			_runs.append([shape, start, column])
-			start = -1
+## The water left around the held discs, as polygons in the hazard's space:
+## sampled every HAZARD_STEP px, each sample the water column from
+## `hazard_depth` down to the bottom with the discs' span cut out of it.
+func _wet_outlines() -> Array[PackedVector2Array]:
+	var top := surface_rest_y() + hazard_depth
+	var bottom := surface_rest_y() + size.y
+	var left := global_position.x - size.x * 0.5
+	var samples := maxi(ceili(size.x / HAZARD_STEP), 1)
+	var discs: Array = _held_out.values()
+	var xs := PackedFloat32Array()
+	var uppers := PackedFloat32Array()
+	var lowers := PackedFloat32Array()
+	for i in samples + 1:
+		var x := left + minf(i * HAZARD_STEP, size.x)
+		var cut := Vector2(INF, -INF)
+		for disc: Vector3 in discs:
+			var dx := x - disc.x
+			if absf(dx) < disc.z:
+				var h := sqrt(disc.z * disc.z - dx * dx)
+				cut = Vector2(minf(cut.x, disc.y - h), maxf(cut.y, disc.y + h))
+		xs.append(x)
+		# Water above the cut (where a disc lies under the surface), and below.
+		uppers.append(clampf(cut.x, top, bottom) if cut.x < INF else top)
+		lowers.append(clampf(cut.y, top, bottom) if cut.y > -INF else top)
+	var outlines: Array[PackedVector2Array] = []
+	_bands(xs, PackedFloat32Array(), uppers, top, outlines)
+	_bands(xs, lowers, PackedFloat32Array(), bottom, outlines)
+	return outlines
+
+## One polygon per run of samples where the band is at least
+## HAZARD_MIN_DEPTH deep: its top follows `tops` (or `fixed` when empty), its
+## bottom `bottoms` (or `fixed`).
+func _bands(xs: PackedFloat32Array, tops: PackedFloat32Array, bottoms: PackedFloat32Array, fixed: float, into: Array[PackedVector2Array]) -> void:
+	var upper := PackedVector2Array()
+	var lower := PackedVector2Array()
+	for i in xs.size() + 1:
+		var deep := false
+		var y_top := 0.0
+		var y_bottom := 0.0
+		if i < xs.size():
+			y_top = fixed if tops.is_empty() else tops[i]
+			y_bottom = fixed if bottoms.is_empty() else bottoms[i]
+			deep = y_bottom - y_top >= HAZARD_MIN_DEPTH
+		if deep:
+			upper.append(_hazard.to_local(Vector2(xs[i], y_top)))
+			lower.append(_hazard.to_local(Vector2(xs[i], y_bottom)))
+			continue
+		if upper.size() >= 2:
+			lower.reverse()
+			upper.append_array(lower)
+			into.append(upper)
+		upper = PackedVector2Array()
+		lower = PackedVector2Array()
 
 func _build_floors(columns: int) -> void:
 	_floors.resize(columns)
