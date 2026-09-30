@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="Song" load_steps=5 format=3 uid="uid://kulb9ftdni1t"]
+[gd_resource type="Resource" script_class="Song" format=3 uid="uid://kulcaftdni1t"]
 
 [ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1"]
 [ext_resource type="Resource" uid="uid://haw0km1jwcl3" path="res://resources/songs/palettes/summer_palette.tres" id="2"]

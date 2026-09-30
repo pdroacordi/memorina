@@ -4,9 +4,6 @@
 
 [resource]
 script = ExtResource("1_recall")
-skill = 2
-action = &"roll"
 window = 2.0
 grace_time = 0.9
 trigger_distance = 110.0
-miss_damage = 0
