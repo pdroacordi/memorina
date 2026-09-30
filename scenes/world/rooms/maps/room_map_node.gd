@@ -11,6 +11,12 @@ class_name RoomMapNode extends Node2D
 ## its SIBLINGS, drawn after it - never its children: a lake parented under the
 ## ground's TileMapLayer stopped drawing in front of it.
 ##
+## The entities share one `Entities` node that is filled OUTSIDE the tree and
+## then added whole, so every entity is in the tree before any of them runs
+## _ready: a link (a lift to its plate) resolves whatever order the file lists
+## them in. Added one by one, a lift listed before its plate looked for a
+## plate that did not exist yet and was never linked.
+##
 ## Runs in the editor too, as a preview: what it builds there is never owned
 ## by the scene, so it is never saved into the .tscn - edit the .room file,
 ## not the preview. It has no authored children: a (re)build removes every
@@ -21,6 +27,8 @@ class_name RoomMapNode extends Node2D
 ## earth, and stone looks different on purpose.
 
 const GROUP := &"room_map"
+## The node every placed entity is a child of.
+const ENTITIES := &"Entities"
 const FLOOR_TILESET := preload("res://resources/world/tiles/floor_tileset.tres")
 
 ## The imported `.room` file.
@@ -89,8 +97,11 @@ func _build() -> void:
 	_adopt(_ground)
 	for symbol: String in map.water:
 		_pour(map.legend.entry(symbol), map.water[symbol])
+	var entities := Node2D.new()
+	entities.name = ENTITIES
 	for placed: Dictionary in map.entities:
-		_place(map.legend.entry(placed.symbol), placed)
+		_place(map.legend.entry(placed.symbol), placed, entities)
+	_adopt(entities)
 
 ## One WaterLayer per kind of water, its finer cells painted under every map
 ## cell of that kind BEFORE it enters the tree: it turns its cells into bodies
@@ -106,7 +117,7 @@ func _pour(entry: RoomLegendEntry, cells: PackedVector2Array) -> void:
 	layer.name = "Water_%s" % entry.symbol.uri_encode()
 	_adopt(layer)
 
-func _place(entry: RoomLegendEntry, placed: Dictionary) -> void:
+func _place(entry: RoomLegendEntry, placed: Dictionary, entities: Node2D) -> void:
 	var node := entry.scene.instantiate() as Node2D
 	assert(node != null, "legend '%s': an entity scene's root must be a Node2D" % entry.symbol)
 	var size := Vector2(FLOOR_TILESET.tile_size)
@@ -114,7 +125,7 @@ func _place(entry: RoomLegendEntry, placed: Dictionary) -> void:
 	node.position = Vector2(rect.get_center().x, rect.end.y) if entry.anchor == RoomLegendEntry.Anchor.FEET else rect.get_center()
 	node.name = "%s_%d_%d" % [entry.symbol.uri_encode(), placed.cell.x, placed.cell.y]
 	EntityParams.apply(node, placed.params)
-	_adopt(node)
+	entities.add_child(node)
 
 func _adopt(node: Node) -> void:
 	add_child(node)
