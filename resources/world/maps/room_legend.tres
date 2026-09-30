@@ -7,6 +7,13 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/freezable_water/freezable_water_layer.tscn" id="5_freezable"]
 [ext_resource type="PackedScene" path="res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn" id="6_brute"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/wind/wind_zone.tscn" id="7_wind"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/pressure_plate/pressure_plate.tscn" id="i10_plate"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/gate/gate.tscn" id="i11_gate"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/lift/lift.tscn" id="i12_lift"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/seesaw/seesaw.tscn" id="i13_seesaw"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/hanging_load/hanging_load.tscn" id="i14_load"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/leaf_cover/leaf_cover.tscn" id="i15_cover"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/drawbridge/drawbridge.tscn" id="i16_bridge"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -71,6 +78,69 @@ scene = ExtResource("7_wind")
 anchor = 0
 description = "A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it."
 
+[sub_resource type="Resource" id="plate"]
+script = ExtResource("2_entry")
+symbol = "P"
+kind = 3
+ground = 0
+scene = ExtResource("i10_plate")
+anchor = 0
+description = "A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load."
+
+[sub_resource type="Resource" id="gate"]
+script = ExtResource("2_entry")
+symbol = "G"
+kind = 3
+ground = 0
+scene = ExtResource("i11_gate")
+anchor = 0
+description = "A stone gate standing on this cell that slides up while its trigger_path (a plate) holds. Any Mechanism: travel, move_time, start_moved."
+
+[sub_resource type="Resource" id="lift"]
+script = ExtResource("2_entry")
+symbol = "L"
+kind = 3
+ground = 0
+scene = ExtResource("i12_lift")
+anchor = 0
+description = "A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go."
+
+[sub_resource type="Resource" id="seesaw"]
+script = ExtResource("2_entry")
+symbol = "T"
+kind = 3
+ground = 0
+scene = ExtResource("i13_seesaw")
+anchor = 0
+description = "A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other."
+
+[sub_resource type="Resource" id="load"]
+script = ExtResource("2_entry")
+symbol = "H"
+kind = 3
+ground = 0
+scene = ExtResource("i14_load")
+anchor = 0
+description = "A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back."
+
+[sub_resource type="Resource" id="cover"]
+script = ExtResource("2_entry")
+symbol = "F"
+kind = 3
+ground = 0
+scene = ExtResource("i15_cover")
+anchor = 0
+description = "A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside."
+
+[sub_resource type="Resource" id="bridge"]
+script = ExtResource("2_entry")
+symbol = "D"
+kind = 3
+ground = 0
+scene = ExtResource("i16_bridge")
+anchor = 0
+description = "A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up."
+
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge")])

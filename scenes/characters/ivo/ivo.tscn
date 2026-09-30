@@ -11,6 +11,7 @@
 [ext_resource type="Texture2D" uid="uid://bn6x0lpukduy8" path="res://assets/sprites/characters/ivo/player_run_96x96.png" id="5_ip35x"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_push_96x96.png" id="60_push"]
 [ext_resource type="Script" path="res://scenes/characters/components/airflow_body.gd" id="61_airflow"]
+[ext_resource type="Script" path="res://scenes/world/interactables/weight/weight.gd" id="62_weight"]
 [ext_resource type="Texture2D" uid="uid://dk6l26iest8ah" path="res://assets/sprites/characters/ivo/player_roll_96x96.png" id="6_lk6ox"]
 [ext_resource type="Texture2D" uid="uid://dbcqeejk3rkuc" path="res://assets/sprites/characters/ivo/player_attack.png" id="6_xaiam"]
 [ext_resource type="Texture2D" uid="uid://ncv44x1nf0vl" path="res://assets/sprites/characters/ivo/player_wall_land_96x96.png" id="7_ip35x"]
@@ -1830,6 +1831,7 @@ graph_offset = Vector2(-165.03302, 191.97491)
 
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
 collision_layer = 256
+collision_mask = 3
 script = ExtResource("1_ynyct")
 knockback_time = 0.3
 knockback_damping = 4.0
@@ -1890,6 +1892,9 @@ stats = ExtResource("18_locsta")
 
 [node name="AirflowBody" type="Node" parent="."]
 script = ExtResource("61_airflow")
+
+[node name="Weight" type="Node" parent="."]
+script = ExtResource("62_weight")
 
 [node name="Jump" type="Node" parent="." unique_id=1102847533]
 script = ExtResource("19_jumpco")

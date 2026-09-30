@@ -106,6 +106,13 @@ else in the code knows what a character means.
 | `f` | `[water]` | water | - | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
 | `B` | `[grid]` | entity | - | Brute Shadow: a common enemy that wanders, chases and swings. Give it a unique save_id so its defeat is remembered. |
 | `W` | `[grid]` | entity | - | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
+| `P` | `[grid]` | entity | - | A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load. |
+| `G` | `[grid]` | entity | - | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds. Any Mechanism: travel, move_time, start_moved. |
+| `L` | `[grid]` | entity | - | A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go. |
+| `T` | `[grid]` | entity | - | A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other. |
+| `H` | `[grid]` | entity | - | A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back. |
+| `F` | `[grid]` | entity | - | A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside. |
+| `D` | `[grid]` | entity | - | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -160,6 +167,82 @@ Scene `res://scenes/world/environment/wind/wind_zone.tscn`, anchored at its cell
 | `profile` | WindProfile | `Resource("res://resources/world/wind/gusty_wind.tres")` |
 | `phase` | float | `0.0` |
 | `edge` | float | `24.0` |
+
+#### `P` - PressurePlate
+
+Scene `res://scenes/world/interactables/pressure_plate/pressure_plate.tscn`, anchored at its cell's bottom centre (standing on the cell below). A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `required_mass` | float | `1.0` |
+
+#### `G` - Gate
+
+Scene `res://scenes/world/interactables/gate/gate.tscn`, anchored at its cell's bottom centre (standing on the cell below). A stone gate standing on this cell that slides up while its trigger_path (a plate) holds. Any Mechanism: travel, move_time, start_moved.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `trigger_path` | NodePath | `NodePath("")` |
+| `travel` | Vector2 | `Vector2(0, -96)` |
+| `move_time` | float | `0.6` |
+| `start_moved` | bool | `false` |
+
+#### `L` - Lift
+
+Scene `res://scenes/world/interactables/lift/lift.tscn`, anchored at its cell's bottom centre (standing on the cell below). A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `trigger_path` | NodePath | `NodePath("")` |
+| `travel` | Vector2 | `Vector2(0, -128)` |
+| `move_time` | float | `1.4` |
+| `start_moved` | bool | `false` |
+
+#### `T` - Seesaw
+
+Scene `res://scenes/world/interactables/seesaw/seesaw.tscn`, anchored at its cell's bottom centre (standing on the cell below). A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `degrees_per_torque` | float | `0.35` |
+| `max_degrees` | float | `24.0` |
+| `turn_speed` | float | `60.0` |
+
+#### `H` - HangingLoad
+
+Scene `res://scenes/world/interactables/hanging_load/hanging_load.tscn`, anchored at its cell's bottom centre (standing on the cell below). A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `hang_height` | float | `64.0` |
+| `rope_length` | float | `96.0` |
+| `return_time` | float | `0.5` |
+
+#### `F` - LeafCover
+
+Scene `res://scenes/world/interactables/leaf_cover/leaf_cover.tscn`, anchored at its cell's bottom centre (standing on the cell below). A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `size` | Vector2 | `Vector2(32, 96)` |
+| `regrow_time` | float | `0.8` |
+
+#### `D` - Drawbridge
+
+Scene `res://scenes/world/interactables/drawbridge/drawbridge.tscn`, anchored at its cell's bottom centre (standing on the cell below). A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `length_cells` | int | `4` |
+| `side` | int | `1` |
+| `fall_time` | float | `0.45` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

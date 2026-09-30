@@ -1,0 +1,61 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/interactables/hanging_load/hanging_load.gd" id="1_load"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/hanging_cocoon/hanging_cocoon.png" id="2_tex"]
+[ext_resource type="Script" path="res://scenes/world/interactables/weight/weight.gd" id="3_weight"]
+[ext_resource type="Script" path="res://scenes/characters/components/airflow_body.gd" id="4_air"]
+[ext_resource type="Script" path="res://scenes/world/interactables/releasable/releasable.gd" id="5_rel"]
+[ext_resource type="Script" path="res://scenes/world/memory/song_receiver.gd" id="6_recv"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(28, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_rider"]
+size = Vector2(26, 8)
+
+[node name="HangingLoad" type="RigidBody2D"]
+collision_layer = 2
+collision_mask = 3
+mass = 2.0
+script = ExtResource("1_load")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -2)
+texture = ExtResource("2_tex")
+
+[node name="Rope" type="Line2D" parent="."]
+width = 2.0
+default_color = Color(0.36, 0.27, 0.18, 1)
+
+[node name="Weight" type="Node" parent="."]
+script = ExtResource("3_weight")
+mass = 1.5
+
+[node name="AirflowBody" type="Node" parent="."]
+script = ExtResource("4_air")
+sample_offset = Vector2(0, 0)
+
+[node name="Releasable" type="Node" parent="."]
+script = ExtResource("5_rel")
+
+[node name="ReleaseReceiver" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1048576
+monitorable = false
+script = ExtResource("6_recv")
+reacts_to = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ReleaseReceiver"]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="RiderSensor" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 256
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RiderSensor"]
+position = Vector2(0, -26)
+shape = SubResource("RectangleShape2D_rider")

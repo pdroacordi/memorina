@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/interactables/drawbridge/drawbridge.gd" id="1_bridge"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/drawbridge/drawbridge_plank.png" id="2_tex"]
+[ext_resource type="Script" path="res://scenes/world/interactables/releasable/releasable.gd" id="3_rel"]
+[ext_resource type="Script" path="res://scenes/world/memory/song_receiver.gd" id="4_recv"]
+
+[node name="Drawbridge" type="Node2D"]
+script = ExtResource("1_bridge")
+
+[node name="Plank" type="AnimatableBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plank"]
+
+[node name="Sprite2D" type="Sprite2D" parent="Plank"]
+texture_repeat = 2
+texture = ExtResource("2_tex")
+region_enabled = true
+region_rect = Rect2(0, 0, 128, 12)
+
+[node name="RiderSensor" type="Area2D" parent="Plank"]
+collision_layer = 0
+collision_mask = 256
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plank/RiderSensor"]
+
+[node name="Releasable" type="Node" parent="."]
+script = ExtResource("3_rel")
+
+[node name="ReleaseReceiver" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1048576
+monitorable = false
+script = ExtResource("4_recv")
+reacts_to = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ReleaseReceiver"]
