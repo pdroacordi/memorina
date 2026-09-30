@@ -129,6 +129,12 @@ gdUnit4 lives in `addons/gdUnit4/`. Pure logic goes in a `RefCounted` class and 
 
 After adding a script with a new `class_name`, run `--headless --path . --import` once, or nothing else will resolve the new type. The same import is what turns an edited `.room` into its `RoomMap`.
 
+**Smoke test** after each phase, before the slower playtests: `"<godot>" --headless --path . res://tools/smoke/smoke.tscn` opens every scene in `tools/smoke/scenes.txt` for 120 frames and exits 1 on any logged error (a custom `Logger` counts them). Add every new playable scene to the list.
+
+## Art pipeline
+
+Art the game needs is a **contract** before it is a picture: `tools/art/prompts/<id>.md` gives its target path, frame size and frame count, and the PixelLab prompt for it (appended to the one shared look in `tools/art/prompts/style.md`); `tools/art/prompts/README.md` is the format and the loop. `tools/art/make_placeholders.gd` draws the contract's exact sheet so scenes can use it before the art lands, and `art_prompt_test.gd` fails while any target is missing or mis-sized. `pixellab.ps1 generate -Prompt <id>` fills every parameter from the entry; `tools/art/process_image.gd` then keys the background out from the edges, resizes frames nearest-neighbour, snaps to `tools/art/palette.json` (extracted from the world art by `extract_palette.gd`) and packs the strip into the target. Pure steps live in `ImageOps` (tested). Never generate into `assets/`, never upload pack art as a reference (the GandalfHardcore licence forbids AI training), and credit everything in `CREDITS.md`.
+
 ## Engineering knowledge base (self-improving)
 
 `docs/knowledge/` (start at `docs/knowledge/README.md`) is a separate, English,

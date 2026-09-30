@@ -1,0 +1,44 @@
+class_name ArtPromptTest extends GdUnitTestSuite
+
+## The prompt library stays sound: every entry parses into a valid contract,
+## and every contract target exists at exactly the promised size (a
+## placeholder from tools/art/make_placeholders.gd counts), so a scene can
+## never reference art that is missing or mis-sized.
+
+func _text(lines: Array[String]) -> String:
+	return String.chr(10).join(lines)
+
+func test_frontmatter_and_body_are_read() -> void:
+	var prompt := ArtPrompt.parse(_text([
+		"---", "id: thing", "target: res://assets/x/thing.png", "size: 16x8", "frames: 3", "---",
+		"A small thing.", "Negative: big things"]), "thing")
+	assert_str(prompt.id).is_equal("thing")
+	assert_vector(prompt.frame_size).is_equal(Vector2i(16, 8))
+	assert_vector(prompt.sheet_size()).is_equal(Vector2i(48, 8))
+	assert_str(prompt.description).is_equal("A small thing.")
+	assert_str(prompt.negative).is_equal("big things")
+
+func test_a_mismatched_id_is_a_problem() -> void:
+	var prompt := ArtPrompt.parse(_text(["---", "id: other", "target: res://assets/a.png", "---", "x"]), "thing")
+	assert_int(prompt.problems("thing").size()).is_greater(0)
+
+func test_animate_needs_a_reference() -> void:
+	var prompt := ArtPrompt.parse(_text(["---", "command: animate", "action: waves", "target: res://assets/a.png", "---", "x"]), "a")
+	assert_int(prompt.problems("a").size()).is_greater(0)
+
+func test_the_library_is_sound() -> void:
+	var problems := PackedStringArray()
+	for prompt: ArtPrompt in ArtPrompt.all():
+		problems.append_array(prompt.problems(prompt.id))
+	assert_array(Array(problems)).is_empty()
+
+func test_every_target_exists_at_its_contract_size() -> void:
+	var problems := PackedStringArray()
+	for prompt: ArtPrompt in ArtPrompt.all():
+		if not FileAccess.file_exists(prompt.target):
+			problems.append("%s: %s is missing (run tools/art/make_placeholders.gd)" % [prompt.id, prompt.target])
+			continue
+		var image := Image.load_from_file(ProjectSettings.globalize_path(prompt.target))
+		if image.get_size() != prompt.sheet_size():
+			problems.append("%s: %s is %s, the contract says %s" % [prompt.id, prompt.target, image.get_size(), prompt.sheet_size()])
+	assert_array(Array(problems)).is_empty()

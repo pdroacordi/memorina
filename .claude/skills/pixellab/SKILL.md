@@ -42,6 +42,29 @@ description: Generate or animate pixel-art sprites for Memorina through the Pixe
 - Clip lengths must equal the gameplay durations asserted at startup (`Guardian._assert_clip_durations`,
   `GuardianAttack.duration` = frame count × step) — retune the `.tres` or the step when frame counts change.
 
+## The prompt library (use it)
+
+Every asset the game needs has an entry in `tools/art/prompts/<id>.md`: its frame contract
+(target path, frame size, frame count) and its prompt, appended to the shared look in
+`tools/art/prompts/style.md`. Read `tools/art/prompts/README.md` for the format and the loop.
+Prefer `-Prompt <id>` over hand-typed parameters - the entry fills in the description,
+negative, size (a whole multiple of the contract), frames, view, direction and styles:
+
+```powershell
+.\tools\pixellab\pixellab.ps1 generate -Prompt pressure_plate
+```
+
+then turn the output into the contract (key out, resize nearest, snap to
+`tools/art/palette.json`, pack the strip, write the target):
+
+```
+"<godot>" --headless --path . -s res://tools/art/process_image.gd -- --prompt=pressure_plate --in=<png>
+```
+
+A new asset gets a new entry FIRST (and a placeholder from
+`tools/art/make_placeholders.gd`), so scenes can use it before the art exists;
+`tests/tools/art/art_prompt_test.gd` fails while any target is missing or mis-sized.
+
 ## Typical flows
 
 **Fill a missing guardian clip** (e.g. a `lucid` tremble or a real `restored` pose):

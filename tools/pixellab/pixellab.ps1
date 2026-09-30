@@ -54,7 +54,12 @@ param(
   [double]$ImageGuidance = 1.5,
   [int]$Seed = 0,
   [string]$Name = "",
-  [string]$Out = ""
+  [string]$Out = "",
+  # An entry of the art prompt library (tools/art/prompts/<id>.md): fills in the
+  # description, negative, size, frames, view, direction, styles and reference
+  # from the entry and the shared tools/art/prompts/style.md preamble. Explicit
+  # parameters still win.
+  [string]$Prompt = ""
 )
 
 $ErrorActionPreference = "Stop"
@@ -105,6 +110,61 @@ function Ensure-OutDir {
 function Show-Usage($response) {
   if ($response.usage) { Write-Host ("usage: {0:N4} {1}" -f $response.usage.usd, $response.usage.type) }
 }
+
+# Reads a library entry: a --- frontmatter of "key: value" lines, then the body;
+# a "Negative:" line is the negative prompt. Same format ArtPrompt parses.
+function Read-PromptFile([string]$path) {
+  if (-not (Test-Path $path)) { throw "No art prompt at $path" }
+  $fields = @{}; $body = @(); $negative = ""; $fences = 0
+  foreach ($line in Get-Content -LiteralPath $path -Encoding UTF8) {
+    if ($line.Trim() -eq "---" -and $fences -lt 2) { $fences++; continue }
+    if ($fences -eq 1) {
+      $at = $line.IndexOf(":")
+      if ($at -gt 0) { $fields[$line.Substring(0, $at).Trim()] = $line.Substring($at + 1).Trim() }
+    } elseif ($line.StartsWith("Negative:")) {
+      $negative = $line.Substring(9).Trim()
+    } else {
+      $body += $line
+    }
+  }
+  return @{ Fields = $fields; Body = (($body -join " ").Trim()); Negative = $negative }
+}
+
+# Fills this call's parameters from a library entry, leaving any parameter the
+# caller passed explicitly alone. A multi-frame "generate" asks for the whole
+# sheet in one picture; everything is requested at a whole-number multiple of
+# the contract (at least 64 px on its short side) and process_image.gd scales
+# it back down, nearest neighbour.
+function Use-Prompt([string]$id) {
+  $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+  $dir = Join-Path $root "tools\art\prompts"
+  $entry = Read-PromptFile (Join-Path $dir "$id.md")
+  $style = Read-PromptFile (Join-Path $dir "style.md")
+  $f = $entry.Fields
+  $bound = $script:PSBoundParameters
+  if (-not $bound.ContainsKey("Description")) { $script:Description = "$($style.Fields['preamble']). $($entry.Body)" }
+  if (-not $bound.ContainsKey("Negative")) { $script:Negative = (@($style.Fields['negative'], $entry.Negative) | Where-Object { $_ }) -join ", " }
+  $size = $f['size'] -split "x"
+  $frames = if ($f['frames']) { [int]$f['frames'] } else { 1 }
+  $w = [int]$size[0]; $h = [int]$size[1]
+  if ($script:Command -eq "generate") { $w = $w * $frames }
+  $scale = [Math]::Max(1, [Math]::Ceiling(64 / [Math]::Min($w, $h)))
+  if (-not $bound.ContainsKey("Width")) { $script:Width = $w * $scale }
+  if (-not $bound.ContainsKey("Height")) { $script:Height = $h * $scale }
+  if (-not $bound.ContainsKey("Frames")) { $script:Frames = $frames }
+  if (-not $bound.ContainsKey("View") -and $f['view']) { $script:View = $f['view'] }
+  if (-not $bound.ContainsKey("Direction") -and $f['direction']) { $script:Direction = $f['direction'] }
+  if (-not $bound.ContainsKey("Outline") -and $f['outline']) { $script:Outline = $f['outline'] }
+  if (-not $bound.ContainsKey("Shading") -and $f['shading']) { $script:Shading = $f['shading'] }
+  if (-not $bound.ContainsKey("Detail") -and $f['detail']) { $script:Detail = $f['detail'] }
+  if (-not $bound.ContainsKey("NoBackground") -and $f['no_background'] -eq "true") { $script:NoBackground = [switch]::Present }
+  if (-not $bound.ContainsKey("Action") -and $f['action']) { $script:Action = $f['action'] }
+  if (-not $bound.ContainsKey("Reference") -and $f['reference']) { $script:Reference = Join-Path $root ($f['reference'] -replace '^res://', '') }
+  if (-not $bound.ContainsKey("Name")) { $script:Name = $id }
+  Write-Host "prompt $id -> ${script:Width}x${script:Height}, then: godot -s res://tools/art/process_image.gd -- --prompt=$id --in=<png>"
+}
+
+if ($Prompt) { Use-Prompt $Prompt }
 
 switch ($Command) {
   "balance" {

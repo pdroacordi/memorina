@@ -2,6 +2,17 @@
 
 Third-party art used in Memorina, with the terms it was taken under.
 
+## World
+
+- **Ground tiles and backgrounds** (`assets/sprites/world/tilesets/floor_tiles.png`,
+  `assets/sprites/world/background/`) - from the *FREE Platformer Assets* pack by
+  **GandalfHardcore**, https://gandalfhardcore.itch.io/. Licence (the pack's READ ME):
+  use in commercial and non-commercial games and modification allowed; reselling,
+  repackaging or redistributing the assets, AI training, NFT use and inclusion in game
+  development tools are prohibited. The STONE half of `floor_tiles.png` (columns 9-17) is
+  derived from the pack's earth tiles by `tools/art/derive_stone_tiles.gd`. Pack art is
+  never uploaded to an image generator as a reference (the AI-training clause).
+
 ## Guardians
 
 - **Frost Guardian** (`assets/sprites/characters/guardians/frost_guardian/`) —

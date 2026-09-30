@@ -1,0 +1,11 @@
+# Scenes tools/smoke/smoke.tscn opens, one res:// path per line. Add every new
+# playable scene (a room contents scene, an interactable, a song effect).
+res://scenes/world/game.tscn
+res://scenes/world/rooms/home_village/contents/downtown_contents.tscn
+res://scenes/world/rooms/home_village/contents/woods_contents.tscn
+res://scenes/world/rooms/home_village/contents/bloom_hollow_contents.tscn
+res://scenes/world/rooms/frost_edge/contents/lighthouse_contents.tscn
+res://scenes/world/rooms/trials_winter/contents/winter_trial_contents.tscn
+res://scenes/world/rooms/trials_summer/contents/summer_trial_contents.tscn
+res://scenes/world/rooms/trials_autumn/contents/autumn_trial_contents.tscn
+res://scenes/world/rooms/trials_spring/contents/spring_trial_contents.tscn
