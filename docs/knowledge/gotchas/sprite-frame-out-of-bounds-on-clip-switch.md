@@ -30,3 +30,13 @@ suspect). Two candidate fixes when it is worth the time: pad every strip of a ch
 to the same frame count so `hframes` never changes, or key `frame` to 0 explicitly in a
 one-key track ahead of `hframes`. Do not "fix" it by adding a transition to the state
 machine - the resolver rule forbids transitions for a reason.
+
+## Update 2026-09-23: traced on Ivo, fixed there
+
+Ivo's respawn after a water hazard goes straight from `hurt` (hframes 4) into `idle` (hframes 10)
+and logged `p_frame = 5`. The cause is the TRACK ORDER inside the clip: `idle`, `memorina_draw`,
+`memorina_idle` and `RESET` listed `Sprite2D:frame` before `Sprite2D:hframes`, so the frame was
+applied while the old, narrower hframes still stood. Putting hframes first silenced it. Note the
+track blocks must also appear in index order in the .tscn text, or Godot rejects the higher index
+("track = 2 is out of bounds"). The guardians and BruteShadow are probably the same and were not
+touched.
