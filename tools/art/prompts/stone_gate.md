@@ -10,7 +10,7 @@ no_background: true
 outline: single color black outline
 shading: basic shading
 detail: low detail
-source: pixellab
+source: codex
 ---
 A tall narrow slab of dark weathered stone, a sliding gate that rises into the ceiling, carved with a faint spiral, iron bands top and bottom, flat front face.
 Negative: door frame, wall, handle, wood

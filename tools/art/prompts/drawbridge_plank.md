@@ -10,7 +10,7 @@ no_background: true
 outline: single color black outline
 shading: basic shading
 detail: low detail
-source: pixellab
+source: codex
 ---
 A horizontal tileable drawbridge deck of dark oak planks bound with iron straps, seen from the side, repeating seamlessly left to right.
 Negative: chains, towers, water, rope

@@ -10,7 +10,7 @@ no_background: true
 outline: single color black outline
 shading: basic shading
 detail: low detail
-source: pixellab
+source: codex
 ---
 A heavy wooden lift platform of thick planks bound with rusted iron, seen from the side, chain rings at both ends.
 Negative: chain, rope, pulley, wall

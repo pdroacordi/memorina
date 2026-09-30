@@ -10,7 +10,7 @@ no_background: true
 outline: single color black outline
 shading: basic shading
 detail: low detail
-source: pixellab
+source: codex
 ---
 A square slab of worn grey stone set flush into dark soil, a floor pressure plate seen from the side, two states side by side: raised a few pixels on the left, pressed down flush on the right, a thin carved spiral groove on its face.
 Negative: person, hand, foot, lever, button, chain

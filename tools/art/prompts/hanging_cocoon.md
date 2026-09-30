@@ -10,7 +10,7 @@ no_background: true
 outline: single color black outline
 shading: basic shading
 detail: medium detail
-source: pixellab
+source: codex
 ---
 A heavy silk cocoon wrapped in dry autumn leaves and twine, hanging from a single thin rope at its top, plump teardrop shape, ochre and dusty brown, weighty and still.
 Negative: insect, face, eyes, branch, tree

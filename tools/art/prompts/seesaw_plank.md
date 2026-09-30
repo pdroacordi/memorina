@@ -10,7 +10,7 @@ no_background: true
 outline: single color black outline
 shading: basic shading
 detail: low detail
-source: pixellab
+source: codex
 ---
 A long weathered wooden plank seen from the side, a seesaw beam, worn grain, a darker band in the middle where it rests on its pivot.
 Negative: people, fulcrum, ground, rope
