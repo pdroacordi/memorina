@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="GuardianStats" format=3 uid="uid://bq1bloomstat"]
 
 [ext_resource type="Script" uid="uid://bidtpnbfxl8an" path="res://resources/characters/guardians/guardian_stats.gd" id="1_stats"]
-[ext_resource type="Resource" uid="uid://qmmyie1nnc9w" path="res://resources/songs/sprout.tres" id="2_song"]
+[ext_resource type="Resource" uid="uid://qmmyie1nnc9w" path="res://resources/songs/root.tres" id="2_song"]
 [ext_resource type="Resource" uid="uid://bq8bloomlash" path="res://resources/characters/guardians/bloom_guardian/bloom_lash.tres" id="3_lash"]
 [ext_resource type="Resource" uid="uid://bq0bloombrst" path="res://resources/characters/guardians/bloom_guardian/bloom_burst.tres" id="4_burst"]
 [ext_resource type="Resource" uid="uid://brabloompnc" path="res://resources/characters/guardians/bloom_guardian/bloom_pounce.tres" id="5_pounce"]

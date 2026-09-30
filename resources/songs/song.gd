@@ -21,6 +21,12 @@ const DEFAULT_CUE_WINDOW := 6.0
 ## player learns it by. Distinct from name_key, which names what it does.
 @export var title_key: String = ""
 @export var pulse_stats: PulseStats
+## What the song itself does, beyond what receivers in the world answer to:
+## the gale's field, the bell jar's shell, the burned shadow, the rain. Mounted
+## under the pulse by ColorPulse, the way the palette's particles are, so the
+## pulse never learns which song it carries. Optional: FREEZE has none - the
+## water answers it.
+@export var pulse_effect: PackedScene
 
 @export_group("Performance")
 ## The full piece, heard once, when the song is learned.

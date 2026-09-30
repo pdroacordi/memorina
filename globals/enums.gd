@@ -53,26 +53,23 @@ enum GlyphSet {
 }
 
 ## The eight note sequences, two per season, in season order (Winter, Summer,
-## Autumn, Spring). English identifiers for the Portuguese design-doc names:
-## FREEZE=Congelar, BLIZZARD=Ventania/Nevasca, CONCENTRATED_SUN=Sol
-## Concentrado, SUDDEN_STORM=Tempestade Repentina, WEAKEN=Fragilizar,
-## STRIP=Despir, SPROUT=Brotar, HATCH=Eclodir.
+## Autumn, Spring). English identifiers for the Portuguese design-doc names
+## (docs/design/02_mecanicas.md section 7.1): FREEZE=Congelar,
+## BELL_JAR=Redoma, SHADOW=Sombra, SOLSTICE=Solsticio, RELEASE=Soltar,
+## GALE=Vendaval, ROOT=Enraizar, RAIN=Chuva.
 ##
 ## Member order is load-bearing for the same reason as PlayerSkill: it indexes
-## PlayerData.learned_songs in the save file. Append only.
-##
-## The design docs also describe a third Winter sequence (Hibernacao) that
-## does not fit the fixed eight-slot grid; see docs/design/03_mundo_e_ambiente.md
-## section 7. It is deliberately absent until that conflict is resolved.
+## PlayerData.learned_songs in the save file. Append only. The 2026-09-23
+## matrix renamed each slot in place (see CLAUDE.md "Terms no longer used").
 enum Song {
 	FREEZE,
-	BLIZZARD,
-	CONCENTRATED_SUN,
-	SUDDEN_STORM,
-	WEAKEN,
-	STRIP,
-	SPROUT,
-	HATCH
+	BELL_JAR,
+	SHADOW,
+	SOLSTICE,
+	RELEASE,
+	GALE,
+	ROOT,
+	RAIN
 }
 
 ## The guardians whose restoration the save file remembers. Named after the

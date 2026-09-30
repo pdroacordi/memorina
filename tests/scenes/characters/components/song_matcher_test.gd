@@ -62,13 +62,13 @@ func test_no_candidates_fails_instead_of_crashing() -> void:
 	assert_int(matcher.feed(UP)).is_equal(SongMatcher.Result.FAILED)
 
 func test_the_right_song_matches_when_several_share_a_prefix() -> void:
-	var weaken := _song(Enums.Song.WEAKEN, [DOWN, LEFT, DOWN])
-	var strip := _song(Enums.Song.STRIP, [DOWN, RIGHT, UP])
-	var matcher := _matcher([weaken, strip])
+	var release := _song(Enums.Song.RELEASE, [DOWN, LEFT, DOWN])
+	var gale := _song(Enums.Song.GALE, [DOWN, RIGHT, UP])
+	var matcher := _matcher([release, gale])
 	assert_int(matcher.feed(DOWN)).is_equal(SongMatcher.Result.PROGRESS)
 	assert_int(matcher.feed(RIGHT)).is_equal(SongMatcher.Result.PROGRESS)
 	assert_int(matcher.feed(UP)).is_equal(SongMatcher.Result.MATCHED)
-	assert_object(matcher.matched_song()).is_same(strip)
+	assert_object(matcher.matched_song()).is_same(gale)
 
 func test_reset_discards_a_partial_sequence() -> void:
 	var matcher := _matcher([_song(Enums.Song.FREEZE, [UP, LEFT, DOWN])])

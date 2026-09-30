@@ -5,8 +5,14 @@ class_name ColorPulse extends Node2D
 ## Composes rather than extends: a MemorySource child gives it its effect on
 ## the world's colour, season and time, a SongArea child gives it its reach for
 ## receivers, a PulseTimeline gives it its shape over time, and the season's
-## own particle scene (if any) is mounted under it. The pulse itself only
-## drives the radius those agree on and then frees itself.
+## own particle scene (if any) is mounted under it, and so is the song's own
+## PulseEffect (if any). The pulse itself only drives the radius those agree on
+## and then frees itself.
+
+## Every live pulse is in this group, so a song that acts on other pulses
+## (Solstice) or on what they leave behind (wet earth after Rain) can find them
+## without anyone keeping a list.
+const GROUP := &"color_pulse"
 
 @onready var _source: MemorySource = $Source
 @onready var _area: SongArea = $SongArea
@@ -14,6 +20,19 @@ class_name ColorPulse extends Node2D
 
 var _timeline: PulseTimeline
 var _particles: CPUParticles2D
+var _song: Song
+
+## Every live pulse of `song_id` in the tree `node` belongs to.
+static func lit(node: Node, song_id: Enums.Song) -> Array[ColorPulse]:
+	var found: Array[ColorPulse] = []
+	for member: Node in node.get_tree().get_nodes_in_group(GROUP):
+		var pulse := member as ColorPulse
+		if pulse and pulse.song() and pulse.song().id == song_id:
+			found.append(pulse)
+	return found
+
+func _enter_tree() -> void:
+	add_to_group(GROUP)
 
 ## Called by whoever spawned it, immediately after it enters the tree. `stats`
 ## overrides the song's own shape in time - a lesson's pulse is the same
@@ -23,6 +42,7 @@ func start(song: Song, stats: PulseStats = null) -> void:
 	_source.season = song.season()
 	_source.radius = 0.0
 	_area.song = song
+	_song = song
 	if song.palette.pulse_particles:
 		_particles = song.palette.pulse_particles.instantiate() as CPUParticles2D
 		assert(_particles != null, "SeasonPalette.pulse_particles must be a CPUParticles2D scene.")
@@ -36,6 +56,12 @@ func start(song: Song, stats: PulseStats = null) -> void:
 		local_memory = field.sample(global_position, _source)
 	_timeline = PulseTimeline.new(stats if stats != null else song.pulse_stats, local_memory)
 	_apply_radius()
+	# Mounted last, so the effect's first frame already sees a started pulse.
+	if song.pulse_effect:
+		var effect := song.pulse_effect.instantiate() as PulseEffect
+		assert(effect != null, "Song.pulse_effect must be a PulseEffect scene.")
+		effect.pulse = self
+		add_child(effect)
 
 func _physics_process(delta: float) -> void:
 	if _timeline == null:
@@ -50,6 +76,20 @@ func _physics_process(delta: float) -> void:
 	# clipped away by the mask as the edge passes over it.
 	if _particles and _timeline.phase == PulseTimeline.Phase.CONTRACT:
 		_particles.emitting = false
+
+func song() -> Song:
+	return _song
+
+## The pulse's current reach. The CLEAN disc: gameplay never asks where the
+## dithered edge happened to fall (docs/design/02_mecanicas.md section 7.3).
+func radius() -> float:
+	return maxf(_timeline.radius(), 0.0) if _timeline else 0.0
+
+func phase() -> PulseTimeline.Phase:
+	return _timeline.phase if _timeline else PulseTimeline.Phase.DONE
+
+func contains(global_point: Vector2) -> bool:
+	return global_point.distance_to(global_position) <= radius()
 
 func _apply_radius() -> void:
 	var radius: float = maxf(_timeline.radius(), 0.0)

@@ -20,6 +20,11 @@ signal song_left(song: Song)
 ## the world stay legible: the environment says what it needs, not the UI.
 @export var reacts_to: Enums.Song = Enums.Song.FREEZE
 
+## Matching pulses overlapping this receiver right now. Two pulses of the same
+## song can overlap it, and the first one leaving must not end an effect the
+## second is still lighting.
+var _lit_by: int = 0
+
 func _ready() -> void:
 	area_entered.connect(_on_area_entered)
 	area_exited.connect(_on_area_exited)
@@ -27,12 +32,19 @@ func _ready() -> void:
 func _on_area_entered(area: Area2D) -> void:
 	var song := _matching_song(area)
 	if song:
+		_lit_by += 1
 		song_entered.emit(song, area.global_position)
 
 func _on_area_exited(area: Area2D) -> void:
 	var song := _matching_song(area)
 	if song:
+		_lit_by = maxi(_lit_by - 1, 0)
 		song_left.emit(song)
+
+## Whether any pulse of this song still covers the receiver - asked on
+## song_left, so an effect ends only when the LAST light has gone.
+func is_lit() -> bool:
+	return _lit_by > 0
 
 func _matching_song(area: Area2D) -> Song:
 	var song_area := area as SongArea

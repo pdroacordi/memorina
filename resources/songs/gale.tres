@@ -3,15 +3,15 @@
 [ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1"]
 [ext_resource type="Resource" uid="uid://umn45o2fgypm" path="res://resources/songs/palettes/autumn_palette.tres" id="2"]
 [ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
-[ext_resource type="AudioStream" uid="uid://dt06jkk12aqwb" path="res://assets/audios/soundtrack/song_of_bare_branches.mp3" id="4"]
+[ext_resource type="AudioStream" uid="uid://dt06jkk12aqwb" path="res://assets/audios/soundtrack/song_of_the_restless_wind.mp3" id="4"]
 
 [resource]
 script = ExtResource("1")
 id = 5
 palette = ExtResource("2")
 notes = Array[int]([3, 3, 2, 2, 0, 3])
-name_key = "SONG_STRIP"
-title_key = "SONG_TITLE_STRIP"
+name_key = "SONG_GALE"
+title_key = "SONG_TITLE_GALE"
 pulse_stats = ExtResource("3")
 track = ExtResource("4")
 excerpt_duration = 7.0

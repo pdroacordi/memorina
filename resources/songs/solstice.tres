@@ -3,14 +3,14 @@
 [ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1"]
 [ext_resource type="Resource" uid="uid://haw0km1jwcl3" path="res://resources/songs/palettes/summer_palette.tres" id="2"]
 [ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
-[ext_resource type="AudioStream" uid="uid://claowhen841lx" path="res://assets/audios/soundtrack/call_of_the_lightning.mp3" id="4"]
+[ext_resource type="AudioStream" uid="uid://claowhen841lx" path="res://assets/audios/soundtrack/song_of_the_longest_day.mp3" id="4"]
 
 [resource]
 script = ExtResource("1")
 id = 3
 palette = ExtResource("2")
 notes = Array[int]([3, 1, 0, 3, 1, 0])
-name_key = "SONG_SUDDEN_STORM"
-title_key = "SONG_TITLE_SUDDEN_STORM"
+name_key = "SONG_SOLSTICE"
+title_key = "SONG_TITLE_SOLSTICE"
 pulse_stats = ExtResource("3")
 track = ExtResource("4")

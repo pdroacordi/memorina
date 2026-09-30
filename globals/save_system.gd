@@ -79,6 +79,15 @@ func restore_guardian(guardian: Enums.Guardian) -> void:
 	player_data.restored_guardians[guardian] = true
 	guardian_restored.emit(guardian)
 
+func is_shortcut_resolved(shortcut_id: StringName) -> bool:
+	return shortcut_id in player_data.resolved_shortcuts
+
+## Permanent, like a restored guardian. Same no-autosave rule as learn_song().
+func resolve_shortcut(shortcut_id: StringName) -> void:
+	assert(shortcut_id != &"", "A shortcut needs an authored id")
+	if not is_shortcut_resolved(shortcut_id):
+		player_data.resolved_shortcuts.append(shortcut_id)
+
 func is_enemy_defeated(save_id: String) -> bool:
 	return _defeated_enemies.has(save_id)
 

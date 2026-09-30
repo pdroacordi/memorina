@@ -32,7 +32,7 @@ func test_migrate_keeps_what_the_player_had_already_earned() -> void:
 	data.learned_songs = [false, true]
 	data.migrate()
 	assert_bool(data.learned_songs[Enums.Song.FREEZE]).is_false()
-	assert_bool(data.learned_songs[Enums.Song.BLIZZARD]).is_true()
+	assert_bool(data.learned_songs[Enums.Song.BELL_JAR]).is_true()
 
 func test_migrate_fills_the_new_slots_as_not_earned() -> void:
 	var data := PlayerData.new()
@@ -43,10 +43,10 @@ func test_migrate_fills_the_new_slots_as_not_earned() -> void:
 
 func test_migrate_on_an_up_to_date_save_changes_nothing() -> void:
 	var data := PlayerData.new()
-	data.learned_songs[Enums.Song.HATCH] = true
+	data.learned_songs[Enums.Song.RAIN] = true
 	data.migrate()
 	assert_int(data.learned_songs.size()).is_equal(Enums.Song.size())
-	assert_bool(data.learned_songs[Enums.Song.HATCH]).is_true()
+	assert_bool(data.learned_songs[Enums.Song.RAIN]).is_true()
 
 ## Saves written before guardians existed have no restored_guardians at all.
 func test_migrate_adds_the_guardian_flags_an_old_save_lacks() -> void:

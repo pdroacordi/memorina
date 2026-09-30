@@ -4,6 +4,11 @@ class_name PlayerData extends Resource
 @export var owned_items: Array[bool]
 @export var learned_songs: Array[bool]
 @export var restored_guardians: Array[bool]
+## Puzzles whose first resolution left a permanent shortcut in the world
+## (docs/design/02_mecanicas.md section 6.1): a lever locked, a lift that now
+## runs by itself. Keyed by the puzzle's authored id. A song's own effect is
+## never here - the grey always takes that back.
+@export var resolved_shortcuts: Array[StringName] = []
 
 func _init() -> void:
 	migrate()

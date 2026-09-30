@@ -233,29 +233,29 @@ func test_drawing_consumes_the_buffered_toggle() -> void:
 ##  A   G U A R D I A N ' S   C A L L      ##
 #############################################
 
-func _sprout() -> Song:
+func _root_song() -> Song:
 	var song := Song.new()
-	song.id = Enums.Song.SPROUT
+	song.id = Enums.Song.ROOT
 	song.notes = [DOWN, DOWN, UP, LEFT, RIGHT, UP]
 	return song
 
 ## Answering the call is not a performance: the instrument stays out and the
 ## world does not answer - the guardian does.
 func test_playing_the_call_back_answers_it_instead_of_performing() -> void:
-	var sprout := _sprout()
-	_memorina.call_song = sprout
+	var root_song := _root_song()
+	_memorina.call_song = root_song
 	_draw()
 	var monitor := monitor_signals(_memorina)
-	for note: Enums.Note in sprout.notes:
+	for note: Enums.Note in root_song.notes:
 		_memorina.receive_note(note)
-	await assert_signal(monitor).is_emitted("call_answered", [sprout])
+	await assert_signal(monitor).is_emitted("call_answered", [root_song])
 	await assert_signal(monitor).is_not_emitted("song_matched")
 	assert_bool(_memorina.is_performing()).is_false()
 	assert_bool(_memorina.is_drawn()).is_true()
 
 ## While a guardian calls, only its phrase counts - a known song is noise.
 func test_known_songs_are_not_candidates_during_a_call() -> void:
-	_memorina.call_song = _sprout()
+	_memorina.call_song = _root_song()
 	_draw()
 	var monitor := monitor_signals(_memorina)
 	_memorina.receive_note(UP)
@@ -265,16 +265,16 @@ func test_known_songs_are_not_candidates_during_a_call() -> void:
 func test_a_call_opened_while_drawn_replaces_the_candidates() -> void:
 	_draw()
 	_memorina.receive_note(UP)
-	var sprout := _sprout()
-	_memorina.call_song = sprout
+	var root_song := _root_song()
+	_memorina.call_song = root_song
 	var monitor := monitor_signals(_memorina)
-	for note: Enums.Note in sprout.notes:
+	for note: Enums.Note in root_song.notes:
 		_memorina.receive_note(note)
-	await assert_signal(monitor).is_emitted("call_answered", [sprout])
+	await assert_signal(monitor).is_emitted("call_answered", [root_song])
 
 ## Once the call closes, the player's own songs are candidates again.
 func test_closing_the_call_restores_the_known_songs() -> void:
-	_memorina.call_song = _sprout()
+	_memorina.call_song = _root_song()
 	_draw()
 	_memorina.call_song = null
 	var monitor := monitor_signals(_memorina)
