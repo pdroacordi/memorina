@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=1
+type="Resource"
+uid="uid://c0n27gv73fi8u"
+path="res://.godot/imported/solstice_trial.room-9fb41c8e3bef097f0fb77f14996dc7b6.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/trials_solstice/contents/solstice_trial.room"
+dest_files=["res://.godot/imported/solstice_trial.room-9fb41c8e3bef097f0fb77f14996dc7b6.res"]
+
+[params]
+

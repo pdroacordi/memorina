@@ -19,3 +19,4 @@ res://scenes/world/interactables/leaf_cover/leaf_cover.tscn
 res://scenes/world/interactables/drawbridge/drawbridge.tscn
 res://scenes/world/interactables/floater/floater.tscn
 res://scenes/world/interactables/rain_basin/rain_basin.tscn
+res://scenes/world/rooms/trials_solstice/contents/solstice_trial_contents.tscn

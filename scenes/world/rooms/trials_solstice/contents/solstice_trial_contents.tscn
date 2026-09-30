@@ -1,0 +1,80 @@
+[gd_scene format=4]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_5.png" id="1_hj4u4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_4.png" id="2_c5g2v"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_3.png" id="3_ymthv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_2.png" id="4_igsuk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_1.png" id="5_8tj1l"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_1_material.tres" id="bg_season_1"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_2_material.tres" id="bg_season_2"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_3_material.tres" id="bg_season_3"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_4_material.tres" id="bg_season_4"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/background_layer_5_material.tres" id="bg_season_5"]
+[ext_resource type="Material" path="res://scenes/world/memory/seasonal/floor_tiles_seasonal_material.tres" id="tiles_season"]
+
+[ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
+[ext_resource type="Resource" path="res://scenes/world/rooms/trials_solstice/contents/solstice_trial.room" id="room_map"]
+
+[node name="Contents" type="Node2D"]
+
+[node name="Sky" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.1, 1)
+
+[node name="SpringBackgroundLayer5" type="Sprite2D" parent="Sky"]
+material = ExtResource("bg_season_5")
+texture_repeat = 2
+position = Vector2(-443, -318)
+scale = Vector2(2.1621094, 2.549133)
+texture = ExtResource("1_hj4u4")
+region_enabled = true
+region_rect = Rect2(0, 0, 3072, 346)
+
+[node name="Moutains" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.2, 1)
+
+[node name="SpringBackgroundLayer4" type="Sprite2D" parent="Moutains"]
+material = ExtResource("bg_season_4")
+texture_repeat = 2
+position = Vector2(-367, -109)
+texture = ExtResource("2_c5g2v")
+region_enabled = true
+region_rect = Rect2(0, 0, 3072, 346)
+
+[node name="Deeper Trees" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.4, 1)
+
+[node name="SpringBackgroundLayer3" type="Sprite2D" parent="Deeper Trees"]
+material = ExtResource("bg_season_3")
+texture_repeat = 2
+position = Vector2(-367, -109)
+texture = ExtResource("3_ymthv")
+region_enabled = true
+region_rect = Rect2(0, 0, 3072, 346)
+
+[node name="Deep Trees" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.6, 1)
+
+[node name="SpringBackgroundLayer2" type="Sprite2D" parent="Deep Trees"]
+material = ExtResource("bg_season_2")
+texture_repeat = 2
+position = Vector2(-367, -109)
+texture = ExtResource("4_igsuk")
+region_enabled = true
+region_rect = Rect2(0, 0, 3072, 346)
+
+[node name="Front Trees" type="Parallax2D" parent="."]
+scroll_scale = Vector2(0.8, 1)
+
+[node name="SpringBackgroundLayer1" type="Sprite2D" parent="Front Trees"]
+material = ExtResource("bg_season_1")
+texture_repeat = 2
+position = Vector2(-367, -109)
+texture = ExtResource("5_8tj1l")
+region_enabled = true
+region_rect = Rect2(0, 0, 3072, 346)
+
+[node name="RoomMap" type="Node2D" parent="."]
+script = ExtResource("room_map_node")
+map = ExtResource("room_map")
+ground_material = ExtResource("tiles_season")
+

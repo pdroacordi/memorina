@@ -24,6 +24,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_summer.tscn" id="31_trials_summer"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_autumn.tscn" id="32_trials_autumn"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_spring.tscn" id="33_trials_spring"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice.tscn" id="34_trials_solstice"]
 [ext_resource type="Script" path="res://scenes/world/debug/debug_trials.gd" id="34_teleport"]
 [ext_resource type="Script" path="res://scenes/world/environment/wind/airflow.gd" id="35_airflow"]
 
@@ -44,7 +45,7 @@ position = Vector2(5856, 0)
 
 [node name="DebugTrials" type="Node" parent="."]
 script = ExtResource("34_teleport")
-regions = Array[PackedScene]([ExtResource("30_trials_winter"), ExtResource("31_trials_summer"), ExtResource("32_trials_autumn"), ExtResource("33_trials_spring")])
+regions = Array[PackedScene]([ExtResource("30_trials_winter"), ExtResource("31_trials_summer"), ExtResource("32_trials_autumn"), ExtResource("33_trials_spring"), ExtResource("34_trials_solstice")])
 world_path = NodePath("../World")
 camera_path = NodePath("../World/Camera2D")
 

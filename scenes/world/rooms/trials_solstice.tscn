@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/solstice_trial.tscn" id="1_room"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="2_region"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="3_regmem"]
+
+[node name="TrialsSolstice" type="Node2D"]
+script = ExtResource("2_region")
+season = 1
+
+[node name="Memory" type="Node2D" parent="."]
+script = ExtResource("3_regmem")
+authored = 0.35
+
+[node name="TrialSpawn" type="Marker2D" parent="." groups=["trial_spawn"]]
+position = Vector2(160, -40)
+
+[node name="SolsticeTrial" parent="." instance=ExtResource("1_room")]
