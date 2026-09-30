@@ -25,9 +25,24 @@ static func check(node: Node, params: Dictionary) -> PackedStringArray:
 		if not types.has(key):
 			problems.append("'%s' has no param '%s'" % [node.name, key])
 			continue
-		if _convert(params[key], types[key]) == null:
+		var value: Variant = _convert(params[key], types[key])
+		if value == null:
 			problems.append("'%s'.%s: cannot use %s as %s" % [node.name, key, JSON.stringify(params[key]), type_string(types[key])])
+		elif value is Resource and not _fits(value, _resource_class(node, key)):
+			problems.append("'%s'.%s: %s is not a %s" % [node.name, key, params[key], _resource_class(node, key)])
 	return problems
+
+## The entity ids `params` link to (NodePath params written as a bare id),
+## for the validator to check against the room's entities.
+static func links(node: Node, params: Dictionary) -> PackedStringArray:
+	var found := PackedStringArray()
+	var types := _property_types(node)
+	for key: String in params:
+		var value: Variant = params[key]
+		if key != ID and types.get(key, TYPE_NIL) == TYPE_NODE_PATH and value is String \
+				and not (value as String).begins_with(".") and not (value as String).begins_with("/"):
+			found.append(value)
+	return found
 
 ## Sets every param on `node`. Call check() first; a param that does not
 ## apply is skipped here rather than half-applied.
@@ -51,6 +66,25 @@ static func _property_types(node: Node) -> Dictionary:
 		if property.usage & (PROPERTY_USAGE_STORAGE | PROPERTY_USAGE_EDITOR):
 			types[property.name] = property.type
 	return types
+
+## The class a Resource property takes (its hint), or "" for any.
+static func _resource_class(node: Node, key: String) -> String:
+	for property: Dictionary in node.get_property_list():
+		if property.name == key and property.hint == PROPERTY_HINT_RESOURCE_TYPE:
+			return property.hint_string
+	return ""
+
+## Whether `resource` is a `wanted` - an engine class or a script class_name,
+## through its script's bases. A Song handed to a WindProfile slot is not.
+static func _fits(resource: Object, wanted: String) -> bool:
+	if wanted.is_empty() or resource.is_class(wanted):
+		return true
+	var script := resource.get_script() as Script
+	while script:
+		if script.get_global_name() == wanted:
+			return true
+		script = script.get_base_script()
+	return false
 
 static func _convert(value: Variant, type: int) -> Variant:
 	match type:
