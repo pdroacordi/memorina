@@ -1,0 +1,165 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 21.0,
+ "player_position": [
+  3856.0,
+  5990
+ ],
+ "known_songs": [
+  2
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.65,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.05,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.45,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 6.6,
+   "screenshot": "cast_06.60"
+  },
+  {
+   "t": 6.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 7.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "screenshot": "roof_08.00"
+  },
+  {
+   "t": 8.4,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 8.6,
+   "screenshot": "roof_08.60"
+  },
+  {
+   "t": 9.5,
+   "screenshot": "lure_09.50"
+  },
+  {
+   "t": 11.0,
+   "screenshot": "lure_11.00"
+  },
+  {
+   "t": 12.5,
+   "screenshot": "lure_12.50"
+  },
+  {
+   "t": 14.0,
+   "screenshot": "lure_14.00"
+  },
+  {
+   "t": 15.5,
+   "screenshot": "lure_15.50"
+  },
+  {
+   "t": 16.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 16.6,
+   "screenshot": "slip_16.60"
+  },
+  {
+   "t": 17.2,
+   "screenshot": "slip_17.20"
+  },
+  {
+   "t": 17.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 18.0,
+   "screenshot": "slip_18.00"
+  },
+  {
+   "t": 19.5,
+   "screenshot": "slip_19.50"
+  },
+  {
+   "t": 20.5,
+   "screenshot": "slip_20.50"
+  }
+ ]
+}

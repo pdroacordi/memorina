@@ -108,7 +108,7 @@ else in the code knows what a character means.
 | `W` | `[grid]` | entity | - | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
 | `P` | `[grid]` | entity | - | A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load. |
 | `G` | `[grid]` | entity | - | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds. Any Mechanism: travel, move_time, start_moved. |
-| `L` | `[grid]` | entity | - | A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go. |
+| `L` | `[grid]` | entity | - | A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go; while its lock_path holds (a counterweight on the wrong plate) it is jammed down. |
 | `T` | `[grid]` | entity | - | A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other. |
 | `H` | `[grid]` | entity | - | A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back. |
 | `F` | `[grid]` | entity | - | A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside. |
@@ -132,7 +132,9 @@ property's type:
 
 **Links.** Give an entity an `id` and it becomes the node's name, unique in
 the room (the importer rejects two entities with the same id). A `NodePath`
-param given a bare id resolves to that sibling (`../gate_a`); a path starting
+param given a bare id resolves to that sibling (`../gate_a`) - in any order: the
+entities enter the tree together (under the room's `Entities` node), so a gate
+may be listed before the plate it follows; a path starting
 with `.` or `/` is used as written.
 
 A param the entity does not have, or a value its type cannot take, fails the
@@ -185,18 +187,20 @@ Scene `res://scenes/world/interactables/gate/gate.tscn`, anchored at its cell's 
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `trigger_path` | NodePath | `NodePath("")` |
+| `lock_path` | NodePath | `NodePath("")` |
 | `travel` | Vector2 | `Vector2(0, -96)` |
 | `move_time` | float | `0.6` |
 | `start_moved` | bool | `false` |
 
 #### `L` - Lift
 
-Scene `res://scenes/world/interactables/lift/lift.tscn`, anchored at its cell's bottom centre (standing on the cell below). A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go.
+Scene `res://scenes/world/interactables/lift/lift.tscn`, anchored at its cell's bottom centre (standing on the cell below). A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go; while its lock_path holds (a counterweight on the wrong plate) it is jammed down.
 
 | Param | Type | Default |
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `trigger_path` | NodePath | `NodePath("")` |
+| `lock_path` | NodePath | `NodePath("")` |
 | `travel` | Vector2 | `Vector2(0, -128)` |
 | `move_time` | float | `1.4` |
 | `start_moved` | bool | `false` |
@@ -208,6 +212,8 @@ Scene `res://scenes/world/interactables/seesaw/seesaw.tscn`, anchored at its cel
 | Param | Type | Default |
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
+| `length` | float | `160.0` |
+| `pivot_at` | float | `0.5` |
 | `degrees_per_torque` | float | `0.35` |
 | `max_degrees` | float | `24.0` |
 | `turn_speed` | float | `60.0` |

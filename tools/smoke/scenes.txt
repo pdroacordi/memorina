@@ -10,3 +10,10 @@ res://scenes/world/rooms/trials_summer/contents/summer_trial_contents.tscn
 res://scenes/world/rooms/trials_autumn/contents/autumn_trial_contents.tscn
 res://scenes/world/rooms/trials_spring/contents/spring_trial_contents.tscn
 res://scenes/world/environment/wind/wind_zone.tscn
+res://scenes/world/interactables/pressure_plate/pressure_plate.tscn
+res://scenes/world/interactables/gate/gate.tscn
+res://scenes/world/interactables/lift/lift.tscn
+res://scenes/world/interactables/seesaw/seesaw.tscn
+res://scenes/world/interactables/hanging_load/hanging_load.tscn
+res://scenes/world/interactables/leaf_cover/leaf_cover.tscn
+res://scenes/world/interactables/drawbridge/drawbridge.tscn

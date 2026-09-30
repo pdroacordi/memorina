@@ -25,6 +25,11 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   only sets polled state and silently never triggers `_input()` (see
   `docs/knowledge/gotchas/input-action-press-does-not-reach-input-callbacks.md`) — this
   cost a full debug cycle on the first real run, don't reintroduce it.
+- **`t` is unpaused time.** The runner pauses with the tree, so the seconds a
+  performance freezes the world (the excerpt, ~7 s) do not count: a pulse
+  appears about 1.6 s after its last note in `t`, not 9 s later. A timeline
+  that waits in `t` for the performance to end is idling in the world, and a
+  song's pulse runs out while it waits (the first Soltar-then-Vendaval run did).
 - `--out` must be an **absolute filesystem path** (not `res://`); the runner creates it if
   missing and writes `<name>.png` for every `screenshot` step there, then quits on its own
   once the timeline ends or `max_duration` is hit (default 60s safety cap).

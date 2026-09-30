@@ -1,29 +1,46 @@
-; summer_trial.room - the summer song trials (docs/maps/README.md).
-; Each season's two songs get their puzzles here as they are built.
+; summer_trial.room - the summer song trials (docs/maps/README.md), left to right.
+; Tested by tests/scenes/world/rooms/trials/summer_trial_test.gd; the trials
+; assume a single jump (no double jump), like the rest of the trials.
+;
+; 1. The door that needs someone (design 02 section 8, Verao Espacial 1): the
+;    gate only stands open while something weighs on the plate, and the plate
+;    is too far from it to run. Sombra on the plate; Ivo walks through.
+; 2. The seesaw (Verao Espacial 2): the cliff is out of reach from the floor,
+;    the pedestal and a level plank. The pivot is off-centre: stand on the
+;    long arm (it sinks to the floor), play Sombra, walk up to the short arm -
+;    the shadow outweighs Ivo there, so it stays up - and jump to the cliff.
+; 3. The lure (Verao Logico 1): a Brute Shadow holds the tunnel. Cast the
+;    shadow in the open (col 45) before it wakes, climb onto the tunnel's roof
+;    (the roof hides Ivo from it) to wake it: it goes for the shadow it can
+;    see, and Ivo drops down the shaft behind it into the chamber. Or fight.
 
 [room]
 origin = 0, -16
 
 [grid]
-............................................................
-............................................................
-............................................................
-............................................................
-............................................................
-............................................................
-............................................................
-............................................................
-............................................................
-SS........................................................SS
-SS........................................................SS
-SS........................................................SS
-SS........................................................SS
-SS........................................................SS
-SS........................................................SS
-SS........................................................SS
+..............S..........................................S..
+..............S..........................................S..
+..............S..........................................S..
+..............S..........................................S..
+..............S..........................................S..
+..............S..........................................S..
+..............S..........................................S..
+..............S..........................................S..
+..............S....................######................S..
+SS............S....................######................SSS
+SS............S....................######................SSS
+SS............S....................######................SSS
+SS............S....................######.........SSSSSS.SSS
+SS............................T....######.................SS
+SS............................S....######.................SS
+SS......P.....G...............S....######............B....SS
 ############################################################
 ############################################################
 ############################################################
 ############################################################
 
 [entities]
+8,15 = {"id": "plate_door"}
+14,15 = {"id": "door", "trigger_path": "plate_door"}
+30,13 = {"id": "seesaw", "length": 256.0, "pivot_at": 0.6875, "max_degrees": 30.0}
+53,15 = {"id": "lure_brute", "save_id": "summer_trial_brute"}
