@@ -1,0 +1,133 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 13.0,
+ "player_position": [
+  12,
+  -60
+ ],
+ "known_songs": [
+  0
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 2.65,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.05,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.45,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 7.25,
+   "screenshot": "crossing_07.25"
+  },
+  {
+   "t": 7.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.75,
+   "screenshot": "crossing_07.75"
+  },
+  {
+   "t": 8.25,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 8.25,
+   "screenshot": "crossing_08.25"
+  },
+  {
+   "t": 8.75,
+   "screenshot": "crossing_08.75"
+  },
+  {
+   "t": 9.25,
+   "screenshot": "crossing_09.25"
+  },
+  {
+   "t": 9.75,
+   "screenshot": "crossing_09.75"
+  },
+  {
+   "t": 10.25,
+   "screenshot": "crossing_10.25"
+  },
+  {
+   "t": 10.75,
+   "screenshot": "crossing_10.75"
+  },
+  {
+   "t": 11.25,
+   "screenshot": "crossing_11.25"
+  },
+  {
+   "t": 11.75,
+   "screenshot": "crossing_11.75"
+  }
+ ]
+}

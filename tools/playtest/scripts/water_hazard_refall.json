@@ -1,0 +1,88 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 8.0,
+ "player_position": [
+  10,
+  -60
+ ],
+ "steps": [
+  {
+   "t": 2.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.15,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.3,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.45,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "screenshot": "refall_03.00"
+  },
+  {
+   "t": 3.3,
+   "screenshot": "refall_03.30"
+  },
+  {
+   "t": 3.7,
+   "screenshot": "refall_03.70"
+  },
+  {
+   "t": 3.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.9,
+   "screenshot": "refall_03.90"
+  },
+  {
+   "t": 4.1,
+   "screenshot": "refall_04.10"
+  },
+  {
+   "t": 4.3,
+   "screenshot": "refall_04.30"
+  },
+  {
+   "t": 4.6,
+   "screenshot": "refall_04.60"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "refall_05.00"
+  },
+  {
+   "t": 5.4,
+   "screenshot": "refall_05.40"
+  },
+  {
+   "t": 5.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 6.0,
+   "screenshot": "refall_06.00"
+  },
+  {
+   "t": 6.6,
+   "screenshot": "refall_06.60"
+  },
+  {
+   "t": 7.2,
+   "screenshot": "refall_07.20"
+  }
+ ]
+}

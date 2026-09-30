@@ -1,0 +1,64 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 9.0,
+ "player_position": [
+  -1100,
+  -60
+ ],
+ "steps": [
+  {
+   "t": 2.4,
+   "screenshot": "00_remembered_standing"
+  },
+  {
+   "t": 2.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "screenshot": "walk_03.00"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "walk_03.60"
+  },
+  {
+   "t": 4.2,
+   "screenshot": "walk_04.20"
+  },
+  {
+   "t": 4.8,
+   "screenshot": "walk_04.80"
+  },
+  {
+   "t": 5.4,
+   "screenshot": "walk_05.40"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "walk_06.00"
+  },
+  {
+   "t": 6.2,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 6.8,
+   "screenshot": "stand_06.80"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "stand_07.00"
+  },
+  {
+   "t": 7.2,
+   "screenshot": "stand_07.20"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "stand_08.00"
+  }
+ ]
+}

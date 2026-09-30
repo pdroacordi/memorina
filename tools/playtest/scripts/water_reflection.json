@@ -1,0 +1,46 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 10.0,
+ "player_position": [
+  1552,
+  -40
+ ],
+ "steps": [
+  {
+   "t": 2.5,
+   "screenshot": "00_strip_zoom_1"
+  },
+  {
+   "t": 2.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "screenshot": "01_running_reflected"
+  },
+  {
+   "t": 3.1,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 3.6,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 3.65,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 3.9,
+   "screenshot": "02_zooming"
+  },
+  {
+   "t": 4.6,
+   "screenshot": "03_zoom_1_5"
+  }
+ ]
+}

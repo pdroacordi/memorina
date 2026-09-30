@@ -1,0 +1,163 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 9.0,
+ "player_position": [
+  12,
+  -60
+ ],
+ "known_songs": [
+  0
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 2.65,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.05,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.45,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.4,
+   "screenshot": "grow_04.40"
+  },
+  {
+   "t": 4.55,
+   "screenshot": "grow_04.55"
+  },
+  {
+   "t": 4.6,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.7,
+   "screenshot": "grow_04.70"
+  },
+  {
+   "t": 4.85,
+   "screenshot": "grow_04.85"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "grow_05.00"
+  },
+  {
+   "t": 5.15,
+   "screenshot": "grow_05.15"
+  },
+  {
+   "t": 5.3,
+   "screenshot": "grow_05.30"
+  },
+  {
+   "t": 5.45,
+   "screenshot": "grow_05.45"
+  },
+  {
+   "t": 5.6,
+   "screenshot": "grow_05.60"
+  },
+  {
+   "t": 5.75,
+   "screenshot": "grow_05.75"
+  },
+  {
+   "t": 5.9,
+   "screenshot": "grow_05.90"
+  },
+  {
+   "t": 6.05,
+   "screenshot": "grow_06.05"
+  },
+  {
+   "t": 6.2,
+   "screenshot": "grow_06.20"
+  },
+  {
+   "t": 6.35,
+   "screenshot": "grow_06.35"
+  },
+  {
+   "t": 6.5,
+   "screenshot": "grow_06.50"
+  },
+  {
+   "t": 6.65,
+   "screenshot": "grow_06.65"
+  },
+  {
+   "t": 6.8,
+   "screenshot": "grow_06.80"
+  },
+  {
+   "t": 6.95,
+   "screenshot": "grow_06.95"
+  },
+  {
+   "t": 7.1,
+   "screenshot": "grow_07.10"
+  },
+  {
+   "t": 7.25,
+   "screenshot": "grow_07.25"
+  }
+ ]
+}

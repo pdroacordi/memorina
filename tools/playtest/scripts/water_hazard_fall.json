@@ -1,0 +1,70 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 7.0,
+ "player_position": [
+  10,
+  -60
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "screenshot": "00_bank"
+  },
+  {
+   "t": 2.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.15,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.3,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.45,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 2.75,
+   "screenshot": "fall_02.75"
+  },
+  {
+   "t": 2.9,
+   "screenshot": "fall_02.90"
+  },
+  {
+   "t": 3.05,
+   "screenshot": "fall_03.05"
+  },
+  {
+   "t": 3.2,
+   "screenshot": "fall_03.20"
+  },
+  {
+   "t": 3.4,
+   "screenshot": "fall_03.40"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "fall_03.60"
+  },
+  {
+   "t": 3.9,
+   "screenshot": "fall_03.90"
+  },
+  {
+   "t": 4.2,
+   "screenshot": "fall_04.20"
+  },
+  {
+   "t": 4.6,
+   "screenshot": "fall_04.60"
+  }
+ ]
+}

@@ -1,0 +1,30 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 14.0,
+ "player_position": [
+  120,
+  -60
+ ],
+ "steps": [
+  {
+   "t": 2.5,
+   "screenshot": "still_02.50"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "still_05.00"
+  },
+  {
+   "t": 7.5,
+   "screenshot": "still_07.50"
+  },
+  {
+   "t": 10.0,
+   "screenshot": "still_10.00"
+  },
+  {
+   "t": 12.5,
+   "screenshot": "still_12.50"
+  }
+ ]
+}

@@ -29,7 +29,14 @@ at everything else on demand.
 
 Project-specific agents `godot-reviewer` and `godot-architect` already cover Godot code
 review and architecture planning — do not add ECC's generic `architect`/`code-architect`/
-`code-reviewer`/`planner` agents on top of them.
+`code-reviewer`/`planner` agents on top of them. `godot-playtester` (invoked via the
+`godot-playtest` skill, or directly) covers actually running the game and judging
+fun/fluidity/aesthetics — use it after any gameplay-visible change, not just the reviewer.
+
+All three project agents read from and write to `docs/knowledge/` (architecture
+decisions, confirmed bugs, engine gotchas, playtest reports) — see
+`docs/knowledge/README.md` for the schema. This is the project's living, RAG-shaped
+engineering memory; check it before re-deriving something that may already be documented.
 
 ## LIBRARY (search or invoke on demand — not loaded by default)
 

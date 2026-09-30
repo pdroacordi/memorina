@@ -1,0 +1,16 @@
+{
+  "scene": "res://scenes/world/game.tscn",
+  "max_duration": 20.0,
+  "steps": [
+    { "t": 1.0, "screenshot": "00_spawn" },
+    { "t": 1.2, "action": "move_left", "pressed": true },
+    { "t": 2.2, "action": "move_left", "pressed": false },
+    { "t": 2.3, "screenshot": "01_after_walk" },
+    { "t": 2.5, "action": "jump", "pressed": true },
+    { "t": 2.6, "action": "jump", "pressed": false },
+    { "t": 3.2, "screenshot": "02_mid_jump" },
+    { "t": 3.5, "action": "roll", "pressed": true },
+    { "t": 3.6, "action": "roll", "pressed": false },
+    { "t": 4.2, "screenshot": "03_after_roll" }
+  ]
+}
