@@ -6,6 +6,7 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Architecture
 
+- [the-water-level-moves](architecture/the-water-level-moves.md) — a body is painted at its highest level and `set_level` moves its origin; Chuva's basin dries out at load and fills while lit; ice is laid at the level it freezes at.
 - [weight-and-presence](architecture/weight-and-presence.md) — a shadow counts as Ivo by being a `Weight` and a `PRESENCE`; Soltar is one `Releasable` rule; a seesaw needs an off-centre pivot.
 - [played-pulses-hold-in-a-pause](architecture/played-pulses-hold-in-a-pause.md) — Ivo's pulses stop their clock under a performance's freeze so a second song finds the first one's effect; a guardian's lesson pulse does not.
 - [one-air-channel](architecture/one-air-channel.md) - `Airflow` sums every moving air (currents, the Vendaval gale, later weather) into a VELOCITY scaled by memory; bodies steer toward input plus wind (a force against capped braking was nothing or a runaway); a ground deadzone keeps a breeze from breaking a performance.
@@ -61,6 +62,7 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Gotchas
 
+- [sync-to-physics-lands-a-move-next-step](gotchas/sync-to-physics-lands-a-move-next-step.md) — a moving platform's set transform reads back stale until the next physics step; keep the target as state and test that.
 - [body-state-cannot-change-in-the-physics-flush](gotchas/body-state-cannot-change-in-the-physics-flush.md) — `freeze`/`disabled` set from an area signal is refused; defer it.
 - [playtest-clock-pauses-with-the-tree](gotchas/playtest-clock-pauses-with-the-tree.md) — a timeline's `t` is unpaused time; a performance's frozen seconds do not count.
 - [a-force-does-not-wake-a-sleeping-rigidbody](gotchas/a-force-does-not-wake-a-sleeping-rigidbody.md) — wake it yourself; and cut a sliding box's corners so tile seams do not stop it.
@@ -84,6 +86,7 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Playtests
 
+- [2026-09-30-chuva-basin-and-moat](playtests/2026-09-30-chuva-basin-and-moat.md) — the log rides the rain up to the passage (after widening it), and Chuva then Congelar crosses the dry moat ahead of the thaw.
 - [2026-09-30-sombra-and-soltar-trials](playtests/2026-09-30-sombra-and-soltar-trials.md) — door, seesaw, lure, counterweights and the cocoon on the wind all solve with real input; seven bugs found and fixed on the way.
 - [2026-09-23-lake-and-water-hazard](playtests/2026-09-23-lake-and-water-hazard.md) — the lake in front of the path, the lake/pool seam, Ivo not swimming (fun 3, fluidity 3, aesthetics 3): reads as a lake in colour, grey lake still and flat; splash, edge seam and lake clock verified fixed. Open: the reflection is checkerboarded by the ramp dither, glints perforate at memory edges, the shore line is lost against the sky reflection, a two-material seam at the pit, and the ~1 s hazard fade hides the sink.
 - [2026-09-23-generated-water](playtests/2026-09-23-generated-water.md) — reflection strip, splash in grey water, FREEZE growth → thaw → fall (fun 3, fluidity 3, aesthetics 3): pixel discipline strong and the fall is real. Problems: the crest is a needle then a comb, the strip mirrors only underbrush and is not cool, a navy seam at the screen's side edges, caustic speckle on grey.
