@@ -65,3 +65,12 @@ as a whole).
 A parser-level suite cannot catch this. A small scene test would: instantiate a contents
 scene, reassign `map`, and assert the child names and count. The same goes for anything
 else that builds children in `_ready()` from an exported resource.
+
+## Revision (2026-09-30)
+
+A later review confirmed that the code is already fixed. The "Open" status above was
+out of date when this entry was written. Commit 4ecd877 changed `RoomMapNode._build()`
+(room_map_node.gd:81-83) to `remove_child(child)` before `child.queue_free()`, and to
+remove EVERY child, not only the ones it built. That keeps the fresh nodes' names and
+`id` links, and it also clears the children a `duplicate()` copied before `_ready()`
+builds again. No scene test locks this in yet (see Prevention).
