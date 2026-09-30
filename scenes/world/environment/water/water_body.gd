@@ -92,6 +92,13 @@ var _top_y := 0.0
 var _bottom_y := 0.0
 var _floor_bottoms := PackedFloat32Array()
 var _mirror_top := 0
+# Discs the water is held out of (Redoma's shells), by holder, and which
+# columns that leaves dry.
+var _held_out := {}
+var _dry := PackedByteArray()
+# The hazard's shapes while some columns are held out: one per run of wet
+# columns, as (shape, first column, end column).
+var _runs: Array[Array] = []
 
 @onready var _surface: WaterQuad = $Surface
 @onready var _veil: WaterQuad = get_node_or_null("Veil")
@@ -129,6 +136,7 @@ func _ready() -> void:
 	for column in _floor_bottoms.size():
 		_floor_bottoms[column] += _top_y
 	_mirror_top = mirror_axis_offset
+	_dry.resize(columns)
 	_memory = MemoryField.find_in(self)
 	_airflow = Airflow.find_in(self)
 	for quad: WaterQuad in [_surface, _veil]:
@@ -210,8 +218,10 @@ func set_level(rest_y: float) -> void:
 		return
 	global_position.y = y
 	size = Vector2i(size.x, roundi(_bottom_y - y))
-	for column in _floors.size():
-		_floors[column] = maxf(_floor_bottoms[column] - y, 0.0)
+	# A shell's disc holds out the columns whose waterline it covers: the line
+	# has moved, so ask again.
+	_refresh_dry(false)
+	_apply_floors()
 	# The bank above the water grows as it sinks; the axis stays halfway up it.
 	mirror_axis_offset = _mirror_top - floori((y - _top_y) * 0.5)
 	var dry := is_dry()
@@ -222,10 +232,7 @@ func set_level(rest_y: float) -> void:
 		var volume_shape := _volume.get_node("Shape") as CollisionShape2D
 		fit_area(volume_shape, 0.0)
 		volume_shape.set_deferred(&"disabled", dry)
-	if _hazard:
-		var hazard_shape := _hazard.get_node("Shape") as CollisionShape2D
-		fit_area(hazard_shape, hazard_depth)
-		hazard_shape.set_deferred(&"disabled", size.y <= hazard_depth)
+	_refit_hazard()
 	_set_uniform(&"rest_y", y)
 	_set_uniform(&"mirror_axis_offset", float(mirror_axis_offset))
 	_upload()
@@ -274,10 +281,35 @@ func splash(world_x: float, speed: float) -> void:
 	assert(_field != null, "%s has no surface to splash: it has no WaterProfile" % name)
 	var depth := minf(speed * profile.splash_depth_per_speed, profile.splash_max_depth)
 	var centre := column_of(world_x)
+	if _dry.size() > centre and _dry[centre] == 1:
+		return
 	var width := float(profile.splash_half_width)
 	for k in range(-3 * profile.splash_half_width, 3 * profile.splash_half_width + 1):
 		var x := float(k) / width
 		_field.disturb(centre + k, -depth * (1.0 - 2.0 * x * x) * exp(-x * x))
+
+## Holds the water out of a disc (Redoma's shell, design 02 section 7.1): every
+## column whose waterline lies inside it is dry - drawn empty, and no hazard
+## there - until the disc shrinks off it or `holder` lets go. A radius of 0
+## lets go.
+func hold_out(holder: Object, centre: Vector2, radius: float) -> void:
+	var key := holder.get_instance_id()
+	if radius <= 0.0:
+		release(holder)
+		return
+	var disc := Vector3(centre.x, centre.y, radius)
+	if _held_out.get(key, Vector3.ZERO) == disc:
+		return
+	_held_out[key] = disc
+	_refresh_dry()
+
+func release(holder: Object) -> void:
+	if _held_out.erase(holder.get_instance_id()):
+		_refresh_dry()
+
+## Whether the water is held out of the column at `world_x`.
+func is_held_out(world_x: float) -> bool:
+	return _dry.size() > 0 and _dry[column_of(world_x)] == 1
 
 ## A raindrop landing at `world_x`: a small dent `depth` px deep, a few columns
 ## wide - never a one-column notch, which the springs ring as a comb (see
@@ -330,6 +362,78 @@ func _blow(delta: float) -> void:
 		var wind := _winds[column]
 		if not is_zero_approx(wind):
 			_field.disturb(column, -wind * profile.wind_stress * delta * ((column - half) / half))
+
+func _refresh_dry(refit := true) -> void:
+	var left := global_position.x - size.x * 0.5
+	var width := column_width()
+	var line := surface_rest_y()
+	var changed := false
+	for column in _dry.size():
+		var point := Vector2(left + (column + 0.5) * width, line)
+		var dry := 0
+		for disc: Vector3 in _held_out.values():
+			if point.distance_to(Vector2(disc.x, disc.y)) < disc.z:
+				dry = 1
+				break
+		if _dry[column] != dry:
+			_dry[column] = dry
+			changed = true
+	if changed:
+		_rebuild_runs()
+		if refit:
+			_apply_floors()
+			_refit_hazard()
+			_upload()
+
+## Each column's depth: its bed at its world height under the current level,
+## or nothing where the water is held out.
+func _apply_floors() -> void:
+	var y := global_position.y
+	for column in _floors.size():
+		var dry := _dry.size() > column and _dry[column] == 1
+		_floors[column] = 0.0 if dry else maxf(_floor_bottoms[column] - y, 0.0)
+
+## The hazard follows the water: one shape over the whole body, or one per run
+## of wet columns while some are held out. The runs are rebuilt only when the
+## dry columns change (_rebuild_runs); a moving level only resizes them.
+func _refit_hazard() -> void:
+	if _hazard == null:
+		return
+	var base := _hazard.get_node("Shape") as CollisionShape2D
+	fit_area(base, hazard_depth)
+	var shallow := size.y <= hazard_depth
+	base.set_deferred(&"disabled", not _runs.is_empty() or _dry.has(1) or shallow)
+	var left := global_position.x - size.x * 0.5
+	var width := column_width()
+	for run: Array in _runs:
+		var shape: CollisionShape2D = run[0]
+		var box := shape.shape as RectangleShape2D
+		box.size = Vector2((run[2] - run[1]) * width, maxf(size.y - hazard_depth, 1.0))
+		shape.global_position = Vector2(left + (run[1] + run[2]) * 0.5 * width, global_position.y + hazard_depth + box.size.y * 0.5)
+		shape.set_deferred(&"disabled", shallow)
+
+func _rebuild_runs() -> void:
+	if _hazard == null:
+		return
+	for run: Array in _runs:
+		var shape: CollisionShape2D = run[0]
+		_hazard.remove_child(shape)
+		shape.queue_free()
+	_runs.clear()
+	if not _dry.has(1):
+		return
+	var start := -1
+	for column in range(_dry.size() + 1):
+		var wet := column < _dry.size() and _dry[column] == 0
+		if wet and start < 0:
+			start = column
+		elif not wet and start >= 0:
+			var shape := CollisionShape2D.new()
+			shape.name = "Run%d" % start
+			shape.shape = RectangleShape2D.new()
+			_hazard.add_child(shape)
+			_runs.append([shape, start, column])
+			start = -1
 
 func _build_floors(columns: int) -> void:
 	_floors.resize(columns)
