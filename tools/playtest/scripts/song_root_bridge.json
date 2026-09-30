@@ -1,0 +1,143 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 14.0,
+ "player_position": [
+  8784.0,
+  6110
+ ],
+ "known_songs": [
+  6
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.65,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.05,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.45,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 6.4,
+   "screenshot": "grow_06.40"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "grow_07.00"
+  },
+  {
+   "t": 7.6,
+   "screenshot": "grow_07.60"
+  },
+  {
+   "t": 8.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 8.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.2,
+   "screenshot": "cross_08.20"
+  },
+  {
+   "t": 8.45,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.5,
+   "screenshot": "cross_08.50"
+  },
+  {
+   "t": 8.9,
+   "screenshot": "cross_08.90"
+  },
+  {
+   "t": 9.3,
+   "screenshot": "cross_09.30"
+  },
+  {
+   "t": 9.8,
+   "screenshot": "cross_09.80"
+  },
+  {
+   "t": 10.2,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 10.4,
+   "screenshot": "cross_10.40"
+  },
+  {
+   "t": 11.5,
+   "screenshot": "cross_11.50"
+  }
+ ]
+}
