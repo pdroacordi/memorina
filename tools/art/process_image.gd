@@ -22,9 +22,10 @@ func _init() -> void:
 	var source := Image.load_from_file(args.get("in", ""))
 	assert(source != null, "--in=<png> could not be read")
 	source.convert(Image.FORMAT_RGBA8)
-	if source.get_pixel(0, 0).a > 0.0:
-		var key := Color.html(args["key"]) if args.has("key") else source.get_pixel(0, 0)
-		source = ImageOps.key_out(source, key)
+	if args.has("key"):
+		source = ImageOps.key_out(source, Color.html(args["key"]))
+	elif source.get_pixel(0, 0).a > 0.0:
+		source = ImageOps.key_out(source, source.get_pixel(0, 0))
 	var frames := ImageOps.split_strip(source, prompt.frames)
 	var sheet := ImageOps.pack_strip(frames, prompt.frame_size)
 	if not args.has("no-palette"):

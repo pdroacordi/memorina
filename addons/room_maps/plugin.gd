@@ -3,7 +3,7 @@ extends EditorPlugin
 
 ## Registers the `.room` importer. Rooms are authored as text
 ## (docs/maps/README.md); this is what turns the text into the RoomMap a
-## RoomMapLayer builds from.
+## RoomMapNode builds from.
 
 var _importer: EditorImportPlugin
 

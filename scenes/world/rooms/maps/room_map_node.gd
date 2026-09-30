@@ -13,7 +13,8 @@ class_name RoomMapNode extends Node2D
 ##
 ## Runs in the editor too, as a preview: what it builds there is never owned
 ## by the scene, so it is never saved into the .tscn - edit the .room file,
-## not the preview.
+## not the preview. It has no authored children: a (re)build removes every
+## child first, so a reassigned map or a duplicate() never leaves two grounds.
 ##
 ## It is also where the rest of the game asks what the ground is made of
 ## (ground_at), because the map is the only place that knows: Enraizar needs
@@ -37,8 +38,6 @@ const FLOOR_TILESET := preload("res://resources/world/tiles/floor_tileset.tres")
 			_ground.material = value
 
 var _ground: TileMapLayer
-## Everything built from the map, so a rebuild removes exactly that.
-var _built: Array[Node] = []
 
 ## The room map whose map contains `global_point`'s cell (rooms do not
 ## overlap). Null where no room map is loaded.
@@ -56,8 +55,9 @@ func _ready() -> void:
 func cell_at(global_point: Vector2) -> Vector2i:
 	return _ground.local_to_map(_ground.to_local(global_point)) if _ground else Vector2i.ZERO
 
-## What the ground at `global_point` is made of; NONE in the air, in water, off
-## the map.
+## What the ground at `global_point` is made of; NONE in the air and off the
+## map. Water does not change the answer: a lake painted over ground is still
+## over that ground, and a pool fills cells that are empty anyway.
 func ground_at(global_point: Vector2) -> Enums.Ground:
 	return map.ground_at(cell_at(global_point)) if map else Enums.Ground.NONE
 
@@ -67,9 +67,12 @@ func cell_rect(cell: Vector2i) -> Rect2:
 	return Rect2(_ground.to_global(_ground.map_to_local(cell) - size * 0.5), size)
 
 func _build() -> void:
-	for node: Node in _built:
-		node.queue_free()
-	_built.clear()
+	# Removed now, not at frame end, so the fresh nodes keep their names (an
+	# entity's `id` is a link target) - queue_free alone leaves the old one
+	# holding the name until the frame ends.
+	for child: Node in get_children():
+		remove_child(child)
+		child.queue_free()
 	_ground = null
 	if map == null:
 		return
@@ -114,5 +117,4 @@ func _place(entry: RoomLegendEntry, placed: Dictionary) -> void:
 	_adopt(node)
 
 func _adopt(node: Node) -> void:
-	_built.append(node)
 	add_child(node)

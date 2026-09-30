@@ -24,7 +24,7 @@ const NO_TILE := -1
 ## The resolved atlas tile per cell, packed by pack_tile(); NO_TILE if empty.
 @export var tiles := PackedInt32Array()
 ## Water cells by legend symbol: symbol -> PackedVector2Array of cells.
-@export var water := {}
+@export var water: Dictionary[String, PackedVector2Array] = {}
 ## One per placed thing: {"symbol": String, "cell": Vector2i, "params": Dictionary}.
 @export var entities: Array[Dictionary] = []
 

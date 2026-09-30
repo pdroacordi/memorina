@@ -36,8 +36,9 @@ func _enter_tree() -> void:
 
 ## Called by whoever spawned it, immediately after it enters the tree. `stats`
 ## overrides the song's own shape in time - a lesson's pulse is the same
-## song, opened slowly across its whole track.
-func start(song: Song, stats: PulseStats = null) -> void:
+## song, opened slowly across its whole track. `with_effect` false lights the
+## colour without what the song does (a guardian's pulse; see PulseEmitter).
+func start(song: Song, stats: PulseStats = null, with_effect: bool = true) -> void:
 	_source.tint = song.tint()
 	_source.season = song.season()
 	_source.radius = 0.0
@@ -57,7 +58,7 @@ func start(song: Song, stats: PulseStats = null) -> void:
 	_timeline = PulseTimeline.new(stats if stats != null else song.pulse_stats, local_memory)
 	_apply_radius()
 	# Mounted last, so the effect's first frame already sees a started pulse.
-	if song.pulse_effect:
+	if song.pulse_effect and with_effect:
 		var effect := song.pulse_effect.instantiate() as PulseEffect
 		assert(effect != null, "Song.pulse_effect must be a PulseEffect scene.")
 		effect.pulse = self
@@ -92,11 +93,11 @@ func contains(global_point: Vector2) -> bool:
 	return global_point.distance_to(global_position) <= radius()
 
 func _apply_radius() -> void:
-	var radius: float = maxf(_timeline.radius(), 0.0)
-	_source.radius = radius
+	var reach := radius()
+	_source.radius = reach
 	# A pulse's edge scales with the pulse, unlike an authored zone whose
 	# feather is a fixed pixel width. Contracting light should keep the same
 	# proportion of softness the whole way down.
-	_source.feather = radius * MemoryFieldMath.DEFAULT_FEATHER_RATIO
+	_source.feather = reach * MemoryFieldMath.DEFAULT_FEATHER_RATIO
 	var circle: CircleShape2D = _shape.shape
-	circle.radius = maxf(radius, 0.01)
+	circle.radius = maxf(reach, 0.01)

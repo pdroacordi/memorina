@@ -24,7 +24,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_summer.tscn" id="31_trials_summer"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_autumn.tscn" id="32_trials_autumn"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_spring.tscn" id="33_trials_spring"]
-[ext_resource type="Script" path="res://scenes/world/debug/trial_teleport.gd" id="34_teleport"]
+[ext_resource type="Script" path="res://scenes/world/debug/debug_trials.gd" id="34_teleport"]
 [ext_resource type="Script" path="res://scenes/world/environment/wind/airflow.gd" id="35_airflow"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
@@ -42,20 +42,11 @@ process_mode = 1
 [node name="FrostEdge" parent="World" unique_id=2108025702 instance=ExtResource("16_frost")]
 position = Vector2(5856, 0)
 
-[node name="TrialsWinter" parent="World" instance=ExtResource("30_trials_winter")]
-position = Vector2(0, 6000)
-
-[node name="TrialsSummer" parent="World" instance=ExtResource("31_trials_summer")]
-position = Vector2(2400, 6000)
-
-[node name="TrialsAutumn" parent="World" instance=ExtResource("32_trials_autumn")]
-position = Vector2(4800, 6000)
-
-[node name="TrialsSpring" parent="World" instance=ExtResource("33_trials_spring")]
-position = Vector2(7200, 6000)
-
-[node name="TrialTeleport" type="Node" parent="."]
+[node name="DebugTrials" type="Node" parent="."]
 script = ExtResource("34_teleport")
+regions = Array[PackedScene]([ExtResource("30_trials_winter"), ExtResource("31_trials_summer"), ExtResource("32_trials_autumn"), ExtResource("33_trials_spring")])
+world_path = NodePath("../World")
+camera_path = NodePath("../World/Camera2D")
 
 [node name="RegionWeather" parent="World" instance=ExtResource("20_weather")]
 

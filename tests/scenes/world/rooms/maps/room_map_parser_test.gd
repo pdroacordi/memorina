@@ -138,3 +138,11 @@ func test_ground_in_the_water_grid_is_an_error() -> void:
 
 func test_the_water_grid_must_match_the_ground_grid() -> void:
 	assert_bool(_parse("[grid]\n...\n...\n[water]\n.~.\n").ok()).is_false()
+
+func test_a_semicolon_inside_json_is_not_a_comment() -> void:
+	var result := _parse("[grid]\nB\n[entities]\n0,0 = {\"id\": \"a;b\"} ; trailing note\n")
+	assert_bool(result.ok()).is_true()
+	assert_str(result.map.entities[0].params.id).is_equal("a;b")
+
+func test_a_grid_row_may_not_start_with_whitespace() -> void:
+	assert_bool(_parse("[grid]\n##\n ##\n").ok()).is_false()

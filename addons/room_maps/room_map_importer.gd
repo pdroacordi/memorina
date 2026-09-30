@@ -9,9 +9,18 @@ extends EditorImportPlugin
 ## Entity params are checked against the placed scene here too, so a typo in
 ## a param name fails the import instead of silently doing nothing in game.
 ##
-## A legend change does not reimport maps by itself; reimport them (or run
-## `--import`). tests/scenes/world/rooms/maps/room_files_test.gd parses every
-## map against the current legend, so a map the legend broke fails the suite.
+## The imported RoomMap BAKES this importer's logic (the parser, the
+## autotiler's tile choices, the legend's kinds and materials), so a checkout
+## that already imported a map keeps the old result when that logic changes -
+## unless FORMAT_VERSION is bumped, which makes the editor reimport every map.
+## Bump it whenever RoomMapParser, GroundAutotile or the RoomMap layout change.
+## (room_files_test.gd re-parses the text, so it guards the maps, not a
+## machine's stale imports.) A legend EDIT alone needs a reimport too.
+
+const FORMAT_VERSION := 1
+
+func _get_format_version() -> int:
+	return FORMAT_VERSION
 
 func _get_importer_name() -> String:
 	return "memorina.room_map"

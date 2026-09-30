@@ -29,14 +29,6 @@ const SECTION_WATER := "water"
 const SECTION_ENTITIES := "entities"
 const COMMENT := ";"
 
-class Result:
-	var map: RoomMap
-	var errors := PackedStringArray()
-	var warnings := PackedStringArray()
-
-	func ok() -> bool:
-		return errors.is_empty()
-
 static func parse(text: String, legend: RoomLegend, source: String = "<room>") -> Result:
 	var result := Result.new()
 	var map := RoomMap.new()
@@ -59,15 +51,23 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 			if not section in [SECTION_ROOM, SECTION_GRID, SECTION_WATER, SECTION_ENTITIES]:
 				result.errors.append("%s:%d: unknown section [%s]" % [source, i + 1, section])
 			continue
-		if section == SECTION_GRID:
-			if not line.is_empty():
+		if section == SECTION_GRID or section == SECTION_WATER:
+			if line.is_empty():
+				continue
+			# Every character of a grid row is a cell: leading whitespace would
+			# shift the row, so it is an error rather than silently trimmed.
+			if raw.length() > 0 and raw[0] in [" ", "\t"]:
+				result.errors.append("%s:%d: a grid row may not start with whitespace - use '%s' for an empty cell" % [source, i + 1, RoomLegend.EMPTY])
+			if section == SECTION_GRID:
 				map.rows.append(line)
 				grid_lines.append(i + 1)
-			continue
-		if section == SECTION_WATER:
-			if not line.is_empty():
+			else:
 				water_rows.append(line)
 				water_lines.append(i + 1)
+			continue
+		if section == SECTION_ENTITIES:
+			if not _entity_line(line).is_empty():
+				entity_lines.append(i + 1)
 			continue
 		line = _uncomment(line)
 		if line.is_empty():
@@ -75,8 +75,6 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 		match section:
 			SECTION_ROOM:
 				_parse_setting(map, line, i + 1, source, result)
-			SECTION_ENTITIES:
-				entity_lines.append(i + 1)
 			_:
 				result.errors.append("%s:%d: text outside any section" % [source, i + 1])
 
@@ -86,10 +84,22 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 	_read_grid(map, grid_lines, source, result)
 	_read_water(map, water_rows, water_lines, source, result)
 	for line_number: int in entity_lines:
-		_parse_entity(map, _uncomment(lines[line_number - 1].strip_edges()), line_number, source, result)
+		_parse_entity(map, _entity_line(lines[line_number - 1].strip_edges()), line_number, source, result)
 	_check_entities(map, source, result)
 	_resolve_tiles(map)
 	return result
+
+## An [entities] line without its comment. A ';' inside the JSON (a string
+## value) is not a comment: only one after the object's closing brace is.
+static func _entity_line(line: String) -> String:
+	if line.begins_with(COMMENT):
+		return ""
+	var close := line.rfind("}")
+	if close < 0:
+		return _uncomment(line)
+	var tail := line.substr(close + 1)
+	var at := tail.find(COMMENT)
+	return (line.substr(0, close + 1) + (tail.substr(0, at) if at >= 0 else tail)).strip_edges()
 
 static func _uncomment(line: String) -> String:
 	var at := line.find(COMMENT)
@@ -236,3 +246,11 @@ static func _resolve_tiles(map: RoomMap) -> void:
 				if beyond or map.is_solid(other):
 					mask |= bit
 			map.tiles[index] = RoomMap.pack_tile(GroundAutotile.in_material(GroundAutotile.tile_for(mask), ground), 0)
+
+class Result:
+	var map: RoomMap
+	var errors := PackedStringArray()
+	var warnings := PackedStringArray()
+
+	func ok() -> bool:
+		return errors.is_empty()

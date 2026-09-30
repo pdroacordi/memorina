@@ -842,6 +842,7 @@ pitch_scale = 0.5
 [node name="PulseEmitter" type="Node" parent="."]
 script = ExtResource("22_pulsem")
 pulse_scene = ExtResource("23_pulsesc")
+song_acts = false
 
 [node name="GreyhushShield" type="Node2D" parent="."]
 position = Vector2(0, -90)
