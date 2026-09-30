@@ -6,6 +6,8 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Architecture
 
+- [weight-and-presence](architecture/weight-and-presence.md) — a shadow counts as Ivo by being a `Weight` and a `PRESENCE`; Soltar is one `Releasable` rule; a seesaw needs an off-centre pivot.
+- [played-pulses-hold-in-a-pause](architecture/played-pulses-hold-in-a-pause.md) — Ivo's pulses stop their clock under a performance's freeze so a second song finds the first one's effect; a guardian's lesson pulse does not.
 - [one-air-channel](architecture/one-air-channel.md) - `Airflow` sums every moving air (currents, the Vendaval gale, later weather) into a VELOCITY scaled by memory; bodies steer toward input plus wind (a force against capped braking was nothing or a runaway); a ground deadzone keeps a breeze from breaking a performance.
 - [rooms-are-text](architecture/rooms-are-text.md) - a room's ground, water and entities are a `.room` ASCII map (earth `#`, stone `S`, a `[water]` layer that can lie over ground), imported once into a resolved `RoomMap` and built by `RoomMapNode`; the guide `docs/maps/README.md` is generated where it could drift.
 - [water-two-projections](architecture/water-two-projections.md) — a pool in a pit is a cross-section, a lake in front of the land is a plane seen from above (opaque, straight shore, torn reflection, glints, no WaterProfile, a clock per column); both painted with a `WaterLayer` that `WaterBasins` turns into bodies. Also records the measured cost.
@@ -29,6 +31,8 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Bugs
 
+- [room-entity-links-depended-on-file-order](bugs/room-entity-links-depended-on-file-order.md) — a lift listed before its plate was never linked; entities now enter the tree together.
+- [released-load-refused-to-unfreeze-in-the-physics-flush](bugs/released-load-refused-to-unfreeze-in-the-physics-flush.md) — Soltar reached the load but it stayed on its rope; `Releasable` now emits deferred, and the return tween is killed on a new release.
 - [room-map-node-rebuild-renames-and-doubles-its-children](bugs/room-map-node-rebuild-renames-and-doubles-its-children.md) - `RoomMapNode._build()` queue_frees and re-adds in one frame, so every rebuilt node is renamed `@Type@N` and `id` links hit the dying node; `duplicate()` copies the unowned built children and `_ready` builds again (doubled ground/water/entities). Editor-only today; low, open. Fix: `remove_child` before `queue_free`, free unbuilt children in `_ready`.
 - [guardian-inherits-the-hazard-wound](bugs/guardian-inherits-the-hazard-wound.md) — 84ada2e gave `Character` a default hazard response (Health damage, hurt flash, `_just_hit`); `Guardian` overrides only the hit path, so a guardian in water is wounded and flinches in any phase, against "its Health is inert". Latent (no arena has water), low; fix with one `_wound()` hook both paths call. Fixed 2026-09-23.
 - [camera-zoom-out-shows-past-room-bounds](bugs/camera-zoom-out-shows-past-room-bounds.md) — `GameCamera` clamps the view in physics with the zoom of that tick, but the zoom tween steps in idle, so every zoom-OUT (the post-song focus release) shows 1-3 px past the room's bottom: a dark ground line under lakes painted to the bound. Open; fix: tween zoom on the physics clock or re-clamp in `_process`.
@@ -57,6 +61,9 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Gotchas
 
+- [body-state-cannot-change-in-the-physics-flush](gotchas/body-state-cannot-change-in-the-physics-flush.md) — `freeze`/`disabled` set from an area signal is refused; defer it.
+- [playtest-clock-pauses-with-the-tree](gotchas/playtest-clock-pauses-with-the-tree.md) — a timeline's `t` is unpaused time; a performance's frozen seconds do not count.
+- [a-force-does-not-wake-a-sleeping-rigidbody](gotchas/a-force-does-not-wake-a-sleeping-rigidbody.md) — wake it yourself; and cut a sliding box's corners so tile seams do not stop it.
 - [import-plugin-output-is-stale-when-its-logic-changes](gotchas/import-plugin-output-is-stale-when-its-logic-changes.md) - an import is redone only when its source or `_get_format_version()` changes; the `.room` importer bakes `GroundAutotile`, the parser and the legend in, so changing them leaves every machine's imported maps stale while `room_files_test` stays green.
 - [logger-log-error-also-receives-warnings](gotchas/logger-log-error-also-receives-warnings.md) - a custom `Logger._log_error` also receives `push_warning` (`error_type` 1); the smoke test counts warnings as failures.
 - [duplicate-copies-script-built-unowned-children](gotchas/duplicate-copies-script-built-unowned-children.md) - `duplicate()` copies children whatever their owner, so a node that builds in `_ready` gets two sets; "unowned, never saved" is true for scene saves only.
@@ -77,6 +84,7 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Playtests
 
+- [2026-09-30-sombra-and-soltar-trials](playtests/2026-09-30-sombra-and-soltar-trials.md) — door, seesaw, lure, counterweights and the cocoon on the wind all solve with real input; seven bugs found and fixed on the way.
 - [2026-09-23-lake-and-water-hazard](playtests/2026-09-23-lake-and-water-hazard.md) — the lake in front of the path, the lake/pool seam, Ivo not swimming (fun 3, fluidity 3, aesthetics 3): reads as a lake in colour, grey lake still and flat; splash, edge seam and lake clock verified fixed. Open: the reflection is checkerboarded by the ramp dither, glints perforate at memory edges, the shore line is lost against the sky reflection, a two-material seam at the pit, and the ~1 s hazard fade hides the sink.
 - [2026-09-23-generated-water](playtests/2026-09-23-generated-water.md) — reflection strip, splash in grey water, FREEZE growth → thaw → fall (fun 3, fluidity 3, aesthetics 3): pixel discipline strong and the fall is real. Problems: the crest is a needle then a comb, the strip mirrors only underbrush and is not cool, a navy seam at the screen's side edges, caustic speckle on grey.
 - [2026-09-22-lucidity-leap-and-the-second-press](playtests/2026-09-22-lucidity-leap-and-the-second-press.md) — the guardian leaps out of the frame and lands at the far side before it calls; the recalled double jump fired all along and simply could not be seen.
