@@ -58,6 +58,9 @@ signal hurt
 ## Water (a HazardZone) took him and he is sinking. The composition root
 ## answers by fading out and calling respawn(); he does not swim.
 signal fell_into_hazard
+## His life, whenever it changes and once at the start, so the HUD keeps
+## listening to one node rather than reaching into his Health.
+signal health_changed(current: int, max_hp: int)
 
 const GROUP := "player"
 
@@ -230,6 +233,10 @@ func _ready() -> void:
 	_performance.finished.connect(_on_performance_finished)
 	_attack.phase_started.connect(_on_attack_phase_started)
 	_hitbox.connected.connect(_on_hitbox_connected)
+	health.damaged.connect(_relay_health.unbind(2))
+	health.healed.connect(_relay_health.unbind(2))
+	# Deferred: whoever listens is wired by the scene and may not be ready yet.
+	_relay_health.call_deferred()
 	# facing_changed only fires on a CHANGE, so without this the hitbox would
 	# sit at its authored (facing-right) offset until the first turn, wrong
 	# whenever Ivo starts a scene already facing left.
@@ -776,6 +783,9 @@ func _on_skill_recall_missed(stats: AbilityRecallStats) -> void:
 func _end_recall() -> void:
 	_glow_shield(_resting_shield_amount)
 	recall_ended.emit()
+
+func _relay_health() -> void:
+	health_changed.emit(health.current_hp, health.max_hp)
 
 ## Death does not tick the recall, so an open window would leave the world
 ## slowed forever; it is dropped here, without a miss - there is no one left

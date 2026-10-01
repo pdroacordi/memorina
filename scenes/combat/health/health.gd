@@ -38,6 +38,10 @@ func is_alive() -> bool:
 	return current_hp > 0
 
 ## Restores to full — the hook for benches, which the design docs say fully
-## heal the hero on rest.
+## heal the hero on rest. Announced as a heal, so whoever shows the pool hears
+## a rest exactly as it hears any other healing; a pool already full is silent.
 func reset() -> void:
+	var restored := max_hp - current_hp
 	current_hp = max_hp
+	if restored > 0:
+		healed.emit(restored, current_hp)

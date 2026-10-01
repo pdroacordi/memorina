@@ -166,3 +166,11 @@ greyhush_creature_pass={
 "type": "sampler2D",
 "value": ""
 }
+greyhush_black_lift={
+"type": "float",
+"value": 0.55
+}
+greyhush_black_lift_color={
+"type": "vec3",
+"value": Vector3(0.24, 0.26, 0.32)
+}

@@ -20,7 +20,11 @@ extends SceneTree
 ##       bursting on the ground, anchored bottom-centre
 ##   assets/sprites/world/rain/rain_water_splash.png  four 7x5 frames of a drop
 ##       throwing a crown up out of the water
-## White, in two tones: whoever draws them tints them.
+##   assets/sprites/hud/life/life_note.png  six 12x16 frames of a gold eighth
+##       note bobbing and flicking its flag - one unit of Ivo's life. It is
+##       drawn in COLOUR, in the world palette: the HUD's shader takes the
+##       colour away pixel by pixel when the unit is lost.
+## The rest are white, in two tones: whoever draws them tints them.
 ## Rerun after changing them:
 ##   "<godot>" --headless --path . -s res://tools/art/draw_procedural_sprites.gd
 
@@ -59,7 +63,8 @@ func _init() -> void:
 	_save_frames(DIR.path_join("wind_dash.png"), [DASH])
 	_save_frames(RAIN_DIR.path_join("rain_splash.png"), SPLASH_FRAMES)
 	_save_frames(RAIN_DIR.path_join("rain_water_splash.png"), WATER_SPLASH_FRAMES)
-	print("Wrote the wind, leaf, leaf wall, gust, dash and splash sprites")
+	_draw_life_note()
+	print("Wrote the wind, leaf, leaf wall, gust, dash, splash and life note sprites")
 	quit()
 
 const WALL := "res://assets/sprites/world/props/leaf_wall/leaf_wall.png"
@@ -183,3 +188,58 @@ func _gust_path() -> Array[Vector3]:
 		previous = here
 		t += step / 4.0
 	return points
+
+const LIFE_NOTE := "res://assets/sprites/hud/life/life_note.png"
+const LIFE_NOTE_SIZE := Vector2i(12, 16)
+## "o" outline, "#" gold, "h" highlight, "s" shade - all from the world palette.
+const LIFE_NOTE_TONES := {
+	"o": Color("#221f19"),
+	"#": Color("#ce9f4a"),
+	"h": Color("#f5e5c3"),
+	"s": Color("#8d5615"),
+}
+const LIFE_FLAG_DOWN := [
+	"......oo..",
+	"......o#o.",
+	"......o.#o",
+	"......o..o",
+	"......o...",
+]
+const LIFE_FLAG_UP := [
+	"......ooo.",
+	"......o##o",
+	"......o..o",
+	"......o...",
+	"......o...",
+]
+const LIFE_STEM_AND_HEAD := [
+	"......o...",
+	"......o...",
+	"......o...",
+	"......o...",
+	"..ooooo...",
+	".o#hh#o...",
+	"o#h###o...",
+	"o####so...",
+	".ossso....",
+	"..ooo.....",
+]
+## Each frame's flag and how far the note has risen (whole pixels): it lifts
+## as the flag flicks up and settles back, a breath rather than a dance.
+const LIFE_NOTE_FRAMES := [
+	[false, 0], [false, 1], [true, 1], [true, 1], [true, 0], [false, 0],
+]
+
+func _draw_life_note() -> void:
+	var image := Image.create(LIFE_NOTE_SIZE.x * LIFE_NOTE_FRAMES.size(), LIFE_NOTE_SIZE.y, false, Image.FORMAT_RGBA8)
+	for i: int in LIFE_NOTE_FRAMES.size():
+		var frame: Array = LIFE_NOTE_FRAMES[i]
+		var rows: Array = (LIFE_FLAG_UP if frame[0] else LIFE_FLAG_DOWN) + LIFE_STEM_AND_HEAD
+		var top: int = LIFE_NOTE_SIZE.y - rows.size() - int(frame[1])
+		for y: int in rows.size():
+			var row: String = rows[y]
+			for x: int in row.length():
+				if LIFE_NOTE_TONES.has(row[x]):
+					image.set_pixel(i * LIFE_NOTE_SIZE.x + 1 + x, top + y, LIFE_NOTE_TONES[row[x]])
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(LIFE_NOTE.get_base_dir()))
+	image.save_png(ProjectSettings.globalize_path(LIFE_NOTE))

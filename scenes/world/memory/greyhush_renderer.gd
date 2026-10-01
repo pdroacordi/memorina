@@ -261,6 +261,10 @@ func _push_atmosphere() -> void:
 	# they are read by sprites this node never meets.
 	RenderingServer.global_shader_parameter_set(&"greyhush_haze_color", Vector3(haze_color.r, haze_color.g, haze_color.b))
 	RenderingServer.global_shader_parameter_set(&"greyhush_distance_fade", distance_fade)
+	# The life HUD greys its notes with the same faded print, so one knob rules
+	# both the world's forgetting and the hero's.
+	RenderingServer.global_shader_parameter_set(&"greyhush_black_lift", black_lift)
+	RenderingServer.global_shader_parameter_set(&"greyhush_black_lift_color", Vector3(black_lift_color.r, black_lift_color.g, black_lift_color.b))
 	_set_param("edge_reroll_period", edge_reroll_period)
 	_set_param("ring_width", ring_width)
 	_set_param("ring_strength", ring_strength)

@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/life_hud/life_note.gd" id="1_note"]
+[ext_resource type="Shader" path="res://scenes/ui/life_hud/life_note.gdshader" id="2_shader"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/life/life_note.png" id="3_tex"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_note"]
+resource_local_to_scene = true
+shader = ExtResource("2_shader")
+shader_parameter/memory = 1.0
+
+[node name="LifeNote" type="Control"]
+custom_minimum_size = Vector2(12, 16)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 12.0
+offset_bottom = 16.0
+mouse_filter = 2
+script = ExtResource("1_note")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+material = SubResource("ShaderMaterial_note")
+texture = ExtResource("3_tex")
+centered = false
+hframes = 6

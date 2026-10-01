@@ -27,6 +27,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice.tscn" id="34_trials_solstice"]
 [ext_resource type="Script" path="res://scenes/world/debug/debug_trials.gd" id="34_teleport"]
 [ext_resource type="Script" path="res://scenes/world/environment/wind/airflow.gd" id="35_airflow"]
+[ext_resource type="PackedScene" path="res://scenes/ui/life_hud/life_hud.tscn" id="36_life"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -144,7 +145,10 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 script = ExtResource("6_sarsd")
 
+[node name="LifeHud" parent="CanvasLayer" instance=ExtResource("36_life")]
+
 [connection signal="call_answered" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_answered"]
+[connection signal="health_changed" from="World/Player" to="CanvasLayer/LifeHud" method="show_health"]
 [connection signal="call_closed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_closed"]
 [connection signal="call_closed" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_closed"]
 [connection signal="call_note_sounded" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_note_sounded"]
