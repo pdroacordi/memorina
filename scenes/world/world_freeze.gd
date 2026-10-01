@@ -28,6 +28,13 @@ var _slowed: bool = false
 var _stopping: bool = false
 var _ramp: Tween
 
+## A new world starts on a running clock. Both live OUTSIDE the scene, so a
+## world reloaded after a death would otherwise inherit whatever the old one
+## was doing - a recall's slow, or a hit-stop whose await died with it.
+func _ready() -> void:
+	Engine.time_scale = 1.0
+	get_tree().paused = false
+
 func freeze() -> void:
 	get_tree().paused = true
 

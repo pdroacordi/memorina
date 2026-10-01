@@ -12,6 +12,8 @@ const MAX_RESIDENT_ROOMS := 2
 ## Seconds Ivo is seen sinking before the screen starts to fade: the fall
 ## gets its own moment instead of vanishing into the dark on contact.
 @export var hazard_sink_hold: float = 0.25
+## Seconds the body lies still after its death clip before the screen fades.
+@export var death_hold: float = 0.6
 
 @onready var _fade   : Fade   = %Fade
 @onready var _camera : GameCamera = %Camera2D
@@ -24,6 +26,9 @@ var _is_transitioning: bool      = false
 ## the screen, and an older beat that wakes up finds it is not the latest and
 ## stops (Fade.faded resumes it when the newer fade lands).
 var _hazard_beat     : int       = 0
+## Ivo is dead and the world is on its way back to the last bench. Nothing
+## else may take the screen: a corpse can fall across a room boundary.
+var _dying           : bool      = false
 
 ## Most-recently-used first. A room only ever leaves this list via eviction
 ## (_touch_resident below), never just by being left — that's the whole
@@ -35,6 +40,7 @@ var _resident_rooms: Array[Room] = []
 func _ready() -> void:
 	_camera.follow(_player)
 	_player.fell_into_hazard.connect(_on_player_fell_into_hazard)
+	_player.died.connect(_on_player_died)
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
 		room.room_entered.connect(_on_player_entered_room)
 		var region := room.get_region()
@@ -42,7 +48,7 @@ func _ready() -> void:
 			region.memory_changed.connect(_on_region_memory_changed.bind(region))
 
 func _on_player_entered_room(room: Room) -> void:
-	if room == _current_room or _is_transitioning:
+	if room == _current_room or _is_transitioning or _dying:
 		return
 	_is_transitioning = true
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
@@ -91,6 +97,50 @@ func _on_player_fell_into_hazard() -> void:
 			_enter_room(room)
 		_camera.snap()
 	await _fade.to_clear()
+
+## Death returns Ivo to the last bench and takes back everything gained since
+## (the user's decisions, 2026-10-01). The body is seen to fall and lie still,
+## the screen goes dark, the death is written onto the bench's save - its mark
+## outlives the rewind - and the world is built again from that save, so every
+## system that reads it at _ready comes back as the bench left it.
+##
+## The save is rewound only behind the black: the corpse's world must not
+## change under the death clip.
+func _on_player_died() -> void:
+	assert(not get_tree().paused, "Nothing deals damage while the world is paused")
+	_dying = true
+	# A hazard beat still running stands down at its next check.
+	_hazard_beat += 1
+	var region := _current_room.get_region() if _current_room != null else null
+	var region_key := SceneKey.of(region) if region != null else ""
+	var point := region.to_local(_player.global_position) if region != null else Vector2.ZERO
+	if not _player.is_death_shown():
+		await _player.death_shown
+	await get_tree().create_timer(death_hold, false).timeout
+	await _fade.to_black()
+	if region != null:
+		SaveSystem.record_death(region_key, point)
+	else:
+		SaveSystem.rewind()
+	_reload_world.call_deferred()
+
+## Swaps this world for a fresh instance of itself. Not reload_current_scene():
+## under the playtest harness the current scene is the RUNNER, which would
+## restart its timeline. Removed before it is freed, so its sources, shelters
+## and groups leave before the new world's join (a queue_free()d node keeps
+## its name and its groups until the frame ends).
+func _reload_world() -> void:
+	var tree := get_tree()
+	var parent := get_parent()
+	var index := get_index()
+	var was_current := tree.current_scene == self
+	var fresh := (load(scene_file_path) as PackedScene).instantiate()
+	parent.remove_child(self)
+	queue_free()
+	parent.add_child(fresh)
+	parent.move_child(fresh, index)
+	if was_current:
+		tree.current_scene = fresh
 
 func _room_at(point: Vector2) -> Room:
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):

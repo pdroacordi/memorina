@@ -50,6 +50,11 @@ func rest_at(bench: StringName, room_key: String) -> void:
 func record_death(region_key: String, point: Vector2) -> void:
 	_write(_ledger.record_death(region_key, point))
 
+## A death with nowhere to leave its mark (outside any region): the live save
+## goes back to the last bench, and nothing is written.
+func rewind() -> void:
+	_ledger.rewind()
+
 ## Commits the live save as if rested on, without changing the bench. Setup
 ## for a playtest, whose death should rewind to its own start.
 func commit() -> void:

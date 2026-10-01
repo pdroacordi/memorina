@@ -1,0 +1,22 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 16.0,
+ "player_position": [10, -60],
+ "steps": [
+  {"t": 1.5, "screenshot": "00_bank_full_life"},
+  {"t": 2.0, "action": "move_right", "pressed": true},
+  {"t": 3.2, "action": "move_right", "pressed": false},
+  {"t": 4.6, "screenshot": "01_after_first_fall"},
+  {"t": 5.0, "action": "move_right", "pressed": true},
+  {"t": 6.2, "action": "move_right", "pressed": false},
+  {"t": 7.6, "screenshot": "02_after_second_fall"},
+  {"t": 8.0, "action": "move_right", "pressed": true},
+  {"t": 9.2, "action": "move_right", "pressed": false},
+  {"t": 9.4, "screenshot": "03_dying"},
+  {"t": 10.0, "screenshot": "04_dead"},
+  {"t": 10.8, "screenshot": "05_fading"},
+  {"t": 11.6, "screenshot": "06_black"},
+  {"t": 12.6, "screenshot": "07_back"},
+  {"t": 14.0, "screenshot": "08_back_settled"}
+ ]
+}

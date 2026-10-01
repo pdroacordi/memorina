@@ -61,6 +61,9 @@ signal fell_into_hazard
 ## His life, whenever it changes and once at the start, so the HUD keeps
 ## listening to one node rather than reaching into his Health.
 signal health_changed(current: int, max_hp: int)
+## The death clip has played out. The composition root waits on this before
+## the screen goes dark, so the fall is seen, not cut.
+signal death_shown
 
 const GROUP := "player"
 
@@ -188,6 +191,8 @@ var _pending_recall_left: float = 0.0
 var _pending_recall_source: Node2D
 ## Water has him: no control until respawn() puts him back on firm ground.
 var _sinking: bool = false
+## death_shown has been emitted for this death.
+var _death_shown: bool = false
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -263,6 +268,9 @@ func _process_motion(delta: float) -> void:
 	if is_dead():
 		# A corpse still falls and stops sliding; nothing else.
 		_knockback_motion(delta)
+		if not _death_shown and _player_resolver.is_death_finished():
+			_death_shown = true
+			death_shown.emit()
 		return
 	var on_floor := is_on_floor()
 	# Ticked while sinking too: a press made under water must expire there,
@@ -908,6 +916,10 @@ func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
 ## Whether the water has him (from the fall until the respawn).
 func is_sinking() -> bool:
 	return _sinking
+
+## Whether the death clip has played out (death_shown has fired).
+func is_death_shown() -> bool:
+	return _death_shown
 
 func receive_hazard(hazard: HazardZone) -> void:
 	if is_dead() or _sinking:
