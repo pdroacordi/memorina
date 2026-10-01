@@ -8,7 +8,9 @@ class_name RegionMemory extends Node2D
 ## point: MemoryField.sample() skips a source that is not visible in the tree
 ## and Room.deactivate() hides a room's contents, so a well authored inside a
 ## room can only ever be felt from inside that room - and a region is very
-## often more than one room. Death marks will hang here too.
+## often more than one room. Death marks hang here too, for the same reason,
+## under their own DeathMarks node: they are not wells, and a restoration that
+## fills the wells back in never touches them - only erase_marks() does.
 ##
 ## It never reads SaveSystem. Whether this region's guardian has been restored
 ## is the Region's judgement, pushed in through restore().
@@ -23,10 +25,14 @@ signal changed(level: float)
 ## Seconds the wells take to fill in and the level to climb to 1.0 once the
 ## guardian is restored - the first act of the lesson.
 @export var lift_time: float = 6.0
+## How the player's deaths here become marks.
+@export var death_mark_stats: DeathMarkStats = preload("res://resources/memory/death_mark_stats.tres")
 
 var _level: float = 1.0
 var _wells: Array[MemorySource] = []
 var _tween: Tween
+var _marks: Node2D
+var _marks_tween: Tween
 
 
 func _ready() -> void:
@@ -34,6 +40,9 @@ func _ready() -> void:
 	for child: Node in get_children():
 		if child is MemorySource:
 			_wells.append(child as MemorySource)
+	_marks = Node2D.new()
+	_marks.name = "DeathMarks"
+	add_child(_marks)
 
 ## The region's memory as it stands right now.
 func current() -> float:
@@ -59,6 +68,53 @@ func restore(seconds: float) -> void:
 	for well: MemorySource in _wells:
 		_tween.tween_property(well, "strength", 0.0, seconds)
 	_tween.chain().tween_callback(_hide_wells)
+
+## Mounts one mark per cluster of the deaths the save holds for this region,
+## replacing whatever marks were there. `points` are local to the REGION (this
+## node's parent), as the composition root recorded them.
+func mark_deaths(points: PackedVector2Array) -> void:
+	_clear_marks()
+	if death_mark_stats == null:
+		return
+	var stats := death_mark_stats
+	for cluster: Dictionary in DeathMarkClusters.cluster(points, stats.merge_distance, stats.max_marks):
+		var deaths: int = cluster["deaths"]
+		var mark := MemorySource.new()
+		mark.shape = MemoryFieldMath.Shape.CIRCLE
+		mark.radius = stats.radius_for(deaths)
+		mark.feather = stats.feather
+		mark.strength = -stats.strength_for(deaths)
+		mark.show_in_editor = false
+		_marks.add_child(mark)
+		mark.global_position = get_parent().to_global(cluster["centre"])
+
+## The marks here, as they stand.
+func marks() -> Array[MemorySource]:
+	var result: Array[MemorySource] = []
+	for child: Node in _marks.get_children():
+		result.append(child as MemorySource)
+	return result
+
+## The guardian is restored and the place forgets the player's deaths in it
+## (the user's decision, 2026-10-01): the marks thin out across `seconds`,
+## alongside the lift. At or below 0 they are simply gone.
+func erase_marks(seconds: float) -> void:
+	if _marks_tween != null:
+		_marks_tween.kill()
+	if seconds <= 0.0 or _marks.get_child_count() == 0:
+		_clear_marks()
+		return
+	_marks_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_parallel(true)
+	for mark: MemorySource in marks():
+		_marks_tween.tween_property(mark, "strength", 0.0, seconds)
+	_marks_tween.chain().tween_callback(_clear_marks)
+
+# remove_child before freeing: a source unregisters from the field on leaving
+# the tree, and a mark left registered until the frame ends would still be drawn.
+func _clear_marks() -> void:
+	for mark: Node in _marks.get_children():
+		_marks.remove_child(mark)
+		mark.queue_free()
 
 # tween_method rather than tween_property so the change is announced as it
 # happens; a property tween would leave every listener polling for it.

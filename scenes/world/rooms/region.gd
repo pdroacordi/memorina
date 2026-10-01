@@ -31,6 +31,9 @@ signal memory_changed(level: float)
 ## whether or not the arena's room is still resident.
 func _ready() -> void:
 	_memory.changed.connect(memory_changed.emit)
+	# Mounted whether or not the guardian is restored: a region loaded whole
+	# only holds deaths that happened after its restoration.
+	_memory.mark_deaths(SaveSystem.deaths_in(SceneKey.of(self)))
 	if not has_guardian:
 		return
 	if SaveSystem.is_guardian_restored(guardian):
@@ -47,3 +50,8 @@ func _on_guardian_restored(restored: Enums.Guardian) -> void:
 	if restored != guardian:
 		return
 	_memory.restore(_memory.lift_time)
+	# The memory that comes back takes the player's forgetting with it (the
+	# user's decision, 2026-10-01). On the live save, like the restoration: a
+	# death before the next bench brings both back.
+	SaveSystem.clear_deaths(SceneKey.of(self))
+	_memory.erase_marks(_memory.lift_time)
