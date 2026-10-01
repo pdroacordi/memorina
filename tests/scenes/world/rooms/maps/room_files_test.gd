@@ -26,5 +26,29 @@ func test_every_room_file_is_valid() -> void:
 		problems.append_array(result.errors)
 	assert_array(Array(problems)).is_empty()
 
+## The save remembers a bench and a defeated creature by an authored id, so
+## an id two maps share is two places the save cannot tell apart.
+func test_save_ids_and_bench_ids_are_unique_across_every_map() -> void:
+	var legend := RoomLegend.load_default()
+	var seen := {}
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var result := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
+		for placed: Dictionary in result.map.entities:
+			for key: String in ["bench_id", "save_id"]:
+				if not placed.params.has(key):
+					continue
+				var id := "%s=%s" % [key, placed.params[key]]
+				if seen.has(id):
+					problems.append("%s in %s and %s" % [id, seen[id], path])
+				seen[id] = path
+	assert_array(Array(problems)).is_empty()
+
+func test_a_placement_missing_a_required_param_is_refused() -> void:
+	var text := "[room]\norigin = 0, 0\n\n[grid]\n..R..\n#####\n"
+	var result := RoomMapValidator.validate(text, RoomLegend.load_default(), "inline.room")
+	assert_bool(result.ok()).is_false()
+	assert_str("\n".join(result.errors)).contains("needs a 'bench_id' param")
+
 func test_the_legend_is_sound() -> void:
 	assert_array(Array(RoomLegend.load_default().problems())).is_empty()

@@ -126,6 +126,7 @@ locale/translations=PackedStringArray("res://i18n/translations.en.translation", 
 2d_physics/layer_3="Climbable"
 2d_physics/layer_4="Shell"
 2d_physics/layer_5="Invisible Walls"
+2d_physics/layer_6="Interactable"
 2d_physics/layer_9="Player"
 2d_physics/layer_10="Player Hurtbox"
 2d_physics/layer_11="Hazard"

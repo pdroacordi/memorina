@@ -104,7 +104,7 @@ else in the code knows what a character means.
 | `~` | `[water]` | water | - | Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand. |
 | `w` | `[water]` | water | - | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides. |
 | `f` | `[water]` | water | - | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
-| `B` | `[grid]` | entity | - | Brute Shadow: a common enemy that wanders, chases and swings. Give it a unique save_id so its defeat is remembered. |
+| `B` | `[grid]` | entity | - | Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death. |
 | `W` | `[grid]` | entity | - | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
 | `P` | `[grid]` | entity | - | A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load. |
 | `G` | `[grid]` | entity | - | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds. Any Mechanism: travel, move_time, start_moved. |
@@ -115,6 +115,7 @@ else in the code knows what a character means.
 | `D` | `[grid]` | entity | - | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
 | `r` | `[water]` | water | - | A basin Chuva fills: paint it up to where the rain brings the water. It is dry until it rains, rises while a Chuva pulse covers it, sinks back to dry when the last pulse leaves, and freezes like f (Chuva then Congelar: ice where there was no water). |
 | `O` | `[grid]` | entity | - | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
+| `R` | `[grid]` | entity | - | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -142,15 +143,22 @@ with `.` or `/` is used as written.
 A param the entity does not have, or a value its type cannot take, fails the
 import (and the room-files test) instead of silently doing nothing.
 
+**Required params.** Some entities are remembered by the save under an
+authored id - a bench by `bench_id`, a creature by `save_id` - and a scene
+default would quietly give every placement the same one. The legend lists
+these as the entry's `required_params` (marked **required** in the tables
+below): a placement without one fails the import, and the room-files test
+also fails when two maps use the same id.
+
 <!-- generated:entities -->
 #### `B` - BruteShadow
 
-Scene `res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn`, anchored at its cell's bottom centre (standing on the cell below). Brute Shadow: a common enemy that wanders, chases and swings. Give it a unique save_id so its defeat is remembered.
+Scene `res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn`, anchored at its cell's bottom centre (standing on the cell below). Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death.
 
 | Param | Type | Default |
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
-| `save_id` | String | `"downtown_brute_shadow"` |
+| `save_id` | String | **required** - unique across every map |
 | `terminal_velocity` | float | `500.0` |
 | `gravity_scale` | float | `1.0` |
 | `knockback_time` | float | `1.0` |
@@ -260,6 +268,16 @@ Scene `res://scenes/world/interactables/floater/floater.tscn`, anchored at its c
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `draft` | float | `4.0` |
+
+#### `R` - Bench
+
+Scene `res://scenes/world/interactables/bench/bench.tscn`, anchored at its cell's bottom centre (standing on the cell below). A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `bench_id` | StringName | **required** - unique across every map |
+| `facing` | int | `1` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach
@@ -318,3 +336,4 @@ has a reachability test that checks both halves.
 | `id 'X' is used by two entities` | ids name nodes; they must be unique in the room |
 | `'Node' has no param 'X'` | the entity's root has no such exported property |
 | `cannot use V as T` | the value does not convert to the property's type |
+| `needs a 'X' param` | the legend requires this param on every placement of the entity (an id the save remembers it by) |

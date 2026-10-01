@@ -69,7 +69,9 @@ static func entities_section(legend: RoomLegend) -> String:
 			var usage: int = property.usage
 			if usage & PROPERTY_USAGE_SCRIPT_VARIABLE == 0 or usage & PROPERTY_USAGE_EDITOR == 0:
 				continue
-			lines.append("| `%s` | %s | `%s` |" % [property.name, _type_name(property), var_to_str(node.get(property.name)).replace("\n", " ")])
+			var default := "**required** - unique across every map" if property.name in entry.required_params \
+				else "`%s`" % var_to_str(node.get(property.name)).replace("\n", " ")
+			lines.append("| `%s` | %s | %s |" % [property.name, _type_name(property), default])
 		lines.append("")
 		node.free()
 	return "\n".join(lines)

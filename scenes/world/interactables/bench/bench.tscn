@@ -1,0 +1,36 @@
+[gd_scene load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scenes/world/interactables/bench/bench.gd" id="1_bench"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/bench/bench.png" id="2_tex"]
+[ext_resource type="Script" path="res://scenes/world/interactables/bench/seat.gd" id="3_seat"]
+[ext_resource type="Script" path="res://scenes/world/environment/wind/disc_shelter.gd" id="4_shelter"]
+[ext_resource type="PackedScene" path="res://scenes/ui/key_glyph/key_glyph.tscn" id="5_glyph"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_seat"]
+size = Vector2(48, 40)
+
+[node name="Bench" type="Node2D"]
+script = ExtResource("1_bench")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -16)
+texture = ExtResource("2_tex")
+
+[node name="Seat" type="Area2D" parent="."]
+script = ExtResource("3_seat")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Seat"]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_seat")
+
+[node name="Shelter" type="Node2D" parent="."]
+position = Vector2(0, -24)
+script = ExtResource("4_shelter")
+radius = 96.0
+
+[node name="Prompt" parent="." instance=ExtResource("5_glyph")]
+visible = false
+offset_left = -16.0
+offset_top = -96.0
+offset_right = 16.0
+offset_bottom = -64.0

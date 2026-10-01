@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/drawbridge/drawbridge.tscn" id="i16_bridge"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/rain_basin/rain_basin_layer.tscn" id="i17_rain"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/floater/floater.tscn" id="i18_floater"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/bench.tscn" id="i19_bench"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -86,7 +87,8 @@ kind = 3
 ground = 0
 scene = ExtResource("6_brute")
 anchor = 0
-description = "Brute Shadow: a common enemy that wanders, chases and swings. Give it a unique save_id so its defeat is remembered."
+required_params = PackedStringArray("save_id")
+description = "Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death."
 
 [sub_resource type="Resource" id="wind"]
 script = ExtResource("2_entry")
@@ -160,6 +162,16 @@ scene = ExtResource("i16_bridge")
 anchor = 0
 description = "A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up."
 
+[sub_resource type="Resource" id="bench"]
+script = ExtResource("2_entry")
+symbol = "R"
+kind = 3
+ground = 0
+scene = ExtResource("i19_bench")
+anchor = 0
+required_params = PackedStringArray("bench_id")
+description = "A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map."
+
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("floater")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("floater"), SubResource("bench")])

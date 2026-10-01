@@ -18,6 +18,9 @@ static func validate(text: String, legend: RoomLegend, source: String) -> RoomMa
 			ids[str(placed.params[EntityParams.ID])] = true
 	for placed: Dictionary in result.map.entities:
 		var entry := legend.entry(placed.symbol)
+		for required: String in entry.required_params:
+			if not placed.params.has(required):
+				result.errors.append("%s: entity '%s' at %s: needs a '%s' param" % [source, placed.symbol, placed.cell, required])
 		var node := entry.scene.instantiate()
 		for problem: String in EntityParams.check(node, placed.params):
 			result.errors.append("%s: entity '%s' at %s: %s" % [source, placed.symbol, placed.cell, problem])

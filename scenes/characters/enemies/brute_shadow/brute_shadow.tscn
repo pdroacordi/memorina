@@ -533,7 +533,6 @@ radius = 200.0
 [node name="BruteShadow" type="CharacterBody2D" unique_id=1573815107]
 collision_layer = 65536
 script = ExtResource("1_hrlur")
-save_id = "downtown_brute_shadow"
 knockback_time = 1.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1693411011]
