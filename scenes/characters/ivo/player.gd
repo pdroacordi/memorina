@@ -290,6 +290,9 @@ func _process_motion(delta: float) -> void:
 	# not fire on the first frame back on the bank.
 	_tick_input_timers(delta, on_floor)
 	if _sinking:
+		# A down press under water must not sit him on whatever bench the
+		# respawn puts him beside.
+		_sit_requested = false
 		_sink_motion(delta)
 		return
 	_try_sit(on_floor)
@@ -499,15 +502,15 @@ func _try_climb() -> void:
 		_climb.grab()
 		_wall_mobility.stop()
 
-# No gravity and no wind: he holds on. Climbing out of the top hops him onto
-# the ledge; anything else that ends it lets him fall.
-## Seated: nothing moves him - no gravity, no wind (a bench is shelter anyway).
+# Seated: nothing moves him - no gravity, no wind (a bench is shelter anyway).
 func _sit_motion(_delta: float) -> void:
 	velocity = Vector2.ZERO
 
 # Down pressed sits him on a bench in reach - the body's judgement, like every
 # other gate: on the floor with no direction held, and only when nothing else
-# has him (a roll, a swing, a flinch, a climb, the instrument, a guardian's call).
+# has him (a roll, a swing, a flinch, a climb, the instrument) and no fight is
+# on - a guardian's fight around him, its call, or a recall it forced. A rest
+# is never taken in the middle of a fight.
 func _try_sit(on_floor: bool) -> void:
 	if not _sit_requested:
 		return
@@ -516,7 +519,11 @@ func _try_sit(on_floor: bool) -> void:
 		return
 	if is_rolling() or is_attacking() or is_in_knockback() or is_climbing() or is_memorina_drawn():
 		return
-	if _staged_caller != null:
+	if _staged_caller != null or _memorina.call_song != null:
+		return
+	if _recall.is_armed() or _pending_recall != null:
+		return
+	if Guardian.fight_at(get_tree(), global_position):
 		return
 	var seat := _sit.reachable()
 	if seat == null:
@@ -538,6 +545,8 @@ func _unless_seated(action: Callable) -> void:
 		return
 	action.call()
 
+# No gravity and no wind: he holds on. Climbing out of the top hops him onto
+# the ledge; anything else that ends it lets him fall.
 func _climb_motion(delta: float) -> void:
 	match _climb.update(delta, Vector2(move_axis(), _input.look_direction)):
 		ClimbComponent.Exit.OVER_THE_TOP:
@@ -707,6 +716,8 @@ func _on_debug_learn_song_pressed() -> void:
 ## `caller_height` is how tall the body on stage is, in world pixels; the
 ## sheet needs it to know whether it can hang above the pair.
 func stage_call(caller: Node2D, caller_height: float = 0.0) -> void:
+	# A call is answered standing: a first draw press must not only get him up.
+	_stand_up()
 	_staged_caller = caller
 	_staged_height = caller_height
 	call_staged.emit(caller)
@@ -718,6 +729,7 @@ func unstage_call() -> void:
 ## A lucidity window opened: from now until close_call(), the instrument
 ## listens for `song` alone - and stays in until the phrase has been heard.
 func open_call(song: Song, revealed: int, cure_done: int, cure_total: int) -> void:
+	_stand_up()
 	if _memorina.is_drawn():
 		_memorina.sheathe()
 	_memorina.call_song = song
@@ -780,6 +792,9 @@ func close_call(success: bool) -> void:
 func begin_recall(stats: AbilityRecallStats, attack_duration: float = 0.0, source: Node2D = null) -> void:
 	if _recall.is_armed() or _pending_recall != null:
 		return
+	# A blow is coming: he is on his feet for it, so the press that remembers
+	# the skill also performs it instead of only standing him up.
+	_stand_up()
 	_pending_recall = stats
 	_pending_recall_source = source
 	_pending_recall_left = maxf(attack_duration, 0.1)
@@ -1015,6 +1030,7 @@ func receive_hazard(hazard: HazardZone) -> void:
 ## still and briefly untouchable. Called behind a fade; nothing here eases.
 func respawn() -> void:
 	assert(not is_dead(), "A corpse is not respawned")
+	_sit_requested = false
 	global_position = _safe_ground.last_safe_position()
 	velocity = Vector2.ZERO
 	_sinking = false

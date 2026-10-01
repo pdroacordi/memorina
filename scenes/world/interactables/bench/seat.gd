@@ -31,13 +31,6 @@ func _init() -> void:
 	monitorable = true
 	monitoring = true
 
-func _enter_tree() -> void:
-	add_to_group(GROUP)
-
-func _ready() -> void:
-	body_entered.connect(_on_body_entered)
-	body_exited.connect(_on_body_exited)
-
 ## The seat of the bench with this id, if its room is loaded.
 static func find(tree: SceneTree, id: StringName) -> Seat:
 	for node: Node in tree.get_nodes_in_group(GROUP):
@@ -45,6 +38,13 @@ static func find(tree: SceneTree, id: StringName) -> Seat:
 		if seat != null and seat.bench_id == id:
 			return seat
 	return null
+
+func _enter_tree() -> void:
+	add_to_group(GROUP)
+
+func _ready() -> void:
+	body_entered.connect(_on_body_entered)
+	body_exited.connect(_on_body_exited)
 
 func set_occupied(occupied: bool) -> void:
 	if occupied == _occupied:

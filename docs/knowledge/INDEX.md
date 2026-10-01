@@ -35,6 +35,8 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Bugs
 
+- [sitting-is-not-gated-on-a-guardian-fight](bugs/sitting-is-not-gated-on-a-guardian-fight.md) — `_try_sit` only refuses a STAGED call, and the Frost Edge bench is inside the lighthouse `Arena`, so Ivo can heal, commit the save and wake rooms mid-fight; seated, `_process_motion` returns above `_recall.tick`/`_tick_pending_recall`, so a recall's cue and window stall and a roll press unlocks the skill without the dodge. Medium, FIXED: `_try_sit` also refuses a set call, a pending/armed recall and `Guardian.fight_at` (pulled, not a pushed flag that would go stale); a recall or call stands him up.
+- [a-down-press-made-while-sinking-sits-ivo-on-respawn](bugs/a-down-press-made-while-sinking-sits-ivo-on-respawn.md) — `_sit_requested` is a flag with no timer, cleared only by `_try_sit`, which the sink branch skips: a down press under water sits (rests, saves) him on respawn by a bench. Latent, low, FIXED: the sink branch and `respawn()` clear it.
 - [temporary-song-floors-are-remembered-as-safe-ground](bugs/temporary-song-floors-are-remembered-as-safe-ground.md) — only `IceCollider` is `unsafe_ground`; the Redoma ring, a root bridge and moving planks/loads are recorded as firm, so a fall into water respawns Ivo in mid-air over it and loops him to death. High, fixed 2026-09-30.
 - [water-that-returns-leaves-its-dry-floor-as-safe-ground](bugs/water-that-returns-leaves-its-dry-floor-as-safe-ground.md) — a well floor dried by Redoma or a dry Chuva basin has its hazard off, so it is recorded as safe; when the water returns Ivo respawns inside the hazard he never left and stands under water. High, fixed 2026-09-30.
 - [solstice-cannot-stretch-a-root-span-it-was-never-built](bugs/solstice-cannot-stretch-a-root-span-it-was-never-built.md) — `RootGrower` filters spans once by the unstretched `max_radius`, so Solstice never lets a root reach farther. Medium, fixed 2026-09-30.
@@ -69,6 +71,8 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Gotchas
 
+- [first-process-frame-can-precede-the-first-deferred-flush](gotchas/first-process-frame-can-precede-the-first-deferred-flush.md) — at boot `process_frame` is emitted before the idle flush and the first iteration may run no physics step, so `call_deferred` + one `await process_frame` in the main scene's `_ready` is not guaranteed (measured 4/5 headless in a minimal project); `Game._arrive` now awaits the room contents' `ready` instead (2026-10-01).
+- [queue-free-deferred-add-still-enters-the-tree](gotchas/queue-free-deferred-add-still-enters-the-tree.md) — the deferred flush runs before the delete queue, so a node `queue_free()`d while its `call_deferred("add_child")` is pending still enters the tree (ready, groups) for the frame; `Room` now defers its own `_add_contents`, which skips contents evicted meanwhile (2026-10-01).
 - [sync-to-physics-lands-a-move-next-step](gotchas/sync-to-physics-lands-a-move-next-step.md) — a moving platform's set transform reads back stale until the next physics step; keep the target as state and test that.
 - [body-state-cannot-change-in-the-physics-flush](gotchas/body-state-cannot-change-in-the-physics-flush.md) — `freeze`/`disabled` set from an area signal is refused; defer it.
 - [playtest-clock-pauses-with-the-tree](gotchas/playtest-clock-pauses-with-the-tree.md) — a timeline's `t` is unpaused time; a performance's frozen seconds do not count.

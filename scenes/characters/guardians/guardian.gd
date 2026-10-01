@@ -27,6 +27,8 @@ signal leapt(position: Vector2)
 signal landed(position: Vector2, impact_speed: float)
 
 ## The failure's tremble: hard and brief, then the colour is gone.
+## Every guardian in the world, for whoever must ask whether a fight is on.
+const GROUP := &"guardians"
 const FAIL_BURST_TIME := 0.3
 const FAIL_BURST_HZ := 12.0
 ## How much of the way to full the pressure's hits bring the colour.
@@ -130,6 +132,17 @@ var _sprite_rest: Vector2 = Vector2.ZERO
 @onready var _guardian_resolver : GuardianAnimationResolver = $AnimationResolver
 
 
+## Whether any guardian's fight is on at `point`.
+static func fight_at(tree: SceneTree, point: Vector2) -> bool:
+	for node: Node in tree.get_nodes_in_group(GROUP):
+		var guardian := node as Guardian
+		if guardian != null and guardian.is_fighting_at(point):
+			return true
+	return false
+
+func _enter_tree() -> void:
+	add_to_group(GROUP)
+
 func _ready() -> void:
 	super()
 	assert(stats != null and stats.song != null, "%s has no GuardianStats with a song." % name)
@@ -219,6 +232,15 @@ func _notification(what: int) -> void:
 
 func phase() -> GuardianFight.Phase:
 	return _fight.phase()
+
+## Whether this guardian's fight is on at `point`: woken and not yet restored,
+## and `point` inside its arena. A bench asks so a rest is never taken in the
+## middle of a fight; before the guardian wakes, and after a death rewinds it
+## to sleep, the same bench is a rest again.
+func is_fighting_at(point: Vector2) -> bool:
+	if _fight == null or phase() in [GuardianFight.Phase.DORMANT, GuardianFight.Phase.RESTORED]:
+		return false
+	return _arena == null or _arena.bounds().has_point(point)
 
 ## How tall the body standing there is, in world pixels: the stage asks, so
 ## a sheet hung above the pair is never hung on a golem's head.

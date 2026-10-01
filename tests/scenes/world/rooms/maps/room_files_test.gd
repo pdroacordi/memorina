@@ -50,5 +50,10 @@ func test_a_placement_missing_a_required_param_is_refused() -> void:
 	assert_bool(result.ok()).is_false()
 	assert_str("\n".join(result.errors)).contains("needs a 'bench_id' param")
 
+func test_an_empty_required_param_is_refused() -> void:
+	var text := "[room]\norigin = 0, 0\n\n[grid]\n..R..\n#####\n\n[entities]\n2,0 = {\"bench_id\": \"\"}\n"
+	var result := RoomMapValidator.validate(text, RoomLegend.load_default(), "inline.room")
+	assert_str("\n".join(result.errors)).contains("needs a 'bench_id' param")
+
 func test_the_legend_is_sound() -> void:
 	assert_array(Array(RoomLegend.load_default().problems())).is_empty()

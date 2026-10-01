@@ -103,10 +103,11 @@ func _on_player_fell_into_hazard() -> void:
 
 ## A world built from a save that names a bench - after a death, or a load -
 ## starts with Ivo seated on it, behind the black the fade starts in. The
-## bench's room is entered first and given a frame to build (Room.activate()
-## adds its contents deferred) before its seat is looked for. With no such
-## room or bench (a renamed map, a debug-only trial in a release build) he
-## comes back where the world places him, as on a new game.
+## bench's room is entered first and its contents awaited until `ready`
+## (Room.activate() adds them deferred, and the first process_frame of a boot
+## can come before the first deferred flush) before its seat is looked for.
+## With no such room or bench (a renamed map, a debug-only trial in a release
+## build) he comes back where the world places him, as on a new game.
 func _arrive() -> void:
 	var room := _room_by_key(SaveSystem.bench_room())
 	if room == null:
@@ -115,7 +116,9 @@ func _arrive() -> void:
 	_is_transitioning = true
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
 	_enter_room(room)
-	await get_tree().process_frame
+	var contents := room.contents()
+	if contents != null and not contents.is_node_ready():
+		await contents.ready
 	var seat := Seat.find(get_tree(), SaveSystem.bench_id())
 	if seat != null:
 		_player.sit(seat)

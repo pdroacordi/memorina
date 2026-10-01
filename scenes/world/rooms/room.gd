@@ -24,7 +24,7 @@ func activate() -> void:
 		evict()
 	if not _contents_node:
 		_contents_node = contents_scene.instantiate()
-		call_deferred("add_child", _contents_node)
+		_add_contents.call_deferred(_contents_node)
 	else:
 		_contents_node.process_mode = Node.PROCESS_MODE_INHERIT
 		_contents_node.show()
@@ -59,6 +59,13 @@ func evict() -> void:
 func expire() -> void:
 	_expired = true
 
+## The contents built for this room, or null before its first visit. Added to
+## the tree deferred by activate(), so whoever needs what is in them awaits
+## their `ready` - RoomMapNode builds a map's entities inside its own _ready,
+## so by then they are all there.
+func contents() -> Node2D:
+	return _contents_node
+
 ## The region this room belongs to. Rooms are always direct children of their
 ## region's composition scene - that is the middle layer of the three-level
 ## room pattern - so the parent IS the region.
@@ -72,6 +79,13 @@ func get_bounds() -> Rect2:
 	var shape: RectangleShape2D = _shape_node.shape
 	return Rect2(_shape_node.global_position - shape.size * 0.5, shape.size)
 
+
+# Deferred from activate(). Contents evicted before this ran are not added at
+# all: a deferred add_child would still put them in the tree for a frame after
+# their queue_free (docs/knowledge/gotchas/queue-free-deferred-add-still-enters-the-tree.md).
+func _add_contents(node: Node2D) -> void:
+	if node == _contents_node and is_instance_valid(node):
+		add_child(node)
 
 func _on_body_entered(_body: Node2D) -> void:
 	room_entered.emit(self)
