@@ -7,43 +7,95 @@ signal guardian_restored(guardian: Enums.Guardian)
 
 const PATH: String = "user://"
 const SAVE_FILE_NAME: String = "save.tres"
+## Debug builds keep their own save and start a fresh game every launch unless
+## given `-- --continue`: an editor run stays deterministic and never clobbers
+## a release save on the same machine.
+const DEBUG_SAVE_FILE_NAME: String = "save_debug.tres"
+const CONTINUE_ARG: String = "--continue"
 
-var player_data : PlayerData
+## The LIVE save: what the world reads and writes while it is played. Benches
+## commit it to disk; a death throws it away for the last commit (SaveLedger).
+var player_data: PlayerData:
+	get:
+		return _ledger.live
 
-## Session-only memory of enemies defeated since the game last started.
-## Deliberately NOT part of PlayerData (the save-file schema): a full
-## restart, or loading a save from a fresh launch, naturally resets it, while
-## leaving and re-entering a room within the same session does not.
-var _defeated_enemies: Dictionary = {}
+var _ledger: SaveLedger
+## Where commits are written. Empty keeps the save in memory (playtests).
+var _path: String = ""
 
 func _ready() -> void:
-	if ResourceLoader.exists(PATH + SAVE_FILE_NAME):
-		load_game()
+	if OS.is_debug_build():
+		begin(PATH + DEBUG_SAVE_FILE_NAME, not CONTINUE_ARG in OS.get_cmdline_user_args())
 	else:
-		new_game()
+		begin(PATH + SAVE_FILE_NAME, false)
+
+## Starts a session on the save at `path` (empty: in memory only), from the
+## file unless `fresh` or there is none to read.
+func begin(path: String, fresh: bool) -> void:
+	_path = path
+	var start: PlayerData = null
+	if not fresh and not path.is_empty() and ResourceLoader.exists(path):
+		start = _read(path)
+	_ledger = SaveLedger.new(start if start != null else _new_game())
+
+## Ivo rests on a bench: it is where he comes back, and the world as it stands
+## becomes the save. The defeated come back with the rest.
+func rest_at(bench: StringName, room_key: String) -> void:
+	player_data.bench_id = bench
+	player_data.bench_room = room_key
+	_write(_ledger.commit())
+
+## Ivo died at `point` (local to the region `region_key` names). The mark is
+## written onto the last bench's save, and the live save goes back to it.
+func record_death(region_key: String, point: Vector2) -> void:
+	_write(_ledger.record_death(region_key, point))
+
+## Commits the live save as if rested on, without changing the bench. Setup
+## for a playtest, whose death should rewind to its own start.
+func commit() -> void:
+	_write(_ledger.commit())
+
+func bench_id() -> StringName:
+	return player_data.bench_id
+
+func bench_room() -> String:
+	return player_data.bench_room
+
+func deaths_in(region_key: String) -> PackedVector2Array:
+	return player_data.deaths.get(region_key, PackedVector2Array())
+
+## A restored guardian's region forgets the player's deaths in it (the user's
+## decision, 2026-10-01). Live, like the restoration itself: dying before the
+## next bench brings both back.
+func clear_deaths(region_key: String) -> void:
+	player_data.deaths.erase(region_key)
 
 ## A fresh save owns nothing. Debug builds start with the sword and the
 ## instrument so a guardian can be fought from a clean launch; nothing in the
 ## world grants either yet (the mentor will hand over the Memorina).
-func new_game() -> void:
-	player_data = PlayerData.new()
+func _new_game() -> PlayerData:
+	var data := PlayerData.new()
 	if OS.is_debug_build():
-		set_item_owned(Enums.PlayerItem.SWORD, true)
-		set_item_owned(Enums.PlayerItem.MEMORINA, true)
+		data.owned_items[Enums.PlayerItem.SWORD] = true
+		data.owned_items[Enums.PlayerItem.MEMORINA] = true
+	return data
 
-func save_game() -> void:
-	var err := ResourceSaver.save(player_data, PATH + SAVE_FILE_NAME)
+# CACHE_MODE_IGNORE: the file is rewritten by every rest, and a cached copy
+# would hand back the save as it was first read.
+func _read(path: String) -> PlayerData:
+	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
+	if loaded == null:
+		push_error("Failed to load save file, falling back to a new game: %s" % path)
+		return null
+	loaded.migrate()
+	return loaded
+
+func _write(data: PlayerData) -> void:
+	if _path.is_empty():
+		return
+	var err := ResourceSaver.save(data, _path)
 	if err != OK:
 		push_error("Failed to save game: %s" % error_string(err))
-
-func load_game() -> void:
-	var loaded: Resource = ResourceLoader.load(PATH + SAVE_FILE_NAME)
-	if loaded == null or not (loaded is PlayerData):
-		push_error("Failed to load save file, falling back to a new game: %s" % (PATH + SAVE_FILE_NAME))
-		new_game()
-		return
-	player_data = loaded
-	player_data.migrate()
 
 func has_skill(skill: Enums.PlayerSkill) -> bool:
 	return player_data.unlocked_player_skills[skill]
@@ -73,8 +125,9 @@ func set_item_owned(item: Enums.PlayerItem, owned: bool) -> void:
 func is_guardian_restored(guardian: Enums.Guardian) -> bool:
 	return player_data.restored_guardians[guardian]
 
-## Permanent: a restored guardian stays lucid, and its region's memory stays at
-## 1.0, on every later visit. Same no-autosave rule as learn_song().
+## Permanent once a bench has saved it: a restored guardian stays lucid, and
+## its region's memory stays at 1.0, on every later visit. Same no-autosave
+## rule as learn_song() - only benches save (the user's decision, 2026-10-01).
 func restore_guardian(guardian: Enums.Guardian) -> void:
 	player_data.restored_guardians[guardian] = true
 	guardian_restored.emit(guardian)
@@ -88,8 +141,9 @@ func resolve_shortcut(shortcut_id: StringName) -> void:
 	if not is_shortcut_resolved(shortcut_id):
 		player_data.resolved_shortcuts.append(shortcut_id)
 
+## Enemies stay down until the next rest or death - never on disk.
 func is_enemy_defeated(save_id: String) -> bool:
-	return _defeated_enemies.has(save_id)
+	return _ledger.defeated.has(save_id)
 
 func mark_enemy_defeated(save_id: String) -> void:
-	_defeated_enemies[save_id] = true
+	_ledger.defeated[save_id] = true

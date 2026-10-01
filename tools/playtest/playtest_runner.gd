@@ -42,16 +42,22 @@ func _ready() -> void:
 	_steps = timeline.get("steps", [])
 	_max_duration = float(timeline.get("max_duration", DEFAULT_MAX_DURATION))
 
+	# A fresh game kept in memory: a run never reads or writes a save on disk,
+	# so it plays the same every time. Optional `"known_songs": [Enums.Song ids]`
+	# are taught before the world loads, so a timeline can PLAY a song without
+	# first sitting its lesson - and committed, so a death mid-run rewinds to
+	# the timeline's own start rather than to a game that never knew them.
+	SaveSystem.begin("", true)
+	for song_id: Variant in timeline.get("known_songs", []):
+		SaveSystem.learn_song(int(song_id) as Enums.Song)
+	SaveSystem.commit()
+
 	var scene_path: String = timeline.get("scene", "res://scenes/world/game.tscn")
 	var packed: PackedScene = load(scene_path)
 	assert(packed != null, "Could not load playtest scene %s" % scene_path)
 	add_child(packed.instantiate())
 	if timeline.has("player_position"):
 		_place_player(timeline["player_position"])
-	# Optional `"known_songs": [Enums.Song ids]`: taught through the save before
-	# step 0, so a timeline can PLAY a song without first sitting its lesson.
-	for song_id: Variant in timeline.get("known_songs", []):
-		SaveSystem.learn_song(int(song_id) as Enums.Song)
 
 	print("[playtest] loaded %s, %d steps, capturing to %s" % [scene_path, _steps.size(), _out_dir])
 

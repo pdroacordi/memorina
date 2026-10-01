@@ -9,6 +9,15 @@ class_name PlayerData extends Resource
 ## runs by itself. Keyed by the puzzle's authored id. A song's own effect is
 ## never here - the grey always takes that back.
 @export var resolved_shortcuts: Array[StringName] = []
+## The bench Ivo last rested on (its authored id) and the room it stands in
+## (SceneKey.of the room), where he comes back after a death or a load. Empty
+## until the first rest: he comes back where the world places him.
+@export var bench_id: StringName = &""
+@export var bench_room: String = ""
+## Where Ivo has died, per region (SceneKey.of the region), in region-local
+## points. Raw facts, never clustered here: how deaths become marks is
+## RegionMemory's tuning, and it can change without migrating a save.
+@export var deaths: Dictionary[String, PackedVector2Array] = {}
 
 func _init() -> void:
 	migrate()

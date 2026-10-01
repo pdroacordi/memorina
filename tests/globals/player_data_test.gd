@@ -48,6 +48,43 @@ func test_migrate_on_an_up_to_date_save_changes_nothing() -> void:
 	assert_int(data.learned_songs.size()).is_equal(Enums.Song.size())
 	assert_bool(data.learned_songs[Enums.Song.RAIN]).is_true()
 
+## A save written before benches and death marks existed is a file without
+## those keys: it must load, with no bench and no deaths.
+func test_a_save_from_before_benches_loads_with_no_bench_and_no_deaths() -> void:
+	var path := "user://test_old_save.tres"
+	var file := FileAccess.open(path, FileAccess.WRITE)
+	file.store_string("""[gd_resource type="Resource" script_class="PlayerData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://globals/player_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+learned_songs = Array[bool]([true])
+""")
+	file.close()
+	var data := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	assert_object(data).is_not_null()
+	data.migrate()
+	assert_bool(data.learned_songs[Enums.Song.FREEZE]).is_true()
+	assert_str(String(data.bench_id)).is_empty()
+	assert_str(data.bench_room).is_empty()
+	assert_bool(data.deaths.is_empty()).is_true()
+
+## The bench and the deaths survive the disk, typed dictionary and all.
+func test_the_bench_and_the_deaths_round_trip_through_the_file() -> void:
+	var path := "user://test_round_trip.tres"
+	var data := PlayerData.new()
+	data.bench_id = &"downtown_bench"
+	data.bench_room = "uid://room"
+	data.deaths["uid://region"] = PackedVector2Array([Vector2(12, -40), Vector2(3, 4)])
+	assert_int(ResourceSaver.save(data, path)).is_equal(OK)
+	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	assert_str(String(loaded.bench_id)).is_equal("downtown_bench")
+	assert_str(loaded.bench_room).is_equal("uid://room")
+	assert_array(Array(loaded.deaths["uid://region"])).is_equal([Vector2(12, -40), Vector2(3, 4)])
+
 ## Saves written before guardians existed have no restored_guardians at all.
 func test_migrate_adds_the_guardian_flags_an_old_save_lacks() -> void:
 	var data := PlayerData.new()
