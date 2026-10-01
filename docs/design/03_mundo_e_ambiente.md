@@ -115,6 +115,8 @@ Já estabelecido em `02_mecanicas.md`: morrer acrescenta um pequeno símbolo do 
 
 O efeito é deliberadamente pequeno demais para virar punição mecânica, e grande o bastante para que um jogador que morreu muitas vezes no mesmo lugar sinta, sem ser avisado, que aquele canto do mundo está pior por causa dele.
 
+**Decidido (2026-10-01):** mortes próximas não multiplicam marcas — **fundem-se numa só, que se aprofunda** a cada morte (no máximo 6 marcas por região). As marcas **sobrevivem à volta ao banco** (a morte desfaz o progresso, nunca a própria marca). E **restaurar o guardião apaga as marcas da região**: quando a memória volta, ela leva junto o esquecimento que o jogador deixou ali. Mortes depois da restauração voltam a marcar.
+
 ---
 
 ## 5. Clima regional

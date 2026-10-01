@@ -30,15 +30,15 @@
  
 ## Vida, Derrota e Pontos de Restauração
  
-**Vida:** o herói tem 3 unidades de vida, representadas por um ícone temático (não barra). Formato visual exato a definir.
+**Vida:** o herói tem 3 unidades de vida, representadas por um ícone temático (não barra). **Decidido (2026-10-01): uma fileira de notas que perdem a cor** — cada unidade é uma pequena nota colorida; a unidade perdida fica cinza e parada, do mesmo jeito que o mundo esquece. Sempre visível.
  
-**Derrota:** não existe game over tradicional. Ao perder toda a vida, o jogador reaparece no último ponto de restauração (banco), sem perder progresso material — nenhum item, sequência musical ou habilidade é perdida. A única consequência é atmosférica: um pequeno símbolo do cinzesquecimento aparece a mais na região da morte, um detalhe de cenário sem efeito em gameplay. Mortes acumuladas numa mesma região se somam visualmente, de forma discreta.
+**Derrota:** não existe game over tradicional. Ao perder toda a vida, o jogador reaparece no último banco em que sentou. **Decidido (2026-10-01): a morte volta ao último banco** — tudo o que foi ganho depois dele (sequências, habilidades, itens, guardiões restaurados, atalhos) é perdido, e as criaturas derrotadas voltam, como voltam ao descansar. A consequência atmosférica permanece e não volta junto: um pequeno símbolo do cinzesquecimento aparece a mais na região da morte (uma fonte negativa no campo de memória, `03_mundo_e_ambiente.md`, seção 4.3). Mortes acumuladas numa mesma região se somam visualmente, de forma discreta.
  
-*Nota de design:* essa penalidade é deliberadamente fraca em termos de custo tático — decisão consciente de manter o risco real concentrado no QTE de habilidades físicas (ver seção 4), não na morte geral. A ausência de "recuperar o que foi perdido" reforça o tema central do jogo: aceitar a perda, não insistir em reter à força.
+*Nota de design:* não há corrida para recuperar o que ficou no lugar da morte — a ausência de "recuperar o que foi perdido" reforça o tema central do jogo: aceitar a perda, não insistir em reter à força. *(Substitui, em 2026-10-01, a versão em que a morte não custava progresso nenhum.)*
  
 **Vitória:** derrotar o guardião-mentor na Grande Provação/Batalha Final, restaurando o mundo.
  
-**Pontos de restauração (bancos):** espalhados pelo mapa com mais frequência que os marcos de guardião. Sentar num banco recupera a vida cheia e salva o progresso no mesmo gesto. Função dupla: mecânica (cura e checkpoint) e de ritmo — força uma pausa deliberada, reforçando o tom contemplativo do jogo. Coexistem com os pontos de restauração de guardião, que continuam marcando progresso de história/mundo.
+**Pontos de restauração (bancos):** espalhados pelo mapa com mais frequência que os marcos de guardião. Sentar num banco recupera a vida cheia e salva o progresso no mesmo gesto. Função dupla: mecânica (cura e checkpoint) e de ritmo — força uma pausa deliberada, reforçando o tom contemplativo do jogo. **Decidido (2026-10-01): só os bancos salvam** — restaurar um guardião não é ponto de salvamento; morrer depois da lição sem ter sentado num banco devolve o guardião à corrupção, com a sequência e a habilidade que ele ensinou. Senta-se apertando **para baixo** diante do banco. Descansar traz de volta as criaturas derrotadas.
  
 ## Interface de Usuário (UI/HUD)
  
