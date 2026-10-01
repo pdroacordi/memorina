@@ -6,6 +6,7 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Architecture
 
+- [the-life-loop-rewinds-by-reloading](architecture/the-life-loop-rewinds-by-reloading.md) — PLAN (2026-10-01): benches commit a pure `SaveLedger`, death writes its mark onto the committed save and reloads `game.tscn` (self-swap, harness-safe) so every system that reads the save at `_ready` comes back right; arrival finds the bench by authored id + room scene key; death marks are raw points clustered by `RegionMemory` (MAX_SOURCES budget); the life HUD is notes greyed and stopped on the greyhush's Bayer cell.
 - [the-bell-jar-closes-once](architecture/the-bell-jar-closes-once.md) — Redoma's ring closes when its pulse stops growing and excepts what was inside until it leaves; it shelters the air and rain and holds water out column by column.
 - [roots-join-earth-to-earth](architecture/roots-join-earth-to-earth.md) — Enraizar reads earth faces from the room map (bridge, shaft, pillar), grows strands by the pulse and withers them from the tips; climbing is a generic component on a `Climbable` place.
 - [the-water-level-moves](architecture/the-water-level-moves.md) — a body is painted at its highest level and `set_level` moves its origin; Chuva's basin dries out at load and fills while lit; ice is laid at the level it freezes at.
