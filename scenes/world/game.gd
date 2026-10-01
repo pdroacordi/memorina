@@ -42,6 +42,8 @@ func _ready() -> void:
 	_player.fell_into_hazard.connect(_on_player_fell_into_hazard)
 	_player.died.connect(_on_player_died)
 	_player.sat_down.connect(_on_player_sat_down)
+	if SaveSystem.bench_id() != &"":
+		_arrive()
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
 		room.room_entered.connect(_on_player_entered_room)
 		var region := room.get_region()
@@ -98,6 +100,37 @@ func _on_player_fell_into_hazard() -> void:
 			_enter_room(room)
 		_camera.snap()
 	await _fade.to_clear()
+
+## A world built from a save that names a bench - after a death, or a load -
+## starts with Ivo seated on it, behind the black the fade starts in. The
+## bench's room is entered first and given a frame to build (Room.activate()
+## adds its contents deferred) before its seat is looked for. With no such
+## room or bench (a renamed map, a debug-only trial in a release build) he
+## comes back where the world places him, as on a new game.
+func _arrive() -> void:
+	var room := _room_by_key(SaveSystem.bench_room())
+	if room == null:
+		push_warning("The saved bench's room %s is not in this world; starting at the authored start" % SaveSystem.bench_room())
+		return
+	_is_transitioning = true
+	_player.process_mode = Node.PROCESS_MODE_DISABLED
+	_enter_room(room)
+	await get_tree().process_frame
+	var seat := Seat.find(get_tree(), SaveSystem.bench_id())
+	if seat != null:
+		_player.sit(seat)
+	else:
+		push_warning("The saved bench %s is not in its room; starting at the authored start" % SaveSystem.bench_id())
+	_camera.snap()
+	_player.process_mode = Node.PROCESS_MODE_INHERIT
+	_is_transitioning = false
+	await _fade.to_clear()
+
+func _room_by_key(key: String) -> Room:
+	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
+		if SceneKey.of(room) == key:
+			return room
+	return null
 
 ## Ivo sat on a bench: he is whole again, the save becomes the world as it
 ## stands with this bench as where he comes back, and the creatures return

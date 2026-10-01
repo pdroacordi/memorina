@@ -1,0 +1,91 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 28.0,
+ "player_position": [
+  -1104,
+  -40
+ ],
+ "steps": [
+  {
+   "t": 3.0,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 3.1,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 3.5,
+   "screenshot": "00_rested_at_downtown_bench"
+  },
+  {
+   "t": 4.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.5,
+   "screenshot": "01_walking"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "02_brute"
+  },
+  {
+   "t": 8.5,
+   "screenshot": "03"
+  },
+  {
+   "t": 10.0,
+   "screenshot": "04"
+  },
+  {
+   "t": 11.5,
+   "screenshot": "05"
+  },
+  {
+   "t": 13.0,
+   "screenshot": "06"
+  },
+  {
+   "t": 14.5,
+   "screenshot": "07"
+  },
+  {
+   "t": 16.0,
+   "screenshot": "08"
+  },
+  {
+   "t": 17.5,
+   "screenshot": "09"
+  },
+  {
+   "t": 19.0,
+   "screenshot": "10"
+  },
+  {
+   "t": 20.5,
+   "screenshot": "11"
+  },
+  {
+   "t": 21.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 22.5,
+   "screenshot": "12"
+  },
+  {
+   "t": 24.5,
+   "screenshot": "13"
+  },
+  {
+   "t": 26.5,
+   "screenshot": "14"
+  }
+ ],
+ "_note": "Ivo's authored start is in Bloom Hollow, so the teleport into Downtown costs a room transition (~1 s, input dropped): the first press waits for it."
+}
