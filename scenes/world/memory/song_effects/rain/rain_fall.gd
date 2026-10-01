@@ -2,14 +2,15 @@ class_name RainFall extends PulseEffect
 
 ## Chuva (Enums.Song.RAIN): it rains inside the pulse (design 02 section 7.1).
 ## What the rain FILLS is the world's answer, not the effect's: a RainBasin
-## hears the song. The effect is the weather itself, three things:
+## hears the song. The effect is the weather itself:
 ##
-## - the SKY CLOSES: a storm ceiling lowers over the pulse as it opens and
-##   lifts as it contracts (rain_sky.gdshader, a dithered multiply on the world);
 ## - DROPS fall, each to where it LANDS: when a drop is born a ray finds the
 ##   ground, a load or a Redoma's shell under it, or the water, and the drop
 ##   stops there and splashes instead of falling through the floor. On water it
 ##   dents the surface and throws up a crown;
+## - a CHARACTER in the rain is rained on: a drop crossing the top of Ivo or a
+##   creature bursts on its head (characters move, so they are checked as the
+##   drop falls, not when it is born);
 ## - all of it is clipped to the season mask, so it exists only where the pulse
 ##   has redrawn the world.
 ##
@@ -20,6 +21,10 @@ class_name RainFall extends PulseEffect
 
 ## Terrain, Props and the Shell: what a drop lands on.
 const LANDS_ON := (1 << 0) | (1 << 1) | (1 << 3)
+## Player and Enemy bodies: who is rained on.
+const RAINED_ON := (1 << 8) | (1 << 16)
+## Characters on screen it looks for at most.
+const MAX_HEADS := 16
 ## Height of a drop's bright head, px.
 const HEAD := 2
 ## How far into a lake's plane (from its far shore toward the viewer) drops
@@ -37,8 +42,6 @@ const LAKE_DEPTH := 96.0
 @export var splash: SpriteStrip
 @export var water_splash: SpriteStrip
 @export var splash_color := Color(0.86, 0.94, 1.0, 0.9)
-## Seconds for the sky to close fully (and to open again).
-@export var close_time := 2.5
 
 # The drops, local to the effect: x, y, speed, where it lands (y), length,
 # and the water it lands on (null on the ground, and past the pulse's bottom
@@ -52,41 +55,42 @@ var _length := PackedInt32Array()
 var _water: Array = []
 var _grounded := PackedByteArray()
 var _debt := 0.0
-var _cover := 0.0
-var _clock := 0.0
-var _sky_radius := -1.0
 var _query := PhysicsRayQueryParameters2D.new()
+# The tops of the characters on screen this frame (local), and the query and
+# box that find them.
+var _heads: Array[Rect2] = []
+var _head_query := PhysicsShapeQueryParameters2D.new()
+var _head_box := RectangleShape2D.new()
 var _airflow: Airflow
 
-@onready var _sky: Polygon2D = $Sky
 @onready var _splashes: SpriteBursts = $Splashes
+## Bursts on a head draw in the creature pass, over the body they land on:
+## in the world canvas the character, composited later, would hide them.
+@onready var _head_splashes: SpriteBursts = $HeadSplashes
 
 func _ready() -> void:
 	_query.collision_mask = LANDS_ON
 	# A drop born inside rock (an overhang above the screen's top) is under a
 	# roof: it is not born at all.
 	_query.hit_from_inside = true
+	_head_query.shape = _head_box
+	_head_query.collision_mask = RAINED_ON
 	_airflow = Airflow.find_in(self)
 	var season := pulse.song().season()
-	for clipped: CanvasItem in [self, _splashes, _sky]:
+	CreatureMask.join_layer(_head_splashes)
+	for clipped: CanvasItem in [self, _splashes, _head_splashes]:
 		(clipped.material as ShaderMaterial).set_shader_parameter(&"season", season)
 
 ## Drops in the air right now.
 func drop_count() -> int:
 	return _x.size()
 
-## How far the sky has closed, 0..1.
-func cover() -> float:
-	return _cover
-
 func _physics_process(delta: float) -> void:
 	var radius := pulse.radius()
 	var raining := pulse.phase() != PulseTimeline.Phase.CONTRACT and radius > 8.0
-	_clock += delta
-	_cover = move_toward(_cover, 1.0 if raining else 0.0, delta / maxf(close_time, 0.01))
-	_update_sky(radius)
 	if raining:
 		_rain(delta, radius)
+	_find_heads()
 	_fall(delta)
 	queue_redraw()
 
@@ -158,27 +162,66 @@ func _spawn(x: float, top: float, bottom: float) -> void:
 func _fall(delta: float) -> void:
 	var i := 0
 	while i < _x.size():
+		var was := _y[i]
 		_y[i] += _speed[i] * delta
 		var surface := _surface_under(i)
-		if _y[i] < minf(_land[i], surface):
+		var head := _head_crossed(_x[i], was, _y[i])
+		if head < minf(_land[i], surface):
+			_head_splashes.spawn(splash, global_position + Vector2(_x[i], head), Vector2.ZERO, splash_color)
+		elif _y[i] < minf(_land[i], surface):
 			i += 1
 			continue
-		_land_drop(i, _y[i] >= surface)
-		var last := _x.size() - 1
-		_x[i] = _x[last]
-		_y[i] = _y[last]
-		_speed[i] = _speed[last]
-		_land[i] = _land[last]
-		_length[i] = _length[last]
-		_water[i] = _water[last]
-		_grounded[i] = _grounded[last]
-		_x.resize(last)
-		_y.resize(last)
-		_speed.resize(last)
-		_land.resize(last)
-		_length.resize(last)
-		_water.resize(last)
-		_grounded.resize(last)
+		else:
+			_land_drop(i, _y[i] >= surface)
+		_remove(i)
+
+## Swaps drop `i` with the last and drops it.
+func _remove(i: int) -> void:
+	var last := _x.size() - 1
+	_x[i] = _x[last]
+	_y[i] = _y[last]
+	_speed[i] = _speed[last]
+	_land[i] = _land[last]
+	_length[i] = _length[last]
+	_water[i] = _water[last]
+	_grounded[i] = _grounded[last]
+	_x.resize(last)
+	_y.resize(last)
+	_speed.resize(last)
+	_land.resize(last)
+	_length.resize(last)
+	_water.resize(last)
+	_grounded.resize(last)
+
+## The characters on screen, as the boxes of their collision shapes (local).
+func _find_heads() -> void:
+	_heads.clear()
+	var view := get_canvas_transform().affine_inverse() * get_viewport_rect()
+	_head_box.size = view.size
+	_head_query.transform = Transform2D(0.0, view.get_center())
+	for hit: Dictionary in get_world_2d().direct_space_state.intersect_shape(_head_query, MAX_HEADS):
+		var body := hit.get("collider") as CollisionObject2D
+		var shape := _first_shape(body)
+		if shape:
+			var box := shape.shape.get_rect()
+			_heads.append(Rect2(shape.global_position + box.position - global_position, box.size))
+
+## The local y where a drop falling from `was` to `now` at `x` crossed the top
+## of a character, or INF.
+func _head_crossed(x: float, was: float, now: float) -> float:
+	for head: Rect2 in _heads:
+		if x > head.position.x + 1.0 and x < head.end.x - 1.0 and was < head.position.y and now >= head.position.y:
+			return head.position.y
+	return INF
+
+static func _first_shape(body: CollisionObject2D) -> CollisionShape2D:
+	if body == null:
+		return null
+	for child: Node in body.get_children():
+		var shape := child as CollisionShape2D
+		if shape and shape.shape and not shape.disabled:
+			return shape
+	return null
 
 ## The waterline a pool drop is falling toward right now (local y), or INF
 ## when there is none to stop it: no pool, dry, or held back by a shell. A
@@ -205,16 +248,3 @@ func _land_drop(i: int, on_pool: bool) -> void:
 			_splashes.spawn(water_splash, at, Vector2.ZERO, splash_color)
 	elif _grounded[i] == 1:
 		_splashes.spawn(splash, at, Vector2.ZERO, splash_color)
-
-func _update_sky(radius: float) -> void:
-	var material := _sky.material as ShaderMaterial
-	if absf(radius - _sky_radius) >= 1.0:
-		_sky_radius = radius
-		_sky.polygon = PackedVector2Array([
-			Vector2(-radius, -radius), Vector2(radius, -radius),
-			Vector2(radius, radius), Vector2(-radius, radius),
-		])
-		material.set_shader_parameter(&"radius", radius)
-	material.set_shader_parameter(&"centre", global_position)
-	material.set_shader_parameter(&"cover", _cover)
-	material.set_shader_parameter(&"clock", _clock)

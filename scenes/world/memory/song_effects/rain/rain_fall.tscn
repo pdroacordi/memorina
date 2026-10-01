@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://scenes/world/memory/song_effects/rain/rain_fall.gd" id="1_rain"]
 [ext_resource type="Shader" path="res://scenes/world/memory/seasonal/seasonal_particles.gdshader" id="2_clip"]
-[ext_resource type="Shader" path="res://scenes/world/memory/song_effects/rain/rain_sky.gdshader" id="3_sky"]
 [ext_resource type="Script" path="res://scenes/world/memory/song_effects/bursts/sprite_bursts.gd" id="4_bursts"]
 [ext_resource type="Resource" path="res://resources/world/effects/rain_splash.tres" id="5_splash"]
 [ext_resource type="Resource" path="res://resources/world/effects/rain_water_splash.tres" id="6_water"]
@@ -15,9 +14,6 @@ shader_parameter/season = 3
 shader = ExtResource("2_clip")
 shader_parameter/season = 3
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_sky"]
-shader = ExtResource("3_sky")
-
 [node name="RainFall" type="Node2D"]
 z_index = 56
 z_as_relative = false
@@ -26,13 +22,15 @@ script = ExtResource("1_rain")
 splash = ExtResource("5_splash")
 water_splash = ExtResource("6_water")
 
-[node name="Sky" type="Polygon2D" parent="."]
-z_index = 54
-z_as_relative = false
-material = SubResource("ShaderMaterial_sky")
-
 [node name="Splashes" type="Node2D" parent="."]
 z_index = 55
+z_as_relative = false
+texture_filter = 1
+material = SubResource("ShaderMaterial_splashes")
+script = ExtResource("4_bursts")
+
+[node name="HeadSplashes" type="Node2D" parent="."]
+z_index = 60
 z_as_relative = false
 texture_filter = 1
 material = SubResource("ShaderMaterial_splashes")

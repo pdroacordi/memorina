@@ -9,7 +9,6 @@ created: 2026-09-30
 updated: 2026-09-30
 source_files:
   - scenes/world/memory/song_effects/rain/rain_fall.gd
-  - scenes/world/memory/song_effects/rain/rain_sky.gdshader
   - scenes/world/memory/song_effects/gale/gale_field.gd
   - scenes/world/memory/song_effects/bursts/sprite_bursts.gd
   - scenes/world/environment/water/water_body.gd
@@ -45,3 +44,12 @@ timelines (`song_rain_basin_log`, `song_gale_chasm`, `song_release_gale_cocoon`,
 Whether the storm multiply is too dark for a long rainy puzzle, and whether the
 gusts' density feels busy over minutes rather than one crossing. A lake under a
 shell was checked in a unit test only.
+
+## Revision (2026-09-30, later)
+
+The storm sky was cut at the user's request: a dithered multiply over the whole
+pulse printed a field of Bayer dots across the screen (the same reason the grey
+carries no high-frequency texture). Rain now bursts on characters too: a drop
+crossing the top of a Player or Enemy body on screen splashes there, drawn in
+the creature pass so the body, composited after the world, does not hide it.
+Seen on Ivo standing in the rain on the log: a few crowns a second off his head.
