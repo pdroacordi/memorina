@@ -13,6 +13,9 @@ signal jump_pressed
 signal jump_canceled
 signal roll_pressed
 signal draw_memorina_pressed
+## Down was pressed - the gesture that sits Ivo on a bench. The held axis is
+## still look_direction; this is the press.
+signal look_down_pressed
 signal note_pressed(note: Enums.Note, glyph_set: Enums.GlyphSet)
 ## Debug builds only: teaches the next unknown song. Stands in for the guardian
 ## fights until they exist.
@@ -72,6 +75,8 @@ func _input(event: InputEvent) -> void:
 		attack_pressed.emit()
 	if event.is_action_pressed("draw_memorina"):
 		draw_memorina_pressed.emit()
+	if event.is_action_pressed("look_down"):
+		look_down_pressed.emit()
 	if OS.is_debug_build() and event.is_action_pressed("debug_learn_song"):
 		debug_learn_song_pressed.emit()
 	# Deliberately unconditional: this node reports what the hardware did and

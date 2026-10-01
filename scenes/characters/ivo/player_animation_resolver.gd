@@ -28,6 +28,7 @@ const CLIMB_BACK := &"climb_back"
 const CLIMB_BACK_HOLD := &"climb_back_hold"
 const HURT := &"hurt"
 const DEATH := &"death"
+const SIT := &"sit"
 
 ## Coming out of these Ivo is already mid-motion, so the jump/fall intros are
 ## skipped rather than crouching or tucking in mid-air.
@@ -44,6 +45,8 @@ func resolve() -> StringName:
 		return DEATH
 	if _player.just_hit() or driver.holding(HURT):
 		return HURT
+	if _player.is_sitting():
+		return SIT
 	if _player.is_rolling():
 		return ROLL
 	if _player.is_attacking():

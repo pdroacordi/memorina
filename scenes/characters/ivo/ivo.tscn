@@ -63,8 +63,13 @@
 [ext_resource type="Script" uid="uid://cd0iolsgg5fll" path="res://scenes/characters/ivo/abilities/ability_recall_component.gd" id="49_recall"]
 [ext_resource type="Script" path="res://scenes/characters/ivo/recall_aura/recall_aura.gd" id="50_aura"]
 [ext_resource type="Script" path="res://scenes/characters/components/safe_ground_tracker.gd" id="60_safe_ground"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_sit_96x96.png" id="70_sit"]
+[ext_resource type="Script" path="res://scenes/characters/components/sit_component.gd" id="71_sitco"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_climbsensor"]
+size = Vector2(12, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_seatsensor"]
 size = Vector2(12, 28)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ynyct"]
@@ -1445,6 +1450,48 @@ tracks/2/keys = {
 "values": [0]
 }
 
+[sub_resource type="Animation" id="Animation_sit"]
+resource_name = "sit"
+length = 1.0
+loop_mode = 1
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("70_sit")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [10]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+}
+
 [sub_resource type="Animation" id="Animation_climb_back"]
 resource_name = "climb_back"
 length = 0.6
@@ -1860,6 +1907,7 @@ _data = {
 &"brace": SubResource("Animation_brace"),
 &"climb": SubResource("Animation_climb"),
 &"climb_hold": SubResource("Animation_climb_hold"),
+&"sit": SubResource("Animation_sit"),
 &"climb_back": SubResource("Animation_climb_back"),
 &"climb_back_hold": SubResource("Animation_climb_back_hold"),
 &"RESET": SubResource("Animation_knqxj"),
@@ -1962,6 +2010,9 @@ animation = &"climb"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_climb_hold"]
 animation = &"climb_hold"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sit"]
+animation = &"sit"
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_climb_back"]
 animation = &"climb_back"
 
@@ -2015,6 +2066,8 @@ states/climb/node = SubResource("AnimationNodeAnimation_climb")
 states/climb/position = Vector2(626, 20)
 states/climb_hold/node = SubResource("AnimationNodeAnimation_climb_hold")
 states/climb_hold/position = Vector2(726, 20)
+states/sit/node = SubResource("AnimationNodeAnimation_sit")
+states/sit/position = Vector2(1026, 20)
 states/climb_back/node = SubResource("AnimationNodeAnimation_climb_back")
 states/climb_back/position = Vector2(826, 20)
 states/climb_back_hold/node = SubResource("AnimationNodeAnimation_climb_back_hold")
@@ -2105,6 +2158,18 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ClimbSensor"]
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_climbsensor")
+
+[node name="Sit" type="Node" parent="."]
+script = ExtResource("71_sitco")
+
+[node name="SeatSensor" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 32
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="SeatSensor"]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_seatsensor")
 
 [node name="Jump" type="Node" parent="." unique_id=1102847533]
 script = ExtResource("19_jumpco")

@@ -1,0 +1,23 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 8.0,
+ "player_position": [2470, 5990],
+ "steps": [
+  {"t": 1.5, "action": "move_right", "pressed": true},
+  {"t": 1.95, "action": "move_right", "pressed": false},
+  {"t": 2.4, "screenshot": "00_at_bench"},
+  {"t": 2.5, "action": "look_down", "pressed": true},
+  {"t": 2.6, "action": "look_down", "pressed": false},
+  {"t": 3.0, "screenshot": "01_seated"},
+  {"t": 3.5, "screenshot": "02_seated_breathing"},
+  {"t": 4.0, "action": "jump", "pressed": true},
+  {"t": 4.1, "action": "jump", "pressed": false},
+  {"t": 4.3, "screenshot": "03_jump_only_stands_him_up"},
+  {"t": 4.8, "action": "look_down", "pressed": true},
+  {"t": 4.9, "action": "look_down", "pressed": false},
+  {"t": 5.3, "screenshot": "04_seated_again"},
+  {"t": 5.5, "action": "move_right", "pressed": true},
+  {"t": 6.0, "screenshot": "05_walked_off"},
+  {"t": 6.1, "action": "move_right", "pressed": false}
+ ]
+}

@@ -8,6 +8,8 @@ const GROUP := "room"
 @export var contents_scene : PackedScene
 @onready var _shape_node: CollisionShape2D = $CollisionShape2D
 var _contents_node: Node2D
+## Rebuild the contents on the next activate() instead of waking them.
+var _expired: bool = false
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -17,6 +19,9 @@ func _enter_tree() -> void:
 ## reverse that — nothing is re-created, so position/AI/animation state all
 ## carry over exactly as they were left.
 func activate() -> void:
+	if _expired:
+		_expired = false
+		evict()
 	if not _contents_node:
 		_contents_node = contents_scene.instantiate()
 		call_deferred("add_child", _contents_node)
@@ -40,8 +45,19 @@ func deactivate() -> void:
 ## before this whole warm/cold split existed.
 func evict() -> void:
 	if _contents_node:
+		# Out of the tree now, not at frame end: a fresh instance may follow
+		# this frame, and the old one's groups (a bench's seat) must be gone.
+		if _contents_node.get_parent() == self:
+			remove_child(_contents_node)
 		_contents_node.queue_free()
 		_contents_node = null
+
+## The contents go stale without being torn down: the next time this room is
+## entered after being left, it is built fresh rather than woken. A rest calls
+## this on the room it happens in, so what was defeated there comes back - but
+## not under Ivo's feet.
+func expire() -> void:
+	_expired = true
 
 ## The region this room belongs to. Rooms are always direct children of their
 ## region's composition scene - that is the middle layer of the three-level

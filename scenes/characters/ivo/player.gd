@@ -64,6 +64,10 @@ signal health_changed(current: int, max_hp: int)
 ## The death clip has played out. The composition root waits on this before
 ## the screen goes dark, so the fall is seen, not cut.
 signal death_shown
+## He sat down on a bench of his own accord. The composition root rests him:
+## heals, brings the creatures back and saves. Not emitted when he is PUT on
+## one (arrival after a death or a load).
+signal sat_down(seat: Seat)
 
 const GROUP := "player"
 
@@ -85,7 +89,7 @@ const STILL_SPEED_EPSILON := 1.0
 ## as an ESCAPE from whatever forced it, in seconds.
 const RECALL_ESCAPE_TIME := 0.6
 
-enum MotionState { KNOCKBACK, ROLL, GROUND, AIR, CLIMB }
+enum MotionState { KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 
 
 @onready var _input           : PlayerInput = $PlayerInput
@@ -96,6 +100,7 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR, CLIMB }
 @onready var _wall_mobility   : WallMobilityComponent = $WallMobility
 @onready var _roll            : RollComponent = $Roll
 @onready var _climb           : ClimbComponent = $Climb
+@onready var _sit             : SitComponent = $Sit
 @onready var _attack          : AttackComponent = $Attack
 @onready var _pogo            : PogoComponent = $Pogo
 @onready var _memorina        : MemorinaComponent = $Memorina
@@ -193,6 +198,10 @@ var _pending_recall_source: Node2D
 var _sinking: bool = false
 ## death_shown has been emitted for this death.
 var _death_shown: bool = false
+## Down was pressed: sit if a bench is in reach, next physics frame.
+var _sit_requested: bool = false
+## A press arrived while seated: it gets him up and does nothing else.
+var _stand_requested: bool = false
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -202,7 +211,9 @@ func _enter_tree() -> void:
 func _ready() -> void:
 	super()
 
-	_input.jump_pressed.connect(_jump.buffer_jump)
+	# Seated, a press only gets him up: routed through _unless_seated, it never
+	# reaches the component's buffer, so it cannot also jump or swing.
+	_input.jump_pressed.connect(_unless_seated.bind(_jump.buffer_jump))
 	_input.jump_canceled.connect(_jump.cut_jump)
 	# Components emit these, but ivo.tscn wires its DustEmitter to Player's own
 	# signals with from=".". Re-emitting keeps those scene connections working
@@ -210,7 +221,7 @@ func _ready() -> void:
 	_jump.jumped.connect(jumped.emit)
 	_landing.hard_landed.connect(hard_landed.emit)
 	_double_jump.double_jumped.connect(_on_double_jumped)
-	_input.roll_pressed.connect(_roll.buffer_roll)
+	_input.roll_pressed.connect(_unless_seated.bind(_roll.buffer_roll))
 	# The recall hears the same presses the abilities buffer, and unlocks the
 	# skill in the same frame, before _try_roll/_try_jump run - so the press
 	# that remembers the roll is also the roll that dodges the attack.
@@ -219,8 +230,9 @@ func _ready() -> void:
 	_recall.recalled.connect(_on_skill_recalled)
 	_recall.step_taken.connect(recall_step_taken.emit)
 	_recall.missed.connect(_on_skill_recall_missed)
-	_input.attack_pressed.connect(_attack.buffer_attack)
-	_input.draw_memorina_pressed.connect(_memorina.buffer_toggle)
+	_input.attack_pressed.connect(_unless_seated.bind(_attack.buffer_attack))
+	_input.draw_memorina_pressed.connect(_unless_seated.bind(_memorina.buffer_toggle))
+	_input.look_down_pressed.connect(func() -> void: _sit_requested = true)
 	_input.note_pressed.connect(_on_note_pressed)
 	_input.debug_learn_song_pressed.connect(_on_debug_learn_song_pressed)
 	_memorina.drawn.connect(_on_memorina_drawn)
@@ -257,6 +269,7 @@ func _ready() -> void:
 	_states.add_state(MotionState.GROUND, _ground_motion)
 	_states.add_state(MotionState.AIR, _air_physics)
 	_states.add_state(MotionState.CLIMB, _climb_motion)
+	_states.add_state(MotionState.SIT, _sit_motion)
 	_resting_shield_amount = _shield.amount
 
 	_assert_clip_durations()
@@ -279,6 +292,14 @@ func _process_motion(delta: float) -> void:
 	if _sinking:
 		_sink_motion(delta)
 		return
+	_try_sit(on_floor)
+	if _sit.is_sitting():
+		if _wants_to_stand():
+			_stand_up()
+		else:
+			_states.transition_to(MotionState.SIT)
+			_states.update(delta)
+			return
 
 	face_towards(move_axis())
 	# The recall's window is real seconds: the world is slowed while it is open,
@@ -414,6 +435,9 @@ func is_still() -> bool:
 func look_axis() -> float:
 	if not is_on_floor() or wants_to_move() or is_recovering():
 		return 0.0
+	# Down is what sat him; the camera must not peek along with it.
+	if is_sitting():
+		return 0.0
 	# Up and Down are notes while playing; the camera must not peek along.
 	if is_memorina_drawn():
 		return 0.0
@@ -477,6 +501,43 @@ func _try_climb() -> void:
 
 # No gravity and no wind: he holds on. Climbing out of the top hops him onto
 # the ledge; anything else that ends it lets him fall.
+## Seated: nothing moves him - no gravity, no wind (a bench is shelter anyway).
+func _sit_motion(_delta: float) -> void:
+	velocity = Vector2.ZERO
+
+# Down pressed sits him on a bench in reach - the body's judgement, like every
+# other gate: on the floor with no direction held, and only when nothing else
+# has him (a roll, a swing, a flinch, a climb, the instrument, a guardian's call).
+func _try_sit(on_floor: bool) -> void:
+	if not _sit_requested:
+		return
+	_sit_requested = false
+	if _sit.is_sitting() or not on_floor or wants_to_move():
+		return
+	if is_rolling() or is_attacking() or is_in_knockback() or is_climbing() or is_memorina_drawn():
+		return
+	if _staged_caller != null:
+		return
+	var seat := _sit.reachable()
+	if seat == null:
+		return
+	sit(seat)
+	sat_down.emit(seat)
+
+# Any move, up, or a press gets him up.
+func _wants_to_stand() -> bool:
+	return _stand_requested or wants_to_move() or _input.look_direction < -0.5
+
+func _stand_up() -> void:
+	_stand_requested = false
+	_sit.stand()
+
+func _unless_seated(action: Callable) -> void:
+	if _sit.is_sitting():
+		_stand_requested = true
+		return
+	action.call()
+
 func _climb_motion(delta: float) -> void:
 	match _climb.update(delta, Vector2(move_axis(), _input.look_direction)):
 		ClimbComponent.Exit.OVER_THE_TOP:
@@ -921,6 +982,22 @@ func is_sinking() -> bool:
 func is_death_shown() -> bool:
 	return _death_shown
 
+func is_sitting() -> bool:
+	return _sit.is_sitting()
+
+## Puts him on `seat`, sitting, without the rest that sitting down himself
+## asks for: arrival at the bench after a death or a load.
+func sit(seat: Seat) -> void:
+	_climb.release()
+	_wall_mobility.stop()
+	clear_knockback()
+	_landing.cancel_recovery()
+	_sit.sit(seat)
+
+## A bench's rest, for his body: whole again.
+func rest() -> void:
+	health.reset()
+
 func receive_hazard(hazard: HazardZone) -> void:
 	if is_dead() or _sinking:
 		return
@@ -952,8 +1029,9 @@ func _react_to_hurt() -> void:
 	hurt.emit()
 	_attack.cancel()
 	_memorina.interrupt()
-	# Being hurt knocks him off what he was holding.
+	# Being hurt knocks him off what he was holding, and off a bench.
 	_climb.release()
+	_stand_up()
 
 func _on_attack_phase_started(_phase_index: int, phase: AttackPhaseData) -> void:
 	_hitbox.damage = phase.damage

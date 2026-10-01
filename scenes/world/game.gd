@@ -41,6 +41,7 @@ func _ready() -> void:
 	_camera.follow(_player)
 	_player.fell_into_hazard.connect(_on_player_fell_into_hazard)
 	_player.died.connect(_on_player_died)
+	_player.sat_down.connect(_on_player_sat_down)
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
 		room.room_entered.connect(_on_player_entered_room)
 		var region := room.get_region()
@@ -97,6 +98,26 @@ func _on_player_fell_into_hazard() -> void:
 			_enter_room(room)
 		_camera.snap()
 	await _fade.to_clear()
+
+## Ivo sat on a bench: he is whole again, the save becomes the world as it
+## stands with this bench as where he comes back, and the creatures return
+## (the user's decisions, 2026-10-01).
+func _on_player_sat_down(seat: Seat) -> void:
+	_player.rest()
+	var room := _room_at(seat.global_position)
+	SaveSystem.rest_at(seat.bench_id, SceneKey.of(room) if room != null else "")
+	_wake_rooms()
+
+## The creatures come back with a rest: every other resident room is
+## forgotten and built fresh on its next visit, and the one he rests in is
+## rebuilt the next time he enters it - never under his feet.
+func _wake_rooms() -> void:
+	for room: Room in _resident_rooms.duplicate():
+		if room != _current_room:
+			room.evict()
+			_resident_rooms.erase(room)
+	if _current_room != null:
+		_current_room.expire()
 
 ## Death returns Ivo to the last bench and takes back everything gained since
 ## (the user's decisions, 2026-10-01). The body is seen to fall and lie still,
