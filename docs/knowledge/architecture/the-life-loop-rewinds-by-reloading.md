@@ -20,6 +20,8 @@ source_files:
   - tools/playtest/playtest_runner.gd
 ---
 
+> **Status: built** (2026-10-01, commits 1d02d6f..5319a40). The plan below is what was implemented, with the user's decisions in "Decisions taken"; CLAUDE.md "Life, benches and death" is the short form.
+
 ## Context
 
 The user's decisions of 2026-10-01 (design 02 "Vida, Derrota", already updated): death returns Ivo to the last

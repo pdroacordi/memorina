@@ -6,7 +6,7 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Architecture
 
-- [the-life-loop-rewinds-by-reloading](architecture/the-life-loop-rewinds-by-reloading.md) — PLAN (2026-10-01): benches commit a pure `SaveLedger`, death writes its mark onto the committed save and reloads `game.tscn` (self-swap, harness-safe) so every system that reads the save at `_ready` comes back right; arrival finds the bench by authored id + room scene key; death marks are raw points clustered by `RegionMemory` (MAX_SOURCES budget); the life HUD is notes greyed and stopped on the greyhush's Bayer cell.
+- [the-life-loop-rewinds-by-reloading](architecture/the-life-loop-rewinds-by-reloading.md) — BUILT (2026-10-01): benches commit a pure `SaveLedger`, death writes its mark onto the committed save and reloads `game.tscn` (self-swap, harness-safe) so every system that reads the save at `_ready` comes back right; arrival finds the bench by authored id + room scene key; death marks are raw points clustered by `RegionMemory` (MAX_SOURCES budget); the life HUD is notes greyed and stopped on the greyhush's Bayer cell.
 - [the-bell-jar-closes-once](architecture/the-bell-jar-closes-once.md) — Redoma's ring closes when its pulse stops growing and excepts what was inside until it leaves; it shelters the air and rain and holds water out column by column.
 - [roots-join-earth-to-earth](architecture/roots-join-earth-to-earth.md) — Enraizar reads earth faces from the room map (bridge, shaft, pillar), grows strands by the pulse and withers them from the tips; climbing is a generic component on a `Climbable` place.
 - [the-water-level-moves](architecture/the-water-level-moves.md) — a body is painted at its highest level and `set_level` moves its origin; Chuva's basin dries out at load and fills while lit; ice is laid at the level it freezes at.
@@ -92,6 +92,8 @@ directory in the same edit that adds or changes an entry — do not let it drift
 - [scene-resave-buries-real-edits-in-noise](gotchas/scene-resave-buries-real-edits-in-noise.md) — a `.tscn` resave mixes real property edits (a moved node) into a diff full of harmless editor metadata churn.
 
 ## Playtests
+
+- [2026-10-01-life-loop](playtests/2026-10-01-life-loop.md) — a lost note greys on the Bayer cell and stops; down sits Ivo on a bench and a press only stands him up; a death after a rest brings him back seated with full life and the brute standing again; a Downtown `player_position` costs a ~1 s room transition before the first press.
 
 - [2026-09-30-rain-gale-shell-look](playtests/2026-09-30-rain-gale-shell-look.md) — rain that lands and splashes under a closing sky, a one-way gale in pixel-art gusts (the cocoon timeline must face the plate), water standing against Redoma's curve; the seesaw timeline fixed for Sombra's shorter pulse.
 - [2026-09-30-redoma-well](playtests/2026-09-30-redoma-well.md) — the shell dries the side of the well and Ivo walks into the low passage.
