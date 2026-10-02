@@ -40,6 +40,10 @@ const PLAYSTATION_NAME_FRAGMENTS: Array[String] = [
 ## Wireless Controller" contains it, so it must be an exact match.
 const PLAYSTATION_EXACT_NAMES: Array[String] = ["wireless controller"]
 
+## Whether down was held as of the last event about it - any motion on its
+## axis says, either way, so the opposite direction lets go of it too.
+var _down_held: bool = false
+
 # Camera-peek intent, deliberately player-only: enemies have no camera, so
 # this stays an inline getter on PlayerInput rather than moving to the base.
 var look_direction: float:
@@ -49,7 +53,8 @@ var look_direction: float:
 ## constructed event and a made-up joypad name; `_input` supplies the real
 ## name from Input.
 static func glyph_set_for(event: InputEvent, joy_name: String) -> Enums.GlyphSet:
-	if event is InputEventJoypadButton:
+	# A stick is the pad as much as a button is.
+	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
 		return Enums.GlyphSet.PLAYSTATION if is_playstation_name(joy_name) else Enums.GlyphSet.XBOX
 	if event is InputEventKey and WASD_KEYS.has((event as InputEventKey).physical_keycode):
 		return Enums.GlyphSet.KEYBOARD_WASD
@@ -75,8 +80,14 @@ func _input(event: InputEvent) -> void:
 		attack_pressed.emit()
 	if event.is_action_pressed("draw_memorina"):
 		draw_memorina_pressed.emit()
-	if event.is_action_pressed("look_down"):
-		look_down_pressed.emit()
+	# The press is the EDGE, not the event: a stick reports "pressed" on every
+	# motion past its deadzone, so a held, wiggling stick would sit Ivo down
+	# again the moment anything stood him up.
+	if event.is_action("look_down"):
+		var held := event.is_action_pressed("look_down")
+		if held and not _down_held:
+			look_down_pressed.emit()
+		_down_held = held
 	if OS.is_debug_build() and event.is_action_pressed("debug_learn_song"):
 		debug_learn_song_pressed.emit()
 	# Deliberately unconditional: this node reports what the hardware did and

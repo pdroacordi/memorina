@@ -4,8 +4,8 @@ extends Node
 ## kept remembers with it, and nothing else can know whether the arena's room
 ## is even loaded when it happens.
 signal guardian_restored(guardian: Enums.Guardian)
-## A rest made the world as it stands the save. The HUD's quill answers it.
-## Emitted on the commit, so a playtest's in-memory save is "kept" too.
+## A rest made the world as it stands the save, and it landed. The HUD's
+## quill answers it. A playtest's in-memory save is "kept" too.
 signal saved
 
 const PATH: String = "user://"
@@ -29,7 +29,11 @@ var _ledger: SaveLedger
 var _path: String = ""
 
 func _ready() -> void:
-	if OS.is_debug_build():
+	# Nobody plays headless: the test suite, the smoke test and the tools run
+	# that way, and none of them may read - or one day write - a player's save.
+	if DisplayServer.get_name() == "headless":
+		begin("", true)
+	elif OS.is_debug_build():
 		begin(PATH + DEBUG_SAVE_FILE_NAME, NEW_GAME_ARG in OS.get_cmdline_user_args())
 	else:
 		begin(PATH + SAVE_FILE_NAME, false)
@@ -48,8 +52,8 @@ func begin(path: String, fresh: bool) -> void:
 func rest_at(bench: StringName, room_key: String) -> void:
 	player_data.bench_id = bench
 	player_data.bench_room = room_key
-	_write(_ledger.commit())
-	saved.emit()
+	if _write(_ledger.commit()):
+		saved.emit()
 
 ## Ivo died at `point` (local to the region `region_key` names). The mark is
 ## written onto the last bench's save, and the live save goes back to it.
@@ -101,12 +105,15 @@ func _read(path: String) -> PlayerData:
 	loaded.migrate()
 	return loaded
 
-func _write(data: PlayerData) -> void:
+## Whether the save landed: true in memory, or once the file is written. The
+## quill must never say "kept" over a failed write.
+func _write(data: PlayerData) -> bool:
 	if _path.is_empty():
-		return
+		return true
 	var err := ResourceSaver.save(data, _path)
 	if err != OK:
 		push_error("Failed to save game: %s" % error_string(err))
+	return err == OK
 
 func has_skill(skill: Enums.PlayerSkill) -> bool:
 	return player_data.unlocked_player_skills[skill]

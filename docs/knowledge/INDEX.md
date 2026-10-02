@@ -71,6 +71,7 @@ directory in the same edit that adds or changes an entry — do not let it drift
 
 ## Gotchas
 
+- [a-stick-is-pressed-on-every-motion-event](gotchas/a-stick-is-pressed-on-every-motion-event.md) — `is_action_pressed` is true for every joystick motion past the deadzone, so a press signal from a stick-bound action must be an edge (`PlayerInput._down_held`); a held stick re-sat Ivo after every stand-up. A motion event is the pad too (`glyph_set_for`).
 - [first-process-frame-can-precede-the-first-deferred-flush](gotchas/first-process-frame-can-precede-the-first-deferred-flush.md) — at boot `process_frame` is emitted before the idle flush and the first iteration may run no physics step, so `call_deferred` + one `await process_frame` in the main scene's `_ready` is not guaranteed (measured 4/5 headless in a minimal project); `Game._arrive` now awaits the room contents' `ready` instead (2026-10-01).
 - [queue-free-deferred-add-still-enters-the-tree](gotchas/queue-free-deferred-add-still-enters-the-tree.md) — the deferred flush runs before the delete queue, so a node `queue_free()`d while its `call_deferred("add_child")` is pending still enters the tree (ready, groups) for the frame; `Room` now defers its own `_add_contents`, which skips contents evicted meanwhile (2026-10-01).
 - [sync-to-physics-lands-a-move-next-step](gotchas/sync-to-physics-lands-a-move-next-step.md) — a moving platform's set transform reads back stale until the next physics step; keep the target as state and test that.

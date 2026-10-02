@@ -212,8 +212,10 @@ func _ready() -> void:
 	super()
 
 	# Seated, a press only gets him up: routed through _unless_seated, it never
-	# reaches the component's buffer, so it cannot also jump or swing.
-	_input.jump_pressed.connect(_unless_seated.bind(_jump.buffer_jump))
+	# reaches the component's buffer, so it cannot also jump or swing. With the
+	# instrument out, a face button is a note (the gamepad's double duty), so
+	# _as_move drops the move it also means instead of buffering it.
+	_input.jump_pressed.connect(_as_move.bind(_jump.buffer_jump))
 	_input.jump_canceled.connect(_jump.cut_jump)
 	# Components emit these, but ivo.tscn wires its DustEmitter to Player's own
 	# signals with from=".". Re-emitting keeps those scene connections working
@@ -221,7 +223,7 @@ func _ready() -> void:
 	_jump.jumped.connect(jumped.emit)
 	_landing.hard_landed.connect(hard_landed.emit)
 	_double_jump.double_jumped.connect(_on_double_jumped)
-	_input.roll_pressed.connect(_unless_seated.bind(_roll.buffer_roll))
+	_input.roll_pressed.connect(_as_move.bind(_roll.buffer_roll))
 	# The recall hears the same presses the abilities buffer, and unlocks the
 	# skill in the same frame, before _try_roll/_try_jump run - so the press
 	# that remembers the roll is also the roll that dodges the attack.
@@ -230,7 +232,7 @@ func _ready() -> void:
 	_recall.recalled.connect(_on_skill_recalled)
 	_recall.step_taken.connect(recall_step_taken.emit)
 	_recall.missed.connect(_on_skill_recall_missed)
-	_input.attack_pressed.connect(_unless_seated.bind(_attack.buffer_attack))
+	_input.attack_pressed.connect(_as_move.bind(_attack.buffer_attack))
 	_input.draw_memorina_pressed.connect(_unless_seated.bind(_memorina.buffer_toggle))
 	_input.look_down_pressed.connect(func() -> void: _sit_requested = true)
 	_input.note_pressed.connect(_on_note_pressed)
@@ -544,6 +546,13 @@ func _unless_seated(action: Callable) -> void:
 		_stand_requested = true
 		return
 	action.call()
+
+# A jump, roll or attack press while the instrument is out was a note: buffered,
+# it would fire the moment the instrument is put away within the buffer.
+func _as_move(action: Callable) -> void:
+	if is_memorina_drawn():
+		return
+	_unless_seated(action)
 
 # No gravity and no wind: he holds on. Climbing out of the top hops him onto
 # the ledge; anything else that ends it lets him fall.

@@ -32,25 +32,31 @@ func _input(event: InputEvent) -> void:
 func is_pad() -> bool:
 	return glyph_set in [Enums.GlyphSet.XBOX, Enums.GlyphSet.PLAYSTATION]
 
-## The binding of `action` the player's device would press: its key on the
-## keyboard; on a pad its button, or else its stick. Null when the device has
-## no binding for it.
+## The binding of `action` the player's device would press: on the keyboard
+## the key of the set under the hand (S rather than the down arrow for a WASD
+## player, where the action has both), else its first key; on a pad its
+## button, or else its stick. Null when the device has no binding for it.
 func event_for(action: StringName) -> InputEvent:
-	return binding_for(action, is_pad())
+	return binding_for(action, glyph_set)
 
 ## Pure over the InputMap, for tests.
-static func binding_for(action: StringName, pad: bool) -> InputEvent:
+static func binding_for(action: StringName, for_set: Enums.GlyphSet) -> InputEvent:
 	if not InputMap.has_action(action):
 		return null
-	var motion: InputEvent = null
+	var pad := for_set in [Enums.GlyphSet.XBOX, Enums.GlyphSet.PLAYSTATION]
+	var fallback: InputEvent = null
 	for event: InputEvent in InputMap.action_get_events(action):
-		if not pad and event is InputEventKey:
-			return event
-		if pad and event is InputEventJoypadButton:
-			return event
-		if pad and event is InputEventJoypadMotion and motion == null:
-			motion = event
-	return motion
+		if pad:
+			if event is InputEventJoypadButton:
+				return event
+			if event is InputEventJoypadMotion and fallback == null:
+				fallback = event
+		elif event is InputEventKey:
+			if PlayerInput.glyph_set_for(event, "") == for_set:
+				return event
+			if fallback == null:
+				fallback = event
+	return fallback
 
 static func _is_deliberate(event: InputEvent) -> bool:
 	if event is InputEventKey or event is InputEventJoypadButton:
