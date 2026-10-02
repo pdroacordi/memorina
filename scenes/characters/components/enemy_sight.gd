@@ -1,23 +1,12 @@
 class_name EnemySight
 extends Area2D
-## Broad-phase detection (this Area2D's CollisionShape2D radius) of the player
-## and of every PRESENCE - whatever a creature takes for the hero: Ivo's body,
-## and his burned shadow (Sombra, design 02 section 7.1), which is an area,
-## not a body. Each is confirmed by a narrow-phase RayCast2D against Terrain,
-## so a wall between them blocks the chase like it would block real sight.
-##
-## Two answers, because two kinds of mind read this: `player` is Ivo alone (a
-## guardian fights HIM, never a shadow he left), and visible_presence() is the
-## nearest presence in plain sight (a common creature goes for whichever it
-## sees - that is what makes the shadow a lure).
+## Detects visible presences; see docs/design/02_canções.md section 7.1.
 
-## The group of everything a creature takes for the hero.
 const PRESENCE := &"presence"
+## `player` is Ivo; `visible_presence()` may instead return his nearest visible shadow.
 
-## Both Player and Enemy have their origin at their feet (the collision
-## capsule sits ~27px above it). A ray cast from/to that raw origin runs
-## right along the ground and clips terrain it has no business hitting, so
-## both ends are lifted to roughly chest height before casting.
+## Sight ray height above the feet in px.
+# Raise both ray ends to avoid terrain clipping at their foot-level origins.
 const SIGHT_HEIGHT_OFFSET := Vector2(0, -27)
 
 var player: Node2D = null
@@ -40,7 +29,6 @@ func visible_presence() -> Node2D:
 	var best := INF
 	for node: Node2D in _presences:
 		var distance := global_position.distance_squared_to(node.global_position)
-		# Distance first: the ray is the expensive part.
 		if distance < best and node.is_in_group(PRESENCE) and can_see(node):
 			nearest = node
 			best = distance

@@ -2,18 +2,15 @@ extends Node
 
 ## Windowed playtest capture harness — needs real rendering, so it must NOT be run with
 ## --headless (headless has no rendering device, so viewport screenshots come back blank).
-## Drives a scene through a scripted input timeline (see tools/playtest/scripts/*.json)
-## and saves viewport screenshots at chosen timestamps, then quits on its own.
+## Runs scripted timelines from tools/playtest/scripts/ and captures screenshots.
 ##
 ## Run from the project root:
 ##   "<godot>" --path . res://tools/playtest/playtest_runner.tscn -- \
 ##       --script=res://tools/playtest/scripts/<name>.json --out=<absolute output dir>
 ##
-## --out must be an absolute filesystem path, not res://, so the calling agent can Read
-## the resulting PNGs back without guessing where user:// resolves to on this machine.
+## --out must be an absolute filesystem path so captured PNGs can be read directly.
 ##
-## This drives Input.action_press/action_release, which PlayerInput reads exactly like a
-## live keyboard/pad, so the played-back run exercises real gameplay code, not a mock.
+## Timeline actions are dispatched through InputEventAction to exercise gameplay input.
 
 const DEFAULT_MAX_DURATION := 60.0
 
@@ -42,11 +39,7 @@ func _ready() -> void:
 	_steps = timeline.get("steps", [])
 	_max_duration = float(timeline.get("max_duration", DEFAULT_MAX_DURATION))
 
-	# A fresh game kept in memory: a run never reads or writes a save on disk,
-	# so it plays the same every time. Optional `"known_songs": [Enums.Song ids]`
-	# are taught before the world loads, so a timeline can PLAY a song without
-	# first sitting its lesson - and committed, so a death mid-run rewinds to
-	# the timeline's own start rather than to a game that never knew them.
+	# Keep runs isolated from disk saves and commit setup so deaths rewind to this timeline's start.
 	SaveSystem.begin("", true)
 	for song_id: Variant in timeline.get("known_songs", []):
 		SaveSystem.learn_song(int(song_id) as Enums.Song)
@@ -103,8 +96,7 @@ func _capture(screenshot_name: String) -> void:
 		print("[playtest] wrote %s" % path)
 	_pending_captures -= 1
 
-## Optional `"player_position": [x, y]` teleports Ivo before the first step, so a
-## timeline can start beside the thing it tests instead of walking there.
+## Optionally positions Ivo before the first timeline step.
 func _place_player(at: Array) -> void:
 	var player := get_tree().get_first_node_in_group(Player.GROUP) as Node2D
 	assert(player != null, "player_position given but no node is in group %s" % Player.GROUP)

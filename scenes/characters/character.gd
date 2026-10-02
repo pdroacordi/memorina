@@ -4,8 +4,7 @@ extends CharacterBody2D
 signal facing_changed(facing: int)
 signal died
 
-## What silhouette() copies from the body's sprite: the frame, never its
-## material, script or animation.
+## Sprite properties copied by `silhouette()`.
 const SILHOUETTE_PROPERTIES: Array[StringName] = [
 	&"texture", &"hframes", &"vframes", &"frame", &"flip_h", &"flip_v",
 	&"centered", &"offset", &"region_enabled", &"region_rect", &"texture_filter",
@@ -16,16 +15,12 @@ const SILHOUETTE_PROPERTIES: Array[StringName] = [
 @export_category("Knockback")
 @export var knockback_time: float = 0.18
 @export var knockback_damping: float = 6.0
-## The colour a body wears for a moment when something lands on it, and for
-## how long. Script-owned: nothing keys Sprite2D:modulate, so no RESET track
-## fights this.
+## Color and duration of the hit flash, in real seconds.
 @export var hurt_flash_color: Color = Color(1.0, 0.5, 0.5)
 @export var hurt_flash_time: float = 0.18
 
 var facing: int = 1
-## The air this body stands in this frame, as a VELOCITY (px/s): wind, a
-## current, a song's gale (Airflow, through AirflowBody). Summed by whatever
-## pushes, steered toward by the body's own motion, cleared after the move.
+## Air velocity (px/s) applied during this physics frame.
 var _carry := Vector2.ZERO
 var _knockback_timer: float = 0.0
 var _just_hit: bool = false
@@ -64,13 +59,11 @@ func face_towards(axis: float) -> void:
 	_sprite.flip_h = facing < 0
 	facing_changed.emit(facing)
 
-## Adds moving air to this frame's carry. Pushers call this before the body
-## moves (AirflowBody runs at a lower physics priority than the body).
+## Pushers call this before movement; `AirflowBody` runs at a lower physics priority.
 func push(wind: Vector2) -> void:
 	_carry += wind
 
-## The air this body is standing in right now. The body decides what it does
-## with it: locomotion steers toward input plus this, a guardian ignores it.
+## Returns this frame's accumulated air velocity.
 func carry() -> Vector2:
 	return _carry
 
@@ -86,8 +79,7 @@ func is_dead() -> bool:
 func just_hit() -> bool:
 	return _just_hit
 
-## A body wearing a colour for a beat: being hit, a guardian telegraphing, a
-## guardian going lucid. One implementation, whatever the reason.
+## Flashes the sprite for the given duration in real seconds.
 func flash(color: Color, seconds: float) -> void:
 	if _flash_tween != null:
 		_flash_tween.kill()
@@ -95,10 +87,7 @@ func flash(color: Color, seconds: float) -> void:
 	_flash_tween = create_tween()
 	_flash_tween.tween_property(_sprite, "modulate", Color.WHITE, seconds)
 
-## A still copy of the frame this body is showing right now - what Sombra
-## burns into the ground. Plain drawing: no script, no animation, and not on
-## the creature pass (it is the world's, so the grey takes it). Its transform
-## is the sprite's GLOBAL one; re-express it under whatever adopts it.
+## Returns a static sprite copy using the current global transform.
 func silhouette() -> Sprite2D:
 	var copy := Sprite2D.new()
 	for property: StringName in SILHOUETTE_PROPERTIES:
@@ -116,15 +105,11 @@ func apply_knockback(impulse: Vector2) -> void:
 
 	_knockback_timer = knockback_time
 
-## Lets go of a flinch early, for something that OUTRANKS being hit - a
-## remembered skill performing on the same press that bought it.
+## Clears knockback when an action performed on the same press takes priority.
 func clear_knockback() -> void:
 	_knockback_timer = 0.0
 
-## Somewhere this body cannot be (a HazardZone found it). By default it simply
-## hurts: no knockback, there is nothing to be knocked away from, and no
-## i-frames, which cannot hold anyone above water. A body that must also be put
-## back somewhere (Player), or that is never wounded (Guardian), overrides this.
+## Applies hazard damage; subclasses may also relocate or ignore the body.
 func receive_hazard(hazard: HazardZone) -> void:
 	if is_dead():
 		return
@@ -150,7 +135,7 @@ func _on_hit_received(damage: int, knockback: Vector2, _source: Node2D) -> void:
 	_wound(damage)
 	apply_knockback(knockback)
 
-## What every way of being hurt shares: the health, the flash, the flinch.
+## Applies shared damage, flash, and hit state.
 func _wound(damage: int) -> void:
 	health.take_damage(damage)
 	flash(hurt_flash_color, hurt_flash_time)

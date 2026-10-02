@@ -1,9 +1,5 @@
 class_name LifeHudTest extends GdUnitTestSuite
 
-## The life HUD draws one note per unit and forgets from the right. The first
-## pool it hears is SHOWN (no fade in front of the player); later losses fade.
-## A forgotten note is still: its sway stops on the frame it held.
-
 const HUD := preload("res://scenes/ui/life_hud/life_hud.tscn")
 
 var _hud: LifeHud

@@ -1,18 +1,13 @@
 extends Node2D
 
-## How many rooms (including the current one) stay resident — deactivated
-## but not destroyed — at once. Backtracking within this many rooms of the
-## current one keeps enemy position/AI/animation state intact; anything
-## older gets evicted (see Room.evict()) and comes back fresh next visit.
+## Maximum resident rooms, including the current room.
 const MAX_RESIDENT_ROOMS := 2
 
-## Where a region's season is turned into a look: the palette of that
-## season's songs.
+## Palette lookup by region season.
 @export var song_catalog: SongCatalog
-## Seconds Ivo is seen sinking before the screen starts to fade: the fall
-## gets its own moment instead of vanishing into the dark on contact.
+## Seconds Ivo sinks before the hazard fade starts.
 @export var hazard_sink_hold: float = 0.25
-## Seconds the body lies still after its death clip before the screen fades.
+## Seconds the body remains still after its death clip.
 @export var death_hold: float = 0.6
 
 @onready var _fade   : Fade   = %Fade
@@ -21,22 +16,14 @@ const MAX_RESIDENT_ROOMS := 2
 @onready var _memory_field : MemoryField = %MemoryField
 var _current_room    : Room
 var _is_transitioning: bool      = false
-## Which fall the running beat belongs to. Control comes back while the screen
-## is still clearing, so Ivo can fall in again mid-beat; the newer fall owns
-## the screen, and an older beat that wakes up finds it is not the latest and
-## stops (Fade.faded resumes it when the newer fade lands).
+## Identifies the latest hazard beat so an older overlapping beat can stop.
 var _hazard_beat     : int       = 0
-## Ivo is dead and the world is on its way back to the last bench. Nothing
-## else may take the screen: a corpse can fall across a room boundary.
+## Prevents room transitions while the death sequence is running.
 var _dying           : bool      = false
 
-## Most-recently-used first. A room only ever leaves this list via eviction
-## (_touch_resident below), never just by being left — that's the whole
-## point of keeping it "warm" instead of destroying it.
+## Resident rooms ordered most recently used first.
 var _resident_rooms: Array[Room] = []
 
-## The regions are reached through the rooms already being walked - a room is
-## always a child of its region - so nothing needs a group of its own.
 func _ready() -> void:
 	_camera.follow(_player)
 	_player.fell_into_hazard.connect(_on_player_fell_into_hazard)
@@ -62,8 +49,7 @@ func _on_player_entered_room(room: Room) -> void:
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
 
-## The swap itself, behind whatever fade the caller is holding: the old room
-## sleeps, the new one wakes, and the memory field and the camera follow it.
+## Activates the room and updates its memory field and camera bounds.
 func _enter_room(room: Room) -> void:
 	if _current_room:
 		_current_room.deactivate()
@@ -78,9 +64,7 @@ func _enter_room(room: Room) -> void:
 	_touch_resident(room)
 	_camera.set_bounds(_current_room.get_bounds())
 
-## Water took Ivo (design: he does not swim). He sinks while the screen fades,
-## comes back on the last firm ground he stood on, and the screen clears.
-## A second fall while the screen clears starts a beat of its own.
+## Respawns at firm ground after a hazard fade; a newer fall supersedes this beat.
 func _on_player_fell_into_hazard() -> void:
 	_hazard_beat += 1
 	var beat := _hazard_beat
@@ -101,13 +85,7 @@ func _on_player_fell_into_hazard() -> void:
 		_camera.snap()
 	await _fade.to_clear()
 
-## A world built from a save that names a bench - after a death, or a load -
-## starts with Ivo seated on it, behind the black the fade starts in. The
-## bench's room is entered first and its contents awaited until `ready`
-## (Room.activate() adds them deferred, and the first process_frame of a boot
-## can come before the first deferred flush) before its seat is looked for.
-## With no such room or bench (a renamed map, a debug-only trial in a release
-## build) he comes back where the world places him, as on a new game.
+## Enters the saved bench room and waits for deferred contents before finding its seat.
 func _arrive() -> void:
 	var room := _room_by_key(SaveSystem.bench_room())
 	if room == null:
@@ -135,9 +113,7 @@ func _room_by_key(key: String) -> Room:
 			return room
 	return null
 
-## Ivo sat on a bench: he is whole again, the save becomes the world as it
-## stands with this bench as where he comes back, and the creatures return
-## (the user's decisions, 2026-10-01).
+## Restores Ivo and records the bench as the respawn point.
 func _on_player_sat_down(seat: Seat) -> void:
 	_player.rest()
 	seat.rest()
@@ -145,9 +121,7 @@ func _on_player_sat_down(seat: Seat) -> void:
 	SaveSystem.rest_at(seat.bench_id, SceneKey.of(room) if room != null else "")
 	_wake_rooms()
 
-## The creatures come back with a rest: every other resident room is
-## forgotten and built fresh on its next visit, and the one he rests in is
-## rebuilt the next time he enters it - never under his feet.
+## Evicts other resident rooms and expires the current room for its next visit.
 func _wake_rooms() -> void:
 	for room: Room in _resident_rooms.duplicate():
 		if room != _current_room:
@@ -156,14 +130,7 @@ func _wake_rooms() -> void:
 	if _current_room != null:
 		_current_room.expire()
 
-## Death returns Ivo to the last bench and takes back everything gained since
-## (the user's decisions, 2026-10-01). The body is seen to fall and lie still,
-## the screen goes dark, the death is written onto the bench's save - its mark
-## outlives the rewind - and the world is built again from that save, so every
-## system that reads it at _ready comes back as the bench left it.
-##
-## The save is rewound only behind the black: the corpse's world must not
-## change under the death clip.
+## Rewinds to the bench only after the death clip and black fade finish.
 func _on_player_died() -> void:
 	assert(not get_tree().paused, "Nothing deals damage while the world is paused")
 	_dying = true
@@ -182,11 +149,7 @@ func _on_player_died() -> void:
 		SaveSystem.rewind()
 	_reload_world.call_deferred()
 
-## Swaps this world for a fresh instance of itself. Not reload_current_scene():
-## under the playtest harness the current scene is the RUNNER, which would
-## restart its timeline. Removed before it is freed, so its sources, shelters
-## and groups leave before the new world's join (a queue_free()d node keeps
-## its name and its groups until the frame ends).
+## Replaces this world directly because the playtest runner may be current_scene.
 func _reload_world() -> void:
 	var tree := get_tree()
 	var parent := get_parent()
@@ -206,19 +169,14 @@ func _room_at(point: Vector2) -> Room:
 			return room
 	return null
 
-## Marks `room` as the most recently visited, then evicts whichever
-## resident room hasn't been touched in the longest time if that pushes the
-## cache past its cap.
+## Marks `room` most recently used and evicts the oldest room above the cap.
 func _touch_resident(room: Room) -> void:
 	_resident_rooms.erase(room)
 	_resident_rooms.push_front(room)
 	while _resident_rooms.size() > MAX_RESIDENT_ROOMS:
 		_resident_rooms.pop_back().evict()
 
-## The one place MemoryField.baseline is written. A region lifts its own
-## memory when its guardian is restored, which can happen while the player is
-## standing in it, so the field follows the region it is showing rather than
-## only being refreshed at the next doorway.
+## Updates the displayed region's memory immediately when it changes.
 func _on_region_memory_changed(level: float, region: Region) -> void:
 	if _current_room != null and _current_room.get_region() == region:
 		_memory_field.baseline = level

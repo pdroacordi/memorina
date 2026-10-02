@@ -1,8 +1,7 @@
 class_name IceFront extends RefCounted
 
-## The life of the ice FREEZE lays over a body of water, as pure logic: two
-## fronts growing out from where the song was played, each column setting
-## behind them, and a thaw front following. Tested without a scene.
+## Models FREEZE growth and thaw over water.
+## The fronts grow from the song position, and a thaw front follows.
 ##
 ## GROWTH NEEDS LIVING WATER (design 03 §6.3). The fronts and the setting both
 ## run at the memory under them, so ice crawls over grey water and stops dead
@@ -14,10 +13,7 @@ class_name IceFront extends RefCounted
 ## pulse contracted, and the timed crossing (design 02, Combinado 1: "começa a
 ## descongelar assim que criada") would not exist.
 ##
-## Two thresholds, read in order as a column sets:
-##   hold      - the surface stops answering (harden_at)
-##   solidity  - the ice is drawn solid and carries weight (solid_at)
-## so a front visibly calms the water before it looks like ice.
+## `harden_at` stops surface response before `solid_at` makes ice walkable.
 
 var _profile: IceProfile
 var _column_width: float
@@ -46,9 +42,7 @@ func _init(column_count: int, column_width: int, profile: IceProfile) -> void:
 func column_count() -> int:
 	return _ice.size()
 
-## Starts (or restarts) the ice at `column`, clamped onto the water - a song
-## played from the bank freezes from the nearest edge. Ice already standing is
-## kept; only the fronts and the thaw start over.
+## Starts the fronts at `column`, clamped to the water; existing ice remains.
 func freeze_from(column: int) -> void:
 	_origin = clampi(column, 0, _ice.size() - 1)
 	_left = float(_origin)
@@ -66,8 +60,7 @@ func is_active() -> bool:
 			return true
 	return false
 
-## Advances everything by `delta` seconds. `rates[i]` is the memory over column
-## i (0..1, no threshold).
+## Advances ice by `delta` seconds using per-column memory rates in 0..1.
 func advance(delta: float, rates: PackedFloat32Array) -> void:
 	assert(rates.size() == _ice.size(), "One rate per column")
 	if _origin < 0 or delta <= 0.0:
@@ -81,21 +74,18 @@ func advance(delta: float, rates: PackedFloat32Array) -> void:
 		elif _reached[i] == 1:
 			_ice[i] = minf(_ice[i] + delta * rates[i] / _profile.crystallise_time, 1.0)
 
-## 0..1: how far the surface has stopped answering. 1 = locked flat.
+## Surface hold amount, 0..1.
 func hold(column: int) -> float:
 	return clampf(_ice[column] / _profile.harden_at, 0.0, 1.0)
 
-## 0..1: how solid the ice looks. 1 = drawn solid and walkable.
+## Ice solidity amount, 0..1.
 func solidity(column: int) -> float:
 	return clampf(_ice[column] / _profile.solid_at, 0.0, 1.0)
 
 func is_solid(column: int) -> bool:
 	return _ice[column] >= _profile.solid_at
 
-## One byte per collision segment (IceProfile.segment_width): 1 only while
-## EVERY column in it is solid. Conservative on purpose - collision that reaches
-## past the ice you can see reads as a bug; ice that drops you a pixel early
-## reads as ice.
+## Returns one byte per collision segment; a segment is solid only when every column is solid.
 func solid_segments() -> PackedByteArray:
 	var per_segment := int(_profile.segment_width / _column_width)
 	var count := ceili(float(_ice.size()) / float(per_segment))
@@ -118,9 +108,7 @@ func _grow_fronts(delta: float, rates: PackedFloat32Array) -> void:
 		if _thawed[i] == 0:
 			_reached[i] = 1
 
-## Spends `budget` columns-at-full-memory of travel one column at a time, each
-## at the memory of the column being crossed. Column by column so a fast front
-## or a long frame can never leap a column nothing remembers.
+## Advances one column at a time using that column's memory, preventing a front from skipping unremembered columns.
 func _advance_front(position: float, direction: int, budget: float, rates: PackedFloat32Array) -> float:
 	var remaining := budget
 	while remaining > 0.0:

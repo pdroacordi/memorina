@@ -1,30 +1,7 @@
 @tool
 class_name RoomMapNode extends Node2D
 
-## A room's ground, water and placed things, built from its `.room` text
-## (docs/maps/README.md). The text is the source of truth; this node only
-## lays out what the imported RoomMap already resolved, so a room's load is a
-## set_cell per ground cell plus one WaterLayer per kind of water and one node
-## per entity.
-##
-## The ground is a TileMapLayer child, and the water layers and entities are
-## its SIBLINGS, drawn after it - never its children: a lake parented under the
-## ground's TileMapLayer stopped drawing in front of it.
-##
-## The entities share one `Entities` node that is filled OUTSIDE the tree and
-## then added whole, so every entity is in the tree before any of them runs
-## _ready: a link (a lift to its plate) resolves whatever order the file lists
-## them in. Added one by one, a lift listed before its plate looked for a
-## plate that did not exist yet and was never linked.
-##
-## Runs in the editor too, as a preview: what it builds there is never owned
-## by the scene, so it is never saved into the .tscn - edit the .room file,
-## not the preview. It has no authored children: a (re)build removes every
-## child first, so a reassigned map or a duplicate() never leaves two grounds.
-##
-## It is also where the rest of the game asks what the ground is made of
-## (ground_at), because the map is the only place that knows: Enraizar needs
-## earth, and stone looks different on purpose.
+## Builds room ground, water and entities from `.room` data (docs/maps/README.md).
 
 const GROUP := &"room_map"
 ## The node every placed entity is a child of.
@@ -37,8 +14,7 @@ const FLOOR_TILESET := preload("res://resources/world/tiles/floor_tileset.tres")
 		map = value
 		if is_inside_tree():
 			_build()
-## What the ground draws with: the seasonal art material, so a pulse redraws
-## it in its season.
+## Seasonal material used to draw the ground.
 @export var ground_material: Material:
 	set(value):
 		ground_material = value
@@ -47,8 +23,7 @@ const FLOOR_TILESET := preload("res://resources/world/tiles/floor_tileset.tres")
 
 var _ground: TileMapLayer
 
-## The room map whose map contains `global_point`'s cell (rooms do not
-## overlap). Null where no room map is loaded.
+## Loaded visible room map containing `global_point`, or null if none does.
 static func at(node: Node, global_point: Vector2) -> RoomMapNode:
 	for member: Node in node.get_tree().get_nodes_in_group(GROUP):
 		var room := member as RoomMapNode
@@ -63,9 +38,7 @@ func _ready() -> void:
 func cell_at(global_point: Vector2) -> Vector2i:
 	return _ground.local_to_map(_ground.to_local(global_point)) if _ground else Vector2i.ZERO
 
-## What the ground at `global_point` is made of; NONE in the air and off the
-## map. Water does not change the answer: a lake painted over ground is still
-## over that ground, and a pool fills cells that are empty anyway.
+## Ground type at `global_point`, or NONE off-map/in air; water does not change the ground type.
 func ground_at(global_point: Vector2) -> Enums.Ground:
 	return map.ground_at(cell_at(global_point)) if map else Enums.Ground.NONE
 
@@ -75,9 +48,7 @@ func cell_rect(cell: Vector2i) -> Rect2:
 	return Rect2(_ground.to_global(_ground.map_to_local(cell) - size * 0.5), size)
 
 func _build() -> void:
-	# Removed now, not at frame end, so the fresh nodes keep their names (an
-	# entity's `id` is a link target) - queue_free alone leaves the old one
-	# holding the name until the frame ends.
+	# Remove immediately so newly built entities can reuse IDs before queued nodes are freed.
 	for child: Node in get_children():
 		remove_child(child)
 		child.queue_free()
@@ -99,13 +70,12 @@ func _build() -> void:
 		_pour(map.legend.entry(symbol), map.water[symbol])
 	var entities := Node2D.new()
 	entities.name = ENTITIES
+	# Add the complete entity set together so links resolve regardless of map order.
 	for placed: Dictionary in map.entities:
 		_place(map.legend.entry(placed.symbol), placed, entities)
 	_adopt(entities)
 
-## One WaterLayer per kind of water, its finer cells painted under every map
-## cell of that kind BEFORE it enters the tree: it turns its cells into bodies
-## in its own _ready.
+## Paint finer water cells before adding the layer, because its `_ready` creates bodies.
 func _pour(entry: RoomLegendEntry, cells: PackedVector2Array) -> void:
 	var layer := entry.water_layer.instantiate() as WaterLayer
 	assert(layer != null, "legend '%s': water_layer must be a WaterLayer preset" % entry.symbol)

@@ -1,26 +1,13 @@
 class_name ColorPulse extends Node2D
 
-## A song, made visible and physical for a few seconds.
-##
-## Composes rather than extends: a MemorySource child gives it its effect on
-## the world's colour, season and time, a SongArea child gives it its reach for
-## receivers, a PulseTimeline gives it its shape over time, and the season's
-## own particle scene (if any) is mounted under it, and so is the song's own
-## PulseEffect (if any). The pulse itself only drives the radius those agree on
-## and then frees itself.
+## A song pulse drives its memory source, receiver area, timeline, particles, and optional effect.
 
-## Every live pulse is in this group, so a song that acts on other pulses
-## (Solstice) or on what they leave behind (wet earth after Rain) can find them
-## without anyone keeping a list.
+## Group used to find live pulses, including by Solstice effects.
 const GROUP := &"color_pulse"
 
-## Who played the song (the PulseEmitter's body), for an effect that is about
-## them - the burned shadow copies their frame. Null for a pulse nobody
-## played. Set before start().
+## PulseEmitter body, used by performer-specific effects; set before start().
 var performer: Node2D
-## Whether it holds still while the tree is paused (see PulseEmitter). It stays
-## PROCESS_MODE_ALWAYS either way - a lesson's pulse must spread under the
-## pause - and only its clock and its particles stop. Set before start().
+## Whether its clock and particles stop during pause; its node remains PROCESS_MODE_ALWAYS. Set before start().
 var holds_in_pause := false
 
 @onready var _source: MemorySource = $Source
@@ -44,10 +31,7 @@ static func lit(node: Node, song_id: Enums.Song) -> Array[ColorPulse]:
 func _enter_tree() -> void:
 	add_to_group(GROUP)
 
-## Called by whoever spawned it, immediately after it enters the tree. `stats`
-## overrides the song's own shape in time - a lesson's pulse is the same
-## song, opened slowly across its whole track. `with_effect` false lights the
-## colour without what the song does (a guardian's pulse; see PulseEmitter).
+## Starts the pulse; optional stats override its timeline and with_effect disables song actions.
 func start(song: Song, stats: PulseStats = null, with_effect: bool = true) -> void:
 	_source.tint = song.tint()
 	_source.season = song.season()
@@ -98,24 +82,22 @@ func _physics_process(delta: float) -> void:
 func song() -> Song:
 	return _song
 
-## Whether this pulse carries what its song does: its effect, and the world's
-## answers to it (see PulseEmitter.song_acts).
+## Whether this pulse runs its song effect and triggers world responses; see PulseEmitter.song_acts.
 func acts() -> bool:
 	return _acts
 
-## The pulse's current reach. The CLEAN disc: gameplay never asks where the
-## dithered edge happened to fall (docs/design/02_mecanicas.md section 7.3).
+## Current gameplay radius uses the clean disc; see docs/design/02_mecanicas.md section 7.3.
 func radius() -> float:
 	return maxf(_timeline.radius(), 0.0) if _timeline else 0.0
 
-## Lasts longer and reaches farther, once (Solstice; see PulseTimeline.stretch).
+## Extends reach and duration once; see PulseTimeline.stretch.
 func stretch(reach: float, duration: float) -> bool:
 	return _timeline != null and _timeline.stretch(reach, duration)
 
 func is_stretched() -> bool:
 	return _timeline != null and _timeline.is_stretched()
 
-## The reach it opens to or holds at, stretched or not.
+## Maximum reach, stretched or not.
 func max_radius() -> float:
 	return _timeline.max_radius() if _timeline else 0.0
 
@@ -128,9 +110,7 @@ func contains(global_point: Vector2) -> bool:
 func _apply_radius() -> void:
 	var reach := radius()
 	_source.radius = reach
-	# A pulse's edge scales with the pulse, unlike an authored zone whose
-	# feather is a fixed pixel width. Contracting light should keep the same
-	# proportion of softness the whole way down.
+	# Scale feather with radius so edge softness remains proportional while contracting.
 	_source.feather = reach * MemoryFieldMath.DEFAULT_FEATHER_RATIO
 	var circle: CircleShape2D = _shape.shape
 	circle.radius = maxf(reach, 0.01)

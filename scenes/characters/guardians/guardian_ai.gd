@@ -1,60 +1,24 @@
 class_name GuardianAI
 extends AIController
-## The pressure phase's movement and attack picking. Which moves exist is data
-## (GuardianAttack); whether the AI may act at all is pushed in through
-## `active` by the guardian, which is the only node that knows the fight's
-## phase. Never instantiated on its own: a Guardian mounts it as $AI.
-##
-## IT NEVER STANDS STILL, AND IT NEVER DITHERS. Two rules carry that:
-##
-## 1. It picks the move that SUITS the moment - one that reaches a player
-##    overhead when it owns one, its longest when they are far, whatever the
-##    roll says otherwise (`_situational_pick`).
-## 2. Every decision taken from a distance is COMMITTED for a while. A player
-##    bouncing on a guardian's head crosses the reach of its moves several
-##    times a second, and an AI that re-decides on each crossing turns on the
-##    spot: the escape from under them is a state with a minimum dwell and a
-##    wider exit band, the spacing is a mode entered and left at different
-##    distances, and the chase and the facing keep their side inside a dead
-##    band.
-##
-## What it does between swings is therefore: escape a player standing on it
-## (fast, committed, and punished the moment they land), hold its spacing
-## while a cooldown runs (give ground, drift back in, or pace), wait out a
-## player it cannot reach rather than walking under them, and otherwise close
-## in and swing.
-##
-## The move carrying a recall is not left to chance: it is scheduled every
-## `recall_after_attacks` ordinary moves (a phase the player can learn to
-## expect), or at once when the guardian asks for it (request_recall), whether
-## or not the skill has been remembered yet - the guardian decides if a recall
-## opens; the AI only supplies the rhythm. A guardian being mashed asks for a
-## counter the same way (provoke).
+## Chooses attacks and movement during the pressure phase; the guardian sets `active` and attack data.
 
 signal attack_telegraphed(attack: GuardianAttack)
 signal attack_started(attack: GuardianAttack)
 signal attack_finished(attack: GuardianAttack)
 
-## How far the player must be to one side before the guardian picks a new
-## side to walk or look at. Inside this band it keeps what it had: someone
-## standing exactly overhead must not make it turn every frame.
+## Horizontal dead band, in px, for movement and facing.
 const TURN_BAND := 10.0
-## Horizontal reach of "on top of me", and how far it must get before it
-## considers itself clear. Two different numbers on purpose.
+## Horizontal entry and exit bands, in px, for escaping an overhead player.
 const OVERHEAD_BAND := 64.0
 const ESCAPED_BAND := 150.0
-## Seconds the guardian lunges to get clear, and the shortest time it stays in
-## the escape however the player bounces.
+## Lunge and minimum escape durations, in seconds.
 const STEP_OUT_TIME := 0.55
 const ESCAPE_MIN_TIME := 0.9
-## Seconds a player must be back within reach before the escape ends: a pogo
-## dips inside it a few times a second and must not cancel anything.
+## Seconds the player must remain within reach before escape ends.
 const ESCAPE_RELEASE_TIME := 0.3
-## How far back inside its reach a player must come before the guardian
-## believes they are down: a fraction of the tallest move's height.
+## Fraction of the tallest attack height used as the reach release threshold.
 const REACH_RELEASE := 0.8
-## How much closer than its comfort distance a player may come before the
-## guardian gives ground, and how much further before it drifts back in.
+## Comfort-distance multipliers for entering give-ground and close modes.
 const COMFORT_NEAR := 0.7
 const COMFORT_FAR := 1.3
 
@@ -190,9 +154,6 @@ func _select_state() -> int:
 		return TELEGRAPH
 	return APPROACH
 
-#############################################
-##  M A N O E U V R E                      ##
-#############################################
 
 ## Everything the guardian does between swings.
 func _approach_tick(delta: float) -> void:
@@ -206,8 +167,7 @@ func _approach_tick(delta: float) -> void:
 	if _in_range(_next):
 		_current_direction = 0.0
 		return
-	# Walking under a player it cannot reach is how a guardian becomes a
-	# trampoline; it keeps its distance and waits for them to come down.
+	# Avoid moving beneath an overhead player the current attacks cannot reach.
 	if _above_reach:
 		_hold_spacing(to_player, delta)
 		return
@@ -252,8 +212,7 @@ func _update_escape(to_player: Vector2, delta: float) -> bool:
 		_escape_release = 0.0
 
 	_escape_time += delta
-	# A pogo dips in and out of reach several times a second; only a player
-	# who STAYS down ends the escape.
+	# Require a continuous landing interval to end the escape.
 	_escape_release = 0.0 if _above_reach else _escape_release + delta
 	if _escape_time >= ESCAPE_MIN_TIME:
 		var clear := absf(to_player.x) >= ESCAPED_BAND
@@ -261,8 +220,7 @@ func _update_escape(to_player: Vector2, delta: float) -> bool:
 		if clear or landed:
 			_escaping = false
 			if landed:
-				# They came down. The move it could not make while they were up
-				# there lands now, with no cooldown left to hide behind.
+				# Allow an attack immediately after the player lands.
 				_cooldown = 0.0
 			return false
 
@@ -279,16 +237,7 @@ func _close_in(to_player: Vector2) -> void:
 	if absf(to_player.x) > TURN_BAND:
 		_current_direction = signf(to_player.x)
 
-## Waiting out a cooldown is not standing still: it gives ground to a player
-## who has closed in, drifts back toward one who has backed off, and paces
-## when the spacing is what it wants. The magnitude is a fraction of its
-## walking speed, so this reads as circling rather than charging.
-##
-## The mode is held with hysteresis - it is entered at COMFORT_NEAR/FAR and
-## only left back at the comfort distance itself. Deciding it from the raw
-## distance every frame makes a guardian standing near the threshold turn
-## dozens of times a second, which is the same class of bug as chasing the
-## sign of an x that sits on its own.
+## Holds spacing during cooldown with hysteresis at the comfort-distance thresholds.
 func _hold_spacing(to_player: Vector2, delta: float) -> void:
 	if comfort_distance <= 0.0:
 		_current_direction = 0.0
@@ -344,9 +293,6 @@ func _update_look() -> void:
 	if absf(dx) > TURN_BAND:
 		_look_direction = signf(dx)
 
-#############################################
-##  T H E   M O V E S                      ##
-#############################################
 
 func _start_telegraph(attack: GuardianAttack) -> void:
 	current_attack = attack
@@ -389,9 +335,7 @@ func _tallest_reach() -> float:
 		tallest = maxf(tallest, attack.attack_height)
 	return tallest
 
-## A fresh choice: the recall move when its turn has come or was asked for,
-## otherwise the move that suits where the player is, with a weighted roll to
-## break ties. A move with weight 0 is only ever scheduled.
+## Selects a due recall, a situational move, or a weighted move; weight 0 only permits scheduling.
 func _pick_next() -> void:
 	var recall_move := _recall_move()
 	var due := recall_after_attacks > 0 and _since_recall >= recall_after_attacks
@@ -401,11 +345,7 @@ func _pick_next() -> void:
 	var situational := _situational_pick()
 	_next = situational if situational != null else _weighted_pick()
 
-## Between swings the choice is KEPT, and only a strong opinion changes it -
-## the player went overhead, or moved out past its spacing. Re-rolling every
-## frame instead looks like variety and is the opposite: the guardian throws
-## whichever move happens to be in range NOW, so the longest one wins every
-## race and the short ones are never seen again.
+## Keeps the selected move until a situational condition changes.
 func _refresh_next() -> void:
 	if _next == null:
 		_pick_next()
@@ -419,10 +359,7 @@ func _refresh_next() -> void:
 	if opinion != null:
 		_next = opinion
 
-## Most of a guardian's intelligence: a player overhead is answered by a move
-## that reaches up there IF it owns one, a player beyond its comfort distance
-## by the longest move it has, and anything else by the roll. Null means "no
-## strong opinion".
+## Returns an attack suited to an overhead or distant player, or null when neither applies.
 func _situational_pick() -> GuardianAttack:
 	var to_player := _sight.player.global_position - _body.global_position
 	var above := -to_player.y
@@ -438,8 +375,7 @@ func _situational_pick() -> GuardianAttack:
 				reaches_up = attack
 		if reaches_up != null:
 			return reaches_up
-	# Well beyond its spacing - not merely at the edge of it, or the move it
-	# keeps backing away to would be the only one it ever threw.
+	# Require distance beyond the comfort band to avoid always selecting the longest attack.
 	if comfort_distance > 0.0 and distance > comfort_distance * COMFORT_FAR:
 		var longest: GuardianAttack = null
 		for attack: GuardianAttack in attacks:

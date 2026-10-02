@@ -1,21 +1,10 @@
 class_name EntityParams extends RefCounted
 
-## Applies a room map entity's JSON params to the node it placed
-## (docs/maps/README.md, "Entity params"). A param is a property of the
-## entity's root, by name, converted to that property's type:
-##   numbers, booleans, strings, StringNames, enums (by their int)
-##   Vector2 / Vector2i from [x, y]
-##   Color from "#rrggbb" or "#rrggbbaa"
-##   a Resource (a profile, stats) from its "res://..." path
-##   NodePath from another entity's `id` - it resolves among the room's
-##     entities, so {"target_path": "gate_a"} points at the entity whose id is
-##     "gate_a". A path that already starts with "." or "/" is kept as written.
-## `id` itself is not a property: it names the node, which is what makes it a
-## link target.
+## Applies room map entity parameters to node properties (docs/maps/README.md, "Entity params").
 
 const ID := "id"
 
-## Problems with `params` for `node`, as messages; empty when all apply.
+## Returns parameter validation errors for `node`.
 static func check(node: Node, params: Dictionary) -> PackedStringArray:
 	var problems := PackedStringArray()
 	var types := _property_types(node)
@@ -32,8 +21,7 @@ static func check(node: Node, params: Dictionary) -> PackedStringArray:
 			problems.append("'%s'.%s: %s is not a %s" % [node.name, key, params[key], _resource_class(node, key)])
 	return problems
 
-## The entity ids `params` link to (NodePath params written as a bare id),
-## for the validator to check against the room's entities.
+## Returns entity ids referenced by bare-id NodePath parameters.
 static func links(node: Node, params: Dictionary) -> PackedStringArray:
 	var found := PackedStringArray()
 	var types := _property_types(node)
@@ -44,8 +32,7 @@ static func links(node: Node, params: Dictionary) -> PackedStringArray:
 			found.append(value)
 	return found
 
-## Sets every param on `node`. Call check() first; a param that does not
-## apply is skipped here rather than half-applied.
+## Sets convertible parameters on `node`; call `check()` first.
 static func apply(node: Node, params: Dictionary) -> void:
 	var types := _property_types(node)
 	if params.has(ID):
@@ -57,9 +44,7 @@ static func apply(node: Node, params: Dictionary) -> void:
 		if value != null:
 			node.set(key, value)
 
-## The names a map may set, with their types: the root's own properties that
-## are stored or shown in the editor (exports, and the engine's own such as
-## position), which is exactly what the map guide lists.
+## Returns stored or editor-visible root properties and their types.
 static func _property_types(node: Node) -> Dictionary:
 	var types := {}
 	for property: Dictionary in node.get_property_list():
@@ -67,15 +52,14 @@ static func _property_types(node: Node) -> Dictionary:
 			types[property.name] = property.type
 	return types
 
-## The class a Resource property takes (its hint), or "" for any.
+## Returns the hinted Resource class, or an empty string for any class.
 static func _resource_class(node: Node, key: String) -> String:
 	for property: Dictionary in node.get_property_list():
 		if property.name == key and property.hint == PROPERTY_HINT_RESOURCE_TYPE:
 			return property.hint_string
 	return ""
 
-## Whether `resource` is a `wanted` - an engine class or a script class_name,
-## through its script's bases. A Song handed to a WindProfile slot is not.
+## Checks `wanted` against the resource's engine class and script base classes.
 static func _fits(resource: Object, wanted: String) -> bool:
 	if wanted.is_empty() or resource.is_class(wanted):
 		return true

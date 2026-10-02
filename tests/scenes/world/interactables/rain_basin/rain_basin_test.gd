@@ -1,9 +1,6 @@
 class_name RainBasinTest extends GdUnitTestSuite
 
-## A rain basin is dry until it rains, fills to its painted level while a RAIN
-## pulse covers it, lifts what floats, and sinks back to dry when the last
-## pulse leaves. A dry basin has nothing to freeze. Driven by hand: the pulse's
-## arrival is the receiver's own signal, and no memory field means memory 1.
+## Covers rain basin fill, drain, floating, and freeze behavior; direct signal setup uses memory 1 without a memory field.
 
 const BASIN := preload("res://scenes/world/interactables/rain_basin/rain_basin.tscn")
 const FLOATER := preload("res://scenes/world/interactables/floater/floater.tscn")
@@ -13,8 +10,7 @@ const FREEZE := preload("res://resources/songs/freeze.tres")
 var _basin: FreezableWater
 var _water: WaterBody
 var _rain: RainBasin
-# Each test's basin stands apart: a freed one lingers in the tree until the
-# frame ends, and WaterBody.at() must not find the last test's.
+# Keep test basins spatially separate because freed nodes remain until frame end and WaterBody.at() searches the tree.
 var _placed := 0
 
 func before_test() -> void:
@@ -25,7 +21,7 @@ func before_test() -> void:
 	auto_free(_basin)
 	_water = _basin.get_node("Water") as WaterBody
 	_rain = _basin.get_node("Rain") as RainBasin
-	# What the basin's deferred dry-out does, now rather than at frame end.
+	# Apply the deferred initial dry level before assertions run.
 	_water.set_level(_water.level_range().y)
 
 func _run(seconds: float) -> void:

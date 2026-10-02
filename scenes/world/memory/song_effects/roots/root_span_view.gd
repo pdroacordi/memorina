@@ -1,10 +1,6 @@
 class_name RootSpanView extends Node2D
 
-## One place Enraizar's roots grow (a RootSpanFinder.Span), drawn and made
-## solid: a pair of strands per crossing (RootStrands) in the root art, and
-## what the crossing becomes once joined - a one-way floor for a bridge, a
-## Climbable shape per rung of a shaft, a Climbable pole for a pillar.
-## World art (the grey takes it); placed in world coordinates.
+## Draws a root span and adds its bridge, rung or pillar collision when joined.
 
 ## How thick the strands are drawn, px (the root art's height).
 const STRAND_THICKNESS := 10.0
@@ -97,8 +93,7 @@ func advance(delta: float, grower: RootGrower) -> void:
 			if shape:
 				shape.set_deferred(&"disabled", not joined)
 
-## Whether this span holds anything up right now (a bridge to stand on, any
-## rung or the pole to climb).
+## Whether any crossing is currently joined.
 func is_joined() -> bool:
 	for crossing: Dictionary in _crossings:
 		if crossing["joined"]:
@@ -121,10 +116,7 @@ func _add_crossing(a: Vector2, b: Vector2, strand: Texture2D, drop: float) -> Di
 	_crossings.append(crossing)
 	return crossing
 
-## A root growing from `from` along `direction`, its art repeating along it
-## and centred on the line (the offset is local, so it turns with the root
-## whichever way it grows); `drop` lowers the line so a bridge's strands lie
-## with their top on the banks' tops, where its floor is.
+## Creates a repeated strand along a line; `drop` offsets it vertically in pixels.
 func _strand_sprite(from: Vector2, direction: Vector2, strand: Texture2D, drop: float) -> Sprite2D:
 	var sprite := Sprite2D.new()
 	sprite.texture = strand

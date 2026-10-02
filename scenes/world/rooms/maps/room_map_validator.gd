@@ -1,12 +1,6 @@
 class_name RoomMapValidator extends RefCounted
 
-## Everything that makes a room map wrong, in one pass: what RoomMapParser
-## finds in the text, plus what only the placed scenes can say - a param the
-## entity does not have, or a value its property cannot take, or a link to an
-## id no entity in the room has (a gate whose plate is missing would simply
-## never open). The importer and
-## the room-files suite both run this, so the game and the tests reject the
-## same maps.
+## Validates parsed room text and placed-scene properties and links; importer and room-file checks share this validator.
 
 static func validate(text: String, legend: RoomLegend, source: String) -> RoomMapParser.Result:
 	var result := RoomMapParser.parse(text, legend, source)

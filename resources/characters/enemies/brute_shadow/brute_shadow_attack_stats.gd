@@ -1,9 +1,10 @@
 class_name BruteShadowAttackStats
 extends Resource
-## Tuning data for BruteShadowAI's melee attack.
+## Stores Brute Shadow melee attack timing and range.
 
-## Matches the "attack" animation's length (brute_shadow.tscn) so the
-## gameplay state and the animation stay in lockstep.
+## Must match the attack animation length in brute_shadow.tscn.
 @export var attack_duration: float = 0.9166667
+## Melee reach, in px.
 @export var attack_range: float = 40.0
+## Delay between attacks, in seconds.
 @export var attack_cooldown: float = 1.0

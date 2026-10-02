@@ -1,21 +1,7 @@
 extends SceneTree
 
-## Builds the stacked seasonal background sheets the game draws from.
-##
-## Art is authored one season per file under
-## assets/sprites/world/background/<season>/<season>_background_layer_N.png.
-## The seasonal_art shader wants one sheet per layer with the seasons stacked
-## vertically in equal bands, so this script blits them together into
-## assets/sprites/world/background/seasonal/background_layer_N.png.
-##
-## Band order is spring, autumn, winter - the same order floor_tiles.png uses -
-## and is declared to the shader by each background_layer_N_material.tres in
-## scenes/world/memory/seasonal/. A season
-## whose file is missing falls back to spring, so the pipeline runs before the
-## art lands; the console says which ones were stood in for.
-##
-## Run from the project root:
-##   "<godot>" --headless --path . -s res://tools/stack_seasonal_sheets.gd
+## Stacks per-season background art into bands consumed by seasonal_art.gdshader.
+## Missing season art falls back to spring.
 
 const SOURCE_DIR := "res://assets/sprites/world/background"
 const OUTPUT_DIR := "res://assets/sprites/world/background/seasonal"

@@ -1,12 +1,10 @@
 class_name NoteGlyphSet extends Resource
 
-## The icons one input device draws on the sheet: a normal and a lit texture
-## per Enums.Note. One .tres per Enums.GlyphSet; MemorinaHud picks the set
-## from the glyph the press arrived with and never looks at textures itself.
+## Normal and selected textures for each note and input glyph set.
 
-## Indexed by Enums.Note.
+## Textures indexed by Enums.Note.
 @export var normal: Array[Texture2D] = []
-## Indexed by Enums.Note. Shown while a performance replays the note.
+## Selected textures indexed by Enums.Note.
 @export var selected: Array[Texture2D] = []
 
 func texture(note: Enums.Note, lit: bool) -> Texture2D:

@@ -1,39 +1,19 @@
 class_name MemoryClock extends Node
 
-## Runs its neighbour's clock at whatever rate the memory field allows here.
-##
-## This is the other half of the greyhush, and the more important one: a place
-## the cinzesquecimento has taken is not merely colourless, it is STOPPED. See
-## docs/design/03_mundo_e_ambiente.md section 2 - a branch caught mid-sway
-## stays caught mid-sway, and resumes from exactly there when colour returns.
-## Lowering an animation's amplitude would be the wrong thing entirely: that
-## still leaves a cycle running.
-##
-## Environment only. Characters are never slowed - the player must stay
-## responsive inside a dead zone, and an enemy frozen solid would be a combat
-## mechanic nobody designed. _ready() asserts that.
+## Drives environmental animation time from the memory field (docs/design/03_mundo_e_ambiente.md section 2).
 
-## The node whose speed_scale is driven. Empty means the parent.
-##
-## A NodePath resolved in code, not an exported Node: a hand-written NodePath in
-## a .tscn does not convert into an exported Node reference, it silently leaves
-## the property null. That cost a whole verification pass here - the clock
-## computed the right rate while driving nothing at all.
-##
-## Duck-typed rather than adapted per class: AnimatedSprite2D, AnimationPlayer,
-## GPUParticles2D and CPUParticles2D all spell it the same way.
+## Node whose `speed_scale` is driven; empty uses the parent.
+## Keep a NodePath: scene-authored Node references do not resolve reliably from exports.
 @export var target_path: NodePath
 
 var target: Node
 
-## Below this, the clock snaps to a dead stop instead of crawling. Without it a
-## "stopped" area would still creep forward over a long visit.
+## Rates below this threshold stop instead of crawling.
 @export_range(0.0, 1.0) var stop_threshold: float = 0.05
 
 ## How fast this spot's time is running, 0..1. Read-only.
 var rate: float = 0.0
-## Seconds of local time elapsed. A surface animated by a shader reads this
-## instead of TIME so that it freezes and resumes with everything else.
+## Elapsed local seconds; shaders use this instead of TIME to freeze and resume with the world.
 var time: float = 0.0
 
 var _field: MemoryField
@@ -42,8 +22,7 @@ var _anchor: Node2D
 func _ready() -> void:
 	target = get_node_or_null(target_path) if not target_path.is_empty() else get_parent()
 	assert(target != null, "MemoryClock.target_path does not resolve: %s" % target_path)
-	# Without this the clock ticks correctly and drives nothing, which reads
-	# exactly like working code.
+	# Catch valid clocks with unresolved or unsupported targets at setup.
 	assert("speed_scale" in target,
 		"MemoryClock target '%s' has no speed_scale; it would be driven into the void." % target.name)
 	assert(not _is_character(target), "MemoryClock must never drive a Character: the greyhush stops the world, not the people in it.")

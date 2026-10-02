@@ -1,13 +1,7 @@
 class_name LeafCover extends StaticBody2D
 
-## A curtain of dry leaves grown over a passage (design 02 section 8, Outono
-## Espacial 1: "uma parede de folhas secas esconde uma passagem lateral").
-## Soltar lets the leaves fall: they drop in a flurry, the passage opens, and
-## when the grey takes the pulse back they grow back - not while someone is
-## standing in the passage, which would leave them inside the wall.
-##
-## Stands on its cell like any room map entity: `size` wide, rising from the
-## floor.
+## See docs/design/02_mecanicas.md section 8, Outono Espacial 1.
+## Leaves regrow after the passage is clear so they cannot trap a character.
 
 @export var size := Vector2(32, 96)
 @export var regrow_time := 0.8
@@ -49,8 +43,7 @@ func _on_restored() -> void:
 	_shape.set_deferred("disabled", false)
 	_fade_leaves(1.0, regrow_time)
 
-## One fade at a time: a pulse arriving while the leaves grow back must not
-## leave two tweens fighting over them.
+## Replaces the active tween so overlapping pulses cannot animate alpha concurrently.
 func _fade_leaves(alpha: float, seconds: float) -> void:
 	if _fade:
 		_fade.kill()

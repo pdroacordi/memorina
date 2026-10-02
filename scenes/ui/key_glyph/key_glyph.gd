@@ -1,14 +1,6 @@
 class_name KeyGlyph extends TextureRect
 
-## An action's button on screen, as the player's own device draws it: the
-## arrow key, the D-pad, the Xbox A or the PlayStation cross (InputGlyphs, from
-## the binding InputDevice says the hand is on), and it follows the player
-## from keyboard to pad while it is shown. A key with no symbol of its own (Z,
-## Shift) is the blank medallion key with its name written on it. The one place
-## that turns an action into a button the player can read - the recall prompt,
-## the answer prompt and a bench all use it. Can blink between its normal and
-## selected art, and read as pressed. The label is the key's own name from the
-## InputMap, not prose, so it carries no translation key.
+## Displays an action using the active device's glyph, or a labeled blank key when no glyph exists.
 
 enum Look { NORMAL, SELECTED, PRESSED }
 
@@ -35,8 +27,7 @@ func _ready() -> void:
 	set_look(Look.NORMAL)
 	set_process(false)
 
-## Blinks in REAL time: the recall slows the world, and a prompt that blinked
-## at a fifth of its pace would read as stuck.
+## Blink timing uses real seconds so recall slow motion does not slow the prompt.
 func _process(delta: float) -> void:
 	_blink += delta / maxf(Engine.time_scale, 0.001)
 	if _blink >= BLINK_TIME:
@@ -81,9 +72,7 @@ func stop_blink(look: Look = Look.NORMAL) -> void:
 	set_process(false)
 	set_look(look)
 
-## The first keyboard event bound to `action`, as the OS names it - written on
-## the blank key when the glyph art has no symbol for it. Pad bindings never
-## need it: every one of them has its own glyph in InputGlyphs.
+## OS display name of the first keyboard event bound to `action`.
 static func key_name(action: StringName) -> String:
 	for event: InputEvent in InputMap.action_get_events(action):
 		if event is InputEventKey:

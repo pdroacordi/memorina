@@ -1,27 +1,6 @@
 class_name RoomMapParser extends RefCounted
 
-## Turns a room's `.room` text into a RoomMap (docs/maps/README.md). Pure: the
-## importer calls it once per file, the tests call it on strings.
-##
-## A `.room` file has up to four sections:
-##
-##   [room]
-##   origin = -12, -6        ; tile coordinates of the grids' top-left character
-##
-##   [grid]
-##   ....##########          ; ground, ledges and entities: one character per
-##                           ; 32 px cell, from the legend
-##
-##   [water]                 ; optional, the same size as [grid]: water kinds.
-##   ..~~~~~.......          ; A layer of its own because water can lie OVER
-##                           ; ground (a lake in front of the land) as well as
-##                           ; fill a pit.
-##
-##   [entities]
-##   12,8 = {"save_id": "downtown_brute"}   ; grid column,row = JSON params
-##
-## `;` starts a comment in [room] and [entities] (never in a grid, where every
-## character is a cell). Blank lines are ignored everywhere.
+## Parses `.room` text into a RoomMap; see docs/maps/README.md.
 
 const SECTION_ROOM := "room"
 const SECTION_GRID := "grid"
@@ -54,8 +33,7 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 		if section == SECTION_GRID or section == SECTION_WATER:
 			if line.is_empty():
 				continue
-			# Every character of a grid row is a cell: leading whitespace would
-			# shift the row, so it is an error rather than silently trimmed.
+			# Every grid character is a cell, so leading whitespace would shift the row.
 			if raw.length() > 0 and raw[0] in [" ", "\t"]:
 				result.errors.append("%s:%d: a grid row may not start with whitespace - use '%s' for an empty cell" % [source, i + 1, RoomLegend.EMPTY])
 			if section == SECTION_GRID:
@@ -89,8 +67,7 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 	_resolve_tiles(map)
 	return result
 
-## An [entities] line without its comment. A ';' inside the JSON (a string
-## value) is not a comment: only one after the object's closing brace is.
+## Removes a trailing entity comment while preserving semicolons inside JSON strings.
 static func _entity_line(line: String) -> String:
 	if line.begins_with(COMMENT):
 		return ""
@@ -214,11 +191,7 @@ static func _parse_cell(text: String) -> Variant:
 		return null
 	return Vector2i(parts[0].strip_edges().to_int(), parts[1].strip_edges().to_int())
 
-## Every ground cell gets its tile now, so the room never autotiles at load.
-## Cells past the map's left, right and bottom edges count as solid: the ground
-## runs on beyond the room instead of showing a rounded rim at the edge of the
-## screen. Past the TOP edge is open sky, so a ledge on the top row still has
-## its grass.
+## Resolves tile masks at import time; out-of-map cells are solid below and beside the map, but open above.
 static func _resolve_tiles(map: RoomMap) -> void:
 	map.tiles.resize(map.size.x * map.size.y)
 	map.tiles.fill(RoomMap.NO_TILE)

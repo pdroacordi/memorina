@@ -1,7 +1,6 @@
 class_name PulseTimelineTest extends GdUnitTestSuite
 
-## The pulse's shape in time. Pure logic, so the feel of a pulse can be tuned
-## and checked without spawning one.
+## Checks pulse timing and radius without creating a scene.
 
 const MAX_RADIUS := 100.0
 const ATTACK := 0.25
@@ -31,8 +30,7 @@ func test_the_attack_opens_to_the_full_radius() -> void:
 	assert_int(timeline.phase).is_equal(PulseTimeline.Phase.ATTACK)
 	assert_float(timeline.radius()).is_greater(MAX_RADIUS * 0.9)
 
-## The front leaps and settles rather than creeping, so it is already past
-## halfway at the halfway point.
+## The easing curve places the radius past halfway at the time midpoint.
 func test_the_attack_eases_out() -> void:
 	var timeline := _timeline()
 	timeline.advance(ATTACK * 0.5)
@@ -51,8 +49,7 @@ func test_the_contraction_pulls_the_radius_back_in() -> void:
 	assert_float(timeline.radius()).is_less(MAX_RADIUS)
 	assert_float(timeline.radius()).is_greater(0.0)
 
-## "Nao e um desvanecer educado; e reconquista" - the grey comes back faster
-## the longer it has been coming, so the second half loses more than the first.
+## The contraction accelerates, so its second half loses more radius than its first.
 func test_the_contraction_accelerates() -> void:
 	var timeline := _timeline()
 	timeline.advance(ATTACK + SUSTAIN)
@@ -82,8 +79,7 @@ func test_it_finishes_after_all_three_phases() -> void:
 	assert_bool(timeline.is_finished()).is_true()
 	assert_int(timeline.phase).is_equal(PulseTimeline.Phase.DONE)
 
-## A pulse lit in a corroded place dies sooner - this is what makes the danger
-## of a region readable in the light the player switched on.
+## Local memory shortens pulse duration.
 func test_a_pulse_in_a_dead_place_dies_sooner() -> void:
 	var alive := _timeline(1.0)
 	var dying := _timeline(0.0)
@@ -92,7 +88,7 @@ func test_a_pulse_in_a_dead_place_dies_sooner() -> void:
 func test_full_memory_gives_the_authored_contraction() -> void:
 	assert_float(_timeline(1.0).total_time()).is_equal_approx(ATTACK + SUSTAIN + CONTRACT, 0.0001)
 
-## The 0.0001 clamps exist so an un-tuned PulseStats cannot divide by zero.
+## Zero phase durations must remain safe from division by zero.
 func test_zero_length_phases_do_not_divide_by_zero() -> void:
 	var stats := _stats()
 	stats.attack_time = 0.0
@@ -111,8 +107,7 @@ func test_advancing_past_the_end_stays_finished() -> void:
 	assert_bool(timeline.is_finished()).is_true()
 	assert_float(timeline.radius()).is_equal_approx(0.0, 0.0001)
 
-## The leading ring (design 3.1): bright while the front is moving, lingering
-## a moment once it has arrived, then gone.
+## The leading ring follows design 03 section 1.
 func test_the_ring_is_full_while_the_front_moves() -> void:
 	var timeline := _timeline()
 	assert_float(timeline.ring()).is_equal_approx(1.0, 0.0001)

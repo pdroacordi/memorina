@@ -1,6 +1,5 @@
 class_name CueTrackerTest extends GdUnitTestSuite
 
-## CueTracker is pure logic, so these run with no scene tree and no audio.
 
 func _tracker(cues: Array[float] = [1.0, 2.0, 3.0]) -> CueTracker:
 	return CueTracker.new(PackedFloat32Array(cues))

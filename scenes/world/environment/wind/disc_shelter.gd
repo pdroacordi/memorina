@@ -1,10 +1,7 @@
 class_name DiscShelter extends AirflowShelter
 
-## A round place the air cannot reach, `radius` around this node: Redoma's
-## shell (design 02 section 7.1: it shelters from the wind, Vendaval and the
-## weather), which drives the radius as it shrinks, and a bench (design 03
-## section 5.4, item 4: every bench is full shelter), which authors it.
-## At 0 it covers nothing.
+## See docs/design/02_mecanicas.md section 7.1 and docs/design/03_mundo_e_ambiente.md section 5.4 item 4.
+## Radius is in pixels; zero covers no area.
 
 @export var radius := 0.0
 

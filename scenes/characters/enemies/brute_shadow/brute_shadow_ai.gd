@@ -1,11 +1,6 @@
 class_name BruteShadowAI
 extends EnemyAI
-## BruteShadow's only addition beyond the common wander/chase baseline: a
-## melee ATTACK state that takes over once its target is within melee range,
-## holding direction at 0.0 for the swing's full duration so it can't move or
-## turn mid-attack. The swing itself (Hitbox timing, sprite frames) is
-## entirely the attack clip's business; BruteShadowAnimationResolver just
-## reads `is_attacking` below (via BruteShadow.is_attacking()) to pick it.
+## BruteShadow adds a stationary melee attack state to the common AI baseline.
 
 const ATTACK := 2
 
@@ -21,10 +16,8 @@ func _ready() -> void:
 	super()
 	_states.add_state(ATTACK, _attack_tick)
 
-## Cooldown decays every tick regardless of state, not just while attacking —
-## overridden here (rather than added to _select_state, which has no delta)
-## so it's always up to date before _select_state reads it this same frame.
 func tick(delta: float) -> void:
+	# Decay before state selection so cooldown expiry can start an attack this tick.
 	_attack_cooldown = maxf(_attack_cooldown - delta, 0.0)
 	super.tick(delta)
 
@@ -36,12 +29,7 @@ func _select_state() -> int:
 		return ATTACK
 	return super._select_state()
 
-## Overrides the inherited chase: once already within melee range (e.g.
-## still on cooldown from the last swing), stop advancing instead of walking
-## flush into the player — EnemyAI's own _chase_tick has no minimum distance
-## at all, which otherwise leaves the AI trying to walk into the player's
-## collider every frame, flipping facing back and forth as the collision
-## response shoves it back each time.
+## Stops inside melee range while waiting for cooldown; the base chase has no stop distance.
 func _chase_tick(delta: float) -> void:
 	if _in_melee_range():
 		_current_direction = 0.0
@@ -60,8 +48,7 @@ func _start_attack() -> void:
 	_attack_timer = attack_stats.attack_duration
 	_current_direction = 0.0
 
-## A hit interrupts the swing; the cooldown still applies so the next one
-## doesn't come the instant the flinch ends.
+# Interruptions retain the cooldown so a flinch cannot trigger an immediate follow-up swing.
 func cancel_attack() -> void:
 	if is_attacking:
 		is_attacking = false

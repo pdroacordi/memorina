@@ -1,16 +1,6 @@
 class_name RainBasin extends Node
 
-## A basin Chuva (Enums.Song.RAIN) fills (design 02 section 7.1, 03 section
-## 6.5). It is painted up to where the rain brings the water - the level is
-## authored, never computed - and is dry until it rains: while a RAIN pulse
-## covers it the water rises to that level, and when the last one has gone it
-## sinks back to dry. It rises and sinks at the memory under it, like all water
-## (a basin in the grey fills slowly, in a dead place not at all), and holds
-## its level while it is frozen - Chuva then Congelar is ice where there was no
-## water.
-##
-## Glue beside the FreezableWater it rides on: the water is a WaterBody, the
-## level is WaterBody.set_level, the ice is the FreezableWater's.
+## Fills a painted WaterBody under a RAIN pulse and freezes its current level (docs/design/02_mecanicas.md section 7.1; docs/design/03_mundo_e_ambiente.md section 6.5).
 
 ## Seconds to rise from dry to full at memory 1.
 @export var fill_time := 3.0
@@ -41,8 +31,7 @@ func _ready() -> void:
 	# water in its _ready, which runs after this one.
 	_water.set_level.call_deferred(_dry_y)
 
-## Under a Redoma's closed shell no rain reaches it: the whole painted
-## waterline must be covered, or rain still falls into the part that is not.
+## Requires shelter across the whole waterline because exposed sections still receive rain.
 func _sheltered() -> bool:
 	var airflow := Airflow.find_in(self)
 	if airflow == null:
@@ -53,12 +42,12 @@ func _sheltered() -> bool:
 			return false
 	return true
 
-## How full it is: 0 dry, 1 at its painted level.
+## Returns fill from 0 (dry) to 1 (painted level).
 func level() -> float:
 	return _level
 
 func _physics_process(delta: float) -> void:
-	# Under a Redoma's shell it does not rain: the basin stays as it is.
+	# Shelter forces the rain target to zero, draining the basin.
 	var target := 0.0 if _sheltered() else _target
 	if is_equal_approx(_level, target) or (_freezable and _freezable.is_frozen()):
 		return

@@ -1,16 +1,6 @@
 class_name RootGrower extends PulseEffect
 
-## Enraizar (Enums.Song.ROOT): roots join earth to earth (design 02 section
-## 7.1). Wherever two earth faces are both inside the pulse's clean disc, roots
-## grow across the gap from both, at the memory under each tip: between two
-## banks a bridge (a one-way floor once they meet), across a narrow shaft a web
-## of rungs to climb, from the floor under Ivo to the ceiling above him a
-## pillar to climb. A face the pulse leaves withers its root back, so a bridge
-## breaks at its tips first; stone never roots. Wet earth - inside a Chuva
-## pulse - lets a bridge reach farther (design 02 section 7.4).
-##
-## Where roots can grow is read once from the room's map (RootSpanFinder);
-## what grows, and how far, is decided every frame from the pulse.
+## Enraizar grows roots between earth faces inside its pulse; see design 02 sections 7.1 and 7.4.
 
 @export var grow_speed := 110.0
 @export var wither_speed := 180.0
@@ -72,8 +62,7 @@ func _wet(point: Vector2) -> bool:
 			return true
 	return false
 
-## Builds a view for every span both of whose faces the pulse can reach at
-## `radius` (plus a cell of slack): only what it could ever reach is built.
+## Builds views for spans reachable at `radius`, with one cell of slack.
 func _build_within(radius: float) -> void:
 	_built_reach = radius
 	var reach := radius + float(RoomMapNode.FLOOR_TILESET.tile_size.x)

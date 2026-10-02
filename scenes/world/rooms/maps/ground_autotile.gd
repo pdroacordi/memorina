@@ -1,19 +1,6 @@
 class_name GroundAutotile extends RefCounted
 
-## Which floor_tiles.png tile a ground cell draws with, decided by its
-## neighbours. Pure: a room map is resolved to atlas coordinates once, at
-## import, so a room's load is a plain set_cell per cell.
-##
-## The sheet's band 0, per material (earth at column 0, stone at column 9):
-##   (0..2, 0..2)  a 3x3 block: grassy top row, sides, rounded bottom row
-##   (3, 1)        a one-tile-wide wall piece (edges on both sides)
-##   (4, 3) (5, 3) a step's inner corner: solid, with the grass of the ledge
-##                 above-left / above-right tufting over its top corner
-##   (6, 0) (8, 0) inner corners opening below-right / below-left (a cave's rim)
-##   (6, 3) (6, 4) a one-tile-wide pillar's top and bottom
-##   (6..8, 5)     a one-tile-high platform: left end, middle, right end
-## Everything a cell's shape depends on is whether each of its eight
-## neighbours is solid; the material only picks the column block.
+## Resolves a ground cell's atlas tile from its eight solid neighbours; material selects its column block.
 
 ## The `ground` custom data layer of floor_tileset.tres.
 const GROUND_DATA := "ground"
@@ -48,9 +35,7 @@ static func tile_for(mask: int) -> Vector2i:
 	if not s:
 		return _row(w, e, Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2), Vector2i(6, 4))
 	if w and e:
-		# Surrounded on all four sides: an inner corner shows where a diagonal
-		# opens. Above, it is a step, and the ledge's grass tufts over the
-		# corner (what the rooms were painted with); below, a cave's rim.
+		# Diagonal openings determine inner corners for steps and cave rims.
 		if mask & NW == 0:
 			return Vector2i(4, 3)
 		if mask & NE == 0:
@@ -62,8 +47,7 @@ static func tile_for(mask: int) -> Vector2i:
 		return Vector2i(1, 1)
 	return _row(w, e, Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1))
 
-## A one-tile-high run: ends where the run ends. A lone cell takes the left
-## end - the sheet has no single-tile piece.
+## Selects a tile for a one-tile-high run; a lone cell uses the left end because the sheet has no single-cell tile.
 static func platform_tile(west: bool, east: bool) -> Vector2i:
 	if west and east:
 		return PLATFORM_MIDDLE

@@ -1,20 +1,12 @@
 extends Node
 
-## Which device the player is holding - the keyboard, an Xbox-style pad or a
-## PlayStation one - as the Enums.GlyphSet every prompt draws with, so a key
-## on screen is always the one under the player's hand.
-##
-## An autoload because it is genuinely global: prompts live in the world (a
-## bench), on the HUD and, one day, in menus, and none of them belongs to Ivo.
-## Thin on purpose: the judgement of which set an event means is
-## PlayerInput.glyph_set_for (pure, tested); this only remembers the last one.
+## Tracks the active input device for prompt glyphs; PlayerInput determines the glyph set.
 
 ## The player picked up another device (or moved from the arrows to WASD).
 ## Discrete: emitted on the switch, never per frame.
 signal device_changed(glyph_set: Enums.GlyphSet)
 
-## A stick must be pushed this far before it counts as picking the pad up, so
-## a resting stick's drift never flips the prompts away from the keyboard.
+## Minimum stick magnitude that switches prompts to the gamepad.
 const STICK_THRESHOLD := 0.5
 
 var glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
@@ -32,10 +24,7 @@ func _input(event: InputEvent) -> void:
 func is_pad() -> bool:
 	return glyph_set in [Enums.GlyphSet.XBOX, Enums.GlyphSet.PLAYSTATION]
 
-## The binding of `action` the player's device would press: on the keyboard
-## the key of the set under the hand (S rather than the down arrow for a WASD
-## player, where the action has both), else its first key; on a pad its
-## button, or else its stick. Null when the device has no binding for it.
+## Returns the current device's binding for `action`, or null if none exists.
 func event_for(action: StringName) -> InputEvent:
 	return binding_for(action, glyph_set)
 

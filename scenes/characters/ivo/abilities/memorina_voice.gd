@@ -1,20 +1,7 @@
 class_name MemorinaVoice extends Node
 
-## The instrument's sound: one note at a time, and the mistake that follows a
-## wrong one. Holds no opinion about which notes are right - Player asks
-## can_play_note() before it lets a press through, and MemorinaComponent
-## decides what the press meant.
-##
-## A note rings for well over a second, far longer than a phrase is played
-## at, so a new note CUTS the one still ringing - a pan flute stops sounding
-## the pipe you left - once `min_note_gap` has passed. Presses inside the gap
-## are mashing and are dropped; the gap is what keeps a rhythm to the playing.
-##
-## Mounted with an AudioStreamPlayer child, process_mode ALWAYS so a note can
-## ring out while WorldFreeze holds the world still.
+## Plays one note at a time; `min_note_gap` sets the minimum interval between notes.
 
-## The last note finished sounding on its own (not cut by the next). A queued
-## mistake starts right after.
 signal note_finished
 signal mistake_finished
 
@@ -35,8 +22,6 @@ func _ready() -> void:
 		"MemorinaVoice has %d note streams for %d notes." % [note_streams.size(), Enums.Note.size()])
 	_player.finished.connect(_on_player_finished)
 
-## Whether a press right now would sound: never over the mistake, and not
-## within the gap after the last note began.
 func can_play_note() -> bool:
 	if is_faulting():
 		return false
@@ -51,23 +36,16 @@ func play_note(note: Enums.Note) -> void:
 	_player.stream = note_streams[note]
 	_player.play()
 
-## Sounds the mistake once the note that is ringing has finished, or at once
-## if nothing is sounding. is_busy() stays true until the mistake ends.
 func play_mistake_after_note() -> void:
 	if _player.playing and not _sounding_mistake:
 		_mistake_pending = true
 	else:
 		_play_mistake()
 
-## True while a note or the mistake sounds, or a mistake is waiting its turn.
-## `_sounding_mistake` is checked on its own because `playing` drops on the
-## mix thread a frame before `finished` is emitted; a note let through in that
-## gap would replace the stream and swallow the mistake's end.
+## True while a note or mistake sounds, or a mistake is queued; `_sounding_mistake` covers the frame before `finished` arrives.
 func is_busy() -> bool:
 	return _player.playing or _mistake_pending or _sounding_mistake
 
-## True while a mistake sounds or waits its turn: the instrument is in the
-## middle of saying no, and a lesson must not begin over it.
 func is_faulting() -> bool:
 	return _mistake_pending or _sounding_mistake
 
@@ -87,9 +65,7 @@ func _on_player_finished() -> void:
 		_sounding_mistake = false
 		mistake_finished.emit()
 		return
-	# Emitted even when a mistake is queued behind the note: whoever awaits the
-	# ring-out must always be woken, and then asks the instrument whether the
-	# performance still stands.
+	# Wake note waiters before a queued mistake starts.
 	note_finished.emit()
 	if _mistake_pending:
 		_play_mistake()

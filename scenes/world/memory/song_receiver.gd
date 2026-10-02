@@ -1,28 +1,15 @@
 class_name SongReceiver extends Area2D
 
-## Mounted on anything in the world that answers to one song. This is the
-## whole interface between the musical track and the world: a new effect is a
-## new scene that composes one of these, and no part of the song, pulse or
-## instrument code changes to accommodate it.
-##
-## It watches rather than being watched, on purpose. When a pulse frees itself
-## the engine emits area_exited on everyone it was overlapping, so "the light
-## left me" needs no cooperation from the pulse - and a pulse that shrinks
-## past this receiver reports the same way.
+## Receives one song's pulses and emits signals when they enter or leave.
 
-## `origin` is where the pulse was lit - the centre of its song area - so an
-## effect can grow from the point the song was played (ice spreading out from
-## the player, design 03 §6.4).
+## Pulse origin lets effects grow from where the song was played (design 03 section 6.4).
 signal song_entered(song: Song, origin: Vector2)
 signal song_left(song: Song)
 
-## The one song this object answers to. Ignoring every other song is what lets
-## the world stay legible: the environment says what it needs, not the UI.
+## Song this receiver answers to.
 @export var reacts_to: Enums.Song = Enums.Song.FREEZE
 
-## Matching pulses overlapping this receiver right now. Two pulses of the same
-## song can overlap it, and the first one leaving must not end an effect the
-## second is still lighting.
+## Track overlapping pulses so one leaving does not end an effect while another remains.
 var _lit_by: int = 0
 
 func _ready() -> void:

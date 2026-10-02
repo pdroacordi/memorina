@@ -1,16 +1,12 @@
 class_name BruteShadow
 extends Enemy
-## BruteShadow doesn't exist to the player until they wander close enough:
-## hidden and inert until the spawn trigger fires, rooted in place while the
-## spawn clip plays, and only then handed to the AI. Not on Enemy/EnemyAI
-## since this isn't true of every common enemy.
+## BruteShadow stays hidden and inactive until triggered, then joins the AI after its spawn animation.
 
 @onready var _spawn_trigger : PlayerProximityTrigger = $SpawnTrigger
 @onready var _anim_tree     : AnimationTree = %AnimationTree
-## Enemy already holds $AI as the generic AIController; this is a second,
-## more specific reference for the attack state the animation needs.
+## Specific attack-state reference used by the animation.
 @onready var _brute_ai      : BruteShadowAI = $AI
-## Likewise a concrete view of Character's generic resolver, for spawn.
+## Concrete animation resolver reference used for spawning.
 @onready var _brute_resolver: BruteShadowAnimationResolver = $AnimationResolver
 
 var _spawn_done: bool = false
@@ -21,8 +17,7 @@ func _ready() -> void:
 	if is_queued_for_deletion():
 		return
 	hide()
-	# Hurtbox:monitorable has a RESET track, so the tree would own it — it is
-	# kept inactive until spawn precisely so this write sticks while hidden.
+	# Keep the hurtbox inactive until spawn because its RESET track otherwise controls it.
 	hurtbox.monitorable = false
 	set_physics_process(false)
 	_spawn_trigger.player_entered.connect(_on_player_entered)

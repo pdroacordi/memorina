@@ -1,24 +1,13 @@
 class_name MemoryFieldMath extends RefCounted
 
-## The shape of the memory field, in one place. See
-## docs/design/03_mundo_e_ambiente.md sections 2 and 3: a point's memory runs
-## from 0 (grey, and time stopped) to 1 (full colour, time running).
-##
-## IMPORTANT: source_distance() and disc_influence() are mirrored by functions
-## of the same names in greyhush.gdshader, because GDScript and GLSL cannot
-## share code. Change one and you must change the other. Every tunable here is
-## pushed to the shader as a uniform - never re-type a number into the shader.
-##
-## The shader additionally roughens each boundary by angular sector, and dithers
-## between quantisation bands. Both are rendering concerns; the CPU deliberately
-## keeps a clean edge and a continuous value, because sampling is for time-stop
-## and nothing in gameplay may depend on where a ragged sector fell.
+## Memory field rules; see docs/design/03_mundo_e_ambiente.md sections 2 and 3.
+## Must match gh_shape_distance() and gh_influence() in greyhush_common.gdshaderinc.
+## CPU sampling stays smooth; shader edge roughness and dithering are rendering only.
 
 enum Shape {
 	CIRCLE,
 	RECT,
-	## A vertical stadium: a rectangle with semicircular caps. The closest
-	## simple shape to a standing figure, and the reason it is here.
+	## A vertical capsule with semicircular caps.
 	CAPSULE,
 }
 
@@ -26,8 +15,7 @@ enum Shape {
 const EDGE_JAGGEDNESS := 0.12
 ## How many angular sectors that raggedness is quantised into.
 const EDGE_SECTORS := 12.0
-## Feather used when a source leaves it at zero, as a fraction of its extent.
-## Keeps an un-tuned zone from having a perfectly hard edge.
+## Default feather as a fraction of source extent.
 const DEFAULT_FEATHER_RATIO := 0.15
 
 ## Distance from a source's solid core, in pixels. Zero or negative inside the

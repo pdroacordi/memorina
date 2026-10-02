@@ -1,21 +1,7 @@
 class_name WindZone extends AirflowSource
 
-## A natural current: a box of air moving one way, breathing through its
-## WindProfile. It reads as the WORLD's doing - directional streaks and leaves
-## in layers, no ring, no colour of its own (design 03 section 5.3: "direcional
-## e em camadas = foi o mundo") - and it pushes through Airflow like any other
-## air, so Vendaval played into it adds to it (design 02 section 8, Outono
-## Espacial 2) with no rule for the pair.
-##
-## Congelar stops it where it blows: while a FREEZE pulse covers it, the air
-## is still and its streaks hang where they were, icy (design 02 section 8,
-## Inverno Logico 2: freezing one current of several). The grey stops it too,
-## through Airflow's memory scaling and the clock below.
-##
-## The box stands on the node, as a room map entity standing on its cell: it
-## is centred on the node horizontally and rises `size.y` above it.
+## Natural airflow zone; see docs/design/02_canções.md section 8 and docs/design/03_mundo_e_ambiente.md section 5.3.
 
-## Frozen streaks take this colour.
 const FROST := Color(0.75, 0.88, 1.0)
 
 @export var size := Vector2(256, 160)
@@ -23,7 +9,7 @@ const FROST := Color(0.75, 0.88, 1.0)
 ## The air's speed at full strength, px/s. Ivo's ground grip ignores anything
 ## under LocomotionStats.wind_deadzone; in the air he rides all of it.
 @export var speed := 220.0
-## Its breathing. Null blows steadily.
+## Optional wind profile; null blows steadily.
 @export var profile: WindProfile
 ## Seconds into the profile it starts at, so two currents need not gust together.
 @export var phase := 0.0
@@ -70,7 +56,6 @@ func _physics_process(delta: float) -> void:
 	if not _frozen:
 		_time += delta * rate
 	_strength = profile.strength(_time) if profile else 1.0
-	# Stopped air leaves its streaks hanging, exactly where they were.
 	var flow := 0.0 if _frozen else rate
 	for emitter: CPUParticles2D in [_streaks, _leaves]:
 		emitter.speed_scale = flow
@@ -80,8 +65,7 @@ func _physics_process(delta: float) -> void:
 ## Sizes the emitters and the freeze receiver to the box.
 func _fit() -> void:
 	var centre := rect().get_center()
-	# A still current (speed 0) keeps its particles alive rather than dividing
-	# by nothing.
+	# Keep particles alive when speed is zero.
 	var velocity := maxf(speed * 1.6, 1.0)
 	var travel := size.x if absf(direction.x) >= absf(direction.y) else size.y
 	var area := size.x * size.y

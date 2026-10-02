@@ -1,23 +1,13 @@
 class_name Seesaw extends Node2D
 
-## A plank on a pivot that leans toward the heavier side (design 02 section 8,
-## Verao Espacial 2: with weight on one end, the other rises to a high ledge -
-## the shadow holds the low end while Ivo climbs the other). The plank is an
-## AnimatableBody2D, so whoever stands on it rides it; the WeightSensor riding
-## the plank weighs everything on it by where it stands (SeesawBalance).
-##
-## A pivot off the middle is what makes the shadow puzzle work at all: on a
-## centred pivot the shadow on one end and Ivo on the other BALANCE, and the
-## end he walked up to sinks level under him. With the shadow on the long arm
-## it outweighs him on the short one, which stays up.
+## The offset pivot lets the shadow on the long arm raise Ivo on the short arm; see design 02 section 8.
 
 ## Plank length, px (whole plank, both arms).
 @export var length := 160.0
-## Where the pivot sits along the plank, from its left end (0) to its right
-## end (1).
+## Pivot position along the plank, 0 at left and 1 at right.
 @export_range(0.05, 0.95) var pivot_at := 0.5
 
-## How far the plank turns per unit of torque (px times Ivos), in degrees.
+## Angular response per torque unit (px times Ivos), in degrees.
 @export var degrees_per_torque := 0.35
 @export var max_degrees := 24.0
 ## Degrees per second it turns toward where it settles.
@@ -43,8 +33,7 @@ func _ready() -> void:
 		box.size.x = length
 		shape.shape = box
 		shape.position.x = centre
-	# The art repeats along a plank longer than it, with its dark middle band
-	# kept over the pivot, where the plank rests.
+	# Keep the repeating art's dark middle band aligned with the pivot.
 	var art := _plank_sprite.texture.get_size()
 	_plank_sprite.texture_repeat = CanvasItem.TEXTURE_REPEAT_ENABLED
 	_plank_sprite.region_enabled = true

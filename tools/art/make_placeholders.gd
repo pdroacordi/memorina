@@ -1,11 +1,6 @@
 extends SceneTree
 
-## Draws a placeholder for every art prompt whose target does not exist yet:
-## the contract's exact sheet size, one flat block per frame with a dark
-## outline and the frame's index in pips, so code and scenes can reference an
-## asset before its art lands, and the real sheet later drops in over the same
-## path at the same size. art_prompt_test.gd fails while any target is
-## missing or the wrong size.
+## Creates missing art prompt sheets at their contracted dimensions.
 ##
 ##   "<godot>" --headless --path . -s res://tools/art/make_placeholders.gd
 

@@ -1,18 +1,12 @@
 class_name GameCamera
 extends Camera2D
-## Follows a subject, leading horizontally toward its facing and vertically
-## toward its look intent and fall speed, without showing outside the room.
-## Can hold a pair (a guardian and Ivo, for a call) and shake for a hit.
+## Follows a subject and confines the view to room bounds.
 
-## The focus zoom has landed and no look-ahead is still in flight: the frame
-## is final. `subject_screen_position` is the subject in canvas pixels, for
-## whoever must lay out around it (the Memorina's sheet) - the camera is the
-## one node that legitimately turns world into screen.
+## The focus zoom and look-ahead have landed; the position is in canvas pixels.
 signal focused(subject_screen_position: Vector2)
 
 @export_category("Framing")
-## Constant vertical bias, so the character sits below centre. Exported rather
-## than read from the node's own offset, which this script overwrites at runtime.
+## Vertical framing bias in pixels; the script overwrites Camera2D.offset at runtime.
 @export var framing_offset_y      : float = -64.0
 
 @export_category("Look ahead")
@@ -49,10 +43,8 @@ signal focused(subject_screen_position: Vector2)
 @export var pair_duration         : float = 0.8
 
 @export_category("Lesson")
-## The slow push toward the pair while a lesson's track plays, and how long
-## it takes to get there. Long on purpose: the frame must still be closing
-## in at the end of the track, or the scene stops moving halfway through and
-## goes back to being a still picture. Released with the letterbox.
+## Lesson zoom and duration in real seconds; released with the letterbox.
+## Keep the push running through the lesson track so the scene does not stop moving early.
 @export var lesson_zoom           : float = 1.15
 @export var lesson_push_time      : float = 45.0
 
@@ -83,8 +75,7 @@ var _is_bound: bool = false
 func _ready() -> void:
 	offset.y = framing_offset_y
 
-# Physics, not idle: the subject moves in _physics_process, and this game snaps
-# transforms to whole pixels — sampling at render rate turns any drift visible.
+# Physics sampling keeps the camera aligned with the pixel-snapped subject.
 func _physics_process(delta: float) -> void:
 	if not _subject:
 		return
@@ -109,9 +100,7 @@ func set_bounds(bounds: Rect2) -> void:
 func bounds() -> Rect2:
 	return _bounds if _is_bound else Rect2()
 
-# subject stays Node2D rather than narrowing to Character: cutscenes can point
-# the camera at a plain Marker2D with no facing, and the `is Character` checks
-# below already degrade gracefully for that case.
+# Node2D also permits cutscenes to follow a Marker2D without character facing.
 func follow(subject: Node2D) -> void:
 	if subject == _subject:
 		return
@@ -165,8 +154,7 @@ func push_in() -> void:
 func release_push() -> void:
 	_tween_zoom(Vector2.ONE, focus_duration)
 
-## Lands the frame on its subject at once, for a cut nobody watches (a respawn
-## behind a fade): no smoothed axis is left easing across the level after it.
+## Snaps to the subject and clears smoothing for respawns behind a fade.
 func snap() -> void:
 	_peek_axis = 0.0
 	_peek_hold = 0.0
@@ -218,11 +206,7 @@ func _tween_zoom(target: Vector2, seconds: float = focus_duration,
 func _on_subject_facing_changed(_facing: int) -> void:
 	_tween_look_ahead()
 
-## While the frame holds a PAIR there is no look-ahead: the shot is composed
-## around two bodies, and 96 px of lead toward one of them is 96 px the other
-## loses at the far edge - measured, it put a guardian that had just leapt to
-## the far side of the arena 5 px OFF the screen while the camera sat exactly
-## on their midpoint.
+## Pair framing disables look-ahead so neither subject is pushed off-screen.
 func _look_ahead_target() -> float:
 	if _pairing or not (_subject is Character):
 		return 0.0
@@ -256,9 +240,7 @@ func _check_focused() -> void:
 func _is_running(tween: Tween) -> bool:
 	return tween != null and tween.is_valid() and tween.is_running()
 
-# Smoothed toward a computed target rather than tweened like the horizontal
-# axis: two sources feed this axis and the fall-speed one changes every frame,
-# which a tween cannot track without being restarted constantly.
+# The vertical target changes each frame with fall speed, so it uses smoothing rather than a tween.
 func _update_vertical(delta: float) -> void:
 	if not (_subject is Character):
 		return
@@ -297,9 +279,7 @@ func _update_peek_axis(delta: float) -> void:
 	_peek_hold = 0.0
 	_peek_axis = desired
 
-# Clamps the visible rectangle, not the node position: offset is what look-ahead
-# and peek drive, and Camera2D applies it after its own limits — which is why
-# the built-in limit_* properties cannot confine this camera.
+# Clamp the visible rectangle because Camera2D applies offset after its built-in limits.
 func _apply_bounds() -> void:
 	if not _is_bound:
 		return

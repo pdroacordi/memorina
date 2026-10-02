@@ -1,10 +1,6 @@
 shader_type canvas_item;
 
-// The WORLD pass. Drains everything the main viewport drew - background,
-// tilemap, props - to whatever the memory field says. Creatures are culled out
-// of this pass and composited back by greyhush_creatures.gdshader.
-//
-// All of the actual work lives in the include, so the two passes cannot drift.
+// World pass; its shading formula is shared with greyhush_creatures.gdshader via the common include.
 #include "res://scenes/world/memory/greyhush_common.gdshaderinc"
 
 uniform sampler2D screen_texture : hint_screen_texture, filter_nearest;

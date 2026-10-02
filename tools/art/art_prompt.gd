@@ -1,19 +1,15 @@
 class_name ArtPrompt extends RefCounted
 
-## One entry of the art prompt library (tools/art/prompts/README.md): an
-## asset's frame contract - where it lands, its size, its frames - and the
-## words that ask PixelLab for it. Parsed from `<id>.md`: a `---` frontmatter
-## of `key: value` lines, then the description; a line starting `Negative:`
-## is the negative prompt.
+## One parsed art prompt contract (tools/art/prompts/README.md).
 
 const DIR := "res://tools/art/prompts"
 const STYLE := "res://tools/art/prompts/style.md"
 const IGNORED := ["README.md", "style.md"]
 
 var id := ""
-## generate | animate
+## Prompt operation: `generate` or `animate`.
 var command := "generate"
-## Where the finished sheet goes, under res://assets/.
+## Output PNG path under `res://assets/`.
 var target := ""
 var frame_size := Vector2i(32, 32)
 var frames := 1
@@ -23,12 +19,11 @@ var no_background := true
 var outline := ""
 var shading := ""
 var detail := ""
-## animate only: what the reference does.
+## Animation action description.
 var action := ""
-## animate only (or a seed for generate): OUR art, never a third-party pack's.
+## Reference asset path for animation or generation.
 var reference := ""
-## Where the art comes from, for the record: "pixellab", "codex" (Codex CLI's
-## image tool, the codex-consult skill), "pack: <file>" or "procedural: <tool>".
+## Art source identifier.
 var source := "pixellab"
 var description := ""
 var negative := ""
@@ -65,7 +60,7 @@ static func parse(text: String, file_id: String) -> ArtPrompt:
 		prompt.id = file_id
 	return prompt
 
-## Problems with this entry, as messages; empty when it is sound.
+## Returns validation errors for this prompt entry.
 func problems(file_id: String) -> PackedStringArray:
 	var found := PackedStringArray()
 	if id != file_id:
@@ -82,7 +77,7 @@ func problems(file_id: String) -> PackedStringArray:
 		found.append("%s: a generated asset's prompt needs a description" % file_id)
 	return found
 
-## The sheet this contract promises: frames side by side.
+## Returns the sheet size with frames arranged side by side.
 func sheet_size() -> Vector2i:
 	return Vector2i(frame_size.x * frames, frame_size.y)
 

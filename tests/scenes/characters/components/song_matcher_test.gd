@@ -1,6 +1,6 @@
 class_name SongMatcherTest extends GdUnitTestSuite
 
-## SongMatcher is pure logic, so these run with no scene tree and no save file.
+## SongMatcher tests require no scene tree or save file.
 
 const UP := Enums.Note.UP
 const DOWN := Enums.Note.DOWN
@@ -40,8 +40,7 @@ func test_wrong_note_fails_and_clears_buffer() -> void:
 	assert_array(matcher.buffer()).is_empty()
 	assert_object(matcher.matched_song()).is_null()
 
-## A failure must leave the matcher ready for a fresh attempt straight away -
-## the design calls for a silent reset, not a lockout.
+## Failure resets the matcher without a lockout (docs/design/02_mecanicas.md section 6.2).
 func test_matcher_is_usable_again_after_a_failure() -> void:
 	var freeze := _song(Enums.Song.FREEZE, [UP, LEFT, DOWN])
 	var matcher := _matcher([freeze])
@@ -51,8 +50,7 @@ func test_matcher_is_usable_again_after_a_failure() -> void:
 	matcher.feed(LEFT)
 	assert_int(matcher.feed(DOWN)).is_equal(SongMatcher.Result.MATCHED)
 
-## Only songs the player knows are candidates, so an unknown song's sequence
-## must read as noise rather than silently firing.
+## Only learned songs are candidates (docs/design/02_mecanicas.md section 6.2).
 func test_a_song_outside_the_candidates_never_matches() -> void:
 	var matcher := _matcher([_song(Enums.Song.FREEZE, [UP, LEFT, DOWN])])
 	assert_int(matcher.feed(RIGHT)).is_equal(SongMatcher.Result.FAILED)
@@ -77,7 +75,7 @@ func test_reset_discards_a_partial_sequence() -> void:
 	assert_array(matcher.buffer()).is_empty()
 	assert_int(matcher.feed(LEFT)).is_equal(SongMatcher.Result.FAILED)
 
-## The buffer is a read-out, not a handle on the matcher's state.
+## The returned buffer is a copy.
 func test_buffer_returns_a_copy() -> void:
 	var matcher := _matcher([_song(Enums.Song.FREEZE, [UP, LEFT, DOWN])])
 	matcher.feed(UP)

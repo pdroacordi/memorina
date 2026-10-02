@@ -1,16 +1,11 @@
 class_name GuardianCall extends Node
 
-## The guardian's side of the call-and-response: sounds a phrase through a
-## MemorinaVoice child, one note per beat, so the call is heard as a melody
-## rather than six ringing tones. Reports which note is sounding so the sheet
-## can light it, and when the phrase is done so the answer's window can open.
-## Holds no opinion about the answer.
+## Plays a guardian's note sequence and reports note and phrase completion.
 
 signal note_sounded(index: int)
 signal finished
 
-## Seconds between the notes of the call. The player answers at their own
-## pace; this only sets how the guardian phrases it.
+## Seconds between call notes.
 @export var note_interval: float = 0.55
 
 var _notes: Array[Enums.Note] = []
@@ -25,11 +20,11 @@ func _ready() -> void:
 func is_calling() -> bool:
 	return _index >= 0 and _index < _notes.size()
 
-## Seconds a complete call takes, so the answer can be given at least as long.
+## Duration of a complete call in seconds.
 func duration() -> float:
 	return note_interval * _notes.size()
 
-## `lead_in` is a silence before the first note, for the stage to land.
+## `lead_in` is the silence in seconds before the first note.
 func play(notes: Array[Enums.Note], lead_in: float = 0.0) -> void:
 	stop()
 	_notes = notes.duplicate()
@@ -39,13 +34,11 @@ func play(notes: Array[Enums.Note], lead_in: float = 0.0) -> void:
 	else:
 		_sound_next()
 
-## The guardian forgetting again, heard: the instrument's own mistake sound
-## in the guardian's voice, after any note still ringing.
+## Plays the mistake sound after any ringing note ends.
 func groan() -> void:
 	_voice.play_mistake_after_note()
 
-## Cuts the phrase short. The window never opens for a call that was not
-## heard out; the guardian decides what that means.
+## Stops an incomplete phrase; its window does not open.
 func stop() -> void:
 	_notes = []
 	_index = -1

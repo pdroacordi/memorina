@@ -1,14 +1,6 @@
 class_name SolsticeAura extends PulseEffect
 
-## Solstice (Enums.Song.SOLSTICE): the longest day. It acts on MEMORY, not on
-## the world (design 02 section 7.1): every other pulse that overlaps it lasts
-## longer and reaches farther - once (ColorPulse.stretch) - so the shadow holds
-## the door to the end of the corridor, the root bridge reaches farther and the
-## ice lasts the crossing, with no rule in any of them. Alone it holds colour in
-## a dead place longer: its own stats sustain long and contract at the same
-## pace whatever the memory.
-##
-## Looks like a low sun: warm rays turning slowly on the disc's edge.
+## Solstice stretches overlapping non-Solstice pulses (docs/design/02_mecanicas.md section 7.1).
 
 @export var reach := 1.4
 @export var duration := 2.5

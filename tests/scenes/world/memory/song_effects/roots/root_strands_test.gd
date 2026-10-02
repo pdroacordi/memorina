@@ -1,7 +1,6 @@
 class_name RootStrandsTest extends GdUnitTestSuite
 
-## Two roots grow toward each other at the memory under each tip, meet, and
-## break at the tips first when the pulse lets go of a face.
+## Roots grow toward each other and wither when either face loses memory.
 
 func test_they_grow_from_both_faces_and_meet() -> void:
 	var strands := RootStrands.new(100.0)

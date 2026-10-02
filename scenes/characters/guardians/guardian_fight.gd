@@ -1,25 +1,12 @@
 class_name GuardianFight extends RefCounted
 
-## The structure of a guardian encounter (docs/design/02_mecanicas.md
-## section 3) as pure logic: pressure until enough hits land, a lucidity
-## window the player answers or loses, a relapse while the madness returns,
-## and restoration after enough good answers. A plain RefCounted like
-## CharacterStateMachine: the owning Guardian drives it explicitly, reads
-## its phase, and does all the sounding, moving and saving itself.
-##
-## The recall (section 4) is a gate, not a chance: while a skill is still to
-## be remembered, the hits saturate at the threshold and the window waits.
-## The body remembering is then the blow that opens it.
-##
-## Every failed answer makes the guardian angrier - more hits to open the next
-## window, a shorter window, faster attacks - up to a cap. That is the
-## design's whole penalty: no game over, just a harder road back.
+## Guardian encounter phases and timing rules; see docs/design/02_mecanicas.md sections 3–4.
 
 signal phase_changed(from: Phase, to: Phase)
 
 enum Phase { DORMANT, PRESSURE, LUCIDITY, RELAPSE, RESTORED }
 
-## A relapse after a failure is this much shorter: it comes back sooner.
+## Failed answers shorten relapse duration by this factor.
 const FAILED_RELAPSE_SCALE := 0.6
 
 var _stats: GuardianStats
@@ -32,8 +19,7 @@ var _recall_pending: bool = false
 var _relapse_failed: bool = false
 ## Seconds left to answer; negative while no window is counting.
 var _window_left: float = -1.0
-## What that window started at, so the fraction left can be reported without
-## anyone else having to remember the number they were told at the start.
+## Initial window duration, used to calculate its remaining fraction.
 var _window_total: float = 0.0
 ## Seconds left in the relapse before pressure resumes.
 var _relapse_left: float = 0.0
@@ -44,56 +30,50 @@ func _init(stats: GuardianStats) -> void:
 func phase() -> Phase:
 	return _phase
 
-## The fight starts: the player walked into the arena.
+## Starts the encounter.
 func begin() -> void:
 	if _phase == Phase.DORMANT:
 		_transition(Phase.PRESSURE)
 
-## The save says this guardian was restored on an earlier visit; skip the fight.
+## Restores this guardian without playing the fight.
 func restore_silently() -> void:
 	if _phase == Phase.DORMANT:
 		_cycles = _stats.cycles_to_restore
 		_transition(Phase.RESTORED)
 
-## The owner says whether a skill is still to be remembered in this fight.
-## While it is, no window opens: the design's guarantee that the player does
-## not leave the encounter without it.
+## Prevents the lucidity window from opening until the required skill is recalled.
 func set_recall_pending(pending: bool) -> void:
 	_recall_pending = pending
 
 func recall_pending() -> bool:
 	return _recall_pending
 
-## A hit landed on the guardian. Counts only under pressure; true when it was
-## the one that opened a lucidity window. With a recall pending the hits stop
-## at the threshold and wait.
+## Counts a pressure hit and returns true if it opens a lucidity window.
 func register_hit() -> bool:
 	if _phase != Phase.PRESSURE:
 		return false
 	_hits = mini(_hits + 1, hits_to_open())
 	return _try_open()
 
-## The body remembered. True when that was what the window was waiting for.
+## Clears the recall gate and returns true if that opens a lucidity window.
 func skill_recalled() -> bool:
 	_recall_pending = false
 	if _phase != Phase.PRESSURE:
 		return false
 	return _try_open()
 
-## The hits are in and only the recall stands between them and the window.
+## Whether the hit threshold is met while recall is pending.
 func is_saturated() -> bool:
 	return _phase == Phase.PRESSURE and _recall_pending and _hits >= hits_to_open()
 
-## How close the pressure is to opening the next window, 0..1.
+## Pressure progress, 0..1.
 func pressure_progress() -> float:
 	var needed := hits_to_open()
 	if needed <= 0:
 		return 1.0
 	return clampf(float(_hits) / needed, 0.0, 1.0)
 
-## The call has been heard; the player's window starts now. `call_length` is
-## how long the phrase itself took: the answer cannot be played any faster
-## than the call was, so the window is that plus the stats' slack.
+## Opens the answer window for `call_length` plus the configured slack, in seconds.
 func open_window(call_length: float = 0.0) -> void:
 	if _phase == Phase.LUCIDITY:
 		_window_left = maxf(call_length, 0.0) + window_duration()
@@ -105,17 +85,13 @@ func is_window_open() -> bool:
 func window_left() -> float:
 	return maxf(_window_left, 0.0)
 
-## How much of the window is left, 0..1 - the one number a meter needs, and
-## the only clock there is. A HUD that counted its own down would be a second
-## truth, agreeing with this one only by coincidence.
+## Remaining window fraction, 0..1.
 func window_fraction() -> float:
 	if _window_total <= 0.0:
 		return 0.0
 	return clampf(_window_left / _window_total, 0.0, 1.0)
 
-## Advances the window and the relapse. True on the frame the window runs
-## out, which the owner treats exactly like a wrong note; the relapse ending
-## is announced through phase_changed alone.
+## Advances timers and returns true on the frame the answer window expires.
 func tick(delta: float) -> bool:
 	if _phase == Phase.RELAPSE:
 		_relapse_left -= delta
@@ -131,8 +107,7 @@ func tick(delta: float) -> bool:
 	answer_failed()
 	return true
 
-## The phrase came back right and in time. Restores the guardian on the last
-## needed cycle; otherwise the madness returns, a little less of it.
+## Records a successful answer and restores the guardian after the final cycle.
 func answer_succeeded() -> void:
 	if _phase != Phase.LUCIDITY:
 		return
@@ -143,9 +118,7 @@ func answer_succeeded() -> void:
 	else:
 		_relapse(false)
 
-## A wrong note, an interruption or an expired window: the madness returns
-## sooner and angrier. Not a second kind of failure - the same one, however
-## it happened.
+## Records a failed answer and increases aggression up to its configured cap.
 func answer_failed() -> void:
 	if _phase != Phase.LUCIDITY:
 		return
@@ -157,7 +130,7 @@ func answer_failed() -> void:
 func relapse_failed() -> bool:
 	return _relapse_failed
 
-## How far the relapse under way has run, 0..1; 1 when none is.
+## Relapse progress, 0..1; returns 1 outside relapse.
 func relapse_progress() -> float:
 	if _phase != Phase.RELAPSE:
 		return 1.0
@@ -166,7 +139,7 @@ func relapse_progress() -> float:
 		return 1.0
 	return clampf(1.0 - _relapse_left / total, 0.0, 1.0)
 
-## Good answers given so far.
+## Number of successful answers.
 func cycles() -> int:
 	return _cycles
 
@@ -182,11 +155,11 @@ func hits_to_open() -> int:
 func window_duration() -> float:
 	return _stats.window * pow(_stats.window_scale_per_failure, _aggression)
 
-## Multiplier for the guardian's attack cooldowns: 1.0 when calm.
+## Attack cooldown multiplier; 1.0 at zero aggression.
 func cooldown_scale() -> float:
 	return pow(_stats.cooldown_scale_per_failure, _aggression)
 
-## How far the cure has come, 0..1. Drives how much colour the guardian holds.
+## Restoration progress, 0..1.
 func lucidity() -> float:
 	if _stats.cycles_to_restore <= 0:
 		return 1.0
@@ -203,7 +176,7 @@ func _relapse(failed: bool) -> void:
 	_relapse_failed = failed
 	_relapse_left = _stats.relapse_time * (FAILED_RELAPSE_SCALE if failed else 1.0)
 	_transition(Phase.RELAPSE)
-	# A relapse of no length is the old behaviour: straight back to pressure.
+	# Zero-length relapse returns to pressure immediately.
 	if _relapse_left <= 0.0:
 		_transition(Phase.PRESSURE)
 

@@ -1,37 +1,21 @@
 class_name RecallPrompt extends Control
 
-## The button prompt of the emergency QTE (docs/design/02_mecanicas.md
-## section 4): "prompt de botao claro, ensinado na hora". The key the body
-## must remember, blinking inside a ring that drains with the real-time
-## window, floating just above Ivo's head - where the colour is born
-## (RecallAura does that part; this is only the button). Pressed and green
-## on success, red on a miss, then gone. Says nothing in words: the aura and
-## the slowed world are the signal, the key is the answer.
-##
-## A memory that takes more than one press asks for them ONE AT A TIME, in
-## the same place: the key that landed reads as pressed for a beat, then the
-## next one is there asking, on its own fresh ring. Two keys side by side
-## looked like a chord to play at once, which is not what a double jump is.
-## An observer of Player's signals, wired in game.tscn, that decides nothing.
+## Shows the recall key and its real-time deadline above the player (docs/design/02_mecanicas.md section 4).
 
 const RING_COLOR := Color(0.98, 0.78, 0.35)
 const RING_LOW_COLOR := Color(0.95, 0.4, 0.3)
 const SUCCESS_COLOR := Color(0.6, 1.0, 0.65)
 const FAIL_COLOR := Color(1.0, 0.4, 0.35)
 const LINGER_TIME := 0.35
-## How long the key that was just pressed is held before the next one asks,
-## in REAL seconds: the world is slowed, and a beat measured in game time
-## would be five times longer than it reads.
+## Hold time between chained keys, in real seconds; game time is slowed during recall.
 const STEP_HOLD := 0.18
 const KEY_SIZE := 32.0
-## Margin around the key, wide enough for the ring to clear it.
 const RING_MARGIN := 12.0
 
-## Ring geometry, in this Control's pixels: centred on the key it is drained
-## for.
+## Ring radius and stroke width in Control pixels.
 @export var ring_radius: float = 22.0
 @export var ring_width: float = 3.0
-## Where the prompt sits relative to Ivo, in world pixels: above the head.
+## Prompt offset from the player's origin, in world pixels.
 @export var head_offset: Vector2 = Vector2(0.0, -78.0)
 
 var _window_total: float = 0.0
@@ -39,10 +23,7 @@ var _window_left: float = 0.0
 var _counting: bool = false
 var _linger_tween: Tween
 var _subject: Node2D
-## One per press the memory asks for; only ONE is ever on screen. The first
-## is the scene's own.
 var _keys: Array[KeyGlyph] = []
-## Which of them is being asked for.
 var _current: int = 0
 var _step_tween: Tween
 
@@ -73,8 +54,6 @@ func show_for(action: StringName, seconds: float, steps: int = 1) -> void:
 	show()
 	_ring.queue_redraw()
 
-## One press of a chain landed: it reads as pressed where it stands, and a
-## beat later the next one is asking in the same place, on its own clock.
 func on_step_taken(_remaining: int, seconds: float) -> void:
 	var spent := _keys[_current]
 	spent.stop_blink(KeyGlyph.Look.PRESSED)
@@ -107,7 +86,6 @@ func on_missed(_skill: Enums.PlayerSkill) -> void:
 	_ring.queue_redraw()
 	_linger_then_hide()
 
-## The recall ended with no verdict (Ivo died): nothing to linger on.
 func on_recall_ended() -> void:
 	if _counting:
 		_counting = false
@@ -121,9 +99,6 @@ func _start_window(seconds: float) -> void:
 	_window_left = seconds
 	_counting = true
 
-## As many keys as the memory takes, all in the same place; only the one
-## being asked for is shown. The extras are made from the scene's own, so the
-## art stays in one place.
 func _build_keys(count: int, action: StringName) -> void:
 	_stop_step()
 	while _keys.size() < count:
@@ -142,6 +117,7 @@ func _build_keys(count: int, action: StringName) -> void:
 	_ask_current()
 
 func _ask_current() -> void:
+	# Show chained keys one at a time so they are not read as a chord.
 	for i: int in _keys.size():
 		_keys[i].visible = i == _current
 	var key := _keys[_current]
@@ -153,9 +129,7 @@ func _stop_step() -> void:
 		_step_tween.kill()
 		_step_tween = null
 
-## Pinned above Ivo every frame. Turning world into screen is the camera's
-## job for layout that must be settled (the sheet); a prompt that rides on a
-## moving body has to sample the canvas transform itself.
+## Uses the canvas transform each frame because the prompt follows a moving body.
 func _follow_subject() -> void:
 	if not is_instance_valid(_subject):
 		_subject = get_tree().get_first_node_in_group(Player.GROUP) as Node2D

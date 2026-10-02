@@ -1,7 +1,6 @@
 class_name ImageOpsTest extends GdUnitTestSuite
 
-## The art pipeline steps: key the background out from the edges, snap to
-## the palette, cut and pack frames to the contract.
+## Image operation tests cover keying, quantization, trimming and packing.
 
 const KEY := Color(1, 0, 1)
 
@@ -57,7 +56,7 @@ func test_trimming_crops_frames_to_their_shared_bounds() -> void:
 	var trimmed := ImageOps.trim_frames([raised, pressed] as Array[Image])
 	assert_vector(trimmed[0].get_size()).is_equal(Vector2i(10, 6))
 	assert_vector(trimmed[1].get_size()).is_equal(Vector2i(10, 6))
-	# The pressed slab keeps its place at the bottom of the shared box.
+	# The trimmed frame remains bottom-aligned in the shared bounds.
 	assert_float(trimmed[1].get_pixel(0, 0).a).is_equal(0.0)
 	assert_float(trimmed[1].get_pixel(0, 5).a).is_equal(1.0)
 
@@ -66,7 +65,7 @@ func test_trimming_leaves_empty_frames_alone() -> void:
 	assert_vector(ImageOps.trim_frames([empty] as Array[Image])[0].get_size()).is_equal(Vector2i(8, 8))
 
 func test_packing_keeps_proportions_and_stands_the_frame_bottom_centre() -> void:
-	# 40x4 into a 20x4 cell: halved to 20x2, sitting on the cell's floor.
+	# A 40x4 frame scales to 20x2 and aligns to the 20x4 cell bottom.
 	var frames: Array[Image] = [_image(Vector2i(40, 4), Color.WHITE)]
 	var strip := ImageOps.pack_strip(frames, Vector2i(20, 4))
 	assert_vector(strip.get_size()).is_equal(Vector2i(20, 4))

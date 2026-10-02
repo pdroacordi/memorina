@@ -1,8 +1,5 @@
 class_name WindProfileTest extends GdUnitTestSuite
 
-## A current breathes: calm, rise, gust, fall. The calms are the window to
-## play in.
-
 func _profile() -> WindProfile:
 	var profile := WindProfile.new()
 	profile.calm_time = 2.0

@@ -1,17 +1,6 @@
 extends SceneTree
 
-## Turns a generated (or pack-cropped) picture into the sheet its prompt's
-## frame contract promises, and writes it to the contract's target:
-##   1. key out the background by flood fill from the edges (skipped when the
-##      picture is already transparent at its corners); an explicit --key is
-##      cleared everywhere, holes the subject encloses included,
-##   2. split it into the contract's frames and crop them to their shared
-##      opaque bounds (a generated picture's margin; --no-trim keeps it),
-##   3. snap every pixel onto tools/art/palette.json, at full size,
-##   4. scale each frame by one factor to fit the contract's frame, standing
-##      bottom-centre (a large shrink keeps each block's most common colour,
-##      ImageOps.shrink_mode), and pack them into the strip a Sprite2D reads.
-## Then run --import. Look at the result before committing it.
+## Converts an input image to an art prompt's frame sheet; inspect the result before use.
 ##
 ##   "<godot>" --headless --path . -s res://tools/art/process_image.gd -- \
 ##       --prompt=<id> --in=<picture or strip> [--key=#ff00ff] [--no-trim] [--no-palette]
@@ -26,19 +15,16 @@ func _init() -> void:
 	assert(source != null, "--in=<png> could not be read")
 	source.convert(Image.FORMAT_RGBA8)
 	if args.has("key"):
-		# An explicit key is a colour the subject was drawn without, so it is
-		# background wherever it is - enclosed holes too.
+		# Explicit keys apply everywhere, including enclosed holes.
 		source = ImageOps.key_out(source, Color.html(args["key"]), 0.25, true)
 	elif source.get_pixel(0, 0).a > 0.0:
 		source = ImageOps.key_out(source, source.get_pixel(0, 0))
-	# A generated picture is rarely a multiple of the frame count wide; the
-	# columns left over at the right are keyed-out background.
+	# Discard incomplete trailing columns that cannot form a frame.
 	var width := source.get_width() - source.get_width() % prompt.frames
 	var frames := ImageOps.split_strip(source.get_region(Rect2i(0, 0, width, source.get_height())), prompt.frames)
 	if not args.has("no-trim"):
 		frames = ImageOps.trim_frames(frames)
-	# Snapped BEFORE packing, at full size, so a large shrink counts palette
-	# colours (ImageOps.shrink_mode) instead of the render's noise.
+	# Quantize before shrinking so palette colours, not render noise, determine each block.
 	if not args.has("no-palette"):
 		var palette := _palette()
 		for i: int in frames.size():

@@ -1,9 +1,6 @@
 class_name SaveMark extends TextureRect
 
-## The quill in the corner that says a rest was kept: it fades in, glows once
-## and fades away whenever SaveSystem commits a rest (`saved`). Show, not tell -
-## no word on screen, so nothing to translate. PROCESS_MODE_ALWAYS in its
-## scene, like every HUD that must not stop with the world.
+## Displays a brief glow when SaveSystem emits `saved`; its scene uses PROCESS_MODE_ALWAYS.
 
 @export var fade_in: float = 0.25
 @export var hold: float = 1.2

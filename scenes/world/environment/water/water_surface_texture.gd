@@ -1,20 +1,12 @@
 class_name WaterSurfaceTexture extends RefCounted
 
-## Packs a WaterSurfaceField (and the ice over it, and the floor under it) into
-## the 1xN float texture the water shaders read: r = height, g = foam (or, for
-## a lake, which has neither, the column's own clock), b = floor depth,
-## a = ice solidity. A lake writes r = 0, which is true: it is flat. The layout is
-## declared once, in water_common.gdshaderinc.
-##
-## Created once and then only update()d: update() requires the same size and
-## format, and recreating the texture every frame is the slow path.
+## Packs water height, foam or clock, floor depth, and ice solidity for the water shaders; layout must match water_common.gdshaderinc.
 
 const BYTES_PER_TEXEL := 16
 
 var texture: ImageTexture
 var _image: Image
-# The texels' bytes, written in place every frame rather than converted from a
-# float array (which would allocate a new buffer per frame).
+# Reused texel buffer avoids allocating a new byte array every frame.
 var _bytes := PackedByteArray()
 
 func _init(column_count: int) -> void:
@@ -22,9 +14,7 @@ func _init(column_count: int) -> void:
 	texture = ImageTexture.create_from_image(_image)
 	_bytes.resize(column_count * BYTES_PER_TEXEL)
 
-## `field` is null for a body with no profile (a lake), which writes `clocks`
-## where a pool writes foam. `floors` is each column's depth in world pixels
-## below the rest line.
+## `floors` contains per-column depths below the rest line, in world pixels; null `field` writes clocks instead of foam.
 func write(field: WaterSurfaceField, clocks: PackedFloat32Array, floors: PackedFloat32Array,
 		solidity: PackedFloat32Array) -> void:
 	var count := solidity.size()

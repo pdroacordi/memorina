@@ -1,25 +1,14 @@
 class_name GuardianCallHud extends Control
 
-## The guardian's side of the call-and-response, on screen: a sheet that
-## slides down from the top into the encounter's slot - centred, above the
-## pair the camera is holding - tinted in its season, asking the player to
-## listen while the phrase sounds, its revealed notes lighting and popping one
-## by one, with one pip per answer the cure needs under the message, the ones
-## already given lit. When the phrase is over it slides away and Ivo's own
-## sheet (MemorinaHud) takes THE SAME SLOT: the turn passes without the sheet
-## moving an inch. Where that slot IS belongs to NoteSheet - both HUDs ask it
-## for the x and the y - not to a number typed into each of them. An observer
-## of Player's signals (wired in game.tscn) that decides nothing.
-##
-## The Label is given a translation KEY (a Label auto-translates its text).
+## Displays the guardian's call sheet in the slot shared with MemorinaHud.
 
 const LISTEN_KEY := "GUARDIAN_CALL_LISTEN"
 const SLIDE_TIME := 0.35
 
-## Indexed by Enums.GlyphSet, same resources as MemorinaHud's.
+## Glyph sets indexed by Enums.GlyphSet.
 @export var glyph_sets: Array[NoteGlyphSet] = []
 var _slide_tween: Tween
-## The stage: which side the guardian stands on and how tall it is.
+## Guardian side and height used to position the sheet.
 var _guardian_side: int = 1
 var _guardian_height: float = 0.0
 
@@ -34,9 +23,7 @@ func _ready() -> void:
 	_message.text = LISTEN_KEY
 	hide()
 
-## The guardian starts calling: the sheet slides into the slot wearing its
-## season's colour, the notes it is willing to show unlit, the cure's pips
-## under the ask to listen.
+## Shows the call notes and cure progress, then slides the sheet into view.
 func on_call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet, cure_done: int, cure_total: int, side: int, caller_height: float) -> void:
 	_guardian_side = side
 	_guardian_height = caller_height
@@ -61,8 +48,7 @@ func on_call_closed() -> void:
 	if visible:
 		_slide(false)
 
-## In: from above the screen's edge down into the slot. Out: back up, then
-## hidden - and Ivo's sheet appears in the same place.
+## Slides the sheet into or out of its shared HUD slot.
 func _slide(in_: bool) -> void:
 	if _slide_tween != null:
 		_slide_tween.kill()

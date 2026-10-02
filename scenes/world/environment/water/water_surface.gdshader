@@ -1,17 +1,10 @@
 shader_type canvas_item;
 
-// A body of water, computed: its colour by depth, what shows through it, the
-// world and the creatures mirrored in it, coarse caustics, the lighter line on
-// top, and ice. Drawn in the WORLD canvas at WaterQuad.Z, so the greyhush pass
-// greys it afterwards like any other world pixel.
+// Computes water colour, transmission, reflection, caustics, top line and ice.
 //
-// TWO GRIDS. Everything that belongs to the art (waterline, depth bands, the
-// reflection's row bands, caustics, ice crystals) is decided in WORLD TEXELS,
-// so it moves with the scenery under any zoom. Everything that follows the
-// memory field (the reflection gate, the edge stipple) is decided in GAME
-// PIXELS, on the same Bayer grid as the greyhush. Never FRAGCOORD.
+// Art uses world texels; memory gates and edge stippling use game pixels on the greyhush Bayer grid.
 //
-// The mirror itself (no camera, two sources) is water_reflection.gdshaderinc.
+// Keep reflection sampling in sync with water_reflection.gdshaderinc.
 
 #include "res://scenes/world/environment/water/water_common.gdshaderinc"
 #include "res://scenes/world/environment/water/water_reflection.gdshaderinc"
@@ -23,8 +16,7 @@ uniform sampler2D ice_ramp : filter_nearest, repeat_disable, hint_default_white;
 uniform vec4 top_line_color : source_color = vec4(0.78, 0.88, 0.9, 1.0);
 uniform vec4 foam_color : source_color = vec4(0.94, 0.97, 0.98, 1.0);
 
-// World pixels from the rest line to the mirror axis; negative is ABOVE the
-// water: water below a bank mirrors about the bank's top, not its own.
+// Mirror axis offset in world pixels; negative values place the axis above the water.
 uniform float mirror_axis_offset = 0.0;
 uniform int band_height = 2;
 uniform float band_shift_max = 1.0;
@@ -37,9 +29,7 @@ uniform float caustic_density = 0.3;
 uniform float caustic_strength = 0.35;
 
 uniform float ice_thickness = 6.0;
-// The pool's own clock (WaterBody): stops with the world under a pause, and
-// runs at the memory of its most remembered column - it stops only where the
-// whole pool is forgotten (the springs, per column, are what crawl). Never TIME.
+// Must use WaterBody's memory-driven clock so water freezes with the world; never use TIME.
 uniform float water_time = 0.0;
 
 void vertex() {
@@ -47,7 +37,7 @@ void vertex() {
 }
 
 void fragment() {
-	// Derivatives first: nothing below may discard before they are taken.
+	// Derivatives must be evaluated before any discard.
 	vec2 uv_per_world = vec2(dFdx(SCREEN_UV.x) / dFdx(world_pos.x), dFdy(SCREEN_UV.y) / dFdy(world_pos.y));
 
 	vec2 texel = floor(world_pos);

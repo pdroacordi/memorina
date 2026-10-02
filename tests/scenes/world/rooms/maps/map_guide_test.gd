@@ -1,9 +1,6 @@
 class_name MapGuideTest extends GdUnitTestSuite
 
-## docs/maps/README.md cannot drift from the code: its legend table, entity
-## params and reach numbers are generated, and this fails whenever the
-## committed guide is not what the generator would write. The fix is always
-## the same: run tools/maps/gen_map_docs.tscn and commit the guide.
+## Verifies generated sections in docs/maps/README.md match current map data.
 
 func test_the_map_guide_matches_the_code() -> void:
 	var readme := FileAccess.get_file_as_string(MapGuide.README)

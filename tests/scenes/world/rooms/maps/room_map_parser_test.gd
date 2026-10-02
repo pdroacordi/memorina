@@ -1,8 +1,6 @@
 class_name RoomMapParserTest extends GdUnitTestSuite
 
-## A room's text becomes a RoomMap: ground by material, one-way platforms,
-## water by kind, placed things with their params - every tile resolved - and
-## every mistake reported with the line (and column) it is on.
+## Checks room parsing, tile resolution and source-positioned errors.
 
 var _legend: RoomLegend
 
@@ -50,7 +48,7 @@ func test_ground_keeps_its_material() -> void:
 
 func test_a_floor_under_open_sky_draws_its_grassy_top() -> void:
 	var map := _parse("[grid]\n....\n####\n").map
-	# Out of bounds counts as solid, so the bottom row has ground below it.
+	# Out-of-bounds cells count as solid, making this bottom row autotile as ground.
 	assert_vector(RoomMap.tile_coords(map.tile_at(Vector2i(1, 1)))).is_equal(Vector2i(1, 0))
 
 func test_stone_draws_from_the_stone_block() -> void:

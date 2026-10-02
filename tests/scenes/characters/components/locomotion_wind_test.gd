@@ -1,7 +1,6 @@
 class_name LocomotionWindTest extends GdUnitTestSuite
 
-## Wind is a velocity the air carries. Feet on the ground ignore a breeze
-## (so a standing performance survives it) and slide in a gust.
+## Wind affects grounded movement only above the gust threshold.
 
 func _locomotion() -> LocomotionComponent:
 	var locomotion: LocomotionComponent = auto_free(LocomotionComponent.new())

@@ -1,17 +1,8 @@
 class_name ImageOps extends RefCounted
 
-## Pure image operations for the art pipeline (tools/art/process_image.gd):
-## turning a generated picture into a sheet that obeys this project's frame
-## contract and palette. No file access here, so every step is testable.
+## Pure image operations used by tools/art/process_image.gd to prepare generated art for the project's frame and palette contract.
 
-## Makes the background transparent by flood-filling from every edge pixel
-## whose colour is within `tolerance` of `key`. Filling from the edges - not
-## replacing the key colour everywhere - keeps a purple body purple. A
-## generated "flat" background is not flat (Codex's magenta wanders to about
-## 0.1 from #ff00ff and fringes the subject), so the default is loose: the
-## muted earth and slate subjects sit near 0.6 away. `holes` also clears the
-## key colour where the subject encloses it (a ring's eye, the gaps in a
-## braid) - right when the subject was drawn on a key it cannot contain.
+## Flood-fills edge-connected pixels within `tolerance` of `key`, preserving enclosed matching colors unless `holes` is true.
 static func key_out(image: Image, key: Color, tolerance: float = 0.25, holes: bool = false) -> Image:
 	var out := image.duplicate() as Image
 	out.convert(Image.FORMAT_RGBA8)
@@ -44,8 +35,7 @@ static func key_out(image: Image, key: Color, tolerance: float = 0.25, holes: bo
 					out.set_pixel(x, y, Color(0, 0, 0, 0))
 	return out
 
-## Every opaque pixel snapped to its nearest palette colour; alpha is made
-## binary (pixel art has no half-transparent edge).
+## Snaps opaque pixels to the nearest palette color and makes alpha binary.
 static func quantize(image: Image, palette: PackedColorArray) -> Image:
 	assert(not palette.is_empty(), "quantize needs a palette")
 	var out := image.duplicate() as Image
@@ -82,10 +72,7 @@ static func split_strip(strip: Image, count: int) -> Array[Image]:
 		frames.append(strip.get_region(Rect2i(i * width, 0, width, strip.get_height())))
 	return frames
 
-## Crops every frame to the UNION of their opaque bounds, so a generated
-## picture's empty margin is not squashed into the sprite while the frames
-## stay aligned with each other (a pressed plate keeps its place under the
-## raised one). Frames with nothing opaque are returned unchanged.
+## Crops all frames to their shared opaque bounds so frame content stays aligned; empty frames remain unchanged.
 static func trim_frames(frames: Array[Image]) -> Array[Image]:
 	var bounds := Rect2i()
 	for frame: Image in frames:
@@ -99,11 +86,7 @@ static func trim_frames(frames: Array[Image]) -> Array[Image]:
 		trimmed.append(frame.get_region(bounds))
 	return trimmed
 
-## Lays frames side by side into the strip a Sprite2D with hframes =
-## frames.size() reads. Each is scaled (nearest neighbour, never smoothed) by
-## ONE factor, the largest that fits `frame_size`, and stands bottom-centre
-## in its cell like a prop on the ground - a picture a little off the
-## contract's aspect keeps its proportions instead of being stretched.
+## Packs frames into Sprite2D horizontal cells, preserving aspect ratio and bottom-centering each frame.
 static func pack_strip(frames: Array[Image], frame_size: Vector2i) -> Image:
 	var strip := Image.create(frame_size.x * frames.size(), frame_size.y, false, Image.FORMAT_RGBA8)
 	for i: int in frames.size():
@@ -119,11 +102,7 @@ static func pack_strip(frames: Array[Image], frame_size: Vector2i) -> Image:
 		strip.blit_rect(frame, Rect2i(Vector2i.ZERO, size), at)
 	return strip
 
-## Shrinks by a large factor keeping pixel-art edges: every target pixel is
-## the MOST COMMON colour of the source block it covers (transparent counts as
-## a colour). Nearest neighbour picks one arbitrary source pixel per block,
-## which at 20x turns an outline into speckle; an average invents midtones.
-## Feed it palette-snapped pixels so the counts gather on a few colours.
+## Shrinks by assigning each target pixel the most common source-block color; transparent pixels count as a color.
 static func shrink_mode(image: Image, size: Vector2i) -> Image:
 	var source := image.duplicate() as Image
 	source.convert(Image.FORMAT_RGBA8)
@@ -148,8 +127,7 @@ static func shrink_mode(image: Image, size: Vector2i) -> Image:
 			out.set_pixel(x, y, Color(0, 0, 0, 0) if best == 0 else Color.hex(best))
 	return out
 
-## Weighted RGB distance: close enough to perceptual for snapping to a
-## hand-picked palette, and cheap.
+## Weighted RGB distance used for palette snapping.
 static func _distance(a: Color, b: Color) -> float:
 	var dr := a.r - b.r
 	var dg := a.g - b.g

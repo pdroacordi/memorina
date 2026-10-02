@@ -1,11 +1,6 @@
 class_name GaleShape extends RefCounted
 
-## The shape of Vendaval's wind across its pulse (design 02 section 7.1): it
-## blows ONE WAY - the way Ivo faced when the song ended - across the whole
-## disc, along the ground, still in an eye around where it was played ("parado
-## no olho, nao e arrastado ate sair dele"), strongest a little way out and
-## gone at the pulse's clean edge. Pure, so the numbers a puzzle is sized
-## against are tested.
+## Vendaval wind follows design 02 section 7.1: horizontal, one direction, zero in the eye and at the pulse edge.
 
 ## Where across the ring from the eye to the edge the wind is strongest, 0..1.
 const PEAK_AT := 0.35

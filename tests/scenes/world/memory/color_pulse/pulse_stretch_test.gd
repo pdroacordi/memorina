@@ -1,7 +1,6 @@
 class_name PulseStretchTest extends GdUnitTestSuite
 
-## Solstice stretches a pulse once, while it still opens or holds: farther,
-## longer, grown into rather than jumped to.
+## Solstice can stretch a pulse once during opening or sustain, with gradual growth.
 
 func _timeline() -> PulseTimeline:
 	var stats := PulseStats.new()

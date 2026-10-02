@@ -1,7 +1,6 @@
 class_name RootSpanFinderTest extends GdUnitTestSuite
 
-## Roots join earth to earth: a bridge between two bank tops, a shaft between
-## two walls, a pillar from floor to ceiling - and never from stone.
+## Checks that root spans connect earth surfaces and exclude stone.
 
 func _map(rows: Array[String]) -> RoomMap:
 	var text := "[room]\norigin = 0, 0\n\n[grid]\n" + "\n".join(rows) + "\n"

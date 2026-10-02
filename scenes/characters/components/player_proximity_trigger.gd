@@ -1,9 +1,6 @@
 class_name PlayerProximityTrigger
 extends Area2D
-## Fires once when the player enters this Area2D's CollisionShape2D radius,
-## then disables itself. A plain one-shot proximity detector — for anything
-## that only needs "the player got close," without the raycast/line-of-sight
-## machinery EnemySight adds for chase detection.
+## Emits once when the player enters the area, then disables monitoring.
 
 signal player_entered
 
@@ -14,7 +11,6 @@ func _ready() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if not body.is_in_group(Player.GROUP):
 		return
-	# Area2D forbids changing `monitoring` synchronously from inside its own
-	# in/out signal dispatch (it's "locked" mid-callback) — must be deferred.
+	# Area2D monitoring cannot change during its own signal dispatch.
 	set_deferred("monitoring", false)
 	player_entered.emit()

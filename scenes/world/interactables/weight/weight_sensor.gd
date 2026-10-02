@@ -1,10 +1,6 @@
 class_name WeightSensor extends Area2D
 
-## Sums the Weight of everything overlapping it: bodies (Ivo, a released load,
-## a crate) and areas (the burned shadow, which is no body at all). Anything
-## without a Weight child is ignored - a hurtbox, an enemy, a pulse.
-## Emits load_changed whenever the sum moves, so a plate or a seesaw never
-## polls.
+## Sums overlapping nodes with a Weight child, including bodies and areas, and signals when the total changes.
 
 signal load_changed(total: float)
 
@@ -22,7 +18,7 @@ func total() -> float:
 		sum += Weight.of(node).mass
 	return sum
 
-## Everything pressing, with where it presses, for a seesaw weighing torque.
+## Overlapping weighted nodes and their positions, used by seesaws to calculate torque.
 func pressing() -> Array[Node2D]:
 	return _pressing.duplicate()
 

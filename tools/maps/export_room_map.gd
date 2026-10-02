@@ -1,13 +1,8 @@
 extends Node
 
-## Writes a room's hand-painted ground, water and legend entities out as a
-## `.room` text map (docs/maps/README.md) - the one-time migration that made
-## text the source of truth. It then parses what it wrote and compares every
-## ground tile the autotiler picks with the one that was painted, so a room
-## whose art the rules do not reproduce says so instead of silently changing.
+## Exports a room to `.room` and checks autotiled ground against the painted tiles; see docs/maps/README.md.
 ##
-## A scene rather than a SceneTree script because the legend's entity scenes
-## reference autoloads (SaveSystem), which only exist when a scene is run:
+## Runs as a scene because entity scenes may reference autoloads such as SaveSystem:
 ##   "<godot>" --headless --path . res://tools/maps/export_room_map.tscn -- \
 ##       --contents=res://scenes/world/rooms/<region>/contents/<room>_contents.tscn \
 ##       --out=res://scenes/world/rooms/<region>/contents/<room>.room

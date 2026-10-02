@@ -1,33 +1,9 @@
 shader_type canvas_item;
 
-// A lake in front of the land, seen FROM ABOVE. The pool (water_surface) is a
-// cross-section: its waterline is a profile, and what lies behind the water
-// shows through it. A lake is a plane: its top edge is the far shore and stays
-// straight, it is opaque - it IS the surface, and hides the bank under it - and
-// its waves are not an outline but the reflection tearing:
-//
-// - PERSPECTIVE ROWS. The reflection is cut into bands of rows that slide
-//   sideways by whole pixels. Near the far shore the bands are thin and still,
-//   so what stands at the bank is mirrored almost whole; toward the viewer
-//   they grow taller and slide further, and the mirror breaks into slats.
-// - GLINTS. Short 1 px dashes of sky caught on the ripples, thick near the
-//   shore and thinning toward the viewer.
-// - DEPTH. The reflection is strongest at the far shore and gives way to dark
-//   water toward the viewer: the ramps, far to near, in FLAT rows of colour
-//   (wc_ramp_flat) - never dithered between steps, or the reflection turns
-//   into a checkerboard.
-//
-// TWO CLOCKS. A lake runs the width of a room, so it cannot share one clock:
-// the grey end would move at the pace of the remembered one. Each column keeps
-// its own (the data texture's g), running at the memory over it, and the
-// DISCRETE re-rolls - which shore dashes are open, which glints are lit - read
-// it, since columns drifting out of step is invisible in a re-roll. Everything
-// that SLIDES (the bands, the glints' drift) reads the body's shared clock
-// instead: a slide out of step between columns would shear for good once
-// colour returns, and in grey water the reflection and the glints are gated
-// away, so the shared clock's pace is never seen there. Grey water is a flat sheet
-// with its light line on top, still. Same two grids as the pool: art in WORLD
-// texels, memory in GAME pixels.
+// The lake is a top-down plane; unlike water_surface's cross-section, its far shore stays straight and opaque.
+// Reflection bands and glints use whole-pixel movement; body and reflection ramps must use wc_ramp_flat to avoid dithering.
+// Discrete glint and shore-line choices use each column's memory clock; sliding bands and glints use shared water_time to avoid permanent shear.
+// Grey water hides reflection and glints but keeps the still shore line. Art uses world texels; memory uses game pixels.
 
 #include "res://scenes/world/environment/water/water_common.gdshaderinc"
 #include "res://scenes/world/environment/water/water_reflection.gdshaderinc"
@@ -37,7 +13,7 @@ uniform sampler2D body_ramp : filter_nearest, repeat_disable, hint_default_black
 uniform sampler2D reflection_ramp : filter_nearest, repeat_disable, hint_default_black;
 uniform vec4 top_line_color : source_color = vec4(0.78, 0.88, 0.9, 1.0);
 
-// World pixels from the far shore to the mirror axis; negative is ABOVE it.
+// World pixels from the far shore to the mirror axis; negative values are above it.
 uniform float mirror_axis_offset = 0.0;
 uniform int band_height = 2;
 uniform int band_height_near = 6;
@@ -51,7 +27,7 @@ uniform int glint_length = 10;
 uniform float glint_rate = 0.8;
 uniform vec4 glint_color : source_color = vec4(0.85, 0.92, 0.98, 0.7);
 
-// The body's shared clock (WaterBody), for the bands. Never TIME.
+// WaterBody's shared clock for sliding bands; do not use TIME.
 uniform float water_time = 0.0;
 
 // Share of the far shore's light line broken at any moment, and how often a
@@ -61,10 +37,7 @@ const float LINE_REROLL = 0.25;
 // Fastest sideways drift of a lane of glints, world pixels per second.
 const float GLINT_DRIFT = 3.0;
 
-// Which band of rows a depth falls in, when a band's height grows linearly from
-// band_height at the shore to band_height_near at perspective_px and stays
-// there: the integral of 1 / height, so every band is as tall as the rows it
-// sits on say it should be.
+// Integrates inverse band height so bands grow from band_height to band_height_near over perspective_px.
 float band_of(float depth) {
 	float h0 = float(band_height);
 	float h1 = float(band_height_near);
@@ -82,7 +55,7 @@ void vertex() {
 }
 
 void fragment() {
-	// Derivatives first: nothing below may discard before they are taken.
+	// Derivatives must be evaluated before any discard.
 	vec2 uv_per_world = vec2(dFdx(SCREEN_UV.x) / dFdx(world_pos.x), dFdy(SCREEN_UV.y) / dFdy(world_pos.y));
 
 	vec2 texel = floor(world_pos);
@@ -92,10 +65,10 @@ void fragment() {
 	if (texel.y < rest_y || texel.y >= wc_floor(data)) {
 		discard;
 	}
-	// This column's own clock: stops where the lake is forgotten.
+	// Per-column memory clock stops when that column is forgotten.
 	float here_time = data.g;
 	float depth = texel.y - rest_y;
-	// 0 at the far shore, 1 from perspective_px toward the viewer.
+	// 0 at the far shore and 1 at perspective_px and beyond.
 	float near = clamp(depth / max(perspective_px, 1.0), 0.0, 1.0);
 
 	vec2 game_px = floor(SCREEN_UV * wr_game_size());
@@ -103,8 +76,7 @@ void fragment() {
 
 	vec3 colour = wc_ramp_flat(body_ramp, depth).rgb;
 
-	// The reflection, torn into bands. Each slides sideways and dips a row by
-	// whole pixels, by more the nearer it is.
+	// Reflection bands shift and dip by whole pixels, increasingly with depth.
 	float band = band_of(depth);
 	float phase = band * 1.7 + wd_hash11(band * 3.1) * 6.2832 + water_time * band_speed;
 	float shift = round(band_shift_near * near * sin(phase));
@@ -117,10 +89,7 @@ void fragment() {
 	float gate = wr_gate(tint.a, awake, wr_edge(uv_m), game_px);
 	colour = mix(colour, wr_sample(uv_m, SCREEN_PIXEL_SIZE) * tint.rgb, gate);
 
-	// Glints: along each row, segments glint_length wide drift slowly and are
-	// re-rolled on the clock; a lit one shows a dash of 2..glint_length pixels.
-	// Memory decides per DASH, not per pixel: where it fades there are fewer
-	// glints, never glints broken into dots.
+	// Memory gates each dash, so fading reduces dash count without breaking dashes into dots.
 	if (depth >= 2.0) {
 		float lane = depth;
 		float drift = floor(water_time * (wd_hash11(lane * 5.3) * 2.0 - 1.0) * GLINT_DRIFT);
@@ -136,9 +105,7 @@ void fragment() {
 		}
 	}
 
-	// The far shore's light line: always drawn, dead water keeps it; a few
-	// dashes - one per column, so one clock each - open and close on the
-	// column's clock, which stops with the water.
+	// The far shore line remains visible in dead water; each column's gaps use its own clock.
 	if (depth < 1.0) {
 		float dash = float(column);
 		float roll = floor(here_time * LINE_REROLL + wd_hash11(dash * 2.3) * 4.0);

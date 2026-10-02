@@ -1,38 +1,13 @@
-// The greyhush, shared by every pass that needs to agree on the field.
-//
-// Three shaders include this file: greyhush.gdshader drains the WORLD,
-// greyhush_creatures.gdshader drains the CREATURES that were culled out of the
-// world pass and composited back on top, and seasonal/season_mask.gdshader
-// writes which pulse season owns each pixel. They must agree exactly on what a
-// given point's memory is, or a creature would read at a different depth of
-// grey than the ground it is standing on, and snow would stop one pixel short
-// of the colour. Sharing the source is the only way to guarantee that.
-//
-// IMPORTANT: gh_shape_distance() and gh_influence() are mirrored by
-// source_distance() and disc_influence() in memory_field_math.gd, because
-// GDScript and GLSL cannot share code. Change one and you must change the
-// other. Every tunable arrives as a uniform - never re-type a number here.
-//
-// HOW THE DITHER WORKS, AND WHY IT IS NOT A SIMPLE THRESHOLD.
-// The naive version - `remembered = memory > bayer` - picks between FULL COLOUR
-// and FULL GREY. That is right only at a boundary. Across a flat interior it
-// renders the same handful of pixels per 4x4 cell as colour and the rest as
-// grey, everywhere, which reads as a countable checkerboard rather than as a
-// place that has lost its memory.
-//
-// Real pixel-art dithering picks between two ADJACENT steps of a palette. So
-// memory is quantised into `memory_levels` bands, and the Bayer matrix decides
-// only whether a pixel rounds to the band below or the band above.
+// Shared by the world, creature and season-mask memory passes.
+// Must match MemoryFieldMath.source_distance() and disc_influence() in GDScript.
+// Dither between adjacent quantised memory levels to avoid checkerboard interiors.
 
 #include "res://scenes/world/memory/dither_common.gdshaderinc"
 
 const int MAX_SOURCES = 32;
-// Mirrored by MemoryField.MAX_SHIELDS / MAX_SOURCES. These are array sizes, so
-// they cannot be uniforms - the one pair of numbers in this file that lives in
-// two places. Raise one and you must raise the other.
+// Must match MemoryField.MAX_SHIELDS and MAX_SOURCES.
 const int MAX_SHIELDS = 8;
-// Width of one row of the shield_falloff atlas; mirrors
-// GreyhushRenderer.FALLOFF_SAMPLES.
+// Must match GreyhushRenderer.FALLOFF_SAMPLES.
 const int FALLOFF_SAMPLES = 64;
 const float TAU_F = 6.28318530718;
 
@@ -69,25 +44,17 @@ uniform int shield_count = 0;
 // One row per shield, 64 samples across, holding that shield's authored
 // falloff curve. Baked on the CPU from a Curve resource, so what you draw in
 // the inspector is exactly what the GPU reads.
-// repeat_disable matters: with repeat on, a lookup at t = 0 blends 50/50 with
-// the LAST texel of the row, so the inner edge of every feather reads the
-// average of the curve's two ends instead of curve(0).
+// Clamp sampling to a row; repeating blends the first sample with the last at t = 0.
 uniform sampler2D shield_falloff : hint_default_white, filter_linear, repeat_disable;
 
 uniform float baseline : hint_range(0.0, 1.0) = 1.0;
 
-// The pass's own size, i.e. the 640x360 game resolution. Used instead of
-// FRAGCOORD because the project stretches with integer scaling: FRAGCOORD is in
-// WINDOW pixels, so dithering off it would give a 4x-finer speckle at 4x zoom
-// instead of a stable pixel-art pattern.
+// Use pass pixels so integer window scaling does not change the dither pattern.
 uniform vec2 game_size = vec2(640.0, 360.0);
 
 uniform float edge_jaggedness = 0.12;
 uniform float edge_sectors = 12.0;
-// Seconds between one sector of the ragged edge re-rolling its bite. Each
-// sector runs its own clock, so the boundary re-forms piece by piece - "um
-// padrao que se refaz em ritmo lento" - rather than flickering all at once.
-// 0 keeps every sector frozen where it was seeded.
+// Seconds between sector updates; 0 keeps the seeded edge fixed.
 uniform float edge_reroll_period = 0.0;
 
 uniform int memory_levels : hint_range(2, 16) = 6;
@@ -102,10 +69,6 @@ uniform float region_tint_amount : hint_range(0.0, 1.0) = 0.0;
 uniform float haze_strength : hint_range(0.0, 1.0) = 0.0;
 uniform vec3 haze_color : source_color = vec3(0.34, 0.37, 0.43);
 uniform float contrast_loss : hint_range(0.0, 1.0) = 0.0;
-// The faded print. In the forgotten world black is not black: the darks rise
-// to `black_lift_color` (white stays white), so the grey reads as a picture
-// left in the sun - thin, cold and far away - instead of heavy. Emptiness is
-// the absence of contrast, not the presence of texture.
 uniform float black_lift : hint_range(0.0, 1.0) = 0.0;
 uniform vec3 black_lift_color : source_color = vec3(0.24, 0.26, 0.32);
 
@@ -123,14 +86,11 @@ float gh_hash11(float n) {
 	return wd_hash11(n);
 }
 
-// The 4x4 Bayer cell a game pixel falls in. Every dithered decision in every
-// pass goes through this, so they all agree on the pattern.
 int gh_bayer_index(vec2 px) {
 	return wd_bayer_index(px);
 }
 
-// Distance from a shape's solid core, in game pixels. Zero or negative inside
-// the core, growing outward. Mirrors MemoryFieldMath.source_distance().
+// Must match MemoryFieldMath.source_distance(). Distance is in game pixels.
 float gh_shape_distance(vec2 offset, vec2 extent, int shape) {
 	if (shape == SHAPE_RECT) {
 		vec2 d = abs(offset) - extent;
@@ -144,17 +104,14 @@ float gh_shape_distance(vec2 offset, vec2 extent, int shape) {
 	return length(offset) - extent.x;
 }
 
-// Mirrors MemoryFieldMath.disc_influence().
+// Must match MemoryFieldMath.disc_influence().
 float gh_influence(float dist, float feather, float strength) {
 	if (dist <= 0.0) { return strength; }
 	if (feather <= 0.0 || dist >= feather) { return 0.0; }
 	return strength * (1.0 - dist / feather);
 }
 
-// The grey does not retreat in a clean arc - it advances and recedes in
-// sectors, "como algo que morde de volta". Stable per source and per direction,
-// so it reads as a shape rather than as television snow. GPU only: the CPU
-// field keeps a clean edge, and nothing in gameplay may depend on this.
+// Rendering only: gameplay uses the clean CPU field, independent of edge noise.
 float gh_sector_wobble(vec2 offset, float seed) {
 	float angle = atan(offset.y, offset.x);
 	float sector = floor((angle + TAU_F * 0.5) / TAU_F * edge_sectors);
@@ -168,11 +125,6 @@ float gh_sector_wobble(vec2 offset, float seed) {
 	return gh_hash11(sector + seed + roll * 61.7) * 2.0 - 1.0;
 }
 
-// One source's contribution at a game pixel: the distance from its core (out,
-// so the ring can use it) and the feathered influence. `ragged` applies the
-// per-sector bite to the boundary; the clean version is the CPU field's disc.
-// The ONLY place a source's geometry is evaluated, so the colour passes and
-// the season mask cannot disagree by a pixel.
 float gh_source_influence(int i, vec2 px, bool ragged, out float dist) {
 	vec2 offset = px - sources[i].xy;
 	float strength = source_params[i].x;
@@ -189,9 +141,7 @@ float gh_source_influence(int i, vec2 px, bool ragged, out float dist) {
 	return gh_influence(dist, feather, strength);
 }
 
-// Creatures carry a little of their own memory. RENDERING ONLY: this never
-// enters MemoryField, so standing somewhere does not thaw the world or make
-// its water freezable.
+// Rendering only; creature shields do not affect gameplay memory.
 float gh_shield_cover(vec2 px) {
 	float shield = 0.0;
 	for (int i = 0; i < shield_count; i++) {
@@ -224,8 +174,6 @@ float gh_shield_cover(vec2 px) {
 	return clamp(shield, 0.0, 1.0);
 }
 
-// The clean field at one point: the CPU disc plus creature shields, no bite.
-// What the atmosphere and the distance dissolve read.
 float gh_smooth_memory(vec2 px) {
 	float memory = baseline;
 	for (int i = 0; i < source_count; i++) {
@@ -235,11 +183,6 @@ float gh_smooth_memory(vec2 px) {
 	return mix(clamp(memory, 0.0, 1.0), 1.0, gh_shield_cover(px));
 }
 
-// The field at one point, twice: RAGGED (the bitten boundary, for the
-// dithered colour edge) and SMOOTH (the clean disc, for the atmosphere - a
-// gradient that followed the bite would draw every sector seam as a straight
-// line). Plus the accumulated tint of whatever lit it and the brightness of
-// any opening pulse's leading ring here.
 float gh_memory(vec2 px, out float smooth_memory, out vec3 tint_rgb, out float tint_amount, out float ring) {
 	float memory = baseline;
 	vec3 tint_sum = vec3(0.0);
@@ -271,21 +214,10 @@ float gh_memory(vec2 px, out float smooth_memory, out vec3 tint_rgb, out float t
 	return memory;
 }
 
-// Ordered dither between ADJACENT quantisation steps - see the header. The
-// result takes only `memory_levels` distinct values; there is no interpolation.
 float gh_quantise(float memory, vec2 px) {
 	return wd_quantise(memory, memory_levels, px);
 }
 
-// Drains a colour to the given quantised memory, then applies aerial
-// perspective and the leading ring. Shared so a creature and the ground it
-// stands on agree.
-//
-// Two memories come in on purpose. `lit_amount` is quantised and dithered and
-// decides colour versus grey - that boundary is pixel art and must be a
-// stipple. `memory` is smooth and drives the atmosphere: haze, contrast loss
-// and black lift are gradients of distance, and stepping them per band would
-// print the Bayer lattice across every flat sky as a grid of brighter pixels.
 vec3 gh_shade(vec3 base, float lit_amount, float memory, vec3 tint_rgb, float tint_amount, float ring, vec2 px) {
 	float luma = dot(base, vec3(0.299, 0.587, 0.114));
 	vec3 grey = vec3(luma);
@@ -316,10 +248,6 @@ vec3 gh_shade(vec3 base, float lit_amount, float memory, vec3 tint_rgb, float ti
 	return col;
 }
 
-// A soft darkening toward the edges of the screen. Deliberately smooth rather
-// than dithered: it reads as light, not as memory, and the two should not share
-// a visual language. Applied in BOTH passes so a creature standing in a dark
-// corner does not glow against the world behind it.
 vec3 gh_vignette(vec3 col, vec2 uv, float lit_amount) {
 	if (vignette_strength <= 0.0) {
 		return col;

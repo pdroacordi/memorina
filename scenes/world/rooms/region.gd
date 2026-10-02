@@ -1,38 +1,23 @@
 class_name Region extends Node2D
 
-## The composition scene that places a region's rooms. Owns what belongs to
-## the region rather than to any single room: which season its art is drawn
-## in, whether a guardian keeps it - and, through its RegionMemory child, how
-## much of it is still remembered.
-##
-## A value, not a switch, deliberately - see
-## docs/design/03_mundo_e_ambiente.md section 4.1. The home village opens at
-## 0.8 (alive, but already thinning), is revisited lower, and returns to 1.0.
+## Composes a region's rooms, season, guardian state, and memory (design 03 section 4.1).
 
-## The region's memory moved. Re-emitted from RegionMemory so that whoever
-## shows a region listens to the region, not to its parts.
+## Re-emitted when RegionMemory changes.
 signal memory_changed(level: float)
 
-## The region's native season (docs/design/03_mundo_e_ambiente.md section
-## 4.2). Every seasonal sheet in its rooms shows this season's band unless a
-## pulse paints another over it.
+## Native season (design 03 section 4.2).
 @export var season: Enums.Season = Enums.Season.SPRING
-## Whether a guardian keeps this region, and which. Restoring it lifts the
-## region's memory to 1.0 for good (section 4.1, "estacao de repouso
-## permanente"); the flag exists because an enum has no "none".
+## Guardian that keeps this region; restoring it sets memory to 1.0.
 @export var has_guardian: bool = false
 @export var guardian: Enums.Guardian = Enums.Guardian.FROST
 
 @onready var _memory: RegionMemory = $Memory
 
 
-## The guardian is heard from SaveSystem rather than from the Guardian itself:
-## it is the one thing that knows, whatever order the world loaded in and
-## whether or not the arena's room is still resident.
+## Reads guardian restoration from SaveSystem, independent of room residency.
 func _ready() -> void:
 	_memory.changed.connect(memory_changed.emit)
-	# Mounted whether or not the guardian is restored: a region loaded whole
-	# only holds deaths that happened after its restoration.
+	# Mount marks even when restored; only newer deaths remain in the save.
 	_memory.mark_deaths(SaveSystem.deaths_in(SceneKey.of(self)))
 	if not has_guardian:
 		return
@@ -41,8 +26,7 @@ func _ready() -> void:
 		return
 	SaveSystem.guardian_restored.connect(_on_guardian_restored)
 
-## The baseline as it stands now: the authored value until the region's
-## guardian has been restored, then full memory.
+## Current baseline memory value.
 func current_baseline() -> float:
 	return _memory.current()
 
@@ -50,8 +34,6 @@ func _on_guardian_restored(restored: Enums.Guardian) -> void:
 	if restored != guardian:
 		return
 	_memory.restore(_memory.lift_time)
-	# The memory that comes back takes the player's forgetting with it (the
-	# user's decision, 2026-10-01). On the live save, like the restoration: a
-	# death before the next bench brings both back.
+	# Death marks follow the live save and return on death before the next bench.
 	SaveSystem.clear_deaths(SceneKey.of(self))
 	_memory.erase_marks(_memory.lift_time)

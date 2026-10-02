@@ -1,10 +1,6 @@
 class_name GuardianAnimationResolver
 extends AnimationResolver
-## The clip vocabulary every guardian shares. A guardian scene must author
-## all of these; one with moves of its own beyond three attack clips
-## subclasses this and extends the chain. The phase outranks everything:
-## a restored guardian is never seen flinching, a lucid one never swings, and
-## a relapsing one staggers (Guardian pulses just_hit() as the relapse starts).
+## Resolves shared guardian clips with encounter phase precedence.
 
 const IDLE := &"idle"
 const WALK := &"walk"
@@ -28,11 +24,11 @@ func resolve() -> StringName:
 		GuardianFight.Phase.LUCIDITY:
 			return LUCID
 		GuardianFight.Phase.RELAPSE:
-			# The stagger of a mind slipping back, then the guardian stands lost.
+			# Keep the relapse stagger while the hit signal is active, then return to idle.
 			return HURT if _guardian.just_hit() or driver.holding(HURT) else IDLE
 	if _guardian.is_swinging():
 		return attack_clip_for(_guardian.current_attack().clip_index)
-	# The wind-up is the idle pose held still; the telegraph tint does the rest.
+	# Telegraphing uses the idle pose; the telegraph tint communicates the wind-up.
 	if _guardian.is_telegraphing():
 		return IDLE
 	if _guardian.just_hit() or driver.holding(HURT):
@@ -41,7 +37,6 @@ func resolve() -> StringName:
 		return WALK
 	return IDLE
 
-## The clip a GuardianAttack's clip_index plays; Guardian's duration assert
-## walks this same mapping so the two cannot drift apart.
+## Maps attack indices to clips; Guardian's duration assertion uses this mapping too.
 func attack_clip_for(index: int) -> StringName:
 	return ATTACK_CLIPS[clampi(index, 0, ATTACK_CLIPS.size() - 1)]

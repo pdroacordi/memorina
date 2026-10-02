@@ -1,24 +1,16 @@
 class_name PlayerInput
 extends CharacterController
-## Translates raw hardware input into player intent.
-## Continuous state is exposed as read-only properties; discrete actions are
-## signals inherited from CharacterController (see that class for the rule).
-##
-## The only node that knows what an InputEvent is. That includes WHICH keys a
-## note was played with: the sheet draws the button actually under the thumb,
-## so a note travels with its Enums.GlyphSet, derived here and nowhere else.
+## Translates hardware events into player intent and derives the glyph set used to display pressed controls.
 
 signal attack_pressed
 signal jump_pressed
 signal jump_canceled
 signal roll_pressed
 signal draw_memorina_pressed
-## Down was pressed - the gesture that sits Ivo on a bench. The held axis is
-## still look_direction; this is the press.
+## Emitted on the down press edge used to sit at a bench.
 signal look_down_pressed
 signal note_pressed(note: Enums.Note, glyph_set: Enums.GlyphSet)
-## Debug builds only: teaches the next unknown song. Stands in for the guardian
-## fights until they exist.
+## Debug-build action for teaching the next unknown song.
 signal debug_learn_song_pressed
 
 ## Which action plays which note. A dictionary rather than four branches
@@ -80,9 +72,7 @@ func _input(event: InputEvent) -> void:
 		attack_pressed.emit()
 	if event.is_action_pressed("draw_memorina"):
 		draw_memorina_pressed.emit()
-	# The press is the EDGE, not the event: a stick reports "pressed" on every
-	# motion past its deadzone, so a held, wiggling stick would sit Ivo down
-	# again the moment anything stood him up.
+	# Use the press edge because analog sticks report pressed on every motion past the deadzone.
 	if event.is_action("look_down"):
 		var held := event.is_action_pressed("look_down")
 		if held and not _down_held:
@@ -90,10 +80,7 @@ func _input(event: InputEvent) -> void:
 		_down_held = held
 	if OS.is_debug_build() and event.is_action_pressed("debug_learn_song"):
 		debug_learn_song_pressed.emit()
-	# Deliberately unconditional: this node reports what the hardware did and
-	# never asks whether the instrument happens to be out. Notes arriving while
-	# it is sheathed are dropped by MemorinaComponent, which is the node that
-	# actually knows.
+	# MemorinaComponent decides whether notes are accepted while the instrument is sheathed.
 	for action: StringName in NOTE_ACTIONS:
 		if event.is_action_pressed(action):
 			note_pressed.emit(NOTE_ACTIONS[action], glyph_set_for(event, Input.get_joy_name(event.device)))

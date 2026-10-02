@@ -1,9 +1,6 @@
 class_name SceneKey extends RefCounted
 
-## How the save names a place - a region, a room - so the name outlives the
-## session: the uid of the scene it was instanced from, falling back to the
-## scene's path. A uid survives a rename made in the editor, so an old save
-## still finds its bench and its death marks after the files move.
+## Persistent scene key; a scene UID survives editor renames, with path fallback.
 
 static func of(node: Node) -> String:
 	var path := node.scene_file_path

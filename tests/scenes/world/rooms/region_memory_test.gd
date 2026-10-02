@@ -1,8 +1,6 @@
 class_name RegionMemoryTest extends GdUnitTestSuite
 
-## Death marks are not wells: a region loaded already restored keeps the marks
-## its save holds (deaths after the restoration), and only erase_marks - the
-## live restoration - takes them away.
+## Loaded restored regions retain saved death marks; live restoration removes them with erase_marks.
 
 var _region: Node2D
 var _memory: RegionMemory

@@ -1,13 +1,6 @@
 class_name RecallAura extends Node2D
 
-## The colour that is born around Ivo's head while the body remembers
-## (docs/design/02_mecanicas.md section 4: "cor nasce ao redor da cabeca/olhos
-## do heroi"). Wavy rays radiate from the head and tremble for as long as the
-## window is open, warm gold flickering toward white; on a recall they flare
-## white and fly outward; on a miss they go red and drop. Drawn on the
-## creature layer, so it keeps its colour inside the greyhush. Runs on REAL
-## time: the world is slowed while it shows. An observer of Player's signals,
-## wired in ivo.tscn, that decides nothing.
+## Recall window indicator; drawn on the creature layer and animated in real time.
 
 enum State { HIDDEN, ARMED, FLARE, DROP }
 
@@ -19,7 +12,7 @@ const VERDICT_TIME := 0.35
 ## How long a press of a chain brightens the crown, in real seconds.
 const STEP_FLASH_TIME := 0.25
 
-## Ray geometry in Ivo's pixels.
+## Ray geometry in px.
 @export var inner_radius: float = 10.0
 @export var ray_length: float = 18.0
 @export var ray_width: float = 2.0
@@ -54,7 +47,7 @@ func _process(delta: float) -> void:
 				return
 	queue_redraw()
 
-## The window opened: colour is born.
+## Starts the armed window.
 func begin(_action: StringName, seconds: float) -> void:
 	_state = State.ARMED
 	_time = 0.0
@@ -65,8 +58,7 @@ func begin(_action: StringName, seconds: float) -> void:
 	set_process(true)
 	queue_redraw()
 
-## One press of a chained memory landed: the crown flares a moment and
-## settles back into its trembling, on the clock that press bought.
+## Resets the armed window and flashes after a successful chain press.
 func step(_remaining: int, seconds: float) -> void:
 	if _state != State.ARMED:
 		return
@@ -74,23 +66,21 @@ func step(_remaining: int, seconds: float) -> void:
 	_window_total = maxf(seconds, 0.001)
 	_window_left = seconds
 
-## The body remembered.
+## Shows a successful recall verdict.
 func flare(_skill: Enums.PlayerSkill) -> void:
 	if _state != State.ARMED:
 		return
 	_state = State.FLARE
 	_verdict_left = VERDICT_TIME
 
-## The window closed on nothing.
+## Shows a failed recall verdict.
 func drop(_skill: Enums.PlayerSkill) -> void:
 	if _state != State.ARMED:
 		return
 	_state = State.DROP
 	_verdict_left = VERDICT_TIME
 
-## The window is over. Player reports this BEFORE the verdict that follows
-## it, so the decision is deferred a frame: if a flare or a drop arrived by
-## then it plays out, otherwise there was none (Ivo died) and the crown goes.
+## Defers settling so a same-frame flare or drop can be received first.
 func end() -> void:
 	_settle.call_deferred()
 
@@ -111,7 +101,7 @@ func _draw() -> void:
 	var alpha := 1.0
 	match _state:
 		State.ARMED:
-			# Brighter and longer as the window runs out: the moment sharpens.
+			# Increase reach as the recall window expires.
 			var urgency := 1.0 - _window_left / _window_total
 			reach = 1.0 + 0.5 * urgency + 0.9 * _step_flash
 			alpha = 0.7 + 0.3 * tremble
@@ -127,12 +117,11 @@ func _draw() -> void:
 	color.a = alpha
 	for i: int in RAYS:
 		var angle := -PI + (i + 0.5) * PI / RAYS
-		# Every other ray a little longer, so the crown is ragged, not a gear.
+		# Alternating ray lengths avoid a uniform silhouette.
 		var length := ray_length * reach * (1.0 if i % 2 == 0 else 0.7)
 		_draw_ray(angle, length, color, i)
 
-## A ray is a short polyline whose points sway sideways with a wave that
-## travels outward, so the whole crown looks alive rather than stamped.
+## Draws a ray whose sideways sway travels outward.
 func _draw_ray(angle: float, length: float, color: Color, seed: int) -> void:
 	var dir := Vector2.from_angle(angle)
 	var side := dir.orthogonal()

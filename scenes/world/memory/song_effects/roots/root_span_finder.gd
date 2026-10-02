@@ -1,15 +1,6 @@
 class_name RootSpanFinder extends RefCounted
 
-## Where Enraizar's roots can grow, read from a room's map (design 02 section
-## 7.1: roots join EARTH to earth, never stone). Pure, so every rule is tested:
-##   - a BRIDGE between the tops of two earth banks facing each other across a
-##     gap of air (both with air above them: banks, not walls);
-##   - a SHAFT where two earth walls face each other across a narrow gap for
-##     several rows (its rungs become something to climb);
-##   - a PILLAR from an earth floor to an earth ceiling straight above it.
-## Cells are the map's world cells (RoomMap.origin applied). Whether a span is
-## inside the pulse is not this class's business: RootGrower asks that every
-## frame.
+## Finds earth-only root spans in map coordinates (docs/design/02 section 7.1).
 
 enum Kind { BRIDGE, SHAFT, PILLAR }
 
@@ -26,7 +17,7 @@ static func _earth(map: RoomMap, cell: Vector2i) -> bool:
 static func _solid(map: RoomMap, cell: Vector2i) -> bool:
 	return map.contains(cell) and (map.is_solid(cell) or map.is_platform(cell))
 
-## The first solid cell right of `cell` on its row, or the row's end.
+## First solid cell right of `cell`, or the row's end.
 static func _next_solid(map: RoomMap, cell: Vector2i) -> Vector2i:
 	var x := cell.x + 1
 	while x < map.origin.x + map.size.x and not _solid(map, Vector2i(x, cell.y)):

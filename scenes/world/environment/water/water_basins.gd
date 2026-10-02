@@ -1,16 +1,6 @@
 class_name WaterBasins extends RefCounted
 
-## Painted water cells, grouped into the bodies they describe. Pure logic: it
-## knows cells, not pixels, tiles or scenes, so every rule for what a painted
-## shape means is tested here. WaterLayer turns the result into water.
-##
-## A body of water has ONE flat surface, so a painted shape is read like water
-## poured into it: each 4-connected group of cells fills up to its highest row,
-## the surface. Every contiguous run of columns that reaches that row is one
-## body, and each column is as deep as its cells run unbroken down from the
-## surface - so a stepped basin is one body with a stepped floor. A cell no
-## surface can reach (under a ceiling of terrain, or below a gap) cannot hold
-## water in a side view; it is reported, never silently drawn.
+## Groups painted cells into reachable water bodies; cells without a surface are reported.
 
 const NEIGHBOURS: Array[Vector2i] = [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]
 
@@ -79,8 +69,7 @@ static func _component(start: Vector2i, painted: Dictionary[Vector2i, bool],
 				found.append(neighbour)
 	return found
 
-# Row by row, left to right: the order a reader scans a map, so warnings and
-# ties come out the same every run.
+# Row-major traversal keeps warnings and ties deterministic.
 static func _sorted(cells: Array[Vector2i]) -> Array[Vector2i]:
 	var sorted := cells.duplicate()
 	sorted.sort_custom(func(a: Vector2i, b: Vector2i) -> bool:

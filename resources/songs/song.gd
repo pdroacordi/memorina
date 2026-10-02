@@ -1,31 +1,22 @@
 class_name Song extends Resource
 
-## One note sequence. Pure data: it knows what the player must play, what
-## season it belongs to, how it sounds and how its pulse behaves, and nothing
-## about who listens or what happens in the world - that is SongReceiver's job.
+## Song data; world responses belong to SongReceiver.
 
-## Every song is exactly this long; the sheet in MemorinaHud has this many
-## slots. SongCatalog.validate() enforces it.
+## Must match the note-slot count in MemorinaHud; SongCatalog validates it.
 const NOTE_COUNT := 6
 ## Seconds the fallback cues span when there is no excerpt duration to use.
 const DEFAULT_CUE_WINDOW := 6.0
 
 @export var id: Enums.Song = Enums.Song.FREEZE
 @export var palette: SeasonPalette
-## The sequence, in order. No song's notes may be a prefix of another's or the
-## longer one becomes unreachable; SongCatalog.validate() enforces that.
+## Ordered notes; no sequence may prefix another (SongCatalog validates this).
 @export var notes: Array[Enums.Note] = []
-## Translation key for the song's effect ("Freeze"). Never a literal.
+## Translation key for the song's effect.
 @export var name_key: String = ""
-## Translation key for the piece's title ("Hymn of Frost"), the name the
-## player learns it by. Distinct from name_key, which names what it does.
+## Translation key for the title shown when the player learns the song.
 @export var title_key: String = ""
 @export var pulse_stats: PulseStats
-## What the song itself does, beyond what receivers in the world answer to:
-## the gale's field, the bell jar's shell, the burned shadow, the rain. Mounted
-## under the pulse by ColorPulse, the way the palette's particles are, so the
-## pulse never learns which song it carries. Optional: FREEZE has none - the
-## water answers it.
+## Optional effect scene mounted under ColorPulse; world responses are handled by receivers.
 @export var pulse_effect: PackedScene
 
 @export_group("Performance")
@@ -35,15 +26,11 @@ const DEFAULT_CUE_WINDOW := 6.0
 ## track itself, cut at excerpt_duration. A dedicated excerpt must begin at
 ## the same instant as the track so note_cues stays valid for both.
 @export var excerpt: AudioStream
-## Seconds of performance_stream() heard in the world before the cut. 0 plays
-## it whole.
+## Seconds played before the excerpt cut; 0 plays the full stream.
 @export var excerpt_duration: float = 7.0
-## Seconds over which the cut fades out.
+## Fade duration, in seconds.
 @export var excerpt_fade: float = 0.5
-## Seconds into the track at which each of the motif's notes sounds, one per
-## note, ascending. The sheet lights the matching slot as playback crosses
-## each. Hand-tuned against the audio. Optional: leave it empty and cues()
-## spaces the notes evenly across the excerpt, a placeholder until it is tuned.
+## Optional per-note cue times in seconds, tuned to the audio; empty uses evenly spaced cues.
 @export var note_cues: PackedFloat32Array = []
 
 func season() -> Enums.Season:

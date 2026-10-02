@@ -1,7 +1,6 @@
 extends SceneTree
 
-## Draws the few sprites that are simpler to compute than to paint, so they
-## stay reproducible and in the world palette:
+## Generates reproducible procedural sprites in the world palette:
 ##   assets/sprites/world/wind/wind_streak.png  a 12x1 streak, bright at its
 ##       head and fading behind it (particles align it to their velocity)
 ##   assets/sprites/world/wind/wind_streak_radial.png  the same streak standing

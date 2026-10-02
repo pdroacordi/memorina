@@ -1,11 +1,6 @@
 class_name ReleaseState extends RefCounted
 
-## When a thing Soltar let go of comes back. Pure, so the rule is tested:
-## - a RELEASE pulse reaching it lets it go (once, however many pulses);
-## - when the last pulse has left it, the grey gives back the old state
-##   (design 02 section 7.3, "o cinza guarda o estado antigo") - unless
-##   something is holding it (roots that caught it, Ivo standing on it), in
-##   which case it comes back the moment the last hold lets go.
+## Release and restoration transitions; see docs/design/02_mecanicas.md section 7.3.
 
 enum Event { NONE, RELEASED, RESTORED }
 
@@ -19,7 +14,7 @@ func is_released() -> bool:
 func is_waiting() -> bool:
 	return _waiting
 
-## A RELEASE pulse reached it.
+## Marks the object released when a RELEASE pulse reaches it.
 func lit() -> Event:
 	_waiting = false
 	if _released:
@@ -27,7 +22,7 @@ func lit() -> Event:
 	_released = true
 	return Event.RELEASED
 
-## A RELEASE pulse left it; `still_lit` is whether another still covers it.
+## Handles a departing RELEASE pulse; `still_lit` indicates another covering pulse.
 func unlit(still_lit: bool) -> Event:
 	if still_lit or not _released:
 		return Event.NONE

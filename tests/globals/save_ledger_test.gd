@@ -1,8 +1,6 @@
 class_name SaveLedgerTest extends GdUnitTestSuite
 
-## Only benches save, and a death rewinds to the last of them (the user's
-## decisions, 2026-10-01) - except the death's own mark, which is written onto
-## the bench's save and survives the rewind. Enemies come back on both.
+## Death rewinds to the last bench while preserving its new death mark.
 
 func _ledger() -> SaveLedger:
 	return SaveLedger.new(PlayerData.new())
@@ -38,8 +36,7 @@ func test_deaths_accumulate_per_region() -> void:
 	assert_int(ledger.live.deaths["a"].size()).is_equal(2)
 	assert_int(ledger.live.deaths["b"].size()).is_equal(1)
 
-## A restoration erases its region's marks on the LIVE save; a death before the
-## next bench brings them back with the guardian's corruption.
+## An uncommitted mark erasure is restored by death.
 func test_an_erasure_not_yet_committed_is_rewound() -> void:
 	var ledger := _ledger()
 	ledger.record_death("a", Vector2(1, 1))
@@ -47,8 +44,7 @@ func test_an_erasure_not_yet_committed_is_rewound() -> void:
 	ledger.record_death("b", Vector2(2, 2))
 	assert_bool(ledger.live.deaths.has("a")).is_true()
 
-## The bug a shallow duplicate() would be: live and committed sharing their
-## arrays, so a song learned after a bench is already in the bench's save.
+## Live and committed save arrays must not alias.
 func test_live_and_committed_share_nothing() -> void:
 	var ledger := _ledger()
 	ledger.live.learned_songs[Enums.Song.FREEZE] = true

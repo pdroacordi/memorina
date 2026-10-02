@@ -1,8 +1,6 @@
 class_name IceFrontTest extends GdUnitTestSuite
 
-## FREEZE's ice (design 03 §6.3-6.4): it grows only over living water, hardens
-## before it looks solid, carries weight conservatively, and thaws on its own
-## clock - from the origin by default, so it melts behind the player.
+## Checks FREEZE ice growth and thaw rules in docs/design/03_mundo.md sections 6.3-6.4.
 
 const COLUMNS := 48
 const WIDTH := 2
@@ -65,8 +63,7 @@ func test_it_grows_slower_over_grey_water() -> void:
 	assert_int(_reached(grey)).is_less(_reached(alive))
 	assert_int(_reached(grey)).is_greater(1)
 
-## Ice needs moving water: a front stops dead at a column nothing remembers,
-## and carries on once a pulse wakes it.
+## Ice growth pauses at forgotten water and resumes when memory returns.
 func test_a_front_stops_at_dead_water_and_resumes_when_it_wakes() -> void:
 	var ice := _ice(_profile(100.0))
 	var rates := _rates(1.0)
@@ -87,8 +84,7 @@ func test_the_surface_is_held_before_the_ice_looks_solid() -> void:
 	assert_float(ice.solidity(ORIGIN)).is_less(1.0)
 	assert_bool(ice.is_solid(ORIGIN)).is_false()
 
-## The design's default: the ice melts BEHIND the player, from where the song
-## was played, while the far bank still holds.
+## Default thawing starts at the song origin while the far bank remains frozen.
 func test_thaw_from_the_origin_leaves_the_far_bank_standing() -> void:
 	var ice := _ice()
 	ice.freeze_from(ORIGIN)
@@ -107,8 +103,7 @@ func test_thaw_from_the_edges_melts_the_banks_first() -> void:
 	assert_float(ice.solidity(COLUMNS - 1)).is_equal(0.0)
 	assert_bool(ice.is_solid(ORIGIN)).is_true()
 
-## Once made, the ice keeps its own clock: a pulse contracting off it does not
-## turn it into a permanent bridge.
+## Ice uses its own thaw clock, so contracting memory does not make a bridge permanent.
 func test_the_thaw_ignores_memory() -> void:
 	var ice := _ice()
 	ice.freeze_from(ORIGIN)
@@ -124,8 +119,7 @@ func test_it_melts_away_completely() -> void:
 	assert_int(_reached(ice)).is_equal(0)
 	assert_bool(ice.is_active()).is_false()
 
-## A segment carries weight only while every column in it is solid, so the
-## collider never reaches past the ice you can see.
+## A segment is solid only when every column in it is solid, keeping collision within visible ice.
 func test_segments_are_conservative() -> void:
 	var ice := _ice()
 	ice.freeze_from(ORIGIN)
@@ -163,8 +157,7 @@ func test_a_song_from_the_bank_freezes_from_the_nearest_edge() -> void:
 	_run(ice, _rates(1.0), 0.1)
 	assert_float(ice.solidity(0)).is_greater(ice.solidity(10))
 
-## Every dead column stops the front, whichever index it sits on and however
-## long the frame (docs/knowledge/bugs/ice-front-leaps-dead-columns.md).
+## Every dead column stops the front at any tested frame duration (docs/knowledge/bugs/ice-front-leaps-dead-columns.md).
 func test_no_dead_column_is_ever_leapt() -> void:
 	for frame_time: float in [1.0 / 60.0, 1.0 / 30.0, 0.1]:
 		for dead in range(ORIGIN + 1, COLUMNS):

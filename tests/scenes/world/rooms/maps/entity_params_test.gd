@@ -1,8 +1,6 @@
 class_name EntityParamsTest extends GdUnitTestSuite
 
-## A room map entity's JSON params become properties of the node it placed,
-## converted to each property's type, and anything that cannot apply is
-## reported instead of silently ignored.
+## Checks JSON entity params are converted to node property types and invalid values are reported.
 
 func _node() -> Node2D:
 	return auto_free(Node2D.new())

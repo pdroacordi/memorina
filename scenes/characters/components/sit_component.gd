@@ -1,14 +1,6 @@
 class_name SitComponent extends Node
 
-## Sitting on a seat (a bench, design 02 "Pontos de restauração"). Generic,
-## like ClimbComponent: the seat is only a place on the Interactable layer,
-## found through this body's own sensor, and this owns being on it - the body
-## stands on the seat's spot facing its way, and the seat knows it is taken so
-## its prompt goes away.
-##
-## The body decides WHEN to sit and what gets it up (Player: down pressed,
-## still on the floor, instrument away); the composition root decides what a
-## rest does.
+## Owns seat occupancy and positioning; the body decides when to sit and the composition root defines rest effects.
 
 @export var sensor_path: NodePath = ^"../SeatSensor"
 
@@ -24,7 +16,7 @@ func is_sitting() -> bool:
 func seat() -> Seat:
 	return _seat
 
-## The seat within reach, if any.
+## Unoccupied seat detected by this body's sensor, if any.
 func reachable() -> Seat:
 	for area: Area2D in _sensor.get_overlapping_areas():
 		var found := area as Seat
@@ -32,7 +24,7 @@ func reachable() -> Seat:
 			return found
 	return null
 
-## Sits on `seat`: the body is put on its spot, facing its way, and holds still.
+## Places the body at `seat`, faces it toward the seat direction, and stops movement.
 func sit(on: Seat) -> void:
 	stand()
 	_seat = on

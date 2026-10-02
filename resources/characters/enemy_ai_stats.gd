@@ -1,6 +1,5 @@
 class_name EnemyAIStats
 extends Resource
-## Tuning data for EnemyAI's wander phases.
 
 @export var min_wander_duration: float = 1.0
 @export var max_wander_duration: float = 2.5

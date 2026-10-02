@@ -1,27 +1,21 @@
 class_name Seat extends Area2D
 
-## Where Ivo sits on a bench. Only a PLACE, like Climbable: an area on the
-## Interactable layer that a body's SitComponent finds through its own sensor.
-## Its origin is where the feet go. It knows which bench it belongs to (the
-## save names a bench by its authored id) and watches for Ivo's BODY - never
-## his hurtbox, which a roll's i-frames switch off - only so its bench can
-## show the prompt while he is in reach.
+## Bench seat interaction area; it tracks the player's body to show the reach prompt.
 
-## The state the prompt reads changed: Ivo came into reach, left it, sat, rose.
+## Emitted when reach or occupancy state changes.
 signal changed
-## A rest was taken here (not merely a seat taken: arriving after a death puts
-## Ivo on it without one). The bench answers with its bloom.
+## Emitted when the player rests here.
 signal rested
 
-## The physics layer seats live on (layer 6, "Interactable").
+## Interactable collision layer (layer 6).
 const LAYER := 1 << 5
-## Ivo's body (layer 9, "Player").
+## Player body collision layer (layer 9).
 const PLAYER_BODY := 1 << 8
 const GROUP := &"seats"
 
-## The bench's authored id, unique across every map. Pushed by the bench.
+## Authored bench ID, unique across maps.
 var bench_id: StringName = &""
-## Which way he faces sitting here: 1 right, -1 left.
+## Facing direction: 1 right, -1 left.
 var facing: int = 1
 
 var _occupied: bool = false

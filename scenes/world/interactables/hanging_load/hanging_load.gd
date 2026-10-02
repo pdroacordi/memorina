@@ -1,29 +1,16 @@
 class_name HangingLoad extends RigidBody2D
 
-## A heavy thing on a rope - a cocoon, a sack, a counterweight. Soltar cuts the
-## rope: it falls for real (a RigidBody2D), lands, weighs down whatever plate
-## it lands on, can be shoved along by Vendaval (it rides the air like any
-## light thing), and can be stood on (Props layer). When the grey takes the
-## pulse back it returns to its rope - not while Ivo is standing on it.
-##
-## It slides rather than tumbles (rotation locked, a slick silk surface):
-## lying on its side it held the floor harder than a gale could drag it, and
-## a cocoon cartwheeling along a ledge reads as a toy, not a weight. Its
-## body's bottom corners are cut: a square corner catches on the seams
-## between floor tiles and stops dead under a full gale.
-##
-## Placed like a room map entity standing on its cell: the load hangs so its
-## bottom is `hang_height` above that floor, the rope running up
-## `rope_length` from its top.
+## A rope-suspended rigid body returns to its anchor when its pulse ends (docs/knowledge/systems/weight-presence-release.md).
 
+## Vertical gap from the supporting floor to the load bottom, in pixels.
 @export var hang_height := 64.0
+## Rope length above the load, in pixels.
 @export var rope_length := 96.0
-## Seconds to fade out where it lies and back in on its rope.
+## Fade duration at each end of the return, in seconds.
 @export var return_time := 0.5
 
 var _rest := Transform2D.IDENTITY
-## The fade back to the rope, killed if another pulse lets it go mid-fade -
-## left running, it would hang the load back up under a pulse still lit.
+## Return tween; cancel it if another pulse releases the load mid-fade.
 var _return: Tween
 # Whether it hangs from its rope, and whether a rider put its return off.
 var _on_rope := true
@@ -34,7 +21,7 @@ var _return_put_off := false
 @onready var _rider_sensor: Area2D = $RiderSensor
 
 func _ready() -> void:
-	# It moves or goes away: never a place to be sent back to.
+	# A moving load cannot be a safe respawn surface.
 	add_to_group(SafeGroundTracker.UNSAFE)
 	position.y -= hang_height + _half_height()
 	_rest = global_transform

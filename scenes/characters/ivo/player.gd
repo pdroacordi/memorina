@@ -1,78 +1,68 @@
 class_name Player
 extends Character
 
+## Coordinates Ivo's movement, combat, songs, and recall behavior.
+
 signal jumped(position: Vector2)
 signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
-## `facing` lets the sheet pick the side with open space without knowing Ivo.
+## The sheet uses `facing` to choose the side with open space.
 signal memorina_drawn(known_songs: Array[Song], facing: int)
 signal memorina_sheathed
-## A note sounded, drawn with the buttons it was pressed on.
+## A note sounded with its input glyph set.
 signal note_played(note: Enums.Note, glyph_set: Enums.GlyphSet)
-## A wrong note: drawn with its buttons, never sounded.
+## A rejected note with its input glyph set; it never sounded.
 signal note_rejected(note: Enums.Note, glyph_set: Enums.GlyphSet)
 signal sequence_failed
-## The mistake finished sounding; what was played so far may be forgotten.
+## The mistake finished sounding and the sequence can reset.
 signal sequence_reset
-## The instrument is answering: the world holds still until performance_finished.
+## The world holds still during the performance, until `performance_finished`.
 signal performance_started
 signal performance_finished
-## Playback of the performance crossed the cue of the note at `index`.
+## Performance playback reached the cue for note `index`.
 signal note_cue_reached(index: int)
-## A song was just learned; its whole track is about to be performed.
+## A song was learned and its full track is about to play.
 signal lesson_started(song: Song, glyph_set: Enums.GlyphSet)
 signal song_played(song: Song, position: Vector2)
-## A guardian has gone lucid and the encounter is staged around it: the camera
-## and the lights hold `caller` and Ivo until `call_unstaged`, across every
-## call and relapse of one lucid moment.
+## The camera and lights stage `caller` and Ivo until `call_unstaged`.
 signal call_staged(caller: Node2D)
 signal call_unstaged
-## A guardian is calling: its phrase, how many of its notes the sheet may show,
-## the glyphs to show them with, how far its cure has come (`cure_done` of
-## `cure_total` answers) and which side of Ivo it stands on (`side`, -1 or 1),
-## so the sheet can keep off it. The instrument is not out yet.
+## Opens a guardian call with its song, reveal count, cure progress, glyphs, side (-1 or 1), and height.
 signal call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet, cure_done: int, cure_total: int, side: int, caller_height: float)
-## The guardian's call sounded the note at `index`.
+## The guardian's call sounded note `index`.
 signal call_note_sounded(index: int)
-## The call has been heard; Ivo has `seconds` to answer.
+## The call was heard and the answer window opened.
 signal call_window_opened()
-## How much of that window is left, 0..1, for whatever is showing it. Relayed
-## every frame it is open: the fight owns the clock, the sheet only draws it.
+## Remaining answer-window fraction, 0..1; the fight owns the clock.
 signal call_window_progress(fraction: float)
-## `count` notes of the answer have landed right so far.
+## The answer has `count` correct notes so far.
 signal call_progress(count: int)
 signal call_closed
-## The phrase was played back whole, in time. Relayed from the instrument.
+## The full phrase was answered in time.
 signal call_answered(song: Song)
-## The emergency QTE opened: the prompt asks for `action`. The world slows.
+## Recall opened for `action`; the world slows.
 signal recall_started(action: StringName, seconds: float, steps: int)
-## A press of a chained memory landed and more are wanted.
+## A recall step landed and more steps remain.
 signal recall_step_taken(remaining: int, seconds: float)
 signal recall_ended
 signal skill_recalled(skill: Enums.PlayerSkill)
 signal skill_recall_missed(skill: Enums.PlayerSkill)
-## The sword connected with something. Feedback hooks (hit-stop) listen here.
+## The sword hit a target.
 signal hit_landed
-## Ivo was hit. The same feedback hooks, from the other side.
+## Ivo was hit.
 signal hurt
-## Water (a HazardZone) took him and he is sinking. The composition root
-## answers by fading out and calling respawn(); he does not swim.
+## Water took Ivo; the composition root fades out and calls `respawn()`.
 signal fell_into_hazard
-## His life, whenever it changes and once at the start, so the HUD keeps
-## listening to one node rather than reaching into his Health.
+## Health changed; emitted once at startup and on each change.
 signal health_changed(current: int, max_hp: int)
-## The death clip has played out. The composition root waits on this before
-## the screen goes dark, so the fall is seen, not cut.
+## The death clip finished; the composition root waits before fading out.
 signal death_shown
-## He sat down on a bench of his own accord. The composition root rests him:
-## heals, brings the creatures back and saves. Not emitted when he is PUT on
-## one (arrival after a death or a load).
+## Ivo sat down voluntarily; not emitted when `sit()` places him on a bench.
 signal sat_down(seat: Seat)
 
 const GROUP := "player"
 
-## Which AttackStats a sequence was started with. Gameplay, not animation:
-## one context spans several clips (a combo), and the resolver maps between.
+## Attack tuning is chosen once per sequence and held across its clips.
 const CTX_IDLE := &"idle"
 const CTX_RUN := &"run"
 const CTX_JUMP := &"jump"
@@ -81,12 +71,9 @@ const CTX_POGO := &"pogo"
 const ATTACK_CONTEXTS: Array[StringName] = [CTX_IDLE, CTX_RUN, CTX_JUMP, CTX_FALL, CTX_POGO]
 const AIR_ATTACK_CONTEXTS: Array[StringName] = [CTX_JUMP, CTX_FALL, CTX_POGO]
 
-## What counts as standing still. Not zero: releasing a direction leaves Ivo
-## decelerating for a few frames, and the design asks for "parado", not for
-## frame-perfect stillness.
+## Horizontal speed below this threshold counts as standing still.
 const STILL_SPEED_EPSILON := 1.0
-## How long after a recall opens a dodge with no direction held still counts
-## as an ESCAPE from whatever forced it, in seconds.
+## Seconds after recall when a directionless dodge moves away from its source.
 const RECALL_ESCAPE_TIME := 0.6
 
 enum MotionState { KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
@@ -107,100 +94,84 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 @onready var _voice           : MemorinaVoice = $MemorinaVoice
 @onready var _performance     : SongPerformance = $SongPerformance
 @onready var _recall          : AbilityRecallComponent = $AbilityRecall
-## The colour Ivo holds against the grey. Raised to full during a recall: the
-## design has colour born at the head, not at the instrument.
+## Shield amount rises to full during recall.
 @onready var _shield          : GreyhushShield = $GreyhushShield
 @onready var _hitbox          : Hitbox = $Hitbox
 @onready var _safe_ground     : SafeGroundTracker = $SafeGroundTracker
 @onready var _airflow_body    : AirflowBody = $AirflowBody
-## A concrete view of Character's generic resolver, for the duration assert.
+## Player resolver used by the clip-duration assertion.
 @onready var _player_resolver : PlayerAnimationResolver = $AnimationResolver
 
-## Per-sequence tuning data Ivo picks from at attack-start; a boss composing
-## the same AttackComponent would never need this idle/run/air split.
+## Attack tuning selected by the sequence's movement context.
 @export var attack_stats_idle : AttackStats
 @export var attack_stats_run  : AttackStats
 @export var attack_stats_jump : AttackStats
 @export var attack_stats_fall : AttackStats
 @export var attack_stats_pogo : AttackStats
 
-## Every song in the game. Ivo filters it by what the save says he has learned;
-## the component is handed the result rather than looking anything up itself.
+## Songs available for filtering by saved player progress.
 @export var song_catalog      : SongCatalog
-## Seconds between a lesson drawing the instrument and the track starting, so
-## the draw clip has reached memorina_idle before the world freezes - a
-## frozen resolver cannot switch clips.
+## Seconds between drawing the instrument for a lesson and starting its track; the clip must advance before playback freezes the world.
 @export var lesson_lead_in    : float = 0.5
-## Seconds the shield takes to bloom to full colour when a recall opens.
+## Seconds for the shield amount to reach its recall value.
 @export var recall_glow_time  : float = 0.2
 
 @export_category("Hazards")
-## How fast Ivo sinks once water has him, in pixels per second, and how quickly
-## the water slows his fall to it.
+## Sink speed in px/s; sink drag in px/s².
 @export var sink_speed        : float = 40.0
 @export var sink_drag         : float = 2400.0
-## Invulnerability granted on coming back to firm ground.
+## Invulnerability duration in seconds after respawning from a hazard.
 @export var hazard_grace      : float = 1.0
 
 @export_category("Wind")
-## How much of the wind reaches Ivo while the instrument is out (design 03
-## section 5.4, item 2: "sacar o instrumento acalma o vento ao redor"). Not
-## zero: at the peak of a gust the performance still breaks.
+## Wind exposure fraction while the instrument is out (design 03, section 5.4).
 @export_range(0.0, 1.0) var memorina_shelter: float = 0.5
-## Walking into a wind at least this fast (px/s) leans him into it.
+## Wind speed in px/s required to enter the brace pose.
 @export var brace_wind        : float = 60.0
 
 var _states: CharacterStateMachine
-## Which AttackStats the current sequence started with, held fixed for its
-## whole duration - _attack_clip() reads it to pick idle vs run vs the
-## single-phase air states. Empty string while not attacking.
+## Attack context selected at sequence start; empty while not attacking.
 var _attack_context: StringName = &""
-## Overlapping safe-room/NPC zones must combine additively: exiting an inner
-## zone while still inside an outer one must not re-enable combat.
+## Active combat-disabled zones; overlapping zones increment this counter.
 var _combat_disable_count: int = 0
 ## A double jump has no lasting gameplay state of its own — afterwards Ivo is
 ## simply rising — so the event is exposed as a one-frame pulse. It fires
-## inside _process_motion, so it is cleared at the top of the next one.
+## inside `_process_motion`, so it is cleared at the top of the next one.
 var _just_double_jumped: bool = false
 ## The buttons the last note was pressed on. MemorinaComponent never sees
 ## glyphs; this rides beside its `note_played` when Ivo relays it, and a lesson
 ## draws its sheet with it.
 var _last_glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
-## How much of the guardian's phrase the current attempt has got right.
+## Correct notes in the current guardian-call answer.
 var _call_progress: int = 0
-## How tall it is, for a sheet that must not cover it.
+## Staged caller height in world pixels, used to place the sheet.
 var _staged_height: float = 0.0
-## The guardian the stage is set around, between stage_call and unstage_call.
+## Guardian currently staged for a call.
 var _staged_caller: Node2D
-## True while the guardian is still singing its phrase: the instrument stays
-## in until the window opens, so the call is heard out before it is answered.
+## True while the guardian's phrase plays and the answer window is not open.
 var _call_listening: bool = false
-## A matched song whose last note is still ringing; performed on note_finished.
+## Matched song waiting for the current note to finish.
 var _pending_performance: Song = null
-## An answered call whose last note is still ringing; sheathed on note_finished.
+## True when an answered call should sheath after the note finishes.
 var _pending_sheathe: bool = false
-## The shield's authored amount, restored when a recall ends.
+## Authored shield amount restored when recall ends.
 var _resting_shield_amount: float = 0.0
 var _glow_tween: Tween
-## Which way is AWAY from whatever forced the memory, and for how long that
-## still counts: a recalled dodge with no direction held goes clear of the
-## blow rather than into it.
+## Direction away from the recall source and remaining escape time in seconds.
 var _recall_escape_axis: float = 0.0
 var _recall_escape_left: float = 0.0
-## A recall that must wait for Ivo to leave the ground, and how long it may
-## wait: the attack that launches him is still in flight.
+## Recall waiting for its cue, plus remaining cue time in seconds.
 var _pending_recall: AbilityRecallStats = null
 var _pending_recall_left: float = 0.0
-## Who is throwing the move the pending recall rides on, for a trigger that
-## waits on distance.
+## Source body used by a pending distance-triggered recall.
 var _pending_recall_source: Node2D
-## Water has him: no control until respawn() puts him back on firm ground.
+## True while sinking without player control.
 var _sinking: bool = false
-## death_shown has been emitted for this death.
+## True after `death_shown` emits for this death.
 var _death_shown: bool = false
-## Down was pressed: sit if a bench is in reach, next physics frame.
+## Pending down press, handled on the next physics frame.
 var _sit_requested: bool = false
-## A press arrived while seated: it gets him up and does nothing else.
+## Pending press to stand without triggering its action.
 var _stand_requested: bool = false
 
 func _enter_tree() -> void:
@@ -411,13 +382,7 @@ func is_bracing() -> bool:
 	var axis := move_axis()
 	return is_on_floor() and not is_zero_approx(axis) and signf(carry().x) == -signf(axis) and absf(carry().x) >= brace_wind
 
-## "Completamente parado, em chao firme" - the precondition the whole musical
-## track rests on (docs/design/02_mecanicas.md section 6.2). Checked against
-## real velocity, not just input intent, so a slide-to-stop does not count.
-##
-## Note this is about Ivo not COMMANDING movement. When weather lands, being
-## shoved by wind will still break a performance, but through the accumulated
-## force crossing a threshold - not through this predicate.
+## The song precondition is firm ground and near-zero horizontal speed (design 02, section 6.2).
 func is_still() -> bool:
 	if not is_on_floor() or is_dead():
 		return false
@@ -473,8 +438,7 @@ func _tick_input_timers(delta: float, on_floor: bool) -> void:
 	_memorina.tick_timers(delta)
 	_climb.tick(delta)
 
-# Water slows the fall to a sink and stops the drift; no input reaches here.
-# Sampled as the fall speed, so the plunge is not remembered as a hard landing.
+# Sample sinking velocity to avoid classifying a water plunge as a hard landing.
 func _sink_motion(delta: float) -> void:
 	apply_knockback_decay(delta)
 	velocity.y = move_toward(velocity.y, sink_speed, sink_drag * delta)
@@ -491,8 +455,7 @@ func _roll_motion(delta: float) -> void:
 func _ground_motion(delta: float) -> void:
 	_locomotion.ground_update(delta, move_axis(), carry().x)
 
-# Up held grabs something climbable within reach - the body's judgement,
-# like every other gate: not while rolling, hurt or playing.
+# Up grabs a climbable surface only when Ivo is not rolling, hurt, or playing.
 func _try_climb() -> void:
 	if _climb.is_climbing() or is_rolling() or is_in_knockback() or is_memorina_drawn():
 		return
@@ -504,7 +467,7 @@ func _try_climb() -> void:
 		_climb.grab()
 		_wall_mobility.stop()
 
-# Seated: nothing moves him - no gravity, no wind (a bench is shelter anyway).
+# Benches block gravity and wind while Ivo is seated.
 func _sit_motion(_delta: float) -> void:
 	velocity = Vector2.ZERO
 
@@ -533,7 +496,7 @@ func _try_sit(on_floor: bool) -> void:
 	sit(seat)
 	sat_down.emit(seat)
 
-# Any move, up, or a press gets him up.
+# Movement, up, or any action press stands Ivo up.
 func _wants_to_stand() -> bool:
 	return _stand_requested or wants_to_move() or _input.look_direction < -0.5
 
@@ -547,15 +510,13 @@ func _unless_seated(action: Callable) -> void:
 		return
 	action.call()
 
-# A jump, roll or attack press while the instrument is out was a note: buffered,
-# it would fire the moment the instrument is put away within the buffer.
+# Do not buffer actions pressed while the instrument is out; those inputs are notes.
 func _as_move(action: Callable) -> void:
 	if is_memorina_drawn():
 		return
 	_unless_seated(action)
 
-# No gravity and no wind: he holds on. Climbing out of the top hops him onto
-# the ledge; anything else that ends it lets him fall.
+# Climbing suppresses gravity and wind; leaving over the top triggers a hop.
 func _climb_motion(delta: float) -> void:
 	match _climb.update(delta, Vector2(move_axis(), _input.look_direction)):
 		ClimbComponent.Exit.OVER_THE_TOP:
@@ -617,11 +578,7 @@ func _on_sequence_failed() -> void:
 	_voice.play_mistake_after_note()
 	sequence_failed.emit()
 
-## The last note rings out first, and only then does the instrument answer.
-## The world is frozen from `started` on, never at match time, so a hit that
-## lands while the note rings still aborts cleanly through interrupt(). Kept
-## as state rather than an await: a signal the voice never gets to emit would
-## leave a coroutine suspended forever.
+## Defer playback until the ringing note ends; state avoids an await that could never resume.
 func _on_song_matched(song: Song) -> void:
 	_pending_performance = song
 	if not _voice.is_busy():
@@ -652,8 +609,7 @@ func _on_memorina_drawn(known_songs: Array[Song]) -> void:
 	_call_progress = 0
 	memorina_drawn.emit(known_songs, facing)
 
-## Sheathing mid-performance (a hit during the ring-out or the lesson's lead-in)
-## must also release the world, or it would stay frozen with nothing to thaw it.
+## Sheathing during playback or lesson lead-in must thaw the world.
 func _on_memorina_sheathed() -> void:
 	_pending_performance = null
 	_pending_sheathe = false
@@ -1066,9 +1022,7 @@ func _on_attack_phase_started(_phase_index: int, phase: AttackPhaseData) -> void
 	# leaving the clip name unchanged — the swing still has to restart.
 	_animation_driver.request_replay()
 
-## Only the pogo attack's hit should bounce Ivo upward - the same shared
-## Hitbox also lands every ground-combo and other air-attack hit, so this is
-## the one place that knows which attack is currently connecting.
+## Only pogo hits bounce Ivo; all attack contexts share this hitbox.
 func _on_hitbox_connected(_target: Hurtbox) -> void:
 	hit_landed.emit()
 	if _attack_context == CTX_POGO:

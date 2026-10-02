@@ -1,9 +1,6 @@
 class_name CurePips extends Control
 
-## One pip per answer the guardian's cure needs, drawn as small diamonds in
-## the song's tint: filled for the answers already given, outlined for the
-## ones still to come. The fight's progress at a glance, without a number.
-## Draws what it is told; decides nothing.
+## Draws guardian cure progress as song-tinted pips.
 
 const PIP_SIZE := 8.0
 const PIP_GAP := 14.0
@@ -13,7 +10,6 @@ const FILL_TIME := 0.25
 var _done: int = 0
 var _total: int = 0
 var _tint: Color = Color.WHITE
-## The pip being filled, swelling from 0 to 1 as it does; -1 when none is.
 var _filling: int = -1
 var _fill_progress: float = 0.0
 
@@ -24,7 +20,6 @@ func show_cure(done: int, total: int, tint: Color) -> void:
 	_filling = -1
 	queue_redraw()
 
-## The next pip fills with a beat: the answer that was just given.
 func fill_next() -> void:
 	if _done >= _total:
 		return

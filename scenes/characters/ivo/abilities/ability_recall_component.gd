@@ -1,28 +1,11 @@
 class_name AbilityRecallComponent extends Node
 
-## The emergency QTE of docs/design/02_mecanicas.md section 4: under an
-## attack that cannot be dodged, the body remembers a skill it had before the
-## grief. Armed by the owner with the attack's AbilityRecallStats, told which
-## actions the player pressed, and ticked with REAL seconds - the world is
-## slowed while it is armed, and the window is measured against the hand, not
-## the slowed clock.
-##
-## A memory can take more than one press. A double jump is jump and then jump
-## AGAIN: asked for with both feet planted it is two steps, and the moment
-## teaches the whole move instead of waiting for someone else to put Ivo in
-## the air. Caught already airborne it is the one press that is left to give.
-## Whether the feet are planted is the BODY's judgement, pushed in through
-## arm() and notify(), the same way `enabled` carries the item gate.
-##
-## A player ability because it is about Enums.PlayerSkill, but it never grants
-## one: it reports `recalled` and the owner touches the save, exactly as the
-## roll's `enabled` gate keeps SaveSystem out of RollComponent.
+## Handles the emergency recall QTE in docs/design/02_mecanicas.md section 4 using real seconds while time is slowed.
+## The owner supplies grounded state and stats; completion is reported by `recalled`, leaving save changes to the owner.
 
-## The right action was pressed in time. Carries what it was armed with, so
-## the owner learns both the skill and the grace it earns.
+## The required action was pressed in time; carries the recalled stats for the owner.
 signal recalled(stats: AbilityRecallStats)
-## A press landed and the memory is not complete: `remaining` presses to go,
-## with `seconds` of real time now on the clock.
+## A chain press landed; reports remaining presses and the real-time window.
 signal step_taken(remaining: int, seconds: float)
 ## The window closed on nothing.
 signal missed(stats: AbilityRecallStats)
@@ -42,10 +25,7 @@ func armed_stats() -> AbilityRecallStats:
 func steps_left() -> int:
 	return _steps_left
 
-## Opens the window. `grounded` is the body's own answer at this instant: with
-## the feet planted the memory may ask for its full chain, in the air only the
-## press that is left. Ignored while one is already open, so a guardian that
-## repeats its attack mid-recall does not restart the clock.
+## Opens a window using the body's current grounded state; ignores re-arming while a window is already open.
 func arm(stats: AbilityRecallStats, grounded: bool = false) -> bool:
 	if is_armed() or stats == null:
 		return false
@@ -54,10 +34,7 @@ func arm(stats: AbilityRecallStats, grounded: bool = false) -> bool:
 	_steps_left = maxi(stats.grounded_steps, 1) if grounded else 1
 	return true
 
-## The player pressed `action`, with `airborne` saying where the body was when
-## they did. True when the press counted - for the last step of a move that
-## can only be performed off the ground, a press with the feet down does not,
-## and is left to the ordinary jump that will put Ivo in the air.
+## Reports whether `action` counted; an airborne-only final step does not count while grounded.
 func notify(action: StringName, airborne: bool = true) -> bool:
 	if not is_armed() or action != _stats.action:
 		return false
@@ -85,8 +62,7 @@ func tick(real_delta: float) -> void:
 	_disarm()
 	missed.emit(stats)
 
-## Drops an open window without a verdict, for an owner that can no longer
-## answer (it died). True when there was one to drop.
+## Drops an open window without a verdict; returns true if one was open.
 func cancel() -> bool:
 	if not is_armed():
 		return false

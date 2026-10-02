@@ -1,7 +1,6 @@
 class_name MechanismTest extends GdUnitTestSuite
 
-## A mechanism follows its trigger, and its lock holds it down whatever the
-## trigger says - the counterweight dropped on the wrong plate.
+## Verifies trigger movement and lock precedence.
 
 const PLATE := preload("res://scenes/world/interactables/pressure_plate/pressure_plate.tscn")
 const GATE := preload("res://scenes/world/interactables/gate/gate.tscn")
@@ -25,7 +24,7 @@ func before_test() -> void:
 	holder.add_child(_jam)
 	holder.add_child(_gate)
 
-## Runs the gate past its whole move.
+## Advances the gate beyond its configured move duration.
 func _settle() -> void:
 	_gate._physics_process(_gate.move_time + 0.1)
 

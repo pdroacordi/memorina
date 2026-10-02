@@ -1,7 +1,6 @@
 class_name SceneKeyTest extends GdUnitTestSuite
 
-## The save names regions and rooms by the uid of the scene they come from, so
-## a bench and its death marks are still found after the files are renamed.
+## Save keys use scene UIDs so renaming scene files preserves bench and death-mark references.
 
 const ROOM := "res://scenes/world/rooms/home_village/downtown.tscn"
 

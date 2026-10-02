@@ -1,29 +1,13 @@
 extends SceneTree
 
-## Builds resources/world/tiles/floor_tileset.tres, the one TileSet every
-## room's ground draws with, from floor_tiles.png.
-##
-## Only band 0 (the top six rows) is referenced: the seasonal_art shader swaps
-## in the matching band per pixel. The other bands' tiles are still DEFINED
-## (bare, no collision or data), because the TileSet's texture padding only
-## bakes the regions of defined tiles - leave them out and every season but
-## the first samples transparent padding, and the ground vanishes under a
-## pulse of another season. Columns 0-8 are EARTH, columns 9-17 the
-## STONE derived from them (tools/art/derive_stone_tiles.gd), and every tile
-## carries its material in the `ground` custom data layer, which is what
-## Enraizar and GroundAutotile read. The thin platform pieces also get an
-## alternative (1) whose collision is one-way, for `=` in a room map.
-##
-## Rerun after changing the sheet's layout:
-##   "<godot>" --headless --path . -s res://tools/maps/build_floor_tileset.gd
+## Builds resources/world/tiles/floor_tileset.tres from floor_tiles.png; rerun after changing the sheet layout.
 
 const SHEET := "res://assets/sprites/world/tilesets/floor_tiles.png"
 const OUTPUT := "res://resources/world/tiles/floor_tileset.tres"
 const TILE := 32
 const BAND_ROWS := 6
 const EARTH_COLUMNS := 9
-## Tiles with fewer opaque pixels than this are decoration (stalactite tips)
-## and get no collision.
+## Minimum opaque pixel count for collision.
 const SOLID_COVERAGE := 200
 
 func _init() -> void:
@@ -47,6 +31,7 @@ func _init() -> void:
 			if coverage == 0:
 				continue
 			var coords := Vector2i(column, row)
+			# Define unused seasonal bands too; atlas padding only includes defined tiles.
 			source.create_tile(coords)
 			if row >= BAND_ROWS:
 				continue

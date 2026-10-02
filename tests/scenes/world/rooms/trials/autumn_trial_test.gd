@@ -1,19 +1,15 @@
 class_name AutumnTrialTest extends GdUnitTestSuite
 
-## "Empurrado pelo Vendaval" (design 02 section 8, Outono Espacial 2) is only
-## a puzzle if the chasm beats Ivo alone, beats the natural current alone and
-## beats the gale alone - and yields to the gale played into the current. The
-## map, the current's params, the gale's tuning and Ivo's jump are all read
-## from the real files, so retuning any of them re-checks the puzzle.
+## Verifies the crossing constraints for Outono Espacial 2 (docs/design/02_mecanicas.md section 8) using the authored map and tuning.
 
 const ROOM := "res://scenes/world/rooms/trials_autumn/contents/autumn_trial.room"
 const GALE_SCENE := "res://scenes/world/memory/song_effects/gale/gale_field.tscn"
 const PULSE_STATS := "res://resources/memory/default_pulse_stats.tres"
-## Where the song is played: this many cells back from the edge, for a run-up.
+## Song origin in cells behind the edge, allowing a run-up.
 const PLAY_CELLS_BACK := 3
-## Ivo's AirflowBody samples the air this far above his feet.
+## AirflowBody sample offset above Ivo's feet, in pixels.
 const SAMPLE_OFFSET := Vector2(0, -28)
-## The crossing must clear by at least this much, not scrape it.
+## Required crossing clearance, in pixels.
 const MARGIN := 16.0
 
 var _map: RoomMap
@@ -24,7 +20,7 @@ func before() -> void:
 	var result := RoomMapParser.parse(FileAccess.get_file_as_string(ROOM), RoomLegend.load_default(), ROOM)
 	assert(result.ok(), str(result.errors))
 	_map = result.map
-	# The first run of empty floor cells on the floor row is the chasm.
+	# The first contiguous empty span on the floor row defines the chasm.
 	var floor_row := 16
 	var start := -1
 	for x: int in _map.size.x:
@@ -47,8 +43,7 @@ func _gale(point: Vector2) -> Vector2:
 	var eye := gale.eye
 	gale.free()
 	var radius := (load(PULSE_STATS) as PulseStats).max_radius
-	# Take-off is at the edge; the song was played PLAY_CELLS_BACK cells back,
-	# facing the chasm, so the gale blows across it.
+	# Take-off is at the edge; place the gale PLAY_CELLS_BACK cells behind it, facing the chasm.
 	var origin := Vector2(-(PLAY_CELLS_BACK * MapGuide.CELL - MapGuide.CELL * 0.5), 0.0)
 	return GaleShape.wind(origin, point + SAMPLE_OFFSET, radius, eye, speed, 1.0)
 
@@ -73,7 +68,7 @@ func test_the_gale_alone_falls_short() -> void:
 # --- Soltar ------------------------------------------------------------------
 
 const RELEASE_STATS := "res://resources/memory/release_pulse_stats.tres"
-## HangingLoad's body height and half width (hanging_load.tscn).
+## HangingLoad body height and half-width, in pixels (hanging_load.tscn).
 const LOAD_HEIGHT := 44.0
 const LOAD_HALF_WIDTH := 14.0
 const FLOOR_ROW := 16
@@ -84,24 +79,24 @@ func _entity(id: String) -> Dictionary:
 			return placed
 	return {}
 
-## Grid column and row of an entity (its cell is a world cell).
+## Entity grid cell relative to the map origin.
 func _cell(id: String) -> Vector2i:
 	return (_entity(id).cell as Vector2i) - _map.origin
 
-## Height above the floor of the top of the first solid cell in `col`.
+## Height in pixels above the floor to the first solid cell in `col`.
 func _top(col: int) -> float:
 	for row: int in _map.size.y:
 		if _map.is_solid(_map.origin + Vector2i(col, row)):
 			return (FLOOR_ROW - row) * MapGuide.CELL
 	return 0.0
 
-## A hanging load's (bottom, top) above the floor, and its column centre x.
+## Hanging load bottom and top above the floor, plus its column-center x, in pixels.
 func _hanging(id: String) -> Vector3:
 	var cell := _cell(id)
 	var bottom := (FLOOR_ROW - 1 - cell.y) * MapGuide.CELL + float(_entity(id).params.hang_height)
 	return Vector3(bottom, bottom + LOAD_HEIGHT, (cell.x + 0.5) * MapGuide.CELL)
 
-## How near a pulse lit on the floor at column `col` comes to a load.
+## Distance in pixels from a floor pulse at `col` to a load.
 func _distance_to_load(col: int, id: String) -> float:
 	var hanging := _hanging(id)
 	var dx := absf((col + 0.5) * MapGuide.CELL - hanging.z)
@@ -125,8 +120,7 @@ func test_the_lift_shelf_is_out_of_reach_from_the_floor_and_the_counterweights()
 func test_the_cocoon_shelf_is_out_of_reach_from_the_floor() -> void:
 	assert_float(_top(_cell("cocoon").x)).is_greater(_peak())
 
-## Between the counterweights and the cocoon's shelf a stone wall hangs from
-## the room's top to below a load's top: standing on a load gets him nowhere.
+## Confirms the wall between counterweights and cocoon shelf extends below the load top.
 func test_a_wall_keeps_the_counterweights_from_the_cocoon_shelf() -> void:
 	var col := _cell("weight_right").x + 2
 	var lowest := -1
@@ -154,9 +148,7 @@ func test_between_them_it_reaches_both() -> void:
 	assert_float(_distance_to_load(middle, "weight_right")).is_less(_release_radius())
 	assert_float(_distance_to_load(middle, "weight_wrong")).is_less(_release_radius())
 
-## Carried out of Soltar's disc, the cocoon is back in the grey, which gives
-## it back to its rope - so Soltar must be played where its disc covers the
-## cocoon both where it hangs and on the plate.
+## Soltar's disc must cover the cocoon at both its hanging and plate positions or it returns to its rope.
 func test_one_soltar_spot_covers_the_cocoon_from_its_rope_to_the_plate() -> void:
 	var hanging := _hanging("cocoon")
 	var plate_x := (_cell("plate_gate").x + 0.5) * MapGuide.CELL
@@ -169,8 +161,7 @@ func test_one_soltar_spot_covers_the_cocoon_from_its_rope_to_the_plate() -> void
 			covered = true
 	assert_bool(covered).is_true()
 
-## The gale would blow the cocoon on past the plate and off the shelf; a
-## stone stop right after the plate holds it there.
+## A stone stop after the plate prevents the gale from blowing the cocoon off the shelf.
 func test_a_stop_holds_the_cocoon_on_the_plate() -> void:
 	var plate := _cell("plate_gate")
 	assert_bool(_map.is_solid(_map.origin + plate + Vector2i(1, 0))).is_true()

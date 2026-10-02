@@ -1,23 +1,15 @@
 class_name LifeHud extends Control
 
-## Ivo's life, always on screen (design 02, "Vida"): one LifeNote per unit, in
-## colour while he has it, grey and still once lost - the rightmost forgets
-## first. It only draws what Player.health_changed tells it; it never reads
-## Health. No text: a life the player reads by colour carries no translation.
-##
-## PROCESS_MODE_ALWAYS and the last child of the CanvasLayer, over the fade and
-## the letterbox, because "always visible" means through a lesson and a death.
+## Displays Player.health_changed as LifeNotes; see docs/design/02_mecanicas.md section Vida.
 
 const NOTE := preload("res://scenes/ui/life_hud/life_note.tscn")
 
-## How many frames apart neighbouring notes sway, so the row breathes rather
-## than marches.
+## Phase spacing in frames between neighbouring notes.
 @export var phase_step: float = 2.0
-## Seconds between one note coming back and the next, when several do at once
-## (a rest): the row refills left to right instead of all in one blink.
+## Real seconds between successive note refills.
 @export var refill_step: float = 0.18
 
-## False until the first pool arrives: that one is shown, not animated.
+## False until the initial health update, which is shown without animation.
 var _shown: bool = false
 
 @onready var _row: HBoxContainer = $Row
@@ -36,7 +28,7 @@ func show_health(current: int, max_hp: int) -> void:
 		else:
 			note.remember(i < current, instant)
 
-## The notes, left to right.
+## Returns notes in display order.
 func notes() -> Array[LifeNote]:
 	var result: Array[LifeNote] = []
 	for child: Node in _row.get_children():

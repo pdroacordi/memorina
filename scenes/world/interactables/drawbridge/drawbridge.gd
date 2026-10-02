@@ -1,14 +1,12 @@
 class_name Drawbridge extends Node2D
 
-## A bridge held up on its hinge by a rope. Soltar lets it fall across the gap
-## with a thud and a bounce; the grey hauls it back up - not while Ivo is on
-## it. The plank is an AnimatableBody2D turning about this node (the hinge),
-## so it carries whoever stands on it.
+## Rope-held bridge plank rotates around this node and carries riders (docs/knowledge/systems/weight-presence-release.md).
 
-## Cells of 32 px the bridge spans when down.
+## Bridge length in 32 px map cells.
 @export var length_cells := 4
-## Which way it falls: 1 lays it to the right of the hinge, -1 to the left.
+## Fall direction: 1 right of hinge, -1 left.
 @export var side := 1
+## Time for the bridge to rotate between raised and lowered positions, in seconds.
 @export var fall_time := 0.45
 
 @onready var _releasable: Releasable = $Releasable
@@ -22,7 +20,7 @@ class_name Drawbridge extends Node2D
 var _tween: Tween
 
 func _ready() -> void:
-	# It moves or goes away: never a place to be sent back to.
+	# A moving bridge cannot be a safe respawn surface.
 	_plank.add_to_group(SafeGroundTracker.UNSAFE)
 	_plank.sync_to_physics = true
 	var length := length_cells * float(RoomMapNode.FLOOR_TILESET.tile_size.x)

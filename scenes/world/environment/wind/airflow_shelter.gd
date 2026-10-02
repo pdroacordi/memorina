@@ -1,8 +1,6 @@
 class_name AirflowShelter extends Node2D
 
-## A place the air cannot reach, whatever blows around it: the bell jar's
-## shell (Redoma), a bench, the lee of a rock (design 03 section 5.4, item 4).
-## Registers with the scene's Airflow; subclasses answer covers().
+## Airflow shelter registered with the scene's Airflow; see docs/knowledge/systems/air.md.
 
 func _ready() -> void:
 	if Engine.is_editor_hint():

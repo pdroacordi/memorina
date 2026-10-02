@@ -1,20 +1,16 @@
 class_name WindProfile extends Resource
 
-## How a natural current breathes: calm, rising, a gust, falling, and round
-## again. The calms are the window to play in (design 03 section 5.4, item 1:
-## "as calmarias entre rajadas sao a janela") - timing, the thread through the
-## whole game, taught by the weather.
+## Defines the repeating wind cycle; see docs/design/03_mundo_e_ambiente.md section 5.4.
 
-## Seconds at calm_strength between gusts.
+## Calm duration between gusts, in seconds.
 @export var calm_time := 2.5
-## Seconds to rise from calm to full.
+## Rise duration, in seconds.
 @export var rise_time := 0.6
-## Seconds at full strength.
+## Gust duration, in seconds.
 @export var gust_time := 1.6
-## Seconds to fall back to calm.
+## Fall duration, in seconds.
 @export var fall_time := 0.9
-## Strength during the calm, as a fraction of full. Not zero: a calm still
-## carries leaves.
+## Calm strength as a fraction of full, 0..1.
 @export_range(0.0, 1.0) var calm_strength := 0.15
 
 func period() -> float:

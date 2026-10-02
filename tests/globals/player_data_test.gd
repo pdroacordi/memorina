@@ -1,8 +1,6 @@
 class_name PlayerDataTest extends GdUnitTestSuite
 
-## PlayerData is the save-file schema. These tests exist because the enums it
-## indexes are append-only and grow over time: a save written by an older
-## build must keep working.
+## Enum-backed save arrays must remain compatible as enums grow.
 
 func test_a_fresh_save_is_sized_from_the_enums() -> void:
 	var data := PlayerData.new()
@@ -15,8 +13,7 @@ func test_a_fresh_save_starts_with_nothing_unlocked() -> void:
 	assert_bool(data.owned_items[Enums.PlayerItem.MEMORINA]).is_false()
 	assert_bool(data.learned_songs[Enums.Song.FREEZE]).is_false()
 
-## This is the whole point of migrate(): deserialising an old save overwrites
-## _init()'s correctly sized arrays with the file's shorter ones.
+## Deserializing an old save replaces `_init()` arrays with shorter serialized arrays.
 func test_migrate_grows_arrays_left_short_by_an_old_save() -> void:
 	var data := PlayerData.new()
 	data.unlocked_player_skills = [true]
@@ -48,8 +45,7 @@ func test_migrate_on_an_up_to_date_save_changes_nothing() -> void:
 	assert_int(data.learned_songs.size()).is_equal(Enums.Song.size())
 	assert_bool(data.learned_songs[Enums.Song.RAIN]).is_true()
 
-## A save written before benches and death marks existed is a file without
-## those keys: it must load, with no bench and no deaths.
+## Old saves omit bench and death-mark keys.
 func test_a_save_from_before_benches_loads_with_no_bench_and_no_deaths() -> void:
 	var path := "user://test_old_save.tres"
 	var file := FileAccess.open(path, FileAccess.WRITE)
@@ -71,7 +67,7 @@ learned_songs = Array[bool]([true])
 	assert_str(data.bench_room).is_empty()
 	assert_bool(data.deaths.is_empty()).is_true()
 
-## The bench and the deaths survive the disk, typed dictionary and all.
+## Bench and death data must round-trip through serialization.
 func test_the_bench_and_the_deaths_round_trip_through_the_file() -> void:
 	var path := "user://test_round_trip.tres"
 	var data := PlayerData.new()

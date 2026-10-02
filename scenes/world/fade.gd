@@ -1,11 +1,7 @@
 class_name Fade
 extends ColorRect
 
-## The screen reached the colour the latest fade asked for. What to_black() and
-## to_clear() hand back to await: a fade started while another runs kills that
-## tween, and a killed tween never emits its own `finished` - whoever awaited
-## it would wait for ever. This fires for every fade that lands, so an
-## interrupted awaiter resumes when the fade that replaced it does.
+## Emitted when a fade reaches its target; a replacement fade completes interrupted awaiters.
 signal faded
 
 const CLEAR    : Color = Color(0,0,0,0)

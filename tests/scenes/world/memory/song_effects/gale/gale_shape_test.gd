@@ -1,7 +1,6 @@
 class_name GaleShapeTest extends GdUnitTestSuite
 
-## Vendaval blows one way - the way Ivo faces - still in an eye around him,
-## strongest a little way out and gone at the pulse's clean edge.
+## Verifies the gale's directional wind profile and zero-strength boundaries.
 
 func test_the_eye_is_still() -> void:
 	assert_float(GaleShape.strength(30.0, 600.0, 48.0)).is_equal(0.0)

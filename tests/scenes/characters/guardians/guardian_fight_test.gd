@@ -1,7 +1,5 @@
 class_name GuardianFightTest extends GdUnitTestSuite
 
-## GuardianFight is pure logic: no Node, no clock, no save file. Everything is
-## driven through its methods and read back through its queries.
 
 var _stats: GuardianStats
 var _fight: GuardianFight
@@ -23,7 +21,6 @@ func _hit_until_open() -> void:
 		if _fight.register_hit():
 			return
 
-## Waits the relapse out, however long it was.
 func _relapse_out() -> void:
 	_fight.tick(_stats.relapse_time + 1.0)
 
@@ -60,8 +57,6 @@ func test_pressure_progress_climbs_with_the_hits() -> void:
 	_fight.register_hit()
 	assert_float(_fight.pressure_progress()).is_equal_approx(2.0 / 3.0, 0.001)
 
-## The design's guarantee: the skill is always remembered inside the
-## encounter, so no window opens while it is still pending.
 func test_a_pending_recall_holds_the_window_shut() -> void:
 	_fight.set_recall_pending(true)
 	_fight.begin()
@@ -95,7 +90,6 @@ func test_nothing_is_gated_when_no_recall_is_pending() -> void:
 	_hit_until_open()
 	assert_int(_fight.phase()).is_equal(GuardianFight.Phase.LUCIDITY)
 
-## The window only counts once the call has been heard.
 func test_the_window_does_not_run_before_it_is_opened() -> void:
 	_fight.begin()
 	_hit_until_open()
@@ -113,8 +107,6 @@ func test_an_expired_window_fails_the_answer() -> void:
 	assert_bool(_fight.relapse_failed()).is_true()
 	assert_int(_fight.aggression()).is_equal(1)
 
-## The answer cannot be played faster than the call was sounded, so the
-## phrase's own length is added to the slack.
 func test_the_window_is_the_calls_length_plus_the_slack() -> void:
 	_fight.begin()
 	_hit_until_open()
@@ -123,8 +115,6 @@ func test_the_window_is_the_calls_length_plus_the_slack() -> void:
 	assert_bool(_fight.tick(13.9)).is_false()
 	assert_bool(_fight.tick(0.2)).is_true()
 
-## The one clock. A meter asks for the fraction rather than counting its own
-## seconds down, so it cannot drift from the deadline it is drawing.
 func test_the_window_reports_the_fraction_it_has_left() -> void:
 	_fight.begin()
 	_hit_until_open()
@@ -135,8 +125,6 @@ func test_the_window_reports_the_fraction_it_has_left() -> void:
 	_fight.tick(3.9)
 	assert_float(_fight.window_fraction()).is_less(0.03)
 
-## Nothing is draining when nothing is open, and an expired window reads
-## empty rather than negative.
 func test_the_fraction_is_zero_with_no_window_open() -> void:
 	assert_float(_fight.window_fraction()).is_equal(0.0)
 	_fight.begin()
@@ -173,7 +161,6 @@ func test_hits_do_not_count_during_the_relapse() -> void:
 		assert_bool(_fight.register_hit()).is_false()
 	assert_float(_fight.pressure_progress()).is_equal_approx(0.0, 0.001)
 
-## A failure comes back sooner: the penalty is visible in the time it takes.
 func test_a_failed_relapse_is_shorter() -> void:
 	_fight.begin()
 	_hit_until_open()
@@ -205,7 +192,6 @@ func test_a_restored_guardian_ignores_hits() -> void:
 	assert_bool(_fight.register_hit()).is_false()
 	assert_float(_fight.lucidity()).is_equal_approx(1.0, 0.001)
 
-## The design's penalty: not game over, a harder road back.
 func test_failures_make_the_guardian_angrier() -> void:
 	_fight.begin()
 	assert_int(_fight.hits_to_open()).is_equal(3)

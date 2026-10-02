@@ -1,11 +1,10 @@
 class_name AbilityRecallComponentTest extends GdUnitTestSuite
 
-## The component is driven by pushed-in stats, action names and real
-## seconds, so it tests without input, a save file or a time scale.
+## The component accepts stats, action names, and real seconds without requiring input or save state.
 
 var _recall: AbilityRecallComponent
 var _roll: AbilityRecallStats
-## The double jump: two presses from the ground, the last one off it.
+## Double jump requires two presses from the ground, with the last airborne.
 var _double_jump: AbilityRecallStats
 
 func before_test() -> void:
@@ -77,7 +76,7 @@ func test_ticking_while_unarmed_does_nothing() -> void:
 	_recall.tick(10.0)
 	await assert_signal(monitor).is_not_emitted("missed")
 
-## The owner died: the window is dropped without a verdict either way.
+## Death cancellation clears the window without a verdict.
 func test_cancelling_drops_the_window_silently() -> void:
 	_recall.arm(_roll)
 	var monitor := monitor_signals(_recall)
@@ -90,9 +89,6 @@ func test_cancelling_drops_the_window_silently() -> void:
 func test_cancelling_while_unarmed_reports_nothing_to_drop() -> void:
 	assert_bool(_recall.cancel()).is_false()
 
-#############################################
-##  A   M E M O R Y   I N   T W O   P R E S S E S
-#############################################
 
 func test_a_chained_memory_asks_for_every_press_from_the_ground() -> void:
 	_recall.arm(_double_jump, true)
@@ -119,7 +115,7 @@ func test_the_last_press_of_a_chain_recalls_the_skill() -> void:
 	await assert_signal(monitor).is_emitted("recalled", [_double_jump])
 	assert_bool(_recall.is_armed()).is_false()
 
-## The ordinary jump the press also performs is what earns the last step.
+## The final press also performs the ordinary jump, so it must occur airborne.
 func test_the_last_press_does_not_count_with_the_feet_down() -> void:
 	_recall.arm(_double_jump, false)
 	var monitor := monitor_signals(_recall)
@@ -132,7 +128,7 @@ func test_a_step_puts_its_own_seconds_back_on_the_clock() -> void:
 	_recall.tick(0.9)
 	_recall.notify(&"jump", false)
 	var monitor := monitor_signals(_recall)
-	# The first window had 0.1s left; the step bought a fresh 2.0s.
+	# The step resets the remaining 0.1 seconds to its configured 2.0-second window.
 	_recall.tick(1.5)
 	await assert_signal(monitor).is_not_emitted("missed")
 	_recall.tick(0.6)

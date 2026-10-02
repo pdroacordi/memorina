@@ -1,9 +1,6 @@
 class_name AnimationDriver
 extends Node
-## Plays whatever animation state it is handed. Switches only when the state
-## changes, so a clip already in progress is never restarted by repeated calls
-## — except after request_replay(), for events that must restart the same clip
-## (a second identical attack chained with no gap in between).
+## Plays animation states without restarting an active clip; `request_replay()` explicitly restarts it.
 
 ## The state most recently started.
 var current: StringName = &""
@@ -39,8 +36,7 @@ func holding(state: StringName) -> bool:
 func finished(state: StringName) -> bool:
 	return current == state and is_finished()
 
-## Resolves an intro-then-loop pair: `intro` once, then `loop`. Both express
-## one logical state, so a resolver only asks while that state holds.
+## Plays `intro` once, then `loop`, while the logical state remains active.
 func sequence(intro: StringName, loop: StringName, skip_intro: bool = false) -> StringName:
 	if current == loop:
 		return loop

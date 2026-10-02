@@ -1,8 +1,6 @@
 class_name RoomMapNodeTest extends GdUnitTestSuite
 
-## A room's entities are built in one piece, so a link resolves whatever order
-## the file lists them in - a gate listed before the plate it follows is still
-## linked to it.
+## Entity links resolve regardless of the order in the room file.
 
 const ROOM := """[room]
 origin = 0, 0

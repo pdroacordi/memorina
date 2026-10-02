@@ -1,10 +1,6 @@
 extends SceneTree
 
-## Builds resources/ui/input/input_glyphs.tres from the glyphs in
-## assets/sprites/hud/input/ (each `<name>_normal/_selected/_pressed.png`, from
-## Franuka's RPG UI pack). The mapping from a binding to its art lives here and
-## nowhere else; rerun after adding a glyph or a binding that needs one:
-##   "<godot>" --headless --path . -s res://tools/ui/build_input_glyphs.gd
+## Builds resources/ui/input/input_glyphs.tres from assets/sprites/hud/input/; rerun after adding a glyph or binding.
 
 const DIR := "res://assets/sprites/hud/input"
 const OUT := "res://resources/ui/input/input_glyphs.tres"
@@ -25,7 +21,6 @@ const PLAYSTATION_BUTTONS := {
 	JOY_BUTTON_A: "ps_cross", JOY_BUTTON_B: "ps_circle", JOY_BUTTON_X: "ps_square", JOY_BUTTON_Y: "ps_triangle",
 	JOY_BUTTON_LEFT_SHOULDER: "ps_l1", JOY_BUTTON_RIGHT_SHOULDER: "ps_r1",
 }
-## Keyed by InputGlyphs.stick_key(axis, value).
 const LEFT_STICK := {
 	0: "stick_left_left", 1: "stick_left_right", 2: "stick_left_up", 3: "stick_left_down",
 }

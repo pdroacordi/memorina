@@ -1,14 +1,8 @@
 class_name DeathMarkClusters extends RefCounted
 
-## Groups a region's deaths into the marks it shows: a death near a mark
-## deepens it, a death far from every mark starts a new one, and once the
-## region shows `max_marks` every further death deepens the nearest. Greedy,
-## in the order the deaths happened, so the same save always draws the same
-## marks. Pure; RegionMemory mounts the result.
+## Greedily groups deaths in occurrence order for deterministic marks; RegionMemory mounts the result.
 
-## Returns one {"centre": Vector2, "deaths": int} per mark. A mark's centre is
-## the mean of its deaths, so a corner died in again and again keeps its mark
-## where the deaths actually are.
+## Returns each mark's mean centre and death count.
 static func cluster(points: PackedVector2Array, merge_distance: float, max_marks: int) -> Array[Dictionary]:
 	var marks: Array[Dictionary] = []
 	for point: Vector2 in points:

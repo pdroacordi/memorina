@@ -1,40 +1,30 @@
 class_name Floater extends AnimatableBody2D
 
-## Something that floats - a fallen log - riding the water under it (design 02
-## section 8, Primavera Logico 2: Chuva fills the basin and the log rises with
-## the water to a high passage). It lies where it was placed, on the basin's
-## floor, until the water reaches it; then it sits `draft` px into the water and
-## rides the waterline, waves and all, and sinks back to the floor as the water
-## goes. A one-way platform on the Props layer, so Ivo jumps up through it and
-## rides it up.
-##
-## It moves only up and down: the water does not carry it sideways.
+## A one-way platform that rises with water (design 02 section 8); it moves vertically only.
 
 ## How deep its bottom sits below the waterline, px.
 @export var draft := 4.0
 
 var _rest_y := 0.0
-# Where it is carried this frame. Kept here, not read back from the body: with
-# sync_to_physics a moved transform only lands on the next physics step.
+# Store the intended position because sync_to_physics applies transform changes on the next physics step.
 var _ride_y := 0.0
 var _water: WaterBody
 var _looked := false
 
 func _ready() -> void:
-	# It moves or goes away: never a place to be sent back to.
+	# A moving or removed floater is not a valid return position.
 	add_to_group(SafeGroundTracker.UNSAFE)
 	sync_to_physics = true
 	_rest_y = global_position.y
 	_ride_y = _rest_y
 
 func _physics_process(_delta: float) -> void:
-	# Looked up once, in the first physics frame: the water bodies of a room
-	# are placed by their layers, which may come after this entity.
+	# Resolve water in the first physics frame because its layer may be placed after this entity.
 	if not _looked:
 		_looked = true
 		_water = WaterBody.at(self, global_position)
 	_ride_y = _rest_y
-	# Water a Redoma holds back is not under it: it rests on the bed.
+	# Water held back by Redoma does not support the floater.
 	if _water and not _water.is_dry() and not _water.is_held_out(global_position.x):
 		_ride_y = minf(_rest_y, roundf(_water.surface_y(global_position.x) + draft))
 	global_position.y = _ride_y

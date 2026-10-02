@@ -1,14 +1,6 @@
 extends SceneTree
 
-## Extracts the world's palette into tools/art/palette.json: the colours the
-## ground tiles and the seasonal backgrounds are actually drawn in, merged
-## where they are near-identical and ranked by how much of the art uses them.
-## process_image.gd snaps generated art onto it, so a PixelLab prop comes out
-## in the same colours as the tiles it stands on (FAG-orbita's lesson: pin the
-## palette, or generated art never sits in the world).
-##
-## Rerun after the world art changes:
-##   "<godot>" --headless --path . -s res://tools/art/extract_palette.gd
+## Extracts a ranked, merged palette from world art for process_image.gd.
 
 const SOURCES: Array[String] = [
 	"res://assets/sprites/world/tilesets/floor_tiles.png",
@@ -19,9 +11,9 @@ const SOURCES: Array[String] = [
 	"res://assets/sprites/world/background/seasonal/background_layer_5.png",
 ]
 const OUTPUT := "res://tools/art/palette.json"
-## How many colours the palette keeps.
+## Maximum number of colours retained.
 const SIZE := 64
-## Colours closer than this (ImageOps distance) are one colour.
+## ImageOps distance below which colours are merged.
 const MERGE := 0.035
 
 func _init() -> void:

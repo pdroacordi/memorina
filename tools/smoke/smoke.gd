@@ -1,12 +1,6 @@
 extends Node
 
-## Opens every scene listed in scenes.txt for a few seconds of frames and
-## exits 1 if anything logged an error (a script error, a failed load, a
-## broken connection) - the cheap check to run after each phase, before the
-## slower playtests. A custom Logger counts the errors, so no output needs
-## scraping. Warnings reach the same Logger callback (error_type WARNING) and
-## are listed but do not fail the run:
-##   "<godot>" --headless --path . res://tools/smoke/smoke.tscn
+## Loads each scene in scenes.txt for 120 frames and exits nonzero on logged errors; warnings are reported but do not fail.
 
 const LIST := "res://tools/smoke/scenes.txt"
 const FRAMES := 120

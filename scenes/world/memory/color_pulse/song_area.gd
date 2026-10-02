@@ -1,9 +1,6 @@
 class_name SongArea extends Area2D
 
-## The reach of a pulse, as a physics shape, carrying which song lit it.
-##
-## Monitorable but NOT monitoring: the receivers do the watching. That way a
-## pulse freeing itself makes the engine emit area_exited on everyone it was
-## touching, and the pulse needs no bookkeeping about who it was covering.
+## Pulse collision area carrying the song that created it.
+## Receivers monitor it so freeing a pulse emits area_exited for overlapping areas.
 
 var song: Song

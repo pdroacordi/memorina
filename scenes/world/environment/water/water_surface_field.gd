@@ -1,28 +1,10 @@
 class_name WaterSurfaceField extends RefCounted
 
-## The surface of a body of water, as a row of springs. Pure logic: it knows
-## nothing about the memory field, the scene or the GPU, so every rule the
-## design sets for water motion is tested here.
-##
-## THE GREY IS STOPPED TIME, PER COLUMN. Each column integrates with its own
-## `rate` (the memory field over it, 0..1, no threshold): a column at 0.1 moves
-## at a tenth of the speed, and one at exactly 0 does not move at all - not
-## "barely", not "calmly": its height and velocity are left bit-for-bit as they
-## were. A crest raised in water nobody remembers stays exactly where it rose.
-##
-## WHY A FIELD AND NOT ANALYTIC WAVES. A pulse can cover half a pool. Analytic
-## waves on per-column time would leave the half that ran ahead permanently out
-## of phase with the half that did not - a scar that never heals. Springs chase
-## the swell instead of being it, so once everything is alive again the surface
-## settles back into one continuous wave. A frozen column is simply a column
-## that does not move: its live neighbours still feel it, so ripples reflect off
-## it like a wall.
-##
-## Heights are in world pixels, positive UP. The shader rounds them, which is
-## what makes the waterline step a whole pixel at a time.
+## Water spring simulation; see docs/design/03_mundo_e_ambiente.md section 4.
+## Column rates are memory values in 0..1; a zero-rate column preserves its state.
+## Heights are world px, positive up.
 
-## Extra damping on a column fully held by ice, per second. The surface stops
-## answering well before the ice looks solid.
+## Extra damping per second on a column fully held by ice.
 const HOLD_DAMPING := 12.0
 
 var _profile: WaterProfile
@@ -97,9 +79,7 @@ func swell(column: int, time: float) -> float:
 		+ 0.1 * sin(2.9 * k * x - 1.9 * w * time + 4.1)
 	)
 
-# The springs couple on each column's distance FROM THE SWELL, not on its raw
-# height: coupling raw heights smooths the swell's own curve away as if it were
-# a ripple, and the waterline would barely leave the flat.
+	# Couple displacement from the swell so neighbour coupling preserves its shape.
 func _substep(dt: float, rates: PackedFloat32Array, swell_time: float) -> void:
 	var count := _heights.size()
 	for i in count:

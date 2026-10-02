@@ -1,10 +1,6 @@
 shader_type canvas_item;
 
-// One unit of Ivo's life forgetting the way the world does: not tinted grey but
-// drained of colour pixel by pixel on the greyhush's own 4x4 Bayer cell, into
-// the same faded print (the black lift the renderer pushes as globals). The
-// cell is measured in the sprite's TEXELS, never FRAGCOORD, so the stipple is
-// part of the art and does not change size with the window.
+// Dithering uses sprite texels so the 4x4 Bayer pattern does not scale with the window.
 
 #include "res://scenes/world/memory/dither_common.gdshaderinc"
 

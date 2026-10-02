@@ -1,25 +1,17 @@
 extends Node
 
-## A guardian was restored. The regions listen for this: the place a guardian
-## kept remembers with it, and nothing else can know whether the arena's room
-## is even loaded when it happens.
+## Emitted when a guardian is restored so its region can update memory.
 signal guardian_restored(guardian: Enums.Guardian)
-## A rest made the world as it stands the save, and it landed. The HUD's
-## quill answers it. A playtest's in-memory save is "kept" too.
+## Emitted when a rest commit succeeds, including in-memory playtest saves.
 signal saved
 
 const PATH: String = "user://"
 const SAVE_FILE_NAME: String = "save.tres"
-## Debug builds keep their own save, so an editor run never clobbers a release
-## save on the same machine. Like a release, they continue it on every launch
-## (the user's call, 2026-10-01: a bench that does not survive closing the game
-## is not a save); `-- --new-game` starts fresh instead. Playtests never touch
-## it - the runner keeps its save in memory.
+## Debug builds use a persistent separate save; `-- --new-game` starts fresh. Playtests use memory only.
 const DEBUG_SAVE_FILE_NAME: String = "save_debug.tres"
 const NEW_GAME_ARG: String = "--new-game"
 
-## The LIVE save: what the world reads and writes while it is played. Benches
-## commit it to disk; a death throws it away for the last commit (SaveLedger).
+## Current session state; benches commit it and death restores the last commit.
 var player_data: PlayerData:
 	get:
 		return _ledger.live
@@ -47,8 +39,7 @@ func begin(path: String, fresh: bool) -> void:
 		start = _read(path)
 	_ledger = SaveLedger.new(start if start != null else _new_game())
 
-## Ivo rests on a bench: it is where he comes back, and the world as it stands
-## becomes the save. The defeated come back with the rest.
+## Commits the current world state and respawn point.
 func rest_at(bench: StringName, room_key: String) -> void:
 	player_data.bench_id = bench
 	player_data.bench_room = room_key
@@ -79,15 +70,11 @@ func bench_room() -> String:
 func deaths_in(region_key: String) -> PackedVector2Array:
 	return player_data.deaths.get(region_key, PackedVector2Array())
 
-## A restored guardian's region forgets the player's deaths in it (the user's
-## decision, 2026-10-01). Live, like the restoration itself: dying before the
-## next bench brings both back.
+## Region deaths clear on guardian restoration and return on death before the next bench.
 func clear_deaths(region_key: String) -> void:
 	player_data.deaths.erase(region_key)
 
-## A fresh save owns nothing. Debug builds start with the sword and the
-## instrument so a guardian can be fought from a clean launch; nothing in the
-## world grants either yet (the mentor will hand over the Memorina).
+## Debug fresh saves grant the sword and instrument for guardian encounters.
 func _new_game() -> PlayerData:
 	var data := PlayerData.new()
 	if OS.is_debug_build():
@@ -118,8 +105,7 @@ func _write(data: PlayerData) -> bool:
 func has_skill(skill: Enums.PlayerSkill) -> bool:
 	return player_data.unlocked_player_skills[skill]
 
-## A skill, once remembered, is never forgotten - grant-only, unlike items.
-## Same no-autosave rule as learn_song().
+## Skills are grant-only and are not saved until a bench commit.
 func unlock_skill(skill: Enums.PlayerSkill) -> void:
 	player_data.unlocked_player_skills[skill] = true
 
@@ -129,9 +115,7 @@ func has_item(item: Enums.PlayerItem) -> bool:
 func has_song(song: Enums.Song) -> bool:
 	return player_data.learned_songs[song]
 
-## Restoring a guardian teaches a song. Deliberately does not save: benches are
-## the only save point, so an unsaved death rewinds the lesson along with
-## everything else that happened after the last bench.
+## Guardian restoration teaches a song without saving; death before a bench rewinds it.
 func learn_song(song: Enums.Song) -> void:
 	player_data.learned_songs[song] = true
 
@@ -143,9 +127,7 @@ func set_item_owned(item: Enums.PlayerItem, owned: bool) -> void:
 func is_guardian_restored(guardian: Enums.Guardian) -> bool:
 	return player_data.restored_guardians[guardian]
 
-## Permanent once a bench has saved it: a restored guardian stays lucid, and
-## its region's memory stays at 1.0, on every later visit. Same no-autosave
-## rule as learn_song() - only benches save (the user's decision, 2026-10-01).
+## Guardian restoration persists only at a bench; an earlier death rewinds it.
 func restore_guardian(guardian: Enums.Guardian) -> void:
 	player_data.restored_guardians[guardian] = true
 	guardian_restored.emit(guardian)

@@ -1,7 +1,6 @@
 class_name GaleWind extends AirflowSource
 
-## Vendaval's air, blowing one way across its pulse, shaped by GaleShape. Its
-## owner (the gale) sets the reach, the speed and the way every frame.
+## Supplies the directional wind parameters used by GaleShape.
 
 var radius := 0.0
 var eye := 48.0

@@ -1,13 +1,7 @@
 @tool
 class_name RoomMap extends Resource
 
-## A room's ground, water and placed things, as parsed from its `.room` text
-## file at import (addons/room_maps). Everything here is already resolved -
-## the tile each ground cell draws with included - so building a room is one
-## set_cell per cell and nothing is parsed at runtime.
-##
-## Cells are in the room's TILE coordinates: the text's top-left character is
-## `origin`.
+## Imported room data with ground tiles resolved; cells use tile coordinates from `origin`.
 
 ## A tile no cell uses.
 const NO_TILE := -1

@@ -1,9 +1,6 @@
 class_name InputGlyphsTest extends GdUnitTestSuite
 
-## A prompt draws the button under the player's hand: the arrow key on the
-## keyboard, the D-pad or the stick on any pad, and the face buttons and
-## shoulders in the pad's own family. Every pad binding Ivo has must have a
-## glyph - a pad has no key name to fall back on.
+## Verifies glyphs exist for keyboard and gamepad bindings.
 
 const GLYPHS := preload("res://resources/ui/input/input_glyphs.tres")
 const PAD_ACTIONS: Array[StringName] = [
@@ -50,8 +47,7 @@ func test_a_stick_counts_only_when_pushed() -> void:
 	drift.axis_value = 0.9
 	assert_bool(InputDevice._is_deliberate(drift)).is_true()
 
-## Codex's review: a stick motion was classified as the keyboard, so moving
-## the stick after pressing a pad button flipped every prompt back to keys.
+## Stick motion must retain its controller glyph family.
 func test_a_stick_is_the_pad() -> void:
 	var motion := InputEventJoypadMotion.new()
 	motion.axis = JOY_AXIS_LEFT_X
@@ -65,8 +61,7 @@ func test_a_wasd_player_is_shown_their_own_key() -> void:
 	event = InputDevice.binding_for(&"note_down", Enums.GlyphSet.KEYBOARD_ARROWS) as InputEventKey
 	assert_int(event.physical_keycode).is_equal(KEY_DOWN)
 
-## A stick reports "pressed" on every motion past its deadzone: holding it
-## down and wiggling it must ask to sit once, not on every event.
+## Repeated stick motion past the deadzone emits one press until released.
 func test_a_held_stick_asks_to_sit_once() -> void:
 	var input: PlayerInput = auto_free(PlayerInput.new())
 	var presses: Array = []

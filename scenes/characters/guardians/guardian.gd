@@ -1,33 +1,13 @@
 class_name Guardian
 extends Character
-## The substrate every guardian is built on (docs/design/02_mecanicas.md
-## sections 3 and 4). A concrete guardian is a scene and a GuardianStats;
-## this script needs no subclass unless a guardian does something no
-## resource can describe.
-##
-## Composition root of the encounter: GuardianFight holds the phase logic,
-## GuardianAI the pressure-phase moves, GuardianCall the phrase, and Ivo's
-## own instrument the answer. This node is the only one that talks to the
-## player, the save and the memory field - so like Player, and unlike any
-## component, it may read SaveSystem.
-##
-## A guardian is never killed. Hits do not hurt it, they destabilise it;
-## its Health is inert and it takes no knockback. Its bulk hurts to touch
-## while it fights (ContactHitbox, phase-owned, never keyed in a clip).
-##
-## The colour it holds is the fight made visible: corrupted under pressure,
-## a little more with every blow, breathing to full with every note it
-## sings, climbing with every note answered, and draining away again as it
-## relapses - until it is restored and keeps it all.
+## Guardian encounters follow docs/design/02_mecanicas.md sections 3 and 4.
 
 signal restored(guardian: Guardian)
-## The lucidity leap left the ground / came back down, for the dust the
-## scene mounts (wired to a DustEmitter exactly as ivo.tscn does).
+## Emitted when the lucidity leap starts or lands; scenes can attach dust effects.
 signal leapt(position: Vector2)
 signal landed(position: Vector2, impact_speed: float)
 
-## The failure's tremble: hard and brief, then the colour is gone.
-## Every guardian in the world, for whoever must ask whether a fight is on.
+## Guardians group used for encounter queries.
 const GROUP := &"guardians"
 const FAIL_BURST_TIME := 0.3
 const FAIL_BURST_HZ := 12.0
@@ -38,13 +18,10 @@ const RELAPSE_HOLD := 0.3
 
 @export var stats: GuardianStats
 @export var terminal_velocity: float = 500.0
-## The hit flash: the sprite is tinted to this and eased back, so a hit reads
-## even mid-swing, when the flinch clip yields to the attack. Sprite2D:modulate
-## has no RESET track, so this write is the script's to make.
+## Hit tint; the script restores it because Sprite2D.modulate has no RESET track.
 @export var hit_flash_color: Color = Color(1.0, 0.55, 0.45)
 @export var hit_flash_time: float = 0.12
-## The telegraph: while a move winds up the sprite pulses to this tint, so the
-## swing that follows was announced. Read it, and the fight is fair.
+## Tint used while an attack is telegraphed.
 @export var telegraph_color: Color = Color(1.0, 0.85, 0.35)
 @export var telegraph_pulse_time: float = 0.12
 ## Lucidity opening: a flash brighter than white.
@@ -54,36 +31,17 @@ const RELAPSE_HOLD := 0.3
 @export var note_swell: float = 1.5
 @export var note_bob: float = 4.0
 
-## Lucidity does not begin where the fighting stopped. The guardian breaks
-## off, throws itself clear over the top of the frame and comes down at the
-## far side of the arena, and only then does it call - so the phase change is
-## something you WATCH, not something the HUD announces. How high the arc
-## goes (it must clear the top of the screen) and how far from Ivo it lands,
-## in world pixels: far enough that the camera holding the pair puts them at
-## opposite edges.
+## Leap height and horizontal travel distance, in world pixels.
 @export var lucidity_leap_height: float = 340.0
-## How far apart the pair should end up: the camera holds their midpoint, so
-## this is the whole width between them - half a screen each side.
+## Target separation from Ivo, in world pixels.
 @export var lucidity_leap_distance: float = 440.0
-## Seconds before a leap that never lands (a pit, a missing floor) gives up
-## and calls from where it is: the fight must not be able to stall.
+## Real seconds before an unlanded leap ends.
 @export var lucidity_leap_timeout: float = 3.0
-## The beat between the blow that opens lucidity and the leap. A recall is
-## the usual opener, and Ivo is in the middle of the move he just remembered:
-## a guardian that leaps on that same frame jumps WITH him, which reads as a
-## coincidence rather than a consequence. It reels first, then breaks off.
+## Delay before the leap, in seconds, so the guardian does not jump with a recalled move.
 @export var lucidity_delay: float = 1.0
-## Kept clear of the arena's edges when choosing where to come down. Wide,
-## because the camera is clamped by those same edges: landing right against
-## one puts the guardian half out of the frame for the whole call.
+## Minimum landing distance from arena edges, in world pixels.
 @export var lucidity_leap_margin: float = 96.0
-## Where the fight happens, pointed at the room's own Arena node on the
-## guardian's instance in the contents scene. The leap needs to know where
-## the ground runs out, and that is a property of the PLACE: asking the
-## camera what it is allowed to show made a rendering clamp decide where a
-## boss comes down. A NodePath rather than a typed Arena export because a
-## node export cannot be assigned across a scene-instance boundary - the
-## deferred resolution happens before the guardian is in the room's tree.
+## Arena path used to constrain the landing; NodePath resolves across scene instances.
 @export var arena_path: NodePath
 ## How hard the landing hits the camera.
 @export var lucidity_leap_shake: float = 6.0
@@ -216,11 +174,7 @@ func _after_move(delta: float) -> void:
 	_contact.monitoring = _fight.phase() == GuardianFight.Phase.PRESSURE
 	_update_shield(delta)
 
-## A room being left deactivates (or evicts) its contents, and a guardian
-## stopped mid-call would otherwise leave its phrase on Ivo's instrument for
-## good - known songs noise, the answer going to no one - and the camera on
-## a guardian that is no longer there. Walking out of a lucidity window is
-## the answer failing.
+## Leaving a room during a call must stop the phrase and release its camera state.
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_DISABLED or what == NOTIFICATION_EXIT_TREE:
 		_abandon_call()
@@ -233,10 +187,7 @@ func _notification(what: int) -> void:
 func phase() -> GuardianFight.Phase:
 	return _fight.phase()
 
-## Whether this guardian's fight is on at `point`: woken and not yet restored,
-## and `point` inside its arena. A bench asks so a rest is never taken in the
-## middle of a fight; before the guardian wakes, and after a death rewinds it
-## to sleep, the same bench is a rest again.
+## True when this guardian is active and `point` is inside its arena.
 func is_fighting_at(point: Vector2) -> bool:
 	if _fight == null or phase() in [GuardianFight.Phase.DORMANT, GuardianFight.Phase.RESTORED]:
 		return false
@@ -282,13 +233,7 @@ func _on_player_entered() -> void:
 	_fight.begin()
 	_ai.active = true
 
-## A hit destabilises rather than wounds: no damage, no knockback, just the
-## flinch - and, once enough have landed, a lucidity window. While a skill is
-## still to be remembered the hits wait on the recall move, which is asked
-## for at once; and a guardian hit too many times between moves answers with
-## one.
-## Health on a guardian is inert - hits destabilise, they never wound - so a
-## hazard does nothing to one either.
+## Hazards do not affect guardians; hits destabilise them without damage.
 func receive_hazard(_hazard: HazardZone) -> void:
 	pass
 
@@ -521,14 +466,7 @@ func _begin_relapse() -> void:
 	# groan must come after that stop, not under it.
 	_call.groan.call_deferred()
 
-## The sync: the guardian remembers itself, the region remembers its season,
-## and the player learns the song through the same lesson a bench would give.
-## The lesson is a scene: time is frozen for the track, memory is not. The
-## REGION lifts its own wells and its own memory - it hears the restoration
-## from SaveSystem, because the place is not the guardian's to own - while
-## the guardian's colour is born at the first note and spreads slowly
-## (lesson_pulse), the weather wakes with the baseline, and the camera holds
-## the pair until the track ends.
+## Restoration updates the save, region memory, weather, song lesson and camera together.
 func _restore() -> void:
 	_call.stop()
 	_ai.active = false

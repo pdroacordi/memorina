@@ -1,18 +1,9 @@
 @tool
 class_name MemorySource extends Node2D
 
-## One contribution to the memory field. Composed, never subclassed: an authored
-## "this corner is worse" patch is a bare instance with negative strength, a
-## colour pulse mounts one as a child and drives its radius, and a death mark
-## will be a third user of the same node.
-##
-## @tool so the zone draws itself in the editor viewport. A memory zone has no
-## sprite and no collision shape, so without this it is an invisible dot and
-## level design is guesswork - you would be placing the most important visual
-## feature of the game blind.
+## One contribution to the memory field; see docs/design/03_mundo_e_ambiente.md sections 2 and 3.
 
-## Circle, rectangle or capsule. A rectangle covers a room, a ledge or a
-## corridor without the corner overshoot a circle forces on you.
+## Source shape: circle, rectangle or capsule.
 @export var shape: MemoryFieldMath.Shape = MemoryFieldMath.Shape.CIRCLE:
 	set(value):
 		shape = value
@@ -24,8 +15,7 @@ class_name MemorySource extends Node2D
 		radius = maxf(value, 0.0)
 		_refresh()
 
-## CAPSULE: half the height of the straight section, NOT counting the caps, so
-## the total height is 2 * (height + radius). Ignored by circle and rect.
+## Capsule straight-section half-height in px, excluding the caps.
 @export var height: float = 96.0:
 	set(value):
 		height = maxf(value, 0.0)
@@ -37,12 +27,7 @@ class_name MemorySource extends Node2D
 		rect_size = value.max(Vector2.ZERO)
 		_refresh()
 
-## How many pixels the edge takes to fade out, measured OUTWARD from the core.
-##
-## In pixels rather than as a fraction of the size, which is the whole point for
-## level design: a 60px fade looks the same on a small patch and on a room-sized
-## one, so a whole region can be given one consistent softness. Left at 0 it
-## falls back to DEFAULT_FEATHER_RATIO of the extent.
+## Outward edge fade in px; 0 uses DEFAULT_FEATHER_RATIO of the extent.
 @export var feather: float = 0.0:
 	set(value):
 		feather = maxf(value, 0.0)
@@ -60,8 +45,7 @@ class_name MemorySource extends Node2D
 		tint = value
 		_refresh()
 
-## Decorrelates this source's ragged edge from every other one. Randomised on
-## entry when left at zero, so authored patches do not wobble in lockstep.
+## Edge seed; 0 randomizes it on entry.
 @export var edge_seed: float = 0.0
 
 @export_group("Season")
@@ -79,9 +63,7 @@ class_name MemorySource extends Node2D
 		show_in_editor = value
 		_refresh()
 
-## Brightness, 0..1, of the leading ring drawn just inside this source's edge.
-## Not exported: it is a moment in a pulse's life, driven by ColorPulse from
-## its timeline, and means nothing on an authored zone.
+## Leading-ring brightness, 0..1.
 var ring: float = 0.0
 
 func _ready() -> void:
@@ -163,9 +145,7 @@ func effective_feather() -> float:
 ## culling, so it may be generous but must never be short.
 func reach() -> float:
 	var e := extent()
-	# Summed, not hypot(). A capsule's furthest point is cap radius PLUS
-	# straight half-height, and hypot of the same pair is always smaller - a
-	# capsule zone would be culled while its caps were still on screen.
+	# Sum cap radius and straight half-height to avoid under-culling capsules.
 	return e.x + e.y + effective_feather()
 
 func influence_at(global_point: Vector2) -> float:

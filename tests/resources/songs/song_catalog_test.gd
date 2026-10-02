@@ -1,8 +1,6 @@
 class_name SongCatalogTest extends GdUnitTestSuite
 
-## Runs validate() against the catalog the game actually ships, so an
-## authoring mistake in a .tres fails here rather than as a song that
-## mysteriously never plays.
+## Validates the shipped song catalog and its authoring invariants.
 
 const CATALOG_PATH := "res://resources/songs/song_catalog.tres"
 
@@ -28,9 +26,7 @@ func test_each_season_carries_exactly_two_songs() -> void:
 func test_an_unknown_id_looks_up_to_nothing() -> void:
 	assert_object(_catalog().get_song(Enums.Song.size() as Enums.Song)).is_null()
 
-## The case a prefix test misses: neither sequence is a strict prefix of the
-## other, but the matcher resolves on the first hit, so the second song would be
-## unplayable forever.
+## Distinct sequences are required because matching resolves on the first hit.
 func test_no_two_songs_share_an_identical_sequence() -> void:
 	var seen: Dictionary = {}
 	for song: Song in _catalog().songs:
@@ -39,8 +35,7 @@ func test_no_two_songs_share_an_identical_sequence() -> void:
 			"songs %d and %s have identical sequences" % [song.id, seen.get(key)]).is_false()
 		seen[key] = song.id
 
-## Every song needs a translation key, because none of these names may ever be
-## a literal in a script or scene.
+## Song and season names use translation keys rather than script or scene literals.
 func test_every_song_and_season_has_a_translation_key() -> void:
 	for song: Song in _catalog().songs:
 		assert_str(song.name_key).is_not_empty()
@@ -57,9 +52,7 @@ func test_every_song_has_a_title_and_a_track() -> void:
 		assert_object(song.track).override_failure_message("song %d has no track" % song.id).is_not_null()
 		assert_object(song.performance_stream()).is_not_null()
 
-## cues() always yields one time per note, in playback order and before the
-## excerpt is cut - whether authored or spaced evenly by the fallback - so the
-## sheet lights every slot in order.
+## Cues must be ascending and inside the excerpt so the sheet lights slots in playback order.
 func test_every_song_yields_one_ascending_cue_per_note_inside_the_excerpt() -> void:
 	for song: Song in _catalog().songs:
 		var cues := song.cues()
@@ -72,8 +65,7 @@ func test_every_song_yields_one_ascending_cue_per_note_inside_the_excerpt() -> v
 			assert_float(cues[-1]).override_failure_message(
 				"song %d's last cue is after the excerpt cut" % song.id).is_less(song.excerpt_duration)
 
-## An untuned or editor-stripped song still lights up: no cues in the data,
-## six evenly-spaced ones out of cues().
+## Missing authored cues fall back to evenly spaced cue times.
 func test_a_song_without_authored_cues_falls_back_to_even_spacing() -> void:
 	var song := Song.new()
 	song.notes = [Enums.Note.UP, Enums.Note.DOWN, Enums.Note.LEFT]

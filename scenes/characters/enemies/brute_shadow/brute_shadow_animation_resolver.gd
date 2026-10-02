@@ -18,7 +18,6 @@ func resolve() -> StringName:
 		return SPAWN
 	if _brute.just_hit() or driver.holding(HURT):
 		return HURT
-	# Staggered: the flinch is over but control hasn't come back yet.
 	if _brute.is_in_knockback():
 		return IDLE
 	if _brute.is_attacking():

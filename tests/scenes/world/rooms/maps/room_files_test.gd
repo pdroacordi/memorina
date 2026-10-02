@@ -1,8 +1,6 @@
 class_name RoomFilesTest extends GdUnitTestSuite
 
-## Every `.room` in the project parses and validates against the CURRENT
-## legend, read fresh from disk - so a legend change that breaks a map fails
-## here even though the editor has not reimported that map yet.
+## Validates every `.room` file against the current legend read from disk.
 
 const ROOMS_DIR := "res://scenes/world/rooms"
 
@@ -26,8 +24,7 @@ func test_every_room_file_is_valid() -> void:
 		problems.append_array(result.errors)
 	assert_array(Array(problems)).is_empty()
 
-## The save remembers a bench and a defeated creature by an authored id, so
-## an id two maps share is two places the save cannot tell apart.
+## Save ids must be unique across maps so saved entities identify one location.
 func test_save_ids_and_bench_ids_are_unique_across_every_map() -> void:
 	var legend := RoomLegend.load_default()
 	var seen := {}

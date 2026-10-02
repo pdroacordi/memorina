@@ -1,20 +1,14 @@
 class_name LocomotionComponent
 extends Node
-## Drives horizontal movement for the CharacterBody2D it is a child of; the
-## owner decides WHEN to call these (ground vs air), the component only
-## decides HOW the velocity changes.
+## Applies ground and air locomotion to its parent body.
 
 @export var stats: LocomotionStats
 
-# Always a direct child of the body it drives, matching the existing
-# $PlayerInput / $Hurtbox idiom in this codebase; an exported NodePath would
-# only add an inspector-reassignable foot-gun with no swappable-target use case.
+# Must remain a direct child of the body whose velocity it updates.
 @onready var _body: CharacterBody2D = get_parent()
 
 
-## `wind_x` is the horizontal air the body stands in (Character.carry()): the
-## body steers toward its input speed plus what the wind makes of it, so wind
-## shifts the target rather than adding a force the brakes would fight.
+## Wind shifts the target velocity so braking does not fight an added force.
 func ground_update(delta: float, axis: float, wind_x: float = 0.0) -> void:
 	var drift := ground_drift(wind_x)
 	if is_zero_approx(axis):
@@ -31,13 +25,11 @@ func air_update(delta: float, axis: float, wind_x: float = 0.0) -> void:
 	else:
 		_body.velocity.x = move_toward(_body.velocity.x, axis * stats.move_speed + drift, stats.acceleration * stats.air_control * delta)
 
-## Vertical air (an updraft, the gale near its origin) as acceleration, for
-## an airborne body. Call after gravity.
+## Applies vertical wind acceleration; call after gravity.
 func lift_update(delta: float, wind_y: float) -> void:
 	_body.velocity.y += wind_y * stats.wind_lift * delta
 
-## What a wind does to feet on the ground: nothing below the deadzone, then a
-## slide at wind_grip of the excess.
+## Returns ground drift after applying the wind deadzone and grip.
 func ground_drift(wind_x: float) -> float:
 	var excess := maxf(absf(wind_x) - stats.wind_deadzone, 0.0)
 	return signf(wind_x) * excess * stats.wind_grip

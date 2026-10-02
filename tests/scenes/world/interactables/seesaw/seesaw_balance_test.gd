@@ -1,7 +1,6 @@
 class_name SeesawBalanceTest extends GdUnitTestSuite
 
-## A seesaw leans toward the heavier side, by mass times distance, up to its
-## limit - the shadow on the low end lifts Ivo on the high one.
+## Seesaw angle follows signed mass-distance torque, clamped to its limit.
 
 func test_balanced_loads_hold_it_level() -> void:
 	var loads: Array[Vector2] = [Vector2(-60, 1.0), Vector2(60, 1.0)]

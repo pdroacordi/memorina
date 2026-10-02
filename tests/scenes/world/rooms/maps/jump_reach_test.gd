@@ -1,7 +1,6 @@
 class_name JumpReachTest extends GdUnitTestSuite
 
-## Ivo's reach, stepped from his real gravity curve: the numbers the map guide
-## prints and the song-trials puzzles are sized against.
+## Checks jump reach using the configured gravity curve.
 
 func _reach(double_jump_height: float = 0.0) -> JumpReach:
 	var jump := JumpStats.new()
@@ -15,12 +14,11 @@ func _reach(double_jump_height: float = 0.0) -> JumpReach:
 	return JumpReach.new(1000.0, jump, locomotion, double_jump_height, 0.0)
 
 func test_a_plain_jump_peaks_at_its_height() -> void:
-	# Stepped like the engine (velocity, then position), so it lands a few
-	# pixels under the continuous 100 - exactly as Ivo does in game.
+	# Match engine integration order: velocity updates before position.
 	assert_float(_reach().peak()).is_equal_approx(100.0, 5.0)
 
 func test_a_plain_arc_is_symmetric() -> void:
-	# Rise time is sqrt(2h/g) = 0.447 s each way at 100 px/s across.
+	# At these settings, rise and fall each take about 0.447 seconds.
 	assert_float(_reach().gap()).is_equal_approx(89.4, 3.0)
 
 func test_the_double_jump_adds_its_height_at_the_apex() -> void:

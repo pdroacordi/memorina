@@ -1,8 +1,6 @@
 class_name Health
 extends Node
-## Generic, character-agnostic health pool. Tracks a clamped hit-point value
-## and announces damage, healing and death; it holds no opinion on what should
-## happen next.
+## Character-agnostic hit-point pool that signals damage, healing, and death.
 
 signal damaged(amount: int, current: int)
 signal healed(amount: int, current: int)
@@ -13,15 +11,11 @@ signal died
 var current_hp: int = max_hp
 
 
-## Exported overrides land after _init() but before _ready(), so _ready is the
-## earliest point at which max_hp is trustworthy for a scene-configured value.
+## Scene export overrides are applied before _ready(), so initialize current_hp here.
 func _ready() -> void:
 	current_hp = max_hp
 
-## Clamps damage so hp never goes below 0. `died` fires exactly once per
-## reaching 0 — this script only announces death and never frees its owner or
-## picks a death policy, since the design has no traditional game over: death
-## respawns the player at the last bench, which is a decision for the host node.
+## Emits `died` only on the transition to 0; the host owns the death policy.
 func take_damage(amount: int) -> void:
 	var was_alive: bool = is_alive()
 	current_hp = maxi(current_hp - amount, 0)
@@ -37,9 +31,7 @@ func heal(amount: int) -> void:
 func is_alive() -> bool:
 	return current_hp > 0
 
-## Restores to full — the hook for benches, which the design docs say fully
-## heal the hero on rest. Announced as a heal, so whoever shows the pool hears
-## a rest exactly as it hears any other healing; a pool already full is silent.
+## Restores full health and emits `healed` only if health changed.
 func reset() -> void:
 	var restored := max_hp - current_hp
 	current_hp = max_hp

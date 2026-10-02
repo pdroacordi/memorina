@@ -1,24 +1,13 @@
 class_name FrostShell extends PulseEffect
 
-## Redoma (Enums.Song.BELL_JAR): the pulse's edge becomes a thin shell of frost
-## that shrinks with it (design 02 section 7.1). One rule: NOTHING ENTERS,
-## EVERYTHING MAY LEAVE. It closes when the pulse stops growing: whatever is
-## inside then is let through until it has left, and from outside it is solid -
-## what falls on it rolls down the curve, and whoever left can climb on it. It
-## bars matter, not creatures (its layer is one enemies do not collide with), so
-## it is never a combat shield. It shelters from the air (a DiscShelter in the
-## Airflow) and from the rain, and holds water out of itself: a shell played at
-## a well's edge leaves its bottom dry, and the water comes back in behind as
-## it shrinks.
+## Redoma (Enums.Song.BELL_JAR); see docs/design/02_canções.md section 7.1.
 
-## The physics layer the shell is on (layer 4, "Shell").
 const LAYER := 1 << 3
-## Bodies it may find inside when it closes: Player and Props.
 const INSIDE_MASK := (1 << 8) | (1 << 1)
 const SEGMENTS := 48
-## How far outside the shell a body must be before it counts as having left.
+## Exit clearance in px before a body is considered outside the shell.
 const CLEARANCE := 28.0
-## Seconds between two re-rolls of the rime crystals.
+## Seconds between rime crystal rerolls.
 const RIME_PERIOD := 0.25
 
 @export var color := Color(0.86, 0.95, 1.0, 0.95)
@@ -40,7 +29,7 @@ func _ready() -> void:
 	top_level = true
 	global_position = pulse.global_position
 	_collider = StaticBody2D.new()
-	# The shell shrinks away: never a place to be sent back to.
+	# The shrinking shell is not a valid respawn surface.
 	_collider.add_to_group(SafeGroundTracker.UNSAFE)
 	_collider.collision_layer = LAYER
 	_collider.collision_mask = 0
@@ -60,9 +49,7 @@ func _physics_process(delta: float) -> void:
 	if not _closed and pulse.phase() != PulseTimeline.Phase.ATTACK and radius > CLEARANCE:
 		_close(radius)
 	if _closed:
-		# Closed, it only ever shrinks: a pulse Solstice stretches after the
-		# shell has closed must not grow a solid ring through what stands
-		# outside it.
+		# Prevent a later pulse expansion from growing a closed shell through bodies.
 		radius = minf(radius, _radius)
 		if absf(radius - _radius) > 0.5:
 			_refit(radius)
@@ -82,13 +69,11 @@ func _draw() -> void:
 		return
 	var points := maxi(32, int(radius * 0.5))
 	draw_arc(Vector2.ZERO, radius, 0.0, TAU, points, color, thickness, false)
-	# Rime: a few brighter crystals along the ring, re-rolled on a slow clock.
 	var seed_step := int(_clock / RIME_PERIOD)
 	for i in 12:
 		var angle := fposmod(float(i * 7919 + seed_step * 131) * 0.137, TAU)
 		draw_rect(Rect2((Vector2.from_angle(angle) * radius).round() - Vector2.ONE, Vector2(2, 2)), Color.WHITE)
 
-## Whether a point is inside the shell right now (it exists and holds).
 func holds(global_point: Vector2) -> bool:
 	return _closed and global_point.distance_to(global_position) < _radius
 
@@ -115,7 +100,6 @@ func _refit(radius: float) -> void:
 		_segments[i].a = Vector2.from_angle(TAU * i / SEGMENTS) * radius
 		_segments[i].b = Vector2.from_angle(TAU * (i + 1) / SEGMENTS) * radius
 
-## A body let through once it is clear of the shell collides with it again.
 func _let_out(radius: float) -> void:
 	for body: PhysicsBody2D in _inside.duplicate():
 		if not is_instance_valid(body):

@@ -1,7 +1,6 @@
 class_name SongCatalog extends Resource
 
-## Every song in the game, in Enums.Song order. The single place anything
-## looks a song up, so nothing else has to hold an Array[Song] of its own.
+## Stores and validates songs in Enums.Song order.
 
 @export var songs: Array[Song] = []
 
@@ -18,19 +17,14 @@ func songs_for_season(season: Enums.Season) -> Array[Song]:
 			result.append(song)
 	return result
 
-## The look of a season - its tint, its weather - as shared by its songs. A
-## region's atmosphere is looked up here so it is authored once, on the
-## palette, and never re-typed on the region.
+## Returns the shared season palette used by songs and regions.
 func palette_for(season: Enums.Season) -> SeasonPalette:
 	for song: Song in songs:
 		if song.season() == season:
 			return song.palette
 	return null
 
-## Debug-only integrity check, called from _ready() by whoever holds the
-## catalog. Catches the authoring mistakes that would otherwise show up as a
-## song that can never be played: a missing entry, a duplicate id, or a
-## sequence that shadows a longer one.
+## Checks song count, uniqueness, required resources, cues, and playable sequences.
 func validate() -> void:
 	assert(songs.size() == Enums.Song.size(),
 		"SongCatalog holds %d songs but Enums.Song has %d members." % [songs.size(), Enums.Song.size()])
@@ -50,18 +44,13 @@ func validate() -> void:
 		for other: Song in songs:
 			if other == song:
 				continue
-			# Identical sequences are the case a prefix test misses: neither is
-			# a strict prefix of the other, but the matcher resolves on the
-			# first hit, so the second song is unplayable forever.
+			# Identical sequences evade the strict-prefix check but make the later song unreachable.
 			assert(song.notes != other.notes,
 				"Songs %d and %d have identical sequences; only the first could ever be played." % [song.id, other.id])
 			assert(not _is_prefix(song.notes, other.notes),
 				"Song %d's sequence is a prefix of song %d's, so the longer one can never be played." % [song.id, other.id])
 
-## Cues are optional (Song.cues() spaces them evenly when they are absent), but
-## once authored they must line up one-to-one with the notes and advance in
-## time, or the sheet would light slots out of order or never light the last
-## one before the excerpt is cut.
+## Authored cues must align one-to-one with notes and precede the excerpt end; see Song.cues().
 func _validate_cues(song: Song) -> void:
 	if song.note_cues.is_empty():
 		return

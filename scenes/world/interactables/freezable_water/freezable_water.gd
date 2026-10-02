@@ -1,21 +1,13 @@
 class_name FreezableWater extends Node2D
 
-## Water that FREEZE lays a crossing of ice over. The first world object to
-## answer a song, and still the template for every later one: it composes a
-## SongReceiver and reacts, and the song system knows nothing about it.
-##
-## Glue only. The water is a WaterBody, the ice's life is an IceFront, its weight
-## is an IceCollider; this node starts the front where the pulse was lit and,
-## each physics frame, carries the front's state to the other two. Being the
-## parent, it runs before the water it holds, so the water steps and draws with
-## this frame's ice.
+## Coordinates water and ice when a FREEZE pulse reaches it.
 ##
 ## Design 03 §6.3-6.4: the ice grows only over living water (the pulse that
 ## carried the song is what wakes it), stills the surface before it looks
 ## solid, and thaws on its own clock from where the song was played - so it
 ## melts behind the player, who must commit forward.
 
-## World pixels above the waterline a pulse can reach the water from.
+## Receiver headroom above the waterline, in world pixels.
 const RECEIVER_HEADROOM := 8
 
 @export var ice: IceProfile
@@ -32,7 +24,7 @@ func _ready() -> void:
 	_water.set_ice_thickness(ice.thickness)
 	var left := _water.global_position.x - _water.size.x * 0.5
 	_collider.build(left, _water.size.x, _water.surface_rest_y(), ice.segment_width, ice.thickness)
-	# Sized from the water, which a WaterLayer may have painted at any size.
+	# Fit the receiver to dimensions authored by WaterLayer.
 	_water.fit_area(_receiver_shape, -RECEIVER_HEADROOM)
 
 func _physics_process(delta: float) -> void:
@@ -44,13 +36,12 @@ func _physics_process(delta: float) -> void:
 		_water.set_solidity(column, _front.solidity(column))
 	_collider.set_solid(_front.solid_segments())
 
-## Whether any ice is on it: a basin holds its level while frozen (RainBasin).
+## Whether the water is frozen; RainBasin uses this to hold its level.
 func is_frozen() -> bool:
 	return _front.is_active()
 
 func _on_song_entered(_song: Song, origin: Vector2) -> void:
-	# A dry basin has nothing to freeze; a level that moved (Chuva) freezes
-	# where it stands now.
+	# A dry basin has no water to freeze; a filled basin freezes at its current level.
 	if _water.is_dry():
 		return
 	if not _front.is_active():

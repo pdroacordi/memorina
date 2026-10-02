@@ -1,29 +1,20 @@
 class_name WallMobilityComponent
 extends Node
-## Clinging to and sliding down a wall, plus re-arming the air options that
-## make a wall jump possible. Named "mobility" rather than "slide" because the
-## unlock covers both the slide and jumping away from the wall.
+## Wall slide and wall-jump mobility.
 
-## The owner drives this from the save-game skill gate; the component itself
-## must never know SaveSystem exists, so it stays reusable.
+## Set by the owner from the saved skill gate.
 @export var enabled: bool = true
-## Multiplier on base gravity while clinging to a wall. Low values give a slow,
-## controlled slide; 0.0 would stick to the wall entirely. A single scalar, so
-## a plain export rather than a one-field Resource, which would be ceremony.
+## Base-gravity multiplier during a wall slide (0 sticks; 1 is normal gravity).
 @export var wall_gravity_mult: float = 0.1
 
-## Public: read by the owner's animation contract.
+## Read by the owner's animation logic.
 var is_sliding: bool = false
 
-## Injected by the owner, which as composition root is the only thing that
-## should know the full wiring graph; the component does not go looking for
-## siblings.
+## Injected by the owner.
 var jump: JumpComponent
 var double_jump: DoubleJumpComponent
 
-# Always a direct child of the body it drives, matching the existing
-# $PlayerInput / $Hurtbox idiom in this codebase; an exported NodePath would
-# only add an inspector-reassignable foot-gun with no swappable-target use case.
+# The component is a direct child of the body it drives.
 @onready var _body: Character = get_parent()
 
 
@@ -48,7 +39,7 @@ func update(delta: float, axis: float) -> bool:
 
 	return is_sliding
 
-## Jumping away or touching the ground ends the slide, and the owner drives that.
+## Ends the slide after a jump or ground contact.
 func stop() -> void:
 	is_sliding = false
 

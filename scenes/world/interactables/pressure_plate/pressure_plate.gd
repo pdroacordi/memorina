@@ -1,15 +1,11 @@
 class_name PressurePlate extends Node2D
 
-## A stone plate in the floor that holds something open while enough weight
-## stands on it (design 02 section 8, Verao Espacial 1: "uma porta so fica
-## aberta enquanto houver peso na placa"). Ivo is enough; so is his burned
-## shadow, a released load or a crate. It knows nothing of what it opens: a
-## gate or a lift links to it (room map param `trigger_path`) and listens.
+## Weight activates the plate (design 02 section 8); linked gates and lifts use room-map `trigger_path`.
 
 signal activated
 signal deactivated
 
-## How much must stand on it, in Ivos.
+## Required mass, in Ivos.
 @export var required_mass := 1.0
 
 var _active := false

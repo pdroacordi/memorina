@@ -1,7 +1,6 @@
 class_name WaterSurfaceFieldTest extends GdUnitTestSuite
 
-## The water's motion rules (design 03 §2 and §6.2): time runs at the rate the
-## place is remembered, stops only at exactly zero, and heals once alive.
+## Checks water motion against memory in docs/design/03_mundo.md sections 2 and 6.2.
 
 const COLUMNS := 48
 const FRAME := 1.0 / 60.0
@@ -52,8 +51,7 @@ func test_a_live_crest_relaxes() -> void:
 	_run(field, _rates(1.0), 6.0)
 	assert_float(_max_abs(field)).is_less(0.1)
 
-## Soft springs, so the two runs' different step sizes (a tenth of the rate is
-## a tenth of the step) cannot hide the rule behind integration error.
+## Soft springs keep integration error small when comparing rate-scaled runs with different step sizes.
 func test_grey_water_moves_in_proportion_to_its_memory() -> void:
 	var soft := _profile()
 	soft.spread = 200.0
@@ -63,8 +61,7 @@ func test_grey_water_moves_in_proportion_to_its_memory() -> void:
 	fast.disturb(20, 4.0)
 	_run(slow, _rates(0.1), 2.0)
 	_run(fast, _rates(1.0), 0.2)
-	# Same shape to within 5% of the 4 px crest: what is left is step-size
-	# error, not a different motion.
+	# The 0.2 px tolerance is 5% of the 4 px crest and allows step-size error.
 	for i in COLUMNS:
 		assert_float(slow.height(i)).is_equal_approx(fast.height(i), 0.2)
 
@@ -94,8 +91,7 @@ func test_the_swell_does_nothing_where_nothing_is_remembered() -> void:
 	_run(field, _rates(0.0), 3.0)
 	assert_float(_max_abs(field)).is_equal(0.0)
 
-## At the default profile the waterline must actually carry the swell, not a
-## smoothed-away fraction of it (docs/knowledge/bugs/water-swell-flattened-by-spread.md).
+## The default profile must retain swell amplitude (docs/knowledge/bugs/water-swell-flattened-by-spread.md).
 func test_the_swell_reaches_its_amplitude_at_the_default_profile() -> void:
 	var field := _field(1.0)
 	_run(field, _rates(1.0), 5.0)
@@ -105,9 +101,7 @@ func test_the_swell_reaches_its_amplitude_at_the_default_profile() -> void:
 		peak = maxf(peak, _max_abs(field))
 	assert_float(peak).is_greater(0.85)
 
-## Half the pool ran inside a pulse and half did not. Once all of it is alive
-## again the scar must heal back to the water that was never forgotten -
-## analytic per-column waves never would.
+## A temporarily forgotten half of the pool must converge to the always-alive control after memory returns.
 func test_a_scar_heals_once_everything_is_alive() -> void:
 	var scarred := _field(1.0)
 	var control := _field(1.0)
@@ -150,9 +144,7 @@ func test_a_partial_hold_settles_the_surface_sooner() -> void:
 	_run(held, _rates(1.0), 0.6)
 	assert_float(_max_abs(held)).is_less(_max_abs(free))
 
-## A notch one column wide is almost all zig-zag; viscosity must kill that mode
-## fast instead of letting it ring as a comb of teeth
-## (docs/knowledge/bugs/splash-rings-the-alternating-column-mode.md).
+## Viscosity must damp the alternating-column mode (docs/knowledge/bugs/splash-rings-the-alternating-column-mode.md).
 func test_the_zig_zag_mode_dies_quickly() -> void:
 	var field := _field()
 	field.disturb(24, -5.0)

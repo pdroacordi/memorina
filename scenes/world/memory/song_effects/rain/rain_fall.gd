@@ -1,43 +1,22 @@
 class_name RainFall extends PulseEffect
 
-## Chuva (Enums.Song.RAIN): it rains inside the pulse (design 02 section 7.1).
-## What the rain FILLS is the world's answer, not the effect's: a RainBasin
-## hears the song. The effect is the weather itself:
-##
-## - DROPS fall, each to where it LANDS: when a drop is born a ray finds the
-##   ground, a load or a Redoma's shell under it, or the water, and the drop
-##   stops there and splashes instead of falling through the floor. On water it
-##   dents the surface and throws up a crown;
-## - a CHARACTER in the rain is rained on: a drop crossing the top of Ivo or a
-##   creature bursts on its head (characters move, so they are checked as the
-##   drop falls, not when it is born);
-## - all of it is clipped to the season mask, so it exists only where the pulse
-##   has redrawn the world.
-##
-## Looks like a SONG and not the spring drizzle (design 03 section 5.3): it
-## falls only in the pulse, and stops as the grey takes the pulse back. Drops
-## are only born over the screen (plus a margin): the ones nobody could see
-## would change nothing, and water off screen does not simulate.
+## Chuva (Enums.Song.RAIN) effect; see docs/design/02_canções.md section 7.1 and docs/design/03_mundo_e_ambiente.md section 5.3.
 
-## Terrain, Props and the Shell: what a drop lands on.
 const LANDS_ON := (1 << 0) | (1 << 1) | (1 << 3)
-## Player and Enemy bodies: who is rained on.
 const RAINED_ON := (1 << 8) | (1 << 16)
-## Characters on screen it looks for at most.
 const MAX_HEADS := 16
-## Height of a drop's bright head, px.
+## Drop head height in px.
 const HEAD := 2
-## How far into a lake's plane (from its far shore toward the viewer) drops
-## land, px.
+## Lake landing depth from the far shore in px.
 const LAKE_DEPTH := 96.0
 
-## Drops born per second for every pixel of the pulse's width on screen.
+## Drops born per second per screen pixel of pulse width.
 @export var drops_per_px := 0.3
 @export var fall_speed := Vector2(480.0, 600.0)
-## Length of a drop, px (shortest, longest).
+## Drop length range in px.
 @export var drop_length := Vector2i(4, 7)
 @export var drop_color := Color(0.78, 0.88, 1.0, 0.8)
-## How deep a drop dents the water, px.
+## Water dent depth in px.
 @export var drip_depth := 1.2
 @export var splash: SpriteStrip
 @export var water_splash: SpriteStrip
@@ -70,8 +49,7 @@ var _airflow: Airflow
 
 func _ready() -> void:
 	_query.collision_mask = LANDS_ON
-	# A drop born inside rock (an overhang above the screen's top) is under a
-	# roof: it is not born at all.
+	# Suppress drops whose spawn point is under an overhang.
 	_query.hit_from_inside = true
 	_head_query.shape = _head_box
 	_head_query.collision_mask = RAINED_ON
@@ -206,8 +184,7 @@ func _find_heads() -> void:
 			var box := shape.shape.get_rect()
 			_heads.append(Rect2(shape.global_position + box.position - global_position, box.size))
 
-## The local y where a drop falling from `was` to `now` at `x` crossed the top
-## of a character, or INF.
+## Local y where a falling drop crossed a character's top, or INF.
 func _head_crossed(x: float, was: float, now: float) -> float:
 	for head: Rect2 in _heads:
 		if x > head.position.x + 1.0 and x < head.end.x - 1.0 and was < head.position.y and now >= head.position.y:
@@ -223,9 +200,7 @@ static func _first_shape(body: CollisionObject2D) -> CollisionShape2D:
 			return shape
 	return null
 
-## The waterline a pool drop is falling toward right now (local y), or INF
-## when there is none to stop it: no pool, dry, or held back by a shell. A
-## lake's drops stop at the point chosen on its plane (_land).
+## Current local pool waterline, or INF if the drop has no water target.
 func _surface_under(i: int) -> float:
 	if not is_instance_valid(_water[i]):
 		return INF

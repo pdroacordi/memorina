@@ -1,20 +1,12 @@
 class_name PulseTimeline extends RefCounted
 
-## The radius of a colour pulse over its life, and nothing else. Pure logic, so
-## the curve can be tuned and tested without spawning anything.
-##
-## Phase meanings live on PulseStats, which is where they are authored.
-##
-## A plain match rather than a CharacterStateMachine: three phases in a fixed
-## line, never re-entered, no per-phase behaviour beyond a number.
+## Computes a color pulse's radius and ring brightness over its phases; phase parameters are authored in PulseStats.
 
 enum Phase { ATTACK, SUSTAIN, CONTRACT, DONE }
 
-## How far into SUSTAIN the leading ring takes to fade out, as a fraction of
-## the sustain time. The front has arrived; the ring lingers a moment, then the
-## pulse is just light.
+## Fraction of sustain time used to fade the leading ring.
 const RING_FADE := 0.25
-## Seconds a stretched pulse takes to grow to its new reach (Solstice).
+## Seconds a stretched pulse takes to grow to its new reach.
 const GROW_TIME := 1.0
 
 var phase: Phase = Phase.ATTACK
@@ -24,17 +16,14 @@ var _attack_time: float
 var _sustain_time: float
 var _contract_time: float
 var _elapsed: float = 0.0
-# A stretch (Solstice): the radius it grew from, and when.
+# Radius and elapsed time at which stretching began.
 var _stretched := false
 var _grow_from := -1.0
 var _grow_start := 0.0
-# How long the leading ring fades once the front stops: fixed at the start,
-# so a stretch that lengthens the sustain does not light a faded ring again.
+# Fixed at initialization so extending sustain cannot relight a faded ring.
 var _ring_fade_time := 0.0
 
-## `local_memory` is how alive the ground under the pulse already was. A pulse
-## lit in a badly corroded place dies sooner, so the danger of a region is
-## legible in the very light the player switched on.
+## `local_memory` scales contract duration: pulses in less remembered ground contract sooner.
 func _init(stats: PulseStats, local_memory: float) -> void:
 	_max_radius = stats.max_radius
 	_attack_time = maxf(stats.attack_time, 0.0001)
@@ -55,11 +44,7 @@ func advance(delta: float) -> void:
 	else:
 		phase = Phase.DONE
 
-## Makes the pulse reach `reach` times farther and hold `duration` times
-## longer - once, and only while it is still opening or holding (design 02
-## section 7.1: Solstice makes every pulse it overlaps last longer and reach
-## farther). The new reach is grown into over GROW_TIME, not jumped to.
-## Returns whether it took.
+## Applies the Solstice stretch from docs/design/02_mecanicas.md section 7.1 once, while opening or sustaining; reach grows over GROW_TIME.
 func stretch(reach: float, duration: float) -> bool:
 	if _stretched or phase == Phase.CONTRACT or phase == Phase.DONE:
 		return false
@@ -73,7 +58,7 @@ func stretch(reach: float, duration: float) -> bool:
 func is_stretched() -> bool:
 	return _stretched
 
-## The reach it opens to (or holds at): the stats', times a stretch.
+## Maximum reach after any stretch.
 func max_radius() -> float:
 	return _max_radius
 
@@ -87,20 +72,19 @@ func radius() -> float:
 func _natural_radius() -> float:
 	match phase:
 		Phase.ATTACK:
-			# Ease-out: the front leaps away and settles, rather than creeping.
+			# Ease-out makes the front move quickly at first and then settle.
 			var t := _elapsed / _attack_time
 			return _max_radius * (1.0 - (1.0 - t) * (1.0 - t))
 		Phase.SUSTAIN:
 			return _max_radius
 		Phase.CONTRACT:
-			# Squared, so the grey comes back faster the longer it has been coming.
+			# Squared contraction accelerates as the pulse fades.
 			var t := (_elapsed - _attack_time - _sustain_time) / _contract_time
 			return _max_radius * (1.0 - t * t)
 		_:
 			return 0.0
 
-## Brightness of the leading ring, 0..1: full while the front is moving out,
-## fading once it stops, gone for the rest of the pulse's life.
+## Leading-ring brightness in 0..1; it fades during sustain and is zero afterward.
 func ring() -> float:
 	match phase:
 		Phase.ATTACK:

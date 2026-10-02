@@ -1,9 +1,6 @@
 shader_type canvas_item;
 
-// Sombra's burned shadow (CastShadow): Ivo's frame as a hole of shade, its
-// rim burning in the summer tint and shimmering like air over hot stone. The
-// shimmer shifts whole texels, row by row, so it stays pixel art; the fade is
-// an ordered dither on the texel grid, never alpha.
+// The shimmer shifts whole texels; the fade uses ordered dithering, not alpha.
 
 #include "res://scenes/world/memory/dither_common.gdshaderinc"
 

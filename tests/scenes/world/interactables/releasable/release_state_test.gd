@@ -1,7 +1,6 @@
 class_name ReleaseStateTest extends GdUnitTestSuite
 
-## What Soltar lets go of comes back when the grey takes the pulse - but not
-## while something holds it, and not while another pulse still covers it.
+## Covers release, restoration after the last pulse, and restoration deferred by holds.
 
 func test_a_pulse_lets_it_go_once() -> void:
 	var state := ReleaseState.new()

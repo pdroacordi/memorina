@@ -1,8 +1,5 @@
 class_name WaterHoldOutTest extends GdUnitTestSuite
 
-## Redoma holds water out of its shell, pixel for pixel: the water stands
-## against the curve and the hazard's outline follows it, until it lets go. A
-## lake, seen from above, is never held out.
 
 const POOL := preload("res://scenes/world/environment/water/water_pool.tscn")
 const LAKE := preload("res://scenes/world/environment/water/water_lake.tscn")
@@ -18,7 +15,6 @@ func before_test() -> void:
 	add_child(_water)
 	auto_free(_water)
 
-## Whether the hazard takes a body at `point` (after its deferred refit).
 func _hazard_at(point: Vector2) -> bool:
 	var hazard := _water.get_node("Hazard") as Area2D
 	var base := hazard.get_node("Shape") as CollisionShape2D
@@ -40,8 +36,8 @@ func test_columns_in_the_disc_are_dry_and_the_rest_are_not() -> void:
 func test_the_hazard_follows_the_curve() -> void:
 	var middle := _water.global_position.x
 	_water.hold_out(self, Vector2(middle, 300), 40.0)
+	# Collision outlines are refit deferred, so query them after an idle frame.
 	await await_idle_frame()
-	# Inside the disc: dry. Under its curve, and beside it: water.
 	assert_bool(_hazard_at(Vector2(middle, 330))).is_false()
 	assert_bool(_hazard_at(Vector2(middle + 30, 318))).is_false()
 	assert_bool(_hazard_at(Vector2(middle, 350))).is_true()
@@ -67,7 +63,6 @@ func test_a_lake_is_never_held_out() -> void:
 func test_a_level_moving_under_a_still_shell_asks_again() -> void:
 	var water := _water
 	var left := water.global_position.x - 96.0
-	# Held out at the painted level; then the water sinks below the disc.
 	water.hold_out(self, Vector2(left, 300), 20.0)
 	assert_bool(water.is_held_out(left + 8.0)).is_true()
 	water.set_level(340.0)

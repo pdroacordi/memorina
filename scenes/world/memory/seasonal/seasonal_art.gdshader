@@ -1,19 +1,7 @@
 shader_type canvas_item;
 
-// Seasonal art, generically. Put this material on any Sprite2D or TileMapLayer
-// whose texture is a STACKED SHEET - the same drawing repeated in equal
-// vertical bands, one per season - and it shows the region's native season,
-// or the season of whatever pulse is lighting each pixel, by sliding its UV
-// into the matching band.
-//
-// The scene always references BAND 0: tile atlas coordinates in the top rows,
-// a sprite's region_rect inside the top band. Which band is which season is
-// declared here per sheet, so the existing tile sheet (spring, autumn, winter)
-// and any future sheet in a different order both work unchanged.
-//
-// Works with texture_repeat: fract() folds a UV.y that tiles past the band
-// back into it, and UV.x is left alone. With TileSet texture padding: a band
-// is a whole number of tile rows, so the FRACTION is the same padded or not.
+// Seasonal sheets use vertically stacked bands; band order is configured per material.
+// fract(UV.y) keeps repeated textures inside one band; each band must span whole tile rows.
 #include "res://scenes/world/memory/seasonal/seasonal_common.gdshaderinc"
 
 // How many equal bands the sheet is stacked into.
@@ -27,17 +15,14 @@ uniform ivec4 band_of_season = ivec4(0);
 // proportion, so a dead place loses its horizon before it loses its floor.
 uniform float distance : hint_range(0.0, 1.0) = 0.0;
 
-// The node's modulate, carried over from the vertex stage. In a canvas_item
-// fragment COLOR already holds texture(TEXTURE, UV) * modulate, so using it
-// as the tint would multiply the seasonal texel by the band-0 texel.
+// Preserve vertex modulate separately because fragment COLOR already includes the band-0 texture.
 varying vec4 modulate;
 
 void vertex() {
 	modulate = COLOR;
 }
 
-// Explicit components rather than band_of_season[season]: a vector indexed by
-// a runtime value is not reliable across Godot's shader backends.
+// Keep explicit components because runtime vector indexing varies across shader backends.
 int band_for(int season) {
 	if (season == 0) { return band_of_season.x; }
 	if (season == 1) { return band_of_season.y; }

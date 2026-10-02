@@ -1,16 +1,7 @@
 class_name Releasable extends Node
 
-## Makes its parent something Soltar (Enums.Song.RELEASE) lets go of: a load
-## on a rope, a counterweight, a drawbridge, a curtain of leaves. It turns a
-## SongReceiver sibling into two signals, `released` and `restored`, following
-## ReleaseState - the grey gives the old state back when the pulse has gone,
-## held back while something holds the released thing (hold / let_go).
-## What "let go" means is the parent's business; this only decides when.
-##
-## Both signals are emitted DEFERRED: a pulse reaches a receiver from inside
-## the physics flush (an area overlap), where a body may not change its state
-## - a load un-freezing there is refused ("Can't change this state while
-## flushing queries") and simply stays on its rope.
+## Applies Soltar state to a parent; see docs/design/02_canções.md section 7.1.
+## Signals are deferred because physics-flush callbacks cannot safely change body state.
 
 signal released
 signal restored
@@ -29,7 +20,6 @@ func _ready() -> void:
 func is_released() -> bool:
 	return _state.is_released()
 
-## Something is holding the released thing; it will not return until let go.
 func hold() -> void:
 	_state.hold()
 

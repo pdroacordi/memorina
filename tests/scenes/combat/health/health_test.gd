@@ -1,8 +1,6 @@
 class_name HealthTest extends GdUnitTestSuite
 
-## A bench heals through Health.reset(), and the life HUD only knows what it is
-## told: a rest that refilled the pool in silence would leave grey notes on a
-## healed hero.
+## Health.reset() must emit the heal event used by the life HUD.
 
 var _health: Health
 

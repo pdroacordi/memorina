@@ -1,14 +1,8 @@
 class_name CharacterStateMachine
 extends RefCounted
-## Selects which behaviour runs on a given frame and dispatches to it. A plain
-## RefCounted, not a Node — it has no exports and no place in the scene tree,
-## and its owner drives it explicitly each physics frame. States are integers
-## (the owner supplies its own enum) mapped to Callables, so the same machine
-## serves motion states for one character and, later, behaviour phases for
-## another.
+## Maps owner-defined integer states to handlers; the owner drives updates each physics frame.
 
-## WHY: lets animation, audio or telemetry react to a transition without the
-## owner having to notify each of them by hand.
+## Observers can react to state changes without owner-specific callbacks.
 signal state_changed(from: int, to: int)
 
 const NONE: int = -1

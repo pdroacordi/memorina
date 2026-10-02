@@ -1,24 +1,12 @@
 class_name NoteSheet extends Control
 
-## The staff: six slots across the frame's lines, each showing the button a
-## note was pressed with, on the line of its pitch. Knows geometry and
-## textures and nothing about songs - it draws what it is handed.
-##
-## Geometry is authored in the pixels of memorina_hud.png (128x64) and scaled
-## by however large the frame is actually drawn, so the frame's size in the
-## scene is the only place that decides 1x or 2x. Icons have their own scale:
-## at the frame's 2x they crowd the staff, at 1x they vanish.
+## Draws a song's notes on the HUD staff.
 
-## The glyph PNGs' native size.
 const ICON_SIZE := 16.0
 
-## The source sheet, which every constant below is measured in.
 const SOURCE_WIDTH := 128.0
-## Where the staff lines begin and end in the source.
 const STAFF_LEFT := 48.0
 const STAFF_RIGHT := 114.0
-## The staff line each pitch sits on: G4 on top, then E4, D4, C4 at the
-## bottom (source lines y 23, 32, 37, 41; line 27 carries no note).
 const LINE_Y: Dictionary[Enums.Note, float] = {
 	Enums.Note.UP: 23.0,
 	Enums.Note.RIGHT: 32.0,
@@ -30,8 +18,7 @@ const FLASH_TIME := 0.25
 const POP_SCALE := 1.3
 const POP_TIME := 0.18
 
-## How large the glyphs are drawn, in multiples of their 16px art. Non-integer
-## values draw uneven pixels; 1.5 was judged the best trade against legibility.
+## Glyph scale in multiples of 16px art; controls note legibility.
 @export_range(1.0, 2.0, 0.25) var icon_scale: float = 1.5
 
 var _slots: Array[TextureRect] = []
@@ -51,8 +38,6 @@ func _ready() -> void:
 	resized.connect(_layout)
 	_layout()
 
-## Draws `note` in the next free slot. A seventh note is ignored: the sheet is
-## exactly one song long.
 func push_note(note: Enums.Note, glyphs: NoteGlyphSet) -> void:
 	var index := _notes.size()
 	if index >= _slots.size():
@@ -61,21 +46,16 @@ func push_note(note: Enums.Note, glyphs: NoteGlyphSet) -> void:
 	_glyphs.append(glyphs)
 	_show(index, false)
 
-## Fills the sheet at once, unlit: the whole song for a lesson, or only the
-## first `count` notes of a guardian's fragmented call. Negative means all.
 func show_notes(notes: Array[Enums.Note], glyphs: NoteGlyphSet, count: int = -1) -> void:
 	clear()
 	var shown := notes.size() if count < 0 else mini(count, notes.size())
 	for i: int in shown:
 		push_note(notes[i], glyphs)
 
-## Swaps the slot at `index` to its lit texture.
 func light(index: int) -> void:
 	if index < _notes.size():
 		_show(index, true)
 
-## A beat on the slot at `index`: it swells and settles, for a note that has
-## just sounded or just landed.
 func pop(index: int) -> void:
 	if index >= _notes.size():
 		return
@@ -85,13 +65,10 @@ func pop(index: int) -> void:
 	var tween := create_tween().set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	tween.tween_property(slot, "scale", Vector2.ONE, POP_TIME)
 
-## Puts every slot back to its unlit texture, keeping the notes.
 func dim_all() -> void:
 	for i: int in _notes.size():
 		_show(i, false)
 
-## The failure blink: the sheet tints and settles back, notes left in place
-## for the caller to clear when the mistake has been heard.
 func flash() -> void:
 	if _flash_tween != null:
 		_flash_tween.kill()
@@ -112,41 +89,23 @@ func _show(index: int, lit: bool) -> void:
 	slot.position.y = _slot_y(note)
 	slot.show()
 
-## Where the staff's middle falls inside the frame, in frame pixels. The
-## ornament takes the frame's left third, so centring the BOX on screen
-## leaves the notes - the part anyone reads - sitting off to the right; an
-## encounter's slot centres this instead.
+## The frame-pixel x coordinate at the staff's center.
 func staff_center() -> float:
 	return _to_frame((STAFF_LEFT + STAFF_RIGHT) / 2.0)
 
-## A guardian taller than this, in world pixels, would wear a centred sheet
-## as a hat: the camera frames the pair with their feet near the bottom of
-## the screen, so height alone decides whether the sky above them is free.
 const CENTRE_CLEARANCE := 140.0
-## The gap from the screen edge when the sheet has to stand aside instead.
 const SIDE_MARGIN := 24.0
-## Screen y of an encounter frame's top edge: the camera holds the pair in
-## the lower band, so the sheet owns the upper one.
 const ENCOUNTER_TOP := 40.0
 
-## Where an encounter's frame goes, in the HUD's pixels: above the pair with
-## the staff on the screen's axis when the guardian's head clears it, beside
-## it - on the side away from the guardian - when it does not. Both HUDs ask
-## this, and they ask it ONCE per encounter: a sheet that hops between the
-## listening and the answer is what made these moments read as clutter.
+## Keeps the sheet at one position for an encounter so it does not jump between turns.
 func encounter_x(screen_width: float, guardian_side: int, guardian_height: float) -> float:
 	if guardian_height <= CENTRE_CLEARANCE:
 		return roundf(screen_width / 2.0 - staff_center())
 	return SIDE_MARGIN if guardian_side > 0 else roundf(screen_width - size.x - SIDE_MARGIN)
 
-## Where an encounter's frame sits vertically. One owner, like the x: two
-## exports holding the same number in two scenes is how the sheet comes to
-## jump when the turn passes.
 func encounter_y() -> float:
 	return ENCOUNTER_TOP
 
-## Places and sizes every slot for the frame's current size; re-run whenever
-## it changes.
 func _layout() -> void:
 	var icon := roundf(ICON_SIZE * icon_scale)
 	for i: int in _slots.size():
@@ -155,16 +114,12 @@ func _layout() -> void:
 	for i: int in _notes.size():
 		_slots[i].position.y = _slot_y(_notes[i])
 
-## Slots are spread evenly across the staff, centred in their columns.
 func _slot_x(index: int) -> float:
 	var column_width := (STAFF_RIGHT - STAFF_LEFT) / Song.NOTE_COUNT
 	return roundf(_to_frame(STAFF_LEFT + (index + 0.5) * column_width) - ICON_SIZE * icon_scale / 2.0)
 
-## Centred on the pitch's staff line.
 func _slot_y(note: Enums.Note) -> float:
 	return roundf(_to_frame(LINE_Y[note]) - ICON_SIZE * icon_scale / 2.0)
 
-## Source pixel -> frame pixel, by how much larger than the sheet the frame is.
-## Rounded so an icon never lands between pixels.
 func _to_frame(source_px: float) -> float:
 	return roundf(source_px * size.x / SOURCE_WIDTH)

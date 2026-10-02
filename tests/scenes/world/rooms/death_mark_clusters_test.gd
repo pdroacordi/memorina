@@ -1,8 +1,6 @@
 class_name DeathMarkClustersTest extends GdUnitTestSuite
 
-## Deaths close together merge into one mark that deepens; far apart, they
-## leave their own; a region never shows more than max_marks (the user's
-## decision, 2026-10-01 - and the field draws at most 32 sources on screen).
+## Verifies the mark cap remains within the field's 32-source draw limit.
 
 func test_no_deaths_no_marks() -> void:
 	assert_array(DeathMarkClusters.cluster(PackedVector2Array(), 48.0, 6)).is_empty()

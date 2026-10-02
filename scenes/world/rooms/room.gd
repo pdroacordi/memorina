@@ -14,10 +14,7 @@ var _expired: bool = false
 func _enter_tree() -> void:
 	add_to_group(GROUP)
 
-## Instantiates on the first-ever visit; on every later visit the node was
-## just sitting deactivated (see deactivate()), so this only needs to
-## reverse that — nothing is re-created, so position/AI/animation state all
-## carry over exactly as they were left.
+## Reactivates cached contents or creates them on the first visit.
 func activate() -> void:
 	if _expired:
 		_expired = false
@@ -29,20 +26,13 @@ func activate() -> void:
 		_contents_node.process_mode = Node.PROCESS_MODE_INHERIT
 		_contents_node.show()
 
-## Leaving a room does NOT destroy its contents — just freezes them in
-## place. PROCESS_MODE_DISABLED recursively stops _process/_physics_process
-## for the whole subtree (children default to inheriting it), so nothing in
-## a deactivated room ticks: no AI, no gravity, no timers.
+## Deactivates contents while preserving their session state.
 func deactivate() -> void:
 	if _contents_node:
 		_contents_node.process_mode = Node.PROCESS_MODE_DISABLED
 		_contents_node.hide()
 
-## The actual destroy, reserved for when the resident-room cache (see
-## game.gd) decides this room is cold enough to truly forget. Whatever
-## per-session state a deactivated room would have kept (position, "already
-## spawned," etc.) is lost — the next visit instantiates fresh, same as
-## before this whole warm/cold split existed.
+## Destroys cached contents when the resident-room cache evicts this room (see game.gd).
 func evict() -> void:
 	if _contents_node:
 		# Out of the tree now, not at frame end: a fresh instance may follow
@@ -52,23 +42,13 @@ func evict() -> void:
 		_contents_node.queue_free()
 		_contents_node = null
 
-## The contents go stale without being torn down: the next time this room is
-## entered after being left, it is built fresh rather than woken. A rest calls
-## this on the room it happens in, so what was defeated there comes back - but
-## not under Ivo's feet.
 func expire() -> void:
 	_expired = true
 
-## The contents built for this room, or null before its first visit. Added to
-## the tree deferred by activate(), so whoever needs what is in them awaits
-## their `ready` - RoomMapNode builds a map's entities inside its own _ready,
-## so by then they are all there.
+## Newly activated contents are added deferred; wait for `ready` before reading their children.
 func contents() -> Node2D:
 	return _contents_node
 
-## The region this room belongs to. Rooms are always direct children of their
-## region's composition scene - that is the middle layer of the three-level
-## room pattern - so the parent IS the region.
 func get_region() -> Region:
 	var region := get_parent() as Region
 	assert(region != null, "Room %s is not a child of a Region." % name)
@@ -80,9 +60,7 @@ func get_bounds() -> Rect2:
 	return Rect2(_shape_node.global_position - shape.size * 0.5, shape.size)
 
 
-# Deferred from activate(). Contents evicted before this ran are not added at
-# all: a deferred add_child would still put them in the tree for a frame after
-# their queue_free (docs/knowledge/gotchas/queue-free-deferred-add-still-enters-the-tree.md).
+# Prevent evicted contents from entering the tree after deferred activation (docs/knowledge/gotchas/queue-free-deferred-add-still-enters-the-tree.md).
 func _add_contents(node: Node2D) -> void:
 	if node == _contents_node and is_instance_valid(node):
 		add_child(node)

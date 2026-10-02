@@ -1,20 +1,6 @@
 class_name WorldFreeze extends Node
 
-## The one writer of the world's clock. The instrument freezes everything
-## while a performance plays (docs/design/02_mecanicas.md section 6.2); a
-## pause menu will call the same two methods. Whatever must keep moving
-## through a freeze - the sheet, the instrument's sound, Ivo's idle, the
-## memory layer - is marked PROCESS_MODE_ALWAYS in its own scene, not
-## excepted here.
-##
-## The ability recall (section 4) slows the world instead of stopping it:
-## "tempo desacelera". Everything keeps moving, just slowly, so the attack
-## that forced the memory is still coming while the hand finds the button.
-## The slow eases in and out over a few real milliseconds rather than
-## snapping, so it reads as the world losing speed and not as a stutter.
-##
-## A hit-stop is the same clock held for a few real milliseconds so a blow
-## has weight; it always returns to whatever the recall had set.
+## Owns the world clock for performance freezes and recalls; see docs/design/02_mecanicas.md sections 4 and 6.2.
 
 ## How slow the world runs during a recall. 1.0 would be no signal at all.
 @export_range(0.05, 1.0) var slow_scale: float = 0.2
@@ -28,9 +14,7 @@ var _slowed: bool = false
 var _stopping: bool = false
 var _ramp: Tween
 
-## A new world starts on a running clock. Both live OUTSIDE the scene, so a
-## world reloaded after a death would otherwise inherit whatever the old one
-## was doing - a recall's slow, or a hit-stop whose await died with it.
+## Reset the clock because WorldFreeze outlives room reloads.
 func _ready() -> void:
 	Engine.time_scale = 1.0
 	get_tree().paused = false
@@ -63,9 +47,7 @@ func hit_stop() -> void:
 	_stopping = false
 	Engine.time_scale = slow_scale if _slowed else 1.0
 
-## The tween ignores the very clock it is driving, or slowing down would
-## slow its own ramp, and runs through a pause for the same reason the
-## recall's window does.
+## The tween ignores the clock it drives so slow motion does not slow its own ramp.
 func _ease_to(scale: float) -> void:
 	_kill_ramp()
 	if slow_ramp <= 0.0:

@@ -1,13 +1,8 @@
 class_name SpriteBursts extends Node2D
 
-## A pool of short-lived sprites drawn by one node: a splash where a raindrop
-## landed, a gust curling across the gale. Each plays its SpriteStrip, drifts
-## at its own velocity and is gone. Positions are GLOBAL and snapped to whole
-## pixels when drawn, so the art stays on the pixel grid; the node runs on the
-## world's clock (it inherits its effect's PAUSABLE mode), so a pause leaves a
-## splash hanging where it was. Give it a material to clip it (the season's).
+## Draws short-lived SpriteStrip bursts at global positions, snapped to pixels and paused with their effect.
 
-## Alpha steps a fading burst passes through: whole steps, never a smooth fade.
+## Number of discrete alpha steps in a burst fade.
 const FADE_STEPS := 3
 
 var _bursts: Array[Burst] = []

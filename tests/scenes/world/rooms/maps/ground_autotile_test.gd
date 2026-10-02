@@ -1,8 +1,6 @@
 class_name GroundAutotileTest extends GdUnitTestSuite
 
-## Which tile a ground cell draws with, from which of its eight neighbours are
-## solid. The shapes are the sheet's: a grassy top row, sides, a rounded
-## bottom, one-wide walls and pillars, one-high platforms and inner corners.
+## Verifies atlas tile selection from the eight solid neighbours.
 
 const ALL := GroundAutotile.N | GroundAutotile.E | GroundAutotile.S | GroundAutotile.W \
 		| GroundAutotile.NE | GroundAutotile.SE | GroundAutotile.SW | GroundAutotile.NW

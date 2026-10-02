@@ -1,8 +1,7 @@
 @tool
 class_name RoomLegend extends Resource
 
-## Every character a room map may use (docs/maps/README.md). "." is always
-## empty and is not an entry.
+## Room-map symbols are defined in docs/maps/README.md; `.` is reserved for empty cells.
 
 const DEFAULT_PATH := "res://resources/world/maps/room_legend.tres"
 const EMPTY := "."

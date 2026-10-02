@@ -1,10 +1,6 @@
 class_name EnemyAI
 extends AIController
-## Baseline behavior for common enemies: wanders with random pauses and
-## direction changes until the EnemySight sibling reports a presence visible
-## - Ivo, or the shadow he burned (Sombra) - then chases the nearest one. A specific enemy needing more (an attack
-## state, etc.) subclasses THIS — not AIController — and overrides
-## _select_state() to fold its own state in ahead of the wander/chase pick.
+## Common enemies wander until EnemySight reports a visible target, then chase it. Subclasses override `_select_state()` to add states.
 
 const WANDER := 0
 const CHASE := 1

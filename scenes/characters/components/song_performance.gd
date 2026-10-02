@@ -1,13 +1,6 @@
 class_name SongPerformance extends Node
 
-## Plays one stream and reports where it is in it: `cue_reached` as playback
-## crosses each cue, `finished` when the stream ends or the cut it was given
-## has faded out. Generic - the world excerpt, the lesson and, later, a
-## guardian's call all sound through one of these.
-##
-## Mounted with an AudioStreamPlayer child. Set process_mode to ALWAYS when
-## the performance must keep sounding through a paused tree, which is the
-## case for the instrument (WorldFreeze pauses the world while it plays).
+## Plays a stream and emits cue and finish signals; use ALWAYS process mode for audio that continues during a pause.
 
 signal started
 signal cue_reached(index: int)
@@ -42,9 +35,7 @@ func _process(_delta: float) -> void:
 ## fading over the last `fade` seconds; 0 plays it whole.
 func play(stream: AudioStream, cues: PackedFloat32Array, stop_at: float = 0.0, fade: float = 0.0) -> void:
 	stop()
-	# AudioStreamPlayer.play() is a no-op without a stream and would never
-	# report `finished`, leaving whoever froze the world with nothing to thaw
-	# it. Report the end at once instead: the song is simply heard silently.
+	# Report completion for an empty stream so callers can thaw the world.
 	if stream == null:
 		finished.emit()
 		return
@@ -66,9 +57,7 @@ func stop() -> void:
 func is_playing() -> bool:
 	return is_processing()
 
-## The audio clock, corrected for the mix that is already on its way to the
-## speakers, so a cue lands when the note is heard rather than when it was
-## queued.
+## Playback position corrected for audio latency, in seconds.
 func _position() -> float:
 	return _player.get_playback_position() \
 		+ AudioServer.get_time_since_last_mix() \

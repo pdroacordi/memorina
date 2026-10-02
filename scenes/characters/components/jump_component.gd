@@ -1,9 +1,6 @@
 class_name JumpComponent
 extends Node
-## Owns ONE jump plus the vertical-motion feel around it: the gravity curve,
-## coyote time, input buffering and jump-cut. A second, mid-air jump is NOT
-## here — that is a gated ability composed separately, reusing launch()/
-## jump_force() rather than duplicating them.
+## Owns ground jump timing and vertical motion; air jumps are separate abilities.
 
 signal jumped(position: Vector2)
 
@@ -15,9 +12,7 @@ var is_jumping: bool = false
 var _coyote_timer: float = 0.0
 var _buffer_timer: float = 0.0
 
-# Always a direct child of the body it drives, matching the existing
-# $PlayerInput / $Hurtbox idiom in this codebase; an exported NodePath would
-# only add an inspector-reassignable foot-gun with no swappable-target use case.
+# The component is a direct child of the body it drives.
 @onready var _body: Character = get_parent()
 
 
@@ -38,14 +33,11 @@ func has_buffered_jump() -> bool:
 func can_ground_jump(on_floor: bool) -> bool:
 	return on_floor or _coyote_timer > 0.0
 
-## Wall-sliding re-arms the coyote window so you can jump off a wall, so the
-## owner needs a way to say so without reaching into the timer.
+## Re-arms coyote time after a wall slide.
 func refresh_coyote() -> void:
 	_coyote_timer = stats.coyote_time_max
 
-## Shared launch used by BOTH a ground jump and, later, a mid-air ability
-## jump — exposed publicly so a separately-composed air-jump ability reuses
-## the exact same launch and force formula instead of duplicating it.
+## Shared launch for ground and air jumps.
 func launch(height: float) -> void:
 	_body.velocity.y = jump_force(height)
 	is_jumping = true
@@ -82,7 +74,6 @@ func apply_gravity(delta: float) -> void:
 	if is_jumping and _body.velocity.y >= 0.0:
 		is_jumping = false
 
-## The owner's camera-intent code needs terminal velocity to normalise fall
-## speed; a one-hop accessor beats reaching through `.stats` from outside.
+## Returns terminal velocity for camera fall-speed normalization.
 func terminal_velocity() -> float:
 	return stats.terminal_velocity

@@ -1,78 +1,56 @@
 class_name GuardianStats
 extends Resource
-## Everything that makes one guardian's fight different from another's:
-## which song it teaches, how it attacks, how much pressure opens a lucidity
-## window and how many good answers restore it. See
-## docs/design/02_mecanicas.md section 3.
+## Guardian-specific fight parameters; see docs/design/02_mecanicas.md section 3.
 
 @export var id: Enums.Guardian = Enums.Guardian.FROST
-## The phrase it calls in a lucidity window is this song's sequence, and
-## restoring it teaches this song.
+## Song taught when this guardian is restored.
 @export var song: Song
 @export var attacks: Array[GuardianAttack] = []
 
 @export_group("Lucidity")
-## Hits taken in the pressure phase before a lucidity window opens.
+## Hits in the pressure phase before lucidity opens.
 @export var hits_to_open: int = 5
-## Good answers needed to restore the guardian. Each one short of the last is
-## followed by a relapse: the madness returns, on a shorter leash.
+## Good answers needed to restore the guardian.
 @export var cycles_to_restore: int = 2
-## Seconds the guardian stands lost between an answer and the pressure that
-## follows it, its colour draining; a failed answer takes
-## GuardianFight.FAILED_RELAPSE_SCALE of this. 0 is straight back to pressure.
+## Seconds before pressure resumes after an answer; failed answers use GuardianFight.FAILED_RELAPSE_SCALE.
 @export var relapse_time: float = 1.4
-## Seconds between lucidity opening and the first note of the call, so the
-## camera and the stage land before the phrase starts.
+## Seconds between lucidity opening and the first call note.
 @export var call_lead_in: float = 0.7
-## Seconds of slack the player has to answer beyond the phrase's own length:
-## the window is the time the call took to sound, plus this.
+## Extra answer time in seconds beyond the call length.
 @export var window: float = 3.0
-## How many of the phrase's notes are drawn on the sheet as the call sounds.
-## The full count is a literal call; fewer is the fragmented call of a more
-## corrupted guardian, whose tail must be caught by ear.
+## Number of call notes shown on the sheet; fewer notes leave the tail to ear.
 @export_range(0, 6) var revealed_notes: int = 6
 
 @export_group("Recall")
-## How many ordinary attacks the guardian makes before its unavoidable move
-## comes: the recall is a phase of the fight, not a roll of the dice. It keeps
-## coming at this cadence until the skill is remembered - and at once, cadence
-## or not, as soon as the hits are in and only the recall stands between them
-## and the window.
+## Ordinary attacks between recalls; a recall also occurs as soon as the pressure threshold is met.
 @export var recall_after_attacks: int = 3
 
 @export_group("Movement")
-## The spacing a guardian keeps while its move is on cooldown. It does not
-## stand still waiting to be hit: closer than this it gives ground, further
-## it drifts back in, and at it it paces. 0 keeps the old statue.
+## Desired spacing in world pixels during cooldown; 0 disables pacing.
 @export var comfort_distance: float = 140.0
-## Seconds a sidestep lasts before it changes its mind.
+## Seconds a pacing direction lasts before it changes.
 @export var pace_time: float = 0.9
-## Fraction of its walking speed used while pacing - it is circling, not
-## charging.
+## Fraction of walking speed used while pacing (0..1).
 @export_range(0.0, 1.0) var pace_speed: float = 0.5
-## Multiplier on its walking speed while getting out from under a player
-## standing on its head: this one is a lunge, not a stroll.
+## Walking speed multiplier while stepping away from an overlapping player.
 @export var step_out_speed: float = 1.7
 
 @export_group("Counter")
-## Hits taken in a row, while not already mid-move, that the guardian answers
-## with an immediate move: mashing is not free. 0 never counters.
+## Consecutive hits before an immediate counter; 0 disables counters.
 @export var counter_after_hits: int = 3
 
 @export_group("Aggression")
-## Every failed answer adds this many hits to the next window's threshold...
+## Hits added to the next window threshold per failed answer.
 @export var extra_hits_per_failure: int = 1
-## ...shrinks the next window by this factor...
+## Next answer-window duration multiplier per failed answer (0.1..1.0).
 @export_range(0.1, 1.0) var window_scale_per_failure: float = 0.8
-## ...and shortens attack cooldowns by this factor.
+## Attack-cooldown multiplier per failed answer (0.1..1.0).
 @export_range(0.1, 1.0) var cooldown_scale_per_failure: float = 0.8
-## Failures past this many stop making things worse.
+## Maximum failures that increase aggression.
 @export var max_aggression: int = 3
 
 @export_group("Shield")
-## How much colour the corrupted guardian still holds (GreyhushShield.amount).
-## It climbs toward 1.0 as the cure advances and flickers to 1.0 while lucid.
+## Corrupted shield amount (0..1); approaches 1 as the cure advances.
 @export_range(0.0, 1.0) var corrupted_shield_amount: float = 0.3
-## Rate of the slow tremble between the cure so far and full colour while the
-## answer window is open (a sine, not a flicker).
+## Tremble frequency in Hz while the answer window is open.
 @export var tremble_hz: float = 2.0

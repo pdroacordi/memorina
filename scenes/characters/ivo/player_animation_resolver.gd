@@ -30,8 +30,7 @@ const HURT := &"hurt"
 const DEATH := &"death"
 const SIT := &"sit"
 
-## Coming out of these Ivo is already mid-motion, so the jump/fall intros are
-## skipped rather than crouching or tucking in mid-air.
+## These transitions start mid-motion, so jump and fall intro clips are skipped.
 const INTRO_SKIPPING_CLIPS: Array[StringName] = [AIR_SPIN, ATTACK_JUMP, ATTACK_FALL, ATTACK_POGO, HURT]
 const FALL_CLIPS: Array[StringName] = [FALL_START, FALL_IDLE]
 
@@ -54,7 +53,7 @@ func resolve() -> StringName:
 		if clip != &"":
 			return clip
 
-	# Above the airborne block: holding on is not falling.
+	# Holding on is not falling.
 	if _player.is_climbing():
 		var moving := _player.velocity.length() > 1.0
 		if _player.climb_grip() == Climbable.Grip.POLE:
@@ -66,7 +65,7 @@ func resolve() -> StringName:
 			return driver.sequence(WALL_LANDING, WALL_SLIDE)
 		if _player.just_double_jumped() or driver.holding(AIR_SPIN):
 			return AIR_SPIN
-		# The launch pose plays out even on a hop that peaks before it ends.
+		# Keep the launch pose through short hops.
 		if driver.holding(JUMP_START):
 			return JUMP_START
 		var skip_intro := driver.current in INTRO_SKIPPING_CLIPS
@@ -74,9 +73,7 @@ func resolve() -> StringName:
 			return driver.sequence(JUMP_START, JUMP_IDLE, skip_intro or driver.current in FALL_CLIPS)
 		return driver.sequence(FALL_START, FALL_IDLE, skip_intro)
 
-	# Below the airborne block because being drawn already implies standing on
-	# the floor, and above locomotion because holding the instrument outranks
-	# idling. Hurt and death still win, which is the point of interruption.
+	# Drawn implies grounded; instrument holding outranks idle, while hurt and death take priority.
 	if _player.is_memorina_drawn():
 		return driver.sequence(MEMORINA_DRAW, MEMORINA_IDLE)
 
@@ -89,8 +86,7 @@ func resolve() -> StringName:
 func is_death_finished() -> bool:
 	return driver.finished(DEATH)
 
-## The clip for one attack context and phase; Player's duration assert walks
-## this same mapping so the two cannot drift apart.
+## Must match the mapping used by Player's attack-duration assertion.
 func attack_clip_for(context: StringName, phase: int) -> StringName:
 	match context:
 		Player.CTX_IDLE:
@@ -105,9 +101,7 @@ func attack_clip_for(context: StringName, phase: int) -> StringName:
 			return ATTACK_POGO
 	return &""
 
-## Ground combos are the same clip family wherever Ivo ends up; air attacks
-## yield to the ground the moment he lands, so landing mid-swing reads as a
-## landing rather than a swing frozen on the floor.
+## Ground attacks use the same clip family; air attacks yield immediately on landing.
 func _attack_clip(on_floor: bool) -> StringName:
 	var context := _player.attack_context()
 	if on_floor and context in Player.AIR_ATTACK_CONTEXTS:

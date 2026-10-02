@@ -1,48 +1,16 @@
 @tool
 class_name WaterBody extends Node2D
 
-## A body of water: the one node other systems talk to (a level paints it with
-## a WaterLayer, which places these). It composes whatever it finds under it -
-## a Surface always; a Veil, a Volume and a Hazard when the water is one bodies
-## can fall into - so what a body of water does is decided by its scene.
-##
-## It reads the memory field over each column (every few frames), steps the
-## surface (WaterSurfaceField) and hands the result to the shaders as a 1xN
-## texture.
-##
-## TWO PROJECTIONS. A pool in a pit is seen EDGE-ON: its waterline is a profile
-## that waves and splashes, so it has a `profile` and simulates one. A lake in
-## front of the land is seen FROM ABOVE: its top edge is the far shore and
-## stays straight, and its waves are drawn by the shader. It has no `profile`
-## and simulates nothing - the widest water is the cheapest - but each of its
-## columns keeps its own clock, running at the memory over it, because a lake
-## runs the width of a room and one clock for all of it would keep the grey end
-## moving at the pace of the remembered one.
-##
-## Motion is TIME: this node is pausable, so a performance or a lesson stops
-## the water with the world. The reflection is MEMORY: the shader reads it from
-## the season mask, which runs through a pause - so a lesson that returns colour
-## returns the reflection while the waves hold still.
-##
-## ORIGIN: the centre of the rest waterline. `size` is the water below it; the
-## quads draw HEADROOM rows above as well, for crests to rise into.
-##
-## THE LEVEL CAN MOVE (set_level, driven by Chuva's RainBasin): the body is
-## painted at its HIGHEST level and can sink to dry. Moving it moves the origin,
-## so everything that reads surface_rest_y() follows; the floors keep their
-## world height, so the water gets shallower over the same stepped bed and a
-## column whose floor is above the level is simply dry.
+## Coordinates water simulation, collision, and rendering for pools and lakes with movable levels.
+## Simulation follows pausable physics time; reflection reads the season mask independently.
 
-## Rows above the rest line the quads draw, so a crest has somewhere to rise.
+## Render rows above the rest line for wave crests.
 const HEADROOM := 12
-## Physics frames between two readings of the memory field. Memory changes over
-## seconds; reading it every frame for every column is wasted work. Read while
-## on screen, and on demand (column_rates()) by whoever needs it off screen.
+## Physics frames between memory-field samples.
 const RATE_REFRESH_FRAMES := 3
 ## Columns between two samples of the field; those between are interpolated.
 const RATE_STRIDE := 4
-## Column width of a body with no profile (a lake): it only reads memory and
-## keeps a clock per column, so one painted cell (WaterLayer) is one column.
+## Column width for profile-free lakes.
 const PLANE_COLUMN_WIDTH := 16
 ## Every body of water at runtime, for what looks for the water under a point
 ## (a floating log, the rain).
@@ -60,18 +28,13 @@ const HAZARD_MIN_DEPTH := 3.0
 	set(value):
 		size = value
 		_layout()
-## World pixels from the rest line to the mirror axis; negative is above the
-## water. For water lying below a bank `b` pixels tall, -b/2 puts the axis
-## halfway up it: the first row of water then mirrors the top of the bank, so
-## the bank itself is skipped and what stands on it sits close to the water.
+## Mirror axis offset in world pixels from the rest line; negative values place it above the water.
 @export var mirror_axis_offset := 0
 ## How the surface moves. None for a lake seen from above, which has no
 ## waterline profile to move.
 @export var profile: WaterProfile
 @export var look: WaterLook
-## World pixels below the rest line where the water TAKES a body (the Hazard
-## begins): enough that a fall visibly goes in before the beat, never so much
-## that standing on ice at the surface counts as being in the water.
+## World pixels below the rest line where the hazard begins.
 @export var hazard_depth := 4.0
 
 var _field: WaterSurfaceField
@@ -86,7 +49,7 @@ var _floors := PackedFloat32Array()
 var _floor_spans := PackedFloat32Array()
 var _floor_span := 0.0
 var _time := 0.0
-# A lake's clock per column (see TWO PROJECTIONS); empty for a pool.
+# A lake keeps an independent clock per column; empty for a pool.
 var _clocks := PackedFloat32Array()
 var _rates_frame := -RATE_REFRESH_FRAMES
 var _memory: MemoryField
@@ -180,9 +143,7 @@ func _physics_process(delta: float) -> void:
 		_field.step(delta, _rates, _time)
 	_upload()
 
-## The world y of the waterline at rest. The single source every part of the
-## water reads - the shader, the veil, the volume, the ice - so a water level
-## that moves later moves everything with it.
+## Rest waterline world y shared by rendering and water components.
 func surface_rest_y() -> float:
 	return global_position.y
 
@@ -255,10 +216,7 @@ func column_of(world_x: float) -> int:
 	var left := global_position.x - size.x * 0.5
 	return clampi(floori((world_x - left) / column_width()), 0, column_count() - 1)
 
-## The memory over each column: the rate its time runs at. Read afresh when
-## stale, even off screen - FREEZE's ice is never gated, and a pulse can reach
-## a pool before the camera does; ice grown on rates read when the pool was
-## last seen would ignore the memory it is spreading over.
+## Memory rate over each column; refresh stale values off screen because pulses and ice can reach unseen water.
 func column_rates() -> PackedFloat32Array:
 	_refresh_rates_if_stale()
 	return _rates
@@ -278,13 +236,7 @@ func fit_area(area_shape: CollisionShape2D, top: float) -> void:
 	rect.size = Vector2(size.x, maxf(size.y - top, 1.0))
 	area_shape.global_position = global_position + Vector2(0.0, top + rect.size.y * 0.5)
 
-## A body fell in at `world_x` at `speed` pixels per second: the water dents
-## under it and a crest rises either side. Wired from the Volume in the scene.
-##
-## The shape is a smooth "Mexican hat" (a Ricker wavelet) several columns wide,
-## never a one-column notch: a notch is almost all zig-zag, which the springs
-## ring as a comb of teeth instead of a crest (docs/knowledge/bugs/
-## splash-rings-the-alternating-column-mode.md).
+## Applies a smooth splash dent several columns wide; one-column notches ring as teeth (docs/knowledge/bugs/splash-rings-the-alternating-column-mode.md).
 func splash(world_x: float, speed: float) -> void:
 	assert(_field != null, "%s has no surface to splash: it has no WaterProfile" % name)
 	var depth := minf(speed * profile.splash_depth_per_speed, profile.splash_max_depth)
@@ -384,9 +336,7 @@ func _held_changed() -> void:
 	_push_held()
 	_refit_hazard()
 
-## Which columns have their waterline inside a held disc. The disc test is
-## the same as wc_held() in water_common.gdshaderinc: change one, change the
-## other.
+## Must use the same disc test as `wc_held()` in water_common.gdshaderinc.
 func _refresh_dry() -> void:
 	var left := global_position.x - size.x * 0.5
 	var width := column_width()

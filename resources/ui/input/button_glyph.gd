@@ -1,9 +1,9 @@
 class_name ButtonGlyph extends Resource
 
-## One key or button as a prompt draws it, in the three looks KeyGlyph uses.
+## Textures for a key or button prompt in its three visual states.
 
 @export var normal: Texture2D
-## Lit, for a prompt that blinks to be pressed.
+## Selected texture shown while the prompt blinks.
 @export var selected: Texture2D
-## Pressed in, for a prompt that has been answered.
+## Pressed texture shown after the prompt is answered.
 @export var pressed: Texture2D

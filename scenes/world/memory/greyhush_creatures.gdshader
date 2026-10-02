@@ -1,31 +1,22 @@
 shader_type canvas_item;
-// A SubViewport with transparent_bg outputs PREMULTIPLIED alpha. Blending it as
-// straight alpha multiplies the edge pixels by their coverage a second time,
-// which draws a dark rim around every sprite - the "shadow" effect.
+// The transparent SubViewport output is premultiplied; keep this blend mode to avoid dark sprite edges.
 render_mode blend_premul_alpha;
 
-// The CREATURE pass. Draws the isolated creature render - produced by
-// CreatureMask, a SubViewport that shares the world but renders only the
-// creature visibility layer - back over the drained world.
+// Draws CreatureMask's isolated creature render over the drained world.
 
 //
-// Identical maths to the world pass, via the shared include, so a creature and
-// the ground under its feet always agree on how forgotten this spot is. The one
-// difference is alpha: this pass must preserve it, or the transparent space
-// around the creatures would paint over the world.
+// Must match the world pass through the shared include; preserve alpha so transparent areas do not cover the world.
 #include "res://scenes/world/memory/greyhush_common.gdshaderinc"
 
 void fragment() {
 	vec2 px = UV * game_size;
 	vec4 src = texture(TEXTURE, UV);
 
-	// Nothing to shade where no creature was drawn. Returning early also keeps
-	// the premultiplied edge pixels from being dragged toward the haze colour.
+	// Preserve empty pixels and premultiplied edges.
 	if (src.a <= 0.001) {
 		COLOR = vec4(0.0);
 	} else {
-		// Undo the premultiply before shading, or a half-covered edge pixel
-		// would be desaturated as if it were a darker colour than it is.
+		// Unpremultiply before shading so edge coverage does not darken the colour.
 		vec3 straight = src.rgb / max(src.a, 0.0001);
 
 		vec3 tint_rgb;
@@ -38,7 +29,7 @@ void fragment() {
 		vec3 col = gh_shade(straight, lit_amount, smooth_memory, tint_rgb, tint_amount, ring, px);
 		col = gh_vignette(col, UV, smooth_memory);
 
-		// Re-premultiply to match blend_premul_alpha.
+		// Match blend_premul_alpha.
 		COLOR = vec4(col * src.a, src.a);
 	}
 }

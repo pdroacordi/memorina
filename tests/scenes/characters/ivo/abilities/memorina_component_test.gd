@@ -1,7 +1,6 @@
 class_name MemorinaComponentTest extends GdUnitTestSuite
 
-## The component is driven entirely through pushed-in values (enabled,
-## can_play, known_songs), so it tests without a body, a save file or a world.
+## Injected inputs let these tests run without a body, save, or world.
 
 const UP := Enums.Note.UP
 const DOWN := Enums.Note.DOWN
@@ -34,13 +33,11 @@ func test_drawing_while_still_succeeds() -> void:
 	assert_bool(_memorina.try_draw(true, _known())).is_true()
 	assert_bool(_memorina.is_drawn()).is_true()
 
-## The stillness rule of docs/design/02_mecanicas.md section 6.2, pushed in by
-## the body rather than checked here.
+## Stillness is supplied by the body (design 02 section 6.2).
 func test_it_cannot_be_drawn_while_moving() -> void:
 	assert_bool(_memorina.try_draw(false, _known())).is_false()
 	assert_bool(_memorina.is_drawn()).is_false()
 
-## The item gate, pushed in the same way the roll's skill gate is.
 func test_it_cannot_be_drawn_without_the_instrument() -> void:
 	_memorina.enabled = false
 	assert_bool(_memorina.try_draw(true, _known())).is_false()
@@ -55,8 +52,7 @@ func test_notes_are_ignored_while_sheathed() -> void:
 	_memorina.receive_note(UP)
 	await assert_signal(monitor).is_not_emitted("note_played")
 
-## The last note does not play the song yet: it starts the performance, and
-## the song is played only once the owner has heard it out.
+## The performance starts on the last note; playback begins after the owner hears it.
 func test_a_complete_sequence_starts_a_performance() -> void:
 	_draw()
 	var monitor := monitor_signals(_memorina)
@@ -92,8 +88,7 @@ func test_notes_are_ignored_while_performing() -> void:
 	_memorina.receive_note(UP)
 	await assert_signal(monitor).is_not_emitted("note_played")
 
-## The world is answering; putting the instrument away has to wait. The
-## toggle is still consumed so it cannot fire once the answer ends.
+## Consume the toggle while the world answers so it cannot fire afterward.
 func test_sheathing_while_performing_is_ignored() -> void:
 	_draw()
 	_play_freeze()
@@ -150,8 +145,7 @@ func test_a_wrong_note_is_rejected_and_fails_the_sequence() -> void:
 	await assert_signal(monitor).is_not_emitted("note_played")
 	await assert_signal(monitor).is_not_emitted("song_played")
 
-## Failing must not put the instrument away - the design says try again
-## immediately, with no penalty.
+## Failure leaves the instrument ready for an immediate retry.
 func test_a_failure_leaves_the_instrument_out() -> void:
 	_draw()
 	_memorina.receive_note(RIGHT)
@@ -184,9 +178,7 @@ func test_an_interruption_mid_sequence_reports_a_failure() -> void:
 	await assert_signal(monitor).is_emitted("sequence_failed")
 	assert_bool(_memorina.is_drawn()).is_false()
 
-## Order matters, not just presence: the HUD hides itself on `sheathed`, so a
-## failure emitted afterwards would flash an already-hidden label and the player
-## would never see the reset.
+## Emit failure before `sheathed` so the HUD can display the reset.
 func test_an_interruption_reports_the_failure_before_it_sheathes() -> void:
 	_draw()
 	_memorina.receive_note(UP)

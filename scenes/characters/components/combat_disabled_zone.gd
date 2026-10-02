@@ -1,9 +1,6 @@
 class_name CombatDisabledZone
 extends Area2D
-## Persistent proximity gate for safe rooms and NPC vicinities - contrast with
-## the one-shot PlayerProximityTrigger. Entering disables combat for as long
-## as the player stays inside; exiting re-enables it. Drop directly into a
-## safe room, or as a child of an NPC scene, since the mechanism is the same.
+## Disables combat while the player is inside a safe-room or NPC proximity area.
 
 signal player_entered
 signal player_exited

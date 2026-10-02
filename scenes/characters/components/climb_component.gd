@@ -1,13 +1,6 @@
 class_name ClimbComponent extends Node
 
-## Holding on to something climbable - Enraizar's root webs and pillars
-## (design 02 section 7.1; a climbing state rather than stacked steps, by the
-## user's choice). Generic, not a skill: nothing gates it but the roots.
-##
-## The body decides WHEN to grab (Player: up held, not rolling or hurt) and
-## what a jump does; this owns being on it: moving along it at climb speed,
-## no gravity, and noticing it is gone - withered roots let go, and climbing
-## out of the top is its own exit, so the body can hop onto the ledge.
+## Implements climbing on Enraizar roots (design 02 section 7.1); the body decides when to grab.
 
 enum Exit { HOLDING, LET_GO, OVER_THE_TOP }
 
@@ -15,8 +8,7 @@ enum Exit { HOLDING, LET_GO, OVER_THE_TOP }
 @export var climb_speed := 80.0
 ## The hop that carries the body over the top of what it climbed, px.
 @export var top_hop_height := 44.0
-## Seconds after letting go before the same body can grab again, so a jump
-## off with up still held does not snatch it straight back.
+## Regrab delay, in seconds, so held jump input cannot immediately reattach after a hop.
 @export var regrab_delay := 0.3
 ## Pulls toward a pole's axis, px/s.
 @export var pole_pull := 240.0

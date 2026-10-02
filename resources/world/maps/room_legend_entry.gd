@@ -1,10 +1,7 @@
 @tool
 class_name RoomLegendEntry extends Resource
 
-## One character of a room map (docs/maps/README.md). The legend is the only
-## place a character means anything: the parser, the importer, the builder and
-## the generated map guide all read it, so a new character is a new entry
-## here and nothing else.
+## Defines room-map symbols used by the parser, importer, builder, and map guide (docs/maps/README.md).
 
 enum Kind {
 	## Solid ground of `ground`'s material, drawn by GroundAutotile.
@@ -25,7 +22,7 @@ enum Anchor {
 	CENTER,
 }
 
-## Exactly one character. Never ".", which is always empty.
+## Exactly one character; `.` is reserved for empty cells.
 @export var symbol: String = ""
 @export var kind: Kind = Kind.GROUND
 ## GROUND and PLATFORM: what it is made of.

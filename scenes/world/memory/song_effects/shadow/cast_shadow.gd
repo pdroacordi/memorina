@@ -1,27 +1,14 @@
 class_name CastShadow extends PulseEffect
 
-## Sombra (Enums.Song.SHADOW): the noon sun burns Ivo's shadow into the place
-## he played, and until the pulse closes it COUNTS AS HIM being there (design
-## 02 section 7.1). It weighs what he weighs - its Presence carries a Weight,
-## so a plate or a seesaw counts it with no rule of its own - and creatures
-## take it for him: the Presence is in EnemySight.PRESENCE, and it is a
-## Hurtbox, so whatever they swing at it lands on it. It never fights back
-## (design 02, "Sombra e o combate comum"): the first blow breaks it into
-## ash, and whatever it was holding lets go.
-##
-## It is the frame Ivo was showing when the song ended - the instrument still
-## raised - drawn as world art (the grey takes it), dark, with a rim burning
-## in the summer tint and shimmering like air over hot stone. It rides what it
-## was cast on: a shadow left on a seesaw's plank tilts with the plank, rather
-## than floating off the wood and letting go of the weight it is there for.
+## Creates a hittable, weighted shadow anchored to its cast surface (docs/design/02 section 7.1).
 
-## Terrain and Props: what a shadow can be cast on.
+## Collision layers queried for cast surfaces.
 const FLOOR_MASK := 0b11
 ## How far below the feet the floor is looked for, px.
 const FLOOR_PROBE := 12.0
 
 @export var burn_material: ShaderMaterial
-## How much lighter than the song's tint the rim burns.
+## Rim lightness relative to the song tint, in 0..1.
 @export_range(0.0, 1.0) var rim_lightness := 0.3
 ## Seconds a broken shadow takes to fall to ash.
 @export var break_time := 0.35
@@ -65,8 +52,7 @@ func _physics_process(delta: float) -> void:
 	if not _broken:
 		_material.set_shader_parameter("fade", _fade())
 
-## Finds what it was cast on, in the first physics frame (the space is only
-## guaranteed current there), and keeps its place on it from then on.
+## Query on the first physics frame because the physics space is current then; retain the relative transform afterward.
 func _anchor() -> void:
 	_anchored = true
 	var query := PhysicsRayQueryParameters2D.create(global_position + Vector2(0, -4), global_position + Vector2(0, FLOOR_PROBE), FLOOR_MASK)

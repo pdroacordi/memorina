@@ -1,8 +1,6 @@
 class_name SolsticeTrialTest extends GdUnitTestSuite
 
-## The long corridor is only Solstice's puzzle if the shadow alone is gone
-## before Ivo reaches the door, and the shadow stretched by Solstice is not.
-## Read from the real map, Sombra's pulse, Solstice's stretch and Ivo's speed.
+## Checks the real trial map against shadow pulse, Solstice stretch, and Ivo's speed.
 
 const ROOM := "res://scenes/world/rooms/trials_solstice/contents/solstice_trial.room"
 const SHADOW_STATS := "res://resources/memory/shadow_pulse_stats.tres"
@@ -10,8 +8,7 @@ const AURA := "res://scenes/world/memory/song_effects/solstice/solstice_aura.tsc
 const LOCOMOTION := "res://resources/characters/ivo/ivo_locomotion_stats.tres"
 const GATE := "res://scenes/world/interactables/gate/gate.tscn"
 const CELL := 32.0
-## Of the gate's rise that must still be open for Ivo to pass (see the summer
-## trial): the shadow must hold until he is under it.
+## Fraction of gate rise that must remain open for Ivo to pass (see summer trial).
 const PASSABLE := 0.6
 
 var _map: RoomMap
@@ -31,8 +28,7 @@ func _walk_time() -> float:
 	var run := (load(LOCOMOTION) as LocomotionStats).move_speed
 	return (_col("far_door") - _col("plate_far")) * CELL / run
 
-## How long the shadow keeps the plate: the life of its pulse (it counts
-## until the pulse is gone), plus what is left of the gate's fall.
+## Time the shadow holds the plate, including the gate's remaining fall.
 func _holds_for(stretched: bool) -> float:
 	var timeline := PulseTimeline.new(load(SHADOW_STATS) as PulseStats, 1.0)
 	if stretched:

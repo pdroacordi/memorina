@@ -1,12 +1,6 @@
 shader_type canvas_item;
 
-// Particles that belong to one season. A pulse's particles survive only where
-// the season mask says that season has swapped the art, so snow falls exactly
-// where the snow tiles are - inside the pulse, out to its ragged edge, and
-// retreating with it - and never inside another season's pulse. A region's
-// own weather (ambient) is the reverse: it lives wherever NO pulse has swapped
-// the art, and inside pulses of its own season, and is cut only by a pulse of
-// another season.
+// Pulse particles appear inside their season mask; ambient weather appears outside masks and inside same-season masks.
 #include "res://scenes/world/memory/seasonal/seasonal_common.gdshaderinc"
 
 // Enums.Season these particles belong to.

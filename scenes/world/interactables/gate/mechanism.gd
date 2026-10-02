@@ -1,18 +1,10 @@
 class_name Mechanism extends AnimatableBody2D
 
-## Something a trigger moves between two places: a gate that slides up out of
-## the way, a lift that rises. It follows ONE trigger (room map param
-## `trigger_path`, the id of a plate or anything with `activated` /
-## `deactivated` signals) and moves `travel` pixels over `move_time` seconds
-## while the trigger holds, back while it does not. An AnimatableBody2D, so it
-## carries and shoves whoever stands on or against it instead of passing
-## through them.
+## An AnimatableBody2D that follows one trigger, moving `travel` px over `move_time` seconds.
 
 ## The trigger it follows. A bare id in a room map resolves to that entity.
 @export var trigger_path: NodePath
-## While THIS trigger holds, it is jammed at rest whatever its trigger says - a
-## counterweight dropped on the wrong plate (design 02 section 8, Outono
-## Logico 1). Empty: nothing can jam it.
+## Trigger that jams movement (design 02 section 8, Outono Logico 1); empty disables jamming.
 @export var lock_path: NodePath
 ## Where it goes when triggered, relative to where it was placed.
 @export var travel := Vector2(0, -96)
@@ -27,7 +19,7 @@ var _triggered := false
 var _locked := false
 
 func _ready() -> void:
-	# It moves or goes away: never a place to be sent back to.
+	# Moving mechanisms are not valid return locations.
 	add_to_group(SafeGroundTracker.UNSAFE)
 	sync_to_physics = true
 	_rest = position
@@ -65,5 +57,5 @@ func _retarget() -> void:
 	_target = 1.0 if _triggered and not _locked else 0.0
 
 func _apply() -> void:
-	# Eased, so it starts and settles like something heavy, and whole pixels.
+	# Ease motion and round positions to whole pixels.
 	position = (_rest + travel * smoothstep(0.0, 1.0, _progress)).round()

@@ -1,20 +1,11 @@
 class_name AirflowBody extends Node
 
-## Lets the air move the body it is a child of. Each physics frame it asks the
-## Airflow how the air moves at the body and hands that on:
-##   - a Character gets it as carry (Character.push), which its own motion
-##     steers toward - so the body decides what wind means to it;
-##   - a RigidBody2D is dragged toward the wind's velocity along the wind.
-## Runs before its body (process_physics_priority), so the carry is ready when
-## the body moves - no frame of lag.
-##
-## `exposure` is the body's judgement, pushed in the way `enabled` gates an
-## ability: Ivo is half sheltered while the instrument is out (design 03
-## section 5.4, item 2).
+## Applies sampled airflow to this body; exposure follows design 03 section 5.4, item 2.
+## Runs before the body so its carry is ready for that physics step.
 
-## Where on the body the air is sampled, from its origin (the feet).
+## Sample offset in pixels from the body's origin.
 @export var sample_offset := Vector2(0, -28)
-## How hard a RigidBody2D is dragged toward the wind's velocity, per second.
+## RigidBody2D wind drag coefficient per second.
 @export var rigid_drag := 3.0
 
 var exposure := 1.0

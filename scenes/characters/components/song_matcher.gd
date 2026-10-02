@@ -1,22 +1,13 @@
 class_name SongMatcher extends RefCounted
 
-## Turns a stream of notes into "still going", "that was a song" or "that was
-## nothing". Pure logic: no Node, no Input, no SaveSystem, no clock.
-##
-## Timing is deliberately absent. The guardian call-and-response needs the same
-## matching with a window on top of it (docs/design/02_mecanicas.md section 3),
-## so whoever needs timing owns the clock and calls reset() when it expires -
-## rather than this class growing two modes.
-##
-## Which songs are candidates is pushed in, not looked up, for the same reason
-## every ability component takes `enabled` instead of reading SaveSystem.
+## Matches note sequences without owning timing or candidate lookup (docs/design/02_mecanicas.md section 3).
 
 enum Result {
-	## The buffer is a prefix of at least one candidate. Keep listening.
+	## The buffer matches a candidate prefix; keep listening.
 	PROGRESS,
-	## The buffer exactly equals a candidate. Buffer cleared; matched_song() is valid.
+	## The buffer matches a complete candidate; `matched_song()` is valid.
 	MATCHED,
-	## The buffer is a prefix of nothing. Buffer cleared.
+	## The buffer matches no candidate prefix.
 	FAILED
 }
 
@@ -50,7 +41,7 @@ func feed(note: Enums.Note) -> Result:
 func matched_song() -> Song:
 	return _matched
 
-## A copy, so a caller cannot edit the matcher's state out from under it.
+## Return a copy so callers cannot mutate matcher state.
 func buffer() -> Array[Enums.Note]:
 	return _buffer.duplicate()
 

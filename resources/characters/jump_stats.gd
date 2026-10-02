@@ -1,8 +1,6 @@
 class_name JumpStats
 extends Resource
-## Tuning data for a single jump and the vertical-motion feel around it, so a
-## new character with different handling is a new .tres asset rather than a
-## new script or a scene full of property overrides.
+## Jump and vertical-motion tuning.
 
 @export var jump_height: float = 80.0
 ## Multiplier on base gravity while rising.
