@@ -8,13 +8,13 @@
 [ext_resource type="Script" path="res://scenes/world/memory/memory_source.gd" id="6_source"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_seat"]
-size = Vector2(48, 40)
+size = Vector2(72, 40)
 
 [node name="Bench" type="Node2D"]
 script = ExtResource("1_bench")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(0, -16)
+position = Vector2(0, -24)
 texture = ExtResource("2_tex")
 
 [node name="Seat" type="Area2D" parent="."]
@@ -41,6 +41,6 @@ show_in_editor = false
 [node name="Prompt" parent="." instance=ExtResource("5_glyph")]
 visible = false
 offset_left = -16.0
-offset_top = -96.0
+offset_top = -104.0
 offset_right = 16.0
-offset_bottom = -64.0
+offset_bottom = -72.0
