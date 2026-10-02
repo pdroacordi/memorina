@@ -1,0 +1,297 @@
+[gd_resource type="Resource" script_class="InputGlyphs" format=3]
+
+[ext_resource type="Script" path="res://resources/ui/input/button_glyph.gd" id="1_ydbuy"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_up_normal.png" id="2_nbmbt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_up_pressed.png" id="3_fkg24"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_up_selected.png" id="4_bmqin"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_down_normal.png" id="5_hhmtl"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_down_pressed.png" id="6_nhqmw"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_down_selected.png" id="7_q00i3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_left_normal.png" id="8_fuddg"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_left_pressed.png" id="9_7kp27"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_left_selected.png" id="10_lrfv4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_right_normal.png" id="11_d2mmp"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_right_pressed.png" id="12_62aik"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_right_selected.png" id="13_kgg8t"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_w_normal.png" id="14_gffjl"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_w_pressed.png" id="15_cay6g"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_w_selected.png" id="16_a3jkx"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_a_normal.png" id="17_0m8fa"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_a_pressed.png" id="18_mjywt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_a_selected.png" id="19_57seo"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_s_normal.png" id="20_bb6p7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_s_pressed.png" id="21_us827"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_s_selected.png" id="22_bwo3s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_d_normal.png" id="23_efcmf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_d_pressed.png" id="24_28uvj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/key_d_selected.png" id="25_fdjhb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_left_normal.png" id="26_tyrkb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_left_pressed.png" id="27_imroe"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_left_selected.png" id="28_tcr7s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_right_normal.png" id="29_agfqw"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_right_pressed.png" id="30_86u40"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_right_selected.png" id="31_kgveq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_up_normal.png" id="32_4haev"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_up_pressed.png" id="33_ndqcc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_up_selected.png" id="34_7mvbn"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_down_normal.png" id="35_ocxkd"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_down_pressed.png" id="36_cgqj5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/stick_left_down_selected.png" id="37_usowt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_up_normal.png" id="38_nq6m5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_up_pressed.png" id="39_gqy3a"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_up_selected.png" id="40_o76ao"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_down_normal.png" id="41_ej7nq"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_down_pressed.png" id="42_uw7c6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_down_selected.png" id="43_rxr8g"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_left_normal.png" id="44_dqnos"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_left_pressed.png" id="45_33fmc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_left_selected.png" id="46_46hpu"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_right_normal.png" id="47_wwrlk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_right_pressed.png" id="48_vbreb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/dpad_right_selected.png" id="49_qeoqf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_cross_normal.png" id="50_me3ji"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_cross_pressed.png" id="51_qfqlc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_cross_selected.png" id="52_yiotl"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_circle_normal.png" id="53_ocakf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_circle_pressed.png" id="54_at87y"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_circle_selected.png" id="55_us2ge"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_square_normal.png" id="56_snm11"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_square_pressed.png" id="57_fpnmr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_square_selected.png" id="58_dxt3x"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_triangle_normal.png" id="59_2k17v"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_triangle_pressed.png" id="60_j8x2r"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_triangle_selected.png" id="61_7lr8n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_l1_normal.png" id="62_jxrqk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_l1_pressed.png" id="63_y55i0"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_l1_selected.png" id="64_ylhne"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_r1_normal.png" id="65_lsgbi"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_r1_pressed.png" id="66_hyxtv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/ps_r1_selected.png" id="67_j30f7"]
+[ext_resource type="Script" path="res://resources/ui/input/input_glyphs.gd" id="68_u32qm"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_a_normal.png" id="69_jp2n6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_a_pressed.png" id="70_0pl46"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_a_selected.png" id="71_d6gjn"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_b_normal.png" id="72_7onnc"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_b_pressed.png" id="73_l3y4f"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_b_selected.png" id="74_klu4n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_x_normal.png" id="75_vyc37"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_x_pressed.png" id="76_1d2kr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_x_selected.png" id="77_th1f1"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_y_normal.png" id="78_pgql7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_y_pressed.png" id="79_qbukh"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_y_selected.png" id="80_8mwtd"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_lb_normal.png" id="81_wdokj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_lb_pressed.png" id="82_1ca4b"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_lb_selected.png" id="83_isdl6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_rb_normal.png" id="84_wb5to"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_rb_pressed.png" id="85_ymla4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/input/xbox_rb_selected.png" id="86_iedng"]
+
+[sub_resource type="Resource" id="Resource_sonjh"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("2_nbmbt")
+selected = ExtResource("4_bmqin")
+pressed = ExtResource("3_fkg24")
+
+[sub_resource type="Resource" id="Resource_4d5rt"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("5_hhmtl")
+selected = ExtResource("7_q00i3")
+pressed = ExtResource("6_nhqmw")
+
+[sub_resource type="Resource" id="Resource_u2qts"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("8_fuddg")
+selected = ExtResource("10_lrfv4")
+pressed = ExtResource("9_7kp27")
+
+[sub_resource type="Resource" id="Resource_elgs4"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("11_d2mmp")
+selected = ExtResource("13_kgg8t")
+pressed = ExtResource("12_62aik")
+
+[sub_resource type="Resource" id="Resource_3dtwv"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("14_gffjl")
+selected = ExtResource("16_a3jkx")
+pressed = ExtResource("15_cay6g")
+
+[sub_resource type="Resource" id="Resource_wdd5j"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("17_0m8fa")
+selected = ExtResource("19_57seo")
+pressed = ExtResource("18_mjywt")
+
+[sub_resource type="Resource" id="Resource_if5et"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("20_bb6p7")
+selected = ExtResource("22_bwo3s")
+pressed = ExtResource("21_us827")
+
+[sub_resource type="Resource" id="Resource_7xye6"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("23_efcmf")
+selected = ExtResource("25_fdjhb")
+pressed = ExtResource("24_28uvj")
+
+[sub_resource type="Resource" id="Resource_4usco"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("26_tyrkb")
+selected = ExtResource("28_tcr7s")
+pressed = ExtResource("27_imroe")
+
+[sub_resource type="Resource" id="Resource_5jq1i"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("29_agfqw")
+selected = ExtResource("31_kgveq")
+pressed = ExtResource("30_86u40")
+
+[sub_resource type="Resource" id="Resource_v23g1"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("32_4haev")
+selected = ExtResource("34_7mvbn")
+pressed = ExtResource("33_ndqcc")
+
+[sub_resource type="Resource" id="Resource_ceieh"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("35_ocxkd")
+selected = ExtResource("37_usowt")
+pressed = ExtResource("36_cgqj5")
+
+[sub_resource type="Resource" id="Resource_0vkqh"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("38_nq6m5")
+selected = ExtResource("40_o76ao")
+pressed = ExtResource("39_gqy3a")
+
+[sub_resource type="Resource" id="Resource_i5l6k"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("41_ej7nq")
+selected = ExtResource("43_rxr8g")
+pressed = ExtResource("42_uw7c6")
+
+[sub_resource type="Resource" id="Resource_ps545"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("44_dqnos")
+selected = ExtResource("46_46hpu")
+pressed = ExtResource("45_33fmc")
+
+[sub_resource type="Resource" id="Resource_yki0u"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("47_wwrlk")
+selected = ExtResource("49_qeoqf")
+pressed = ExtResource("48_vbreb")
+
+[sub_resource type="Resource" id="Resource_ro0gi"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("50_me3ji")
+selected = ExtResource("52_yiotl")
+pressed = ExtResource("51_qfqlc")
+
+[sub_resource type="Resource" id="Resource_t6xg2"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("53_ocakf")
+selected = ExtResource("55_us2ge")
+pressed = ExtResource("54_at87y")
+
+[sub_resource type="Resource" id="Resource_hk5m8"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("56_snm11")
+selected = ExtResource("58_dxt3x")
+pressed = ExtResource("57_fpnmr")
+
+[sub_resource type="Resource" id="Resource_ybdci"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("59_2k17v")
+selected = ExtResource("61_7lr8n")
+pressed = ExtResource("60_j8x2r")
+
+[sub_resource type="Resource" id="Resource_l8p5s"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("62_jxrqk")
+selected = ExtResource("64_ylhne")
+pressed = ExtResource("63_y55i0")
+
+[sub_resource type="Resource" id="Resource_runm5"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("65_lsgbi")
+selected = ExtResource("67_j30f7")
+pressed = ExtResource("66_hyxtv")
+
+[sub_resource type="Resource" id="Resource_nstby"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("69_jp2n6")
+selected = ExtResource("71_d6gjn")
+pressed = ExtResource("70_0pl46")
+
+[sub_resource type="Resource" id="Resource_jqosw"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("72_7onnc")
+selected = ExtResource("74_klu4n")
+pressed = ExtResource("73_l3y4f")
+
+[sub_resource type="Resource" id="Resource_u7xg6"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("75_vyc37")
+selected = ExtResource("77_th1f1")
+pressed = ExtResource("76_1d2kr")
+
+[sub_resource type="Resource" id="Resource_o843b"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("78_pgql7")
+selected = ExtResource("80_8mwtd")
+pressed = ExtResource("79_qbukh")
+
+[sub_resource type="Resource" id="Resource_hgni0"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("81_wdokj")
+selected = ExtResource("83_isdl6")
+pressed = ExtResource("82_1ca4b")
+
+[sub_resource type="Resource" id="Resource_amdk2"]
+script = ExtResource("1_ydbuy")
+normal = ExtResource("84_wb5to")
+selected = ExtResource("86_iedng")
+pressed = ExtResource("85_ymla4")
+
+[resource]
+script = ExtResource("68_u32qm")
+keys = Dictionary[int, ExtResource("1_ydbuy")]({
+65: SubResource("Resource_wdd5j"),
+68: SubResource("Resource_7xye6"),
+83: SubResource("Resource_if5et"),
+87: SubResource("Resource_3dtwv"),
+4194319: SubResource("Resource_u2qts"),
+4194320: SubResource("Resource_sonjh"),
+4194321: SubResource("Resource_elgs4"),
+4194322: SubResource("Resource_4d5rt")
+})
+pad_buttons = Dictionary[int, ExtResource("1_ydbuy")]({
+11: SubResource("Resource_0vkqh"),
+12: SubResource("Resource_i5l6k"),
+13: SubResource("Resource_ps545"),
+14: SubResource("Resource_yki0u")
+})
+xbox_buttons = Dictionary[int, ExtResource("1_ydbuy")]({
+0: SubResource("Resource_nstby"),
+1: SubResource("Resource_jqosw"),
+2: SubResource("Resource_u7xg6"),
+3: SubResource("Resource_o843b"),
+9: SubResource("Resource_hgni0"),
+10: SubResource("Resource_amdk2")
+})
+playstation_buttons = Dictionary[int, ExtResource("1_ydbuy")]({
+0: SubResource("Resource_ro0gi"),
+1: SubResource("Resource_t6xg2"),
+2: SubResource("Resource_hk5m8"),
+3: SubResource("Resource_ybdci"),
+9: SubResource("Resource_l8p5s"),
+10: SubResource("Resource_runm5")
+})
+left_stick = Dictionary[int, ExtResource("1_ydbuy")]({
+0: SubResource("Resource_4usco"),
+1: SubResource("Resource_5jq1i"),
+2: SubResource("Resource_v23g1"),
+3: SubResource("Resource_ceieh")
+})
