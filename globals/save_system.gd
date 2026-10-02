@@ -7,11 +7,13 @@ signal guardian_restored(guardian: Enums.Guardian)
 
 const PATH: String = "user://"
 const SAVE_FILE_NAME: String = "save.tres"
-## Debug builds keep their own save and start a fresh game every launch unless
-## given `-- --continue`: an editor run stays deterministic and never clobbers
-## a release save on the same machine.
+## Debug builds keep their own save, so an editor run never clobbers a release
+## save on the same machine. Like a release, they continue it on every launch
+## (the user's call, 2026-10-01: a bench that does not survive closing the game
+## is not a save); `-- --new-game` starts fresh instead. Playtests never touch
+## it - the runner keeps its save in memory.
 const DEBUG_SAVE_FILE_NAME: String = "save_debug.tres"
-const CONTINUE_ARG: String = "--continue"
+const NEW_GAME_ARG: String = "--new-game"
 
 ## The LIVE save: what the world reads and writes while it is played. Benches
 ## commit it to disk; a death throws it away for the last commit (SaveLedger).
@@ -25,7 +27,7 @@ var _path: String = ""
 
 func _ready() -> void:
 	if OS.is_debug_build():
-		begin(PATH + DEBUG_SAVE_FILE_NAME, not CONTINUE_ARG in OS.get_cmdline_user_args())
+		begin(PATH + DEBUG_SAVE_FILE_NAME, NEW_GAME_ARG in OS.get_cmdline_user_args())
 	else:
 		begin(PATH + SAVE_FILE_NAME, false)
 

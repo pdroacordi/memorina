@@ -106,7 +106,7 @@ methods: `rest_at(bench_id, room_key)` (set bench fields, `ledger.commit()`, wri
 point)` (write the returned committed data), `commit()` (playtest setup), `bench_id()`, `bench_room()`,
 `deaths_in(region_key)`, `begin(path, fresh)`. A path of `""` means in-memory. Boot policy:
 - **Release**: `user://save.tres`, load if present.
-- **Debug**: `user://save_debug.tres`, a FRESH new game (sword + Memorina) unless the user arg `--continue` is
+- **Debug**: `user://save_debug.tres`, continued on launch (see decision 4: the user reversed "fresh unless `--continue`"); `--new-game` starts fresh. Originally: a FRESH new game unless the user arg `--continue` is
   given. Editor runs stay deterministic and never clobber a release save on the same machine.
 - **Playtest runner**: `SaveSystem.begin("", true)` before instantiating, then teach `known_songs`, then
   `SaveSystem.commit()`. This way a death mid-timeline rewinds to the timeline's own start. That start is NOT
@@ -269,7 +269,7 @@ not tell). If a label is ever wanted, the key is `BENCH_REST`.
    `SIT` loop. No art contract for `ivo_sit` until Ivo's real art exists; the bench's seat height is matched to
    the crouch.
 3. Respawn SEATED on the bench, on death and on load: **yes** (default taken).
-4. Debug builds start fresh unless given `--continue`, with a separate `save_debug.tres`: **yes** (default taken).
+4. Debug builds keep a separate `save_debug.tres`. The default taken here (start fresh unless `--continue`) was REVERSED by the user the same day after testing: a closed game lost its bench. Debug builds now continue their save; `-- --new-game` starts fresh.
 5. **Death marks merge** within about 48 px into one deepening mark, at most 6 per region (the user's choice).
 6. **First benches** (the user's choice): Downtown, the Frost Edge approach before the lighthouse, and the summer
    trial.
