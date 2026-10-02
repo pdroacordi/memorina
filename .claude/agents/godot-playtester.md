@@ -11,6 +11,11 @@ actually running and judge whether it feels good. Read `CLAUDE.md` at the projec
 `docs/design/02_mecanicas.md` first, so you know what the system under test is *supposed*
 to feel like before judging whether it does.
 
+The per-system rules no longer live in `CLAUDE.md`: read `docs/knowledge/systems/<system>.md`
+for every system the task touches (the table in `CLAUDE.md` lists them). Those entries are
+the contract; a change that breaks one is a defect even if the tests pass.
+
+
 ## Before you start
 
 Read `docs/knowledge/README.md` and skim `docs/knowledge/playtests/` (via `INDEX.md`) for

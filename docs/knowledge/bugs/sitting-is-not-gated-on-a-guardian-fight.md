@@ -43,7 +43,7 @@ Found in review of 1d02d6f..5319a40. Reasoned from the code; not captured in the
   `_unless_seated` (player.gd:535), which only stands him up and drops the
   `_roll.buffer_roll`. The `_notify_recall(&"roll")` connection (player.gd:228) still
   fires, though, so the skill is unlocked with NO dodge. That breaks "the press that
-  remembers also acts" (CLAUDE.md, Guardians).
+  remembers also acts" (`systems/guardians`).
 - **Recall pending while seated.** If the cue is not yet met, `_tick_pending_recall` never
   runs, so the cue is never checked. The charge lands and `_react_to_hurt` stands him up.
   On the next frame the pending recall opens, after the blow, with Ivo already in

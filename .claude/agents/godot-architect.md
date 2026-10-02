@@ -11,6 +11,10 @@ Read `docs/design/01_lore_e_narrativa.md` and `docs/design/02_mecanicas.md` for 
 
 ## Consult the knowledge base first
 
+The per-system rules no longer live in `CLAUDE.md`: read `docs/knowledge/systems/<system>.md`
+for every system the task touches (the table in `CLAUDE.md` lists them). Those entries are
+the contract; a change that breaks one is a defect even if the tests pass.
+
 Before planning anything, read `docs/knowledge/README.md` once (if you haven't this
 session) and then `Grep`/read `docs/knowledge/architecture/` and `docs/knowledge/gotchas/`
 for entries relevant to the system you're about to design (by tag, filename, or `related`

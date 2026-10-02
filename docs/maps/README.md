@@ -20,7 +20,7 @@ describes.**
 
 ## Where a room's files live
 
-Rooms are a three-level pattern (see CLAUDE.md, "Project structure"):
+Rooms are a three-level pattern (see `CLAUDE.md`, "Project structure", and `docs/knowledge/systems/rooms.md`):
 
 ```
 scenes/world/rooms/<region>.tscn                            places the rooms

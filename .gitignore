@@ -4,3 +4,5 @@
 reports/
 # Godot editor save leftovers (scene.tscn<digits>.tmp)
 *.tmp
+# Personal Claude Code settings (the shared ones are .claude/settings.json)
+.claude/settings.local.json

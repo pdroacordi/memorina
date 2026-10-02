@@ -168,8 +168,8 @@ forms, pick by need:
 - **Focused pass** (the useful one for this project): plain read-only exec that
   runs the diff itself:
   > Review commit 9601606 (run: git show 9601606) / the uncommitted changes (run:
-  > git diff HEAD). Focus: correctness bugs and violations of CLAUDE.md
-  > invariants [name the ones touched: GDScript/GLSL formula pairs, RESET
+  > git diff HEAD). Focus: correctness bugs and violations of CLAUDE.md and
+  > docs/knowledge/systems/ invariants [name the ones touched: GDScript/GLSL formula pairs, RESET
   > tracks, pause-mode map, skill gate via `enabled`, no `Input` in logic nodes,
   > i18n strings]. Max N findings, each with file:line, failing scenario and
   > confidence. Do not modify files.

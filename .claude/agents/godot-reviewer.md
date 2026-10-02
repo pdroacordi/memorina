@@ -9,6 +9,10 @@ You are an expert Godot 4 / GDScript reviewer for **Memorina**, a 2D metroidvani
 
 ## Consult the knowledge base first
 
+The per-system rules no longer live in `CLAUDE.md`: read `docs/knowledge/systems/<system>.md`
+for every system the task touches (the table in `CLAUDE.md` lists them). Those entries are
+the contract; a change that breaks one is a defect even if the tests pass.
+
 Before reviewing, `Grep`/read `docs/knowledge/bugs/` and `docs/knowledge/gotchas/` (start
 from `docs/knowledge/INDEX.md`) for anything already known about the files under review. A
 past bug in the same area is the single highest-signal thing you can check for regression.

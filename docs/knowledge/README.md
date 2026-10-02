@@ -40,7 +40,7 @@ Every entry is a single Markdown file with this frontmatter:
 ```yaml
 ---
 id: <category>/<slug>              # matches the file's path, e.g. architecture/character-controller-input-split
-type: architecture | feature | bug | gotcha | playtest
+type: system | architecture | feature | bug | gotcha | playtest
 title: One line, human-readable
 status: active | superseded | deprecated   # superseded entries stay, but point to what replaced them
 tags: [lowercase, kebab-case, keywords]
@@ -110,11 +110,15 @@ you can read why.
   History of *why something changed* is as valuable as the current state.
 - Update `INDEX.md` in the same edit that adds or changes an entry. The index is the fast
   scan path; an entry that isn't indexed is effectively invisible to a quick lookup.
-- English, even though `docs/design/` is Portuguese — see the Glossary in the root
-  `CLAUDE.md` for design-term-to-code-identifier mappings; use those identifiers here too.
+- English, even though `docs/design/` is Portuguese. Use the code identifiers from
+  [`glossary.md`](glossary.md), which maps design terms to code names and lists retired terms.
 
 ## Directories
 
+- `systems/` — the current contract of each system: how it works and the rules a change
+  must not break. One file per system, updated in the same change that alters the system.
+  `CLAUDE.md` links each one with its most-broken rule. Unlike `architecture/`, these are
+  rewritten to stay current, not appended to; the history lives in `architecture/` and `bugs/`.
 - `architecture/` — durable structural decisions and reusable patterns (the "how this
   kind of thing gets built here" knowledge).
 - `features/` — one file per implemented gameplay system, describing what it does and

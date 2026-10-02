@@ -42,6 +42,6 @@ comes when it can land.
 ## Prevention
 
 Not asserted: the reach of a keyed hitbox is not readable from a resource at startup
-without evaluating the clip. Rule of thumb, now in CLAUDE.md: a move's `attack_range`
+without evaluating the clip. Rule of thumb, now in `systems/guardians`: a move's `attack_range`
 must not exceed the reach its clip's hitbox keys, and a launch move that carries an
 airborne recall must be able to reach Ivo from where it is thrown.

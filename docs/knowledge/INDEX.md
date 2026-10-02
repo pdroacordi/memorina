@@ -4,6 +4,27 @@ Flat scan list, newest first within each category. See [README.md](README.md) fo
 schema and the self-improvement rule every agent follows. Keep this file in sync with the
 directory in the same edit that adds or changes an entry — do not let it drift.
 
+## Systems
+
+The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Read before changing the system.
+
+- [air](systems/air.md) — Air: one physical channel for wind, currents and the gale.
+- [animation](systems/animation.md) — Animation: code decides, the AnimationTree renders.
+- [art-pipeline](systems/art-pipeline.md) — Art pipeline: contracts, generation and processing.
+- [bell-jar](systems/bell-jar.md) — Redoma: the frost shell.
+- [greyhush](systems/greyhush.md) — The greyhush: the memory field and its renderer.
+- [guardians](systems/guardians.md) — Guardians: phases, the call, the recall, the AI and staging.
+- [input](systems/input.md) — Input: actions, gamepad layout and device glyphs.
+- [life-benches-death](systems/life-benches-death.md) — Life, benches, saving and death.
+- [rooms](systems/rooms.md) — Rooms: text maps, the importer and the legend.
+- [roots-and-climbing](systems/roots-and-climbing.md) — Enraizar's roots and climbing.
+- [seasonal-art](systems/seasonal-art.md) — Seasonal art: stacked sheets, the season mask and regional weather.
+- [solstice](systems/solstice.md) — Solstice: stretching other pulses.
+- [songs-and-the-memorina](systems/songs-and-the-memorina.md) — Songs, pulses, the Memorina instrument and the pause-mode map.
+- [water](systems/water.md) — Water: painted bodies, projections, reflection, motion, hazard, ice and rain.
+- [weight-presence-release](systems/weight-presence-release.md) — Weight, presence, Sombra and Soltar.
+- [glossary](glossary.md) — design term to code identifier, and retired terms.
+
 ## Architecture
 
 - [the-life-loop-rewinds-by-reloading](architecture/the-life-loop-rewinds-by-reloading.md) — BUILT (2026-10-01): benches commit a pure `SaveLedger`, death writes its mark onto the committed save and reloads `game.tscn` (self-swap, harness-safe) so every system that reads the save at `_ready` comes back right; arrival finds the bench by authored id + room scene key; death marks are raw points clustered by `RegionMemory` (MAX_SOURCES budget); the life HUD is notes greyed and stopped on the greyhush's Bayer cell.
