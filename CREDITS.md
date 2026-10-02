@@ -53,6 +53,6 @@ Third-party art used in Memorina, with the terms it was taken under.
 ## UI
 
 - **Key prompts, frames and banners** (`assets/sprites/hud/memorina/input_*.png`,
-  `assets/sprites/hud/input/` - the keyboard, D-pad, stick, Xbox and PlayStation glyphs,
+  `assets/sprites/hud/input/` - the keyboard, D-pad, stick, Xbox and PlayStation glyphs, the save quill `assets/sprites/hud/save/kept_quill.png`,
   `assets/sprites/hud/recall/`, the `memorina_*` fonts) — from the *RPG UI pack* by
   **Franuka**, https://franuka.itch.io/ (free for commercial use; a link back is asked for).

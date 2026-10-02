@@ -4,6 +4,9 @@ extends Node
 ## kept remembers with it, and nothing else can know whether the arena's room
 ## is even loaded when it happens.
 signal guardian_restored(guardian: Enums.Guardian)
+## A rest made the world as it stands the save. The HUD's quill answers it.
+## Emitted on the commit, so a playtest's in-memory save is "kept" too.
+signal saved
 
 const PATH: String = "user://"
 const SAVE_FILE_NAME: String = "save.tres"
@@ -46,6 +49,7 @@ func rest_at(bench: StringName, room_key: String) -> void:
 	player_data.bench_id = bench
 	player_data.bench_room = room_key
 	_write(_ledger.commit())
+	saved.emit()
 
 ## Ivo died at `point` (local to the region `region_key` names). The mark is
 ## written onto the last bench's save, and the live save goes back to it.

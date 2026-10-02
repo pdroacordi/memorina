@@ -278,6 +278,12 @@ Scene `res://scenes/world/interactables/bench/bench.tscn`, anchored at its cell'
 | `id` | String | none - names the node so other entities can link to it |
 | `bench_id` | StringName | **required** - unique across every map |
 | `facing` | int | `1` |
+| `bloom_strength` | float | `0.9` |
+| `bloom_radius` | float | `96.0` |
+| `bloom_tint` | Color | `Color(1, 0.86, 0.62, 1)` |
+| `bloom_rise` | float | `0.5` |
+| `bloom_hold` | float | `0.8` |
+| `bloom_fall` | float | `1.8` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

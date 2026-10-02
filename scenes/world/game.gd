@@ -140,6 +140,7 @@ func _room_by_key(key: String) -> Room:
 ## (the user's decisions, 2026-10-01).
 func _on_player_sat_down(seat: Seat) -> void:
 	_player.rest()
+	seat.rest()
 	var room := _room_at(seat.global_position)
 	SaveSystem.rest_at(seat.bench_id, SceneKey.of(room) if room != null else "")
 	_wake_rooms()

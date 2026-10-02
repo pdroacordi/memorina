@@ -13,6 +13,9 @@ const NOTE := preload("res://scenes/ui/life_hud/life_note.tscn")
 ## How many frames apart neighbouring notes sway, so the row breathes rather
 ## than marches.
 @export var phase_step: float = 2.0
+## Seconds between one note coming back and the next, when several do at once
+## (a rest): the row refills left to right instead of all in one blink.
+@export var refill_step: float = 0.18
 
 ## False until the first pool arrives: that one is shown, not animated.
 var _shown: bool = false
@@ -24,8 +27,14 @@ func show_health(current: int, max_hp: int) -> void:
 	var instant := not _shown
 	_shown = true
 	_fit(max_hp)
+	var regained := 0
 	for i: int in _row.get_child_count():
-		(_row.get_child(i) as LifeNote).remember(i < current, instant)
+		var note := _row.get_child(i) as LifeNote
+		if i < current and not instant and not note.is_remembered():
+			note.regain(regained * refill_step)
+			regained += 1
+		else:
+			note.remember(i < current, instant)
 
 ## The notes, left to right.
 func notes() -> Array[LifeNote]:

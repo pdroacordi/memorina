@@ -44,6 +44,26 @@ func test_a_forgotten_note_holds_its_frame() -> void:
 		note._process(0.1)
 	assert_int(sprite.frame).is_equal(held)
 
+func test_a_rest_refills_the_row_one_note_after_another() -> void:
+	_hud.show_health(1, 3)
+	_hud.show_health(3, 3)
+	var notes := _hud.notes()
+	notes[1]._process(0.05)
+	notes[2]._process(0.05)
+	assert_float(notes[1].memory()).is_greater(0.0)
+	assert_float(notes[2].memory()).is_equal(0.0)
+	notes[2]._process(_hud.refill_step)
+	assert_float(notes[2].memory()).is_greater(0.0)
+
+func test_losing_a_note_cancels_its_pending_return() -> void:
+	_hud.show_health(1, 3)
+	_hud.show_health(3, 3)
+	_hud.show_health(1, 3)
+	var note := _hud.notes()[2]
+	note._process(1.0)
+	assert_bool(note.is_remembered()).is_false()
+	assert_float(note.memory()).is_equal(0.0)
+
 func test_a_rest_brings_the_colour_back() -> void:
 	_hud.show_health(1, 3)
 	_hud.show_health(3, 3)

@@ -28,6 +28,7 @@
 [ext_resource type="Script" path="res://scenes/world/debug/debug_trials.gd" id="34_teleport"]
 [ext_resource type="Script" path="res://scenes/world/environment/wind/airflow.gd" id="35_airflow"]
 [ext_resource type="PackedScene" path="res://scenes/ui/life_hud/life_hud.tscn" id="36_life"]
+[ext_resource type="PackedScene" path="res://scenes/ui/save_mark/save_mark.tscn" id="37_kept"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -146,6 +147,8 @@ color = Color(0, 0, 0, 1)
 script = ExtResource("6_sarsd")
 
 [node name="LifeHud" parent="CanvasLayer" instance=ExtResource("36_life")]
+
+[node name="SaveMark" parent="CanvasLayer" instance=ExtResource("37_kept")]
 
 [connection signal="call_answered" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_answered"]
 [connection signal="health_changed" from="World/Player" to="CanvasLayer/LifeHud" method="show_health"]

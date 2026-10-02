@@ -1,0 +1,16 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 9.0,
+ "player_position": [4592, -40],
+ "_note": "The lighthouse's approach bench (Frost Edge, a forgotten region, so the bloom reads). The teleport from the authored start costs a room transition: the press waits for it.",
+ "steps": [
+  {"t": 2.8, "screenshot": "00_before"},
+  {"t": 3.0, "action": "look_down", "pressed": true},
+  {"t": 3.1, "action": "look_down", "pressed": false},
+  {"t": 3.4, "screenshot": "01_bloom_rising_quill_in"},
+  {"t": 4.0, "screenshot": "02_bloom_full"},
+  {"t": 5.0, "screenshot": "03_holding"},
+  {"t": 6.2, "screenshot": "04_fading"},
+  {"t": 7.8, "screenshot": "05_gone"}
+ ]
+}

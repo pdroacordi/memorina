@@ -9,6 +9,9 @@ class_name Seat extends Area2D
 
 ## The state the prompt reads changed: Ivo came into reach, left it, sat, rose.
 signal changed
+## A rest was taken here (not merely a seat taken: arriving after a death puts
+## Ivo on it without one). The bench answers with its bloom.
+signal rested
 
 ## The physics layer seats live on (layer 6, "Interactable").
 const LAYER := 1 << 5
@@ -51,6 +54,10 @@ func set_occupied(occupied: bool) -> void:
 		return
 	_occupied = occupied
 	changed.emit()
+
+## Called by whoever carries the rest out (the composition root).
+func rest() -> void:
+	rested.emit()
 
 func is_occupied() -> bool:
 	return _occupied

@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://scenes/world/interactables/bench/seat.gd" id="3_seat"]
 [ext_resource type="Script" path="res://scenes/world/environment/wind/disc_shelter.gd" id="4_shelter"]
 [ext_resource type="PackedScene" path="res://scenes/ui/key_glyph/key_glyph.tscn" id="5_glyph"]
+[ext_resource type="Script" path="res://scenes/world/memory/memory_source.gd" id="6_source"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_seat"]
 size = Vector2(48, 40)
@@ -27,6 +28,15 @@ shape = SubResource("RectangleShape2D_seat")
 position = Vector2(0, -24)
 script = ExtResource("4_shelter")
 radius = 96.0
+
+[node name="Bloom" type="Node2D" parent="."]
+visible = false
+position = Vector2(0, -24)
+script = ExtResource("6_source")
+radius = 8.0
+feather = 72.0
+strength = 0.0
+show_in_editor = false
 
 [node name="Prompt" parent="." instance=ExtResource("5_glyph")]
 visible = false
