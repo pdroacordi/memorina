@@ -89,6 +89,8 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | a morte volta ao último banco | `SaveLedger` (`commit` / `rewind` / `record_death`), `Game._reload_world` |
 | marca de morte (símbolo do cinzesquecimento) | `PlayerData.deaths`, `DeathMarkClusters`, `RegionMemory.mark_deaths` / `erase_marks` |
 | vida (notas que perdem a cor) | `LifeHud`, `LifeNote`, `Player.health_changed` |
+| pausa / menu de pausa | `PauseMenu`, `Screens`, `ScreenRouter.Kind.PAUSE` (`systems/screens`) |
+| parar tudo atrás do menu (menu hold) | `WorldFreeze.hold()` / `release()` / `is_held()` (scale 0); a performance uses `freeze()` / `thaw()` (scale 1) |
 
 ## Terms no longer used
 
@@ -115,3 +117,5 @@ someone's memory of the project is exactly what causes an accidental regression 
 | Redoma holding water out column by column (depth 0 per dry column, hazard runs of wet columns) | replaced 2026-09-30 by per-pixel `held_discs` and curved hazard outlines; lakes are never held out |
 | `SaveSystem.new_game()` / `save_game()` / `load_game()`; "an unsaved death rewinds" with nothing to rewind to; design 02's "sem perder progresso material" | retired 2026-10-01: `SaveSystem.begin()`, `rest_at()`, `record_death()` over a `SaveLedger`; death rewinds to the last bench (the user's decision) |
 | the first song matrix: `BLIZZARD` (Ventania/Nevasca), `CONCENTRATED_SUN` (Sol Concentrado), `SUDDEN_STORM` (Tempestade Repentina), `WEAKEN` (Fragilizar), `STRIP` (Despir), `SPROUT` (Brotar), `HATCH` (Eclodir), and the unslotted Hibernação | replaced 2026-09-23 by the second matrix, each renamed IN ITS SLOT so the save indices hold: `BELL_JAR`, `SHADOW`, `SOLSTICE`, `RELEASE`, `GALE`, `ROOT`, `RAIN` (design 02 §7.1). The soundtrack files were renamed after the new titles; their music predates the new songs |
+| `PauseInput` / `PauseMenu.opened` → `WorldFreeze.freeze` (the first pause-menu plan, never built) | replaced 2026-10-02 by one `MenuInput`, the `ScreenRouter` and `Screens.hold_requested` → `WorldFreeze.hold` |
+| `MemorinaVoice.note_finished` starting the performance | removed 2026-10-02: a performance starts from `Player._tick_pending_performance` on the pausable clock |

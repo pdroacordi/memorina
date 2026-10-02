@@ -13,10 +13,17 @@ extends Node
 ## Timeline actions are dispatched through InputEventAction to exercise gameplay input.
 
 const DEFAULT_MAX_DURATION := 60.0
+## Real-time watchdog: a run that outlives `max_duration * WATCHDOG_FACTOR + WATCHDOG_SLACK` real seconds is hung.
+const WATCHDOG_FACTOR := 3.0
+const WATCHDOG_SLACK := 30.0
 
 var _steps: Array = []
 var _step_index := 0
+## Timeline clock in seconds: unpaused game time, or real time when the timeline sets "clock": "real".
 var _elapsed := 0.0
+var _real_clock := false
+## Real msec at load, for the watchdog; `max_duration` is measured on the timeline clock.
+var _start_msec := 0
 var _out_dir := ""
 var _max_duration := DEFAULT_MAX_DURATION
 var _pending_captures := 0
@@ -38,11 +45,14 @@ func _ready() -> void:
 
 	_steps = timeline.get("steps", [])
 	_max_duration = float(timeline.get("max_duration", DEFAULT_MAX_DURATION))
+	_real_clock = String(timeline.get("clock", "")) == "real"
 
 	# Keep runs isolated from disk saves and commit setup so deaths rewind to this timeline's start.
 	SaveSystem.begin("", true)
 	for song_id: Variant in timeline.get("known_songs", []):
 		SaveSystem.learn_song(int(song_id) as Enums.Song)
+	for skill_id: Variant in timeline.get("skills", []):
+		SaveSystem.unlock_skill(int(skill_id) as Enums.PlayerSkill)
 	SaveSystem.commit()
 
 	var scene_path: String = timeline.get("scene", "res://scenes/world/game.tscn")
@@ -52,10 +62,15 @@ func _ready() -> void:
 	if timeline.has("player_position"):
 		_place_player(timeline["player_position"])
 
+	_start_msec = Time.get_ticks_msec()
 	print("[playtest] loaded %s, %d steps, capturing to %s" % [scene_path, _steps.size(), _out_dir])
 
 func _process(delta: float) -> void:
-	_elapsed += delta
+	var real_elapsed := (Time.get_ticks_msec() - _start_msec) / 1000.0
+	if _real_clock:
+		_elapsed = real_elapsed
+	elif not get_tree().paused:
+		_elapsed += delta
 
 	while _step_index < _steps.size() and float(_steps[_step_index].get("t", 0.0)) <= _elapsed:
 		_run_step(_steps[_step_index])
@@ -63,6 +78,9 @@ func _process(delta: float) -> void:
 
 	if _pending_captures == 0 and (_step_index >= _steps.size() or _elapsed >= _max_duration):
 		quit_now()
+	elif real_elapsed >= _max_duration * WATCHDOG_FACTOR + WATCHDOG_SLACK:
+		push_error("[playtest] watchdog: %.0f real s with %d steps left; a menu timeline needs \"clock\": \"real\"" % [real_elapsed, _steps.size() - _step_index])
+		get_tree().quit(1)
 
 func _run_step(step: Dictionary) -> void:
 	if step.has("screenshot"):
@@ -78,6 +96,48 @@ func _run_step(step: Dictionary) -> void:
 		event.pressed = bool(step.get("pressed", true))
 		event.strength = 1.0 if event.pressed else 0.0
 		Input.parse_input_event(event)
+	# Raw device events: an action event matches only its own action, so a key bound to
+	# two actions (Z is jump and ui_accept) needs the real key to reproduce the overlap.
+	if step.has("key"):
+		var key := InputEventKey.new()
+		var code := OS.find_keycode_from_string(String(step["key"]))
+		key.keycode = code
+		key.physical_keycode = code
+		key.pressed = bool(step.get("pressed", true))
+		Input.parse_input_event(key)
+	if step.has("joy_button"):
+		var button := InputEventJoypadButton.new()
+		button.button_index = int(step["joy_button"]) as JoyButton
+		button.pressed = bool(step.get("pressed", true))
+		button.pressure = 1.0 if button.pressed else 0.0
+		Input.parse_input_event(button)
+	if step.has("joy_axis"):
+		var motion := InputEventJoypadMotion.new()
+		motion.axis = int(step["joy_axis"][0]) as JoyAxis
+		motion.axis_value = float(step["joy_axis"][1])
+		Input.parse_input_event(motion)
+	if step.has("log"):
+		_log_state(String(step["log"]))
+
+## Prints what a screenshot cannot show: pause, focus and Ivo's motion.
+func _log_state(label: String) -> void:
+	var focus := get_viewport().gui_get_focus_owner()
+	var player := get_tree().get_first_node_in_group(Player.GROUP) as Player
+	var line := "[playtest] log %s t=%.2f paused=%s scale=%.2f focus=%s" % [
+		label, _elapsed, get_tree().paused, Engine.time_scale, focus.name if focus else "none",
+	]
+	if player:
+		var voice := player.get_node("MemorinaVoice/AudioStreamPlayer") as AudioStreamPlayer
+		line += " voice_playing=%s voice_paused=%s voice_pos=%.3f" % [voice.playing, voice.stream_paused, voice.get_playback_position()]
+		var tree := player.get_node("AnimationTree") as AnimationTree
+		var playback := tree.get("parameters/playback") as AnimationNodeStateMachinePlayback
+		line += " pos=(%.1f,%.1f) vel=(%.1f,%.1f) floor=%s roll=%s jump=%s sit=%s state=%s pos_in_clip=%.3f" % [
+			player.global_position.x, player.global_position.y, player.velocity.x, player.velocity.y,
+			player.is_on_floor(), player.is_rolling(), player.is_jumping(), player.is_sitting(),
+			playback.get_current_node() if playback else "?",
+			playback.get_current_play_position() if playback else -1.0,
+		]
+	print(line)
 
 func _capture(screenshot_name: String) -> void:
 	## get_viewport().get_texture() reflects the last COMPLETED render, not the frame

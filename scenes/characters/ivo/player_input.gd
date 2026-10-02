@@ -35,6 +35,8 @@ const PLAYSTATION_EXACT_NAMES: Array[String] = ["wireless controller"]
 ## Whether down was held as of the last event about it - any motion on its
 ## axis says, either way, so the opposite direction lets go of it too.
 var _down_held: bool = false
+## Whether jump was held as of the last event about it, so a release missed while paused still cuts.
+var _jump_held: bool = false
 
 # Camera-peek intent, deliberately player-only: enemies have no camera, so
 # this stays an inline getter on PlayerInput rather than moving to the base.
@@ -61,10 +63,18 @@ static func is_playstation_name(joy_name: String) -> bool:
 			return true
 	return false
 
+# A paused or disabled node receives no events, so held state is re-read when it runs again.
+# See docs/knowledge/bugs/player-input-edge-state-goes-stale-across-a-pause-menu.md.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_UNPAUSED or what == NOTIFICATION_ENABLED:
+		resync(Input.is_action_pressed("jump"), Input.is_action_pressed("look_down"))
+
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("jump"):
+		_jump_held = true
 		jump_pressed.emit()
 	elif event.is_action_released("jump"):
+		_jump_held = false
 		jump_canceled.emit()
 	if event.is_action_pressed("roll"):
 		roll_pressed.emit()
@@ -84,6 +94,13 @@ func _input(event: InputEvent) -> void:
 	for action: StringName in NOTE_ACTIONS:
 		if event.is_action_pressed(action):
 			note_pressed.emit(NOTE_ACTIONS[action], glyph_set_for(event, Input.get_joy_name(event.device)))
+
+## Adopts the held state the events missed: a jump released meanwhile is cut, and down is not a new edge.
+func resync(jump_held: bool, down_held: bool) -> void:
+	if _jump_held and not jump_held:
+		jump_canceled.emit()
+	_jump_held = jump_held
+	_down_held = down_held
 
 func _get_direction() -> float:
 	return Input.get_axis("move_left", "move_right")

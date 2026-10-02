@@ -1,0 +1,77 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "max_duration": 10,
+ "player_position": [
+  160,
+  5960
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 2.4,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 2.45,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 2.8,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 2.85,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 3.25,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 3.5,
+   "log": "f01_yes_focused"
+  },
+  {
+   "t": 3.5,
+   "screenshot": "f01_yes_focused"
+  },
+  {
+   "t": 3.8,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 4.5,
+   "log": "f02_still_running_after_yes"
+  },
+  {
+   "t": 8.0,
+   "log": "f03_end"
+  }
+ ]
+}

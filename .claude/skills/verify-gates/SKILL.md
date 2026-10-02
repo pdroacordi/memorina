@@ -36,13 +36,13 @@ Each must print nothing. A hit is a FAIL unless the line is a documented excepti
 
 ```bash
 X="--exclude-dir=addons --exclude-dir=.godot"
-# Input is read only by the input nodes (CLAUDE.md: Architecture principles).
-grep -rnE '\bInput\.(is_|get_|action)' --include=*.gd $X scenes globals resources | grep -vE 'player_input\.gd|input_device\.gd'
+# Input is read only by the input nodes (CLAUDE.md: Architecture principles; MenuInput: architecture/pause-menu-worldfreeze-reuse).
+grep -rnE '\bInput\.(is_|get_|action)' --include=*.gd $X scenes globals resources | grep -vE 'player_input\.gd|input_device\.gd|menu_input\.gd'
 # WorldFreeze is the only writer of Engine.time_scale and get_tree().paused.
 grep -rnE 'Engine\.time_scale\s*=|get_tree\(\)\.paused\s*=' --include=*.gd $X . | grep -v 'world_freeze.gd'
-# Shaders: game-pixel space, never FRAGCOORD; pausable clocks, never TIME (greyhush edge reroll is the one exception).
+# Shaders: game-pixel space, never FRAGCOORD; pausable clocks, never TIME (the greyhush edge reads the greyhush_time global).
 grep -rnE '\bFRAGCOORD\b' --include=*.gdshader --include=*.gdshaderinc $X . | grep -vE ':\s*//'
-grep -rnE '\bTIME\b' --include=*.gdshader --include=*.gdshaderinc $X . | grep -vE ':\s*//|greyhush_common\.gdshaderinc'
+grep -rnE '\bTIME\b' --include=*.gdshader --include=*.gdshaderinc $X . | grep -vE ':\s*//'
 # Clip names are resolver consts, never loose literals.
 grep -rnE '(travel|play)\(&?"' --include=*.gd $X scenes
 # User-facing text goes through tr() keys.

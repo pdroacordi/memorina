@@ -23,3 +23,6 @@ res://scenes/world/rooms/trials_solstice/contents/solstice_trial_contents.tscn
 res://scenes/ui/life_hud/life_hud.tscn
 res://scenes/world/interactables/bench/bench.tscn
 res://scenes/ui/save_mark/save_mark.tscn
+res://scenes/ui/menu/confirm_panel.tscn
+res://scenes/ui/pause_menu/pause_menu.tscn
+res://scenes/ui/screens/screens.tscn

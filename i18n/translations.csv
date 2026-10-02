@@ -21,3 +21,9 @@ SONG_TITLE_ROOT,Song of the Green Reaching,Canção do Verde que Alcança
 SONG_TITLE_RAIN,Song of the First Rain,Canção da Primeira Chuva
 MEMORINA_LEARNED,You learned how to play,Você aprendeu a tocar
 GUARDIAN_CALL_LISTEN,Listen…,Ouça…
+PAUSE_TITLE,Pause,Pausa
+PAUSE_RESUME,Resume,Continuar
+PAUSE_QUIT_GAME,Quit game,Sair do jogo
+CONFIRM_QUIT_GAME,Quit the game?\nProgress since the last bench will be lost.,Sair do jogo?\nO progresso desde o último banco será perdido.
+CONFIRM_YES,Yes,Sim
+CONFIRM_NO,No,Não

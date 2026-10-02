@@ -37,6 +37,10 @@ func _ready() -> void:
 		if not region.memory_changed.is_connected(_on_region_memory_changed):
 			region.memory_changed.connect(_on_region_memory_changed.bind(region))
 
+## Quits without saving: only benches save.
+func quit_game() -> void:
+	get_tree().quit()
+
 func _on_player_entered_room(room: Room) -> void:
 	if room == _current_room or _is_transitioning or _dying:
 		return
@@ -149,19 +153,8 @@ func _on_player_died() -> void:
 		SaveSystem.rewind()
 	_reload_world.call_deferred()
 
-## Replaces this world directly because the playtest runner may be current_scene.
 func _reload_world() -> void:
-	var tree := get_tree()
-	var parent := get_parent()
-	var index := get_index()
-	var was_current := tree.current_scene == self
-	var fresh := (load(scene_file_path) as PackedScene).instantiate()
-	parent.remove_child(self)
-	queue_free()
-	parent.add_child(fresh)
-	parent.move_child(fresh, index)
-	if was_current:
-		tree.current_scene = fresh
+	SceneSwap.replace(self, load(scene_file_path) as PackedScene)
 
 func _room_at(point: Vector2) -> Room:
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):

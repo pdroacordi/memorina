@@ -7,6 +7,9 @@ signal faded
 const CLEAR    : Color = Color(0,0,0,0)
 const DURATION : float = 0.5
 
+## Fades in real seconds; true for a fade shown under a menu hold, where the time scale is 0.
+@export var real_time: bool = false
+
 var _tween: Tween
 
 func _ready() -> void:
@@ -21,7 +24,7 @@ func to_clear() -> Signal:
 func _tween_color(final_color: Color) -> Signal:
 	if _tween:
 		_tween.kill()
-	_tween = create_tween()
+	_tween = create_tween().set_ignore_time_scale(real_time)
 	_tween.tween_property(self, "color", final_color, DURATION)
 	_tween.finished.connect(faded.emit)
 	return faded

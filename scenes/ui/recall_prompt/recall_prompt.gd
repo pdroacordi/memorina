@@ -62,8 +62,8 @@ func on_step_taken(_remaining: int, seconds: float) -> void:
 	_start_window(seconds)
 	_ring.queue_redraw()
 	_stop_step()
-	# Real time, like everything else in a recall.
-	_step_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS).set_ignore_time_scale(true)
+	# Real time, like everything else in a recall, but bound to this pausable node so no pause runs it.
+	_step_tween = create_tween().set_ignore_time_scale(true)
 	_step_tween.tween_interval(STEP_HOLD)
 	_step_tween.tween_callback(_ask_current)
 

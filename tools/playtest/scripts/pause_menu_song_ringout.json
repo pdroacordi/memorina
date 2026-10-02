@@ -1,0 +1,222 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "max_duration": 18.0,
+ "player_position": [
+  160,
+  5960
+ ],
+ "known_songs": [
+  0
+ ],
+ "steps": [
+  {
+   "t": 2.5,
+   "pressed": true,
+   "action": "draw_memorina"
+  },
+  {
+   "t": 2.55,
+   "pressed": false,
+   "action": "draw_memorina"
+  },
+  {
+   "t": 3.1,
+   "pressed": true,
+   "action": "note_up"
+  },
+  {
+   "t": 3.15,
+   "pressed": false,
+   "action": "note_up"
+  },
+  {
+   "t": 3.5,
+   "pressed": true,
+   "action": "note_right"
+  },
+  {
+   "t": 3.55,
+   "pressed": false,
+   "action": "note_right"
+  },
+  {
+   "t": 3.9,
+   "pressed": true,
+   "action": "note_left"
+  },
+  {
+   "t": 3.95,
+   "pressed": false,
+   "action": "note_left"
+  },
+  {
+   "t": 4.3,
+   "pressed": true,
+   "action": "note_down"
+  },
+  {
+   "t": 4.35,
+   "pressed": false,
+   "action": "note_down"
+  },
+  {
+   "t": 4.7,
+   "pressed": true,
+   "action": "note_down"
+  },
+  {
+   "t": 4.75,
+   "pressed": false,
+   "action": "note_down"
+  },
+  {
+   "t": 5.1,
+   "pressed": true,
+   "action": "note_down"
+  },
+  {
+   "t": 5.1,
+   "log": "c2_last_note"
+  },
+  {
+   "t": 5.15,
+   "pressed": false,
+   "action": "note_down"
+  },
+  {
+   "t": 5.2,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 5.25,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 5.45,
+   "screenshot": "c2_open_ringout"
+  },
+  {
+   "t": 5.45,
+   "log": "c2_open_ringout"
+  },
+  {
+   "t": 6.2,
+   "screenshot": "c2_open_ringout_2"
+  },
+  {
+   "t": 6.2,
+   "log": "c2_open_ringout_2"
+  },
+  {
+   "t": 7.0,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 7.05,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 7.2,
+   "screenshot": "c2_after_06.20"
+  },
+  {
+   "t": 7.2,
+   "log": "c2_after_06.20"
+  },
+  {
+   "t": 7.6,
+   "screenshot": "c2_after_06.60"
+  },
+  {
+   "t": 7.6,
+   "log": "c2_after_06.60"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "c2_after_07.00"
+  },
+  {
+   "t": 8.0,
+   "log": "c2_after_07.00"
+  },
+  {
+   "t": 8.5,
+   "screenshot": "c2_after_07.50"
+  },
+  {
+   "t": 8.5,
+   "log": "c2_after_07.50"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "c2_after_08.00"
+  },
+  {
+   "t": 9.0,
+   "log": "c2_after_08.00"
+  },
+  {
+   "t": 10.0,
+   "screenshot": "c2_after_09.00"
+  },
+  {
+   "t": 10.0,
+   "log": "c2_after_09.00"
+  },
+  {
+   "t": 10.5,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 10.55,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 10.8,
+   "screenshot": "c2_esc_in_perf"
+  },
+  {
+   "t": 10.8,
+   "log": "c2_esc_in_perf"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "c2_after_11.00"
+  },
+  {
+   "t": 12.0,
+   "log": "c2_after_11.00"
+  },
+  {
+   "t": 14.0,
+   "screenshot": "c2_after_13.00"
+  },
+  {
+   "t": 14.0,
+   "log": "c2_after_13.00"
+  },
+  {
+   "t": 15.5,
+   "screenshot": "c2_after_14.50"
+  },
+  {
+   "t": 15.5,
+   "log": "c2_after_14.50"
+  },
+  {
+   "t": 16.5,
+   "screenshot": "c2_after_15.50"
+  },
+  {
+   "t": 16.5,
+   "log": "c2_after_15.50"
+  }
+ ]
+}

@@ -25,11 +25,23 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   only sets polled state and silently never triggers `_input()` (see
   `docs/knowledge/gotchas/input-action-press-does-not-reach-input-callbacks.md`) — this
   cost a full debug cycle on the first real run, don't reintroduce it.
-- **`t` is unpaused time.** The runner pauses with the tree, so the seconds a
-  performance freezes the world (the excerpt, ~7 s) do not count: a pulse
-  appears about 1.6 s after its last note in `t`, not 9 s later. A timeline
-  that waits in `t` for the performance to end is idling in the world, and a
-  song's pulse runs out while it waits (the first Soltar-then-Vendaval run did).
+- **`t` is unpaused time.** The runner runs ALWAYS but counts `t` only while the
+  tree is not paused, so the seconds a performance freezes the world (the excerpt,
+  ~7 s) do not count: a pulse appears about 1.6 s after its last note in `t`, not
+  9 s later. A timeline that waits in `t` for the performance to end is idling in
+  the world, and a song's pulse runs out while it waits (the first
+  Soltar-then-Vendaval run did). A timeline that opens a menu (the pause menu
+  freezes the tree) sets `"clock": "real"` so its steps keep firing while paused.
+  `max_duration` is measured on the same clock as `t`. A separate real-time watchdog
+  (`max_duration * 3 + 30` s) ends a hung run with an error and exit code 1.
+- **Raw device steps.** An `"action"` step matches only its own action, so it cannot
+  reproduce a key bound to several (Z is `jump` and `ui_accept`) and GUI buttons ignore
+  it. `"key": "<name>"` (an `OS.find_keycode_from_string` name: `Z`, `Escape`, `Enter`,
+  `Down`, `Shift`), `"joy_button": <index>` and `"joy_axis": [axis, value]` send the real
+  event, with `"pressed"` as for actions. `"log": "<label>"` prints pause, time scale, GUI
+  focus and Ivo's motion, sit and animation state to stdout. A timeline's
+  `"skills": [ids]` unlocks `Enums.PlayerSkill`s (roll is 2) the way `known_songs` teaches
+  songs.
 - `--out` must be an **absolute filesystem path** (not `res://`); the runner creates it if
   missing and writes `<name>.png` for every `screenshot` step there, then quits on its own
   once the timeline ends or `max_duration` is hit (default 60s safety cap).

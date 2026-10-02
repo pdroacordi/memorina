@@ -130,6 +130,25 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   rows only. Changes outside the body you are testing (the pool's swell, an enemy's
   aura) tell you which pixels to exclude.
 
+- **Learned 2026-10-02 (pause menu playtest)**: an `"action"` step sends an
+  `InputEventAction`, which matches only its own action. A key bound to two actions (Z is
+  `jump`, `ui_accept` and `map_zoom_in`; pad A is also `note_down`) cannot be reproduced
+  with it, and GUI buttons never see it. The runner now has raw steps: `"key": "Z"`
+  (`OS.find_keycode_from_string` names: `Escape`, `Enter`, `Down`, `Shift`),
+  `"joy_button": 0`, `"joy_axis": [axis, value]`, and `"log": "<label>"`, which prints
+  pause, `Engine.time_scale`, the GUI focus owner and Ivo's position, velocity, floor,
+  roll, jump, sit and AnimationTree state and clip position. Use `log` for anything a
+  frame cannot prove (focus, "did he jump", "is the clip frozen"). Grep stdout for
+  `[playtest] log`.
+- Roll (and every `Enums.PlayerSkill`) is locked in the runner's fresh save. A timeline
+  sets `"skills": [2]` to unlock roll. Without it a "B closes the menu without rolling"
+  check passes vacuously: confirm with an unpaused B press that he does roll.
+- The winter trial's x 0 / y 5990 is a void: Ivo falls forever. Use its `TrialSpawn`,
+  `player_position` [160, 5960], and give the room ~1 s before the first press.
+- `Viewport.push_input()` of a joypad motion does not move GUI focus at all in 4.7.2;
+  `Input.parse_input_event()` moves it once per tilt. A headless probe of engine input
+  must use `parse_input_event`, or it reports "the stick does nothing".
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

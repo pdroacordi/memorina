@@ -1,0 +1,413 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "max_duration": 15,
+ "player_position": [
+  160,
+  5960
+ ],
+ "skills": [
+  2
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "screenshot": "b01_idle"
+  },
+  {
+   "t": 2.0,
+   "log": "b01_idle"
+  },
+  {
+   "t": 2.5,
+   "pressed": true,
+   "joy_button": 6
+  },
+  {
+   "t": 2.58,
+   "pressed": false,
+   "joy_button": 6
+  },
+  {
+   "t": 2.8,
+   "screenshot": "b02_start_open"
+  },
+  {
+   "t": 2.8,
+   "log": "b02_start_open"
+  },
+  {
+   "t": 3.0,
+   "joy_axis": [
+    1,
+    0.25
+   ]
+  },
+  {
+   "t": 3.02,
+   "joy_axis": [
+    1,
+    0.45
+   ]
+  },
+  {
+   "t": 3.04,
+   "joy_axis": [
+    1,
+    0.65
+   ]
+  },
+  {
+   "t": 3.06,
+   "joy_axis": [
+    1,
+    0.85
+   ]
+  },
+  {
+   "t": 3.08,
+   "joy_axis": [
+    1,
+    1.0
+   ]
+  },
+  {
+   "t": 3.1,
+   "joy_axis": [
+    1,
+    0.95
+   ]
+  },
+  {
+   "t": 3.12,
+   "joy_axis": [
+    1,
+    1.0
+   ]
+  },
+  {
+   "t": 3.3,
+   "screenshot": "b03_stick_down"
+  },
+  {
+   "t": 3.3,
+   "log": "b03_stick_down"
+  },
+  {
+   "t": 3.5,
+   "joy_axis": [
+    1,
+    0.0
+   ]
+  },
+  {
+   "t": 3.6,
+   "log": "b03b_center"
+  },
+  {
+   "t": 3.8,
+   "joy_axis": [
+    1,
+    -0.25
+   ]
+  },
+  {
+   "t": 3.82,
+   "joy_axis": [
+    1,
+    -0.45
+   ]
+  },
+  {
+   "t": 3.84,
+   "joy_axis": [
+    1,
+    -0.65
+   ]
+  },
+  {
+   "t": 3.86,
+   "joy_axis": [
+    1,
+    -0.85
+   ]
+  },
+  {
+   "t": 3.88,
+   "joy_axis": [
+    1,
+    -1.0
+   ]
+  },
+  {
+   "t": 3.9,
+   "joy_axis": [
+    1,
+    -0.95
+   ]
+  },
+  {
+   "t": 3.92,
+   "joy_axis": [
+    1,
+    -1.0
+   ]
+  },
+  {
+   "t": 4.1,
+   "screenshot": "b04_stick_up"
+  },
+  {
+   "t": 4.1,
+   "log": "b04_stick_up"
+  },
+  {
+   "t": 4.3,
+   "joy_axis": [
+    1,
+    0.0
+   ]
+  },
+  {
+   "t": 4.45,
+   "log": "b05_pre_a"
+  },
+  {
+   "t": 4.5,
+   "pressed": true,
+   "joy_button": 0
+  },
+  {
+   "t": 4.55,
+   "log": "b05_after_a_0"
+  },
+  {
+   "t": 4.6,
+   "pressed": false,
+   "joy_button": 0
+  },
+  {
+   "t": 4.65,
+   "log": "b05_after_a_1"
+  },
+  {
+   "t": 4.75,
+   "log": "b05_after_a_2"
+  },
+  {
+   "t": 4.8,
+   "screenshot": "b05_a_resumed"
+  },
+  {
+   "t": 4.8,
+   "log": "b05_a_resumed"
+  },
+  {
+   "t": 4.9,
+   "log": "b05_after_a_3"
+  },
+  {
+   "t": 5.1,
+   "log": "b05_after_a_4"
+  },
+  {
+   "t": 5.5,
+   "pressed": true,
+   "joy_button": 6
+  },
+  {
+   "t": 5.58,
+   "pressed": false,
+   "joy_button": 6
+  },
+  {
+   "t": 5.8,
+   "screenshot": "b06_start_open"
+  },
+  {
+   "t": 5.8,
+   "log": "b06_start_open"
+  },
+  {
+   "t": 6.0,
+   "pressed": true,
+   "joy_button": 6
+  },
+  {
+   "t": 6.08,
+   "pressed": false,
+   "joy_button": 6
+  },
+  {
+   "t": 6.3,
+   "screenshot": "b07_start_closed"
+  },
+  {
+   "t": 6.3,
+   "log": "b07_start_closed"
+  },
+  {
+   "t": 7.0,
+   "pressed": true,
+   "joy_button": 6
+  },
+  {
+   "t": 7.08,
+   "pressed": false,
+   "joy_button": 6
+  },
+  {
+   "t": 7.4,
+   "log": "b08_pre_b"
+  },
+  {
+   "t": 7.5,
+   "pressed": true,
+   "joy_button": 1
+  },
+  {
+   "t": 7.55,
+   "log": "b08_after_b_0"
+  },
+  {
+   "t": 7.6,
+   "pressed": false,
+   "joy_button": 1
+  },
+  {
+   "t": 7.65,
+   "log": "b08_after_b_1"
+  },
+  {
+   "t": 7.7,
+   "screenshot": "b08_b_closed"
+  },
+  {
+   "t": 7.7,
+   "log": "b08_b_closed"
+  },
+  {
+   "t": 7.8,
+   "log": "b08_after_b_2"
+  },
+  {
+   "t": 8.0,
+   "log": "b08_after_b_3"
+  },
+  {
+   "t": 8.5,
+   "pressed": true,
+   "joy_button": 6
+  },
+  {
+   "t": 8.58,
+   "pressed": false,
+   "joy_button": 6
+  },
+  {
+   "t": 9.0,
+   "joy_axis": [
+    1,
+    0.5
+   ]
+  },
+  {
+   "t": 9.02,
+   "joy_axis": [
+    1,
+    1.0
+   ]
+  },
+  {
+   "t": 9.2,
+   "joy_axis": [
+    1,
+    0.0
+   ]
+  },
+  {
+   "t": 9.4,
+   "pressed": true,
+   "joy_button": 0
+  },
+  {
+   "t": 9.5,
+   "pressed": false,
+   "joy_button": 0
+  },
+  {
+   "t": 9.7,
+   "screenshot": "b09_confirm"
+  },
+  {
+   "t": 9.7,
+   "log": "b09_confirm"
+  },
+  {
+   "t": 10.0,
+   "pressed": true,
+   "joy_button": 1
+  },
+  {
+   "t": 10.1,
+   "pressed": false,
+   "joy_button": 1
+  },
+  {
+   "t": 10.3,
+   "screenshot": "b10_b_back_quit_focus"
+  },
+  {
+   "t": 10.3,
+   "log": "b10_b_back_quit_focus"
+  },
+  {
+   "t": 10.6,
+   "pressed": true,
+   "joy_button": 1
+  },
+  {
+   "t": 10.65,
+   "log": "b11_after_b_0"
+  },
+  {
+   "t": 10.7,
+   "pressed": false,
+   "joy_button": 1
+  },
+  {
+   "t": 10.8,
+   "log": "b11_after_b_1"
+  },
+  {
+   "t": 10.9,
+   "screenshot": "b11_closed"
+  },
+  {
+   "t": 10.9,
+   "log": "b11_closed"
+  },
+  {
+   "t": 11.0,
+   "log": "b11_after_b_2"
+  },
+  {
+   "t": 12.5,
+   "joy_button": 1,
+   "pressed": true
+  },
+  {
+   "t": 12.6,
+   "joy_button": 1,
+   "pressed": false
+  },
+  {
+   "t": 12.6,
+   "log": "b12_ref_b_unpaused"
+  },
+  {
+   "t": 12.7,
+   "log": "b12_ref_b_unpaused_2"
+  }
+ ]
+}

@@ -2114,7 +2114,6 @@ libraries/ = SubResource("AnimationLibrary_ra23q")
 
 [node name="AnimationTree" type="AnimationTree" parent="." unique_id=902993815]
 unique_name_in_owner = true
-process_mode = 3
 root_node = NodePath("%AnimationTree/..")
 callback_mode_process = 0
 tree_root = SubResource("AnimationNodeStateMachine_ks11i")
@@ -2254,6 +2253,8 @@ debug_color = Color(0.930275, 0.2307421, 0.33968982, 0.41960785)
 [connection signal="skill_recalled" from="." to="RecallAura" method="flare"]
 [connection signal="skill_recall_missed" from="." to="RecallAura" method="drop"]
 [connection signal="recall_ended" from="." to="RecallAura" method="end"]
+[connection signal="performance_started" from="." to="AnimationTree" method="set_process_mode" binds= [3]]
+[connection signal="performance_finished" from="." to="AnimationTree" method="set_process_mode" binds= [0]]
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]
 
 [editable path="Hurtbox"]

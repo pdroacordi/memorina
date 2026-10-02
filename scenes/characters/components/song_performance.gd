@@ -25,6 +25,7 @@ func _ready() -> void:
 	set_process(false)
 
 func _process(_delta: float) -> void:
+	assert(not WorldFreeze.is_held(), "A menu holds only a running world; a performance freezes it first")
 	var position := _position()
 	for index: int in _tracker.advance(position):
 		cue_reached.emit(index)

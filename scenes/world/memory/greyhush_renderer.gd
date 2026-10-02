@@ -7,6 +7,8 @@ class_name GreyhushRenderer extends ColorRect
 const FALLOFF_SAMPLES := 64
 ## Sentinel for sources without a season; the shader checks for values below 0.
 const NO_SEASON := -1.0
+## Seconds after which `greyhush_time` wraps, keeping float precision.
+const TIME_WRAP := 3600.0
 
 @export_group("Atmosphere")
 ## Number of desaturation steps, from 2 to 16.
@@ -56,6 +58,8 @@ var _seasons := PackedFloat32Array()
 var _shields := PackedVector4Array()
 var _shield_params := PackedVector4Array()
 
+## Scaled seconds published as `greyhush_time`, wrapped at TIME_WRAP.
+var _time: float = 0.0
 ## Baked shield curves, one FALLOFF_SAMPLES-wide row per shield.
 var _falloff_image: Image
 var _falloff_texture: ImageTexture
@@ -109,7 +113,10 @@ func _exit_tree() -> void:
 	# Clear the global texture when its viewport leaves the tree.
 	RenderingServer.global_shader_parameter_set(&"greyhush_season_mask", null)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	# The scaled delta: the edge re-rolls through a performance freeze and stops under a hold.
+	_time = fmod(_time + delta, TIME_WRAP)
+	RenderingServer.global_shader_parameter_set(&"greyhush_time", _time)
 	if _field == null or material == null:
 		return
 

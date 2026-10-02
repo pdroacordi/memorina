@@ -12,7 +12,12 @@ const STICK_THRESHOLD := 0.5
 var glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
 
 
-func _input(event: InputEvent) -> void:
+# The window hears every event before dispatch, so a press a menu marks handled
+# (Esc, Start, B) and a press made while paused still switch the prompts.
+func _ready() -> void:
+	get_tree().root.window_input.connect(_on_window_input)
+
+func _on_window_input(event: InputEvent) -> void:
 	if not _is_deliberate(event):
 		return
 	var found := PlayerInput.glyph_set_for(event, Input.get_joy_name(event.device))

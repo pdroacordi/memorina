@@ -1,0 +1,387 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "max_duration": 19.0,
+ "player_position": [
+  160,
+  5960
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "screenshot": "a01_idle"
+  },
+  {
+   "t": 2.0,
+   "log": "a01_idle"
+  },
+  {
+   "t": 2.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.55,
+   "screenshot": "a02_running"
+  },
+  {
+   "t": 2.55,
+   "log": "a02_running"
+  },
+  {
+   "t": 2.6,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 2.65,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 2.9,
+   "screenshot": "a03_open_1"
+  },
+  {
+   "t": 2.9,
+   "log": "a03_open_1"
+  },
+  {
+   "t": 3.4,
+   "screenshot": "a04_open_2"
+  },
+  {
+   "t": 3.4,
+   "log": "a04_open_2"
+  },
+  {
+   "t": 3.9,
+   "screenshot": "a05_open_3"
+  },
+  {
+   "t": 3.9,
+   "log": "a05_open_3"
+  },
+  {
+   "t": 4.0,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 4.05,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 4.25,
+   "screenshot": "a06_closed_running"
+  },
+  {
+   "t": 4.25,
+   "log": "a06_closed_running"
+  },
+  {
+   "t": 4.5,
+   "log": "a06b"
+  },
+  {
+   "t": 4.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 5.5,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 5.55,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 5.8,
+   "screenshot": "a07_open_resume_focus"
+  },
+  {
+   "t": 5.8,
+   "log": "a07_open_resume_focus"
+  },
+  {
+   "t": 6.0,
+   "pressed": true,
+   "key": "Down"
+  },
+  {
+   "t": 6.05,
+   "pressed": false,
+   "key": "Down"
+  },
+  {
+   "t": 6.3,
+   "screenshot": "a08_down_quit_focus"
+  },
+  {
+   "t": 6.3,
+   "log": "a08_down_quit_focus"
+  },
+  {
+   "t": 6.6,
+   "pressed": true,
+   "key": "Up"
+  },
+  {
+   "t": 6.65,
+   "pressed": false,
+   "key": "Up"
+  },
+  {
+   "t": 6.9,
+   "screenshot": "a09_up_resume_focus"
+  },
+  {
+   "t": 6.9,
+   "log": "a09_up_resume_focus"
+  },
+  {
+   "t": 7.25,
+   "log": "a10_pre_enter"
+  },
+  {
+   "t": 7.3,
+   "pressed": true,
+   "key": "Enter"
+  },
+  {
+   "t": 7.35,
+   "pressed": false,
+   "key": "Enter"
+  },
+  {
+   "t": 7.4,
+   "log": "a10_enter_1"
+  },
+  {
+   "t": 7.6,
+   "screenshot": "a10_enter_resumed"
+  },
+  {
+   "t": 7.6,
+   "log": "a10_enter_resumed"
+  },
+  {
+   "t": 7.9,
+   "log": "a10_enter_3"
+  },
+  {
+   "t": 8.5,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 8.55,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 9.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 9.05,
+   "screenshot": "a11_z_down"
+  },
+  {
+   "t": 9.05,
+   "log": "a11_z_down"
+  },
+  {
+   "t": 9.2,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 9.25,
+   "log": "a12_after_z_0"
+  },
+  {
+   "t": 9.35,
+   "log": "a12_after_z_1"
+  },
+  {
+   "t": 9.45,
+   "log": "a12_after_z_2"
+  },
+  {
+   "t": 9.5,
+   "screenshot": "a12_z_resumed"
+  },
+  {
+   "t": 9.5,
+   "log": "a12_z_resumed"
+  },
+  {
+   "t": 9.6,
+   "log": "a12_after_z_3"
+  },
+  {
+   "t": 9.8,
+   "log": "a12_after_z_4"
+  },
+  {
+   "t": 10.1,
+   "log": "a12_after_z_5"
+  },
+  {
+   "t": 10.8,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 10.85,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 11.3,
+   "pressed": true,
+   "key": "Down"
+  },
+  {
+   "t": 11.35,
+   "pressed": false,
+   "key": "Down"
+  },
+  {
+   "t": 11.7,
+   "pressed": true,
+   "key": "Enter"
+  },
+  {
+   "t": 11.75,
+   "pressed": false,
+   "key": "Enter"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "a13_confirm_no_focus"
+  },
+  {
+   "t": 12.0,
+   "log": "a13_confirm_no_focus"
+  },
+  {
+   "t": 12.3,
+   "pressed": true,
+   "key": "Left"
+  },
+  {
+   "t": 12.35,
+   "pressed": false,
+   "key": "Left"
+  },
+  {
+   "t": 12.6,
+   "screenshot": "a14_confirm_left"
+  },
+  {
+   "t": 12.6,
+   "log": "a14_confirm_left"
+  },
+  {
+   "t": 12.9,
+   "pressed": true,
+   "key": "Right"
+  },
+  {
+   "t": 12.95,
+   "pressed": false,
+   "key": "Right"
+  },
+  {
+   "t": 13.2,
+   "screenshot": "a15_confirm_right"
+  },
+  {
+   "t": 13.2,
+   "log": "a15_confirm_right"
+  },
+  {
+   "t": 13.5,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 13.55,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 13.8,
+   "screenshot": "a16_esc_back_quit_focus"
+  },
+  {
+   "t": 13.8,
+   "log": "a16_esc_back_quit_focus"
+  },
+  {
+   "t": 14.2,
+   "pressed": true,
+   "key": "Enter"
+  },
+  {
+   "t": 14.25,
+   "pressed": false,
+   "key": "Enter"
+  },
+  {
+   "t": 14.5,
+   "screenshot": "a17_confirm_again"
+  },
+  {
+   "t": 14.5,
+   "log": "a17_confirm_again"
+  },
+  {
+   "t": 14.8,
+   "pressed": true,
+   "key": "Enter"
+  },
+  {
+   "t": 14.85,
+   "pressed": false,
+   "key": "Enter"
+  },
+  {
+   "t": 15.1,
+   "screenshot": "a18_no_back_quit_focus"
+  },
+  {
+   "t": 15.1,
+   "log": "a18_no_back_quit_focus"
+  },
+  {
+   "t": 15.5,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 15.55,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 15.8,
+   "screenshot": "a19_closed"
+  },
+  {
+   "t": 15.8,
+   "log": "a19_closed"
+  },
+  {
+   "t": 16.2,
+   "log": "a20_end"
+  }
+ ]
+}

@@ -1,0 +1,92 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "max_duration": 7,
+ "player_position": [
+  2470,
+  5990
+ ],
+ "skills": [
+  2
+ ],
+ "steps": [
+  {
+   "t": 2.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.95,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 3.3,
+   "log": "g00_standing"
+  },
+  {
+   "t": 3.5,
+   "joy_button": 6,
+   "pressed": true
+  },
+  {
+   "t": 3.58,
+   "joy_button": 6,
+   "pressed": false
+  },
+  {
+   "t": 3.9,
+   "joy_axis": [
+    1,
+    0.8
+   ]
+  },
+  {
+   "t": 3.92,
+   "joy_axis": [
+    1,
+    1.0
+   ]
+  },
+  {
+   "t": 4.1,
+   "log": "g01_stick_down_in_menu"
+  },
+  {
+   "t": 4.3,
+   "joy_button": 1,
+   "pressed": true
+  },
+  {
+   "t": 4.4,
+   "joy_button": 1,
+   "pressed": false
+  },
+  {
+   "t": 4.5,
+   "log": "g02_closed_stick_still_down"
+  },
+  {
+   "t": 4.7,
+   "joy_axis": [
+    1,
+    0.97
+   ]
+  },
+  {
+   "t": 5.2,
+   "log": "g03_after_jitter"
+  },
+  {
+   "t": 5.2,
+   "screenshot": "g03_after_jitter"
+  },
+  {
+   "t": 5.4,
+   "joy_axis": [
+    1,
+    0.0
+   ]
+  }
+ ]
+}

@@ -33,3 +33,47 @@ func test_playstation_pads_draw_playstation_glyphs() -> void:
 func test_the_bare_wireless_controller_name_is_an_exact_match() -> void:
 	assert_bool(PlayerInput.is_playstation_name("Wireless Controller")).is_true()
 	assert_bool(PlayerInput.is_playstation_name("Xbox Wireless Controller")).is_false()
+
+## A jump released while the tree was paused is still cut once it runs again.
+func test_a_jump_released_during_a_pause_is_cut_on_resync() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	var cuts: Array = []
+	input.jump_canceled.connect(func() -> void: cuts.append(true))
+	input._input(_action("jump", true))
+	input.resync(true, false)
+	assert_int(cuts.size()).is_equal(0)
+	input.resync(false, false)
+	assert_int(cuts.size()).is_equal(1)
+	input.resync(false, false)
+	assert_int(cuts.size()).is_equal(1)
+
+## Down held through a menu is not a new edge afterwards: no sit nobody asked for.
+func test_down_held_through_a_pause_is_not_a_new_press() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	var presses: Array = []
+	input.look_down_pressed.connect(func() -> void: presses.append(true))
+	input.resync(false, true)
+	input._input(_stick_y(0.97))
+	assert_int(presses.size()).is_equal(0)
+
+## Down released during a menu: the first press afterwards counts.
+func test_down_released_during_a_pause_presses_again() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	var presses: Array = []
+	input.look_down_pressed.connect(func() -> void: presses.append(true))
+	input._input(_stick_y(0.9))
+	input.resync(false, false)
+	input._input(_stick_y(0.9))
+	assert_int(presses.size()).is_equal(2)
+
+func _action(action: StringName, pressed: bool) -> InputEventAction:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = pressed
+	return event
+
+func _stick_y(value: float) -> InputEventJoypadMotion:
+	var motion := InputEventJoypadMotion.new()
+	motion.axis = JOY_AXIS_LEFT_Y
+	motion.axis_value = value
+	return motion

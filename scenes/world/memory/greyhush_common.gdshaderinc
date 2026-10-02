@@ -4,6 +4,9 @@
 
 #include "res://scenes/world/memory/dither_common.gdshaderinc"
 
+// Seconds of scaled game time, wrapped; GreyhushRenderer advances it. Stops under a menu hold, unlike TIME.
+global uniform float greyhush_time;
+
 const int MAX_SOURCES = 32;
 // Must match MemoryField.MAX_SHIELDS and MAX_SOURCES.
 const int MAX_SHIELDS = 8;
@@ -120,7 +123,7 @@ float gh_sector_wobble(vec2 offset, float seed) {
 		// Each sector's clock is offset by its own hash, so neighbours never
 		// re-roll on the same frame.
 		float phase = gh_hash11(sector * 7.31 + seed) * edge_reroll_period;
-		roll = floor((TIME + phase) / edge_reroll_period);
+		roll = floor((greyhush_time + phase) / edge_reroll_period);
 	}
 	return gh_hash11(sector + seed + roll * 61.7) * 2.0 - 1.0;
 }

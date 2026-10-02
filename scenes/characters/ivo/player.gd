@@ -150,8 +150,12 @@ var _staged_height: float = 0.0
 var _staged_caller: Node2D
 ## True while the guardian's phrase plays and the answer window is not open.
 var _call_listening: bool = false
-## Matched song waiting for the current note to finish.
+## Matched or taught song waiting to be performed; started by `_tick_pending_performance`.
 var _pending_performance: Song = null
+## True when the pending performance is a lesson (the whole track, not the excerpt).
+var _pending_lesson: bool = false
+## Seconds of lesson lead-in left before the pending track may start.
+var _lead_in_left: float = 0.0
 ## True when an answered call should sheath after the note finishes.
 var _pending_sheathe: bool = false
 ## Authored shield amount restored when recall ends.
@@ -216,7 +220,6 @@ func _ready() -> void:
 	_memorina.song_matched.connect(_on_song_matched)
 	_memorina.song_played.connect(_on_song_played)
 	_memorina.call_answered.connect(call_answered.emit)
-	_voice.note_finished.connect(_on_note_finished)
 	_voice.mistake_finished.connect(sequence_reset.emit)
 	_performance.started.connect(performance_started.emit)
 	_performance.cue_reached.connect(note_cue_reached.emit)
@@ -288,6 +291,8 @@ func _process_motion(delta: float) -> void:
 	# melting underfoot - is simply "no longer standing still".
 	if _memorina.is_drawn() and not is_still():
 		_memorina.interrupt()
+	# After the interrupt, so a performance never starts in the frame that ends it.
+	_tick_pending_performance(delta)
 	_pogo.enabled = _can_use_sword()
 	# The body's judgement, pushed into the component like `enabled`: the air
 	# reaching Ivo is his own business, sampled next frame.
@@ -578,27 +583,34 @@ func _on_sequence_failed() -> void:
 	_voice.play_mistake_after_note()
 	sequence_failed.emit()
 
-## Defer playback until the ringing note ends; state avoids an await that could never resume.
+## Playback waits for the ringing note to end (`_tick_pending_performance`).
 func _on_song_matched(song: Song) -> void:
 	_pending_performance = song
-	if not _voice.is_busy():
-		_begin_pending_performance()
+	_pending_lesson = false
+	_lead_in_left = 0.0
 
-func _on_note_finished() -> void:
-	if _pending_performance != null:
-		_begin_pending_performance()
-	if _pending_sheathe:
+## Starts what waited for the last note on Ivo's pausable clock, never from the ALWAYS voice,
+## which would start it under a menu (docs/knowledge/architecture/pause-menu-worldfreeze-reuse.md).
+func _tick_pending_performance(delta: float) -> void:
+	if _pending_sheathe and not _voice.is_busy():
 		_pending_sheathe = false
 		_memorina.sheathe()
-
-## Only the song the instrument is still performing may be heard; anything
-## that sheathed or re-drew it in the meantime has already cleared the way.
-func _begin_pending_performance() -> void:
+	if _pending_performance == null:
+		return
+	_lead_in_left = maxf(_lead_in_left - delta, 0.0)
+	if _lead_in_left > 0.0 or _voice.is_busy():
+		return
 	var song := _pending_performance
+	var lesson := _pending_lesson
 	_pending_performance = null
+	_pending_lesson = false
+	# Anything that sheathed or re-drew the instrument meanwhile cleared the way.
 	if _memorina.performing_song() != song:
 		return
-	_performance.play(song.performance_stream(), song.cues(), song.excerpt_duration, song.excerpt_fade)
+	if lesson:
+		_performance.play(song.track, song.cues())
+	else:
+		_performance.play(song.performance_stream(), song.cues(), song.excerpt_duration, song.excerpt_fade)
 
 ## Thaw before the song is played, so the pulse is born into a moving world.
 func _on_performance_finished() -> void:
@@ -612,6 +624,7 @@ func _on_memorina_drawn(known_songs: Array[Song]) -> void:
 ## Sheathing during playback or lesson lead-in must thaw the world.
 func _on_memorina_sheathed() -> void:
 	_pending_performance = null
+	_pending_lesson = false
 	_pending_sheathe = false
 	if _performance.is_playing():
 		_performance.stop()
@@ -628,12 +641,12 @@ func _on_song_played(song: Song) -> void:
 ## carrying the banner. A restored guardian calls this; F9 stands in for the
 ## guardians that do not exist yet. Refused unless Ivo OWNS the instrument
 ## and could draw it right now, and it is not saying no, so a lesson never
-## starts without a Memorina, mid-air, mid-run, mid-performance or over a
+## starts without a Memorina, seated, mid-air, mid-run, mid-performance or over a
 ## mistake that would then clear its sheet - and the save is only touched
 ## once it will really start. A note still
 ## ringing (the last of a guardian's answer) is let finish before the track.
 func learn_song(song: Song) -> bool:
-	if song == null or _memorina.is_performing() or _voice.is_faulting() or not is_still():
+	if song == null or _memorina.is_performing() or _voice.is_faulting() or not is_still() or is_sitting():
 		return false
 	# No instrument, no lesson. Handing one over is the WORLD's to do - a
 	# pickup, the mentor - and a body that granted itself an item on the way
@@ -650,23 +663,10 @@ func learn_song(song: Song) -> bool:
 		_memorina.try_draw(true, _known_songs())
 	_memorina.start_performance(song)
 	lesson_started.emit(song, _last_glyph_set)
-	_await_lesson_track(song)
+	_pending_performance = song
+	_pending_lesson = true
+	_lead_in_left = lesson_lead_in
 	return true
-
-## Kept as a coroutine only because both waits always end: a timer fires, and a
-## ringing note always finishes. A hit meanwhile sheathes the instrument at
-## once, which is checked before the second wait: after a hit the voice may be
-## sounding the MISTAKE, which ends with mistake_finished and would leave a
-## wait on note_finished hanging until some later, unrelated note.
-func _await_lesson_track(song: Song) -> void:
-	await get_tree().create_timer(lesson_lead_in).timeout
-	if _memorina.performing_song() != song:
-		return
-	if _voice.is_busy():
-		await _voice.note_finished
-	if _memorina.performing_song() != song:
-		return
-	_performance.play(song.track, song.cues())
 
 func _on_debug_learn_song_pressed() -> void:
 	learn_song(_next_unknown_song())

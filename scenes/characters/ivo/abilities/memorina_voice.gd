@@ -2,7 +2,6 @@ class_name MemorinaVoice extends Node
 
 ## Plays one note at a time; `min_note_gap` sets the minimum interval between notes.
 
-signal note_finished
 signal mistake_finished
 
 ## Indexed by Enums.Note.
@@ -21,6 +20,10 @@ func _ready() -> void:
 	assert(note_streams.size() == Enums.Note.size(),
 		"MemorinaVoice has %d note streams for %d notes." % [note_streams.size(), Enums.Note.size()])
 	_player.finished.connect(_on_player_finished)
+
+# Ivo's voice is ALWAYS so it rings through a performance freeze; a menu hold silences it.
+func _process(_delta: float) -> void:
+	_player.stream_paused = WorldFreeze.is_held()
 
 func can_play_note() -> bool:
 	if is_faulting():
@@ -65,7 +68,5 @@ func _on_player_finished() -> void:
 		_sounding_mistake = false
 		mistake_finished.emit()
 		return
-	# Wake note waiters before a queued mistake starts.
-	note_finished.emit()
 	if _mistake_pending:
 		_play_mistake()

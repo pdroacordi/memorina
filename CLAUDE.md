@@ -78,7 +78,7 @@ Read the entry before touching the system. The rule beside each is the one most 
 | System | Entry | Never break |
 |---|---|---|
 | Animation | [`systems/animation`](docs/knowledge/systems/animation.md) | The resolver owns every clip name as a `const`; no transitions or `advance_expression` in a tree. A property with a `RESET` track is overwritten every frame: gate the decision in script, or key it. |
-| Greyhush (memory field) | [`systems/greyhush`](docs/knowledge/systems/greyhush.md) | Grey is stopped time, not a colour filter. `MemoryFieldMath` and `greyhush_common.gdshaderinc` are one formula in two languages: change both. Dither in game pixels (`UV * game_size`), never `FRAGCOORD`. Characters never freeze. |
+| Greyhush (memory field) | [`systems/greyhush`](docs/knowledge/systems/greyhush.md) | Grey is stopped time, not a colour filter. `MemoryFieldMath` and `greyhush_common.gdshaderinc` are one formula in two languages: change both. Dither in game pixels (`UV * game_size`), never `FRAGCOORD`; animate from `greyhush_time`, never `TIME`. Characters never freeze. |
 | Songs and the Memorina | [`systems/songs-and-the-memorina`](docs/knowledge/systems/songs-and-the-memorina.md) | A song is data. Gameplay reads the clean disc, never the dithered edge. The pause-mode map there is exact: add to it, never set a whole `CanvasLayer` to ALWAYS. |
 | Guardians | [`systems/guardians`](docs/knowledge/systems/guardians.md) | A concrete guardian is a scene plus `GuardianStats`, not a subclass. `GuardianFight` is pure and owns the clock; HUDs only draw it. `WorldFreeze` is the only writer of `Engine.time_scale` and `get_tree().paused`. |
 | Seasonal art | [`systems/seasonal-art`](docs/knowledge/systems/seasonal-art.md) | Scenes reference band 0; the material declares which band is which season. No high-frequency texture in the grey. |
@@ -89,7 +89,8 @@ Read the entry before touching the system. The rule beside each is the one most 
 | Solstice | [`systems/solstice`](docs/knowledge/systems/solstice.md) | Stretch takes once, only while a pulse opens or holds. |
 | Water | [`systems/water`](docs/knowledge/systems/water.md) | Reflect below z 50, cover water above it. Never `TIME` or `FRAGCOORD` in water shaders. Hazards detect the body, never the hurtbox. |
 | Life, benches, death | [`systems/life-benches-death`](docs/knowledge/systems/life-benches-death.md) | Only benches save. Death rebuilds the world by swapping `game.tscn`, never `reload_current_scene()`. Headless runs never touch a player's save. |
-| Input | [`systems/input`](docs/knowledge/systems/input.md) | Only `PlayerInput` and `InputDevice` read `InputEvent`s. |
+| Input | [`systems/input`](docs/knowledge/systems/input.md) | Only `PlayerInput`, `MenuInput` and `InputDevice` read `InputEvent`s. |
+| Screens (menus) | [`systems/screens`](docs/knowledge/systems/screens.md) | Screens only asks `WorldFreeze` to hold and releases only what it held. The Screens root Control is ALWAYS, never its CanvasLayer. Every tween under Screens ignores the time scale. |
 | Rooms | [`systems/rooms`](docs/knowledge/systems/rooms.md) | Rooms are `.room` text; never paint ground in the editor. Bump the importer's `FORMAT_VERSION` when the parser changes. |
 | Art pipeline | [`systems/art-pipeline`](docs/knowledge/systems/art-pipeline.md) | Art starts as a contract in `tools/art/prompts/`. Never upload pack art as a reference (licences forbid AI training). Credit everything in `CREDITS.md`. |
 

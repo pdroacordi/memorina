@@ -6,7 +6,7 @@ status: active
 tags: [tween, await, coroutine, fade, async]
 related: [bugs/a-second-fall-during-the-respawn-clear-sinks-forever]
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-10-02
 source_files:
   - scenes/world/fade.gd
   - scenes/world/game.gd
@@ -39,5 +39,6 @@ is a disabled player or a guard that stays set for good.
   - Before `kill()`, run `if _tween: _tween.finished.emit()`. This is legal because
     `finished` is an ordinary signal.
   - Tag each request with a generation counter, and have stale awaiters exit.
-- `Player._await_lesson_track` already follows the same rule for its own waits ("kept as
-  a coroutine only because both waits always end").
+- `Player._await_lesson_track` already followed the same rule for its own waits. It was
+  removed on 2026-10-02 (UI-02): the lesson track now starts from state polled in
+  `Player._tick_pending_performance`, with no await.

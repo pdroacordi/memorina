@@ -29,11 +29,13 @@
 [ext_resource type="Script" path="res://scenes/world/environment/wind/airflow.gd" id="35_airflow"]
 [ext_resource type="PackedScene" path="res://scenes/ui/life_hud/life_hud.tscn" id="36_life"]
 [ext_resource type="PackedScene" path="res://scenes/ui/save_mark/save_mark.tscn" id="37_kept"]
+[ext_resource type="PackedScene" path="res://scenes/ui/screens/screens.tscn" id="38_screens"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
 
 [node name="Game" type="Node2D" unique_id=585377483]
+process_mode = 1
 script = ExtResource("4_game")
 song_catalog = ExtResource("19_songcat")
 
@@ -150,6 +152,11 @@ script = ExtResource("6_sarsd")
 
 [node name="SaveMark" parent="CanvasLayer" instance=ExtResource("37_kept")]
 
+[node name="ScreenLayer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="Screens" parent="ScreenLayer" instance=ExtResource("38_screens")]
+
 [connection signal="call_answered" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_answered"]
 [connection signal="health_changed" from="World/Player" to="CanvasLayer/LifeHud" method="show_health"]
 [connection signal="call_closed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_closed"]
@@ -198,3 +205,7 @@ script = ExtResource("6_sarsd")
 [connection signal="skill_recalled" from="World/Player" to="CanvasLayer/RecallPrompt" method="on_recalled"]
 [connection signal="song_played" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_song_played"]
 [connection signal="focused" from="World/Camera2D" to="CanvasLayer/MemorinaHud" method="on_camera_focused"]
+[connection signal="died" from="World/Player" to="ScreenLayer/Screens" method="lock"]
+[connection signal="hold_requested" from="ScreenLayer/Screens" to="WorldFreeze" method="hold"]
+[connection signal="release_requested" from="ScreenLayer/Screens" to="WorldFreeze" method="release"]
+[connection signal="quit_game_requested" from="ScreenLayer/Screens" to="." method="quit_game"]

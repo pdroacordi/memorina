@@ -1,0 +1,34 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/screens/screens.gd" id="1_screens"]
+[ext_resource type="Script" path="res://scenes/ui/menu/menu_input.gd" id="2_input"]
+[ext_resource type="PackedScene" path="res://scenes/ui/pause_menu/pause_menu.tscn" id="3_pause"]
+
+[node name="Screens" type="Control"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_screens")
+
+[node name="MenuInput" type="Node" parent="."]
+script = ExtResource("2_input")
+
+[node name="Dim" type="ColorRect" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.55)
+
+[node name="PauseMenu" parent="." instance=ExtResource("3_pause")]
+visible = false
+layout_mode = 1
