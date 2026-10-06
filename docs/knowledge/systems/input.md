@@ -43,7 +43,7 @@ source_files:
 
 ## The three InputEvent readers
 
-Only these three nodes read `InputEvent`s; the `verify-gates` input scan excludes exactly their files.
+Only these three nodes read `InputEvent`s; the `verify-gates` input scan excludes exactly their files. The one exception is debug-only: `DebugTrials` (`scenes/world/debug/debug_trials.gd`) reads F10 in `_unhandled_input` and is never in a release build.
 
 1. **`PlayerInput`** (pausable, a `CharacterController`): gameplay presses as signals, axes as properties.
    - `look_down_pressed` is an edge (`_down_held`): a stick reports pressed on every motion past its deadzone (`gotchas/a-stick-is-pressed-on-every-motion-event`).

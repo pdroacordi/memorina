@@ -9,6 +9,10 @@ var _title: Title
 var _menu_input: MenuInput
 
 
+# Erase and play call SaveSystem; memory only, so no run can touch a real slot.
+func before() -> void:
+	SaveSystem.use_memory_only()
+
 func before_test() -> void:
 	_title = auto_free(TITLE.instantiate()) as Title
 	add_child(_title)
