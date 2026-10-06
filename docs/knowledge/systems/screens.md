@@ -1,10 +1,10 @@
 ---
 id: systems/screens
 type: system
-title: Screens: the menu system (pause, the map and the title; the notebook later)
+title: Screens: the menu system (pause, the notebook, the map and the title)
 status: active
 tags: [menu, pause, screens, ui, focus, theme, hold, i18n]
-related: [systems/map, architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/notebook-entries-are-derived-from-the-save, architecture/map-reveal-seen-cells-per-room, systems/input, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/time-scale-zero-stops-delta-particles-and-time, playtests/2026-10-02-pause-menu, playtests/2026-10-02-title-and-slots, bugs/a-click-during-a-leave-fade-still-reaches-the-menu-buttons, bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight]
+related: [systems/map, systems/notebook, architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/notebook-entries-are-derived-from-the-save, architecture/map-reveal-seen-cells-per-room, systems/input, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/time-scale-zero-stops-delta-particles-and-time, playtests/2026-10-02-pause-menu, playtests/2026-10-02-title-and-slots, bugs/a-click-during-a-leave-fade-still-reaches-the-menu-buttons, bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight]
 created: 2026-10-02
 updated: 2026-10-06
 source_files:
@@ -32,12 +32,12 @@ source_files:
 
 ## Summary
 
-One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns presses into signals, the pure `ScreenRouter` decides the next screen, and `Screens` applies the decision and asks `WorldFreeze` to hold or release through signals. The router screens are the pause menu (UI-02) and the map (UI-04, `systems/map`); the notebook (UI-03) will plug in. The title (UI-05) is not a router screen: it is its own composition root that reuses the menu kit (see "Title").
+One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns presses into signals, the pure `ScreenRouter` decides the next screen, and `Screens` applies the decision and asks `WorldFreeze` to hold or release through signals. The router screens are the pause menu (UI-02), the notebook (UI-03, `systems/notebook`) and the map (UI-04, `systems/map`). The title (UI-05) is not a router screen: it is its own composition root that reuses the menu kit (see "Title").
 
 ## Tree and wiring (`game.tscn`)
 
 - `ScreenLayer` is a CanvasLayer at layer 2, process mode INHERIT, the last child of `Game`, after `World`. `_input` reaches it first (`gotchas/a-menu-press-reaches-the-last-node-first`).
-- `Screens` is a full-rect Control, process mode ALWAYS, `mouse_filter` IGNORE. Its children are `MenuInput`, `Dim` (black at 0.55 alpha), `MapScreen`, `PauseMenu` and `Blackout` (a `Fade` with `real_time = true`, last, so it covers the menu).
+- `Screens` is a full-rect Control, process mode ALWAYS, `mouse_filter` IGNORE. Its children are `MenuInput`, `Dim` (black at 0.55 alpha), `MapScreen`, `Notebook`, `PauseMenu` and `Blackout` (a `Fade` with `real_time = true`, last, so it covers the menu).
 - Connections in `game.tscn`:
   - `hold_requested` → `WorldFreeze.hold`
   - `release_requested` → `WorldFreeze.release`
@@ -47,6 +47,7 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
   - `block_requested` / `unblock_requested` → `World/Player.block_input` / `unblock_input`
   - `World/Player.hurt` → `Screens.close_map`: any hit closes the map
 - `Game._ready` calls `Screens.set_map_subject(player)`. The map centres on Ivo and asks `Player.can_open_map()` before it opens.
+- `Game._ready` also calls `Screens.set_notebook_watcher(World/NotebookWatcher)`: the notebook opens on the newest unread entry the watcher announced.
 
 ## Deciding and applying
 
@@ -54,8 +55,9 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
   - From NONE, a toggle opens its screen only on a running tree that is not locked. So nothing opens over a performance or lesson.
   - While a screen is open, its own toggle, `back` or `pause` closes it, and the other toggles are ignored.
 - **`Screens._on_press`** applies the decision:
-  - A kind with no scene yet (the notebook) stays shut, and so does one whose `MenuScreen.can_open()` answers false. A refused press is not consumed, so it reaches the world.
-  - A press that closes a screen first offers `step_back()`, so an inner panel closes before the screen does.
+  - A kind whose `MenuScreen.can_open()` answers false stays shut. A refused press is not consumed, so it reaches the world.
+  - A press that closes a screen first offers `step_back()`, so an inner panel closes before the screen does. A screen may also use it to play its own way out: the notebook plays the book shut, then emits `close_requested`, and `Screens` closes and releases. The world stays held until the book is shut, and Esc on the notebook never opens the pause.
+  - `page_pressed` (left / right) goes to the notebook and is consumed only while the notebook is open.
   - Any press it acts on is consumed with `set_input_as_handled()`. B is both back and roll: unconsumed, the B that resumes would also roll.
   - Esc and Start close the map without opening the pause (the router's "pause closes an open screen"); a second Esc pauses.
   - `zoom_pressed` goes to the map and is consumed only while the map is open: Z / X and pad A / X are also jump and attack.
@@ -68,6 +70,7 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 
 - **Adding a screen:** a `MenuScreen` scene (`can_open() -> bool`, `open()`, `close()`, `step_back() -> bool`) as a child of `Screens`, one entry in `_screens`, and its kind in `HOLDING` if it holds or `BLOCKING` if it only stops Ivo.
 - **`MapScreen`:** see `systems/map`. It has no entries and takes no focus; its pan, zoom and refusals are there.
+- **`Notebook`:** see `systems/notebook`. It holds the world; its rows take focus after the opening animation, and its open, close and page-turn strips are real-time tweens.
 - **`PauseMenu`:** Resume, Quit to title, Quit game. Opening focuses Resume.
   - Quit to title and Quit game each hide the box and open their own confirmation (`ConfirmQuitToTitle`, `ConfirmQuit`) with No focused.
   - Back or No returns to the box with the entry that asked focused (`_asked_by`). Yes emits `quit_to_title_requested` / `quit_game_requested`.
@@ -185,4 +188,4 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 
 ## Tests
 
-`tests/scenes/ui/screens/screen_router_test.gd`, `screens_test.gd` (with buttons pressed while leaving), `screens_map_test.gd` (the map with a real Ivo), `tests/scenes/ui/menu/menu_input_test.gd`, `tests/scenes/world/world_freeze_test.gd`, `tests/scenes/ui/title/title_test.gd`, `slot_screen_test.gd`.
+`tests/scenes/ui/screens/screen_router_test.gd`, `screens_test.gd` (with buttons pressed while leaving), `screens_map_test.gd` (the map with a real Ivo), `screens_notebook_test.gd`, `tests/scenes/ui/menu/menu_input_test.gd`, `tests/scenes/world/world_freeze_test.gd`, `tests/scenes/ui/title/title_test.gd`, `slot_screen_test.gd`.

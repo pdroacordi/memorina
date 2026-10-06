@@ -156,6 +156,8 @@ var _pending_performance: Song = null
 var _pending_lesson: bool = false
 ## Seconds of lesson lead-in left before the pending track may start.
 var _lead_in_left: float = 0.0
+## From `learn_song` until its track finishes or is cut: the lead-in and the lesson itself.
+var _in_lesson: bool = false
 ## True when an answered call should sheath after the note finishes.
 var _pending_sheathe: bool = false
 ## Authored shield amount restored when recall ends.
@@ -606,6 +608,7 @@ func _tick_pending_performance(delta: float) -> void:
 	_pending_lesson = false
 	# Anything that sheathed or re-drew the instrument meanwhile cleared the way.
 	if _memorina.performing_song() != song:
+		_in_lesson = false
 		return
 	if lesson:
 		_performance.play(song.track, song.cues())
@@ -614,6 +617,7 @@ func _tick_pending_performance(delta: float) -> void:
 
 ## Thaw before the song is played, so the pulse is born into a moving world.
 func _on_performance_finished() -> void:
+	_in_lesson = false
 	performance_finished.emit()
 	_memorina.finish_performance()
 
@@ -625,6 +629,7 @@ func _on_memorina_drawn(known_songs: Array[Song]) -> void:
 func _on_memorina_sheathed() -> void:
 	_pending_performance = null
 	_pending_lesson = false
+	_in_lesson = false
 	_pending_sheathe = false
 	if _performance.is_playing():
 		_performance.stop()
@@ -665,8 +670,13 @@ func learn_song(song: Song) -> bool:
 	lesson_started.emit(song, _last_glyph_set)
 	_pending_performance = song
 	_pending_lesson = true
+	_in_lesson = true
 	_lead_in_left = lesson_lead_in
 	return true
+
+## A lesson is in its lead-in or playing its track. Pulled by the notebook watcher, which waits it out.
+func is_in_lesson() -> bool:
+	return _in_lesson
 
 func _on_debug_learn_song_pressed() -> void:
 	learn_song(_next_unknown_song())

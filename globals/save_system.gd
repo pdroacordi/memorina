@@ -4,6 +4,8 @@ extends Node
 signal guardian_restored(guardian: Enums.Guardian)
 ## Emitted when a rest commit succeeds, including in-memory playtest saves.
 signal saved
+## A song, skill, item or guardian fact changed; the notebook recomputes its entries from the save.
+signal progress_changed
 
 const PATH: String = "user://"
 
@@ -151,6 +153,7 @@ func has_skill(skill: Enums.PlayerSkill) -> bool:
 ## Skills are grant-only and are not saved until a bench commit.
 func unlock_skill(skill: Enums.PlayerSkill) -> void:
 	player_data.unlocked_player_skills[skill] = true
+	progress_changed.emit()
 
 func has_item(item: Enums.PlayerItem) -> bool:
 	return player_data.owned_items[item]
@@ -161,11 +164,13 @@ func has_song(song: Enums.Song) -> bool:
 ## Guardian restoration teaches a song without saving; death before a bench rewinds it.
 func learn_song(song: Enums.Song) -> void:
 	player_data.learned_songs[song] = true
+	progress_changed.emit()
 
 ## Items, unlike skills, can be taken away again - hence the explicit value
 ## rather than a grant-only setter. Same no-autosave rule as learn_song().
 func set_item_owned(item: Enums.PlayerItem, owned: bool) -> void:
 	player_data.owned_items[item] = owned
+	progress_changed.emit()
 
 func is_guardian_restored(guardian: Enums.Guardian) -> bool:
 	return player_data.restored_guardians[guardian]
@@ -174,6 +179,23 @@ func is_guardian_restored(guardian: Enums.Guardian) -> bool:
 func restore_guardian(guardian: Enums.Guardian) -> void:
 	player_data.restored_guardians[guardian] = true
 	guardian_restored.emit(guardian)
+	progress_changed.emit()
+
+func is_guardian_met(guardian: Enums.Guardian) -> bool:
+	return player_data.met_guardians[guardian] or player_data.restored_guardians[guardian]
+
+## The fight began; live only, like every gain.
+func meet_guardian(guardian: Enums.Guardian) -> void:
+	player_data.met_guardians[guardian] = true
+	progress_changed.emit()
+
+func is_notebook_read(id: StringName) -> bool:
+	return player_data.notebook_read.has(id)
+
+## Not a gain: emits nothing, and a death keeps it (SaveLedger.rewind).
+func mark_notebook_read(id: StringName) -> void:
+	if not is_notebook_read(id):
+		player_data.notebook_read.append(id)
 
 func is_shortcut_resolved(shortcut_id: StringName) -> bool:
 	return shortcut_id in player_data.resolved_shortcuts

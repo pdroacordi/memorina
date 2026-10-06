@@ -31,3 +31,5 @@ res://scenes/ui/title/slot_card.tscn
 res://scenes/ui/title/slot_screen.tscn
 res://scenes/ui/title/title.tscn
 res://scenes/boot/boot.tscn
+res://scenes/ui/notebook/notebook.tscn
+res://scenes/ui/notebook_toast/notebook_toast.tscn

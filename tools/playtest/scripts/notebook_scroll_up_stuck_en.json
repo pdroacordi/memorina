@@ -1,0 +1,364 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "player_position": [
+  160,
+  5960
+ ],
+ "known_songs": [
+  0,
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "locale": "en",
+ "steps": [
+  {
+   "t": 1.5,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 1.58,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 2.4,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 2.48,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 3.1,
+   "screenshot": "a_songs"
+  },
+  {
+   "t": 3.1,
+   "log": "a_songs"
+  },
+  {
+   "t": 3.4,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 3.48,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 3.88,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 4.28,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 4.68,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 5.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 5.08,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 5.4,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 5.48,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 5.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 5.88,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 6.2,
+   "screenshot": "b_bottom"
+  },
+  {
+   "t": 6.2,
+   "log": "b_bottom"
+  },
+  {
+   "t": 6.4,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 6.48,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 6.7,
+   "screenshot": "c_up_1"
+  },
+  {
+   "t": 6.7,
+   "log": "c_up_1"
+  },
+  {
+   "t": 6.9,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 6.98,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 7.2,
+   "screenshot": "c_up_2"
+  },
+  {
+   "t": 7.2,
+   "log": "c_up_2"
+  },
+  {
+   "t": 7.4,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 7.48,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 7.7,
+   "screenshot": "c_up_3"
+  },
+  {
+   "t": 7.7,
+   "log": "c_up_3"
+  },
+  {
+   "t": 7.9,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 7.98,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 8.2,
+   "screenshot": "c_up_4"
+  },
+  {
+   "t": 8.2,
+   "log": "c_up_4"
+  },
+  {
+   "t": 8.4,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 8.48,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 8.7,
+   "screenshot": "c_up_5"
+  },
+  {
+   "t": 8.7,
+   "log": "c_up_5"
+  },
+  {
+   "t": 8.9,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 8.98,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 9.2,
+   "screenshot": "c_up_6"
+  },
+  {
+   "t": 9.2,
+   "log": "c_up_6"
+  },
+  {
+   "t": 9.4,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 9.48,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 9.7,
+   "screenshot": "c_up_7"
+  },
+  {
+   "t": 9.7,
+   "log": "c_up_7"
+  },
+  {
+   "t": 9.9,
+   "joy_button": 11,
+   "pressed": true
+  },
+  {
+   "t": 9.98,
+   "joy_button": 11,
+   "pressed": false
+  },
+  {
+   "t": 10.2,
+   "screenshot": "d_up_dpad"
+  },
+  {
+   "t": 10.2,
+   "log": "d_up_dpad"
+  },
+  {
+   "t": 10.4,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 10.48,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 11.2,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 11.28,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 11.9,
+   "screenshot": "e_back"
+  },
+  {
+   "t": 11.9,
+   "log": "e_back"
+  },
+  {
+   "t": 12.2,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 12.28,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 12.5,
+   "screenshot": "f_up_after_return"
+  },
+  {
+   "t": 12.5,
+   "log": "f_up_after_return"
+  },
+  {
+   "t": 12.7,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 12.78,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 13.5,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 13.58,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 14.3,
+   "screenshot": "g_reopen"
+  },
+  {
+   "t": 14.3,
+   "log": "g_reopen"
+  },
+  {
+   "t": 14.6,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 14.68,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 14.9,
+   "screenshot": "h_up_after_reopen"
+  },
+  {
+   "t": 14.9,
+   "log": "h_up_after_reopen"
+  }
+ ],
+ "max_duration": 15.9
+}

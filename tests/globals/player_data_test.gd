@@ -70,6 +70,8 @@ learned_songs = Array[bool]([true])
 	assert_str(data.region_name_key).is_empty()
 	assert_int(data.saved_at).is_equal(0)
 	assert_bool(data.map_seen.is_empty()).is_true()
+	assert_int(data.met_guardians.size()).is_equal(Enums.Guardian.size())
+	assert_array(data.notebook_read).is_empty()
 
 ## Bench and death data must round-trip through serialization.
 func test_the_bench_and_the_deaths_round_trip_through_the_file() -> void:
@@ -114,3 +116,21 @@ func test_the_map_round_trips_through_the_file() -> void:
 	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	assert_object(loaded.map_seen["uid://room"]).is_equal(grid.to_bytes())
+
+func test_migrate_adds_the_met_flags_an_old_save_lacks() -> void:
+	var data := PlayerData.new()
+	data.met_guardians = []
+	data.migrate()
+	assert_int(data.met_guardians.size()).is_equal(Enums.Guardian.size())
+	assert_bool(data.met_guardians[Enums.Guardian.BLOOM]).is_false()
+
+func test_the_notebook_round_trips_through_the_file() -> void:
+	var path := "user://test_round_trip_notebook.tres"
+	var data := PlayerData.new()
+	data.met_guardians[Enums.Guardian.BLOOM] = true
+	data.notebook_read.append(&"song_root")
+	assert_int(ResourceSaver.save(data, path)).is_equal(OK)
+	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	assert_bool(loaded.met_guardians[Enums.Guardian.BLOOM]).is_true()
+	assert_array(loaded.notebook_read).contains_exactly([&"song_root"])

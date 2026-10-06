@@ -91,6 +91,12 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | vida (notas que perdem a cor) | `LifeHud`, `LifeNote`, `Player.health_changed` |
 | pausa / menu de pausa | `PauseMenu`, `Screens`, `ScreenRouter.Kind.PAUSE` (`systems/screens`) |
 | mapa (tecla M / LB) | `MapScreen`, `MapCanvas`, `ScreenRouter.Kind.MAP` (`systems/map`) |
+| caderno de campo (tecla E / Select) | `Notebook`, `ScreenRouter.Kind.NOTEBOOK` (`systems/notebook`) |
+| seções: Lore (diário do personagem) / Canções / Itens / Guardiões | `NotebookEntry.Section.LORE` (titled Memórias / Memories) / `SONGS` / `ITEMS` / `GUARDIANS` |
+| registro do caderno (entrada) | `NotebookEntry`, `NotebookCatalog`, `NotebookIndex.present()` |
+| guardião conhecido / estado de corrupção | `PlayerData.met_guardians` (`SaveSystem.meet_guardian`) / `restored_guardians` |
+| entrada não lida / lida | `NotebookIndex.unread()` / `PlayerData.notebook_read` (`SaveSystem.mark_notebook_read`) |
+| aviso de entrada nova (a pena no HUD) | `NotebookWatcher.announced` → `NotebookToast` |
 | parte da sala vista (célula do mapa) | `MapGrid` (64 px cells), `PlayerData.map_seen`, revealed by `MapRevealer` |
 | contorno do mapa (área vista, contornada) | `MapOutline` (`fill_runs`, `edges`, `notches`, `ink`) |
 | Ivo bloqueado (mapa aberto, o mundo segue) | `Screens.BLOCKING`, `Player.block_input` / `unblock_input`, `PlayerInput.blocked` |

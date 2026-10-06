@@ -43,3 +43,39 @@ BENCH_SUMMER_TRIAL_BENCH,Summer Trial,Provação de Verão
 TITLE_CONTINUE,Continue,Continuar
 TITLE_EMPTY_SLOT,Empty,Vazio
 CONFIRM_OVERWRITE,Overwrite this game?\nThe saved game will be erased.,Substituir este jogo?\nO jogo salvo será apagado.
+NOTEBOOK_SECTION_LORE,Memories,Memórias
+NOTEBOOK_SECTION_SONGS,Songs,Canções
+NOTEBOOK_SECTION_ITEMS,Items,Itens
+NOTEBOOK_SECTION_GUARDIANS,Guardians,Guardiões
+NOTEBOOK_UNKNOWN,? ? ?,? ? ?
+NOTEBOOK_SONG_FREEZE_DETAIL,Winter · petrified branch,Inverno · galho petrificado
+NOTEBOOK_SONG_FREEZE_BODY,Water stops where the song reaches. It holds my weight while the colour lasts.,A água para onde a canção alcança. Aguenta meu peso enquanto a cor dura.
+NOTEBOOK_SONG_BELL_JAR_DETAIL,Winter · petrified branch,Inverno · galho petrificado
+NOTEBOOK_SONG_BELL_JAR_BODY,A shell of frost that shrinks. Nothing gets in; anything may leave.,Uma casca de geada que encolhe. Nada entra; tudo pode sair.
+NOTEBOOK_SONG_RELEASE_DETAIL,Autumn · hollow bone,Outono · osso oco
+NOTEBOOK_SONG_RELEASE_BODY,What is held lets go. She would say it is the easiest song.,O que está preso se solta. Ela diria que é a canção mais fácil.
+NOTEBOOK_SONG_GALE_DETAIL,Autumn · hollow bone,Outono · osso oco
+NOTEBOOK_SONG_GALE_BODY,The wind runs the way I face when the song ends.,O vento corre para onde estou olhando quando a canção termina.
+NOTEBOOK_SONG_ROOT_DETAIL,Spring · living stem,Primavera · caule vivo
+NOTEBOOK_SONG_ROOT_BODY,Roots join earth to earth. Stone never takes root.,Raízes ligam terra a terra. Pedra não enraíza.
+NOTEBOOK_SONG_RAIN_DETAIL,Spring · living stem,Primavera · caule vivo
+NOTEBOOK_SONG_RAIN_BODY,"It rains inside the song. The water rises, and settles back when the colour leaves.","Chove dentro da canção. A água sobe e, quando a cor vai embora, volta ao que era."
+NOTEBOOK_SONG_SHADOW_DETAIL,Summer · volcanic stone,Verão · pedra vulcânica
+NOTEBOOK_SONG_SHADOW_BODY,"The sun burns my shadow onto the ground. It weighs what I weigh, and creatures believe it.","O sol queima minha sombra no chão. Ela pesa o que eu peso, e as criaturas acreditam nela."
+NOTEBOOK_SONG_SOLSTICE_DETAIL,Summer · volcanic stone,Verão · pedra vulcânica
+NOTEBOOK_SONG_SOLSTICE_BODY,The longest day. Any song that touches this one lasts longer.,O dia mais longo. Toda canção que encosta nesta dura mais.
+GUARDIAN_FROST,Frost Guardian,Guardião do Gelo
+GUARDIAN_BLOOM,Bloom Guardian,Guardião da Flor
+NOTEBOOK_GUARDIAN_FROST_BODY,"It keeps the winter on an edge of ice. When the colour came back, the water remembered how to stand still.","Guarda o inverno numa borda de gelo. Quando a cor voltou, a água lembrou como parar."
+NOTEBOOK_GUARDIAN_BLOOM_BODY,"Two flower heads deep in the woods. When the colour came back, the earth held together again.","Duas cabeças de flor no fundo da mata. Quando a cor voltou, a terra voltou a se ligar."
+NOTEBOOK_GUARDIAN_CORRUPTED,Corrupted,Corrompido
+NOTEBOOK_GUARDIAN_RESTORED,Restored,Restaurado
+NOTEBOOK_GUARDIAN_TAUGHT,Taught:,Ensinou:
+SKILL_ROLL,Roll,Rolar
+SKILL_DOUBLE_JUMP,Double jump,Salto duplo
+NOTEBOOK_LORE_ROLL,"I rolled without thinking. My legs remembered first: the girl running across the yard, me tumbling through the grass after her.","Rolei sem pensar. As pernas lembraram antes de mim: a menina correndo no quintal, eu rolando na grama atrás dela."
+NOTEBOOK_LORE_DOUBLE_JUMP,"I jumped again, in mid-air. I have climbed like that before, on a roof, mending leaks before the rain.","Saltei de novo, no ar. Eu já subi assim antes, num telhado, consertando goteiras antes da chuva."
+ITEM_SWORD,Sword,Espada
+ITEM_MEMORINA,Memorina,Memorina
+NOTEBOOK_ITEM_SWORD,"A plain sword. I wasn't made for it, but it serves.","Uma espada simples. Não fui feito para ela, mas ela serve."
+NOTEBOOK_ITEM_MEMORINA,"A pan flute patched by many hands. Each pipe is a different material, a different season.","Uma flauta remendada por muitas mãos. Cada tubo é de um material, de uma estação."

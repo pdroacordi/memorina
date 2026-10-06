@@ -1,0 +1,187 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "player_position": [
+  3300,
+  -69
+ ],
+ "known_songs": [
+  0,
+  1
+ ],
+ "max_duration": 40,
+ "steps": [
+  {
+   "t": 1.0,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 1.08,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 1.7,
+   "log": "a_open"
+  },
+  {
+   "t": 2.0,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 2.08,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 2.4,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 2.48,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 3.28,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 3.5,
+   "log": "a_read"
+  },
+  {
+   "t": 3.8,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 3.88,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 4.5,
+   "log": "a_closed"
+  },
+  {
+   "t": 4.8,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 6.5,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 10.0,
+   "log": "f_10.0"
+  },
+  {
+   "t": 15.0,
+   "log": "f_15.0"
+  },
+  {
+   "t": 18.0,
+   "log": "f_18.0"
+  },
+  {
+   "t": 19.0,
+   "log": "f_19.0"
+  },
+  {
+   "t": 20.0,
+   "log": "f_20.0"
+  },
+  {
+   "t": 20.0,
+   "screenshot": "f_dying"
+  },
+  {
+   "t": 21.0,
+   "log": "f_21.0"
+  },
+  {
+   "t": 22.0,
+   "log": "f_22.0"
+  },
+  {
+   "t": 23.0,
+   "log": "f_23.0"
+  },
+  {
+   "t": 25.0,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 25.08,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 25.8,
+   "screenshot": "g_open_after_death"
+  },
+  {
+   "t": 25.8,
+   "log": "g_open_after_death"
+  },
+  {
+   "t": 26.2,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 26.28,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 27.0,
+   "screenshot": "g_songs_after_death"
+  },
+  {
+   "t": 27.0,
+   "log": "g_songs_after_death"
+  },
+  {
+   "t": 27.4,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 27.48,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 28.2,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 28.28,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 29.0,
+   "screenshot": "g_guardians_after_death"
+  },
+  {
+   "t": 29.0,
+   "log": "g_guardians_after_death"
+  }
+ ]
+}

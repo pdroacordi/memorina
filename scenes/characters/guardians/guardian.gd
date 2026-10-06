@@ -232,6 +232,7 @@ func _on_player_entered() -> void:
 	_player.skill_recalled.connect(_on_skill_recalled)
 	_fight.begin()
 	_ai.active = true
+	SaveSystem.meet_guardian(stats.id)
 
 ## Hazards do not affect guardians; hits destabilise them without damage.
 func receive_hazard(_hazard: HazardZone) -> void:

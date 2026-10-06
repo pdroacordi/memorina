@@ -186,6 +186,26 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   `[playtest] log` lines, and md5s the real save. A Pillow contact sheet (half scale, two
   columns, the filename on top) turns six frames into one `Read`.
 
+- **Learned 2026-10-06 (notebook playtest)**: the runner's `log` now prints the notebook (phase,
+  section, page, rows with `>` focused / `*` unread / `()` hidden, cues, tab marks, read ids,
+  `quill=` alpha, the watcher's `waiting` and `holding`). New timeline fields: `"locale"` (the
+  OS locale is pt_BR, so a run without it is Portuguese), `"met_guardians"`,
+  `"restored_guardians"`, `"notebook_read"`.
+  - The runner's fresh debug save owns the Sword and the Memorina, so both item entries
+    exist, unread.
+  - Granted progress is seeded before the world loads, so it never announces. To see the
+    quill, make progress live: F9 (`debug_learn_song`) teaches the first unknown song in
+    catalog order. Lesson tracks run 32 s (Longest Day) to ~95 s, so leave every song known
+    except SOLSTICE (3) for the shortest wait.
+  - The Bloom fight starts at x ≥ ~3564 (trigger radius 560 around 4124). Start at
+    (3300, -69). Once it starts, an arena wall stops a retreat at x 2860, and standing still
+    he dies in ~19 s.
+  - A performance freezes from ~1.6 s after the last note. Screens open during that ring-out
+    by design, and each open delays the performance.
+- Focus bugs need real `ui_up`/`ui_down` events, not just frames. The engine's focus search
+  depends on clip geometry; probe it headless with a bare ScrollContainer
+  (`gotchas/gui-focus-skips-a-neighbour-wholly-clipped-by-a-scroll-container`).
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

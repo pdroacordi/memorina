@@ -117,3 +117,27 @@ func test_live_and_committed_maps_share_nothing() -> void:
 	bytes[4] = 7
 	ledger.live.map_seen["room"] = bytes
 	assert_int(ledger.committed.map_seen["room"][4]).is_equal(1)
+
+## What the player read is a fact about the player, like a death mark.
+func test_entries_read_since_the_bench_survive_a_death() -> void:
+	var ledger := _ledger()
+	ledger.live.learned_songs[Enums.Song.FREEZE] = true
+	ledger.live.notebook_read.append(&"song_freeze")
+	var written := ledger.record_death("region", Vector2.ZERO)
+	assert_bool(ledger.live.learned_songs[Enums.Song.FREEZE]).is_false()
+	assert_array(ledger.live.notebook_read).contains_exactly([&"song_freeze"])
+	assert_array(written.notebook_read).contains_exactly([&"song_freeze"])
+
+func test_a_rewind_without_a_mark_keeps_the_read_entries_once() -> void:
+	var ledger := _ledger()
+	ledger.live.notebook_read.append(&"lore_roll")
+	ledger.commit()
+	ledger.live.notebook_read.append(&"song_gale")
+	ledger.rewind()
+	assert_array(ledger.live.notebook_read).contains_exactly([&"lore_roll", &"song_gale"])
+
+func test_a_guardian_met_since_the_bench_is_forgotten_by_a_death() -> void:
+	var ledger := _ledger()
+	ledger.live.met_guardians[Enums.Guardian.FROST] = true
+	ledger.record_death("region", Vector2.ZERO)
+	assert_bool(ledger.live.met_guardians[Enums.Guardian.FROST]).is_false()

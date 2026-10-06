@@ -23,9 +23,13 @@ func commit(elapsed: float = 0.0) -> PlayerData:
 	defeated.clear()
 	return committed
 
-## Restores committed data and clears transient defeated enemies. The play time `elapsed` since the last commit is kept.
+## Restores committed data and clears transient defeated enemies. The play time `elapsed` since the last commit is kept,
+## and so are the notebook entries read since: what the player read is a fact about the player.
 func rewind(elapsed: float = 0.0) -> void:
 	committed.play_time += elapsed
+	for id: StringName in live.notebook_read:
+		if not committed.notebook_read.has(id):
+			committed.notebook_read.append(id)
 	live = copy(committed)
 	defeated.clear()
 

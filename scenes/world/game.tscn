@@ -31,6 +31,9 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/save_mark/save_mark.tscn" id="37_kept"]
 [ext_resource type="PackedScene" path="res://scenes/ui/screens/screens.tscn" id="38_screens"]
 [ext_resource type="Script" path="res://scenes/ui/map/map_revealer.gd" id="39_reveal"]
+[ext_resource type="Script" path="res://scenes/ui/notebook/notebook_watcher.gd" id="40_watcher"]
+[ext_resource type="Resource" path="res://resources/ui/notebook/notebook_catalog.tres" id="41_notecat"]
+[ext_resource type="PackedScene" path="res://scenes/ui/notebook_toast/notebook_toast.tscn" id="42_toast"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -76,6 +79,11 @@ vertical_smooth_time = 0.5
 [node name="MapRevealer" type="Node" parent="World" node_paths=PackedStringArray("camera")]
 script = ExtResource("39_reveal")
 camera = NodePath("../Camera2D")
+
+[node name="NotebookWatcher" type="Node" parent="World" node_paths=PackedStringArray("subject")]
+script = ExtResource("40_watcher")
+catalog = ExtResource("41_notecat")
+subject = NodePath("../Player")
 
 [node name="Spawner" type="Node2D" parent="World" unique_id=1572119967]
 script = ExtResource("2_hqfqh")
@@ -158,6 +166,8 @@ script = ExtResource("6_sarsd")
 
 [node name="SaveMark" parent="CanvasLayer" instance=ExtResource("37_kept")]
 
+[node name="NotebookToast" parent="CanvasLayer" instance=ExtResource("42_toast")]
+
 [node name="ScreenLayer" type="CanvasLayer" parent="."]
 layer = 2
 
@@ -219,4 +229,5 @@ layer = 2
 [connection signal="block_requested" from="ScreenLayer/Screens" to="World/Player" method="block_input"]
 [connection signal="unblock_requested" from="ScreenLayer/Screens" to="World/Player" method="unblock_input"]
 [connection signal="hurt" from="World/Player" to="ScreenLayer/Screens" method="close_map"]
+[connection signal="announced" from="World/NotebookWatcher" to="CanvasLayer/NotebookToast" method="show_hint"]
 [connection signal="room_changed" from="." to="World/MapRevealer" method="on_room_changed"]

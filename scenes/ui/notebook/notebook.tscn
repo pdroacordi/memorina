@@ -1,0 +1,372 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/notebook/notebook.gd" id="1_script"]
+[ext_resource type="Theme" path="res://scenes/ui/menu/menu_theme.tres" id="2_theme"]
+[ext_resource type="Resource" path="res://resources/ui/notebook/notebook_catalog.tres" id="3_catalog"]
+[ext_resource type="Resource" path="res://resources/songs/song_catalog.tres" id="4_songs"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/frost_guardian/frost_guardian_stats.tres" id="5_frost"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_guardian_stats.tres" id="6_bloom"]
+[ext_resource type="Resource" path="res://resources/ui/memorina/glyphs_keyboard_arrows.tres" id="7_arrows"]
+[ext_resource type="Resource" path="res://resources/ui/memorina/glyphs_keyboard_wasd.tres" id="8_wasd"]
+[ext_resource type="Resource" path="res://resources/ui/memorina/glyphs_xbox.tres" id="9_xbox"]
+[ext_resource type="Resource" path="res://resources/ui/memorina/glyphs_playstation.tres" id="10_ps"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/spellbook.png" id="11_book"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/spellbook_opening.png" id="12_open"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/spellbook_next_page.png" id="13_next"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/spellbook_previous_page.png" id="14_prev"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/tab_01_normal.png" id="t1n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/tab_01_selected.png" id="t1s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/tab_02_normal.png" id="t2n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/tab_02_selected.png" id="t2s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/tab_03_normal.png" id="t3n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/tab_03_selected.png" id="t3s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/tab_04_normal.png" id="t4n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/tab_04_selected.png" id="t4s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/icon_quill.png" id="icon_quill"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/icon_note.png" id="icon_note"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/icon_pouch.png" id="icon_pouch"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/icon_leaf.png" id="icon_leaf"]
+[ext_resource type="Shader" path="res://scenes/ui/notebook/notebook_forgotten.gdshader" id="15_shader"]
+[ext_resource type="PackedScene" path="res://scenes/ui/notebook/notebook_mark.tscn" id="16_mark"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_stats.gd" id="17_stats"]
+[ext_resource type="Script" path="res://resources/ui/memorina/note_glyph_set.gd" id="18_glyphs"]
+[ext_resource type="Script" path="res://scenes/ui/notebook/notebook_cue.gd" id="19_cue"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_forgotten"]
+shader = ExtResource("15_shader")
+
+[node name="Notebook" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_script")
+catalog = ExtResource("3_catalog")
+songs = ExtResource("4_songs")
+guardians = Array[ExtResource("17_stats")]([ExtResource("5_frost"), ExtResource("6_bloom")])
+glyph_sets = Array[ExtResource("18_glyphs")]([ExtResource("7_arrows"), ExtResource("8_wasd"), ExtResource("9_xbox"), ExtResource("10_ps")])
+opening_strip = ExtResource("12_open")
+next_page_strip = ExtResource("13_next")
+previous_page_strip = ExtResource("14_prev")
+tab_normal = Array[Texture2D]([ExtResource("t1n"), ExtResource("t2n"), ExtResource("t3n"), ExtResource("t4n")])
+tab_selected = Array[Texture2D]([ExtResource("t1s"), ExtResource("t2s"), ExtResource("t3s"), ExtResource("t4s")])
+forgotten_material = SubResource("ShaderMaterial_forgotten")
+
+[node name="Art" type="Control" parent="."]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+theme = ExtResource("2_theme")
+
+[node name="Book" type="TextureRect" parent="Art"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 24.0
+offset_top = 10.0
+offset_right = 280.0
+offset_bottom = 170.0
+mouse_filter = 2
+texture = ExtResource("11_book")
+
+[node name="Flip" type="Sprite2D" parent="Art"]
+unique_name_in_owner = true
+position = Vector2(24, -70)
+texture = ExtResource("12_open")
+centered = false
+hframes = 8
+
+[node name="Pages" type="Control" parent="Art"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+mouse_filter = 2
+
+[node name="LeftPage" type="VBoxContainer" parent="Art/Pages"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 54.0
+offset_top = 26.0
+offset_right = 135.0
+offset_bottom = 132.0
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="SectionTitle" type="Label" parent="Art/Pages/LeftPage"]
+unique_name_in_owner = true
+layout_mode = 2
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="SectionRule" type="ColorRect" parent="Art/Pages/LeftPage"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.32, 0.2, 0.25, 0.5)
+
+[node name="List" type="ScrollContainer" parent="Art/Pages/LeftPage"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+mouse_filter = 2
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+
+[node name="Content" type="VBoxContainer" parent="Art/Pages/LeftPage/List"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Rows" type="VBoxContainer" parent="Art/Pages/LeftPage/List/Content"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_constants/separation = 3
+
+[node name="Tail" type="Control" parent="Art/Pages/LeftPage/List/Content"]
+custom_minimum_size = Vector2(0, 106)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Portrait" type="TextureRect" parent="Art/Pages/LeftPage"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 4
+mouse_filter = 2
+
+[node name="MoreAbove" type="Control" parent="Art/Pages"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 136.0
+offset_top = 40.0
+offset_right = 141.0
+offset_bottom = 43.0
+mouse_filter = 2
+script = ExtResource("19_cue")
+up = true
+
+[node name="MoreBelow" type="Control" parent="Art/Pages"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 136.0
+offset_top = 129.0
+offset_right = 141.0
+offset_bottom = 132.0
+mouse_filter = 2
+script = ExtResource("19_cue")
+
+[node name="RightPage" type="Control" parent="Art/Pages"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 167.0
+offset_top = 26.0
+offset_right = 248.0
+offset_bottom = 132.0
+mouse_filter = 2
+
+[node name="Detail" type="VBoxContainer" parent="Art/Pages/RightPage"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 2
+
+[node name="EntryTitle" type="Label" parent="Art/Pages/RightPage/Detail"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/line_spacing = 1
+autowrap_mode = 2
+
+[node name="EntryRule" type="ColorRect" parent="Art/Pages/RightPage/Detail"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+mouse_filter = 2
+color = Color(0.32, 0.2, 0.25, 0.5)
+
+[node name="Notes" type="Control" parent="Art/Pages/RightPage/Detail"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Note1" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
+layout_mode = 0
+offset_left = -3.0
+offset_right = 13.0
+offset_bottom = 16.0
+mouse_filter = 2
+
+[node name="Note2" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
+layout_mode = 0
+offset_left = 11.0
+offset_right = 27.0
+offset_bottom = 16.0
+mouse_filter = 2
+
+[node name="Note3" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
+layout_mode = 0
+offset_left = 25.0
+offset_right = 41.0
+offset_bottom = 16.0
+mouse_filter = 2
+
+[node name="Note4" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
+layout_mode = 0
+offset_left = 39.0
+offset_right = 55.0
+offset_bottom = 16.0
+mouse_filter = 2
+
+[node name="Note5" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
+layout_mode = 0
+offset_left = 53.0
+offset_right = 69.0
+offset_bottom = 16.0
+mouse_filter = 2
+
+[node name="Note6" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
+layout_mode = 0
+offset_left = 67.0
+offset_right = 83.0
+offset_bottom = 16.0
+mouse_filter = 2
+
+[node name="Line" type="Label" parent="Art/Pages/RightPage/Detail"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.32, 0.2, 0.25, 0.65)
+theme_override_constants/line_spacing = 1
+autowrap_mode = 2
+
+[node name="Taught" type="Label" parent="Art/Pages/RightPage/Detail"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.32, 0.2, 0.25, 1)
+theme_override_constants/line_spacing = 1
+autowrap_mode = 2
+
+[node name="Body" type="Label" parent="Art/Pages/RightPage/Detail"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.32, 0.2, 0.25, 1)
+theme_override_constants/line_spacing = 1
+autowrap_mode = 2
+
+[node name="Tabs" type="Control" parent="Art"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 256.0
+offset_top = 20.0
+offset_right = 289.0
+offset_bottom = 136.0
+mouse_filter = 2
+
+[node name="Lore" type="TextureButton" parent="Art/Tabs"]
+layout_mode = 0
+offset_top = 0.0
+offset_right = 32.0
+offset_bottom = 32.0
+focus_mode = 0
+texture_normal = ExtResource("t1n")
+
+[node name="Icon" type="TextureRect" parent="Art/Tabs/Lore"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 23.0
+offset_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource("icon_quill")
+
+[node name="Mark" parent="Art/Tabs/Lore" instance=ExtResource("16_mark")]
+visible = false
+offset_left = 21.0
+offset_top = 6.0
+offset_right = 26.0
+offset_bottom = 11.0
+
+[node name="Songs" type="TextureButton" parent="Art/Tabs"]
+layout_mode = 0
+offset_top = 28.0
+offset_right = 32.0
+offset_bottom = 60.0
+focus_mode = 0
+texture_normal = ExtResource("t2n")
+
+[node name="Icon" type="TextureRect" parent="Art/Tabs/Songs"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 23.0
+offset_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource("icon_note")
+
+[node name="Mark" parent="Art/Tabs/Songs" instance=ExtResource("16_mark")]
+visible = false
+offset_left = 21.0
+offset_top = 6.0
+offset_right = 26.0
+offset_bottom = 11.0
+
+[node name="Items" type="TextureButton" parent="Art/Tabs"]
+layout_mode = 0
+offset_top = 56.0
+offset_right = 32.0
+offset_bottom = 88.0
+focus_mode = 0
+texture_normal = ExtResource("t3n")
+
+[node name="Icon" type="TextureRect" parent="Art/Tabs/Items"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 23.0
+offset_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource("icon_pouch")
+
+[node name="Mark" parent="Art/Tabs/Items" instance=ExtResource("16_mark")]
+visible = false
+offset_left = 21.0
+offset_top = 6.0
+offset_right = 26.0
+offset_bottom = 11.0
+
+[node name="Guardians" type="TextureButton" parent="Art/Tabs"]
+layout_mode = 0
+offset_top = 84.0
+offset_right = 32.0
+offset_bottom = 116.0
+focus_mode = 0
+texture_normal = ExtResource("t4n")
+
+[node name="Icon" type="TextureRect" parent="Art/Tabs/Guardians"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 23.0
+offset_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource("icon_leaf")
+
+[node name="Mark" parent="Art/Tabs/Guardians" instance=ExtResource("16_mark")]
+visible = false
+offset_left = 21.0
+offset_top = 6.0
+offset_right = 26.0
+offset_bottom = 11.0

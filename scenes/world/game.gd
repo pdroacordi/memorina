@@ -20,6 +20,7 @@ const MAX_RESIDENT_ROOMS := 2
 @onready var _player : Player = %Player
 @onready var _memory_field : MemoryField = %MemoryField
 @onready var _screens : Screens = $ScreenLayer/Screens
+@onready var _notebook_watcher : NotebookWatcher = $World/NotebookWatcher
 var _current_room    : Room
 var _is_transitioning: bool      = false
 ## Identifies the latest hazard beat so an older overlapping beat can stop.
@@ -37,6 +38,7 @@ func _ready() -> void:
 	_player.died.connect(_on_player_died)
 	_player.sat_down.connect(_on_player_sat_down)
 	_screens.set_map_subject(_player)
+	_screens.set_notebook_watcher(_notebook_watcher)
 	if SaveSystem.bench_id() != &"":
 		_arrive()
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):

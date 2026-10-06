@@ -26,18 +26,22 @@ var _screens: Dictionary[ScreenRouter.Kind, MenuScreen] = {}
 @onready var _dim: ColorRect = $Dim
 @onready var _pause_menu: PauseMenu = $PauseMenu
 @onready var _map: MapScreen = $MapScreen
+@onready var _notebook: Notebook = $Notebook
 @onready var _blackout: Fade = $Blackout
 
 
 func _ready() -> void:
 	_screens[ScreenRouter.Kind.PAUSE] = _pause_menu
 	_screens[ScreenRouter.Kind.MAP] = _map
+	_screens[ScreenRouter.Kind.NOTEBOOK] = _notebook
 	_map.menu_input = _menu_input
 	_menu_input.pause_pressed.connect(_on_press.bind(ScreenRouter.Press.PAUSE))
 	_menu_input.notebook_pressed.connect(_on_press.bind(ScreenRouter.Press.NOTEBOOK))
 	_menu_input.map_pressed.connect(_on_press.bind(ScreenRouter.Press.MAP))
 	_menu_input.back_pressed.connect(_on_press.bind(ScreenRouter.Press.BACK))
 	_menu_input.zoom_pressed.connect(_on_zoom)
+	_menu_input.page_pressed.connect(_on_page)
+	_notebook.close_requested.connect(_unless_leaving.bind(close))
 	_pause_menu.resume_requested.connect(_unless_leaving.bind(close))
 	_pause_menu.quit_to_title_requested.connect(_leave_for_title)
 	_pause_menu.quit_game_requested.connect(_unless_leaving.bind(quit_game_requested.emit))
@@ -59,6 +63,10 @@ func close() -> void:
 ## Ivo, whom the map centres on and asks before it opens. Game sets it.
 func set_map_subject(ivo: Player) -> void:
 	_map.subject = ivo
+
+## The notebook opens on the newest unread entry this watcher announced. Game sets it.
+func set_notebook_watcher(watcher: NotebookWatcher) -> void:
+	_notebook.watcher = watcher
 
 ## Any hit Ivo takes closes the map.
 func close_map() -> void:
@@ -86,6 +94,13 @@ func _on_zoom(direction: int) -> void:
 		return
 	get_viewport().set_input_as_handled()
 	_map.zoom(direction)
+
+## Left and right turn the notebook's pages; consumed only while it is open.
+func _on_page(direction: int) -> void:
+	if _leaving or _open != ScreenRouter.Kind.NOTEBOOK:
+		return
+	get_viewport().set_input_as_handled()
+	_notebook.turn(direction)
 
 ## Stays held under a real-time Blackout, so nothing moves while the screen goes dark.
 func _leave_for_title() -> void:

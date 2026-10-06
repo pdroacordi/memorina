@@ -43,7 +43,12 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   is blocked, the open screen, the map's centre and zoom, and the seen map cells per room key
   to stdout. A timeline's
   `"skills": [ids]` unlocks `Enums.PlayerSkill`s (roll is 2) the way `known_songs` teaches
-  songs.
+  songs. `"met_guardians"` / `"restored_guardians": [ids]` (`Enums.Guardian`) and
+  `"notebook_read": ["<entry id>"]` seed the save the same way, and `"locale": "en"` sets
+  the locale before the scene loads (the default is the OS locale). `log` also prints the
+  notebook: phase, section, the entry on the right page, its rows (`>` focused, `*` unread,
+  `()` hidden), the scroll cues, tab marks, read ids, the HUD quill's alpha and the
+  watcher's queue.
 - `--out` must be an **absolute filesystem path** (not `res://`); the runner creates it if
   missing and writes `<name>.png` for every `screenshot` step there, then quits on its own
   once the timeline ends or `max_duration` is hit (default 60s safety cap).

@@ -46,6 +46,8 @@ func _ready() -> void:
 	_steps = timeline.get("steps", [])
 	_max_duration = float(timeline.get("max_duration", DEFAULT_MAX_DURATION))
 	_real_clock = String(timeline.get("clock", "")) == "real"
+	if timeline.has("locale"):
+		TranslationServer.set_locale(String(timeline["locale"]))
 
 	# Keep runs isolated from disk saves and commit setup so deaths rewind to this timeline's start.
 	SaveSystem.use_memory_only()
@@ -54,6 +56,12 @@ func _ready() -> void:
 		SaveSystem.learn_song(int(song_id) as Enums.Song)
 	for skill_id: Variant in timeline.get("skills", []):
 		SaveSystem.unlock_skill(int(skill_id) as Enums.PlayerSkill)
+	for guardian_id: Variant in timeline.get("met_guardians", []):
+		SaveSystem.meet_guardian(int(guardian_id) as Enums.Guardian)
+	for guardian_id: Variant in timeline.get("restored_guardians", []):
+		SaveSystem.restore_guardian(int(guardian_id) as Enums.Guardian)
+	for entry_id: Variant in timeline.get("notebook_read", []):
+		SaveSystem.mark_notebook_read(StringName(entry_id))
 	SaveSystem.commit()
 
 	var scene_path: String = timeline.get("scene", "res://scenes/world/game.tscn")
@@ -143,6 +151,7 @@ func _log_state(label: String) -> void:
 			player.is_memorina_drawn(), player.get_node("PlayerInput").get("blocked"),
 		]
 	line += _map_state()
+	line += _notebook_state()
 	print(line)
 
 ## Which screen is open, the map's centre and zoom, and the seen cells per room key in the live save.
@@ -165,6 +174,40 @@ func _map_state() -> String:
 				b >>= 1
 		seen.append("%s:%d" % [key.get_file(), count])
 	return line + " seen=[%s]" % ", ".join(seen)
+
+## The notebook's phase, section and page, its rows (">" focused, "*" unread, "()" hidden), cues, tab marks,
+## the read ids, the HUD quill's alpha and the watcher's queue.
+func _notebook_state() -> String:
+	var notebook := get_tree().root.find_child("Notebook", true, false) as Notebook
+	if notebook == null:
+		return ""
+	var marks: PackedStringArray = []
+	for row: NotebookRow in notebook.rows():
+		var mark := String(row.entry.id) if row.entry != null else "?"
+		if row.is_unread():
+			mark += "*"
+		if row.modulate.a == 0.0:
+			mark = "(%s)" % mark
+		if row.has_focus():
+			mark = ">" + mark
+		marks.append(mark)
+	var tabs: PackedStringArray = []
+	for tab: Node in notebook.get_node("%Tabs").get_children():
+		tabs.append("%s%s" % [tab.name, "*" if (tab.get_node("Mark") as CanvasItem).visible else ""])
+	var showing: NotebookEntry = notebook.get("_showing")
+	var line := " nb=%s sec=%s page=%s rows=[%s] above=%s below=%s tabs=[%s] read=%s" % [
+		Notebook.Phase.keys()[notebook.phase()], NotebookEntry.Section.keys()[notebook.section()],
+		showing.id if showing != null else "-", ", ".join(marks),
+		notebook.get_node("%MoreAbove").visible, notebook.get_node("%MoreBelow").visible,
+		", ".join(tabs), SaveSystem.player_data.notebook_read,
+	]
+	var toast := get_tree().root.find_child("NotebookToast", true, false) as CanvasItem
+	if toast != null:
+		line += " quill=%.2f" % toast.modulate.a
+	var watcher := get_tree().root.find_child("NotebookWatcher", true, false) as NotebookWatcher
+	if watcher != null:
+		line += " waiting=%s holding=%s" % [watcher.waiting(), watcher.is_holding()]
+	return line
 
 func _capture(screenshot_name: String) -> void:
 	## get_viewport().get_texture() reflects the last COMPLETED render, not the frame

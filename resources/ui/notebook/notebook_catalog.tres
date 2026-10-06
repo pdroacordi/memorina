@@ -1,0 +1,154 @@
+[gd_resource type="Resource" script_class="NotebookCatalog" format=3]
+
+[ext_resource type="Script" path="res://resources/ui/notebook/notebook_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" path="res://resources/ui/notebook/notebook_entry.gd" id="2_entry"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_idle.png" id="3_frost"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_idle.png" id="4_bloom"]
+
+[sub_resource type="AtlasTexture" id="portrait_frost"]
+atlas = ExtResource("3_frost")
+region = Rect2(56, 18, 79, 60)
+
+[sub_resource type="AtlasTexture" id="portrait_bloom"]
+atlas = ExtResource("4_bloom")
+region = Rect2(36, 52, 58, 44)
+
+[sub_resource type="Resource" id="lore_roll"]
+script = ExtResource("2_entry")
+id = &"lore_roll"
+section = 0
+requirement = 0
+index = 2
+title_key = "SKILL_ROLL"
+body_key = "NOTEBOOK_LORE_ROLL"
+
+[sub_resource type="Resource" id="lore_double_jump"]
+script = ExtResource("2_entry")
+id = &"lore_double_jump"
+section = 0
+requirement = 0
+index = 0
+title_key = "SKILL_DOUBLE_JUMP"
+body_key = "NOTEBOOK_LORE_DOUBLE_JUMP"
+
+[sub_resource type="Resource" id="song_freeze"]
+script = ExtResource("2_entry")
+id = &"song_freeze"
+section = 1
+requirement = 1
+index = 0
+title_key = "SONG_TITLE_FREEZE"
+detail_key = "NOTEBOOK_SONG_FREEZE_DETAIL"
+body_key = "NOTEBOOK_SONG_FREEZE_BODY"
+
+[sub_resource type="Resource" id="song_bell_jar"]
+script = ExtResource("2_entry")
+id = &"song_bell_jar"
+section = 1
+requirement = 1
+index = 1
+title_key = "SONG_TITLE_BELL_JAR"
+detail_key = "NOTEBOOK_SONG_BELL_JAR_DETAIL"
+body_key = "NOTEBOOK_SONG_BELL_JAR_BODY"
+
+[sub_resource type="Resource" id="song_release"]
+script = ExtResource("2_entry")
+id = &"song_release"
+section = 1
+requirement = 1
+index = 4
+title_key = "SONG_TITLE_RELEASE"
+detail_key = "NOTEBOOK_SONG_RELEASE_DETAIL"
+body_key = "NOTEBOOK_SONG_RELEASE_BODY"
+
+[sub_resource type="Resource" id="song_gale"]
+script = ExtResource("2_entry")
+id = &"song_gale"
+section = 1
+requirement = 1
+index = 5
+title_key = "SONG_TITLE_GALE"
+detail_key = "NOTEBOOK_SONG_GALE_DETAIL"
+body_key = "NOTEBOOK_SONG_GALE_BODY"
+
+[sub_resource type="Resource" id="song_root"]
+script = ExtResource("2_entry")
+id = &"song_root"
+section = 1
+requirement = 1
+index = 6
+title_key = "SONG_TITLE_ROOT"
+detail_key = "NOTEBOOK_SONG_ROOT_DETAIL"
+body_key = "NOTEBOOK_SONG_ROOT_BODY"
+
+[sub_resource type="Resource" id="song_rain"]
+script = ExtResource("2_entry")
+id = &"song_rain"
+section = 1
+requirement = 1
+index = 7
+title_key = "SONG_TITLE_RAIN"
+detail_key = "NOTEBOOK_SONG_RAIN_DETAIL"
+body_key = "NOTEBOOK_SONG_RAIN_BODY"
+
+[sub_resource type="Resource" id="song_shadow"]
+script = ExtResource("2_entry")
+id = &"song_shadow"
+section = 1
+requirement = 1
+index = 2
+title_key = "SONG_TITLE_SHADOW"
+detail_key = "NOTEBOOK_SONG_SHADOW_DETAIL"
+body_key = "NOTEBOOK_SONG_SHADOW_BODY"
+
+[sub_resource type="Resource" id="song_solstice"]
+script = ExtResource("2_entry")
+id = &"song_solstice"
+section = 1
+requirement = 1
+index = 3
+title_key = "SONG_TITLE_SOLSTICE"
+detail_key = "NOTEBOOK_SONG_SOLSTICE_DETAIL"
+body_key = "NOTEBOOK_SONG_SOLSTICE_BODY"
+
+[sub_resource type="Resource" id="item_sword"]
+script = ExtResource("2_entry")
+id = &"item_sword"
+section = 2
+requirement = 2
+index = 0
+title_key = "ITEM_SWORD"
+body_key = "NOTEBOOK_ITEM_SWORD"
+
+[sub_resource type="Resource" id="item_memorina"]
+script = ExtResource("2_entry")
+id = &"item_memorina"
+section = 2
+requirement = 2
+index = 1
+title_key = "ITEM_MEMORINA"
+body_key = "NOTEBOOK_ITEM_MEMORINA"
+
+[sub_resource type="Resource" id="guardian_frost"]
+script = ExtResource("2_entry")
+id = &"guardian_frost"
+section = 3
+requirement = 3
+index = 0
+title_key = "GUARDIAN_FROST"
+body_key = "NOTEBOOK_GUARDIAN_FROST_BODY"
+art = SubResource("portrait_frost")
+
+[sub_resource type="Resource" id="guardian_bloom"]
+script = ExtResource("2_entry")
+id = &"guardian_bloom"
+section = 3
+requirement = 3
+index = 1
+title_key = "GUARDIAN_BLOOM"
+body_key = "NOTEBOOK_GUARDIAN_BLOOM_BODY"
+art = SubResource("portrait_bloom")
+
+[resource]
+script = ExtResource("1_catalog")
+entries = Array[ExtResource("2_entry")]([SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom")])

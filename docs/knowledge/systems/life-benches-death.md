@@ -4,7 +4,7 @@ type: system
 title: Life, benches, saving and death
 status: active
 tags: [save, bench, death, life, respawn]
-related: [systems/map, architecture/the-life-loop-rewinds-by-reloading, architecture/save-slots-and-the-boot-swap, systems/screens, bugs/a-teleported-ivo-enters-the-room-he-left, bugs/the-playtest-runner-adopts-the-legacy-save-before-going-memory-only, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step]
+related: [systems/map, systems/notebook, architecture/the-life-loop-rewinds-by-reloading, architecture/save-slots-and-the-boot-swap, systems/screens, bugs/a-teleported-ivo-enters-the-room-he-left, bugs/the-playtest-runner-adopts-the-legacy-save-before-going-memory-only, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step]
 created: 2026-10-02
 updated: 2026-10-06
 source_files:
@@ -64,6 +64,13 @@ Plan and options: `architecture/save-slots-and-the-boot-swap`.
 
 - Every move of a character that is not motion goes through `Character.teleport(point)` (`SitComponent.sit`, so arrival and resting; `Player.respawn`; `DebugTrials`; the runner's `player_position`). It writes the position and puts the physics server there too: `body_set_mode(STATIC)`, `body_set_state(TRANSFORM)`, `body_set_mode(KINEMATIC)`. A plain position write leaves a kinematic body at its old place for one step, and every Area2D there reports it (`gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step`). Without it, arriving on a bench outside BloomHollow faded into BloomHollow, the room of Ivo's authored start (`bugs/a-teleported-ivo-enters-the-room-he-left`). `character_teleport_test` pins the engine behaviour.
 - `Game._ready` now always runs inside a deferred flush (Boot, the title and a death all swap deferred), so `_arrive`'s wait for the room contents no longer depends on load time (`gotchas/first-process-frame-can-precede-the-first-deferred-flush`).
+
+## The notebook's save facts (UI-03, built 2026-10-06)
+
+- `PlayerData.met_guardians` (indexed by `Enums.Guardian`, grown by `migrate()`) is set by `SaveSystem.meet_guardian` when a guardian's fight begins. It is live data like a learned song: a death before a bench forgets it.
+- `PlayerData.notebook_read` holds the ids of notebook entries read. `SaveLedger.rewind` merges the live ids into the committed save before it copies it back, so both kinds of death (`record_death` and `SaveSystem.rewind`) keep what was read.
+- `SaveSystem.progress_changed` is emitted by `learn_song`, `unlock_skill`, `set_item_owned`, `restore_guardian` and `meet_guardian`. `mark_notebook_read` emits nothing. The notebook derives its entries from these facts (`systems/notebook`).
+- Tests: `save_ledger_test` (read ids survive a death, once each; a met guardian is forgotten), `player_data_test` (old saves, round trip), `save_system_notebook_test`.
 
 ## Tests
 

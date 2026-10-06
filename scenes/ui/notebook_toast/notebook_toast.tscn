@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/notebook_toast/notebook_toast.gd" id="1_toast"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/icon_quill.png" id="2_quill"]
+
+[node name="NotebookToast" type="TextureRect"]
+offset_left = 600.0
+offset_top = 8.0
+offset_right = 632.0
+offset_bottom = 40.0
+mouse_filter = 2
+texture = ExtResource("2_quill")
+expand_mode = 1
+script = ExtResource("1_toast")

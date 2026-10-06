@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[node name="Mark" type="Control"]
+custom_minimum_size = Vector2(5, 5)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 5.0
+offset_bottom = 5.0
+mouse_filter = 2
+
+[node name="Rim" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 5.0
+offset_bottom = 5.0
+mouse_filter = 2
+color = Color(0.24, 0.16, 0.21, 1)
+
+[node name="Dot" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 4.0
+offset_bottom = 4.0
+mouse_filter = 2
+color = Color(0.86, 0.2, 0.14, 1)

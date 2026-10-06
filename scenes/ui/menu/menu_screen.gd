@@ -14,6 +14,6 @@ func open() -> void:
 func close() -> void:
 	hide()
 
-## Closes an inner panel (a confirmation) instead of the screen; true when it did.
+## Closes an inner panel (a confirmation) or starts the screen's own closing animation instead of closing it; true when it did.
 func step_back() -> bool:
 	return false

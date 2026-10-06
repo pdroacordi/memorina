@@ -4,9 +4,9 @@ type: architecture
 title: Notebook entries are derived from save facts, never recorded; a watcher diffs them on progress_changed to announce new ones
 status: active
 tags: [notebook, ui, save, resources, unread, toast, plan]
-related: [architecture/pause-menu-worldfreeze-reuse, architecture/the-life-loop-rewinds-by-reloading, architecture/save-slots-and-the-boot-swap, systems/guardians, systems/songs-and-the-memorina]
+related: [systems/notebook, architecture/pause-menu-worldfreeze-reuse, architecture/the-life-loop-rewinds-by-reloading, architecture/save-slots-and-the-boot-swap, systems/guardians, systems/songs-and-the-memorina]
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-06
 source_files:
   - resources/ui/notebook/notebook_entry.gd
   - resources/ui/notebook/notebook_catalog.gd
@@ -19,7 +19,7 @@ source_files:
   - globals/player_data.gd
 ---
 
-> **Status: planned** (2026-10-02, roadmap UI-03). Nothing here is built yet.
+> **Status: built** (2026-10-06, roadmap UI-03). The contract is `systems/notebook`. Built differently: `validate()` returns its problems instead of asserting, read ids are merged in `SaveLedger.rewind` (so both kinds of death keep them), and Lore is titled Memories.
 
 ## Context
 
@@ -71,7 +71,7 @@ for a song lost to a death must vanish with the song.
 **When the icon shows.**
 - Rejected: show it on the frame of the gain. That puts the icon over the lesson cinematic, and over
   the recall the design wants confirmed "pós-combate" (02 §4).
-- **Proposed** (the user's confirmation is pending): the watcher and the toast are PAUSABLE, so
+- **Chosen** (the user, "After the fight"): the watcher and the toast are PAUSABLE, so
   nothing shows during a freeze. The watcher also holds its queue while
   `Guardian.fight_at(tree, ivo_position)` is true. It reads that state on demand, as `_try_sit`
   does, and is never told it by a pushed flag.

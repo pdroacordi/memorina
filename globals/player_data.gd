@@ -19,6 +19,10 @@ class_name PlayerData extends Resource
 @export var saved_at: int = 0
 ## Seen map cells per room scene key, as `MapGrid.to_bytes()`; live data that a bench commits and a death forgets.
 @export var map_seen: Dictionary[String, PackedByteArray] = {}
+## Guardians whose fight has begun, indexed by Enums.Guardian; a restored guardian counts as met too.
+@export var met_guardians: Array[bool]
+## Notebook entry ids the player has read; a death keeps them (SaveLedger.rewind).
+@export var notebook_read: Array[StringName] = []
 
 func _init() -> void:
 	migrate()
@@ -29,6 +33,7 @@ func migrate() -> void:
 	_grow(owned_items, Enums.PlayerItem.size())
 	_grow(learned_songs, Enums.Song.size())
 	_grow(restored_guardians, Enums.Guardian.size())
+	_grow(met_guardians, Enums.Guardian.size())
 
 func _grow(flags: Array[bool], size: int) -> void:
 	if flags.size() < size:

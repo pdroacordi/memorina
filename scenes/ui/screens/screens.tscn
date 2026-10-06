@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu/pause_menu.tscn" id="3_pause"]
 [ext_resource type="Script" uid="uid://be0v2br7tupo7" path="res://scenes/world/fade.gd" id="4_fade"]
 [ext_resource type="PackedScene" path="res://scenes/ui/map/map_screen.tscn" id="5_map"]
+[ext_resource type="PackedScene" path="res://scenes/ui/notebook/notebook.tscn" id="6_notebook"]
 
 [node name="Screens" type="Control"]
 process_mode = 3
@@ -32,6 +33,10 @@ mouse_filter = 2
 color = Color(0, 0, 0, 0.55)
 
 [node name="MapScreen" parent="." instance=ExtResource("5_map")]
+visible = false
+layout_mode = 1
+
+[node name="Notebook" parent="." instance=ExtResource("6_notebook")]
 visible = false
 layout_mode = 1
 

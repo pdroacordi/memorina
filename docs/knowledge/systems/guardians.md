@@ -4,12 +4,13 @@ type: system
 title: Guardians: phases, the call, the recall, the AI and staging
 status: active
 tags: [guardian, boss, lucidity, recall, qte, ai]
-related: [architecture/guardian-fight-phase-machine, features/lucidity-leap, features/encounter-sheet-slot, features/recall-in-more-than-one-press, architecture/the-region-owns-its-forgetting]
+related: [systems/notebook, architecture/guardian-fight-phase-machine, features/lucidity-leap, features/encounter-sheet-slot, features/recall-in-more-than-one-press, architecture/the-region-owns-its-forgetting]
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-06
 source_files:
   - scenes/characters/guardians/guardian.gd
   - scenes/world/world_freeze.gd
+  - scenes/characters/ivo/player.gd
 ---
 
 # Guardians: phases, the call, the recall, the AI and staging
@@ -36,6 +37,7 @@ A guardian encounter is `docs/design/02_mecanicas.md` sections 3 and 4: pressure
 - **`GuardianAnimationResolver` is shared**: `IDLE, WALK, ATTACK_1..3, HURT, LUCID, RESTORED`. `GuardianAttack.clip_index` maps to `attack_clip_for()`, and `Guardian._assert_clip_durations` walks that mapping. The phase outranks everything in `resolve()`.
 - **A guardian's colour is the fight made visible, script-owned, never keyed in a clip** (`Guardian._update_shield`): the rest level is `lerp(corrupted, 1.0, lucidity())`, hits climb a little above it under pressure, each note of the call *breathes* the shield to full and swells its radius (`note_swell`) with the sprite bobbing, the open window trembles slowly (`tremble_hz`, a sine) above a floor that climbs with every note answered, a relapse holds bright then drains to the new rest (or snaps to it with a hard burst after a failure), and restoration keeps it all. The guardian's voice is the same notes an octave down (`Call/Voice/AudioStreamPlayer.pitch_scale = 0.5`) and it groans the mistake sound as it relapses. A shield only lifts memory TOWARD 1, so in a mostly remembered region none of this reads without a well of forgetting under it - and **the well belongs to the REGION, not to the guardian** (below).
 - **A PLACE is not the boss's to own.** The wells of forgetting are `MemorySource` children of a `RegionMemory` node in the REGION's own scene (`scenes/world/rooms/region_memory.gd`, authored in `home_village.tscn` / `frost_edge.tscn`), because `MemoryField.sample()` skips a source that is not `is_visible_in_tree()` and `Room.deactivate()` hides a room's contents - so a well authored inside a room, or inside the guardian standing in it, can only ever be felt from that one room, and a region is very often several. Measured: from Downtown, with Bloom Hollow deactivated, the arena's well still reads 0.05 and downtown's own 0.10, exactly as they read from inside the arena. Death marks (design section 4.3) hang here too. `RegionMemory` owns the authored level, the wells and the lift; it never reads `SaveSystem` - whether the guardian is restored is the `Region`'s judgement, pushed in through `restore(seconds)` (at or below 0 it is simply already whole, which is a later visit).
+- **A guardian is met when its fight begins**: `_on_player_entered` calls `SaveSystem.meet_guardian(stats.id)`, which makes its notebook entry present (`systems/notebook`). `NotebookWatcher` pulls `Guardian.fight_at` and `Player.is_in_lesson()` to hold the HUD quill until both are over.
 - **Restoration is persistent, and the region hears it from the SAVE** (`Enums.Guardian`, `PlayerData.restored_guardians`, `SaveSystem.restore_guardian`). `SaveSystem.guardian_restored` is the channel rather than `Guardian.restored`, because it works whatever order the world loaded in and whether or not the arena's room is still resident; `Region` listens, and `Guardian._restore()` does nothing to the world but record the fact. `Region.memory_changed` re-emits `RegionMemory.changed`, and **`Game` is the ONE writer of `MemoryField.baseline`** - it follows the region it is showing, because a restoration happens while the player is standing in it and not only at the next doorway. A restored guardian starts in `RESTORED` on every later visit and never fights again.
 - **Three moves each, and one of them is a leap.** `GuardianAttack.leap_impulse` with `lunge_speed` is a jump at the player that lands past them, which is how a light guardian changes sides; a heavy one leaves it at 0 - not every boss should jump. Bloom: lash (close), burst (the launcher carrying the recall), pounce (a leap, 48px up and 192px across). Frost: swipe (close), charge (the lunge carrying the recall), slam (a tall keyed hitbox and `attack_height` 150, so the golem swats a player bouncing just above it instead of leaving). The asymmetry is the point: Bloom has no answer overhead and escapes, Frost has one and uses it.
 - Arenas: `home_village/bloom_hollow` (Bloom Guardian, ROOT + DOUBLE_JUMP) and the `frost_edge` region's `lighthouse` (Frost Guardian, FREEZE + ROLL). Sprite credits in `CREDITS.md`.
@@ -45,4 +47,4 @@ A guardian encounter is `docs/design/02_mecanicas.md` sections 3 and 4: pressure
 
 - Dying mid-fight returns Ivo to the last bench with the guardian corrupted again.
 - Arenas have no doors; the player can walk out mid-fight (roadmap GRD-05).
-- The recalled skill has no notebook confirmation yet (roadmap UI-03).
+- (Closed 2026-10-06, UI-03.) A recalled skill is confirmed after the fight: its Memories (diary) entry appears in the notebook, and the HUD quill shows once the fight and the lesson have ended (`systems/notebook`).

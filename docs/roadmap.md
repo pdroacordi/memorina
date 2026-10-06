@@ -94,7 +94,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 |---|---|---|:-:|---|---|---|
 | UI-01 | Memorina sheet and guardian call HUD | 02 UI | `[x]` | | 2026-10-02 | |
 | UI-02 | Pause menu | 02 Controles | `[x]` | | 2026-10-02 | `systems/screens`. Quit to title comes with UI-05, Settings with UI-07. |
-| UI-03 | Field notebook (lore, songs, items, guardians) | 02 UI | `[ ]` | | 2026-10-02 | Also confirms a recalled skill (02 §4). |
+| UI-03 | Field notebook (lore, songs, items, guardians) | 02 UI | `[x]` | | 2026-10-06 | `systems/notebook`. Confirms a recalled skill with a diary entry (02 §4). Mentor entries come with STORY-03. |
 | UI-04 | Map (drawn by exploration) | 02 UI | `[x]` | | 2026-10-06 | `systems/map`. |
 | UI-05 | Title screen and load menu | 02 UI | `[x]` | | 2026-10-06 | `systems/screens`, `systems/life-benches-death`. Three slots; main menu gets Settings with UI-07. |
 | UI-06 | Victory screen | 02 UI | `[?]` | GRD-06 | 2026-10-02 | |
@@ -106,7 +106,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 |---|---|---|:-:|---|---|---|
 | STORY-01 | Lesson cinematic | 02 §7.2 | `[x]` | | 2026-10-02 | |
 | STORY-02 | Pickups: the world grants the sword and the Memorina | 01 §5 | `[ ]` | | 2026-10-02 | Debug builds start owning both. |
-| STORY-03 | Mentor and the opening | 01 §4, §8 | `[?]` | | 2026-10-02 | Mentor's name is open (01 §10). |
+| STORY-03 | Mentor and the opening | 01 §4, §8 | `[?]` | | 2026-10-06 | Mentor's name is open (01 §10). Notebook: two mentor entries, a short one after the Memorina is given and a real one at his restoration (the user, 2026-10-02); the Frost Guardian is not the mentor. |
 | STORY-04 | Bearer fragments, one per tube | 01 §6 | `[ ]` | UI-03 | 2026-10-02 | |
 | STORY-05 | Five playable flashbacks | 01 §9.3 | `[ ]` | | 2026-10-02 | |
 | STORY-06 | Letters, diaries and other collectibles | 01 §6 | `[ ]` | UI-03 | 2026-10-02 | |

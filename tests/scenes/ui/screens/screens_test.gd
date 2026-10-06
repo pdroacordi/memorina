@@ -87,9 +87,8 @@ func test_reopening_starts_on_the_menu_not_the_confirmation() -> void:
 	assert_bool(_pause_menu.is_confirming()).is_false()
 	assert_str(_focused()).is_equal("Resume")
 
-## The notebook has no scene yet; the map refuses without an Ivo standing on the ground.
-func test_a_screen_that_does_not_exist_or_refuses_stays_shut() -> void:
-	_menu_input.notebook_pressed.emit()
+## The map refuses without an Ivo standing on the ground.
+func test_a_screen_that_refuses_stays_shut() -> void:
 	_menu_input.map_pressed.emit()
 	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.NONE)
 	assert_array(_requests).is_empty()
@@ -103,7 +102,7 @@ func test_lock_closes_releases_and_refuses() -> void:
 	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.NONE)
 	assert_array(_requests).contains_exactly(["hold", "release"])
 
-## The notebook will hold like the pause; the map never holds (it only blocks Ivo).
+## The notebook holds like the pause; the map never holds (it only blocks Ivo).
 func test_pause_and_notebook_hold_and_the_map_does_not() -> void:
 	assert_bool(Screens.HOLDING.has(ScreenRouter.Kind.PAUSE)).is_true()
 	assert_bool(Screens.HOLDING.has(ScreenRouter.Kind.NOTEBOOK)).is_true()
