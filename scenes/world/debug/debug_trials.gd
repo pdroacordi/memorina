@@ -34,7 +34,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	var spawn := spawns[_next % spawns.size()] as Node2D
 	_next += 1
-	player.global_position = spawn.global_position
+	player.teleport(spawn.global_position)
 	player.velocity = Vector2.ZERO
 	var camera := get_node_or_null(camera_path) as GameCamera
 	if camera:

@@ -59,3 +59,6 @@ Third-party art used in Memorina, with the terms it was taken under.
   **Franuka**, https://franuka.itch.io/ (free for commercial use; a link back is asked for).
   Modified: `memorina_text_font_size_8.ttf` redraws the tilde of ã õ ñ Ã Õ Ñ as a wave
   (`tools/fonts/patch_tilde.py` rebuilds it from the pack original).
+- **Title logo** (`assets/sprites/hud/title/memorina_logo.png`) - generated for this project with
+  Codex CLI's image tool from `tools/art/prompts/memorina_logo.md`, then keyed, snapped to the world
+  palette and shrunk by `tools/art/process_image.gd`. No third-party art was given as a reference.

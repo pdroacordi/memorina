@@ -1,0 +1,51 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/title/slot_screen.gd" id="1_screen"]
+[ext_resource type="Theme" path="res://scenes/ui/menu/menu_theme.tres" id="2_theme"]
+[ext_resource type="PackedScene" path="res://scenes/ui/title/slot_card.tscn" id="3_card"]
+[ext_resource type="PackedScene" path="res://scenes/ui/menu/confirm_panel.tscn" id="4_confirm"]
+
+[node name="SlotScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 180.0
+mouse_filter = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_screen")
+
+[node name="List" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 58.0
+offset_top = 58.0
+offset_right = 262.0
+offset_bottom = 156.0
+theme_override_constants/separation = 4
+
+[node name="Slot1" parent="List" instance=ExtResource("3_card")]
+layout_mode = 2
+
+[node name="Slot2" parent="List" instance=ExtResource("3_card")]
+layout_mode = 2
+
+[node name="Slot3" parent="List" instance=ExtResource("3_card")]
+layout_mode = 2
+
+[node name="ConfirmErase" parent="." instance=ExtResource("4_confirm")]
+unique_name_in_owner = true
+visible = false
+offset_left = 92.0
+offset_top = 62.0
+offset_right = 228.0
+offset_bottom = 138.0
+body_key = "CONFIRM_ERASE"
+
+[node name="ConfirmOverwrite" parent="." instance=ExtResource("4_confirm")]
+unique_name_in_owner = true
+visible = false
+offset_left = 92.0
+offset_top = 62.0
+offset_right = 228.0
+offset_bottom = 138.0
+body_key = "CONFIRM_OVERWRITE"

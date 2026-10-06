@@ -33,6 +33,16 @@ var _flash_tween: Tween
 @onready var _animation_driver  : AnimationDriver = $AnimationDriver
 @onready var _animation_resolver: AnimationResolver = $AnimationResolver
 
+## Moves `body` to `point` on the node and on the physics server alike. A plain position write leaves a
+## kinematic body at its old place for one step (docs/knowledge/gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step.md).
+static func teleport_body(body: CharacterBody2D, point: Vector2) -> void:
+	body.global_position = point
+	var rid := body.get_rid()
+	# STATIC applies the transform at once; returning to KINEMATIC re-arms GodotPhysics2D's first_time_kinematic.
+	PhysicsServer2D.body_set_mode(rid, PhysicsServer2D.BODY_MODE_STATIC)
+	PhysicsServer2D.body_set_state(rid, PhysicsServer2D.BODY_STATE_TRANSFORM, body.global_transform)
+	PhysicsServer2D.body_set_mode(rid, PhysicsServer2D.BODY_MODE_KINEMATIC)
+
 func _ready() -> void:
 	hurtbox.hit_received.connect(_on_hit_received)
 	health.died.connect(_on_health_died)
@@ -46,6 +56,10 @@ func _physics_process(delta: float) -> void:
 	_animation_driver.play(_animation_resolver.resolve())
 	_just_hit = false
 	_carry = Vector2.ZERO
+
+## Every move that is not motion (a seat, a respawn, a debug jump) goes through here.
+func teleport(point: Vector2) -> void:
+	teleport_body(self, point)
 
 func face_towards(axis: float) -> void:
 	if is_zero_approx(axis):

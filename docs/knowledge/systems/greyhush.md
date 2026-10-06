@@ -6,7 +6,7 @@ status: active
 tags: [greyhush, memory-field, shader, dither]
 related: [architecture/memory-field-cpu-gpu-split, gotchas/glsl-gdscript-math-must-be-duplicated]
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-06
 source_files:
   - scenes/world/memory/memory_field.gd
   - scenes/world/memory/greyhush_renderer.gd
@@ -26,3 +26,4 @@ The world's state at any point is a memory value from 0 to 1 (`docs/design/03_mu
 - **The boundary is an ordered (Bayer) dither, never a gradient**, computed in game-pixel space via `UV * game_size` rather than `FRAGCOORD` — the project stretches with integer scaling, so `FRAGCOORD` would dither at window resolution and the speckle would change size with the window.
 - **Environment freezes; characters never.** `MemoryClock` drives a neighbour's `speed_scale` from the field and asserts in `_ready()` that its target has no `Character` ancestor.
 - New field sources (death marks, flashbacks, the hero's aura in the final fight) compose `MemorySource`. New world effects compose `SongReceiver`. Neither requires touching the song, pulse or field code.
+- **The forgotten print outside the greyhush pass is one formula**: `gh_print(rgb)` in `scenes/world/memory/greyhush_print.gdshaderinc` (luma, blacks lifted toward `greyhush_black_lift_color` by `greyhush_black_lift`, the globals `GreyhushRenderer` pushes). `life_note.gdshader` and the title's `title_grey.gdshader` include it; change the print there only. `gh_shade` in `greyhush_common.gdshaderinc` is a different composition (lift weighted by how forgotten, haze, contrast loss) and does not use it.

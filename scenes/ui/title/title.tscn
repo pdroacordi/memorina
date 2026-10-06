@@ -1,0 +1,177 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/title/title.gd" id="1_title"]
+[ext_resource type="Script" path="res://scenes/ui/menu/menu_input.gd" id="2_input"]
+[ext_resource type="Material" path="res://scenes/ui/title/title_grey_material.tres" id="3_grey"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_5.png" id="4_sky"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_4.png" id="5_mountains"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_3.png" id="6_deeper"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_2.png" id="7_deep"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_1.png" id="8_front"]
+[ext_resource type="Theme" path="res://scenes/ui/menu/menu_theme.tres" id="9_theme"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/title/memorina_logo.png" id="10_logo"]
+[ext_resource type="PackedScene" path="res://scenes/ui/title/slot_screen.tscn" id="11_screen"]
+[ext_resource type="Script" path="res://scenes/ui/menu/menu_entry.gd" id="12_entry"]
+[ext_resource type="Script" uid="uid://be0v2br7tupo7" path="res://scenes/world/fade.gd" id="14_fade"]
+[ext_resource type="Shader" path="res://scenes/ui/title/flute_pulse.gdshader" id="15_pulse_shader"]
+[ext_resource type="Script" path="res://scenes/ui/title/flute_pulse.gd" id="16_pulse"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_pulse"]
+shader = ExtResource("15_pulse_shader")
+
+[node name="Title" type="Control"]
+process_mode = 1
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_title")
+game_scene = "res://scenes/world/game.tscn"
+
+[node name="MenuInput" type="Node" parent="."]
+script = ExtResource("2_input")
+
+[node name="Background" type="Node2D" parent="."]
+
+[node name="Sky" type="Parallax2D" parent="Background"]
+repeat_size = Vector2(1024, 0)
+autoscroll = Vector2(-1, 0)
+
+[node name="Layer5" type="Sprite2D" parent="Background/Sky"]
+material = ExtResource("3_grey")
+texture = ExtResource("4_sky")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 1024, 346)
+
+[node name="Mountains" type="Parallax2D" parent="Background"]
+repeat_size = Vector2(1024, 0)
+autoscroll = Vector2(-2, 0)
+
+[node name="Layer4" type="Sprite2D" parent="Background/Mountains"]
+material = ExtResource("3_grey")
+position = Vector2(0, 14)
+texture = ExtResource("5_mountains")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 1024, 346)
+
+[node name="DeeperTrees" type="Parallax2D" parent="Background"]
+repeat_size = Vector2(1024, 0)
+autoscroll = Vector2(-4, 0)
+
+[node name="Layer3" type="Sprite2D" parent="Background/DeeperTrees"]
+material = ExtResource("3_grey")
+position = Vector2(0, 14)
+texture = ExtResource("6_deeper")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 1024, 346)
+
+[node name="DeepTrees" type="Parallax2D" parent="Background"]
+repeat_size = Vector2(1024, 0)
+autoscroll = Vector2(-6, 0)
+
+[node name="Layer2" type="Sprite2D" parent="Background/DeepTrees"]
+material = ExtResource("3_grey")
+position = Vector2(0, 14)
+texture = ExtResource("7_deep")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 1024, 346)
+
+[node name="FrontTrees" type="Parallax2D" parent="Background"]
+repeat_size = Vector2(1024, 0)
+autoscroll = Vector2(-8, 0)
+
+[node name="Layer1" type="Sprite2D" parent="Background/FrontTrees"]
+material = ExtResource("3_grey")
+position = Vector2(0, 14)
+texture = ExtResource("8_front")
+centered = false
+region_enabled = true
+region_rect = Rect2(0, 0, 1024, 346)
+
+[node name="Art" type="Control" parent="."]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+theme = ExtResource("9_theme")
+
+[node name="FlutePulse" type="ColorRect" parent="Art"]
+material = SubResource("ShaderMaterial_pulse")
+layout_mode = 0
+offset_left = 110.0
+offset_top = 24.0
+offset_right = 206.0
+offset_bottom = 60.0
+mouse_filter = 2
+script = ExtResource("16_pulse")
+
+[node name="Logo" type="TextureRect" parent="Art"]
+layout_mode = 0
+offset_left = 80.0
+offset_top = 6.0
+offset_right = 240.0
+offset_bottom = 54.0
+mouse_filter = 2
+texture = ExtResource("10_logo")
+stretch_mode = 2
+
+[node name="Main" type="Control" parent="Art"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Entries" type="VBoxContainer" parent="Art/Main"]
+layout_mode = 0
+offset_left = 124.0
+offset_top = 92.0
+offset_right = 196.0
+offset_bottom = 148.0
+theme_override_constants/separation = 4
+
+[node name="NewGame" type="Button" parent="Art/Main/Entries"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 16)
+layout_mode = 2
+script = ExtResource("12_entry")
+
+[node name="Continue" type="Button" parent="Art/Main/Entries"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 16)
+layout_mode = 2
+script = ExtResource("12_entry")
+
+[node name="QuitGame" type="Button" parent="Art/Main/Entries"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 16)
+layout_mode = 2
+script = ExtResource("12_entry")
+
+[node name="SlotScreen" parent="Art" instance=ExtResource("11_screen")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+
+[node name="Fade" type="ColorRect" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+script = ExtResource("14_fade")

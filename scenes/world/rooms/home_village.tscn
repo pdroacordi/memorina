@@ -9,6 +9,7 @@
 
 [node name="HomeVillage" type="Node2D" unique_id=587601713]
 script = ExtResource("3_region")
+name_key = "REGION_HOME_VILLAGE"
 has_guardian = true
 guardian = 1
 

@@ -11,6 +11,12 @@ class_name PlayerData extends Resource
 @export var bench_room: String = ""
 ## Region-local death points keyed by region scene key; clustering is handled by `RegionMemory`.
 @export var deaths: Dictionary[String, PackedVector2Array] = {}
+## Seconds played up to the last commit, menus included.
+@export var play_time: float = 0.0
+## Translation key of the last rested bench's region; the title shows it.
+@export var region_name_key: String = ""
+## Unix seconds of the last write to disk; 0 in a save written before it existed. The title continues the latest.
+@export var saved_at: int = 0
 
 func _init() -> void:
 	migrate()

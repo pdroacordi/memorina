@@ -48,6 +48,7 @@ func _ready() -> void:
 	_real_clock = String(timeline.get("clock", "")) == "real"
 
 	# Keep runs isolated from disk saves and commit setup so deaths rewind to this timeline's start.
+	SaveSystem.use_memory_only()
 	SaveSystem.begin("", true)
 	for song_id: Variant in timeline.get("known_songs", []):
 		SaveSystem.learn_song(int(song_id) as Enums.Song)
@@ -158,9 +159,9 @@ func _capture(screenshot_name: String) -> void:
 
 ## Optionally positions Ivo before the first timeline step.
 func _place_player(at: Array) -> void:
-	var player := get_tree().get_first_node_in_group(Player.GROUP) as Node2D
+	var player := get_tree().get_first_node_in_group(Player.GROUP) as Character
 	assert(player != null, "player_position given but no node is in group %s" % Player.GROUP)
-	player.global_position = Vector2(float(at[0]), float(at[1]))
+	player.teleport(Vector2(float(at[0]), float(at[1])))
 
 func _load_timeline(path: String) -> Dictionary:
 	if not FileAccess.file_exists(path):

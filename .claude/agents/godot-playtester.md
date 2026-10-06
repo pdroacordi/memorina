@@ -149,6 +149,25 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   `Input.parse_input_event()` moves it once per tilt. A headless probe of engine input
   must use `parse_input_event`, or it reports "the stick does nothing".
 
+- **Learned 2026-10-02 (title and slots playtest)**: **redirect `APPDATA` for every windowed run.**
+  Since UI-05, `SaveSystem._ready` renames a legacy `user://save_debug.tres` to
+  `save_debug_1.tres` before the runner's `use_memory_only()`
+  (`bugs/the-playtest-runner-adopts-the-legacy-save-before-going-memory-only`). Use
+  `APPDATA="C:/.../scratchpad/<run>"`: forward slashes, one fresh folder per run. A Git Bash
+  `"$S\$run"` passed a literal `$run`. Print `OS.get_user_data_dir()` first and abort unless it is
+  the scratch dir. md5 the real save before and after.
+- The runner cannot test the title or slots: it is memory-only. Use a `-s` SceneTree driver.
+  - Run `"$GODOT" --path . -s <abs>/pt.gd -- --title ...`. `--title` makes debug Boot show the
+    title.
+  - Seed the slot files in a headless `--prepare` pass with `ResourceSaver` (`PlayerData` with
+    `bench_id`, `bench_room` uid, `region_name_key`, `play_time`, `saved_at`). Copy that dir per run.
+  - Drive raw `InputEventKey` / `InputEventJoypadButton` / motion through `parse_input_event`.
+  - Use real-time timers: `create_timer(s, true, false, true)`.
+  - Log `Game._current_room`, `_memory_field.baseline`, `_camera.bounds()` and the
+    `user://` files.
+  - Room uids: Downtown `uid://d3yi3wnqg8gub`, Lighthouse `uid://clighthouse1`. To rest after a
+    new game, teleport Ivo to (-1104, -6), wait 3 s, then press Down.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

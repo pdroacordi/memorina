@@ -9,6 +9,8 @@ const MAX_RESIDENT_ROOMS := 2
 @export var hazard_sink_hold: float = 0.25
 ## Seconds the body remains still after its death clip.
 @export var death_hold: float = 0.6
+## Loaded at swap time: the title exports this scene, so a PackedScene export would be a cycle.
+@export_file("*.tscn") var title_scene: String = ""
 
 @onready var _fade   : Fade   = %Fade
 @onready var _camera : GameCamera = %Camera2D
@@ -25,6 +27,7 @@ var _dying           : bool      = false
 var _resident_rooms: Array[Room] = []
 
 func _ready() -> void:
+	assert(SaveSystem.has_session(), "The game runs on a session that Boot or the title began")
 	_camera.follow(_player)
 	_player.fell_into_hazard.connect(_on_player_fell_into_hazard)
 	_player.died.connect(_on_player_died)
@@ -40,6 +43,10 @@ func _ready() -> void:
 ## Quits without saving: only benches save.
 func quit_game() -> void:
 	get_tree().quit()
+
+## Leaves for the title without saving, behind the black Screens already drew.
+func quit_to_title() -> void:
+	_swap_to_title.call_deferred()
 
 func _on_player_entered_room(room: Room) -> void:
 	if room == _current_room or _is_transitioning or _dying:
@@ -122,7 +129,9 @@ func _on_player_sat_down(seat: Seat) -> void:
 	_player.rest()
 	seat.rest()
 	var room := _room_at(seat.global_position)
-	SaveSystem.rest_at(seat.bench_id, SceneKey.of(room) if room != null else "")
+	var room_key := SceneKey.of(room) if room != null else ""
+	var region_key := room.get_region().name_key if room != null else ""
+	SaveSystem.rest_at(seat.bench_id, room_key, region_key)
 	_wake_rooms()
 
 ## Evicts other resident rooms and expires the current room for its next visit.
@@ -155,6 +164,9 @@ func _on_player_died() -> void:
 
 func _reload_world() -> void:
 	SceneSwap.replace(self, load(scene_file_path) as PackedScene)
+
+func _swap_to_title() -> void:
+	SceneSwap.replace(self, load(title_scene) as PackedScene)
 
 func _room_at(point: Vector2) -> Room:
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):

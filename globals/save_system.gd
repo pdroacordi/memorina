@@ -6,60 +6,97 @@ signal guardian_restored(guardian: Enums.Guardian)
 signal saved
 
 const PATH: String = "user://"
-const SAVE_FILE_NAME: String = "save.tres"
-## Debug builds use a persistent separate save; `-- --new-game` starts fresh. Playtests use memory only.
-const DEBUG_SAVE_FILE_NAME: String = "save_debug.tres"
-const NEW_GAME_ARG: String = "--new-game"
 
 ## Current session state; benches commit it and death restores the last commit.
 var player_data: PlayerData:
 	get:
 		return _ledger.live
 
+## Null until a session begins.
 var _ledger: SaveLedger
 ## Where commits are written. Empty keeps the save in memory (playtests).
 var _path: String = ""
+var _slots: SaveSlots
+## `Time.get_ticks_msec()` at the last commit or session start; play time counts from it.
+var _counted_msec: int = 0
 
+## Decides memory-only before touching user://, so the suite, the smoke test and the playtest runner never read, move or write a save.
 func _ready() -> void:
-	# Nobody plays headless: the test suite, the smoke test and the tools run
-	# that way, and none of them may read - or one day write - a player's save.
-	if DisplayServer.get_name() == "headless":
-		begin("", true)
-	elif OS.is_debug_build():
-		begin(PATH + DEBUG_SAVE_FILE_NAME, NEW_GAME_ARG in OS.get_cmdline_user_args())
-	else:
-		begin(PATH + SAVE_FILE_NAME, false)
+	var session := BootPolicy.decide(DisplayServer.get_name() == "headless", OS.is_debug_build(),
+			OS.get_cmdline_args(), OS.get_cmdline_user_args())
+	var memory_only := session == BootPolicy.Session.MEMORY
+	_slots = SaveSlots.new("" if memory_only else PATH, OS.is_debug_build())
+	_slots.adopt_legacy()
+	match session:
+		BootPolicy.Session.MEMORY:
+			begin("", true)
+		BootPolicy.Session.SLOT_1:
+			begin_slot(1, false)
+		BootPolicy.Session.SLOT_1_FRESH:
+			begin_slot(1, true)
+
+func has_session() -> bool:
+	return _ledger != null
+
+## No slot is read, written or deleted from now on. The playtest runner calls it before `begin("", true)`.
+func use_memory_only() -> void:
+	_slots = SaveSlots.new("", OS.is_debug_build())
+	_path = ""
+
+## Empty when there is no disk.
+func slot_path(slot: int) -> String:
+	return _slots.path(slot)
+
+## The slot's save, or null when it is empty.
+func read_slot(slot: int) -> PlayerData:
+	return _slots.read(slot)
+
+## Every slot's save in slot order; null for an empty slot.
+func read_slots() -> Array[PlayerData]:
+	var saves: Array[PlayerData] = []
+	for slot: int in range(1, SaveSlots.COUNT + 1):
+		saves.append(read_slot(slot))
+	return saves
+
+func delete_slot(slot: int) -> void:
+	_slots.delete(slot)
+
+## A new game writes nothing until its first rest, so a slot left before any bench stays empty.
+func begin_slot(slot: int, fresh: bool) -> void:
+	begin(slot_path(slot), fresh)
 
 ## Starts a session on the save at `path` (empty: in memory only), from the
 ## file unless `fresh` or there is none to read.
 func begin(path: String, fresh: bool) -> void:
 	_path = path
 	var start: PlayerData = null
-	if not fresh and not path.is_empty() and ResourceLoader.exists(path):
-		start = _read(path)
+	if not fresh and not path.is_empty() and FileAccess.file_exists(path):
+		start = SaveSlots.load_data(path)
 	_ledger = SaveLedger.new(start if start != null else _new_game())
+	_counted_msec = Time.get_ticks_msec()
 
 ## Commits the current world state and respawn point.
-func rest_at(bench: StringName, room_key: String) -> void:
+func rest_at(bench: StringName, room_key: String, region_name_key: String) -> void:
 	player_data.bench_id = bench
 	player_data.bench_room = room_key
-	if _write(_ledger.commit()):
+	player_data.region_name_key = region_name_key
+	if _write(_ledger.commit(_take_elapsed())):
 		saved.emit()
 
 ## Ivo died at `point` (local to the region `region_key` names). The mark is
 ## written onto the last bench's save, and the live save goes back to it.
 func record_death(region_key: String, point: Vector2) -> void:
-	_write(_ledger.record_death(region_key, point))
+	_write(_ledger.record_death(region_key, point, _take_elapsed()))
 
 ## A death with nowhere to leave its mark (outside any region): the live save
 ## goes back to the last bench, and nothing is written.
 func rewind() -> void:
-	_ledger.rewind()
+	_ledger.rewind(_take_elapsed())
 
 ## Commits the live save as if rested on, without changing the bench. Setup
 ## for a playtest, whose death should rewind to its own start.
 func commit() -> void:
-	_write(_ledger.commit())
+	_write(_ledger.commit(_take_elapsed()))
 
 func bench_id() -> StringName:
 	return player_data.bench_id
@@ -82,21 +119,19 @@ func _new_game() -> PlayerData:
 		data.owned_items[Enums.PlayerItem.MEMORINA] = true
 	return data
 
-# CACHE_MODE_IGNORE: the file is rewritten by every rest, and a cached copy
-# would hand back the save as it was first read.
-func _read(path: String) -> PlayerData:
-	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
-	if loaded == null:
-		push_error("Failed to load save file, falling back to a new game: %s" % path)
-		return null
-	loaded.migrate()
-	return loaded
+## Real seconds since the last count, menus included; restarts the count.
+func _take_elapsed() -> float:
+	var now := Time.get_ticks_msec()
+	var elapsed := (now - _counted_msec) / 1000.0
+	_counted_msec = now
+	return elapsed
 
 ## Whether the save landed: true in memory, or once the file is written. The
 ## quill must never say "kept" over a failed write.
 func _write(data: PlayerData) -> bool:
 	if _path.is_empty():
 		return true
+	data.saved_at = int(Time.get_unix_time_from_system())
 	var err := ResourceSaver.save(data, _path)
 	if err != OK:
 		push_error("Failed to save game: %s" % error_string(err))

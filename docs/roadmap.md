@@ -96,7 +96,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | UI-02 | Pause menu | 02 Controles | `[x]` | | 2026-10-02 | `systems/screens`. Quit to title comes with UI-05, Settings with UI-07. |
 | UI-03 | Field notebook (lore, songs, items, guardians) | 02 UI | `[ ]` | | 2026-10-02 | Also confirms a recalled skill (02 §4). |
 | UI-04 | Map (drawn by exploration) | 02 UI | `[ ]` | | 2026-10-02 | |
-| UI-05 | Title screen and load menu | 02 UI | `[ ]` | | 2026-10-02 | Decided 2026-10-02: three slots, forest parallax, "Memorina" logo. Plan: `architecture/save-slots-and-the-boot-swap`. |
+| UI-05 | Title screen and load menu | 02 UI | `[x]` | | 2026-10-06 | `systems/screens`, `systems/life-benches-death`. Three slots; main menu gets Settings with UI-07. |
 | UI-06 | Victory screen | 02 UI | `[?]` | GRD-06 | 2026-10-02 | |
 | UI-07 | Settings: volume, language, display, rebinding | | `[ ]` | UI-02 | 2026-10-02 | The user's go-ahead, 2026-10-02. Pause and title show Settings once it exists. |
 

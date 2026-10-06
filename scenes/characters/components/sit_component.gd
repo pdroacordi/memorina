@@ -29,7 +29,7 @@ func sit(on: Seat) -> void:
 	stand()
 	_seat = on
 	_seat.set_occupied(true)
-	_body.global_position = on.global_position
+	_body.teleport(on.global_position)
 	_body.velocity = Vector2.ZERO
 	_body.face_towards(on.facing)
 

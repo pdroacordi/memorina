@@ -6,7 +6,7 @@ status: active
 tags: [glossary, i18n, naming]
 related: []
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-06
 source_files: []
 ---
 
@@ -92,6 +92,19 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | pausa / menu de pausa | `PauseMenu`, `Screens`, `ScreenRouter.Kind.PAUSE` (`systems/screens`) |
 | parar tudo atrás do menu (menu hold) | `WorldFreeze.hold()` / `release()` / `is_held()` (scale 0); a performance uses `freeze()` / `thaw()` (scale 1) |
 
+| espaço de salvamento (slot) | `SaveSlots` (`save_N.tres` / `save_debug_N.tres`), `SaveSystem.begin_slot`, `read_slots` |
+| abertura do jogo (escolhe título ou jogo) | `Boot` (`scenes/boot/boot.tscn`), `BootPolicy` |
+| tela de título | `Title` (`scenes/ui/title/`) |
+| tela dos espaços de salvamento | `SlotScreen` (`Purpose.LOAD` / `Purpose.NEW`), `SlotCard` |
+| escurecer ao voltar ao título | `Screens` `Blackout` (a real-time `Fade`) |
+| tempo de jogo | `PlayerData.play_time` (wall-clock seconds, menus included) |
+| último jogo salvo / o mais antigo | `PlayerData.saved_at`, `SaveSlots.latest` / `SaveSlots.oldest` |
+| Novo jogo / Continuar / Sair do jogo | `TITLE_NEW_GAME` / `TITLE_CONTINUE` / `TITLE_QUIT_GAME` |
+| Apagar / Substituir / Vazio | `TITLE_ERASE` + `CONFIRM_ERASE` / `CONFIRM_OVERWRITE` / `TITLE_EMPTY_SLOT` |
+| Voltar ao título | `PAUSE_QUIT_TO_TITLE`, `CONFIRM_QUIT_TO_TITLE`, `Game.quit_to_title` |
+| nome da região / do banco (no título) | `Region.name_key` (`REGION_*`), `SaveSlots.bench_name_key` (`BENCH_` + bench id in capitals) |
+| teletransportar (banco, retorno) | `Character.teleport` |
+
 ## Terms no longer used
 
 When a code identifier or design term is renamed or retired, add it here instead of just
@@ -119,3 +132,4 @@ someone's memory of the project is exactly what causes an accidental regression 
 | the first song matrix: `BLIZZARD` (Ventania/Nevasca), `CONCENTRATED_SUN` (Sol Concentrado), `SUDDEN_STORM` (Tempestade Repentina), `WEAKEN` (Fragilizar), `STRIP` (Despir), `SPROUT` (Brotar), `HATCH` (Eclodir), and the unslotted Hibernação | replaced 2026-09-23 by the second matrix, each renamed IN ITS SLOT so the save indices hold: `BELL_JAR`, `SHADOW`, `SOLSTICE`, `RELEASE`, `GALE`, `ROOT`, `RAIN` (design 02 §7.1). The soundtrack files were renamed after the new titles; their music predates the new songs |
 | `PauseInput` / `PauseMenu.opened` → `WorldFreeze.freeze` (the first pause-menu plan, never built) | replaced 2026-10-02 by one `MenuInput`, the `ScreenRouter` and `Screens.hold_requested` → `WorldFreeze.hold` |
 | `MemorinaVoice.note_finished` starting the performance | removed 2026-10-02: a performance starts from `Player._tick_pending_performance` on the pausable clock |
+| `user://save.tres` / `save_debug.tres` (one save) | replaced 2026-10-06 by three slots; `SaveSlots.adopt_legacy` moves the old file into slot 1 once |

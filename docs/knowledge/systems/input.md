@@ -6,7 +6,7 @@ status: active
 tags: [input, gamepad, glyphs, keybindings, menu, pause]
 related: [architecture/character-controller-input-split, architecture/pause-menu-worldfreeze-reuse, systems/screens, gotchas/a-stick-is-pressed-on-every-motion-event, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-menu-press-reaches-the-last-node-first, bugs/player-input-edge-state-goes-stale-across-a-pause-menu]
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-06
 source_files:
   - scenes/characters/ivo/player_input.gd
   - scenes/ui/menu/menu_input.gd
@@ -53,6 +53,10 @@ Only these three nodes read `InputEvent`s; the `verify-gates` input scan exclude
 3. **`InputDevice`** (autoload): remembers the last device as an `Enums.GlyphSet`, using `PlayerInput.glyph_set_for`.
    - It listens on `get_tree().root.window_input`, which fires before dispatch. So a press a menu marks handled (Esc, Start, B) and a press made while paused still switch the prompts.
    - A stick counts only past `STICK_THRESHOLD` (0.5), so drift never flips the prompts. A motion event is the pad as much as a button is.
+
+## On the title
+
+The title has its own `MenuInput` (`scenes/ui/title/title.tscn`). Esc arrives as `pause_pressed` and pad B as `back_pressed`; the title treats both as back: they close a confirmation, then leave the slot screen. Nothing opens or quits on them.
 
 ## Focus navigation
 

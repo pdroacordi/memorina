@@ -66,6 +66,9 @@ learned_songs = Array[bool]([true])
 	assert_str(String(data.bench_id)).is_empty()
 	assert_str(data.bench_room).is_empty()
 	assert_bool(data.deaths.is_empty()).is_true()
+	assert_float(data.play_time).is_equal(0.0)
+	assert_str(data.region_name_key).is_empty()
+	assert_int(data.saved_at).is_equal(0)
 
 ## Bench and death data must round-trip through serialization.
 func test_the_bench_and_the_deaths_round_trip_through_the_file() -> void:
@@ -88,3 +91,14 @@ func test_migrate_adds_the_guardian_flags_an_old_save_lacks() -> void:
 	data.migrate()
 	assert_int(data.restored_guardians.size()).is_equal(Enums.Guardian.size())
 	assert_bool(data.restored_guardians[Enums.Guardian.FROST]).is_false()
+
+func test_the_play_time_and_the_region_round_trip_through_the_file() -> void:
+	var path := "user://test_round_trip_title.tres"
+	var data := PlayerData.new()
+	data.play_time = 11220.5
+	data.region_name_key = "REGION_HOME_VILLAGE"
+	assert_int(ResourceSaver.save(data, path)).is_equal(OK)
+	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	assert_float(loaded.play_time).is_equal(11220.5)
+	assert_str(loaded.region_name_key).is_equal("REGION_HOME_VILLAGE")

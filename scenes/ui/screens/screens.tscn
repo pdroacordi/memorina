@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://scenes/ui/screens/screens.gd" id="1_screens"]
 [ext_resource type="Script" path="res://scenes/ui/menu/menu_input.gd" id="2_input"]
 [ext_resource type="PackedScene" path="res://scenes/ui/pause_menu/pause_menu.tscn" id="3_pause"]
+[ext_resource type="Script" uid="uid://be0v2br7tupo7" path="res://scenes/world/fade.gd" id="4_fade"]
 
 [node name="Screens" type="Control"]
 process_mode = 3
@@ -32,3 +33,15 @@ color = Color(0, 0, 0, 0.55)
 [node name="PauseMenu" parent="." instance=ExtResource("3_pause")]
 visible = false
 layout_mode = 1
+
+[node name="Blackout" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0)
+script = ExtResource("4_fade")
+real_time = true

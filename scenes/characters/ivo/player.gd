@@ -996,7 +996,7 @@ func receive_hazard(hazard: HazardZone) -> void:
 func respawn() -> void:
 	assert(not is_dead(), "A corpse is not respawned")
 	_sit_requested = false
-	global_position = _safe_ground.last_safe_position()
+	teleport(_safe_ground.last_safe_position())
 	velocity = Vector2.ZERO
 	_sinking = false
 	_safe_ground.enabled = true

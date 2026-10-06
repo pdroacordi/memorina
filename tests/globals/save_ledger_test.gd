@@ -65,3 +65,25 @@ func test_a_rest_and_a_death_both_bring_the_defeated_back() -> void:
 	ledger.defeated["brute"] = true
 	ledger.record_death("a", Vector2.ZERO)
 	assert_bool(ledger.defeated.has("brute")).is_false()
+
+func test_a_commit_adds_the_play_time_since_the_last_one() -> void:
+	var ledger := _ledger()
+	ledger.commit(60.0)
+	ledger.commit(30.0)
+	assert_float(ledger.committed.play_time).is_equal(90.0)
+	assert_float(ledger.live.play_time).is_equal(90.0)
+
+## The time played up to a death counts, though what was gained in it is lost.
+func test_a_death_keeps_the_play_time_since_the_bench() -> void:
+	var ledger := _ledger()
+	ledger.commit(100.0)
+	var written := ledger.record_death("a", Vector2.ZERO, 40.0)
+	assert_float(written.play_time).is_equal(140.0)
+	assert_float(ledger.live.play_time).is_equal(140.0)
+	ledger.commit(10.0)
+	assert_float(ledger.committed.play_time).is_equal(150.0)
+
+func test_a_rewind_with_no_mark_keeps_the_play_time() -> void:
+	var ledger := _ledger()
+	ledger.rewind(25.0)
+	assert_float(ledger.live.play_time).is_equal(25.0)

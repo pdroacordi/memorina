@@ -16,21 +16,23 @@ func _init(start: PlayerData) -> void:
 static func copy(data: PlayerData) -> PlayerData:
 	return data.duplicate_deep(Resource.DEEP_DUPLICATE_ALL) as PlayerData
 
-## Commits live data and clears transient defeated enemies.
-func commit() -> PlayerData:
+## Commits live data and clears transient defeated enemies. `elapsed` is the play time since the last commit, in seconds.
+func commit(elapsed: float = 0.0) -> PlayerData:
+	live.play_time += elapsed
 	committed = copy(live)
 	defeated.clear()
 	return committed
 
-## Restores committed data and clears transient defeated enemies.
-func rewind() -> void:
+## Restores committed data and clears transient defeated enemies. The play time `elapsed` since the last commit is kept.
+func rewind(elapsed: float = 0.0) -> void:
+	committed.play_time += elapsed
 	live = copy(committed)
 	defeated.clear()
 
-## Records a region-local death point before rewinding (design 03, section 4.3).
-func record_death(region_key: String, point: Vector2) -> PlayerData:
+## Records a region-local death point and the play time `elapsed` before rewinding (design 03, section 4.3).
+func record_death(region_key: String, point: Vector2, elapsed: float = 0.0) -> PlayerData:
 	var points: PackedVector2Array = committed.deaths.get(region_key, PackedVector2Array())
 	points.append(point)
 	committed.deaths[region_key] = points
-	rewind()
+	rewind(elapsed)
 	return committed

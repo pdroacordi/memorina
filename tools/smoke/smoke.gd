@@ -41,7 +41,9 @@ func _ready() -> void:
 		add_child(node)
 		for i: int in FRAMES:
 			await get_tree().process_frame
-		node.queue_free()
+		# Boot swaps itself out, so free whatever stands in its place.
+		for child: Node in get_children():
+			child.queue_free()
 		await get_tree().process_frame
 		print("%s %s" % ["ok  " if counter.errors.size() == before else "FAIL", path])
 	OS.remove_logger(counter)

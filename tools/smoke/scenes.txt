@@ -26,3 +26,7 @@ res://scenes/ui/save_mark/save_mark.tscn
 res://scenes/ui/menu/confirm_panel.tscn
 res://scenes/ui/pause_menu/pause_menu.tscn
 res://scenes/ui/screens/screens.tscn
+res://scenes/ui/title/slot_card.tscn
+res://scenes/ui/title/slot_screen.tscn
+res://scenes/ui/title/title.tscn
+res://scenes/boot/boot.tscn

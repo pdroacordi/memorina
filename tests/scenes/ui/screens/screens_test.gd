@@ -20,6 +20,7 @@ func before_test() -> void:
 	_screens.hold_requested.connect(func() -> void: _requests.append("hold"))
 	_screens.release_requested.connect(func() -> void: _requests.append("release"))
 	_screens.quit_game_requested.connect(func() -> void: _requests.append("quit"))
+	_screens.quit_to_title_requested.connect(func() -> void: _requests.append("title"))
 
 func test_escape_opens_the_pause_menu_held_and_dimmed() -> void:
 	_menu_input._input(_escape())
@@ -113,6 +114,64 @@ func test_every_label_is_translated() -> void:
 	assert_str((_pause_menu.find_child("Title") as Label).text).is_equal(tr("PAUSE_TITLE"))
 	assert_str((_pause_menu.find_child("Resume") as Button).text).is_not_equal("PAUSE_RESUME").is_not_empty()
 	assert_str((_pause_menu.find_child("Body") as Label).text).is_not_equal("CONFIRM_QUIT_GAME").is_not_empty()
+
+func test_quit_to_title_sits_between_resume_and_quit_game() -> void:
+	var names: Array[String] = []
+	for entry: Node in _pause_menu.find_child("Entries").get_children():
+		names.append(entry.name)
+	assert_array(names).contains_exactly(["Resume", "QuitToTitle", "QuitGame"])
+
+func test_quit_to_title_asks_first_and_back_returns_to_it() -> void:
+	_menu_input.pause_pressed.emit()
+	(_pause_menu.find_child("QuitToTitle") as Button).pressed.emit()
+	assert_bool(_pause_menu.is_confirming()).is_true()
+	assert_str(_focused()).is_equal("No")
+	_menu_input.back_pressed.emit()
+	assert_bool(_pause_menu.is_confirming()).is_false()
+	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.PAUSE)
+	assert_str(_focused()).is_equal("QuitToTitle")
+	assert_array(_requests).contains_exactly(["hold"])
+
+## The world stays held under the Blackout; the swap is asked for once it is black.
+func test_yes_blacks_out_still_held_then_asks_for_the_title_once() -> void:
+	_menu_input.pause_pressed.emit()
+	(_pause_menu.find_child("QuitToTitle") as Button).pressed.emit()
+	var yes := _confirm_quit_to_title().find_child("Yes") as Button
+	yes.pressed.emit()
+	yes.pressed.emit()
+	assert_array(_requests).contains_exactly(["hold"])
+	await await_millis(800)
+	assert_array(_requests).contains_exactly(["hold", "title"])
+	assert_float((_screens.get_node("Blackout") as ColorRect).color.a).is_equal(1.0)
+
+func test_no_press_is_obeyed_while_leaving_for_the_title() -> void:
+	_menu_input.pause_pressed.emit()
+	(_pause_menu.find_child("QuitToTitle") as Button).pressed.emit()
+	(_confirm_quit_to_title().find_child("Yes") as Button).pressed.emit()
+	_menu_input.pause_pressed.emit()
+	_menu_input.back_pressed.emit()
+	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.PAUSE)
+	assert_array(_requests).contains_exactly(["hold"])
+
+## Clicks reach Buttons, not MenuInput: the visible No, Resume and Quit game must not release or quit under the Blackout.
+func test_buttons_pressed_while_leaving_neither_release_nor_quit() -> void:
+	_menu_input.pause_pressed.emit()
+	(_pause_menu.find_child("QuitToTitle") as Button).pressed.emit()
+	(_confirm_quit_to_title().find_child("Yes") as Button).pressed.emit()
+	(_confirm_quit_to_title().find_child("No") as Button).pressed.emit()
+	(_pause_menu.find_child("Resume") as Button).pressed.emit()
+	(_pause_menu.find_child("QuitGame") as Button).pressed.emit()
+	(_pause_menu.find_child("ConfirmQuit").find_child("Yes") as Button).pressed.emit()
+	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.PAUSE)
+	assert_array(_requests).contains_exactly(["hold"])
+	assert_int((_screens.get_node("Blackout") as Control).mouse_filter).is_equal(Control.MOUSE_FILTER_STOP)
+
+## The Blackout is the pause menu's UI-05 fade: it must run while the time scale is 0.
+func test_the_blackout_runs_in_real_time() -> void:
+	assert_bool((_screens.get_node("Blackout") as Fade).real_time).is_true()
+
+func _confirm_quit_to_title() -> ConfirmPanel:
+	return _pause_menu.find_child("ConfirmQuitToTitle") as ConfirmPanel
 
 func _focused() -> String:
 	var owner := get_viewport().gui_get_focus_owner()

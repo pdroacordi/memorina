@@ -38,6 +38,7 @@ viewport_path = NodePath("CreatureMask")
 process_mode = 1
 script = ExtResource("4_game")
 song_catalog = ExtResource("19_songcat")
+title_scene = "res://scenes/ui/title/title.tscn"
 
 [node name="World" type="Node2D" parent="." unique_id=870631150]
 process_mode = 1
@@ -208,4 +209,5 @@ layer = 2
 [connection signal="died" from="World/Player" to="ScreenLayer/Screens" method="lock"]
 [connection signal="hold_requested" from="ScreenLayer/Screens" to="WorldFreeze" method="hold"]
 [connection signal="release_requested" from="ScreenLayer/Screens" to="WorldFreeze" method="release"]
+[connection signal="quit_to_title_requested" from="ScreenLayer/Screens" to="." method="quit_to_title"]
 [connection signal="quit_game_requested" from="ScreenLayer/Screens" to="." method="quit_game"]

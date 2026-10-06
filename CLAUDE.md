@@ -88,7 +88,7 @@ Read the entry before touching the system. The rule beside each is the one most 
 | Bell jar (Redoma) | [`systems/bell-jar`](docs/knowledge/systems/bell-jar.md) | `wc_held()` and `WaterBody._refresh_dry()` are the same test: change both. |
 | Solstice | [`systems/solstice`](docs/knowledge/systems/solstice.md) | Stretch takes once, only while a pulse opens or holds. |
 | Water | [`systems/water`](docs/knowledge/systems/water.md) | Reflect below z 50, cover water above it. Never `TIME` or `FRAGCOORD` in water shaders. Hazards detect the body, never the hurtbox. |
-| Life, benches, death | [`systems/life-benches-death`](docs/knowledge/systems/life-benches-death.md) | Only benches save. Death rebuilds the world by swapping `game.tscn`, never `reload_current_scene()`. Headless runs never touch a player's save. |
+| Life, benches, death | [`systems/life-benches-death`](docs/knowledge/systems/life-benches-death.md) | Only benches save. Death rebuilds the world by swapping `game.tscn`, never `reload_current_scene()`. Headless runs and the playtest runner never touch a player's save (`BootPolicy`). Move a character with `Character.teleport`, never a position write. |
 | Input | [`systems/input`](docs/knowledge/systems/input.md) | Only `PlayerInput`, `MenuInput` and `InputDevice` read `InputEvent`s. |
 | Screens (menus) | [`systems/screens`](docs/knowledge/systems/screens.md) | Screens only asks `WorldFreeze` to hold and releases only what it held. The Screens root Control is ALWAYS, never its CanvasLayer. Every tween under Screens ignores the time scale. |
 | Rooms | [`systems/rooms`](docs/knowledge/systems/rooms.md) | Rooms are `.room` text; never paint ground in the editor. Bump the importer's `FORMAT_VERSION` when the parser changes. |

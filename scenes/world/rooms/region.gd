@@ -5,6 +5,8 @@ class_name Region extends Node2D
 ## Re-emitted when RegionMemory changes.
 signal memory_changed(level: float)
 
+## Translation key of the region's name; a rest saves it for the title.
+@export var name_key: String = ""
 ## Native season (design 03 section 4.2).
 @export var season: Enums.Season = Enums.Season.SPRING
 ## Guardian that keeps this region; restoring it sets memory to 1.0.

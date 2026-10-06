@@ -6,7 +6,7 @@ status: active
 tags: [save, slots, title, boot, scene-swap, play-time, headless, playtest, plan]
 related: [architecture/the-life-loop-rewinds-by-reloading, architecture/pause-menu-worldfreeze-reuse, architecture/map-reveal-seen-cells-per-room, gotchas/queue-free-keeps-the-name-until-frame-end, gotchas/first-process-frame-can-precede-the-first-deferred-flush, systems/life-benches-death]
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-06
 source_files:
   - globals/save_system.gd
   - globals/save_ledger.gd
@@ -21,7 +21,7 @@ source_files:
   - project.godot
 ---
 
-> **Status: planned** (2026-10-02, roadmap UI-05). Nothing here is built yet.
+> **Status: built** (2026-10-06, roadmap UI-05). Deviations from the plan are listed at the end.
 
 ## Context
 
@@ -108,3 +108,15 @@ reads then answer empty, and `delete_slot` and every write do nothing.
   passes about 250 lines.
 - A slot's file appears only at the first rest, so "time played" on the title is the time at the
   last bench.
+
+## As built (2026-10-06)
+
+The decision held. What differs:
+- `SaveSlots` is not only static. An instance holds the slot directory and does the file I/O (`read`, `delete`, `adopt_legacy`, `load_data`), so slot files are tested in a temporary directory. `SaveSystem` stays under 200 lines.
+- The boot policy is a pure `BootPolicy.decide(headless, debug, args, user_args)`. It also makes the playtest runner memory-only when its scene is on the command line, decided before `adopt_legacy()` (`bugs/the-playtest-runner-adopts-the-legacy-save-before-going-memory-only`).
+- `SaveLedger.rewind(elapsed)` counts play time too, for a death outside any region.
+- `PlayerData.saved_at` (Unix seconds, stamped on every write) was added for Continue's "last played" and the overwrite's "oldest save".
+- The title became two screens (main column, then slots) on the user's decision of 2026-10-02 (`systems/screens`).
+- The title is its own composition root, not a `ScreenRouter` screen.
+- Arrival exposed a stale room entry after the teleport to the bench. It is fixed at the source by `Character.teleport` (`bugs/a-teleported-ivo-enters-the-room-he-left`).
+- `has_session()` stays true after Quit to title. Boot runs once, and the title begins a new session when a slot is played.

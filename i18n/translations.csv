@@ -27,3 +27,19 @@ PAUSE_QUIT_GAME,Quit game,Sair do jogo
 CONFIRM_QUIT_GAME,Quit the game?\nProgress since the last bench will be lost.,Sair do jogo?\nO progresso desde o último banco será perdido.
 CONFIRM_YES,Yes,Sim
 CONFIRM_NO,No,Não
+PAUSE_QUIT_TO_TITLE,Quit to title,Voltar ao título
+CONFIRM_QUIT_TO_TITLE,Return to the title?\nProgress since the last bench will be lost.,Voltar ao título?\nO progresso desde o último banco será perdido.
+TITLE_NEW_GAME,New game,Novo jogo
+TITLE_ERASE,Erase,Apagar
+TITLE_PLAY_TIME,%dh %02dm,%dh %02dm
+TITLE_QUIT_GAME,Quit game,Sair do jogo
+CONFIRM_ERASE,Erase this game?\nThis cannot be undone.,Apagar este jogo?\nNão há como desfazer.
+REGION_HOME_VILLAGE,Home Village,Vila natal
+REGION_FROST_EDGE,Frost Edge,Borda do Gelo
+REGION_TRIALS,Trials,Provações
+BENCH_DOWNTOWN_BENCH,Town Square,Praça
+BENCH_FROST_EDGE_APPROACH_BENCH,Lighthouse Path,Caminho do Farol
+BENCH_SUMMER_TRIAL_BENCH,Summer Trial,Provação de Verão
+TITLE_CONTINUE,Continue,Continuar
+TITLE_EMPTY_SLOT,Empty,Vazio
+CONFIRM_OVERWRITE,Overwrite this game?\nThe saved game will be erased.,Substituir este jogo?\nO jogo salvo será apagado.
