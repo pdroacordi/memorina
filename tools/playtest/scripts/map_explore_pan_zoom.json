@@ -1,0 +1,206 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 22.0,
+ "player_position": [
+  1000,
+  -69
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 7.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 8.1,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 8.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 9.1,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 9.5,
+   "log": "crossing"
+  },
+  {
+   "t": 10.5,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 11.5,
+   "log": "before_map"
+  },
+  {
+   "t": 11.6,
+   "key": "M",
+   "pressed": true
+  },
+  {
+   "t": 11.7,
+   "key": "M",
+   "pressed": false
+  },
+  {
+   "t": 12.2,
+   "screenshot": "01_open_two_rooms"
+  },
+  {
+   "t": 12.3,
+   "log": "map_open"
+  },
+  {
+   "t": 12.4,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 13.6,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 13.8,
+   "screenshot": "02_panned_left"
+  },
+  {
+   "t": 13.9,
+   "log": "after_pan_ivo_still"
+  },
+  {
+   "t": 14.0,
+   "key": "X",
+   "pressed": true
+  },
+  {
+   "t": 14.1,
+   "key": "X",
+   "pressed": false
+  },
+  {
+   "t": 14.4,
+   "screenshot": "03_zoom_2px"
+  },
+  {
+   "t": 14.5,
+   "key": "X",
+   "pressed": true
+  },
+  {
+   "t": 14.6,
+   "key": "X",
+   "pressed": false
+  },
+  {
+   "t": 14.9,
+   "screenshot": "04_zoom_1px"
+  },
+  {
+   "t": 15.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 15.1,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 15.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 15.3,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 15.4,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 15.5,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 15.8,
+   "screenshot": "05_zoom_8px"
+  },
+  {
+   "t": 15.9,
+   "log": "after_zoom_no_jump"
+  },
+  {
+   "t": 16.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 16.1,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 16.5,
+   "screenshot": "06_closed_by_esc"
+  },
+  {
+   "t": 16.6,
+   "log": "closed"
+  },
+  {
+   "t": 16.7,
+   "key": "M",
+   "pressed": true
+  },
+  {
+   "t": 16.8,
+   "key": "M",
+   "pressed": false
+  },
+  {
+   "t": 17.2,
+   "screenshot": "07_reopened_centred_on_ivo"
+  },
+  {
+   "t": 17.3,
+   "key": "M",
+   "pressed": true
+  },
+  {
+   "t": 17.4,
+   "key": "M",
+   "pressed": false
+  },
+  {
+   "t": 17.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 17.7,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 18.0,
+   "log": "z_after_close_jumps"
+  }
+ ]
+}

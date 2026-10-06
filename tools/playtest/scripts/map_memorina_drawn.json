@@ -1,0 +1,96 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 5.0,
+ "player_position": [
+  1500,
+  -69
+ ],
+ "steps": [
+  {
+   "key": "C",
+   "t": 1.5,
+   "pressed": true
+  },
+  {
+   "key": "C",
+   "t": 1.6,
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "log": "drawn"
+  },
+  {
+   "t": 2.55,
+   "screenshot": "00_drawn"
+  },
+  {
+   "key": "M",
+   "t": 2.6,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 2.7,
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "log": "map_over_memorina"
+  },
+  {
+   "t": 3.0,
+   "screenshot": "01_map_over_sheet"
+  },
+  {
+   "key": "Up",
+   "t": 3.2,
+   "pressed": true
+  },
+  {
+   "key": "Up",
+   "t": 3.3,
+   "pressed": false
+  },
+  {
+   "t": 3.5,
+   "log": "after_up"
+  },
+  {
+   "t": 3.55,
+   "screenshot": "02_up_no_note"
+  },
+  {
+   "key": "M",
+   "t": 3.7,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 3.8,
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "log": "closed"
+  },
+  {
+   "key": "Up",
+   "t": 4.1,
+   "pressed": true
+  },
+  {
+   "key": "Up",
+   "t": 4.2,
+   "pressed": false
+  },
+  {
+   "t": 4.25,
+   "screenshot": "03_note_after_close"
+  },
+  {
+   "t": 4.3,
+   "log": "note_after_close"
+  }
+ ]
+}

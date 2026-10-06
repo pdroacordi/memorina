@@ -87,8 +87,8 @@ func test_reopening_starts_on_the_menu_not_the_confirmation() -> void:
 	assert_bool(_pause_menu.is_confirming()).is_false()
 	assert_str(_focused()).is_equal("Resume")
 
-## Screens without a scene yet (notebook, map) are not opened.
-func test_a_screen_that_does_not_exist_yet_stays_shut() -> void:
+## The notebook has no scene yet; the map refuses without an Ivo standing on the ground.
+func test_a_screen_that_does_not_exist_or_refuses_stays_shut() -> void:
 	_menu_input.notebook_pressed.emit()
 	_menu_input.map_pressed.emit()
 	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.NONE)

@@ -1,10 +1,10 @@
 ---
 id: systems/screens
 type: system
-title: Screens: the menu system (pause, and the title; notebook and map later)
+title: Screens: the menu system (pause, the map and the title; the notebook later)
 status: active
 tags: [menu, pause, screens, ui, focus, theme, hold, i18n]
-related: [architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/notebook-entries-are-derived-from-the-save, architecture/map-reveal-seen-cells-per-room, systems/input, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/time-scale-zero-stops-delta-particles-and-time, playtests/2026-10-02-pause-menu, playtests/2026-10-02-title-and-slots, bugs/a-click-during-a-leave-fade-still-reaches-the-menu-buttons, bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight]
+related: [systems/map, architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/notebook-entries-are-derived-from-the-save, architecture/map-reveal-seen-cells-per-room, systems/input, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/time-scale-zero-stops-delta-particles-and-time, playtests/2026-10-02-pause-menu, playtests/2026-10-02-title-and-slots, bugs/a-click-during-a-leave-fade-still-reaches-the-menu-buttons, bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight]
 created: 2026-10-02
 updated: 2026-10-06
 source_files:
@@ -16,6 +16,7 @@ source_files:
   - scenes/ui/menu/confirm_panel.gd
   - scenes/ui/menu/menu_theme.tres
   - scenes/ui/pause_menu/pause_menu.gd
+  - scenes/ui/map/map_screen.gd
   - scenes/ui/title/title.gd
   - scenes/ui/title/slot_screen.gd
   - scenes/ui/title/slot_card.gd
@@ -31,18 +32,21 @@ source_files:
 
 ## Summary
 
-One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns presses into signals, the pure `ScreenRouter` decides the next screen, and `Screens` applies the decision and asks `WorldFreeze` to hold or release through signals. The pause menu (UI-02) is the only router screen today; the notebook (UI-03) and map (UI-04) will plug in. The title (UI-05) is not a router screen: it is its own composition root that reuses the menu kit (see "Title").
+One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns presses into signals, the pure `ScreenRouter` decides the next screen, and `Screens` applies the decision and asks `WorldFreeze` to hold or release through signals. The router screens are the pause menu (UI-02) and the map (UI-04, `systems/map`); the notebook (UI-03) will plug in. The title (UI-05) is not a router screen: it is its own composition root that reuses the menu kit (see "Title").
 
 ## Tree and wiring (`game.tscn`)
 
 - `ScreenLayer` is a CanvasLayer at layer 2, process mode INHERIT, the last child of `Game`, after `World`. `_input` reaches it first (`gotchas/a-menu-press-reaches-the-last-node-first`).
-- `Screens` is a full-rect Control, process mode ALWAYS, `mouse_filter` IGNORE. Its children are `MenuInput`, `Dim` (black at 0.55 alpha), `PauseMenu` and `Blackout` (a `Fade` with `real_time = true`, last, so it covers the menu).
+- `Screens` is a full-rect Control, process mode ALWAYS, `mouse_filter` IGNORE. Its children are `MenuInput`, `Dim` (black at 0.55 alpha), `MapScreen`, `PauseMenu` and `Blackout` (a `Fade` with `real_time = true`, last, so it covers the menu).
 - Connections in `game.tscn`:
   - `hold_requested` → `WorldFreeze.hold`
   - `release_requested` → `WorldFreeze.release`
   - `quit_to_title_requested` → `Game.quit_to_title`
   - `quit_game_requested` → `Game.quit_game`
   - `World/Player.died` → `Screens.lock`
+  - `block_requested` / `unblock_requested` → `World/Player.block_input` / `unblock_input`
+  - `World/Player.hurt` → `Screens.close_map`: any hit closes the map
+- `Game._ready` calls `Screens.set_map_subject(player)`. The map centres on Ivo and asks `Player.can_open_map()` before it opens.
 
 ## Deciding and applying
 
@@ -50,15 +54,20 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
   - From NONE, a toggle opens its screen only on a running tree that is not locked. So nothing opens over a performance or lesson.
   - While a screen is open, its own toggle, `back` or `pause` closes it, and the other toggles are ignored.
 - **`Screens._on_press`** applies the decision:
-  - A kind with no scene yet (notebook, map) stays shut.
+  - A kind with no scene yet (the notebook) stays shut, and so does one whose `MenuScreen.can_open()` answers false. A refused press is not consumed, so it reaches the world.
   - A press that closes a screen first offers `step_back()`, so an inner panel closes before the screen does.
   - Any press it acts on is consumed with `set_input_as_handled()`. B is both back and roll: unconsumed, the B that resumes would also roll.
-- **Hold.** `HOLDING = [PAUSE, NOTEBOOK]`. Entering a holding screen emits `hold_requested`; leaving one emits `release_requested`. `Dim` is visible exactly while a holding screen is open. The map never holds: it will only block Ivo.
-- **Lock.** `lock()` closes everything, releases, and refuses until a death rebuilds the world.
+  - Esc and Start close the map without opening the pause (the router's "pause closes an open screen"); a second Esc pauses.
+  - `zoom_pressed` goes to the map and is consumed only while the map is open: Z / X and pad A / X are also jump and attack.
+- **Hold.** `HOLDING = [PAUSE, NOTEBOOK]`. Entering a holding screen emits `hold_requested`; leaving one emits `release_requested`. `Dim` is visible exactly while a holding screen is open.
+- **Block.** `BLOCKING = [MAP]`. Entering it emits `block_requested`; leaving it emits `unblock_requested`. The world keeps running and Ivo can be hit, but he hears no input (`systems/input`, `PlayerInput.blocked`). The map has its own `Dim` (0.65), not this one.
+- **Lock.** `lock()` closes everything, releases and unblocks, and refuses until a death rebuilds the world.
+- **`close_map()`** closes the map if it is open and leaves any other screen alone.
 
 ## Screens
 
-- **Adding a screen:** a `MenuScreen` scene (`open()`, `close()`, `step_back() -> bool`) as a child of `Screens`, one entry in `_screens`, and its kind in `HOLDING` if it holds.
+- **Adding a screen:** a `MenuScreen` scene (`can_open() -> bool`, `open()`, `close()`, `step_back() -> bool`) as a child of `Screens`, one entry in `_screens`, and its kind in `HOLDING` if it holds or `BLOCKING` if it only stops Ivo.
+- **`MapScreen`:** see `systems/map`. It has no entries and takes no focus; its pan, zoom and refusals are there.
 - **`PauseMenu`:** Resume, Quit to title, Quit game. Opening focuses Resume.
   - Quit to title and Quit game each hide the box and open their own confirmation (`ConfirmQuitToTitle`, `ConfirmQuit`) with No focused.
   - Back or No returns to the box with the entry that asked focused (`_asked_by`). Yes emits `quit_to_title_requested` / `quit_game_requested`.
@@ -70,14 +79,14 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 
 ## Focus
 
-- Opening a screen focuses its first entry. Closing releases GUI focus, because a hidden focused Button would still take the next `ui_accept`.
+- Opening a screen focuses its first entry; the map has none and focuses nothing. Closing releases GUI focus, because a hidden focused Button would still take the next `ui_accept`.
 - A Button acts on the `ui_accept` release, so a Resume press never reaches the unpaused `PlayerInput`.
 - The stick moves focus once per tilt (measured; `systems/input`).
 - `MenuEntry` (extends Button) swaps `theme_type_variation` to `MenuEntryFocused` while focused. Godot draws the focus stylebox over the pressed one, so a focus style would hide Pressed.
 
 ## Look
 
-- **The 2x rule:** each screen's art lives under ONE root Control of 320x180 with `scale = 2`, authored in pack pixels. Nothing below it is scaled again. The HUD stays 1x.
+- **The 2x rule:** each screen's art lives under ONE root Control of 320x180 with `scale = 2`, authored in pack pixels. Nothing below it is scaled again. The HUD stays 1x. The map's canvas under its root is a Node2D (`gotchas/a-control-is-culled-by-its-own-rect`).
 - **Entries are 16 pack px tall** (user decision 2026-10-06, "Taller entries"). At 14 px the 8 px font's accents (í, the patched tilde) fell on the Selected style's top highlight row (`bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight`). Every `MenuEntry` is 16 px: pause, title column, confirmation Yes/No, Erase.
 - **Pause layout (pack px):**
   - panel `BGbox_05A`: 96x92 at (112, 50), 9-slice margins 12/14/12/12;
@@ -155,6 +164,25 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 - Title background: "Drift + pulse".
 - Entry height: "Taller entries".
 
+## User decisions, UI-04 (the map)
+
+2026-10-02:
+- "Toggle" (M / pad LB opens and closes it; Esc and B close it too).
+- "Ground only, hits close".
+- "World keeps running" (the map blocks Ivo and does not hold).
+- "Centred on Ivo, zoom".
+- "Seen area, outlined".
+- "C ink overlay".
+- "Map rewinds".
+- The reveal: "Room outlines, but not entire room. A room can be enourmous. And the map can be enormous as well. So it is needed to know, once the player has gone trhough all the map and thus drawn the map, the whole map cannot fit the screen, so we have to cope nicely with that. also, as a single room can be pretty big, the whole room should not be drawn on the map, but rather only the parts of the room the player saw on screen".
+
+2026-10-06:
+- "Refuse" (no map with the Memorina drawn).
+- "Right" (the ground rule as built: on the floor, alive, not sinking; it opens while sitting, mid-roll and mid-swing, and is refused while climbing or in the air).
+- "Keep 1/2/4/8, open at 4".
+- "Keep centre clamp".
+- "Dim it too" (the map's dim also dims the HUD).
+
 ## Tests
 
-`tests/scenes/ui/screens/screen_router_test.gd`, `screens_test.gd` (with buttons pressed while leaving), `tests/scenes/ui/menu/menu_input_test.gd`, `tests/scenes/world/world_freeze_test.gd`, `tests/scenes/ui/title/title_test.gd`, `slot_screen_test.gd`.
+`tests/scenes/ui/screens/screen_router_test.gd`, `screens_test.gd` (with buttons pressed while leaving), `screens_map_test.gd` (the map with a real Ivo), `tests/scenes/ui/menu/menu_input_test.gd`, `tests/scenes/world/world_freeze_test.gd`, `tests/scenes/ui/title/title_test.gd`, `slot_screen_test.gd`.

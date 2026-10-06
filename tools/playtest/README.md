@@ -39,7 +39,9 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   it. `"key": "<name>"` (an `OS.find_keycode_from_string` name: `Z`, `Escape`, `Enter`,
   `Down`, `Shift`), `"joy_button": <index>` and `"joy_axis": [axis, value]` send the real
   event, with `"pressed"` as for actions. `"log": "<label>"` prints pause, time scale, GUI
-  focus and Ivo's motion, sit and animation state to stdout. A timeline's
+  focus, Ivo's motion, sit and animation state, hp, attack/climb/drawn, whether `PlayerInput`
+  is blocked, the open screen, the map's centre and zoom, and the seen map cells per room key
+  to stdout. A timeline's
   `"skills": [ids]` unlocks `Enums.PlayerSkill`s (roll is 2) the way `known_songs` teaches
   songs.
 - `--out` must be an **absolute filesystem path** (not `res://`); the runner creates it if

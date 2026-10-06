@@ -87,3 +87,33 @@ func test_a_rewind_with_no_mark_keeps_the_play_time() -> void:
 	var ledger := _ledger()
 	ledger.rewind(25.0)
 	assert_float(ledger.live.play_time).is_equal(25.0)
+
+## The map is live data: what was seen since the bench is forgotten by a death (user decision 2026-10-02, "Map rewinds").
+func test_the_map_seen_since_the_bench_is_forgotten_by_a_death() -> void:
+	var ledger := _ledger()
+	ledger.live.map_seen["room"] = PackedByteArray([1, 0, 1, 0, 1])
+	var written := ledger.record_death("region", Vector2.ZERO)
+	assert_bool(ledger.live.map_seen.has("room")).is_false()
+	assert_bool(written.map_seen.has("room")).is_false()
+
+func test_the_map_a_bench_commits_survives_a_death() -> void:
+	var ledger := _ledger()
+	ledger.live.map_seen["room"] = PackedByteArray([1, 0, 1, 0, 1])
+	ledger.commit()
+	var grown := ledger.live.map_seen["room"]
+	grown.append(3)
+	ledger.live.map_seen["room"] = grown
+	ledger.live.map_seen["other"] = PackedByteArray([1, 0, 1, 0, 2])
+	ledger.record_death("region", Vector2.ZERO)
+	assert_array(Array(ledger.live.map_seen["room"])).is_equal([1, 0, 1, 0, 1])
+	assert_bool(ledger.live.map_seen.has("other")).is_false()
+
+## A PackedByteArray in a Dictionary is a value: a live write never reaches the committed save.
+func test_live_and_committed_maps_share_nothing() -> void:
+	var ledger := _ledger()
+	ledger.live.map_seen["room"] = PackedByteArray([1, 0, 1, 0, 1])
+	ledger.commit()
+	var bytes := ledger.live.map_seen["room"]
+	bytes[4] = 7
+	ledger.live.map_seen["room"] = bytes
+	assert_int(ledger.committed.map_seen["room"][4]).is_equal(1)

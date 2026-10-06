@@ -55,6 +55,9 @@ func tick_timers(delta: float, on_floor: bool) -> void:
 func buffer_roll() -> void:
 	_buffer_timer = stats.roll_buffer_max
 
+func clear_buffer() -> void:
+	_buffer_timer = 0.0
+
 ## Lets the owner skip the whole attempt — including querying the skill gate —
 ## on the frames where no roll was asked for, which is most of them.
 func has_buffered_roll() -> bool:

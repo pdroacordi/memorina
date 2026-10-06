@@ -32,6 +32,12 @@ const PLAYSTATION_NAME_FRAGMENTS: Array[String] = [
 ## Wireless Controller" contains it, so it must be an exact match.
 const PLAYSTATION_EXACT_NAMES: Array[String] = ["wireless controller"]
 
+## While true, no press reaches Ivo and every axis reads 0. Disabling the node keeps `_input` off; re-enabling resyncs.
+var blocked: bool = false:
+	set(value):
+		blocked = value
+		process_mode = Node.PROCESS_MODE_DISABLED if value else Node.PROCESS_MODE_INHERIT
+
 ## Whether down was held as of the last event about it - any motion on its
 ## axis says, either way, so the opposite direction lets go of it too.
 var _down_held: bool = false
@@ -41,7 +47,7 @@ var _jump_held: bool = false
 # Camera-peek intent, deliberately player-only: enemies have no camera, so
 # this stays an inline getter on PlayerInput rather than moving to the base.
 var look_direction: float:
-	get: return Input.get_axis("look_up", "look_down")
+	get: return 0.0 if blocked else Input.get_axis("look_up", "look_down")
 
 ## Which icons `event` should be drawn with. Pure so it can be tested with a
 ## constructed event and a made-up joypad name; `_input` supplies the real
@@ -103,4 +109,4 @@ func resync(jump_held: bool, down_held: bool) -> void:
 	_down_held = down_held
 
 func _get_direction() -> float:
-	return Input.get_axis("move_left", "move_right")
+	return 0.0 if blocked else Input.get_axis("move_left", "move_right")

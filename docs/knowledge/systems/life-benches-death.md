@@ -4,7 +4,7 @@ type: system
 title: Life, benches, saving and death
 status: active
 tags: [save, bench, death, life, respawn]
-related: [architecture/the-life-loop-rewinds-by-reloading, architecture/save-slots-and-the-boot-swap, systems/screens, bugs/a-teleported-ivo-enters-the-room-he-left, bugs/the-playtest-runner-adopts-the-legacy-save-before-going-memory-only, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step]
+related: [systems/map, architecture/the-life-loop-rewinds-by-reloading, architecture/save-slots-and-the-boot-swap, systems/screens, bugs/a-teleported-ivo-enters-the-room-he-left, bugs/the-playtest-runner-adopts-the-legacy-save-before-going-memory-only, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step]
 created: 2026-10-02
 updated: 2026-10-06
 source_files:
@@ -34,6 +34,13 @@ Design 02 "Vida, Derrota" and design 03 section 4.3, as the user decided them on
 - **Death marks** are raw region-local points in `PlayerData.deaths`, clustered at mount by `DeathMarkClusters` (pure, tested; `DeathMarkStats`: merge within 48 px into one deepening mark, at most 6 per region - the field draws at most 32 sources on screen) into small negative `MemorySource`s under `RegionMemory`'s own `DeathMarks` node. They are not wells: `restore()` never touches them. A LIVE restoration erases them (`SaveSystem.clear_deaths` on the live save + `RegionMemory.erase_marks(lift_time)`); a region loaded already restored keeps the marks its save holds, which are deaths after its restoration. There is no decal: the greyhush draws the mark.
 - **Life is a row of notes that lose their colour** (`LifeHud`, `LifeNote`, `life_note.gdshader`): the last child of the `CanvasLayer`, over the fade. A lost note greys pixel by pixel on the greyhush's Bayer cell in TEXEL space and its clock runs at its memory, so it stops on its frame and resumes from there - grey is stopped, not tinted. `GreyhushRenderer` pushes `greyhush_black_lift(_color)` as globals so the notes fade into the same print as the world.
 - **Quit game saves nothing**: only benches save. The pause menu asks first, "Quit the game? Progress since the last bench will be lost." (`CONFIRM_QUIT_GAME`, `systems/screens`), and Yes calls `Game.quit_game()` → `get_tree().quit()`. User decision, 2026-10-02: "Confirm".
+
+## The map is live data (UI-04, built 2026-10-06)
+
+- `PlayerData.map_seen` (seen cells per room `SceneKey`, as `MapGrid` bytes; `systems/map`) is live data like a learned song. `MapRevealer` writes it through `SaveSystem.set_map_seen` as cells are seen, and a bench commits it. `SaveLedger.record_death` writes only the death onto the committed save, so a death forgets every cell seen since the bench (user decision 2026-10-02: "Map rewinds").
+- A `PackedByteArray` in a Dictionary is a value: read it, change the copy, reassign it.
+- A save written before the map loads with an empty `map_seen`. Nothing in `migrate()` is needed.
+- Tests: `save_ledger_test` (forgotten by a death, kept by a rest, live and committed share nothing) and `player_data_test` (round-trip, old save).
 
 ## Slots and boot (UI-05, built 2026-10-06)
 

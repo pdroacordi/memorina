@@ -69,6 +69,7 @@ learned_songs = Array[bool]([true])
 	assert_float(data.play_time).is_equal(0.0)
 	assert_str(data.region_name_key).is_empty()
 	assert_int(data.saved_at).is_equal(0)
+	assert_bool(data.map_seen.is_empty()).is_true()
 
 ## Bench and death data must round-trip through serialization.
 func test_the_bench_and_the_deaths_round_trip_through_the_file() -> void:
@@ -102,3 +103,14 @@ func test_the_play_time_and_the_region_round_trip_through_the_file() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	assert_float(loaded.play_time).is_equal(11220.5)
 	assert_str(loaded.region_name_key).is_equal("REGION_HOME_VILLAGE")
+
+func test_the_map_round_trips_through_the_file() -> void:
+	var path := "user://test_round_trip_map.tres"
+	var data := PlayerData.new()
+	var grid := MapGrid.new(Vector2i(30, 10))
+	grid.mark_rect(Rect2(0, 0, 640, 360))
+	data.map_seen["uid://room"] = grid.to_bytes()
+	assert_int(ResourceSaver.save(data, path)).is_equal(OK)
+	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	assert_object(loaded.map_seen["uid://room"]).is_equal(grid.to_bytes())

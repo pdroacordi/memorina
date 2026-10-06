@@ -111,6 +111,14 @@ func deaths_in(region_key: String) -> PackedVector2Array:
 func clear_deaths(region_key: String) -> void:
 	player_data.deaths.erase(region_key)
 
+## The room's seen cells as `MapGrid` bytes; empty when nothing of it was seen.
+func map_seen(room_key: String) -> PackedByteArray:
+	return player_data.map_seen.get(room_key, PackedByteArray())
+
+## Live only, like every gain: a bench commits it and a death forgets it.
+func set_map_seen(room_key: String, bytes: PackedByteArray) -> void:
+	player_data.map_seen[room_key] = bytes
+
 ## Debug fresh saves grant the sword and instrument for guardian encounters.
 func _new_game() -> PlayerData:
 	var data := PlayerData.new()

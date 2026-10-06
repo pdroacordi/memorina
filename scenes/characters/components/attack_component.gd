@@ -25,6 +25,11 @@ func current_phase() -> AttackPhaseData:
 func buffer_attack() -> void:
 	_buffer_timer = attack_buffer_max
 
+## Drops a buffered press and a combo press waiting for the next phase.
+func clear_buffer() -> void:
+	_buffer_timer = 0.0
+	_buffered_next = false
+
 func has_buffered_attack() -> bool:
 	return _buffer_timer > 0.0
 

@@ -1,0 +1,17 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6.0,
+ "player_position": [1500, -69],
+ "steps": [
+  {"t": 1.5, "key": "Z", "pressed": true},
+  {"t": 1.75, "key": "M", "pressed": true},
+  {"t": 1.8, "key": "M", "pressed": false},
+  {"t": 1.85, "screenshot": "01_refused_mid_air"},
+  {"t": 1.86, "log": "mid_air_after_m"},
+  {"t": 2.2, "key": "Z", "pressed": false},
+  {"t": 3.2, "log": "landed"},
+  {"t": 3.3, "key": "M", "pressed": true},
+  {"t": 3.4, "key": "M", "pressed": false},
+  {"t": 3.8, "screenshot": "02_opens_on_the_ground"}
+ ]
+}

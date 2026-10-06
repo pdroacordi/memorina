@@ -3,10 +3,10 @@ id: architecture/map-reveal-seen-cells-per-room
 type: architecture
 title: The map reveals what the camera showed - a 64 px bitset per room key in PlayerData, marked from the view rect, drawn as fill runs and inner edges
 status: active
-tags: [map, reveal, save, camera, ui, draw, bitset, plan]
-related: [architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/the-life-loop-rewinds-by-reloading, architecture/rooms-are-text, systems/life-benches-death, systems/rooms]
+tags: [map, reveal, save, camera, ui, draw, bitset]
+related: [systems/map, architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/the-life-loop-rewinds-by-reloading, architecture/rooms-are-text, systems/life-benches-death, systems/rooms]
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-06
 source_files:
   - scenes/ui/map/map_grid.gd
   - scenes/ui/map/map_outline.gd
@@ -19,7 +19,7 @@ source_files:
   - globals/save_system.gd
 ---
 
-> **Status: planned** (2026-10-02, roadmap UI-04). Nothing here is built yet.
+> **Status: built** (2026-10-06, roadmap UI-04). The current contract is `systems/map`; the Revision below lists where the build differs from this plan.
 
 ## Context
 
@@ -110,3 +110,25 @@ Metroid room box. Cells are room-local, so a region that moves keeps its map.
 - Nothing is revealed during a freeze (the revealer is pausable), including a lesson's push-in.
 - The map does not redraw while it is open. A knockback that shows new ground while the map is
   up appears the next time it opens.
+
+## Revision (2026-10-06): as built
+
+Built in UI-04, then reviewed (`godot-reviewer`) and playtested (`playtests/2026-10-06-map`). Where the build differs from the Decision above, and why:
+
+- **Cut last cell.** `MapGrid.cells_in(local_rect, room_size)`: a last row or column cut by the room's edge counts by the centre of its part inside the room. With the plain centre rule, row 9 of every 602 px room (centre y 608) could never be seen, because the camera never shows past the room. Found by `map_revealer_test`.
+- **Notches.** `MapOutline.notches` and `ink(edges, notches, px)`. Ink drawn inside both edges of an inner corner touches only diagonally, so each notch adds one pixel.
+- **Fill runs** also merge downward while the span below matches, for fewer draw calls.
+- **Scans read `MapGrid.padded_cells()`**, one byte per cell with an unseen border. Calling `is_seen` per neighbour took 967 ms for 200 rooms of 60x19 cells; the padded scan takes 146 ms. `MapScreen` caches each room's geometry by its bytes and origin, so a reopen rebuilds only rooms that changed.
+- **`MapCanvas` is a Node2D, not a Control.** A Control is culled by its own rect, so the whole map vanished whenever the canvas origin left the screen (`gotchas/a-control-is-culled-by-its-own-rect`).
+- **Zoom 1/2/4/8 pack px per cell, opening at 4** (the mockup's scale), not 1/2/4. User decision 2026-10-06: "Keep 1/2/4/8, open at 4".
+- **Pan:**
+  - in pack px per real second (160), so it looks the same on screen at every zoom;
+  - each frame's step is capped at 0.05 real seconds;
+  - an axis held when the map opens is ignored until it reads zero (`bugs/a-direction-held-when-the-map-opens-pans-it-off-ivo`);
+  - the centre clamp is kept: user decision 2026-10-06, "Keep centre clamp".
+- **No `open(centre)` argument.** `MapScreen` is a `MenuScreen`; `Game._ready` calls `Screens.set_map_subject(player)`. A new `MenuScreen.can_open()` asks `Player.can_open_map()`: on the floor, alive, not sinking, not climbing or wall-sliding, Memorina sheathed (user decisions 2026-10-06, "Right" and "Refuse").
+- **Blocking Ivo.** New `Screens.BLOCKING` with `block_requested` / `unblock_requested`, wired in `game.tscn` to `Player.block_input` / `unblock_input`. Those set `PlayerInput.blocked` and drop the input buffers. `Player.hurt` → `Screens.close_map`.
+- **When `room_changed` fires.** `Game.room_changed` is emitted where the frame shows the room, not inside `_enter_room`. At a debug boot onto a bench, one physics step ran before the seat and marked the authored start's view (`bugs/a-debug-boot-reveals-map-cells-ivo-never-saw`).
+- **Map files.** `MapRevealer` lives in `scenes/ui/map/` as planned; its node is in `World`, after `Camera2D`.
+- **Measured size** (the risk in Consequences): today's world fully explored adds 1.3 KB to the `.tres`. 200 rooms of 3840x1204 px fully explored come to 47 KB as `.tres` and 36 KB as `.res`, so binary slots are not needed.
+- **Accepted, as planned:** a grid that rounds up reaches up to 63 px past its room, so rooms stacked vertically may overlap their boxes. Every room is outlined on its own.

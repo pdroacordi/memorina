@@ -965,6 +965,24 @@ func is_death_shown() -> bool:
 func is_sitting() -> bool:
 	return _sit.is_sitting()
 
+## On the floor, alive, not sinking, not climbing, with the Memorina sheathed.
+func can_open_map() -> bool:
+	return is_on_floor() and not is_dead() and not _sinking and not is_climbing() 			and not is_wall_sliding() and not is_memorina_drawn()
+
+## The map is open: Ivo stays in the world, hittable, but hears no input.
+func block_input() -> void:
+	_input.blocked = true
+	# A press buffered just before the open would otherwise act under the map.
+	_jump.clear_buffer()
+	_roll.clear_buffer()
+	_attack.clear_buffer()
+	_memorina.clear_buffer()
+	_sit_requested = false
+	_stand_requested = false
+
+func unblock_input() -> void:
+	_input.blocked = false
+
 ## Puts him on `seat`, sitting, without the rest that sitting down himself
 ## asks for: arrival at the bench after a death or a load.
 func sit(seat: Seat) -> void:

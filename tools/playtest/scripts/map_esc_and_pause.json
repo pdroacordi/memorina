@@ -1,0 +1,149 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 7.0,
+ "clock": "real",
+ "player_position": [
+  1500,
+  -69
+ ],
+ "steps": [
+  {
+   "key": "M",
+   "t": 1.5,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 1.6,
+   "pressed": false
+  },
+  {
+   "t": 1.8,
+   "log": "open"
+  },
+  {
+   "key": "Escape",
+   "t": 2.0,
+   "pressed": true
+  },
+  {
+   "key": "Escape",
+   "t": 2.1,
+   "pressed": false
+  },
+  {
+   "t": 2.3,
+   "log": "esc1"
+  },
+  {
+   "t": 2.35,
+   "screenshot": "01_after_esc"
+  },
+  {
+   "key": "Escape",
+   "t": 2.6,
+   "pressed": true
+  },
+  {
+   "key": "Escape",
+   "t": 2.7,
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "log": "esc2_pause"
+  },
+  {
+   "t": 2.95,
+   "screenshot": "02_pause"
+  },
+  {
+   "key": "M",
+   "t": 3.2,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 3.3,
+   "pressed": false
+  },
+  {
+   "t": 3.5,
+   "log": "m_in_pause"
+  },
+  {
+   "t": 3.55,
+   "screenshot": "03_m_in_pause"
+  },
+  {
+   "key": "Escape",
+   "t": 3.8,
+   "pressed": true
+  },
+  {
+   "key": "Escape",
+   "t": 3.9,
+   "pressed": false
+  },
+  {
+   "t": 4.1,
+   "log": "resumed"
+  },
+  {
+   "key": "M",
+   "t": 4.4,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 4.5,
+   "pressed": false
+  },
+  {
+   "t": 4.7,
+   "log": "reopen"
+  },
+  {
+   "joy_button": 6,
+   "t": 5.0,
+   "pressed": true
+  },
+  {
+   "joy_button": 6,
+   "t": 5.1,
+   "pressed": false
+  },
+  {
+   "t": 5.3,
+   "log": "start_in_map"
+  },
+  {
+   "t": 5.35,
+   "screenshot": "04_start_in_map"
+  },
+  {
+   "key": "M",
+   "t": 5.6,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 5.7,
+   "pressed": false
+  },
+  {
+   "joy_button": 1,
+   "t": 5.9,
+   "pressed": true
+  },
+  {
+   "joy_button": 1,
+   "t": 6.0,
+   "pressed": false
+  },
+  {
+   "t": 6.2,
+   "log": "b_close"
+  }
+ ]
+}

@@ -4,12 +4,17 @@ extends Control
 
 signal hold_requested
 signal release_requested
+## Ivo hears no input while a blocking screen is open; the world still runs.
+signal block_requested
+signal unblock_requested
 ## The Blackout is drawn; the world stays held until it is swapped out.
 signal quit_to_title_requested
 signal quit_game_requested
 
 ## Screens that stop everything behind them while open; the map does not.
 const HOLDING: Array[ScreenRouter.Kind] = [ScreenRouter.Kind.PAUSE, ScreenRouter.Kind.NOTEBOOK]
+## Screens that only stop Ivo from acting.
+const BLOCKING: Array[ScreenRouter.Kind] = [ScreenRouter.Kind.MAP]
 
 var _open: ScreenRouter.Kind = ScreenRouter.Kind.NONE
 var _locked: bool = false
@@ -20,15 +25,19 @@ var _screens: Dictionary[ScreenRouter.Kind, MenuScreen] = {}
 @onready var _menu_input: MenuInput = $MenuInput
 @onready var _dim: ColorRect = $Dim
 @onready var _pause_menu: PauseMenu = $PauseMenu
+@onready var _map: MapScreen = $MapScreen
 @onready var _blackout: Fade = $Blackout
 
 
 func _ready() -> void:
 	_screens[ScreenRouter.Kind.PAUSE] = _pause_menu
+	_screens[ScreenRouter.Kind.MAP] = _map
+	_map.menu_input = _menu_input
 	_menu_input.pause_pressed.connect(_on_press.bind(ScreenRouter.Press.PAUSE))
 	_menu_input.notebook_pressed.connect(_on_press.bind(ScreenRouter.Press.NOTEBOOK))
 	_menu_input.map_pressed.connect(_on_press.bind(ScreenRouter.Press.MAP))
 	_menu_input.back_pressed.connect(_on_press.bind(ScreenRouter.Press.BACK))
+	_menu_input.zoom_pressed.connect(_on_zoom)
 	_pause_menu.resume_requested.connect(_unless_leaving.bind(close))
 	_pause_menu.quit_to_title_requested.connect(_leave_for_title)
 	_pause_menu.quit_game_requested.connect(_unless_leaving.bind(quit_game_requested.emit))
@@ -47,6 +56,15 @@ func lock() -> void:
 func close() -> void:
 	_apply(ScreenRouter.Kind.NONE)
 
+## Ivo, whom the map centres on and asks before it opens. Game sets it.
+func set_map_subject(ivo: Player) -> void:
+	_map.subject = ivo
+
+## Any hit Ivo takes closes the map.
+func close_map() -> void:
+	if _open == ScreenRouter.Kind.MAP:
+		close()
+
 func _on_press(press: ScreenRouter.Press) -> void:
 	if _leaving:
 		get_viewport().set_input_as_handled()
@@ -54,13 +72,20 @@ func _on_press(press: ScreenRouter.Press) -> void:
 	var next := ScreenRouter.decide(_open, press, get_tree().paused, _locked)
 	if next == _open:
 		return
-	if next != ScreenRouter.Kind.NONE and not _screens.has(next):
+	if next != ScreenRouter.Kind.NONE and not (_screens.has(next) and _screens[next].can_open()):
 		return
 	# Consumed, so the pad's back (also roll) that resumes the game does not also roll.
 	get_viewport().set_input_as_handled()
 	if next == ScreenRouter.Kind.NONE and _screens[_open].step_back():
 		return
 	_apply(next)
+
+## Z and X (pad A and X) are also jump and attack: consumed only while the map is open.
+func _on_zoom(direction: int) -> void:
+	if _leaving or _open != ScreenRouter.Kind.MAP:
+		return
+	get_viewport().set_input_as_handled()
+	_map.zoom(direction)
 
 ## Stays held under a real-time Blackout, so nothing moves while the screen goes dark.
 func _leave_for_title() -> void:
@@ -91,6 +116,10 @@ func _apply(next: ScreenRouter.Kind) -> void:
 		release_requested.emit()
 	if HOLDING.has(next) and not HOLDING.has(was):
 		hold_requested.emit()
+	if BLOCKING.has(was) and not BLOCKING.has(next):
+		unblock_requested.emit()
+	if BLOCKING.has(next) and not BLOCKING.has(was):
+		block_requested.emit()
 	_dim.visible = HOLDING.has(next)
 	if next != ScreenRouter.Kind.NONE:
 		_screens[next].open()

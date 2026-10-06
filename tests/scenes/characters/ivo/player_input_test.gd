@@ -66,6 +66,28 @@ func test_down_released_during_a_pause_presses_again() -> void:
 	input._input(_stick_y(0.9))
 	assert_int(presses.size()).is_equal(2)
 
+## The map blocks Ivo by disabling his input node: no `_input`, no axes.
+func test_a_blocked_input_cannot_process_and_reads_no_axis() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	add_child(input)
+	input.blocked = true
+	assert_bool(input.can_process()).is_false()
+	assert_float(input.direction).is_equal(0.0)
+	assert_float(input.look_direction).is_equal(0.0)
+	input.blocked = false
+	assert_bool(input.can_process()).is_true()
+
+## A jump released while the map was open is cut when it closes, as after a pause.
+func test_a_jump_released_while_blocked_is_cut_on_unblock() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	add_child(input)
+	var cuts: Array = []
+	input.jump_canceled.connect(func() -> void: cuts.append(true))
+	input._input(_action("jump", true))
+	input.blocked = true
+	input.blocked = false
+	assert_int(cuts.size()).is_equal(1)
+
 func _action(action: StringName, pressed: bool) -> InputEventAction:
 	var event := InputEventAction.new()
 	event.action = action

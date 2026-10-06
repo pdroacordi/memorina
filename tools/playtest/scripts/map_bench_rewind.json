@@ -1,0 +1,206 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 32.0,
+ "player_position": [
+  -760,
+  -6
+ ],
+ "steps": [
+  {
+   "t": 1.2,
+   "log": "arrived_east"
+  },
+  {
+   "t": 1.5,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 3.35,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "log": "at_bench"
+  },
+  {
+   "key": "Down",
+   "t": 4.3,
+   "pressed": true
+  },
+  {
+   "key": "Down",
+   "t": 4.4,
+   "pressed": false
+  },
+  {
+   "t": 6.0,
+   "log": "rested"
+  },
+  {
+   "key": "M",
+   "t": 6.1,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 6.2,
+   "pressed": false
+  },
+  {
+   "t": 6.5,
+   "screenshot": "01_rested_map"
+  },
+  {
+   "t": 6.55,
+   "log": "rested_map"
+  },
+  {
+   "key": "M",
+   "t": 6.7,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 6.8,
+   "pressed": false
+  },
+  {
+   "key": "Right",
+   "t": 7.2,
+   "pressed": true
+  },
+  {
+   "key": "Right",
+   "t": 7.3,
+   "pressed": false
+  },
+  {
+   "t": 7.6,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 10.6,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 11.3,
+   "log": "walked"
+  },
+  {
+   "key": "M",
+   "t": 11.4,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 11.5,
+   "pressed": false
+  },
+  {
+   "t": 11.8,
+   "screenshot": "02_before_death"
+  },
+  {
+   "t": 11.85,
+   "log": "before_death"
+  },
+  {
+   "t": 12.5,
+   "log": "w00"
+  },
+  {
+   "t": 13.5,
+   "log": "w01"
+  },
+  {
+   "t": 14.5,
+   "log": "w02"
+  },
+  {
+   "t": 15.5,
+   "log": "w03"
+  },
+  {
+   "t": 16.5,
+   "log": "w04"
+  },
+  {
+   "t": 17.5,
+   "log": "w05"
+  },
+  {
+   "t": 18.5,
+   "log": "w06"
+  },
+  {
+   "t": 19.5,
+   "log": "w07"
+  },
+  {
+   "t": 20.5,
+   "log": "w08"
+  },
+  {
+   "t": 21.5,
+   "log": "w09"
+  },
+  {
+   "t": 22.5,
+   "log": "w10"
+  },
+  {
+   "t": 23.5,
+   "log": "w11"
+  },
+  {
+   "t": 24.5,
+   "log": "w12"
+  },
+  {
+   "t": 25.5,
+   "log": "w13"
+  },
+  {
+   "t": 26.5,
+   "log": "w14"
+  },
+  {
+   "t": 27.5,
+   "log": "w15"
+  },
+  {
+   "t": 28.5,
+   "log": "w16"
+  },
+  {
+   "t": 29.5,
+   "log": "w17"
+  },
+  {
+   "t": 30.6,
+   "log": "rebuilt"
+  },
+  {
+   "key": "M",
+   "t": 30.7,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 30.8,
+   "pressed": false
+  },
+  {
+   "t": 31.1,
+   "screenshot": "03_after_death_rewound"
+  },
+  {
+   "t": 31.15,
+   "log": "after_death"
+  }
+ ]
+}

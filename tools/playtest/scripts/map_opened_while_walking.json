@@ -1,0 +1,62 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 4.0,
+ "player_position": [
+  1000,
+  -69
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "joy_axis": [
+    0,
+    1.0
+   ]
+  },
+  {
+   "t": 2.5,
+   "log": "walking_stick"
+  },
+  {
+   "t": 2.6,
+   "joy_button": 9,
+   "pressed": true
+  },
+  {
+   "t": 2.62,
+   "log": "open_0.02s"
+  },
+  {
+   "t": 2.7,
+   "joy_button": 9,
+   "pressed": false
+  },
+  {
+   "t": 2.75,
+   "log": "open_0.15s"
+  },
+  {
+   "t": 2.75,
+   "screenshot": "01_open_0.15s"
+  },
+  {
+   "t": 3.1,
+   "log": "open_0.5s"
+  },
+  {
+   "t": 3.1,
+   "screenshot": "02_open_0.5s"
+  },
+  {
+   "t": 3.3,
+   "joy_axis": [
+    0,
+    0.0
+   ]
+  },
+  {
+   "t": 3.5,
+   "log": "released"
+  }
+ ]
+}

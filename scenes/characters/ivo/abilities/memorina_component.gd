@@ -45,6 +45,9 @@ func tick_timers(delta: float) -> void:
 func buffer_toggle() -> void:
 	_toggle_buffer = toggle_buffer_max
 
+func clear_buffer() -> void:
+	_toggle_buffer = 0.0
+
 func has_buffered_toggle() -> bool:
 	return _toggle_buffer > 0.0
 

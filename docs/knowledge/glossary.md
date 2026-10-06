@@ -90,6 +90,10 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | marca de morte (símbolo do cinzesquecimento) | `PlayerData.deaths`, `DeathMarkClusters`, `RegionMemory.mark_deaths` / `erase_marks` |
 | vida (notas que perdem a cor) | `LifeHud`, `LifeNote`, `Player.health_changed` |
 | pausa / menu de pausa | `PauseMenu`, `Screens`, `ScreenRouter.Kind.PAUSE` (`systems/screens`) |
+| mapa (tecla M / LB) | `MapScreen`, `MapCanvas`, `ScreenRouter.Kind.MAP` (`systems/map`) |
+| parte da sala vista (célula do mapa) | `MapGrid` (64 px cells), `PlayerData.map_seen`, revealed by `MapRevealer` |
+| contorno do mapa (área vista, contornada) | `MapOutline` (`fill_runs`, `edges`, `notches`, `ink`) |
+| Ivo bloqueado (mapa aberto, o mundo segue) | `Screens.BLOCKING`, `Player.block_input` / `unblock_input`, `PlayerInput.blocked` |
 | parar tudo atrás do menu (menu hold) | `WorldFreeze.hold()` / `release()` / `is_held()` (scale 0); a performance uses `freeze()` / `thaw()` (scale 1) |
 
 | espaço de salvamento (slot) | `SaveSlots` (`save_N.tres` / `save_debug_N.tres`), `SaveSystem.begin_slot`, `read_slots` |

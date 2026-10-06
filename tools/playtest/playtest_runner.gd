@@ -138,7 +138,33 @@ func _log_state(label: String) -> void:
 			playback.get_current_node() if playback else "?",
 			playback.get_current_play_position() if playback else -1.0,
 		]
+		line += " hp=%d attack=%s climb=%s drawn=%s blocked=%s" % [
+			player.health.current_hp, player.is_attacking(), player.is_climbing(),
+			player.is_memorina_drawn(), player.get_node("PlayerInput").get("blocked"),
+		]
+	line += _map_state()
 	print(line)
+
+## Which screen is open, the map's centre and zoom, and the seen cells per room key in the live save.
+func _map_state() -> String:
+	var screens := get_tree().root.find_child("Screens", true, false)
+	if screens == null:
+		return ""
+	var line := " screen=%s" % ScreenRouter.Kind.keys()[int(screens.get("_open"))]
+	var map := screens.get_node_or_null("MapScreen")
+	if map != null:
+		line += " map_visible=%s map_centre=(%.0f,%.0f) cell_px=%d" % [map.visible, map.centre().x, map.centre().y, map.cell_px()]
+	var seen: PackedStringArray = []
+	for key: String in SaveSystem.player_data.map_seen:
+		var bytes: PackedByteArray = SaveSystem.player_data.map_seen[key]
+		var count := 0
+		for i: int in range(4, bytes.size()):
+			var b := bytes[i]
+			while b:
+				count += b & 1
+				b >>= 1
+		seen.append("%s:%d" % [key.get_file(), count])
+	return line + " seen=[%s]" % ", ".join(seen)
 
 func _capture(screenshot_name: String) -> void:
 	## get_viewport().get_texture() reflects the last COMPLETED render, not the frame

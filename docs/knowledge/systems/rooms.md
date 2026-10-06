@@ -4,7 +4,7 @@ type: system
 title: Rooms: text maps, the importer and the legend
 status: active
 tags: [rooms, map, importer, legend, tilemap]
-related: [architecture/rooms-are-text, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/import-plugin-output-is-stale-when-its-logic-changes]
+related: [systems/map, architecture/rooms-are-text, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/import-plugin-output-is-stale-when-its-logic-changes]
 created: 2026-10-02
 updated: 2026-10-06
 source_files:
@@ -22,4 +22,6 @@ Moved verbatim from `CLAUDE.md` ("Project structure") on 2026-10-02. The file fo
 
 - `Region.name_key` is the translation key of the region's name (`REGION_HOME_VILLAGE`, `REGION_FROST_EDGE`, `REGION_TRIALS` on the five trials). A rest saves it so the title can name the slot. Every new region sets it.
 - A bench's `bench_id` names it on the title through `"BENCH_" + bench_id` in capitals. `room_files_test` fails when a bench in any `.room` has no such key with every language filled.
+- **`Game.room_changed(room)`** fires once the camera frames the new current room: after `_enter_room` on a walk-in, after a hazard respawn that changes the room, and after `_arrive`'s seat and `snap()` (never from `_enter_room` itself, `bugs/a-debug-boot-reveals-map-cells-ivo-never-saw`). `MapRevealer` listens to it.
+- **The map is keyed by the room's `SceneKey`**, with cells counted from the top-left of its bounds, so a region that moves keeps its map. Bounds that are not a multiple of 64 px round the grid up (a 602 px room has 10 rows). Two rooms instanced from one scene would share a map; today every room is its own scene (`systems/map`).
 - A `Room`'s `body_entered` drives `Game`'s room transitions and trusts the physics server. Moving Ivo by writing his position leaves the server one step behind, and the room at his old place reports him. Every non-motion move goes through `Character.teleport` (`systems/life-benches-death`, `gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step`).

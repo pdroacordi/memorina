@@ -27,6 +27,9 @@ func tick_timers(delta: float, on_floor: bool) -> void:
 func buffer_jump() -> void:
 	_buffer_timer = stats.jump_buffer_max
 
+func clear_buffer() -> void:
+	_buffer_timer = 0.0
+
 func has_buffered_jump() -> bool:
 	return _buffer_timer > 0.0
 

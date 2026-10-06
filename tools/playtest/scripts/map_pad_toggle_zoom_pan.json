@@ -1,0 +1,238 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 14.0,
+ "clock": "real",
+ "player_position": [
+  1000,
+  -69
+ ],
+ "skills": [
+  2
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "log": "pre"
+  },
+  {
+   "joy_button": 9,
+   "t": 4.1,
+   "pressed": true
+  },
+  {
+   "joy_button": 9,
+   "t": 4.2,
+   "pressed": false
+  },
+  {
+   "t": 4.5,
+   "screenshot": "01_lb_open"
+  },
+  {
+   "t": 4.55,
+   "log": "lb_open"
+  },
+  {
+   "t": 4.6,
+   "joy_axis": [
+    0,
+    -1.0
+   ]
+  },
+  {
+   "t": 5.1,
+   "log": "stick_mid"
+  },
+  {
+   "t": 5.6,
+   "joy_axis": [
+    0,
+    0.0
+   ]
+  },
+  {
+   "t": 5.8,
+   "screenshot": "02_stick_pan"
+  },
+  {
+   "t": 5.85,
+   "log": "stick_pan"
+  },
+  {
+   "joy_button": 0,
+   "t": 6.0,
+   "pressed": true
+  },
+  {
+   "joy_button": 0,
+   "t": 6.1,
+   "pressed": false
+  },
+  {
+   "t": 6.4,
+   "screenshot": "03_a_zoom_8"
+  },
+  {
+   "t": 6.45,
+   "log": "a_zoom_in"
+  },
+  {
+   "joy_button": 2,
+   "t": 6.6,
+   "pressed": true
+  },
+  {
+   "joy_button": 2,
+   "t": 6.7,
+   "pressed": false
+  },
+  {
+   "joy_button": 2,
+   "t": 6.8,
+   "pressed": true
+  },
+  {
+   "joy_button": 2,
+   "t": 6.9,
+   "pressed": false
+  },
+  {
+   "t": 7.2,
+   "screenshot": "04_x_zoom_2"
+  },
+  {
+   "t": 7.25,
+   "log": "x_zoom_out"
+  },
+  {
+   "joy_button": 1,
+   "t": 7.4,
+   "pressed": true
+  },
+  {
+   "joy_button": 1,
+   "t": 7.5,
+   "pressed": false
+  },
+  {
+   "t": 7.8,
+   "log": "b_closed"
+  },
+  {
+   "t": 7.85,
+   "screenshot": "05_b_closed"
+  },
+  {
+   "joy_button": 9,
+   "t": 8.0,
+   "pressed": true
+  },
+  {
+   "joy_button": 9,
+   "t": 8.1,
+   "pressed": false
+  },
+  {
+   "t": 8.3,
+   "log": "lb_reopen"
+  },
+  {
+   "joy_button": 9,
+   "t": 8.5,
+   "pressed": true
+  },
+  {
+   "joy_button": 9,
+   "t": 8.6,
+   "pressed": false
+  },
+  {
+   "t": 8.8,
+   "log": "lb_closed"
+  },
+  {
+   "joy_button": 9,
+   "t": 9.0,
+   "pressed": true
+  },
+  {
+   "joy_button": 9,
+   "t": 9.1,
+   "pressed": false
+  },
+  {
+   "t": 9.3,
+   "log": "lb_open3"
+  },
+  {
+   "joy_button": 6,
+   "t": 9.5,
+   "pressed": true
+  },
+  {
+   "joy_button": 6,
+   "t": 9.6,
+   "pressed": false
+  },
+  {
+   "t": 9.8,
+   "log": "start_in_map"
+  },
+  {
+   "t": 9.85,
+   "screenshot": "06_start_in_map"
+  },
+  {
+   "joy_button": 0,
+   "t": 10.2,
+   "pressed": true
+  },
+  {
+   "joy_button": 0,
+   "t": 10.3,
+   "pressed": false
+  },
+  {
+   "t": 10.4,
+   "log": "a_jumps"
+  },
+  {
+   "joy_button": 2,
+   "t": 11.5,
+   "pressed": true
+  },
+  {
+   "joy_button": 2,
+   "t": 11.6,
+   "pressed": false
+  },
+  {
+   "t": 11.6,
+   "log": "x_attacks"
+  },
+  {
+   "joy_button": 1,
+   "t": 12.5,
+   "pressed": true
+  },
+  {
+   "joy_button": 1,
+   "t": 12.6,
+   "pressed": false
+  },
+  {
+   "t": 12.62,
+   "log": "b_rolls"
+  }
+ ]
+}

@@ -100,6 +100,11 @@ func set_bounds(bounds: Rect2) -> void:
 func bounds() -> Rect2:
 	return _bounds if _is_bound else Rect2()
 
+## The world rect the frame shows, from the centre and zoom the bounds clamp uses.
+func view_rect() -> Rect2:
+	var size: Vector2 = get_viewport_rect().size / zoom
+	return Rect2(global_position + offset - size * 0.5, size)
+
 # Node2D also permits cutscenes to follow a Marker2D without character facing.
 func follow(subject: Node2D) -> void:
 	if subject == _subject:

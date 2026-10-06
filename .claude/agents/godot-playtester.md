@@ -168,6 +168,23 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - Room uids: Downtown `uid://d3yi3wnqg8gub`, Lighthouse `uid://clighthouse1`. To rest after a
     new game, teleport Ivo to (-1104, -6), wait 3 s, then press Down.
 
+- **Learned 2026-10-06 (map playtest)**: `log` now also prints `hp`, `attack`, `climb`, `drawn`,
+  `blocked` (`PlayerInput.blocked`), `screen` (the `ScreenRouter.Kind` open in `Screens`), the
+  map's `map_centre` and `cell_px`, and `seen=[<room key file>:<cell count>]` from the live
+  `SaveSystem.player_data.map_seen`. Room keys are uids: `d3yi3wnqg8gub` Downtown,
+  `b2y7r7eq4pq7r` Woods, `cbloomholl01` Bloom Hollow, `clighthouse1` Lighthouse; trial rooms are
+  keyed by path. A plain walk right from Downtown stops at x ~790 in Woods against a tall pillar:
+  set `"skills": [0, 1]` and double-jump (Z 0.3 s, gap 0.1 s, Z 0.35 s, every 1.3 s) to reach
+  Bloom Hollow (~16 s from x 300). The fresh runner save has no bench, so a death respawns at the
+  authored start (3277, -69) in Bloom Hollow. To prove a bench commit, start Ivo east of the
+  bench (x -760), walk to it, rest and die: the bench view alone re-reveals 60 cells, so 60 after
+  the rebuild proves nothing. Stop at x ~-518 to be hit by the brute; at x -441 (pressed against
+  it) it never attacks.
+- One `run.sh` wrapper per session saves time: it makes a fresh `APPDATA` folder, aborts unless
+  a headless probe prints that folder as `OS.get_user_data_dir()`, runs the timeline, greps the
+  `[playtest] log` lines, and md5s the real save. A Pillow contact sheet (half scale, two
+  columns, the filename on top) turns six frames into one `Read`.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

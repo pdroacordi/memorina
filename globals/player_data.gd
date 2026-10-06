@@ -17,6 +17,8 @@ class_name PlayerData extends Resource
 @export var region_name_key: String = ""
 ## Unix seconds of the last write to disk; 0 in a save written before it existed. The title continues the latest.
 @export var saved_at: int = 0
+## Seen map cells per room scene key, as `MapGrid.to_bytes()`; live data that a bench commits and a death forgets.
+@export var map_seen: Dictionary[String, PackedByteArray] = {}
 
 func _init() -> void:
 	migrate()

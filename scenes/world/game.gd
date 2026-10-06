@@ -1,5 +1,8 @@
 extends Node2D
 
+## The camera frames a new current room; the map reveals it from here. Emitted after an arrival's seat and snap.
+signal room_changed(room: Room)
+
 ## Maximum resident rooms, including the current room.
 const MAX_RESIDENT_ROOMS := 2
 
@@ -16,6 +19,7 @@ const MAX_RESIDENT_ROOMS := 2
 @onready var _camera : GameCamera = %Camera2D
 @onready var _player : Player = %Player
 @onready var _memory_field : MemoryField = %MemoryField
+@onready var _screens : Screens = $ScreenLayer/Screens
 var _current_room    : Room
 var _is_transitioning: bool      = false
 ## Identifies the latest hazard beat so an older overlapping beat can stop.
@@ -32,6 +36,7 @@ func _ready() -> void:
 	_player.fell_into_hazard.connect(_on_player_fell_into_hazard)
 	_player.died.connect(_on_player_died)
 	_player.sat_down.connect(_on_player_sat_down)
+	_screens.set_map_subject(_player)
 	if SaveSystem.bench_id() != &"":
 		_arrive()
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
@@ -56,6 +61,7 @@ func _on_player_entered_room(room: Room) -> void:
 	if _current_room:
 		await _fade.to_black()
 	_enter_room(room)
+	room_changed.emit(room)
 	await _fade.to_clear()
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
@@ -93,6 +99,7 @@ func _on_player_fell_into_hazard() -> void:
 		var room := _room_at(_player.global_position)
 		if room != null and room != _current_room:
 			_enter_room(room)
+			room_changed.emit(room)
 		_camera.snap()
 	await _fade.to_clear()
 
@@ -114,6 +121,8 @@ func _arrive() -> void:
 	else:
 		push_warning("The saved bench %s is not in its room; starting at the authored start" % SaveSystem.bench_id())
 	_camera.snap()
+	# Not at _enter_room: a physics step can run before the seat, framing the authored start (bugs/a-debug-boot-reveals-map-cells-ivo-never-saw).
+	room_changed.emit(room)
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
 	await _fade.to_clear()

@@ -1,0 +1,195 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 10.0,
+ "player_position": [
+  1000,
+  -69
+ ],
+ "skills": [
+  2
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "log": "walking"
+  },
+  {
+   "key": "M",
+   "t": 2.6,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 2.7,
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "log": "open_while_walking"
+  },
+  {
+   "t": 3.0,
+   "screenshot": "01_open_walking"
+  },
+  {
+   "key": "Shift",
+   "t": 3.2,
+   "pressed": true
+  },
+  {
+   "key": "Shift",
+   "t": 3.3,
+   "pressed": false
+  },
+  {
+   "key": "C",
+   "t": 3.4,
+   "pressed": true
+  },
+  {
+   "key": "C",
+   "t": 3.5,
+   "pressed": false
+  },
+  {
+   "key": "X",
+   "t": 3.6,
+   "pressed": true
+  },
+  {
+   "key": "X",
+   "t": 3.7,
+   "pressed": false
+  },
+  {
+   "key": "Z",
+   "t": 3.8,
+   "pressed": true
+  },
+  {
+   "key": "Z",
+   "t": 3.9,
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "log": "after_presses"
+  },
+  {
+   "t": 4.5,
+   "log": "right_held_still"
+  },
+  {
+   "t": 4.6,
+   "screenshot": "02_right_held_pans"
+  },
+  {
+   "key": "M",
+   "t": 4.7,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 4.8,
+   "pressed": false
+  },
+  {
+   "t": 5.1,
+   "log": "closed_right_held"
+  },
+  {
+   "t": 5.3,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "key": "Shift",
+   "t": 5.6,
+   "pressed": true
+  },
+  {
+   "key": "Shift",
+   "t": 5.7,
+   "pressed": false
+  },
+  {
+   "t": 5.75,
+   "log": "roll_after_close"
+  },
+  {
+   "key": "X",
+   "t": 6.6,
+   "pressed": true
+  },
+  {
+   "key": "X",
+   "t": 6.7,
+   "pressed": false
+  },
+  {
+   "t": 6.7,
+   "log": "attack_after_close"
+  },
+  {
+   "key": "Shift",
+   "t": 7.6,
+   "pressed": true
+  },
+  {
+   "key": "Shift",
+   "t": 7.7,
+   "pressed": false
+  },
+  {
+   "key": "M",
+   "t": 7.68,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 7.78,
+   "pressed": false
+  },
+  {
+   "t": 7.85,
+   "log": "open_mid_roll"
+  },
+  {
+   "t": 7.9,
+   "screenshot": "03_open_mid_roll"
+  },
+  {
+   "t": 8.4,
+   "log": "mid_roll_later"
+  },
+  {
+   "key": "M",
+   "t": 8.6,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 8.7,
+   "pressed": false
+  },
+  {
+   "key": "C",
+   "t": 9.0,
+   "pressed": true
+  },
+  {
+   "key": "C",
+   "t": 9.1,
+   "pressed": false
+  },
+  {
+   "t": 9.6,
+   "log": "draw_after_close"
+  }
+ ]
+}

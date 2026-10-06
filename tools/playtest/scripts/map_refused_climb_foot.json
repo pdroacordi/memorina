@@ -1,0 +1,151 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 11.0,
+ "player_position": [
+  7984.0,
+  5990
+ ],
+ "known_songs": [
+  6
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.65,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.05,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.45,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 7.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 7.6,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 7.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 8.1,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 8.5,
+   "log": "descend_8.5"
+  },
+  {
+   "t": 9.0,
+   "log": "descend_9.0"
+  },
+  {
+   "t": 9.5,
+   "log": "descend_9.5"
+  },
+  {
+   "t": 10.0,
+   "log": "descend_10.0"
+  },
+  {
+   "t": 10.1,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 10.3,
+   "log": "at_foot"
+  },
+  {
+   "key": "M",
+   "t": 10.4,
+   "pressed": true
+  },
+  {
+   "key": "M",
+   "t": 10.5,
+   "pressed": false
+  },
+  {
+   "t": 10.6,
+   "log": "after_m_foot"
+  },
+  {
+   "t": 10.65,
+   "screenshot": "01_m_at_web_foot"
+  }
+ ]
+}
