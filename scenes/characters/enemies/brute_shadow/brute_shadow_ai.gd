@@ -10,6 +10,8 @@ var is_attacking: bool = false
 
 var _attack_timer: float = 0.0
 var _attack_cooldown: float = 0.0
+## Side the current swing was aimed at, -1/1; held until the swing ends.
+var _swing_side: float = 0.0
 
 
 func _ready() -> void:
@@ -47,6 +49,7 @@ func _start_attack() -> void:
 	is_attacking = true
 	_attack_timer = attack_stats.attack_duration
 	_current_direction = 0.0
+	_swing_side = _target_side()
 
 # Interruptions retain the cooldown so a flinch cannot trigger an immediate follow-up swing.
 func cancel_attack() -> void:
@@ -56,3 +59,15 @@ func cancel_attack() -> void:
 
 func _in_melee_range() -> bool:
 	return _target != null and _body.global_position.distance_to(_target.global_position) <= attack_stats.attack_range
+
+# In reach the brute stands still, so `direction` is 0 and cannot turn it: face the target, and keep a swing's side.
+# See docs/knowledge/bugs/the-brute-swings-away-from-a-target-already-in-reach.md.
+func _get_facing_direction() -> float:
+	if is_attacking:
+		return _swing_side
+	if _in_melee_range():
+		return _target_side()
+	return super._get_facing_direction()
+
+func _target_side() -> float:
+	return signf(_target.global_position.x - _body.global_position.x)

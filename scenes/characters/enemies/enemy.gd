@@ -28,7 +28,7 @@ func _process_motion(delta: float) -> void:
 		apply_knockback_decay(delta)
 	else:
 		_ai.tick(delta)
-		face_towards(_ai.direction)
+		face_towards(_ai.facing_direction)
 		_locomotion.ground_update(delta, _ai.direction, carry().x)
 	if not is_on_floor():
 		velocity.y = minf(velocity.y + base_gravity() * delta, terminal_velocity)

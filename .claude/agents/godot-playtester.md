@@ -123,7 +123,7 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   on that command's text inside a heredoc. Don't clear an old `--out` folder: point the
   re-run at a new folder name. Downtown spawn facts: the pit pool spans world x 32..224,
   so `player_position` x in that range drops Ivo into the water and he respawns on the
-  bank before your first shot. The `BruteShadow` at x -387 wakes when Ivo comes within
+  bank before your first shot. The `BruteShadow` at x -400 wakes when Ivo comes within
   roughly 300 px and knocks him around, which ruins any stationary pixel-diff. For a
   still frame of the grey lake use x 0..20; for remembered lake use x < -900.
   Stationary motion check: diff frames several seconds apart with Pillow over the water
@@ -178,8 +178,9 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   Bloom Hollow (~16 s from x 300). The fresh runner save has no bench, so a death respawns at the
   authored start (3277, -69) in Bloom Hollow. To prove a bench commit, start Ivo east of the
   bench (x -760), walk to it, rest and die: the bench view alone re-reveals 60 cells, so 60 after
-  the rebuild proves nothing. Stop at x ~-518 to be hit by the brute; at x -441 (pressed against
-  it) it never attacks.
+  the rebuild proves nothing. Stop at x ~-518 or ~-441 to be hit by the brute (before
+  2026-10-06 it never attacked a target already in reach behind it:
+  `docs/knowledge/bugs/the-brute-swings-away-from-a-target-already-in-reach.md`).
 - One `run.sh` wrapper per session saves time: it makes a fresh `APPDATA` folder, aborts unless
   a headless probe prints that folder as `OS.get_user_data_dir()`, runs the timeline, greps the
   `[playtest] log` lines, and md5s the real save. A Pillow contact sheet (half scale, two
