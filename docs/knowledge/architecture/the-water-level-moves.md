@@ -4,9 +4,9 @@ type: architecture
 title: A body of water is painted at its highest level and moves its origin to sink
 status: active
 tags: [water, water-body, set-level, chuva, rain-basin, floater, freeze]
-related: [architecture/water-two-projections, architecture/played-pulses-hold-in-a-pause]
+related: [architecture/water-two-projections, architecture/played-pulses-hold-in-a-pause, architecture/a-pool-rests-below-its-painted-reach, architecture/ice-is-its-own-sheet]
 created: 2026-09-30
-updated: 2026-09-30
+updated: 2026-10-07
 source_files:
   - scenes/world/environment/water/water_body.gd
   - scenes/world/interactables/rain_basin/rain_basin.gd
@@ -42,3 +42,17 @@ the authored level the painted one - readable in the room's text.
 
 A pool rising above a painted rest level, and ice outliving the water draining under it
 (an independent ice sheet, Phase 7).
+
+## Revision (2026-10-07, planned, not built)
+
+Both "Not yet" items are planned. Painting at the highest level stays.
+
+- A basin's rest is no longer always dry: `r` cells above `~`/`f` water are the level Chuva
+  brings it to, and the painted water below is the rest (`WaterBody.rest_depth`,
+  `rest_level()`); a lone `r` group is still dry at rest
+  (`architecture/a-pool-rests-below-its-painted-reach`).
+- "A basin holds its level while any ice is on it" is replaced: ice is a lid, so a frozen
+  basin may not RISE but keeps draining; the ice keeps its own world height in a sheet of
+  its own, and `IceCollider.set_top()` goes (`architecture/ice-is-its-own-sheet`).
+- `set_level()` becomes the commanded level; Redoma's held volume may raise the drawn level
+  above it, up to the painted top (`architecture/the-shell-displaces-water-into-the-reach`).

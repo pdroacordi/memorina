@@ -4,9 +4,9 @@ type: architecture
 title: Water motion is a spring height field whose integration is gated per column by memory, with no stop threshold
 status: active
 tags: [water, greyhush, stopped-time, simulation, memory-field, freeze]
-related: [architecture/memory-field-cpu-gpu-split, architecture/memory-runs-through-pause, bugs/water-swell-flattened-by-spread, bugs/ice-front-leaps-dead-columns]
+related: [architecture/memory-field-cpu-gpu-split, architecture/memory-runs-through-pause, bugs/water-swell-flattened-by-spread, bugs/ice-front-leaps-dead-columns, architecture/ice-is-its-own-sheet, architecture/wind-piles-a-bounded-crest]
 created: 2026-09-22
-updated: 2026-09-23
+updated: 2026-10-07
 source_files:
   - scenes/world/environment/water/water_surface_field.gd
   - scenes/world/environment/water/water_body.gd
@@ -60,3 +60,14 @@ a pulse edge, so one clock per body cannot express it.
   deactivated rooms, and lost on `Room.evict()`.
 - Semi-implicit Euler at `max_substep` 1/120 is stable at the default profile
   (ω·dt ≈ 0.75 < 2); rates are clamped to 1 because a larger one would break that.
+
+## Revision (2026-10-07, planned, not built)
+
+- A full hold no longer zeroes a column: the first hold pins `height - swell`, and the held
+  column's target moves to that pin, so calm water still freezes flat while a crest or a
+  grey-water splash freezes in its shape (`architecture/ice-is-its-own-sheet`). The test
+  `test_full_hold_locks_a_column_flat` changes on purpose.
+- The target gains a per-column offset beside the swell: a bounded wind crest
+  (`architecture/wind-piles-a-bounded-crest`). Coupling stays on the distance from the
+  target, so the offset's shape is kept. `WaterProfile.wind_stress` and `WaterBody._blow`
+  are removed by that plan.
