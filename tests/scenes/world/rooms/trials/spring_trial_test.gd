@@ -237,3 +237,76 @@ func test_the_finder_sees_a_bridge_across_the_chasm() -> void:
 		if span.kind == RootSpanFinder.Kind.BRIDGE and span.a.x - _map.origin.x == chasm.x - 1 and span.b.x - _map.origin.x == chasm.y:
 			found = span.gap() <= _grower().max_bridge_cells
 	assert_bool(found).is_true()
+
+# --- Chuva then Enraizar --------------------------------------------------------
+
+const RAIN := "res://resources/songs/rain.tres"
+const WET_STEP_COL := 61
+const WET_LEDGE_COL := 65
+
+func _wet_chasm() -> Vector2i:
+	var start := -1
+	for col: int in range(_chasm().y, _map.size.x):
+		var open := not _solid(col, FLOOR_ROW)
+		if open and start < 0:
+			start = col
+		elif not open and start >= 0:
+			return Vector2i(start, col)
+	return Vector2i.ZERO
+
+func _wet_ledge_top() -> float:
+	return -_top_from(WET_LEDGE_COL, FLOOR_ROW)
+
+func test_the_wet_chasm_needs_wet_earth() -> void:
+	var chasm := _wet_chasm()
+	var gap := chasm.y - chasm.x
+	assert_float(gap * CELL).is_greater(MapGuide.ivo_reach().gap())
+	assert_int(gap).is_greater(_grower().max_bridge_cells)
+	assert_int(gap).is_less_equal(_grower().wet_bridge_cells)
+
+func test_from_the_wet_ledge_enraizar_covers_both_banks() -> void:
+	var chasm := _wet_chasm()
+	var x := (WET_LEDGE_COL + 0.5) * CELL
+	var depth := _wet_ledge_top()
+	assert_float(Vector2(x - chasm.x * CELL, depth).length()).is_less(_root_radius())
+	assert_float(Vector2(chasm.y * CELL - x, depth).length()).is_less(_root_radius())
+
+func test_from_the_near_bank_enraizar_misses_the_far_one() -> void:
+	var chasm := _wet_chasm()
+	assert_float((chasm.y - chasm.x) * CELL).is_greater(_root_radius())
+
+func test_chuva_from_the_wet_ledge_wets_both_banks() -> void:
+	var chasm := _wet_chasm()
+	var radius := (load(RAIN) as Song).pulse_stats.max_radius
+	var x := (WET_LEDGE_COL + 0.5) * CELL
+	var depth := _wet_ledge_top()
+	assert_float(Vector2(x - chasm.x * CELL, depth).length()).is_less(radius)
+	assert_float(Vector2(chasm.y * CELL - x, depth).length()).is_less(radius)
+
+func test_from_the_wet_ledge_and_step_the_far_bank_is_out_of_reach() -> void:
+	var chasm := _wet_chasm()
+	var reach := MapGuide.ivo_reach()
+	assert_float(chasm.y * CELL - (WET_LEDGE_COL + 1) * CELL).is_greater(reach.reach_at(_wet_ledge_top()))
+	assert_float(chasm.y * CELL - (WET_STEP_COL + 1) * CELL).is_greater(reach.reach_at(-_top_from(WET_STEP_COL, FLOOR_ROW)))
+
+## Ledge to step to near bank: the chasm never traps him.
+func test_the_wet_ledge_leads_back_to_the_near_bank() -> void:
+	var chasm := _wet_chasm()
+	var reach := MapGuide.ivo_reach()
+	var step_top := -_top_from(WET_STEP_COL, FLOOR_ROW)
+	assert_float((WET_LEDGE_COL - WET_STEP_COL - 1) * CELL).is_less(reach.reach_at(_wet_ledge_top() - step_top))
+	assert_float((WET_STEP_COL - chasm.x) * CELL).is_less(reach.reach_at(step_top))
+
+func test_the_finder_sees_a_bridge_across_the_wet_chasm() -> void:
+	var chasm := _wet_chasm()
+	var found := false
+	for span: RootSpanFinder.Span in _spans():
+		if span.kind == RootSpanFinder.Kind.BRIDGE and span.a.x - _map.origin.x == chasm.x - 1 and span.b.x - _map.origin.x == chasm.y:
+			found = true
+	assert_bool(found).is_true()
+
+## The far bank is one cell before the wall: the way back is a drop onto the ledge.
+func test_from_the_far_bank_the_ledge_is_in_reach() -> void:
+	var chasm := _wet_chasm()
+	var across := (chasm.y - WET_LEDGE_COL - 1) * CELL
+	assert_float(MapGuide.ivo_reach().reach_at(-_wet_ledge_top())).is_greater_equal(across)

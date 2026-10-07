@@ -21,6 +21,10 @@ var _spans: Array[RootSpanFinder.Span] = []
 var _built := {}
 var _built_reach := 0.0
 
+## Whether a bridge `gap` cells wide may grow: up to `dry_cells`, or up to `wet_cells` when both faces are wet.
+static func may_bridge(gap: int, dry_cells: int, wet_cells: int, wet: bool) -> bool:
+	return gap <= dry_cells or (wet and gap <= wet_cells)
+
 func _ready() -> void:
 	top_level = true
 	global_position = Vector2.ZERO
@@ -52,9 +56,12 @@ func holds(point: Vector2) -> bool:
 
 ## Whether this span may be crossed: short enough, or wet at both faces.
 func reaches(span: RootSpanFinder.Span, a: Vector2, b: Vector2) -> bool:
-	if span.kind != RootSpanFinder.Kind.BRIDGE or span.gap() <= max_bridge_cells:
+	if span.kind != RootSpanFinder.Kind.BRIDGE:
 		return true
-	return span.gap() <= wet_bridge_cells and _wet(a) and _wet(b)
+	# Rain is looked up only for a span too wide to cross dry.
+	if may_bridge(span.gap(), max_bridge_cells, wet_bridge_cells, false):
+		return true
+	return may_bridge(span.gap(), max_bridge_cells, wet_bridge_cells, _wet(a) and _wet(b))
 
 func _wet(point: Vector2) -> bool:
 	for rain: ColorPulse in ColorPulse.lit(self, Enums.Song.RAIN):

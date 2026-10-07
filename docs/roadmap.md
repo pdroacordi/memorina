@@ -38,6 +38,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | MEM-11 | Death marks | 03 §4.3 | `[x]` | LIFE-02 | 2026-10-02 | |
 | MEM-12 | Foreground art layer | | `[ ]` | | 2026-10-02 | Needs its own creature-bit treatment; characters draw over the finished world. |
 | MEM-13 | Starting memory per region | 03 §7 | `[?]` | WORLD-03 | 2026-10-02 | Village decided: 0.8 at the start, 1.0 at the Return. |
+| WORLD-04 | Background layers of regions placed away from the origin | | `[ ]` | | 2026-10-07 | `Parallax2D` ignores its parent's offset, so the far layers are off screen in the trials: `gotchas/parallax2d-ignores-its-parents-offset`. |
 
 ## Songs
 
@@ -54,6 +55,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | SONG-09 | A reduced excerpt per song | 02 §7 | `[ ]` | | 2026-10-02 | `Song.excerpt` is null everywhere; the track is cut at 7 s. |
 | SONG-10 | Tune `note_cues` against each track | | `[ ]` | | 2026-10-02 | Placeholders 0.5 s apart. |
 | SONG-11 | Effect durations calibrated | 02 §9 | `[ ]` | | 2026-10-02 | `IceProfile` and other timings are first guesses. |
+| SONG-12 | Root bridge strands meet level | | `[ ]` | | 2026-10-07 | The two strands meet 4 px apart in height: `bugs/root-bridge-strands-meet-at-a-step`. |
 
 ## Puzzles
 
@@ -66,7 +68,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | PZL-05 | Combinado 4: Solstício, Sombra and Soltar, the empty house | 02 §8.4 | `[ ]` | | 2026-10-02 | Needs no new code; needs a room. |
 | PZL-06 | Redoma then Congelar: curved ice wall (Inverno Lógico 2) | 02 §7.4 | `[ ]` | | 2026-10-02 | |
 | PZL-07 | Windy-spot puzzle for Redoma (Inverno Lógico 1) | 02 §8 | `[ ]` | | 2026-10-02 | Shelter is unit-tested only. |
-| PZL-08 | Chuva then Enraizar in a trial (wet earth) | 02 §7.4 | `[ ]` | | 2026-10-02 | Unit-tested only. |
+| PZL-08 | Chuva then Enraizar in a trial (wet earth) | 02 §7.4 | `[x]` | | 2026-10-07 | Spring trial puzzle 5. A joined wet bridge holds while Enraizar does (user, 2026-10-07). `systems/roots-and-climbing` |
 | PZL-09 | Rising pool above a painted rest level | 03 §6.5 | `[ ]` | | 2026-10-02 | Chuva fills dry basins only. |
 
 ## Guardians

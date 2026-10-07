@@ -74,7 +74,8 @@ func advance(delta: float, grower: RootGrower) -> void:
 		var a: Vector2 = crossing["a"]
 		var b: Vector2 = crossing["b"]
 		var along := (b - a).normalized()
-		var allowed := grower.reaches(_span, a, b)
+		# Wet earth is needed to reach across, not to hold: a joined span stays while the pulse covers its faces.
+		var allowed := strands.is_joined() or grower.reaches(_span, a, b)
 		strands.advance(delta, grower.grow_speed, grower.wither_speed,
 			grower.memory_at(a + along * strands.a), grower.memory_at(b - along * strands.b),
 			allowed and grower.holds(a), allowed and grower.holds(b))

@@ -1,0 +1,121 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  9296.0,
+  6142
+ ],
+ "known_songs": [
+  6,
+  7
+ ],
+ "max_duration": 12.0,
+ "steps": [
+  {
+   "t": 1.5,
+   "screenshot": "c_start"
+  },
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.65,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.05,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.45,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 5.0,
+   "screenshot": "c_root_05.00"
+  },
+  {
+   "t": 5.6,
+   "screenshot": "c_root_05.60"
+  },
+  {
+   "t": 6.2,
+   "screenshot": "c_root_06.20"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "c_root_07.00"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "c_root_08.00"
+  },
+  {
+   "t": 9.5,
+   "screenshot": "c_root_09.50"
+  },
+  {
+   "t": 11.0,
+   "screenshot": "c_root_11.00"
+  },
+  {
+   "t": 11.0,
+   "log": "control_end"
+  }
+ ]
+}
