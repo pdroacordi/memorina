@@ -1,0 +1,308 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 11.0,
+ "player_position": [
+  1290,
+  5990
+ ],
+ "known_songs": [
+  1,
+  4
+ ],
+ "steps": [
+  {
+   "t": 0.5,
+   "log": "l_00.50"
+  },
+  {
+   "t": 0.75,
+   "log": "l_00.75"
+  },
+  {
+   "t": 1.0,
+   "log": "l_01.00"
+  },
+  {
+   "t": 1.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 1.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 1.25,
+   "log": "l_01.25"
+  },
+  {
+   "t": 1.5,
+   "log": "l_01.50"
+  },
+  {
+   "t": 1.6,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 1.62,
+   "log": "soltar_note1"
+  },
+  {
+   "t": 1.65,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 1.75,
+   "log": "l_01.75"
+  },
+  {
+   "t": 2.0,
+   "log": "l_02.00"
+  },
+  {
+   "t": 2.0,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.02,
+   "log": "soltar_note2"
+  },
+  {
+   "t": 2.05,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 2.25,
+   "log": "l_02.25"
+  },
+  {
+   "t": 2.4,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.42,
+   "log": "soltar_note3"
+  },
+  {
+   "t": 2.45,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "log": "l_02.50"
+  },
+  {
+   "t": 2.75,
+   "log": "l_02.75"
+  },
+  {
+   "t": 2.8,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.82,
+   "log": "soltar_note4"
+  },
+  {
+   "t": 2.85,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "log": "l_03.00"
+  },
+  {
+   "t": 3.2,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.22,
+   "log": "soltar_note5"
+  },
+  {
+   "t": 3.25,
+   "log": "l_03.25"
+  },
+  {
+   "t": 3.25,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "screenshot": "b_notes_03.40"
+  },
+  {
+   "t": 3.5,
+   "log": "l_03.50"
+  },
+  {
+   "t": 3.6,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.62,
+   "log": "soltar_note6"
+  },
+  {
+   "t": 3.65,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.75,
+   "log": "l_03.75"
+  },
+  {
+   "t": 4.0,
+   "log": "l_04.00"
+  },
+  {
+   "t": 4.25,
+   "log": "l_04.25"
+  },
+  {
+   "t": 4.5,
+   "log": "l_04.50"
+  },
+  {
+   "t": 4.75,
+   "log": "l_04.75"
+  },
+  {
+   "t": 5.0,
+   "log": "l_05.00"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "b_pulse_05.00"
+  },
+  {
+   "t": 5.25,
+   "log": "l_05.25"
+  },
+  {
+   "t": 5.5,
+   "log": "l_05.50"
+  },
+  {
+   "t": 5.5,
+   "screenshot": "b_pulse_05.50"
+  },
+  {
+   "t": 5.75,
+   "log": "l_05.75"
+  },
+  {
+   "t": 6.0,
+   "log": "l_06.00"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "b_pulse_06.00"
+  },
+  {
+   "t": 6.25,
+   "log": "l_06.25"
+  },
+  {
+   "t": 6.5,
+   "log": "l_06.50"
+  },
+  {
+   "t": 6.5,
+   "screenshot": "b_pulse_06.50"
+  },
+  {
+   "t": 6.75,
+   "log": "l_06.75"
+  },
+  {
+   "t": 7.0,
+   "log": "l_07.00"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "b_pulse_07.00"
+  },
+  {
+   "t": 7.25,
+   "log": "l_07.25"
+  },
+  {
+   "t": 7.5,
+   "log": "l_07.50"
+  },
+  {
+   "t": 7.75,
+   "log": "l_07.75"
+  },
+  {
+   "t": 8.0,
+   "log": "l_08.00"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "b_after_08.00"
+  },
+  {
+   "t": 8.25,
+   "log": "l_08.25"
+  },
+  {
+   "t": 8.5,
+   "log": "l_08.50"
+  },
+  {
+   "t": 8.75,
+   "log": "l_08.75"
+  },
+  {
+   "t": 9.0,
+   "log": "l_09.00"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "b_after_09.00"
+  },
+  {
+   "t": 9.25,
+   "log": "l_09.25"
+  },
+  {
+   "t": 9.5,
+   "log": "l_09.50"
+  },
+  {
+   "t": 9.75,
+   "log": "l_09.75"
+  },
+  {
+   "t": 10.0,
+   "log": "l_10.00"
+  },
+  {
+   "t": 10.0,
+   "screenshot": "b_after_10.00"
+  },
+  {
+   "t": 10.25,
+   "log": "l_10.25"
+  },
+  {
+   "t": 10.5,
+   "log": "l_10.50"
+  }
+ ]
+}

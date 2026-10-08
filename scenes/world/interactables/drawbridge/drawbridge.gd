@@ -2,6 +2,9 @@ class_name Drawbridge extends Node2D
 
 ## Rope-held bridge plank rotates around this node and carries riders (docs/knowledge/systems/weight-presence-release.md).
 
+## Radius of the hinge's release receiver, px: Soltar's disc must reach this far around the hinge.
+const RECEIVER_RADIUS := 24.0
+
 ## Bridge length in 32 px map cells.
 @export var length_cells := 4
 ## Fall direction: 1 right of hinge, -1 left.
@@ -27,13 +30,14 @@ func _ready() -> void:
 	var box := RectangleShape2D.new()
 	box.size = Vector2(length, 10)
 	_plank_shape.shape = box
-	_plank_shape.position = Vector2(length * 0.5 * side, -5)
+	# Below the hinge, so the lowered plank's top is flush with its bank, not a curb on it.
+	_plank_shape.position = Vector2(length * 0.5 * side, 5)
 	_rider_shape.shape = box
-	_rider_shape.position = Vector2(length * 0.5 * side, -12)
+	_rider_shape.position = Vector2(length * 0.5 * side, -2)
 	_plank_sprite.region_rect = Rect2(0, 0, length, 12)
-	_plank_sprite.position = Vector2(length * 0.5 * side, -6)
+	_plank_sprite.position = Vector2(length * 0.5 * side, 4)
 	var reach := CircleShape2D.new()
-	reach.radius = 24.0
+	reach.radius = RECEIVER_RADIUS
 	_receiver_shape.shape = reach
 	_plank.rotation = _raised()
 	_releasable.released.connect(func() -> void: _turn(0.0, true))

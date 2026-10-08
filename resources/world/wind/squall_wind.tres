@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="WindProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://resources/world/wind/wind_profile.gd" id="1_profile"]
+
+[resource]
+script = ExtResource("1_profile")
+calm_time = 0.5
+rise_time = 0.4
+gust_time = 1.8
+fall_time = 0.5
+calm_strength = 0.1

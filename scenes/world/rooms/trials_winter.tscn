@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_winter/winter_trial.tscn" id="1_room"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="2_region"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="3_regmem"]
+[ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="4_source"]
 
 [node name="TrialsWinter" type="Node2D"]
 script = ExtResource("2_region")
@@ -17,3 +18,13 @@ authored = 0.35
 position = Vector2(160, -40)
 
 [node name="WinterTrial" parent="." instance=ExtResource("1_room")]
+
+[node name="WindSpawn" type="Marker2D" parent="." groups=["trial_spawn"]]
+position = Vector2(1168, -40)
+
+[node name="SquallMemory" type="Node2D" parent="."]
+position = Vector2(1488, -112)
+script = ExtResource("4_source")
+shape = 1
+rect_size = Vector2(352, 224)
+feather = 48.0

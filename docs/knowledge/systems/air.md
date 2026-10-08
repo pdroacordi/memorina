@@ -6,7 +6,7 @@ status: active
 tags: [air, wind, gale, airflow]
 related: [architecture/one-air-channel]
 created: 2026-10-02
-updated: 2026-10-02
+updated: 2026-10-07
 source_files: []
 ---
 
@@ -22,4 +22,5 @@ Design 03 sections 5.3-5.4 and 6.1: wind, a current, a song's gale and the weath
 - **Vendaval (`GALE`) is `GaleField`**, the song's `PulseEffect`: a `GaleWind` blowing ONE WAY across the whole disc - the way Ivo faced when the song ended (`ColorPulse.performer`'s `facing`; the user's decision, 2026-09-30) - horizontally, still in an eye (48 px), peaking a third of the way out and gone at the clean disc (`GaleShape`, pure and tested). Played into a current it simply adds to it; aimed wrong, it blows the load away from the plate. It reads as the SONG, not the world, by colour and by bounds rather than by geometry: curling pixel-art gusts, dashes and leaves in the season's tint (`SpriteBursts`, clipped to the season mask), living only inside the pulse and dying with it.
 - **`SpriteBursts`** (`song_effects/bursts/`) is the one pool for short pixel-art sprites a song throws off - a gust, a splash - each a `SpriteStrip` resource (`resources/world/effects/`: texture, frames, life, fps, anchor, stepped fade), drawn at whole pixels in world coordinates on the world's clock. The strips are drawn by `tools/art/draw_procedural_sprites.gd`.
 - **Wind moves water**: `WaterBody` samples the air over its columns with its memory rates and drags the surface downwind (`WaterProfile.wind_stress`) - a slope while it blows, a crest the springs carry when it drops, which Congelar will catch into a ramp.
+- **Weather in a grey place is weak and slow**: a `WindZone`'s push and its clock both scale with the memory over it, so a puzzle that needs its wind outside a pulse must stand in a remembered spot. The winter trial's squall has its own `MemorySource` (`SquallMemory`, strength 1) for that; at the trials' 0.35 its gusts never broke a song (`bugs/the-winter-squall-never-breaks-a-song-at-the-trials-memory`).
 - **Puzzles are sized by `JumpReach` with the same wind** (`JumpReach.wind`, steered exactly as `air_update` does); `tests/scenes/world/rooms/trials/autumn_trial_test.gd` proves the autumn chasm beats a jump, the current alone and the gale alone, and yields to the gale played into the current.
