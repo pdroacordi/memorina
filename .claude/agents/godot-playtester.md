@@ -232,6 +232,20 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
 - When the coordinator says the code changed, run `--import` before the next run and label
   every result with the code state it saw.
 
+- **Learned 2026-10-07 (rising pool playtest)**: `git log` misses a sibling agent's UNCOMMITTED
+  edits. Compare `ls -l --time-style=+%H:%M:%S` of the area's files with your `--import` time and
+  your runs' output folders, and record any file that changed after the import. Ice files changed
+  6 s after this session's import.
+- A `Floater` is a level probe. Stand Ivo on the log and `log` every 0.1 s: his y is the log's
+  top, so the water's rise, hold and drain come out as numbers. Playing a song on a log at rest is
+  allowed (it is still).
+- Water trial (`trials_solstice`, world x 14912, `WaterSpawn` 15088/5960):
+  - From (15088, 5970), hold `move_right` 1.4 s and jump 1.0 s into it (0.35 s). Ivo lands on the
+    near wall's top at (15219.6, 5904) and stops there.
+  - A held `move_right` plus a 0.5 s jump from the wall top drops him onto the log by the far wall
+    (x 15478; the tank's rest water is rows 18-19 since the follow-up).
+  - Run speed 192 px/s, held-jump peak 146 px.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
