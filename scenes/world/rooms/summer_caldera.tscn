@@ -1,0 +1,49 @@
+[gd_scene format=3 uid="uid://sf80coo7x0d3"]
+
+[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_chimney_base.tscn" id="r0"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_long_corridor.tscn" id="r1"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_bait.tscn" id="r2"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_dry_moat.tscn" id="r3"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_seesaw.tscn" id="r4"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_open_crater.tscn" id="r5"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_cistern_bottom.tscn" id="r6"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_temple_gate.tscn" id="r7"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_arena.tscn" id="r8"]
+
+[node name="SummerCaldera" type="Node2D"]
+script = ExtResource("1_region")
+name_key = "REGION_SUMMER_CALDERA"
+season = 1
+
+[node name="Memory" type="Node2D" parent="."]
+script = ExtResource("2_regmem")
+authored = 0.15
+
+[node name="CalderaChimneyBase" parent="." instance=ExtResource("r0")]
+position = Vector2(-10240, 1536)
+
+[node name="CalderaLongCorridor" parent="." instance=ExtResource("r1")]
+position = Vector2(-8960, 1536)
+
+[node name="CalderaBait" parent="." instance=ExtResource("r2")]
+position = Vector2(-6400, 1536)
+
+[node name="CalderaDryMoat" parent="." instance=ExtResource("r3")]
+position = Vector2(-5120, 1536)
+
+[node name="CalderaSeesaw" parent="." instance=ExtResource("r4")]
+position = Vector2(-3200, 1536)
+
+[node name="CalderaOpenCrater" parent="." instance=ExtResource("r5")]
+position = Vector2(-1920, 768)
+
+[node name="CalderaCisternBottom" parent="." instance=ExtResource("r6")]
+position = Vector2(-640, 1152)
+
+[node name="CalderaTempleGate" parent="." instance=ExtResource("r7")]
+position = Vector2(1280, 1536)
+
+[node name="CalderaArena" parent="." instance=ExtResource("r8")]
+position = Vector2(2560, 1536)

@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://cxd7dtreane6y"
+path="res://.godot/imported/lake_fisher_hut.room-6707975b0119c9a3497d8be89e291f30.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/frozen_lake/contents/lake_fisher_hut.room"
+dest_files=["res://.godot/imported/lake_fisher_hut.room-6707975b0119c9a3497d8be89e291f30.res"]
+
+[params]
+

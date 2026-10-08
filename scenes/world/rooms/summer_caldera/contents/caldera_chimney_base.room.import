@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://w0j536bas6bw"
+path="res://.godot/imported/caldera_chimney_base.room-4ad972f5ae1db7007a90be3593759d98.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/summer_caldera/contents/caldera_chimney_base.room"
+dest_files=["res://.godot/imported/caldera_chimney_base.room-4ad972f5ae1db7007a90be3593759d98.res"]
+
+[params]
+

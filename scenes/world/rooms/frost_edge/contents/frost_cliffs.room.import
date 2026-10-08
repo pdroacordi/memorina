@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://dddqujoe65huu"
+path="res://.godot/imported/frost_cliffs.room-3c0841c361edc15e1c7bdc861301529b.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/frost_edge/contents/frost_cliffs.room"
+dest_files=["res://.godot/imported/frost_cliffs.room-3c0841c361edc15e1c7bdc861301529b.res"]
+
+[params]
+

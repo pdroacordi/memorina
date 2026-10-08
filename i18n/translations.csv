@@ -35,8 +35,20 @@ TITLE_PLAY_TIME,%dh %02dm,%dh %02dm
 TITLE_QUIT_GAME,Quit game,Sair do jogo
 CONFIRM_ERASE,Erase this game?\nThis cannot be undone.,Apagar este jogo?\nNão há como desfazer.
 REGION_HOME_VILLAGE,Home Village,Vila natal
-REGION_FROST_EDGE,Frost Edge,Borda do Gelo
+REGION_FROST_EDGE,Frost Edge,Borda Gelada
 REGION_TRIALS,Trials,Provações
+REGION_THRESHOLD,Threshold Road,Estrada do Limiar
+REGION_SPRING_WOODS,Bloom Woods,Bosque Florido
+REGION_FROZEN_LAKE,Frozen Lake,Lago Gelado
+REGION_WIND_ORCHARDS,Wind Orchards,Pomar dos Ventos
+REGION_SUMMER_CALDERA,Summer Caldera,Caldeira de Verão
+BENCH_VILLAGE_SQUARE_BENCH,Town Square,Praça
+BENCH_THRESHOLD_WAYSHRINE_BENCH,Wayside Shrine,Capela da Estrada
+BENCH_FROST_CLIFFS_BENCH,Cliff Shelter,Abrigo do Penhasco
+BENCH_WOODS_EDGE_BENCH,Woods' Edge,Orla do Bosque
+BENCH_LAKE_WATERFALL_BENCH,Waterfall Trail,Trilha da Cascata
+BENCH_ORCHARD_TERRACES_BENCH,Orchard Terraces,Terraços do Pomar
+BENCH_CALDERA_CRATER_BENCH,Open Crater,Cratera Aberta
 BENCH_DOWNTOWN_BENCH,Town Square,Praça
 BENCH_FROST_EDGE_APPROACH_BENCH,Lighthouse Path,Caminho do Farol
 BENCH_SUMMER_TRIAL_BENCH,Summer Trial,Provação de Verão

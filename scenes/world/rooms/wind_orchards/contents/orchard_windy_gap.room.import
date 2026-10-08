@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://csmxemmuy7f84"
+path="res://.godot/imported/orchard_windy_gap.room-6c9984b26ee5f5b5d4544e7d85a74f4c.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/wind_orchards/contents/orchard_windy_gap.room"
+dest_files=["res://.godot/imported/orchard_windy_gap.room-6c9984b26ee5f5b5d4544e7d85a74f4c.res"]
+
+[params]
+

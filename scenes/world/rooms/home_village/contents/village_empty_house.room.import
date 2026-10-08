@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://bajkjrxxyy6ha"
+path="res://.godot/imported/village_empty_house.room-26c9b6ca9948a435221b0073d531f65e.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/home_village/contents/village_empty_house.room"
+dest_files=["res://.godot/imported/village_empty_house.room-26c9b6ca9948a435221b0073d531f65e.res"]
+
+[params]
+

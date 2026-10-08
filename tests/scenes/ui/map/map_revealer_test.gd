@@ -2,7 +2,7 @@ class_name MapRevealerTest extends GdUnitTestSuite
 
 ## The revealer marks the cells the camera frame shows in the current room and writes them to the live save.
 
-const ROOM := preload("res://scenes/world/rooms/home_village/downtown.tscn")
+const ROOM := preload("res://scenes/world/rooms/spring_woods/woods_deep.tscn")
 
 var _room: Room
 var _key: String
@@ -47,7 +47,8 @@ func test_the_frame_reveals_the_cells_it_shows_and_no_more() -> void:
 	var cols := ceili(view.size.x / MapGrid.CELL_PX - 0.5)
 	assert_bool(grid.is_seen(cols - 1, 0)).is_true()
 	assert_bool(grid.is_seen(cols, 0)).is_false()
-	assert_bool(grid.is_seen(29, 9)).is_false()
+	var last := MapGrid.dims_for(bounds) - Vector2i.ONE
+	assert_bool(grid.is_seen(last.x, last.y)).is_false()
 
 func test_what_was_seen_stays_seen_as_the_frame_moves_on() -> void:
 	_revealer.on_room_changed(_room)
@@ -57,7 +58,8 @@ func test_what_was_seen_stays_seen_as_the_frame_moves_on() -> void:
 	_frame_at(bounds.end - half)
 	var grid := _seen()
 	assert_bool(grid.is_seen(0, 0)).is_true()
-	assert_bool(grid.is_seen(29, 9)).is_true()
+	var last := MapGrid.dims_for(bounds) - Vector2i.ONE
+	assert_bool(grid.is_seen(last.x, last.y)).is_true()
 
 ## Re-entering a room starts from what the save holds.
 func test_a_room_entered_again_keeps_its_cells() -> void:
@@ -68,7 +70,7 @@ func test_a_room_entered_again_keeps_its_cells() -> void:
 	_frame_at(_room.get_bounds().end - _camera.view_rect().size * 0.5)
 	var grid := _seen()
 	assert_bool(grid.is_seen(0, 0)).is_true()
-	assert_bool(MapGrid.from_bytes(before, Vector2i(30, 10)).is_seen(29, 9)).is_false()
+	assert_bool(MapGrid.from_bytes(before, MapGrid.dims_for(_room.get_bounds())).is_seen(29, 9)).is_false()
 
 ## A frame that shows nothing new writes nothing.
 func test_an_unchanged_frame_does_not_write() -> void:

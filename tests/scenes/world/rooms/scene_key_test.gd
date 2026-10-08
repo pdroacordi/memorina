@@ -2,7 +2,7 @@ class_name SceneKeyTest extends GdUnitTestSuite
 
 ## Save keys use scene UIDs so renaming scene files preserves bench and death-mark references.
 
-const ROOM := "res://scenes/world/rooms/home_village/downtown.tscn"
+const ROOM := "res://scenes/world/rooms/spring_woods/woods_deep.tscn"
 
 func test_an_instanced_scene_is_keyed_by_its_uid() -> void:
 	var room: Node = auto_free((load(ROOM) as PackedScene).instantiate())

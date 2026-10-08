@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://bj16w67f2poei"]
+
+[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_chasm_bridge.tscn" id="r0"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_terraces.tscn" id="r1"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_well.tscn" id="r2"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_mill_town.tscn" id="r3"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_counterweights.tscn" id="r4"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_windy_gap.tscn" id="r5"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_leaf_path.tscn" id="r6"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_arena.tscn" id="r7"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_cliff_chimney.tscn" id="r8"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_inn.tscn" id="r9"]
+
+[node name="WindOrchards" type="Node2D"]
+script = ExtResource("1_region")
+name_key = "REGION_WIND_ORCHARDS"
+season = 2
+
+[node name="Memory" type="Node2D" parent="."]
+script = ExtResource("2_regmem")
+authored = 0.25
+
+[node name="OrchardChasmBridge" parent="." instance=ExtResource("r0")]
+position = Vector2(-4480, -2304)
+
+[node name="OrchardTerraces" parent="." instance=ExtResource("r1")]
+position = Vector2(-5760, -1920)
+
+[node name="OrchardWell" parent="." instance=ExtResource("r2")]
+position = Vector2(-3840, -1536)
+
+[node name="OrchardMillTown" parent="." instance=ExtResource("r3")]
+position = Vector2(-7680, -1536)
+
+[node name="OrchardCounterweights" parent="." instance=ExtResource("r4")]
+position = Vector2(-6400, -2304)
+
+[node name="OrchardWindyGap" parent="." instance=ExtResource("r5")]
+position = Vector2(-7680, -1920)
+
+[node name="OrchardLeafPath" parent="." instance=ExtResource("r6")]
+position = Vector2(-8960, -1536)
+
+[node name="OrchardArena" parent="." instance=ExtResource("r7")]
+position = Vector2(-10240, -1536)
+
+[node name="OrchardCliffChimney" parent="." instance=ExtResource("r8")]
+position = Vector2(-10880, -1536)
+
+[node name="OrchardInn" parent="." instance=ExtResource("r9")]
+position = Vector2(60000, 12000)

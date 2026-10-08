@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://o3gydiqf2se1"]
+
+[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_fields.tscn" id="r0"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_bridge.tscn" id="r1"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_wayshrine.tscn" id="r2"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_farmhouse.tscn" id="r3"]
+
+[node name="Threshold" type="Node2D"]
+script = ExtResource("1_region")
+name_key = "REGION_THRESHOLD"
+season = 0
+
+[node name="Memory" type="Node2D" parent="."]
+script = ExtResource("2_regmem")
+authored = 0.3
+
+[node name="ThresholdFields" parent="." instance=ExtResource("r0")]
+position = Vector2(4480, 0)
+
+[node name="ThresholdBridge" parent="." instance=ExtResource("r1")]
+position = Vector2(6400, 0)
+
+[node name="ThresholdWayshrine" parent="." instance=ExtResource("r2")]
+position = Vector2(7680, 0)
+
+[node name="ThresholdFarmhouse" parent="." instance=ExtResource("r3")]
+position = Vector2(12000, 12000)

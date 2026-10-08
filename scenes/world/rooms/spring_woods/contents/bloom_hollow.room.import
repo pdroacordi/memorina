@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://c5sd11big4mdx"
+path="res://.godot/imported/bloom_hollow.room-3775af3310f9012fe2451c81388c1c69.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/spring_woods/contents/bloom_hollow.room"
+dest_files=["res://.godot/imported/bloom_hollow.room-3775af3310f9012fe2451c81388c1c69.res"]
+
+[params]
+

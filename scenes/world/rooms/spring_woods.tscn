@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://cv8nugd7djcnp"]
+
+[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/woods_edge.tscn" id="r0"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/woods_deep.tscn" id="r1"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/woods_canopy.tscn" id="r2"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/woods_root_caves.tscn" id="r3"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/woods_pond.tscn" id="r4"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/bloom_hollow.tscn" id="r5"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/woods_hut.tscn" id="r6"]
+
+[node name="SpringWoods" type="Node2D"]
+script = ExtResource("1_region")
+name_key = "REGION_SPRING_WOODS"
+season = 3
+has_guardian = true
+guardian = 1
+
+[node name="Memory" type="Node2D" parent="."]
+script = ExtResource("2_regmem")
+authored = 0.4
+
+[node name="WoodsEdge" parent="." instance=ExtResource("r0")]
+position = Vector2(-2560, 0)
+
+[node name="WoodsDeep" parent="." instance=ExtResource("r1")]
+position = Vector2(-4480, -768)
+
+[node name="WoodsCanopy" parent="." instance=ExtResource("r2")]
+position = Vector2(-4480, -1152)
+
+[node name="WoodsRootCaves" parent="." instance=ExtResource("r3")]
+position = Vector2(-4480, 384)
+
+[node name="WoodsPond" parent="." instance=ExtResource("r4")]
+position = Vector2(-5760, 0)
+
+[node name="BloomHollow" parent="." instance=ExtResource("r5")]
+position = Vector2(-7040, 0)
+
+[node name="WoodsHut" parent="." instance=ExtResource("r6")]
+position = Vector2(36000, 12000)

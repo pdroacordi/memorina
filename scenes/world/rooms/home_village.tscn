@@ -1,41 +1,61 @@
-[gd_scene format=3 uid="uid://d05regasxpdje"]
+[gd_scene format=3 uid="uid://bkdjfyb2247ym"]
 
-[ext_resource type="PackedScene" uid="uid://d3yi3wnqg8gub" path="res://scenes/world/rooms/home_village/downtown.tscn" id="1_vmbir"]
-[ext_resource type="PackedScene" uid="uid://b2y7r7eq4pq7r" path="res://scenes/world/rooms/home_village/woods.tscn" id="2_6d0dj"]
-[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="3_region"]
-[ext_resource type="PackedScene" uid="uid://cbloomholl01" path="res://scenes/world/rooms/home_village/bloom_hollow.tscn" id="4_bloom"]
-[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="5_regmem"]
-[ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="6_source"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_lane_west.tscn" id="r0"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_square.tscn" id="r1"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_bell_tower.tscn" id="r2"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_cistern.tscn" id="r3"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_mill.tscn" id="r4"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_gate_east.tscn" id="r5"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_house.tscn" id="r6"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_tavern.tscn" id="r7"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_tavern_cellar.tscn" id="r8"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_elder.tscn" id="r9"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_bakery.tscn" id="r10"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_empty_house.tscn" id="r11"]
 
-[node name="HomeVillage" type="Node2D" unique_id=587601713]
-script = ExtResource("3_region")
+[node name="HomeVillage" type="Node2D"]
+script = ExtResource("1_region")
 name_key = "REGION_HOME_VILLAGE"
-has_guardian = true
-guardian = 1
+season = 3
 
 [node name="Memory" type="Node2D" parent="."]
-script = ExtResource("5_regmem")
+script = ExtResource("2_regmem")
 authored = 0.8
 
-[node name="DowntownWell" type="Node2D" parent="Memory"]
-script = ExtResource("6_source")
-radius = 500.0
-feather = 140.0
-strength = -0.7
-edge_seed = 137.0
+[node name="VillageLaneWest" parent="." instance=ExtResource("r0")]
+position = Vector2(-1280, 0)
 
-[node name="BloomHollowWell" type="Node2D" parent="Memory"]
-position = Vector2(4124, -2)
-script = ExtResource("6_source")
-shape = 1
-rect_size = Vector2(1600, 480)
-feather = 140.0
-strength = -0.75
+[node name="VillageSquare" parent="." instance=ExtResource("r1")]
+position = Vector2(0, 0)
 
-[node name="Downtown" parent="." unique_id=2037857167 instance=ExtResource("1_vmbir")]
+[node name="VillageBellTower" parent="." instance=ExtResource("r2")]
+position = Vector2(640, -1152)
 
-[node name="Woods" parent="." unique_id=594702678 instance=ExtResource("2_6d0dj")]
-position = Vector2(1952, 0)
+[node name="VillageCistern" parent="." instance=ExtResource("r3")]
+position = Vector2(640, 384)
 
-[node name="BloomHollow" parent="." instance=ExtResource("4_bloom")]
-position = Vector2(3904, 0)
+[node name="VillageMill" parent="." instance=ExtResource("r4")]
+position = Vector2(1920, 0)
+
+[node name="VillageGateEast" parent="." instance=ExtResource("r5")]
+position = Vector2(3200, 0)
+
+[node name="VillageHouse" parent="." instance=ExtResource("r6")]
+position = Vector2(0, 12000)
+
+[node name="VillageTavern" parent="." instance=ExtResource("r7")]
+position = Vector2(1600, 12000)
+
+[node name="VillageTavernCellar" parent="." instance=ExtResource("r8")]
+position = Vector2(3200, 12000)
+
+[node name="VillageElder" parent="." instance=ExtResource("r9")]
+position = Vector2(4800, 12000)
+
+[node name="VillageBakery" parent="." instance=ExtResource("r10")]
+position = Vector2(6400, 12000)
+
+[node name="VillageEmptyHouse" parent="." instance=ExtResource("r11")]
+position = Vector2(8000, 12000)

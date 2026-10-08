@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://vewx6hulrgkm"
+path="res://.godot/imported/orchard_leaf_path.room-7ec48a1f1d2b74c2a9bed4b5b1024e72.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/wind_orchards/contents/orchard_leaf_path.room"
+dest_files=["res://.godot/imported/orchard_leaf_path.room-7ec48a1f1d2b74c2a9bed4b5b1024e72.res"]
+
+[params]
+

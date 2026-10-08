@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://dlptpc4hhosyb"
+path="res://.godot/imported/woods_hut.room-009fbd1cffccdfdc8ad40342953a465d.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/spring_woods/contents/woods_hut.room"
+dest_files=["res://.godot/imported/woods_hut.room-009fbd1cffccdfdc8ad40342953a465d.res"]
+
+[params]
+

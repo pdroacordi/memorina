@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://buj2a4joyiih6"
+path="res://.godot/imported/orchard_arena.room-1c5cd851f05527cd2efb46be35f14298.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/wind_orchards/contents/orchard_arena.room"
+dest_files=["res://.godot/imported/orchard_arena.room-1c5cd851f05527cd2efb46be35f14298.res"]
+
+[params]
+

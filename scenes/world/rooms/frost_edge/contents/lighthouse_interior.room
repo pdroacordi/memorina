@@ -1,0 +1,59 @@
+; lighthouse_interior.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
+; Bounds and edge openings come from the world layout (systems/world); keep them.
+
+[room]
+origin = 0, 0
+
+[grid]
+SSSSSSSSSSSSSSSSSSSS
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..............E...S
+S............SSSSS.S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S...E..............S
+SSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSS
+
+[entities]
+4,44 = {"link": "lighthouse_door", "to_room": "lighthouse_base", "arrive_facing": 1}
+15,8 = {"link": "lighthouse_hatch", "to_room": "lighthouse_top", "requires": "res://resources/save_facts/all_guardians_restored.tres", "arrive_facing": -1}

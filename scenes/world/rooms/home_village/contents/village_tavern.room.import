@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://bakvv6uayvk2m"
+path="res://.godot/imported/village_tavern.room-dfc6922a63f523f34182d24e6ea42b75.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/home_village/contents/village_tavern.room"
+dest_files=["res://.godot/imported/village_tavern.room-dfc6922a63f523f34182d24e6ea42b75.res"]
+
+[params]
+

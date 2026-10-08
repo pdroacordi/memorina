@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://bxrk3ac6wefel"
+path="res://.godot/imported/lake_high_wall.room-e86a2e02f41f66a9074910ed0fa9d5d4.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/frozen_lake/contents/lake_high_wall.room"
+dest_files=["res://.godot/imported/lake_high_wall.room-e86a2e02f41f66a9074910ed0fa9d5d4.res"]
+
+[params]
+

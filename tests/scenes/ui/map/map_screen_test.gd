@@ -3,7 +3,7 @@ class_name MapScreenTest extends GdUnitTestSuite
 ## The map draws the rooms with seen cells, opens on a clamped centre, steps its zoom and pans in pack px.
 
 const MAP := preload("res://scenes/ui/map/map_screen.tscn")
-const ROOM := preload("res://scenes/world/rooms/home_village/downtown.tscn")
+const ROOM := preload("res://scenes/world/rooms/spring_woods/woods_deep.tscn")
 
 var _room: Room
 var _key: String
@@ -68,7 +68,8 @@ func test_a_pan_moves_in_pack_px_and_stops_at_the_seen_edge() -> void:
 	_see(Rect2i(0, 0, 30, 10))
 	_map.open()
 	var seen := _canvas.seen_rect()
-	_map.pan_by(-_map.centre() + seen.get_center())
+	# pan_by takes pack px; the offset to the middle of the seen area is in world px.
+	_map.pan_by((seen.get_center() - _map.centre()) * _map.cell_px() / MapGrid.CELL_PX)
 	var start := _map.centre()
 	_map.pan_by(Vector2(16, 0))
 	assert_float(_map.centre().x - start.x).is_equal_approx(256.0, 0.001)

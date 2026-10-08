@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://yuh63pwsieol"
+path="res://.godot/imported/orchard_terraces.room-3e3d5c402fc03f3096f31f06bc3aa21d.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/wind_orchards/contents/orchard_terraces.room"
+dest_files=["res://.godot/imported/orchard_terraces.room-3e3d5c402fc03f3096f31f06bc3aa21d.res"]
+
+[params]
+

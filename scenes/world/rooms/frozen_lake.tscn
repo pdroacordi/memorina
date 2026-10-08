@@ -1,0 +1,51 @@
+[gd_scene format=3 uid="uid://bg6m7hyliw22c"]
+
+[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_waterfall_path.tscn" id="r0"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_fishing_village.tscn" id="r1"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_well.tscn" id="r2"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_shore.tscn" id="r3"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_high_wall.tscn" id="r4"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_ice_caves.tscn" id="r5"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_frost_arena.tscn" id="r6"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_chasm.tscn" id="r7"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_fisher_hut.tscn" id="r8"]
+
+[node name="FrozenLake" type="Node2D"]
+script = ExtResource("1_region")
+name_key = "REGION_FROZEN_LAKE"
+season = 0
+has_guardian = true
+guardian = 0
+
+[node name="Memory" type="Node2D" parent="."]
+script = ExtResource("2_regmem")
+authored = 0.3
+
+[node name="LakeWaterfallPath" parent="." instance=ExtResource("r0")]
+position = Vector2(2560, -1920)
+
+[node name="LakeFishingVillage" parent="." instance=ExtResource("r1")]
+position = Vector2(640, -1920)
+
+[node name="LakeWell" parent="." instance=ExtResource("r2")]
+position = Vector2(1280, -1536)
+
+[node name="LakeShore" parent="." instance=ExtResource("r3")]
+position = Vector2(-1280, -1920)
+
+[node name="LakeHighWall" parent="." instance=ExtResource("r4")]
+position = Vector2(-1920, -2688)
+
+[node name="LakeIceCaves" parent="." instance=ExtResource("r5")]
+position = Vector2(3200, -1920)
+
+[node name="LakeFrostArena" parent="." instance=ExtResource("r6")]
+position = Vector2(4480, -1920)
+
+[node name="LakeChasm" parent="." instance=ExtResource("r7")]
+position = Vector2(-3200, -2304)
+
+[node name="LakeFisherHut" parent="." instance=ExtResource("r8")]
+position = Vector2(48000, 12000)

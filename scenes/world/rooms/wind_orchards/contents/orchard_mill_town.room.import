@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://caa4rjvkxs72i"
+path="res://.godot/imported/orchard_mill_town.room-4ef309f6a064988b83e0862a0bc1e2a5.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/wind_orchards/contents/orchard_mill_town.room"
+dest_files=["res://.godot/imported/orchard_mill_town.room-4ef309f6a064988b83e0862a0bc1e2a5.res"]
+
+[params]
+

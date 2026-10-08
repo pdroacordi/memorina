@@ -122,7 +122,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | WORLD-01 | Home village: downtown, woods, Bloom Hollow | 01 §8 | `[x]` | | 2026-10-02 | Replaced by WORLD-05 and WORLD-11. |
 | WORLD-02 | Frost edge: the lighthouse | | `[x]` | | 2026-10-02 | Replaced by WORLD-05 and WORLD-13. |
 | WORLD-03 | The world map: regions and their order | 01 §10 | `[x]` | | 2026-10-08 | `docs/design/04_mapa_do_mundo.md`: seven areas, the user's approval "Approve as proposed" (2026-10-08). |
-| WORLD-05 | Clean slate and the whole-world greybox | 04 §2-3 | `[ ]` | WORLD-09 | 2026-10-08 | Remove the old village and frost edge; every room of 04 §3 as a playable `.room` with its gates, benches and arenas, in the current tiles. Trials stay. A save whose bench is gone boots at the new start. |
+| WORLD-05 | Clean slate and the whole-world greybox | 04 §2-3 | `[~]` | WORLD-09 | 2026-10-08 | Remove the old village and frost edge; every room of 04 §3 as a playable `.room` with its gates, benches and arenas, in the current tiles. Trials stay. A save whose bench is gone boots at the new start. |
 | WORLD-06 | Backdrops that work vertically | 04 §6 | `[ ]` | | 2026-10-08 | Per-layer horizontal and vertical parallax, an anchor height, sky and ground past the art, surface and underground sets. Absorbs WORLD-04. |
 | WORLD-07 | Biome tilesets and a back-wall layer | 04 §6 | `[ ]` | | 2026-10-08 | One 32 px tileset per biome (PixelLab sidescroller), three season bands, `Enums.Ground` per tile; a `[back]` layer in `.room` for non-solid walls. |
 | WORLD-08 | Props and ambient motion on the memory clock | 04 §5-6 | `[ ]` | | 2026-10-08 | Placed set dressing; smoke, sway, flags and windmills stop dead in the grey. |

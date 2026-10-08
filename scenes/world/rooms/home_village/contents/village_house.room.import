@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://dl1xyl0fnysm3"
+path="res://.godot/imported/village_house.room-07bfeab045c318c4611f18bed7eabaac.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/home_village/contents/village_house.room"
+dest_files=["res://.godot/imported/village_house.room-07bfeab045c318c4611f18bed7eabaac.res"]
+
+[params]
+

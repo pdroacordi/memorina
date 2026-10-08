@@ -123,6 +123,7 @@ else in the code knows what a character means.
 | `O` | `[grid]` | entity | - | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
 | `R` | `[grid]` | entity | - | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
 | `E` | `[grid]` | entity | - | A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here. |
+| `X` | `[grid]` | entity | - | A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2). |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -321,6 +322,15 @@ Scene `res://scenes/world/interactables/door/door.tscn`, anchored at its cell's 
 | `to_room` | StringName | **required** |
 | `requires` | SaveFact | `null` |
 | `arrive_facing` | int | `0` |
+
+#### `X` - FactBarrier
+
+Scene `res://scenes/world/interactables/fact_barrier/fact_barrier.tscn`, anchored at its cell's bottom centre (standing on the cell below). A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `requires` | SaveFact | **required** |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

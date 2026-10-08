@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://c866652k0bwnt"
+path="res://.godot/imported/woods_deep.room-03d723ae428454091b283a69e9c7ae91.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/spring_woods/contents/woods_deep.room"
+dest_files=["res://.godot/imported/woods_deep.room-03d723ae428454091b283a69e9c7ae91.res"]
+
+[params]
+

@@ -1,0 +1,22 @@
+; threshold_wayshrine.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
+; Bounds and edge openings come from the world layout (systems/world); keep them.
+
+[room]
+origin = 0, 0
+
+[grid]
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+....................
+....................
+....................
+..........R.........
+####################
+####################
+####################
+
+[entities]
+10,8 = {"bench_id": "threshold_wayshrine_bench"}

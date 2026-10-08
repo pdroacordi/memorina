@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://tburr3u6cfih"
+path="res://.godot/imported/caldera_bait.room-5956ecf5efec0d66acf6657100c7c3cf.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/summer_caldera/contents/caldera_bait.room"
+dest_files=["res://.godot/imported/caldera_bait.room-5956ecf5efec0d66acf6657100c7c3cf.res"]
+
+[params]
+

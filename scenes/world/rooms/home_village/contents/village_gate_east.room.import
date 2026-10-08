@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://cblxao40fac4t"
+path="res://.godot/imported/village_gate_east.room-da56f538ce40ef751028490d517fa6f3.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/home_village/contents/village_gate_east.room"
+dest_files=["res://.godot/imported/village_gate_east.room-da56f538ce40ef751028490d517fa6f3.res"]
+
+[params]
+

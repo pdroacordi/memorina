@@ -18,6 +18,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/bench.tscn" id="i19_bench"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/lowering_platform/lowering_platform.tscn" id="i20_lowering"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/door/door.tscn" id="i21_door"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/fact_barrier/fact_barrier.tscn" id="i22_barrier"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -204,6 +205,16 @@ anchor = 0
 required_params = PackedStringArray("link", "to_room")
 description = "A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here."
 
+[sub_resource type="Resource" id="barrier"]
+script = ExtResource("2_entry")
+symbol = "X"
+kind = 3
+ground = 0
+scene = ExtResource("i22_barrier")
+anchor = 0
+required_params = PackedStringArray("requires")
+description = "A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2)."
+
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier")])

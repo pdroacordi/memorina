@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://dxk18i4ov5bcc"
+path="res://.godot/imported/orchard_chasm_bridge.room-f4b43f372fdff4a1f6015b0890ee5931.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/wind_orchards/contents/orchard_chasm_bridge.room"
+dest_files=["res://.godot/imported/orchard_chasm_bridge.room-f4b43f372fdff4a1f6015b0890ee5931.res"]
+
+[params]
+

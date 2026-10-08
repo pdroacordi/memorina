@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://dw4sjg8osvdci"
+path="res://.godot/imported/caldera_temple_gate.room-5bc09767e6d60111045c962c0f0e0532.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/summer_caldera/contents/caldera_temple_gate.room"
+dest_files=["res://.godot/imported/caldera_temple_gate.room-5bc09767e6d60111045c962c0f0e0532.res"]
+
+[params]
+

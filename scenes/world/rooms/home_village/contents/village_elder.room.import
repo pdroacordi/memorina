@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://br6kmuf2u6eqe"
+path="res://.godot/imported/village_elder.room-0b7da57f178dbe846142296a87dbf286.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/home_village/contents/village_elder.room"
+dest_files=["res://.godot/imported/village_elder.room-0b7da57f178dbe846142296a87dbf286.res"]
+
+[params]
+

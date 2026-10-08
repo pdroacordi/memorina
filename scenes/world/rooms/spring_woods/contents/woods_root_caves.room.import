@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://b2vs8kmwkxlqf"
+path="res://.godot/imported/woods_root_caves.room-bba9b77bb29fcfadee8c17c071fd4363.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/spring_woods/contents/woods_root_caves.room"
+dest_files=["res://.godot/imported/woods_root_caves.room-bba9b77bb29fcfadee8c17c071fd4363.res"]
+
+[params]
+

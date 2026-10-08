@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://di4k1py5xybwb"
+path="res://.godot/imported/lake_frost_arena.room-b95897a51ca8a3b868b2abf6f2764830.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/frozen_lake/contents/lake_frost_arena.room"
+dest_files=["res://.godot/imported/lake_frost_arena.room-b95897a51ca8a3b868b2abf6f2764830.res"]
+
+[params]
+

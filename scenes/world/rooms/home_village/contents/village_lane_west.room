@@ -1,0 +1,24 @@
+; village_lane_west.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
+; Bounds and edge openings come from the world layout (systems/world); keep them.
+
+[room]
+origin = 0, 0
+
+[grid]
+#......................................#
+#......................................#
+#......................................#
+#......................................#
+#......................................#
+........................................
+........................................
+........................................
+...X........E.................E.........
+########################################
+########################################
+########################################
+
+[entities]
+3,8 = {"requires": "res://resources/save_facts/owns_memorina.tres"}
+12,8 = {"link": "village_bakery_door", "to_room": "village_bakery"}
+30,8 = {"link": "village_empty_house_door", "to_room": "village_empty_house"}

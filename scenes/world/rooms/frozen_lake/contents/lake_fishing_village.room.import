@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://c5i428m28mpgy"
+path="res://.godot/imported/lake_fishing_village.room-e7f59e29fe33635a25ccb87114d69efa.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/frozen_lake/contents/lake_fishing_village.room"
+dest_files=["res://.godot/imported/lake_fishing_village.room-e7f59e29fe33635a25ccb87114d69efa.res"]
+
+[params]
+

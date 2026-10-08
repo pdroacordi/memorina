@@ -1,27 +1,33 @@
-[gd_scene format=3 uid="uid://cfrostedge01"]
+[gd_scene format=3 uid="uid://btt2o8qq6waf"]
 
-[ext_resource type="PackedScene" uid="uid://clighthouse1" path="res://scenes/world/rooms/frost_edge/lighthouse.tscn" id="1_lighthouse"]
-[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="2_region"]
-[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="3_regmem"]
-[ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="4_source"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frost_edge/frost_shore.tscn" id="r0"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frost_edge/frost_cliffs.tscn" id="r1"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frost_edge/lighthouse_base.tscn" id="r2"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frost_edge/lighthouse_top.tscn" id="r3"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frost_edge/lighthouse_interior.tscn" id="r4"]
 
 [node name="FrostEdge" type="Node2D"]
-script = ExtResource("2_region")
+script = ExtResource("1_region")
 name_key = "REGION_FROST_EDGE"
 season = 0
-has_guardian = true
-guardian = 0
 
 [node name="Memory" type="Node2D" parent="."]
-script = ExtResource("3_regmem")
-authored = 0.2
+script = ExtResource("2_regmem")
+authored = 0.05
 
-[node name="LighthouseWell" type="Node2D" parent="Memory"]
-position = Vector2(170, -2)
-script = ExtResource("4_source")
-shape = 1
-rect_size = Vector2(1600, 480)
-feather = 140.0
-strength = -0.2
+[node name="FrostShore" parent="." instance=ExtResource("r0")]
+position = Vector2(8320, 0)
 
-[node name="Lighthouse" parent="." instance=ExtResource("1_lighthouse")]
+[node name="FrostCliffs" parent="." instance=ExtResource("r1")]
+position = Vector2(9600, -1152)
+
+[node name="LighthouseBase" parent="." instance=ExtResource("r2")]
+position = Vector2(10880, -1152)
+
+[node name="LighthouseTop" parent="." instance=ExtResource("r3")]
+position = Vector2(10880, -1920)
+
+[node name="LighthouseInterior" parent="." instance=ExtResource("r4")]
+position = Vector2(24000, 12000)

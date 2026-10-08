@@ -2,8 +2,8 @@
  "scene": "res://scenes/world/game.tscn",
  "max_duration": 28.0,
  "player_position": [
-  -1104,
-  -40
+  400,
+  250
  ],
  "steps": [
   {
@@ -18,7 +18,7 @@
   },
   {
    "t": 3.5,
-   "screenshot": "00_rested_at_downtown_bench"
+   "screenshot": "00_rested_at_village_square_bench"
   },
   {
    "t": 4.0,
