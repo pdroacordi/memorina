@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=3
+type="Resource"
+uid="uid://yo4l6xonxdjw"
+path="res://.godot/imported/water_trial.room-a08bd2b69fce90888aea12f4d81a5975.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/trials_solstice/contents/water_trial.room"
+dest_files=["res://.godot/imported/water_trial.room-a08bd2b69fce90888aea12f4d81a5975.res"]
+
+[params]
+

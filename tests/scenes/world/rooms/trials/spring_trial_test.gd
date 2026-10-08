@@ -6,7 +6,7 @@ class_name SpringTrialTest extends GdUnitTestSuite
 
 const ROOM := "res://scenes/world/rooms/trials_spring/contents/spring_trial.room"
 const FLOATER_SCENE := "res://scenes/world/interactables/floater/floater.tscn"
-const BASIN_LAYER := "res://scenes/world/interactables/rain_basin/rain_basin_layer.tscn"
+const BASIN_LAYER := "res://scenes/world/interactables/freezable_water/freezable_water_layer.tscn"
 const PULSE_STATS := "res://resources/memory/default_pulse_stats.tres"
 const CELL := 32.0
 const FLOOR_ROW := 16
@@ -58,7 +58,7 @@ func _lip() -> float:
 ## Where rain brings the basin's water: its top painted row, less the lip.
 func _full_level() -> float:
 	var top := FLOOR_ROW
-	for cell: Vector2 in _map.water.get("r", PackedVector2Array()):
+	for cell: Vector2 in _map.reach.get("r", PackedVector2Array()):
 		var col := int(cell.x) - _map.origin.x
 		if col > BASIN_WALL_COL and col < PASSAGE_COL:
 			top = mini(top, int(cell.y) - _map.origin.y)

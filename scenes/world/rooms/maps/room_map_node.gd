@@ -66,8 +66,12 @@ func _build() -> void:
 			if packed != RoomMap.NO_TILE:
 				_ground.set_cell(cell, GroundAutotile.SOURCE_ID, RoomMap.tile_coords(packed), RoomMap.tile_alternative(packed))
 	_adopt(_ground)
-	for symbol: String in map.water:
-		_pour(map.legend.entry(symbol), map.water[symbol])
+	var symbols: Array[String] = map.water.keys()
+	for symbol: String in map.reach:
+		if not symbol in symbols:
+			symbols.append(symbol)
+	for symbol: String in symbols:
+		_pour(map.legend.entry(symbol), map.water.get(symbol, PackedVector2Array()), map.reach.get(symbol, PackedVector2Array()))
 	var entities := Node2D.new()
 	entities.name = ENTITIES
 	# Add the complete entity set together so links resolve regardless of map order.
@@ -76,16 +80,21 @@ func _build() -> void:
 	_adopt(entities)
 
 ## Paint finer water cells before adding the layer, because its `_ready` creates bodies.
-func _pour(entry: RoomLegendEntry, cells: PackedVector2Array) -> void:
+func _pour(entry: RoomLegendEntry, cells: PackedVector2Array, reach: PackedVector2Array) -> void:
 	var layer := entry.water_layer.instantiate() as WaterLayer
 	assert(layer != null, "legend '%s': water_layer must be a WaterLayer preset" % entry.symbol)
+	_paint(layer, cells, 0)
+	_paint(layer, reach, WaterLayer.REACH_ALTERNATIVE)
+	layer.name = "Water_%s" % entry.symbol.uri_encode()
+	_adopt(layer)
+
+## Paints each map cell as the water layer's finer cells, with tile `alternative`.
+func _paint(layer: WaterLayer, cells: PackedVector2Array, alternative: int) -> void:
 	var ratio := Vector2i(FLOOR_TILESET.tile_size) / Vector2i(layer.tile_set.tile_size)
 	for cell: Vector2 in cells:
 		for dy: int in ratio.y:
 			for dx: int in ratio.x:
-				layer.set_cell(Vector2i(cell) * ratio + Vector2i(dx, dy), 0, Vector2i.ZERO)
-	layer.name = "Water_%s" % entry.symbol.uri_encode()
-	_adopt(layer)
+				layer.set_cell(Vector2i(cell) * ratio + Vector2i(dx, dy), 0, Vector2i.ZERO, alternative)
 
 func _place(entry: RoomLegendEntry, placed: Dictionary, entities: Node2D) -> void:
 	var node := entry.scene.instantiate() as Node2D

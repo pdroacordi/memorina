@@ -36,6 +36,8 @@ const HAZARD_MIN_DEPTH := 3.0
 @export var look: WaterLook
 ## World pixels below the rest line where the hazard begins.
 @export var hazard_depth := 4.0
+## World pixels from the painted waterline down to where the water rests; the painted level is Chuva's reach.
+@export var rest_depth := 0.0
 
 var _field: WaterSurfaceField
 var _texture: WaterSurfaceTexture
@@ -169,6 +171,10 @@ func contains_x(world_x: float) -> bool:
 ## (highest level, deepest floor) in world y: the level set_level() moves in.
 func level_range() -> Vector2:
 	return Vector2(_top_y, _bottom_y)
+
+## The waterline's world y at rest, between the painted top and the deepest floor.
+func rest_level() -> float:
+	return minf(_top_y + rest_depth, _bottom_y)
 
 ## No water left anywhere in the body.
 func is_dry() -> bool:

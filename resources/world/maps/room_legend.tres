@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="RoomLegend" load_steps=14 format=3]
+[gd_resource type="Resource" script_class="RoomLegend" load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://resources/world/maps/room_legend.gd" id="1_legend"]
 [ext_resource type="Script" path="res://resources/world/maps/room_legend_entry.gd" id="2_entry"]
@@ -14,7 +14,6 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/hanging_load/hanging_load.tscn" id="i14_load"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/leaf_cover/leaf_cover.tscn" id="i15_cover"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/drawbridge/drawbridge.tscn" id="i16_bridge"]
-[ext_resource type="PackedScene" path="res://scenes/world/interactables/rain_basin/rain_basin_layer.tscn" id="i17_rain"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/floater/floater.tscn" id="i18_floater"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/bench.tscn" id="i19_bench"]
 
@@ -53,6 +52,7 @@ symbol = "w"
 kind = 2
 ground = 0
 water_layer = ExtResource("4_lake")
+takes_reach = false
 description = "Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides."
 
 [sub_resource type="Resource" id="freezable"]
@@ -68,8 +68,9 @@ script = ExtResource("2_entry")
 symbol = "r"
 kind = 2
 ground = 0
-water_layer = ExtResource("i17_rain")
-description = "A basin Chuva fills: paint it up to where the rain brings the water. It is dry until it rains, rises while a Chuva pulse covers it, sinks back to dry when the last pulse leaves, and freezes like f (Chuva then Congelar: ice where there was no water)."
+water_layer = ExtResource("5_freezable")
+reach = true
+description = "Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake."
 
 [sub_resource type="Resource" id="floater"]
 script = ExtResource("2_entry")

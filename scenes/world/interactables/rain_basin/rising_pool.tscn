@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_pool.tscn" id="1_pool"]
+[ext_resource type="Script" path="res://scenes/world/memory/song_receiver.gd" id="2_receiver"]
+[ext_resource type="Script" path="res://scenes/world/interactables/rain_basin/rain_basin.gd" id="3_rain"]
+
+[node name="RisingPool" type="Node2D"]
+
+[node name="Water" parent="." instance=ExtResource("1_pool")]
+size = Vector2i(192, 56)
+mirror_axis_offset = -4
+rest_depth = 32.0
+
+[node name="RainReceiver" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 1048576
+script = ExtResource("2_receiver")
+reacts_to = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RainReceiver"]
+
+[node name="Rain" type="Node" parent="."]
+script = ExtResource("3_rain")

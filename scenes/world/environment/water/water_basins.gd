@@ -8,21 +8,27 @@ var basins: Array[Basin] = []
 ## Cells that belong to no body, in the order they were found.
 var unreachable: Array[Vector2i] = []
 
-static func build(cells: Array[Vector2i]) -> WaterBasins:
+## `reach` cells are where Chuva brings the water above the painted rest (docs/knowledge/architecture/a-pool-rests-below-its-painted-reach.md).
+static func build(cells: Array[Vector2i], reach: Array[Vector2i] = []) -> WaterBasins:
 	var result := WaterBasins.new()
 	var painted: Dictionary[Vector2i, bool] = {}
 	for cell: Vector2i in cells:
 		painted[cell] = true
+	var reached: Dictionary[Vector2i, bool] = {}
+	for cell: Vector2i in reach:
+		painted[cell] = true
+		reached[cell] = true
+	var all := cells + reach
 	var seen: Dictionary[Vector2i, bool] = {}
-	for cell: Vector2i in _sorted(cells):
+	for cell: Vector2i in _sorted(all):
 		if seen.has(cell):
 			continue
-		result._pour(_component(cell, painted, seen))
+		result._pour(_component(cell, painted, seen), reached)
 	result.basins.sort_custom(func(a: Basin, b: Basin) -> bool:
 		return a.surface < b.surface or (a.surface == b.surface and a.left < b.left))
 	return result
 
-func _pour(component: Array[Vector2i]) -> void:
+func _pour(component: Array[Vector2i], reached: Dictionary[Vector2i, bool]) -> void:
 	var cells: Dictionary[Vector2i, bool] = {}
 	var surface := component[0].y
 	for cell: Vector2i in component:
@@ -42,12 +48,19 @@ func _pour(component: Array[Vector2i]) -> void:
 		var basin := Basin.new()
 		basin.left = columns[run_start]
 		basin.surface = surface
+		var rest_row := 0
+		var has_rest := false
 		for x in range(columns[run_start], columns[i] + 1):
 			var depth := 0
 			while cells.has(Vector2i(x, surface + depth)):
-				claimed[Vector2i(x, surface + depth)] = true
+				var cell := Vector2i(x, surface + depth)
+				claimed[cell] = true
+				if not reached.has(cell) and (not has_rest or cell.y < rest_row):
+					rest_row = cell.y
+					has_rest = true
 				depth += 1
 			basin.depths.append(depth)
+		basin.rest = rest_row - surface if has_rest else basin.deepest()
 		basins.append(basin)
 		run_start = i + 1
 	for cell: Vector2i in _sorted(component):
@@ -84,6 +97,8 @@ class Basin:
 	var surface := 0
 	## Cells of water in each column, left to right, counted from the surface.
 	var depths := PackedInt32Array()
+	## Rows from the surface down to the water at rest: 0 without reach, deepest() when all of it is reach (dry).
+	var rest := 0
 
 	func width() -> int:
 		return depths.size()

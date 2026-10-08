@@ -11,6 +11,9 @@ func before_test() -> void:
 		_entry("S", RoomLegendEntry.Kind.GROUND, Enums.Ground.STONE),
 		_entry("=", RoomLegendEntry.Kind.PLATFORM, Enums.Ground.EARTH),
 		_water("~"),
+		_water("f"),
+		_lake("w"),
+		_reach("r"),
 		_thing("B"),
 	]
 
@@ -24,6 +27,16 @@ func _entry(symbol: String, kind: RoomLegendEntry.Kind, ground: Enums.Ground) ->
 func _water(symbol: String) -> RoomLegendEntry:
 	var entry := _entry(symbol, RoomLegendEntry.Kind.WATER, Enums.Ground.NONE)
 	entry.water_layer = PackedScene.new()
+	return entry
+
+func _lake(symbol: String) -> RoomLegendEntry:
+	var entry := _water(symbol)
+	entry.takes_reach = false
+	return entry
+
+func _reach(symbol: String) -> RoomLegendEntry:
+	var entry := _water(symbol)
+	entry.reach = true
 	return entry
 
 func _thing(symbol: String) -> RoomLegendEntry:
@@ -144,3 +157,73 @@ func test_a_semicolon_inside_json_is_not_a_comment() -> void:
 
 func test_a_grid_row_may_not_start_with_whitespace() -> void:
 	assert_bool(_parse("[grid]\n##\n ##\n").ok()).is_false()
+
+# --- Reach -----------------------------------------------------------------------
+
+func test_a_reach_over_water_joins_that_water() -> void:
+	var map := _parse("[grid]
+#..#
+#..#
+####
+[water]
+.rr.
+.~~.
+....
+").map
+	assert_int(map.reach["~"].size()).is_equal(2)
+	assert_bool(map.water.has("r")).is_false()
+	assert_int(map.water["~"].size()).is_equal(2)
+
+func test_a_lone_reach_is_its_own_dry_basin() -> void:
+	var map := _parse("[grid]
+#..#
+####
+[water]
+.rr.
+....
+").map
+	assert_int(map.reach["r"].size()).is_equal(2)
+
+func test_a_reach_over_a_lake_is_an_error() -> void:
+	var result := _parse("[grid]
+#..#
+#..#
+####
+[water]
+.rr.
+.ww.
+....
+")
+	assert_bool(result.ok()).is_false()
+	assert_str(result.errors[0]).contains("a lake does not rise")
+
+func test_a_reach_touching_two_waters_is_an_error() -> void:
+	var result := _parse("[grid]
+#...#
+#.#.#
+#####
+[water]
+.rrr.
+.~.f.
+.....
+")
+	assert_bool(result.ok()).is_false()
+	assert_str(result.errors[0]).contains("touches two kinds of water")
+
+func test_a_reach_under_water_is_an_error() -> void:
+	var result := _parse("[grid]
+#..#
+#..#
+####
+[water]
+.~~.
+.rr.
+....
+")
+	assert_bool(result.ok()).is_false()
+	assert_str(result.errors[0]).contains("is under water")
+
+func test_a_reach_beside_its_water_is_an_error() -> void:
+	var result := _parse("[grid]\n#...#\n#...#\n#####\n[water]\n.rrr.\n.r~~.\n.....\n")
+	assert_bool(result.ok()).is_false()
+	assert_str(result.errors[0]).contains("beside or below its water's rest")

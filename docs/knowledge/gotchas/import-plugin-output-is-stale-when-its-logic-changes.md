@@ -1,12 +1,12 @@
 ---
 id: gotchas/import-plugin-output-is-stale-when-its-logic-changes
 type: gotcha
-title: An import plugin's output is redone only when its source file or _get_format_version() changes, not when the code or data it bakes in changes
+title: An import plugin's output is redone only when its source file or its .import file changes, not when the code or data it bakes in changes (a _get_format_version() bump alone does nothing)
 status: active
 tags: [import-plugin, editor, room-maps, staleness, tooling]
 related: [architecture/rooms-are-text]
 created: 2026-09-30
-updated: 2026-09-30
+updated: 2026-10-07
 source_files:
   - addons/room_maps/room_map_importer.gd
   - scenes/world/rooms/maps/room_map_parser.gd
@@ -39,3 +39,25 @@ symbol, and the parser. Change any of those and every developer's
   changes (`GroundAutotile`, the parser, `RoomMap`'s layout). A legend edit still needs a
   manual reimport. The importer comment already says so, but the "the suite catches it"
   half of that comment is not true for the imported output.
+
+## Revision (2026-10-07)
+
+Measured in 4.7.2 with a throwaway project (one addon `EditorImportPlugin`, one source file):
+bumping `_get_format_version()` from 1 to 2 or 3 did **not** reimport the file. This held for
+`--headless --import`, for `--headless -e` and for a windowed `-e` run. The `.import` file kept
+`importer_version=1` and `_import` was never called. The Summary's claim that a format-version
+change makes Godot reimport is wrong for an addon importer.
+
+What does reimport:
+- A changed `.import` file. Editing `importer_version=1` to `2` in `a.foo.import` and then
+  running `--import` called `_import`. This is the path that reaches other checkouts: the
+  developer who bumps the version must force the reimport locally (delete
+  `.godot/imported/*.room-*`, then `--import`) and commit the rewritten `.room.import` files.
+  Other machines then reimport because their `.import` files changed on pull.
+- A changed source file, or a missing imported file.
+
+Bumping `FORMAT_VERSION` alone is a no-op. It only matters because the reimport it is meant to
+cause writes the new `importer_version` into the committed `.import` files.
+`room_map_importer.gd`'s header ("unless FORMAT_VERSION is bumped, which makes the editor
+reimport every map") states the wrong mechanism. `systems/rooms` ("Format 3") states the
+working one.

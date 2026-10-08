@@ -74,7 +74,7 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | casulo pendurado / cortina de folhas / ponte levadiça | `HangingLoad`, `LeafCover`, `Drawbridge` |
 | a canção tocada não corre durante outra resposta | `PulseEmitter.holds_in_pause` |
 | Chuva / bacia seca que enche | `RainFall`, `RainBasin` (room map `r`), `WaterBody.set_level` |
-| nível da água (autoral) | `WaterBody.level_range()`, the painted top of an `r` basin |
+| nível da água (autoral) | `WaterBody.level_range()` (the painted reach, `r`) and `WaterBody.rest_level()` (the painted water under it) |
 | o que boia (tronco caído) | `Floater` (room map `O`) |
 | Enraizar / raízes ligam terra a terra | `RootGrower`, `RootSpanFinder` (BRIDGE / SHAFT / PILLAR), `RootStrands`, `RootSpanView` |
 | ponte de raízes / poço de terra / pilar | `RootSpanFinder.Kind.BRIDGE` / `SHAFT` / `PILLAR` |

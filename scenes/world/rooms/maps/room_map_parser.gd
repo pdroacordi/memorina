@@ -139,6 +139,7 @@ static func _read_water(map: RoomMap, rows: PackedStringArray, lines: Array[int]
 	if rows.size() != map.size.y:
 		result.errors.append("%s:%d: [water] has %d rows, [grid] has %d" % [source, lines[0], rows.size(), map.size.y])
 		return
+	var reach: Dictionary[Vector2i, String] = {}
 	for y: int in rows.size():
 		var row := rows[y]
 		if row.length() > map.size.x:
@@ -152,11 +153,71 @@ static func _read_water(map: RoomMap, rows: PackedStringArray, lines: Array[int]
 			if entry == null or entry.kind != RoomLegendEntry.Kind.WATER:
 				result.errors.append("%s:%d:%d: '%s' is not a kind of water" % [source, lines[y], x + 1, symbol])
 				continue
+			var cell := map.origin + Vector2i(x, y)
+			if entry.reach:
+				reach[cell] = symbol
+				continue
 			if not map.water.has(symbol):
 				map.water[symbol] = PackedVector2Array()
 			var cells: PackedVector2Array = map.water[symbol]
-			cells.append(Vector2(map.origin + Vector2i(x, y)))
+			cells.append(Vector2(cell))
 			map.water[symbol] = cells
+	_resolve_reach(map, reach, lines, source, result)
+
+## Joins each group of reach cells to the one kind of water it stands on (docs/knowledge/architecture/a-pool-rests-below-its-painted-reach.md).
+static func _resolve_reach(map: RoomMap, reach: Dictionary[Vector2i, String], lines: Array[int], source: String, result: Result) -> void:
+	var water: Dictionary[Vector2i, String] = {}
+	for symbol: String in map.water:
+		for cell: Vector2 in map.water[symbol]:
+			water[Vector2i(cell)] = symbol
+	var seen: Dictionary[Vector2i, bool] = {}
+	for start: Vector2i in reach:
+		if seen.has(start):
+			continue
+		var group: Array[Vector2i] = [start]
+		seen[start] = true
+		var hosts: Dictionary[String, bool] = {}
+		var next := 0
+		while next < group.size():
+			var cell := group[next]
+			next += 1
+			if water.has(cell + Vector2i.UP):
+				_reach_error(map, cell, reach[cell], "is under water", lines, source, result)
+			for step: Vector2i in WaterBasins.NEIGHBOURS:
+				var neighbour := cell + step
+				if water.has(neighbour):
+					hosts[water[neighbour]] = true
+				elif reach.has(neighbour) and not seen.has(neighbour):
+					seen[neighbour] = true
+					group.append(neighbour)
+		var host: String = reach[start]
+		var host_top := 0
+		var has_host_top := false
+		for cell: Vector2i in group:
+			for step: Vector2i in WaterBasins.NEIGHBOURS:
+				if water.has(cell + step) and (not has_host_top or cell.y + step.y < host_top):
+					host_top = cell.y + step.y
+					has_host_top = true
+		if hosts.size() > 1:
+			_reach_error(map, start, reach[start], "touches two kinds of water", lines, source, result)
+			continue
+		if hosts.size() == 1:
+			host = hosts.keys()[0]
+			if not map.legend.entry(host).takes_reach:
+				_reach_error(map, start, reach[start], "is over '%s': a lake does not rise" % host, lines, source, result)
+				continue
+			var low := group.filter(func(cell: Vector2i) -> bool: return cell.y >= host_top)
+			if not low.is_empty():
+				_reach_error(map, low[0], reach[low[0]], "is beside or below its water's rest: a reach is only painted above it", lines, source, result)
+				continue
+		var cells: PackedVector2Array = map.reach.get(host, PackedVector2Array())
+		for cell: Vector2i in group:
+			cells.append(Vector2(cell))
+		map.reach[host] = cells
+
+static func _reach_error(map: RoomMap, cell: Vector2i, symbol: String, problem: String, lines: Array[int], source: String, result: Result) -> void:
+	var local := cell - map.origin
+	result.errors.append("%s:%d:%d: '%s' at %d,%d %s" % [source, lines[local.y], local.x + 1, symbol, local.x, local.y, problem])
 
 static func _parse_entity(map: RoomMap, line: String, line_number: int, source: String, result: Result) -> void:
 	var parts := line.split("=", false, 1)

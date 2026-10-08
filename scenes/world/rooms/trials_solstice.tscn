@@ -3,6 +3,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/solstice_trial.tscn" id="1_room"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="2_region"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/empty_house.tscn" id="4_house"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/water_trial.tscn" id="5_water"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="3_regmem"]
 
 [node name="TrialsSolstice" type="Node2D"]
@@ -24,3 +25,9 @@ position = Vector2(2992, -40)
 
 [node name="EmptyHouse" parent="." instance=ExtResource("4_house")]
 position = Vector2(2560, 0)
+
+[node name="WaterSpawn" type="Marker2D" parent="." groups=["trial_spawn"]]
+position = Vector2(5488, -40)
+
+[node name="WaterTrial" parent="." instance=ExtResource("5_water")]
+position = Vector2(5312, 0)

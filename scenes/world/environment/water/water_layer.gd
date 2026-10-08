@@ -2,8 +2,13 @@ class_name WaterLayer extends TileMapLayer
 
 ## Converts painted water cells into runtime water bodies.
 
+## Tile alternative that paints a reach: where Chuva raises the water, not water at rest.
+const REACH_ALTERNATIVE := 1
+
 ## Scene instantiated for each basin; its root or `Water` child must be a WaterBody.
 @export var body_scene: PackedScene
+## Scene for a basin painted with a reach above its rest (a RainBasin); null when this kind never rises.
+@export var rising_body_scene: PackedScene
 ## Dry gap from painted top to waterline, in world pixels.
 @export var surface_inset := 8
 
@@ -21,7 +26,14 @@ func _ready() -> void:
 	assert(surface_inset >= 0 and surface_inset < tile_set.tile_size.y,
 		"%s: the waterline must sit inside the top row of cells" % name)
 	enabled = false
-	var basins := WaterBasins.build(get_used_cells())
+	var cells: Array[Vector2i] = []
+	var reach: Array[Vector2i] = []
+	for cell: Vector2i in get_used_cells():
+		if get_cell_alternative_tile(cell) == REACH_ALTERNATIVE:
+			reach.append(cell)
+		else:
+			cells.append(cell)
+	var basins := WaterBasins.build(cells, reach)
 	for cell: Vector2i in basins.unreachable:
 		push_warning("%s: water painted at %s is not below its basin's surface (under terrain, or a side arm) and is not drawn" % [get_path(), cell])
 	for basin: WaterBasins.Basin in basins.basins:
@@ -29,8 +41,11 @@ func _ready() -> void:
 
 func _pour(basin: WaterBasins.Basin) -> Node2D:
 	var cell := Vector2(tile_set.tile_size)
-	var instance := body_scene.instantiate() as Node2D
+	var rising := basin.rest > 0
+	assert(not rising or rising_body_scene != null, "%s: a reach is painted but this water never rises" % name)
+	var instance := (rising_body_scene if rising else body_scene).instantiate() as Node2D
 	var body := _water_body_of(instance)
+	body.rest_depth = basin.rest * cell.y
 	# Each water column must fit within one cell to preserve its floor depth.
 	assert(tile_set.tile_size.x % body.column_width() == 0,
 		"%s: a water column (%d px) must divide a cell (%d px)" % [name, body.column_width(), tile_set.tile_size.x])

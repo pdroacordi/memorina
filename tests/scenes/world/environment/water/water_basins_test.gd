@@ -75,3 +75,32 @@ func test_a_gap_in_a_column_ends_its_depth() -> void:
 	var built := WaterBasins.build(_cells(["##", "# ", "##"]))
 	assert_array(Array(built.basins[0].depths)).is_equal([3, 1])
 	assert_array(built.unreachable).is_equal([Vector2i(1, 2)])
+
+func test_without_reach_the_body_rests_at_its_surface() -> void:
+	var built := WaterBasins.build(_cells(["###", "###"]))
+	assert_int(built.basins[0].rest).is_equal(0)
+
+func test_reach_over_water_is_one_body_resting_at_the_water() -> void:
+	var water := _cells(["   ", "   ", "###", "###"])
+	var reach := _cells(["###", "###", "   ", "   "])
+	var built := WaterBasins.build(water, reach)
+	assert_int(built.basins.size()).is_equal(1)
+	assert_int(built.basins[0].surface).is_equal(0)
+	assert_array(Array(built.basins[0].depths)).is_equal([4, 4, 4])
+	assert_int(built.basins[0].rest).is_equal(2)
+
+func test_reach_alone_is_a_dry_basin() -> void:
+	var built := WaterBasins.build([], _cells(["###", "###"]))
+	assert_int(built.basins[0].rest).is_equal(built.basins[0].deepest())
+
+func test_reach_wider_than_its_water_rests_at_the_water() -> void:
+	var water := _cells(["     ", " ### "])
+	var reach := _cells(["#####", "#   #"])
+	var built := WaterBasins.build(water, reach)
+	assert_int(built.basins.size()).is_equal(1)
+	assert_array(Array(built.basins[0].depths)).is_equal([2, 2, 2, 2, 2])
+	assert_int(built.basins[0].rest).is_equal(1)
+
+func test_a_rest_above_row_zero_is_counted_from_the_surface() -> void:
+	var built := WaterBasins.build(_cells(["  ", "##"], Vector2i(0, -5)), _cells(["##", "  "], Vector2i(0, -5)))
+	assert_int(built.basins[0].rest).is_equal(1)

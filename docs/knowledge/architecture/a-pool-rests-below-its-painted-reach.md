@@ -1,7 +1,7 @@
 ---
 id: architecture/a-pool-rests-below-its-painted-reach
 type: architecture
-title: A pool rests at its painted water and Chuva raises it to the `r` cells painted above it, in one body (PLAN for PZL-09)
+title: A pool rests at its painted water and Chuva raises it to the `r` cells painted above it, in one body (PZL-09)
 status: active
 tags: [water, rain-basin, chuva, room-map, water-basins, importer, plan, pzl-09]
 related: [architecture/the-water-level-moves, architecture/rooms-are-text, architecture/ice-is-its-own-sheet, architecture/the-shell-displaces-water-into-the-reach, systems/water, systems/rooms, gotchas/import-plugin-output-is-stale-when-its-logic-changes]
@@ -21,7 +21,7 @@ source_files:
 
 ## Summary
 
-PLAN, not built (2026-10-07). Design 03 §6.5: "poças sobem", and the level rain reaches is
+Built 2026-10-07 as planned, except: the trial room is 24 cells (section 1 only, a stone tank: `~` rest rows 18-19, `r` reach rows 13-17, the passage floor 192 px up) at region x 5312 after the widened `empty_house`; the suites are `rising_pool_test` and `room_map_node_test`'s reach case instead of extending `rain_basin_test`; and the parser also rejects a reach beside or below its water's top row (it would silently be water at rest). Design 03 §6.5: "poças sobem", and the level rain reaches is
 authored, never computed. `r` stops being its own kind of water and becomes a REACH: `r` cells
 painted above `~` or `f` water in the same pit join that body as the level Chuva brings it to; the
 painted water below is its rest level. A lone `r` group is today's dry basin (rest = its floor).

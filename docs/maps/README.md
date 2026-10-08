@@ -68,6 +68,10 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwffffff...........
   `[grid]`. Each 32 px water character becomes 2x2 of the water system's
   16 px cells (`WaterLayer`), which works out the basins, surfaces and depths
   itself (`WaterBasins`).
+- **`r` is a reach, not water**: painted above `~` or `f` in the same pit, the
+  pool rests at the water painted under it and Chuva raises it to the top `r`
+  row; painted alone, it is a dry basin. The parser joins each group of `r` to
+  the one kind of water it touches.
 - **`[entities]`** gives params to entity characters. Keys are **grid**
   column,row (0-based, from the top-left character), not tile coordinates.
   An entity without params needs no line.
@@ -113,7 +117,7 @@ else in the code knows what a character means.
 | `H` | `[grid]` | entity | - | A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back. |
 | `F` | `[grid]` | entity | - | A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside. |
 | `D` | `[grid]` | entity | - | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
-| `r` | `[water]` | water | - | A basin Chuva fills: paint it up to where the rain brings the water. It is dry until it rains, rises while a Chuva pulse covers it, sinks back to dry when the last pulse leaves, and freezes like f (Chuva then Congelar: ice where there was no water). |
+| `r` | `[water]` | water | - | Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake. |
 | `O` | `[grid]` | entity | - | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
 | `R` | `[grid]` | entity | - | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
 <!-- /generated:legend -->
@@ -339,6 +343,9 @@ has a reachability test that checks both halves.
 | `water 'w' belongs in [water], not [grid]` | water goes in its own layer |
 | `'#' is not a kind of water` | only water characters go in `[water]` |
 | `[water] has N rows, [grid] has M` | the two layers must line up |
+| `'r' at C,R is over 'w': a lake does not rise` | a reach only joins pool water (`~`, `f`) |
+| `'r' at C,R touches two kinds of water` | a reach joins one body: keep it over one kind |
+| `'r' at C,R is under water` | a reach is above the water it raises, never below it |
 | `no entity at column C, row R` | an `[entities]` line points at a cell that is not an entity (keys are grid coordinates) |
 | `params must be a JSON object` | the right-hand side is not `{...}` |
 | `id 'X' is used by two entities` | ids name nodes; they must be unique in the room |

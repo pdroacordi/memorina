@@ -1,14 +1,14 @@
 class_name RainBasin extends Node
 
-## Fills a painted WaterBody under a RAIN pulse and freezes its current level (docs/design/02_mecanicas.md section 7.1; docs/design/03_mundo_e_ambiente.md section 6.5).
+## Raises a painted WaterBody from its rest to its painted reach under a RAIN pulse and freezes its current level (docs/design/02_mecanicas.md section 7.1; docs/design/03_mundo_e_ambiente.md section 6.5).
 
-## Seconds to rise from dry to full at memory 1.
+## Seconds to rise from rest to the reach at memory 1.
 @export var fill_time := 3.0
-## Seconds to sink from full to dry at memory 1.
+## Seconds to sink from the reach to rest at memory 1.
 @export var drain_time := 4.0
 
 var _full_y := 0.0
-var _dry_y := 0.0
+var _rest_y := 0.0
 var _level := 0.0
 var _target := 0.0
 
@@ -18,10 +18,9 @@ var _target := 0.0
 @onready var _receiver_shape: CollisionShape2D = $"../RainReceiver/CollisionShape2D"
 
 func _ready() -> void:
-	var levels := _water.level_range()
-	_full_y = levels.x
-	_dry_y = levels.y
-	# Sized to the full basin before it dries: the rain must find it empty.
+	_full_y = _water.level_range().x
+	_rest_y = _water.rest_level()
+	# Sized to the full basin before it sinks: the rain must find it at rest.
 	_water.fit_area(_receiver_shape, -FreezableWater.RECEIVER_HEADROOM)
 	_receiver.song_entered.connect(func(_song: Song, _origin: Vector2) -> void: _target = 1.0)
 	_receiver.song_left.connect(func(_song: Song) -> void:
@@ -29,7 +28,7 @@ func _ready() -> void:
 			_target = 0.0)
 	# Deferred: the FreezableWater above sizes its own receiver from the full
 	# water in its _ready, which runs after this one.
-	_water.set_level.call_deferred(_dry_y)
+	_water.set_level.call_deferred(_rest_y)
 
 ## Requires shelter across the whole waterline because exposed sections still receive rain.
 func _sheltered() -> bool:
@@ -42,7 +41,7 @@ func _sheltered() -> bool:
 			return false
 	return true
 
-## Returns fill from 0 (dry) to 1 (painted level).
+## Returns fill from 0 (rest) to 1 (the painted reach).
 func level() -> float:
 	return _level
 
@@ -58,4 +57,4 @@ func _physics_process(delta: float) -> void:
 	rate /= maxf(rates.size(), 1.0)
 	var time := fill_time if target > _level else drain_time
 	_level = move_toward(_level, target, delta * rate / maxf(time, 0.001))
-	_water.set_level(lerpf(_dry_y, _full_y, smoothstep(0.0, 1.0, _level)))
+	_water.set_level(lerpf(_rest_y, _full_y, smoothstep(0.0, 1.0, _level)))

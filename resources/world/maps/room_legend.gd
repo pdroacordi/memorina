@@ -33,6 +33,8 @@ func problems() -> PackedStringArray:
 			RoomLegendEntry.Kind.WATER:
 				if candidate.water_layer == null:
 					found.append("water '%s' has no water_layer" % candidate.symbol)
+				if candidate.reach and not candidate.takes_reach:
+					found.append("reach '%s' cannot refuse a reach" % candidate.symbol)
 			RoomLegendEntry.Kind.ENTITY:
 				if candidate.scene == null:
 					found.append("entity '%s' has no scene" % candidate.symbol)

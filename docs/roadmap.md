@@ -69,7 +69,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | PZL-06 | Redoma then Congelar: curved ice wall (Inverno Lógico 2) | 02 §7.4 | `[ ]` | | 2026-10-02 | |
 | PZL-07 | Windy-spot puzzle for Redoma (Inverno Lógico 1) | 02 §8 | `[x]` | | 2026-10-07 | Winter trial puzzle 2: Redoma, then Soltar on a drawbridge in a remembered squall. `systems/bell-jar`, `systems/air` |
 | PZL-08 | Chuva then Enraizar in a trial (wet earth) | 02 §7.4 | `[x]` | | 2026-10-07 | Spring trial puzzle 5. A joined wet bridge holds while Enraizar does (user, 2026-10-07). `systems/roots-and-climbing` |
-| PZL-09 | Rising pool above a painted rest level | 03 §6.5 | `[ ]` | | 2026-10-02 | Chuva fills dry basins only. |
+| PZL-09 | Rising pool above a painted rest level | 03 §6.5 | `[x]` | | 2026-10-07 | `r` is a reach painted above `~`/`f` water; the water trial's tank. `systems/water`, `architecture/a-pool-rests-below-its-painted-reach` |
 
 ## Guardians
 
