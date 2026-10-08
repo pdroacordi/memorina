@@ -278,6 +278,24 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   Measure the level with the grey waterline (bright, `max - min < 30`) and the navy test above, in
   columns outside the disc. The light-blue sky inside the disc also passes a plain brightness test.
 
+- **Learned 2026-10-08 (doors playtest)**: windowed runs never re-import assets. A sibling's new
+  `door.png` (16:00) still showed as the old 15:50 placeholder until `--import` was run again. Before
+  writing, `find scenes resources assets globals -newer <import.log>`. If an asset is listed, re-import
+  and re-run before judging art.
+- `log` now also prints `room=<id> interior=`, `cam=(x,y wxh) cam_centre=`, `fade=<alpha>`,
+  `transitioning=`, `facing=`, `pmode=` (4 = disabled, as during a door or walk-in fade),
+  `weather_visible= particles=` and `doors=[link@x:open|sealed+prompt shake=<px>]`. `+prompt` is the
+  in-reach test, so use it to find a door's overlap window instead of guessing from x.
+- Door test bed (`trials_solstice`, F10 `DoorSpawn` 18560/5960):
+  - Outside, floor y 6000: front door 18608, hatch 18992.
+  - Inside, floor y 8048: front door 18576, sealed hatch 19056.
+  - Walking from x 18560, `move_right` 0.25 s stops him at 18603.5, in reach of the front door.
+  - Running left, the inside front door is in reach for x 18593..~18545 (~0.28 s).
+  - `"restored_guardians": [0, 1]` unseals the inside hatch.
+  - Every door trip prints two `body->get_space()` engine errors
+    (`bugs/taking-a-door-disables-ivo-inside-his-own-physics-step`). Until it is fixed, filter them, or
+    they hide new errors.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

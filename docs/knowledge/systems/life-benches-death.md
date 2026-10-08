@@ -63,6 +63,7 @@ Plan and options: `architecture/save-slots-and-the-boot-swap`.
 ## Arrival and teleports
 
 - Every move of a character that is not motion goes through `Character.teleport(point)` (`SitComponent.sit`, so arrival and resting; `Player.respawn`; `DebugTrials`; the runner's `player_position`). It writes the position and puts the physics server there too: `body_set_mode(STATIC)`, `body_set_state(TRANSFORM)`, `body_set_mode(KINEMATIC)`. A plain position write leaves a kinematic body at its old place for one step, and every Area2D there reports it (`gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step`). Without it, arriving on a bench outside BloomHollow faded into BloomHollow, the room of Ivo's authored start (`bugs/a-teleported-ivo-enters-the-room-he-left`). `character_teleport_test` pins the engine behaviour.
+- `_arrive` and a door's trip share `Game._land_in(room, place)`: enter the room, wait for its contents, let `place` put Ivo (the seat, or `Player.arrive_at(door)`), `snap`, `room_changed`. A bench inside an interior works like any other (`systems/rooms`, doors).
 - `Game._ready` now always runs inside a deferred flush (Boot, the title and a death all swap deferred), so `_arrive`'s wait for the room contents no longer depends on load time (`gotchas/first-process-frame-can-precede-the-first-deferred-flush`).
 
 ## The notebook's save facts (UI-03, built 2026-10-06)

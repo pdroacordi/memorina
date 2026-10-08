@@ -59,6 +59,8 @@ signal health_changed(current: int, max_hp: int)
 signal death_shown
 ## Ivo sat down voluntarily; not emitted when `sit()` places him on a bench.
 signal sat_down(seat: Seat)
+## Ivo took an open door; the composition root carries the travel out.
+signal door_entered(door: Door)
 
 const GROUP := "player"
 
@@ -88,6 +90,7 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 @onready var _roll            : RollComponent = $Roll
 @onready var _climb           : ClimbComponent = $Climb
 @onready var _sit             : SitComponent = $Sit
+@onready var _doors           : DoorComponent = $Doors
 @onready var _attack          : AttackComponent = $Attack
 @onready var _pogo            : PogoComponent = $Pogo
 @onready var _memorina        : MemorinaComponent = $Memorina
@@ -179,6 +182,8 @@ var _death_shown: bool = false
 var _sit_requested: bool = false
 ## Pending press to stand without triggering its action.
 var _stand_requested: bool = false
+## Pending up press, handled on the next physics frame.
+var _door_requested: bool = false
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -212,6 +217,7 @@ func _ready() -> void:
 	_input.attack_pressed.connect(_as_move.bind(_attack.buffer_attack))
 	_input.draw_memorina_pressed.connect(_unless_seated.bind(_memorina.buffer_toggle))
 	_input.look_down_pressed.connect(func() -> void: _sit_requested = true)
+	_input.look_up_pressed.connect(_as_move.bind(func() -> void: _door_requested = true))
 	_input.note_pressed.connect(_on_note_pressed)
 	_input.debug_learn_song_pressed.connect(_on_debug_learn_song_pressed)
 	_memorina.drawn.connect(_on_memorina_drawn)
@@ -271,6 +277,7 @@ func _process_motion(delta: float) -> void:
 		# A down press under water must not sit him on whatever bench the
 		# respawn puts him beside.
 		_sit_requested = false
+		_door_requested = false
 		_sink_motion(delta)
 		return
 	_try_sit(on_floor)
@@ -302,7 +309,8 @@ func _process_motion(delta: float) -> void:
 	if on_floor:
 		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
-	_try_climb()
+	if not _try_door(on_floor):
+		_try_climb()
 
 	_states.transition_to(_select_motion_state(on_floor))
 	_states.update(delta)
@@ -502,6 +510,34 @@ func _try_sit(on_floor: bool) -> void:
 		return
 	sit(seat)
 	sat_down.emit(seat)
+
+# Up pressed takes a door in reach, under the same gates as a bench except a
+# held direction: walking up to a door and pressing Up is the gesture. A door
+# taken (or knocked) is the press spent, so it does not also grab a climbable.
+func _try_door(on_floor: bool) -> bool:
+	if not _door_requested:
+		return false
+	_door_requested = false
+	if not on_floor or is_rolling() or is_attacking() or is_in_knockback():
+		return false
+	if is_climbing() or is_wall_sliding() or is_memorina_drawn():
+		return false
+	if _staged_caller != null or _memorina.call_song != null:
+		return false
+	if _recall.is_armed() or _pending_recall != null:
+		return false
+	if Guardian.fight_at(get_tree(), global_position):
+		return false
+	var door := _doors.reachable()
+	if door == null:
+		return false
+	if door.is_open():
+		# Nothing else pressed this frame may act on the way out.
+		_drop_buffers()
+		door_entered.emit(door)
+	else:
+		door.knock()
+	return true
 
 # Movement, up, or any action press stands Ivo up.
 func _wants_to_stand() -> bool:
@@ -984,15 +1020,33 @@ func can_open_map() -> bool:
 func block_input() -> void:
 	_input.blocked = true
 	# A press buffered just before the open would otherwise act under the map.
+	_drop_buffers()
+
+func unblock_input() -> void:
+	_input.blocked = false
+
+## Puts him at `door` after a trip through its partner, facing its
+## `arrive_facing`, with no press of the trip still pending.
+func arrive_at(door: Door) -> void:
+	_sit.stand()
+	_climb.release()
+	_wall_mobility.stop()
+	clear_knockback()
+	_landing.cancel_recovery()
+	teleport(door.global_position)
+	velocity = Vector2.ZERO
+	face_towards(door.arrive_facing)
+	# The buffers did not tick under the fade (bugs/presses-made-while-sinking-fire-on-respawn).
+	_drop_buffers()
+
+func _drop_buffers() -> void:
 	_jump.clear_buffer()
 	_roll.clear_buffer()
 	_attack.clear_buffer()
 	_memorina.clear_buffer()
 	_sit_requested = false
 	_stand_requested = false
-
-func unblock_input() -> void:
-	_input.blocked = false
+	_door_requested = false
 
 ## Puts him on `seat`, sitting, without the rest that sitting down himself
 ## asks for: arrival at the bench after a death or a load.
@@ -1025,6 +1079,7 @@ func receive_hazard(hazard: HazardZone) -> void:
 func respawn() -> void:
 	assert(not is_dead(), "A corpse is not respawned")
 	_sit_requested = false
+	_door_requested = false
 	teleport(_safe_ground.last_safe_position())
 	velocity = Vector2.ZERO
 	_sinking = false

@@ -1,0 +1,24 @@
+; door_trial_inside.room - the interior behind door_trial's doors (docs/maps/README.md).
+; WORLD-09 test bed: an interior Room (off the map, no weather). The hatch on
+; the right is sealed from this side until every guardian is restored.
+
+[room]
+origin = 0, -10
+
+[grid]
+SSSSSSSSSSSSSSSSSSSSSSSS
+S......................S
+S......................S
+S......................S
+S......................S
+S......................S
+S......................S
+S......................S
+S......................S
+S...E..............E...S
+SSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSS
+
+[entities]
+4,9 = {"link": "trial_front", "to_room": "door_trial", "arrive_facing": 1}
+19,9 = {"link": "trial_hatch", "to_room": "door_trial", "requires": "res://resources/save_facts/all_guardians_restored.tres", "arrive_facing": -1}

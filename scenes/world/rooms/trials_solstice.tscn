@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/water_trial.tscn" id="5_water"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/the_catch.tscn" id="6_catch"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="3_regmem"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/door_trial.tscn" id="7_door"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/door_trial_inside.tscn" id="8_inside"]
 
 [node name="TrialsSolstice" type="Node2D"]
 script = ExtResource("2_region")
@@ -44,3 +46,12 @@ position = Vector2(8272, -40)
 
 [node name="TheCatch" parent="." instance=ExtResource("6_catch")]
 position = Vector2(7872, 0)
+
+[node name="DoorSpawn" type="Marker2D" parent="." groups=["trial_spawn"]]
+position = Vector2(8960, -40)
+
+[node name="DoorTrial" parent="." instance=ExtResource("7_door")]
+position = Vector2(8832, 0)
+
+[node name="DoorTrialInside" parent="." instance=ExtResource("8_inside")]
+position = Vector2(8832, 2048)

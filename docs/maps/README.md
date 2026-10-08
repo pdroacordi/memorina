@@ -122,6 +122,7 @@ else in the code knows what a character means.
 | `V` | `[grid]` | entity | - | A platform hanging hang_height above this floor on a braked rope: Soltar frees the brake and it lowers (drop px) swinging, no footing until it stops; Enraizar seizes it between earth walls a few cells away; the grey winches it back up. |
 | `O` | `[grid]` | entity | - | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
 | `R` | `[grid]` | entity | - | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
+| `E` | `[grid]` | entity | - | A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -164,7 +165,7 @@ Scene `res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn`, anchored
 | Param | Type | Default |
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
-| `save_id` | String | **required** - unique across every map |
+| `save_id` | String | **required** |
 | `terminal_velocity` | float | `500.0` |
 | `gravity_scale` | float | `1.0` |
 | `knockback_time` | float | `1.0` |
@@ -300,7 +301,7 @@ Scene `res://scenes/world/interactables/bench/bench.tscn`, anchored at its cell'
 | Param | Type | Default |
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
-| `bench_id` | StringName | **required** - unique across every map |
+| `bench_id` | StringName | **required** |
 | `facing` | int | `1` |
 | `bloom_strength` | float | `0.9` |
 | `bloom_radius` | float | `96.0` |
@@ -308,6 +309,18 @@ Scene `res://scenes/world/interactables/bench/bench.tscn`, anchored at its cell'
 | `bloom_rise` | float | `0.5` |
 | `bloom_hold` | float | `0.8` |
 | `bloom_fall` | float | `1.8` |
+
+#### `E` - Door
+
+Scene `res://scenes/world/interactables/door/door.tscn`, anchored at its cell's bottom centre (standing on the cell below). A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `link` | StringName | **required** |
+| `to_room` | StringName | **required** |
+| `requires` | SaveFact | `null` |
+| `arrive_facing` | int | `0` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

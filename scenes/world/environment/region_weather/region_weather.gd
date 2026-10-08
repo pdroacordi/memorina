@@ -41,6 +41,10 @@ func _process(_delta: float) -> void:
 	var half_height := get_viewport_rect().size.y * 0.5 / maxf(_zoom(), 0.001)
 	_particles.position.y = -maxf(half_height - extents.y, 0.0)
 
+## Wired from `Game.room_changed`: no sky indoors.
+func on_room_changed(room: Room) -> void:
+	visible = not room.interior
+
 ## The camera's zoom, so the band sits at the top of what is actually shown.
 func _zoom() -> float:
 	var camera := get_viewport().get_camera_2d()

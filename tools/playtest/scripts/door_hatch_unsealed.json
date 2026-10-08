@@ -1,0 +1,84 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 8,
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  18990,
+  5960
+ ],
+ "restored_guardians": [
+  0,
+  1
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "log": "spawn"
+  },
+  {
+   "t": 1.2,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 1.3,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "log": "inside"
+  },
+  {
+   "t": 2.6,
+   "screenshot": "c01_inside_hatch_open"
+  },
+  {
+   "t": 3.0,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "log": "back00"
+  },
+  {
+   "t": 3.1,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "log": "back01"
+  },
+  {
+   "t": 3.4,
+   "log": "back02"
+  },
+  {
+   "t": 3.6,
+   "log": "back03"
+  },
+  {
+   "t": 3.8,
+   "log": "back04"
+  },
+  {
+   "t": 4.0,
+   "log": "back05"
+  },
+  {
+   "t": 4.2,
+   "log": "back06"
+  },
+  {
+   "t": 4.4,
+   "log": "back07"
+  },
+  {
+   "t": 4.4,
+   "screenshot": "c02_out_through_hatch"
+  }
+ ]
+}

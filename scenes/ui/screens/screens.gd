@@ -64,6 +64,14 @@ func close() -> void:
 func set_map_subject(ivo: Player) -> void:
 	_map.subject = ivo
 
+## Indoors the map opens on the building's door, not on Ivo. Game sets it.
+func set_map_anchor(point: Vector2) -> void:
+	_map.anchor = point
+	_map.anchored = true
+
+func clear_map_anchor() -> void:
+	_map.anchored = false
+
 ## The notebook opens on the newest unread entry this watcher announced. Game sets it.
 func set_notebook_watcher(watcher: NotebookWatcher) -> void:
 	_notebook.watcher = watcher

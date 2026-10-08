@@ -66,6 +66,24 @@ func test_down_released_during_a_pause_presses_again() -> void:
 	input._input(_stick_y(0.9))
 	assert_int(presses.size()).is_equal(2)
 
+## A stick tilted up reports on every motion past the deadzone; the door hears one press.
+func test_up_is_one_press_per_tilt() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	var presses: Array = []
+	input.look_up_pressed.connect(func() -> void: presses.append(true))
+	input._input(_stick_y(-0.9))
+	input._input(_stick_y(-0.97))
+	assert_int(presses.size()).is_equal(1)
+
+## Up held through a door's fade is not a new edge afterwards: no bounce back through it.
+func test_up_held_through_a_resync_is_not_a_new_press() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	var presses: Array = []
+	input.look_up_pressed.connect(func() -> void: presses.append(true))
+	input.resync(false, false, true)
+	input._input(_stick_y(-0.97))
+	assert_int(presses.size()).is_equal(0)
+
 ## The map blocks Ivo by disabling his input node: no `_input`, no axes.
 func test_a_blocked_input_cannot_process_and_reads_no_axis() -> void:
 	var input: PlayerInput = auto_free(PlayerInput.new())

@@ -1,0 +1,635 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 16,
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  18940,
+  5960
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "log": "spawn"
+  },
+  {
+   "t": 1.0,
+   "screenshot": "b01_before_hatch"
+  },
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.45,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 1.7,
+   "log": "athatch"
+  },
+  {
+   "t": 1.7,
+   "screenshot": "b02_hatch_prompt"
+  },
+  {
+   "t": 1.8,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 1.8,
+   "log": "in00"
+  },
+  {
+   "t": 1.9,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 1.9,
+   "log": "in01"
+  },
+  {
+   "t": 2.0,
+   "log": "in02"
+  },
+  {
+   "t": 2.1,
+   "log": "in03"
+  },
+  {
+   "t": 2.2,
+   "log": "in04"
+  },
+  {
+   "t": 2.3,
+   "log": "in05"
+  },
+  {
+   "t": 2.4,
+   "log": "in06"
+  },
+  {
+   "t": 2.5,
+   "log": "in07"
+  },
+  {
+   "t": 2.6,
+   "log": "in08"
+  },
+  {
+   "t": 2.7,
+   "log": "in09"
+  },
+  {
+   "t": 2.8,
+   "log": "in10"
+  },
+  {
+   "t": 2.9,
+   "log": "in11"
+  },
+  {
+   "t": 3.0,
+   "log": "in12"
+  },
+  {
+   "t": 3.1,
+   "log": "in13"
+  },
+  {
+   "t": 3.2,
+   "log": "in14"
+  },
+  {
+   "t": 3.2,
+   "screenshot": "b03_arrived_hatch"
+  },
+  {
+   "t": 3.3,
+   "log": "in15"
+  },
+  {
+   "t": 3.6,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 3.61,
+   "screenshot": "b04_knock_a"
+  },
+  {
+   "t": 3.62,
+   "log": "knock00"
+  },
+  {
+   "t": 3.66,
+   "screenshot": "b05_knock_b"
+  },
+  {
+   "t": 3.66,
+   "log": "knock01"
+  },
+  {
+   "t": 3.7,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 3.7,
+   "log": "knock02"
+  },
+  {
+   "t": 3.72,
+   "screenshot": "b06_knock_c"
+  },
+  {
+   "t": 3.74,
+   "log": "knock03"
+  },
+  {
+   "t": 3.78,
+   "log": "knock04"
+  },
+  {
+   "t": 3.82,
+   "log": "knock05"
+  },
+  {
+   "t": 3.86,
+   "log": "knock06"
+  },
+  {
+   "t": 3.9,
+   "log": "knock07"
+  },
+  {
+   "t": 4.1,
+   "log": "afterknock"
+  },
+  {
+   "t": 4.3,
+   "key": "M",
+   "pressed": true
+  },
+  {
+   "t": 4.4,
+   "key": "M",
+   "pressed": false
+  },
+  {
+   "t": 5.0,
+   "log": "map_hatch"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "b07_map_from_hatch"
+  },
+  {
+   "t": 5.2,
+   "key": "M",
+   "pressed": true
+  },
+  {
+   "t": 5.3,
+   "key": "M",
+   "pressed": false
+  },
+  {
+   "t": 5.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.6,
+   "log": "walk00"
+  },
+  {
+   "t": 6.65,
+   "log": "walk01"
+  },
+  {
+   "t": 6.7,
+   "log": "walk02"
+  },
+  {
+   "t": 6.75,
+   "log": "walk03"
+  },
+  {
+   "t": 6.8,
+   "log": "walk04"
+  },
+  {
+   "t": 6.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.85,
+   "log": "walk05"
+  },
+  {
+   "t": 6.9,
+   "log": "walk06"
+  },
+  {
+   "t": 6.95,
+   "log": "walk07"
+  },
+  {
+   "t": 7.0,
+   "log": "walk08"
+  },
+  {
+   "t": 7.05,
+   "log": "walk09"
+  },
+  {
+   "t": 7.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.1,
+   "log": "walk10"
+  },
+  {
+   "t": 7.15,
+   "log": "walk11"
+  },
+  {
+   "t": 7.2,
+   "log": "walk12"
+  },
+  {
+   "t": 7.25,
+   "log": "walk13"
+  },
+  {
+   "t": 7.3,
+   "log": "walk14"
+  },
+  {
+   "t": 7.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.35,
+   "log": "walk15"
+  },
+  {
+   "t": 7.4,
+   "log": "walk16"
+  },
+  {
+   "t": 7.45,
+   "log": "walk17"
+  },
+  {
+   "t": 7.5,
+   "log": "walk18"
+  },
+  {
+   "t": 7.55,
+   "log": "walk19"
+  },
+  {
+   "t": 7.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.6,
+   "log": "walk20"
+  },
+  {
+   "t": 7.65,
+   "log": "walk21"
+  },
+  {
+   "t": 7.7,
+   "log": "walk22"
+  },
+  {
+   "t": 7.75,
+   "log": "walk23"
+  },
+  {
+   "t": 7.8,
+   "log": "walk24"
+  },
+  {
+   "t": 7.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.85,
+   "log": "walk25"
+  },
+  {
+   "t": 7.9,
+   "log": "walk26"
+  },
+  {
+   "t": 7.95,
+   "log": "walk27"
+  },
+  {
+   "t": 8.0,
+   "log": "walk28"
+  },
+  {
+   "t": 8.05,
+   "log": "walk29"
+  },
+  {
+   "t": 8.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.1,
+   "log": "walk30"
+  },
+  {
+   "t": 8.15,
+   "log": "walk31"
+  },
+  {
+   "t": 8.15,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 8.2,
+   "log": "walk32"
+  },
+  {
+   "t": 8.2,
+   "log": "out00"
+  },
+  {
+   "t": 8.25,
+   "log": "walk33"
+  },
+  {
+   "t": 8.25,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 8.3,
+   "log": "walk34"
+  },
+  {
+   "t": 8.3,
+   "log": "out01"
+  },
+  {
+   "t": 8.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.35,
+   "log": "walk35"
+  },
+  {
+   "t": 8.4,
+   "log": "walk36"
+  },
+  {
+   "t": 8.4,
+   "log": "out02"
+  },
+  {
+   "t": 8.5,
+   "log": "out03"
+  },
+  {
+   "t": 8.6,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 8.6,
+   "log": "out04"
+  },
+  {
+   "t": 8.7,
+   "log": "out05"
+  },
+  {
+   "t": 8.8,
+   "log": "out06"
+  },
+  {
+   "t": 8.9,
+   "log": "out07"
+  },
+  {
+   "t": 9.0,
+   "log": "out08"
+  },
+  {
+   "t": 9.1,
+   "log": "out09"
+  },
+  {
+   "t": 9.2,
+   "log": "out10"
+  },
+  {
+   "t": 9.3,
+   "log": "out11"
+  },
+  {
+   "t": 9.4,
+   "log": "out12"
+  },
+  {
+   "t": 9.5,
+   "log": "out13"
+  },
+  {
+   "t": 9.5,
+   "screenshot": "b08_out_walking"
+  },
+  {
+   "t": 9.6,
+   "log": "out14"
+  },
+  {
+   "t": 10.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 10.2,
+   "log": "air00"
+  },
+  {
+   "t": 10.25,
+   "log": "air01"
+  },
+  {
+   "t": 10.3,
+   "log": "air02"
+  },
+  {
+   "t": 10.3,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 10.3,
+   "screenshot": "b09_air_up"
+  },
+  {
+   "t": 10.35,
+   "log": "air03"
+  },
+  {
+   "t": 10.35,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 10.4,
+   "log": "air04"
+  },
+  {
+   "t": 10.45,
+   "log": "air05"
+  },
+  {
+   "t": 10.5,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 10.5,
+   "log": "air06"
+  },
+  {
+   "t": 10.55,
+   "log": "air07"
+  },
+  {
+   "t": 10.6,
+   "log": "air08"
+  },
+  {
+   "t": 10.65,
+   "log": "air09"
+  },
+  {
+   "t": 10.7,
+   "log": "air10"
+  },
+  {
+   "t": 10.75,
+   "log": "air11"
+  },
+  {
+   "t": 10.8,
+   "log": "air12"
+  },
+  {
+   "t": 10.85,
+   "log": "air13"
+  },
+  {
+   "t": 10.9,
+   "log": "air14"
+  },
+  {
+   "t": 10.95,
+   "log": "air15"
+  },
+  {
+   "t": 10.95,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 11.0,
+   "log": "air16"
+  },
+  {
+   "t": 11.0,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 11.05,
+   "log": "air17"
+  },
+  {
+   "t": 11.1,
+   "log": "air18"
+  },
+  {
+   "t": 11.15,
+   "log": "air19"
+  },
+  {
+   "t": 11.2,
+   "log": "air20"
+  },
+  {
+   "t": 11.25,
+   "log": "air21"
+  },
+  {
+   "t": 11.3,
+   "log": "air22"
+  },
+  {
+   "t": 11.35,
+   "log": "air23"
+  },
+  {
+   "t": 11.4,
+   "log": "air24"
+  },
+  {
+   "t": 11.4,
+   "screenshot": "b10_after_landing"
+  },
+  {
+   "t": 12.0,
+   "log": "end"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "b10_end"
+  }
+ ]
+}

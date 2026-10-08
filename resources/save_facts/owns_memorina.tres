@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="SaveFact" format=3]
+
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="1_fact"]
+
+[resource]
+script = ExtResource("1_fact")
+kind = 2
+index = 1

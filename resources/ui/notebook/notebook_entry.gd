@@ -3,12 +3,11 @@ extends Resource
 ## One notebook entry; whether it is present is derived from the save (architecture/notebook-entries-are-derived-from-the-save).
 
 enum Section { LORE, SONGS, ITEMS, GUARDIANS }
-## The save fact that makes the entry present; `index` names the flag.
-enum Requirement { SKILL, SONG, ITEM, GUARDIAN_MET, GUARDIAN_RESTORED }
 
 @export var id: StringName = &""
 @export var section: Section = Section.LORE
-@export var requirement: Requirement = Requirement.SKILL
+## The save fact that makes the entry present; `index` names the flag.
+@export var requirement: SaveFact.Kind = SaveFact.Kind.SKILL
 ## Index into the PlayerData flag array the requirement names (an Enums.PlayerSkill, Song, PlayerItem or Guardian).
 @export var index: int = 0
 @export var title_key: String = ""
@@ -20,18 +19,7 @@ enum Requirement { SKILL, SONG, ITEM, GUARDIAN_MET, GUARDIAN_RESTORED }
 
 
 func is_present(data: PlayerData) -> bool:
-	match requirement:
-		Requirement.SKILL:
-			return data.unlocked_player_skills[index]
-		Requirement.SONG:
-			return data.learned_songs[index]
-		Requirement.ITEM:
-			return data.owned_items[index]
-		Requirement.GUARDIAN_MET:
-			return data.met_guardians[index] or data.restored_guardians[index]
-		Requirement.GUARDIAN_RESTORED:
-			return data.restored_guardians[index]
-	return false
+	return SaveFact.check(requirement, index, data)
 
 ## Every translation key the entry names.
 func keys() -> PackedStringArray:

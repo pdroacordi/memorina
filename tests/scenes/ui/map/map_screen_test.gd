@@ -39,6 +39,19 @@ func test_the_centre_is_clamped_into_the_seen_area() -> void:
 	_map.open()
 	assert_bool(_canvas.seen_rect().grow(0.01).has_point(_map.centre())).is_true()
 
+## Indoors the map opens on the building's door; cleared, it opens where it did before.
+func test_an_anchor_centres_the_open_and_clearing_it_returns() -> void:
+	_see(Rect2i(0, 0, 30, 10))
+	var door := _room.get_bounds().position + Vector2(800, 200)
+	_map.anchor = door
+	_map.anchored = true
+	_map.open()
+	assert_object(_map.centre()).is_equal(door)
+	_map.close()
+	_map.anchored = false
+	_map.open()
+	assert_object(_map.centre()).is_not_equal(door)
+
 func test_it_opens_at_four_pack_px_per_cell_and_steps_between_one_and_eight() -> void:
 	_see(Rect2i(0, 0, 4, 4))
 	_map.open()

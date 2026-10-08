@@ -1,0 +1,27 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/interactables/door/door.gd" id="1_door"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/door/door.png" id="2_tex"]
+[ext_resource type="PackedScene" path="res://scenes/ui/key_glyph/key_glyph.tscn" id="3_glyph"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_door"]
+size = Vector2(32, 64)
+
+[node name="Door" type="Area2D"]
+script = ExtResource("1_door")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -32)
+shape = SubResource("RectangleShape2D_door")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(0, -32)
+texture = ExtResource("2_tex")
+hframes = 2
+
+[node name="Prompt" parent="." instance=ExtResource("3_glyph")]
+visible = false
+offset_left = -16.0
+offset_top = -104.0
+offset_right = 16.0
+offset_bottom = -72.0

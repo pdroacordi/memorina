@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://djykide6s04hd"
+path="res://.godot/imported/door_trial_inside.room-ccf86fae15d6a0a89d7c554bdc96adfa.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/trials_solstice/contents/door_trial_inside.room"
+dest_files=["res://.godot/imported/door_trial_inside.room-ccf86fae15d6a0a89d7c554bdc96adfa.res"]
+
+[params]
+

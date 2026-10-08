@@ -25,8 +25,11 @@ func _physics_process(_delta: float) -> void:
 	if _grid.mark_cells(cells):
 		SaveSystem.set_map_seen(_key, _grid.to_bytes())
 
-## Wired from `Game.room_changed`.
+## Wired from `Game.room_changed`. An interior is never revealed (design 04 section 4).
 func on_room_changed(room: Room) -> void:
+	if room.interior:
+		_grid = null
+		return
 	_bounds = room.get_bounds()
 	_key = SceneKey.of(room)
 	_grid = MapGrid.from_bytes(SaveSystem.map_seen(_key), MapGrid.dims_for(_bounds))

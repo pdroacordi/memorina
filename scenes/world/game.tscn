@@ -231,3 +231,4 @@ layer = 2
 [connection signal="hurt" from="World/Player" to="ScreenLayer/Screens" method="close_map"]
 [connection signal="announced" from="World/NotebookWatcher" to="CanvasLayer/NotebookToast" method="show_hint"]
 [connection signal="room_changed" from="." to="World/MapRevealer" method="on_room_changed"]
+[connection signal="room_changed" from="." to="World/RegionWeather" method="on_room_changed"]

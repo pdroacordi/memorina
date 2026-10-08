@@ -30,6 +30,13 @@ func test_nothing_is_revealed_before_a_room_is_entered() -> void:
 	_frame_at(Vector2(0, 0))
 	assert_bool(SaveSystem.player_data.map_seen.has(_key)).is_false()
 
+## An interior is never on the map (design 04 section 4).
+func test_an_interior_reveals_nothing() -> void:
+	_room.interior = true
+	_revealer.on_room_changed(_room)
+	_frame_at(_room.get_bounds().position + _camera.view_rect().size * 0.5)
+	assert_bool(SaveSystem.player_data.map_seen.has(_key)).is_false()
+
 func test_the_frame_reveals_the_cells_it_shows_and_no_more() -> void:
 	_revealer.on_room_changed(_room)
 	var bounds := _room.get_bounds()

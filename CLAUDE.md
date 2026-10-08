@@ -93,7 +93,7 @@ Read the entry before touching the system. The rule beside each is the one most 
 | Screens (menus) | [`systems/screens`](docs/knowledge/systems/screens.md) | Screens only asks `WorldFreeze` to hold and releases only what it held. The Screens root Control is ALWAYS, never its CanvasLayer. Every tween under Screens ignores the time scale. |
 | Notebook | [`systems/notebook`](docs/knowledge/systems/notebook.md) | An entry's presence is derived from save facts, never recorded. Every notebook text and note glyph stays inside its page in every language (`notebook_text_fit_test`). The book animates only with real-time tweens. |
 | Map | [`systems/map`](docs/knowledge/systems/map.md) | Only cells whose centre was on screen are seen, per room `SceneKey`. `MapGrid.CELL_PX` (64) is part of the save. Reassign `map_seen` bytes, never edit them in place. The revealer stays pausable, after `Camera2D`, and is armed only by `Game.room_changed`. The canvas is a Node2D. |
-| Rooms | [`systems/rooms`](docs/knowledge/systems/rooms.md) | Rooms are `.room` text; never paint ground in the editor. Bump the importer's `FORMAT_VERSION` when the parser changes. |
+| Rooms | [`systems/rooms`](docs/knowledge/systems/rooms.md) | Rooms are `.room` text; never paint ground in the editor. Bump the importer's `FORMAT_VERSION` when the parser changes. A door `link` joins exactly two doors of one region. |
 | Art pipeline | [`systems/art-pipeline`](docs/knowledge/systems/art-pipeline.md) | Art starts as a contract in `tools/art/prompts/`. Never upload pack art as a reference (licences forbid AI training). Credit everything in `CREDITS.md`. |
 
 A new system gets a new entry here and in `docs/knowledge/systems/` in the same change.
@@ -116,7 +116,7 @@ A new system gets a new entry here and in `docs/knowledge/systems/` in the same 
 
 - Pure logic lives in a `RefCounted` with a suite under `tests/`, mirroring the source path. `--ignoreHeadlessMode` is required; no suite uses input.
 - Add every new playable scene to `tools/smoke/scenes.txt`.
-- **Song trials** (`scenes/world/rooms/trials_<season>.tscn`) are where song puzzles are built and tested. `DebugTrials` mounts them in debug builds only; F10 moves Ivo to the next. Playtest positions: winter x 0 (its squall puzzle 1168), summer 2400, autumn 4800, spring 7200, Solstice 9600, the empty house 12160, the water trial 14912 (its frozen wave 15856, its wall of water 16656), the catch 17872; floor y 6000.
+- **Song trials** (`scenes/world/rooms/trials_<season>.tscn`) are where song puzzles are built and tested. `DebugTrials` mounts them in debug builds only; F10 moves Ivo to the next. Playtest positions: winter x 0 (its squall puzzle 1168), summer 2400, autumn 4800, spring 7200, Solstice 9600, the empty house 12160, the water trial 14912 (its frozen wave 15856, its wall of water 16656), the catch 17872, the door trial 18560 (its interior's floor y 8048); floor y 6000.
 
 ## Playtesting
 

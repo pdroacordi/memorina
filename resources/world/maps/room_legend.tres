@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/floater/floater.tscn" id="i18_floater"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/bench.tscn" id="i19_bench"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/lowering_platform/lowering_platform.tscn" id="i20_lowering"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/door/door.tscn" id="i21_door"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -193,6 +194,16 @@ anchor = 0
 required_params = PackedStringArray("bench_id")
 description = "A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map."
 
+[sub_resource type="Resource" id="door"]
+script = ExtResource("2_entry")
+symbol = "E"
+kind = 3
+ground = 0
+scene = ExtResource("i21_door")
+anchor = 0
+required_params = PackedStringArray("link", "to_room")
+description = "A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here."
+
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door")])

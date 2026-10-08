@@ -150,9 +150,46 @@ func _log_state(label: String) -> void:
 			player.health.current_hp, player.is_attacking(), player.is_climbing(),
 			player.is_memorina_drawn(), player.get_node("PlayerInput").get("blocked"),
 		]
+	line += _room_state(player)
 	line += _map_state()
 	line += _notebook_state()
 	print(line)
+
+## The current room and its camera bounds, Ivo's facing, the fade's alpha, the weather and every loaded door.
+func _room_state(player: Player) -> String:
+	var game := get_tree().root.find_child("Game", true, false)
+	if game == null:
+		return ""
+	var line := ""
+	var room := game.get("_current_room") as Room
+	if room != null:
+		line += " room=%s interior=%s" % [room.id(), room.interior]
+	var camera := game.get("_camera") as GameCamera
+	if camera != null:
+		var b := camera.bounds()
+		line += " cam=(%.0f,%.0f %.0fx%.0f) cam_centre=(%.0f,%.0f)" % [b.position.x, b.position.y, b.size.x, b.size.y,
+			camera.get_screen_center_position().x, camera.get_screen_center_position().y]
+	var fade := game.get("_fade") as ColorRect
+	if fade != null:
+		line += " fade=%.2f" % fade.color.a
+	line += " transitioning=%s" % game.get("_is_transitioning")
+	if player != null:
+		line += " facing=%d pmode=%d" % [player.facing, player.process_mode]
+	var weather := get_tree().root.find_child("RegionWeather", true, false) as CanvasItem
+	if weather != null:
+		var particles := weather.get("_particles") as CPUParticles2D
+		line += " weather_visible=%s particles=%s" % [weather.is_visible_in_tree(), particles != null and particles.emitting]
+	var doors: PackedStringArray = []
+	for node: Node in get_tree().get_nodes_in_group(&"doors"):
+		var door := node as Door
+		if door == null:
+			continue
+		doors.append("%s@%.0f:%s%s%s" % [door.link, door.global_position.x,
+			"open" if door.is_open() else "sealed",
+			"+prompt" if (door.get_node("Prompt") as CanvasItem).visible else "",
+			" shake=%.1f" % (door.get_node("Sprite2D") as Node2D).position.x])
+	line += " doors=[%s]" % ", ".join(doors)
+	return line
 
 ## Which screen is open, the map's centre and zoom, and the seen cells per room key in the live save.
 func _map_state() -> String:

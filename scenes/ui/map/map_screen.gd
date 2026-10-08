@@ -1,6 +1,6 @@
 class_name MapScreen
 extends MenuScreen
-## The map: every seen room over the dimmed world, opened centred on Ivo, panned and zoomed in real time. It never holds the world.
+## The map: every seen room over the dimmed world, opened centred on Ivo (indoors, on the building's door), panned and zoomed in real time. It never holds the world.
 
 ## Pack px per 64 px cell at each zoom step, farthest first.
 const CELL_PX_STEPS: Array[int] = [1, 2, 4, 8]
@@ -12,10 +12,13 @@ const MAX_PAN_SECONDS := 0.05
 ## Pan speed in pack px per real second at full tilt.
 @export var pan_speed: float = 160.0
 
-## Ivo: the map centres on him and asks him whether it may open. Set through Screens.
+## Ivo: the map centres on him unless `anchored`, and asks him whether it may open. Set through Screens.
 var subject: Player
 ## Pan intent. Set by Screens.
 var menu_input: MenuInput
+## World px the map opens on instead of Ivo while `anchored`: the door of the building he is inside.
+var anchor: Vector2 = Vector2.ZERO
+var anchored: bool = false
 
 ## World px at the middle of the screen.
 var _centre: Vector2 = Vector2.ZERO
@@ -50,7 +53,12 @@ func open() -> void:
 	_canvas.build(_seen_patches())
 	_step = OPEN_STEP
 	_canvas.set_cell_px(cell_px())
-	_centre = _clamped(subject.global_position if subject != null else Vector2.ZERO)
+	var opened_at := Vector2.ZERO
+	if anchored:
+		opened_at = anchor
+	elif subject != null:
+		opened_at = subject.global_position
+	_centre = _clamped(opened_at)
 	_place()
 	_ticks_usec = Time.get_ticks_usec()
 	_pan_armed = Vector2.ZERO

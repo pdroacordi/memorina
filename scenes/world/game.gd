@@ -37,6 +37,7 @@ func _ready() -> void:
 	_player.fell_into_hazard.connect(_on_player_fell_into_hazard)
 	_player.died.connect(_on_player_died)
 	_player.sat_down.connect(_on_player_sat_down)
+	_player.door_entered.connect(_on_player_entered_door)
 	_screens.set_map_subject(_player)
 	_screens.set_notebook_watcher(_notebook_watcher)
 	if SaveSystem.bench_id() != &"":
@@ -82,6 +83,8 @@ func _enter_room(room: Room) -> void:
 	_memory_field.palette = song_catalog.palette_for(region.season) if song_catalog else null
 	_touch_resident(room)
 	_camera.set_bounds(_current_room.get_bounds())
+	if not room.interior:
+		_screens.clear_map_anchor()
 
 ## Respawns at firm ground after a hazard fade; a newer fall supersedes this beat.
 func _on_player_fell_into_hazard() -> void:
@@ -113,21 +116,65 @@ func _arrive() -> void:
 		return
 	_is_transitioning = true
 	_player.process_mode = Node.PROCESS_MODE_DISABLED
-	_enter_room(room)
-	var contents := room.contents()
-	if contents != null and not contents.is_node_ready():
-		await contents.ready
+	await _land_in(room, _seat_at_saved_bench)
+	_player.process_mode = Node.PROCESS_MODE_INHERIT
+	_is_transitioning = false
+	await _fade.to_clear()
+
+func _seat_at_saved_bench() -> void:
 	var seat := Seat.find(get_tree(), SaveSystem.bench_id())
 	if seat != null:
 		_player.sit(seat)
 	else:
 		push_warning("The saved bench %s is not in its room; starting at the authored start" % SaveSystem.bench_id())
+
+## Enters `room` behind the black, waits for its deferred contents, lets `place` put Ivo in it, then frames it.
+func _land_in(room: Room, place: Callable) -> void:
+	_enter_room(room)
+	var contents := room.contents()
+	if contents != null and not contents.is_node_ready():
+		await contents.ready
+	place.call()
 	_camera.snap()
-	# Not at _enter_room: a physics step can run before the seat, framing the authored start (bugs/a-debug-boot-reveals-map-cells-ivo-never-saw).
+	# Not at _enter_room: a physics step can run before the placing, framing the old spot (bugs/a-debug-boot-reveals-map-cells-ivo-never-saw).
 	room_changed.emit(room)
+
+## Carries Ivo through `door` to its partner (architecture/doors-and-interiors).
+func _on_player_entered_door(door: Door) -> void:
+	if _is_transitioning or _dying or _current_room == null:
+		return
+	var room := _room_named(door.to_room, _current_room.get_region())
+	if room == null:
+		push_warning("Door %s leads to room %s, which is not in region %s" % [door.link, door.to_room, _current_room.get_region().name])
+		return
+	# Copied before the first await: the door's room is deactivated, and may be evicted, behind the black.
+	var link := door.link
+	var door_point := door.global_position
+	var leaving_map := not _current_room.interior
+	_is_transitioning = true
+	# Deferred: the press arrives inside Ivo's own physics step (gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move).
+	_player.set_deferred(&"process_mode", Node.PROCESS_MODE_DISABLED)
+	await _fade.to_black()
+	await _land_in(room, _arrive_through.bind(room, link))
+	if leaving_map and room.interior:
+		_screens.set_map_anchor(door_point)
+	await _fade.to_clear()
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
-	await _fade.to_clear()
+
+func _arrive_through(room: Room, link: StringName) -> void:
+	var arrival := Door.find(get_tree(), room, link)
+	if arrival == null:
+		push_warning("Room %s has no door with link %s" % [room.id(), link])
+		return
+	_player.arrive_at(arrival)
+
+## The room with id `room_id` among `region`'s rooms.
+func _room_named(room_id: StringName, region: Region) -> Room:
+	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
+		if room.get_region() == region and room.id() == room_id:
+			return room
+	return null
 
 func _room_by_key(key: String) -> Room:
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):

@@ -65,6 +65,7 @@
 [ext_resource type="Script" path="res://scenes/characters/components/safe_ground_tracker.gd" id="60_safe_ground"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_sit_96x96.png" id="70_sit"]
 [ext_resource type="Script" path="res://scenes/characters/components/sit_component.gd" id="71_sitco"]
+[ext_resource type="Script" path="res://scenes/characters/components/door_component.gd" id="72_doorco"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_climbsensor"]
 size = Vector2(12, 28)
@@ -2167,6 +2168,18 @@ collision_mask = 32
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SeatSensor"]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_seatsensor")
+
+[node name="Doors" type="Node" parent="."]
+script = ExtResource("72_doorco")
+
+[node name="DoorSensor" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 32
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DoorSensor"]
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_seatsensor")
 

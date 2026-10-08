@@ -3,10 +3,10 @@ extends Resource
 ## Every notebook entry in display (story) order.
 
 ## The requirement every entry of a section must use; LORE takes any.
-const SECTION_REQUIREMENT: Dictionary[NotebookEntry.Section, NotebookEntry.Requirement] = {
-	NotebookEntry.Section.SONGS: NotebookEntry.Requirement.SONG,
-	NotebookEntry.Section.ITEMS: NotebookEntry.Requirement.ITEM,
-	NotebookEntry.Section.GUARDIANS: NotebookEntry.Requirement.GUARDIAN_MET,
+const SECTION_REQUIREMENT: Dictionary[NotebookEntry.Section, SaveFact.Kind] = {
+	NotebookEntry.Section.SONGS: SaveFact.Kind.SONG,
+	NotebookEntry.Section.ITEMS: SaveFact.Kind.ITEM,
+	NotebookEntry.Section.GUARDIANS: SaveFact.Kind.GUARDIAN_MET,
 }
 
 @export var entries: Array[NotebookEntry] = []

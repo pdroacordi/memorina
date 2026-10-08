@@ -35,7 +35,7 @@ UI-03, design 02 "UI" ("Caderno de campo"). E / pad Select toggles it; Esc and B
 
 ## Data
 
-- `NotebookEntry` (Resource): `id`, `section`, `requirement` {SKILL, SONG, ITEM, GUARDIAN_MET, GUARDIAN_RESTORED}, `index` into that `PlayerData` flag array, `title_key`, `detail_key` (a song's season and material), `body_key`, `art` (a guardian portrait). `is_present(data)` is one `match`.
+- `NotebookEntry` (Resource): `id`, `section`, `requirement` (a `SaveFact.Kind`: SKILL, SONG, ITEM, GUARDIAN_MET, GUARDIAN_RESTORED), `index` into that `PlayerData` flag array, `title_key`, `detail_key` (a song's season and material), `body_key`, `art` (a guardian portrait). `is_present(data)` is `SaveFact.check`, the one `match` over save facts, shared with doors (`resources/save_facts/save_fact.gd`; `Kind` is append-only because the catalog stores ints).
 - `NotebookCatalog` (`resources/ui/notebook/notebook_catalog.tres`) holds the 14 entries in story order, which is the order of the approved drafts. `validate()` returns the problems: unique ids, SONGS→SONG, ITEMS→ITEM, GUARDIANS→GUARDIAN_MET, one entry per `Enums.Song`, `PlayerItem` and `Guardian`. The notebook asserts it at `_ready`.
 - Memories entries exist only for the recalled skills (ROLL, DOUBLE_JUMP). WALL_CLIMB has none, because no guardian teaches it yet.
 - `NotebookIndex` (pure): `present`, `unread`, `added`, `section_unread`, and `newest_unread(catalog, data, recent)`. The last id announced this session that is still unread wins; else the last unread in catalog order.

@@ -17,6 +17,8 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | Design doc (pt) | Code |
 |---|---|
 | cinzesquecimento / the Greyhush | `greyhush` |
+| porta (de construção) | `Door` (a puzzle's "porta" stays `Mechanism`/gate) |
+| interior (sala de uma construção) | `Room.interior` |
 | campo de memória | `MemoryField` |
 | pulso de cor | `ColorPulse` |
 | sacar / guardar (o instrumento) | `draw` / `sheathe` |

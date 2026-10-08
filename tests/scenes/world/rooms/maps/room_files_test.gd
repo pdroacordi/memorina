@@ -42,6 +42,26 @@ func test_save_ids_and_bench_ids_are_unique_across_every_map() -> void:
 				seen[id] = path
 	assert_array(Array(problems)).is_empty()
 
+## A door pair joins two rooms of one region, each naming the other's room, and every `to_room` is a Room scene of that region.
+func test_every_door_has_its_partner() -> void:
+	var legend := RoomLegend.load_default()
+	var records: Array[DoorLinks.Record] = []
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var result := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
+		# <rooms>/<region>/contents/<room>.room
+		var region_dir := path.get_base_dir().get_base_dir()
+		for placed: Dictionary in result.map.entities:
+			if not placed.params.has("link"):
+				continue
+			var to_room := str(placed.params.get("to_room", ""))
+			records.append(DoorLinks.Record.new(StringName(path.get_file().get_basename()), StringName(region_dir.get_file()),
+					StringName(placed.params["link"]), StringName(to_room), path))
+			if not ResourceLoader.exists(region_dir.path_join(to_room + ".tscn")):
+				problems.append("%s: to_room %s is not a room of %s" % [path, to_room, region_dir])
+	problems.append_array(DoorLinks.problems(records))
+	assert_array(Array(problems)).is_empty()
+
 ## The title names a slot's bench by `SaveSlots.bench_name_key`, so every bench needs that key in both languages.
 func test_every_bench_has_a_name_in_the_translations() -> void:
 	var legend := RoomLegend.load_default()

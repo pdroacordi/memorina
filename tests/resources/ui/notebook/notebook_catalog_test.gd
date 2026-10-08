@@ -13,7 +13,7 @@ const GUARDIAN_STATS: Array[String] = [
 func _catalog() -> NotebookCatalog:
 	return load(CATALOG_PATH) as NotebookCatalog
 
-func _entry(id: StringName, section: NotebookEntry.Section, requirement: NotebookEntry.Requirement, index: int) -> NotebookEntry:
+func _entry(id: StringName, section: NotebookEntry.Section, requirement: SaveFact.Kind, index: int) -> NotebookEntry:
 	var entry := NotebookEntry.new()
 	entry.id = id
 	entry.section = section
@@ -41,13 +41,13 @@ func test_the_shipped_catalog_is_valid() -> void:
 func test_a_duplicate_id_is_reported() -> void:
 	var catalog := NotebookCatalog.new()
 	catalog.entries = _catalog().entries.duplicate()
-	catalog.entries.append(_entry(catalog.entries[0].id, NotebookEntry.Section.LORE, NotebookEntry.Requirement.SKILL, 0))
+	catalog.entries.append(_entry(catalog.entries[0].id, NotebookEntry.Section.LORE, SaveFact.Kind.SKILL, 0))
 	assert_array(Array(catalog.validate())).is_not_empty()
 
 func test_a_section_with_the_wrong_requirement_is_reported() -> void:
 	var catalog := NotebookCatalog.new()
 	catalog.entries = _catalog().entries.duplicate()
-	var wrong := _entry(&"song_wrong", NotebookEntry.Section.SONGS, NotebookEntry.Requirement.ITEM, 0)
+	var wrong := _entry(&"song_wrong", NotebookEntry.Section.SONGS, SaveFact.Kind.ITEM, 0)
 	catalog.entries.append(wrong)
 	assert_str(", ".join(catalog.validate())).contains("song_wrong")
 
@@ -99,14 +99,14 @@ func test_every_screen_key_has_both_languages() -> void:
 
 func test_presence_follows_the_save() -> void:
 	var data := PlayerData.new()
-	var song := _entry(&"s", NotebookEntry.Section.SONGS, NotebookEntry.Requirement.SONG, Enums.Song.RAIN)
+	var song := _entry(&"s", NotebookEntry.Section.SONGS, SaveFact.Kind.SONG, Enums.Song.RAIN)
 	assert_bool(song.is_present(data)).is_false()
 	data.learned_songs[Enums.Song.RAIN] = true
 	assert_bool(song.is_present(data)).is_true()
 
 ## A restored guardian was met, so a save from before met_guardians shows it.
 func test_a_guardian_is_met_once_fought_or_restored() -> void:
-	var met := _entry(&"g", NotebookEntry.Section.GUARDIANS, NotebookEntry.Requirement.GUARDIAN_MET, Enums.Guardian.BLOOM)
+	var met := _entry(&"g", NotebookEntry.Section.GUARDIANS, SaveFact.Kind.GUARDIAN_MET, Enums.Guardian.BLOOM)
 	var data := PlayerData.new()
 	assert_bool(met.is_present(data)).is_false()
 	data.restored_guardians[Enums.Guardian.BLOOM] = true

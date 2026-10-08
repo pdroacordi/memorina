@@ -6,6 +6,8 @@ signal room_entered(room: Room)
 const GROUP := "room"
 
 @export var contents_scene : PackedScene
+## Reached through a door: off the map and out of the weather (design 04 section 4).
+@export var interior: bool = false
 @onready var _shape_node: CollisionShape2D = $CollisionShape2D
 var _contents_node: Node2D
 ## Rebuild the contents on the next activate() instead of waking them.
@@ -48,6 +50,10 @@ func expire() -> void:
 ## Newly activated contents are added deferred; wait for `ready` before reading their children.
 func contents() -> Node2D:
 	return _contents_node
+
+## The room's id, its scene file name: what a door's `to_room` names.
+func id() -> StringName:
+	return StringName(scene_file_path.get_file().get_basename())
 
 func get_region() -> Region:
 	var region := get_parent() as Region

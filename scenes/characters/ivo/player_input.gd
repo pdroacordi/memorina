@@ -9,6 +9,8 @@ signal roll_pressed
 signal draw_memorina_pressed
 ## Emitted on the down press edge used to sit at a bench.
 signal look_down_pressed
+## Emitted on the up press edge used to take a door.
+signal look_up_pressed
 signal note_pressed(note: Enums.Note, glyph_set: Enums.GlyphSet)
 ## Debug-build action for teaching the next unknown song.
 signal debug_learn_song_pressed
@@ -41,6 +43,8 @@ var blocked: bool = false:
 ## Whether down was held as of the last event about it - any motion on its
 ## axis says, either way, so the opposite direction lets go of it too.
 var _down_held: bool = false
+## Whether up was held as of the last event about it, read the same way as down.
+var _up_held: bool = false
 ## Whether jump was held as of the last event about it, so a release missed while paused still cuts.
 var _jump_held: bool = false
 
@@ -73,7 +77,7 @@ static func is_playstation_name(joy_name: String) -> bool:
 # See docs/knowledge/bugs/player-input-edge-state-goes-stale-across-a-pause-menu.md.
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_UNPAUSED or what == NOTIFICATION_ENABLED:
-		resync(Input.is_action_pressed("jump"), Input.is_action_pressed("look_down"))
+		resync(Input.is_action_pressed("jump"), Input.is_action_pressed("look_down"), Input.is_action_pressed("look_up"))
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("jump"):
@@ -94,6 +98,11 @@ func _input(event: InputEvent) -> void:
 		if held and not _down_held:
 			look_down_pressed.emit()
 		_down_held = held
+	if event.is_action("look_up"):
+		var up := event.is_action_pressed("look_up")
+		if up and not _up_held:
+			look_up_pressed.emit()
+		_up_held = up
 	if OS.is_debug_build() and event.is_action_pressed("debug_learn_song"):
 		debug_learn_song_pressed.emit()
 	# MemorinaComponent decides whether notes are accepted while the instrument is sheathed.
@@ -101,12 +110,13 @@ func _input(event: InputEvent) -> void:
 		if event.is_action_pressed(action):
 			note_pressed.emit(NOTE_ACTIONS[action], glyph_set_for(event, Input.get_joy_name(event.device)))
 
-## Adopts the held state the events missed: a jump released meanwhile is cut, and down is not a new edge.
-func resync(jump_held: bool, down_held: bool) -> void:
+## Adopts the held state the events missed: a jump released meanwhile is cut, and down or up is not a new edge.
+func resync(jump_held: bool, down_held: bool, up_held: bool = false) -> void:
 	if _jump_held and not jump_held:
 		jump_canceled.emit()
 	_jump_held = jump_held
 	_down_held = down_held
+	_up_held = up_held
 
 func _get_direction() -> float:
 	return 0.0 if blocked else Input.get_axis("move_left", "move_right")
