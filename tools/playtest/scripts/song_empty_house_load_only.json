@@ -1,0 +1,373 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 16.0,
+ "player_position": [
+  13150.0,
+  5982
+ ],
+ "known_songs": [
+  4
+ ],
+ "locale": "en",
+ "steps": [
+  {
+   "t": 1.0,
+   "screenshot": "start_on_nothing"
+  },
+  {
+   "t": 1.5,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 1.55,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.1,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 2.15,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.55,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.95,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.3,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.35,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.7,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.75,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 4.1,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.15,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 5.4,
+   "screenshot": "load_5.4"
+  },
+  {
+   "t": 5.8,
+   "screenshot": "load_5.8"
+  },
+  {
+   "t": 6.4,
+   "screenshot": "load_6.4"
+  },
+  {
+   "t": 6.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.6,
+   "log": "walk_6.6"
+  },
+  {
+   "t": 6.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.1,
+   "log": "walk_7.1"
+  },
+  {
+   "t": 7.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.6,
+   "log": "walk_7.6"
+  },
+  {
+   "t": 7.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.0,
+   "screenshot": "door_8.0"
+  },
+  {
+   "t": 8.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.1,
+   "log": "walk_8.1"
+  },
+  {
+   "t": 8.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.6,
+   "log": "walk_8.6"
+  },
+  {
+   "t": 8.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.1,
+   "log": "walk_9.1"
+  },
+  {
+   "t": 9.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.6,
+   "log": "walk_9.6"
+  },
+  {
+   "t": 9.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 10.0,
+   "screenshot": "door_10.0"
+  },
+  {
+   "t": 10.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 10.1,
+   "log": "walk_10.1"
+  },
+  {
+   "t": 10.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 10.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 10.6,
+   "log": "walk_10.6"
+  },
+  {
+   "t": 10.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.1,
+   "log": "walk_11.1"
+  },
+  {
+   "t": 11.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.6,
+   "log": "walk_11.6"
+  },
+  {
+   "t": 11.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.0,
+   "screenshot": "door_12.0"
+  },
+  {
+   "t": 12.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.1,
+   "log": "walk_12.1"
+  },
+  {
+   "t": 12.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.6,
+   "log": "walk_12.6"
+  },
+  {
+   "t": 12.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 13.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 13.1,
+   "log": "walk_13.1"
+  },
+  {
+   "t": 13.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 13.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 13.6,
+   "log": "walk_13.6"
+  },
+  {
+   "t": 13.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 14.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 14.1,
+   "log": "walk_14.1"
+  },
+  {
+   "t": 14.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 14.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 14.6,
+   "log": "walk_14.6"
+  },
+  {
+   "t": 14.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 15.0,
+   "screenshot": "door_15.0"
+  },
+  {
+   "t": 15.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 15.1,
+   "log": "walk_15.1"
+  },
+  {
+   "t": 15.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 15.5,
+   "action": "move_left",
+   "pressed": false
+  }
+ ]
+}

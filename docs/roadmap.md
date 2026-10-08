@@ -65,7 +65,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | PZL-02 | Combinado 1: Chuva then Congelar, ice outlives the drain | 02 §8.4 | `[ ]` | | 2026-10-02 | A frozen basin holds its level today. |
 | PZL-03 | Combinado 2: Vendaval then Congelar, frozen crest ramp | 02 §8.4 | `[ ]` | | 2026-10-02 | Wind already moves water. |
 | PZL-04 | Combinado 3: Soltar then Enraizar, catch in mid-fall | 02 §8.4 | `[ ]` | | 2026-10-02 | |
-| PZL-05 | Combinado 4: Solstício, Sombra and Soltar, the empty house | 02 §8.4 | `[ ]` | | 2026-10-02 | Needs no new code; needs a room. |
+| PZL-05 | Combinado 4: Solstício, Sombra and Soltar, the empty house | 02 §8.4 | `[x]` | | 2026-10-07 | `empty_house` in the Solstice trials; a gate's `second_trigger_path`; Solstice's stretch is 3.0x (user, 2026-10-07). `systems/solstice`, `systems/weight-presence-release` |
 | PZL-06 | Redoma then Congelar: curved ice wall (Inverno Lógico 2) | 02 §7.4 | `[ ]` | | 2026-10-02 | |
 | PZL-07 | Windy-spot puzzle for Redoma (Inverno Lógico 1) | 02 §8 | `[ ]` | | 2026-10-02 | Shelter is unit-tested only. |
 | PZL-08 | Chuva then Enraizar in a trial (wet earth) | 02 §7.4 | `[x]` | | 2026-10-07 | Spring trial puzzle 5. A joined wet bridge holds while Enraizar does (user, 2026-10-07). `systems/roots-and-climbing` |

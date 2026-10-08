@@ -107,7 +107,7 @@ else in the code knows what a character means.
 | `B` | `[grid]` | entity | - | Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death. |
 | `W` | `[grid]` | entity | - | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
 | `P` | `[grid]` | entity | - | A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load. |
-| `G` | `[grid]` | entity | - | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds. Any Mechanism: travel, move_time, start_moved. |
+| `G` | `[grid]` | entity | - | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved. |
 | `L` | `[grid]` | entity | - | A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go; while its lock_path holds (a counterweight on the wrong plate) it is jammed down. |
 | `T` | `[grid]` | entity | - | A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other. |
 | `H` | `[grid]` | entity | - | A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back. |
@@ -191,12 +191,13 @@ Scene `res://scenes/world/interactables/pressure_plate/pressure_plate.tscn`, anc
 
 #### `G` - Gate
 
-Scene `res://scenes/world/interactables/gate/gate.tscn`, anchored at its cell's bottom centre (standing on the cell below). A stone gate standing on this cell that slides up while its trigger_path (a plate) holds. Any Mechanism: travel, move_time, start_moved.
+Scene `res://scenes/world/interactables/gate/gate.tscn`, anchored at its cell's bottom centre (standing on the cell below). A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved.
 
 | Param | Type | Default |
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `trigger_path` | NodePath | `NodePath("")` |
+| `second_trigger_path` | NodePath | `NodePath("")` |
 | `lock_path` | NodePath | `NodePath("")` |
 | `travel` | Vector2 | `Vector2(0, -96)` |
 | `move_time` | float | `0.6` |
@@ -210,6 +211,7 @@ Scene `res://scenes/world/interactables/lift/lift.tscn`, anchored at its cell's 
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `trigger_path` | NodePath | `NodePath("")` |
+| `second_trigger_path` | NodePath | `NodePath("")` |
 | `lock_path` | NodePath | `NodePath("")` |
 | `travel` | Vector2 | `Vector2(0, -128)` |
 | `move_time` | float | `1.4` |

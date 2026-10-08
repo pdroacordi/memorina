@@ -115,7 +115,7 @@ kind = 3
 ground = 0
 scene = ExtResource("i11_gate")
 anchor = 0
-description = "A stone gate standing on this cell that slides up while its trigger_path (a plate) holds. Any Mechanism: travel, move_time, start_moved."
+description = "A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved."
 
 [sub_resource type="Resource" id="lift"]
 script = ExtResource("2_entry")

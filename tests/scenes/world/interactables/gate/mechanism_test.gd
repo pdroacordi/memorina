@@ -49,3 +49,34 @@ func test_it_moves_once_the_lock_lets_go() -> void:
 	_jam.deactivated.emit()
 	_settle()
 	assert_bool(_gate.is_moved()).is_true()
+
+func _with_second() -> PressurePlate:
+	var second := PLATE.instantiate() as PressurePlate
+	second.name = "second"
+	_gate.get_parent().add_child(second)
+	var gate := GATE.instantiate() as Mechanism
+	gate.trigger_path = ^"../plate"
+	gate.second_trigger_path = ^"../second"
+	_gate.get_parent().add_child(gate)
+	_gate = gate
+	return second
+
+func test_with_a_second_trigger_one_alone_does_not_move_it() -> void:
+	var second := _with_second()
+	_plate.activated.emit()
+	_settle()
+	assert_bool(_gate.is_moved()).is_false()
+	_plate.deactivated.emit()
+	second.activated.emit()
+	_settle()
+	assert_bool(_gate.is_moved()).is_false()
+
+func test_with_a_second_trigger_both_move_it() -> void:
+	var second := _with_second()
+	_plate.activated.emit()
+	second.activated.emit()
+	_settle()
+	assert_bool(_gate.is_moved()).is_true()
+	second.deactivated.emit()
+	_settle()
+	assert_bool(_gate.is_moved()).is_false()

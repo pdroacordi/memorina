@@ -1,0 +1,352 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 32.0,
+ "player_position": [
+  13200.0,
+  5982
+ ],
+ "known_songs": [
+  4
+ ],
+ "locale": "en",
+ "steps": [
+  {
+   "t": 1.5,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 1.55,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.1,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 2.15,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.55,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.95,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.3,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.35,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.7,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.75,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 4.1,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.15,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 5.8,
+   "log": "drop_5.8"
+  },
+  {
+   "t": 5.9,
+   "log": "drop_5.9"
+  },
+  {
+   "t": 6.0,
+   "log": "drop_6.0"
+  },
+  {
+   "t": 6.1,
+   "log": "drop_6.1"
+  },
+  {
+   "t": 6.2,
+   "log": "drop_6.2"
+  },
+  {
+   "t": 6.3,
+   "log": "drop_6.3"
+  },
+  {
+   "t": 6.4,
+   "log": "drop_6.4"
+  },
+  {
+   "t": 6.5,
+   "log": "drop_6.5"
+  },
+  {
+   "t": 6.6,
+   "log": "drop_6.6"
+  },
+  {
+   "t": 8.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.0,
+   "log": "left_8.0"
+  },
+  {
+   "t": 8.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.5,
+   "log": "left_8.5"
+  },
+  {
+   "t": 8.6,
+   "screenshot": "u_8.6"
+  },
+  {
+   "t": 8.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.0,
+   "log": "left_9.0"
+  },
+  {
+   "t": 9.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.5,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 9.5,
+   "log": "left_9.5"
+  },
+  {
+   "t": 10.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 10.0,
+   "log": "right_10.0"
+  },
+  {
+   "t": 10.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 10.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 10.5,
+   "log": "right_10.5"
+  },
+  {
+   "t": 10.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 10.8,
+   "screenshot": "u_10.8"
+  },
+  {
+   "t": 11.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 11.0,
+   "log": "right_11.0"
+  },
+  {
+   "t": 11.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 11.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 11.5,
+   "log": "right_11.5"
+  },
+  {
+   "t": 12.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 12.0,
+   "log": "jump_12.0"
+  },
+  {
+   "t": 12.2,
+   "screenshot": "u_12.2"
+  },
+  {
+   "t": 12.25,
+   "log": "jump_12.2"
+  },
+  {
+   "t": 12.4,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 12.5,
+   "log": "jump_12.5"
+  },
+  {
+   "t": 12.75,
+   "log": "jump_12.8"
+  },
+  {
+   "t": 13.0,
+   "log": "jump_13.0"
+  },
+  {
+   "t": 14.0,
+   "log": "wait_14.0"
+  },
+  {
+   "t": 15.0,
+   "log": "wait_15.0"
+  },
+  {
+   "t": 16.0,
+   "log": "wait_16.0"
+  },
+  {
+   "t": 17.0,
+   "log": "wait_17.0"
+  },
+  {
+   "t": 18.0,
+   "log": "wait_18.0"
+  },
+  {
+   "t": 19.0,
+   "log": "wait_19.0"
+  },
+  {
+   "t": 20.0,
+   "log": "wait_20.0"
+  },
+  {
+   "t": 20.0,
+   "screenshot": "u_20.0"
+  },
+  {
+   "t": 21.0,
+   "log": "wait_21.0"
+  },
+  {
+   "t": 22.0,
+   "log": "wait_22.0"
+  },
+  {
+   "t": 23.0,
+   "log": "wait_23.0"
+  },
+  {
+   "t": 24.0,
+   "log": "wait_24.0"
+  },
+  {
+   "t": 25.0,
+   "log": "wait_25.0"
+  },
+  {
+   "t": 26.0,
+   "log": "wait_26.0"
+  },
+  {
+   "t": 26.0,
+   "screenshot": "u_26.0"
+  },
+  {
+   "t": 27.0,
+   "log": "wait_27.0"
+  },
+  {
+   "t": 28.0,
+   "log": "wait_28.0"
+  },
+  {
+   "t": 28.0,
+   "screenshot": "u_28.0"
+  },
+  {
+   "t": 29.0,
+   "log": "wait_29.0"
+  },
+  {
+   "t": 30.0,
+   "log": "wait_30.0"
+  },
+  {
+   "t": 31.0,
+   "log": "wait_31.0"
+  },
+  {
+   "t": 31.0,
+   "screenshot": "u_31.0"
+  }
+ ]
+}

@@ -1,0 +1,333 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 9.0,
+ "player_position": [
+  12330.0,
+  5982
+ ],
+ "known_songs": [],
+ "locale": "en",
+ "steps": [
+  {
+   "t": 1.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.4,
+   "log": "jumpL_1.4"
+  },
+  {
+   "t": 1.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.5,
+   "log": "jumpL_1.5"
+  },
+  {
+   "t": 1.6,
+   "log": "jumpL_1.6"
+  },
+  {
+   "t": 1.7,
+   "log": "jumpL_1.7"
+  },
+  {
+   "t": 1.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.8,
+   "log": "jumpL_1.8"
+  },
+  {
+   "t": 1.8,
+   "screenshot": "pocket_skills_left_1.8"
+  },
+  {
+   "t": 1.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 1.9,
+   "log": "jumpL_1.9"
+  },
+  {
+   "t": 2.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "log": "jumpL_2.0"
+  },
+  {
+   "t": 2.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.1,
+   "log": "jumpL_2.1"
+  },
+  {
+   "t": 2.2,
+   "log": "jumpL_2.2"
+  },
+  {
+   "t": 2.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.3,
+   "log": "jumpL_2.3"
+  },
+  {
+   "t": 2.3,
+   "screenshot": "pocket_skills_left_2.3"
+  },
+  {
+   "t": 2.4,
+   "log": "jumpL_2.4"
+  },
+  {
+   "t": 2.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "log": "jumpL_2.5"
+  },
+  {
+   "t": 2.6,
+   "log": "jumpL_2.6"
+  },
+  {
+   "t": 2.7,
+   "log": "jumpL_2.7"
+  },
+  {
+   "t": 2.7,
+   "screenshot": "pocket_skills_left_2.7"
+  },
+  {
+   "t": 2.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.8,
+   "log": "jumpL_2.8"
+  },
+  {
+   "t": 2.9,
+   "log": "jumpL_2.9"
+  },
+  {
+   "t": 3.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "log": "jumpL_3.0"
+  },
+  {
+   "t": 3.1,
+   "log": "jumpL_3.1"
+  },
+  {
+   "t": 3.2,
+   "log": "jumpL_3.2"
+  },
+  {
+   "t": 3.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.3,
+   "log": "jumpL_3.3"
+  },
+  {
+   "t": 3.4,
+   "log": "jumpL_3.4"
+  },
+  {
+   "t": 3.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.5,
+   "log": "jumpL_3.5"
+  },
+  {
+   "t": 3.6,
+   "log": "jumpL_3.6"
+  },
+  {
+   "t": 3.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 4.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 4.0,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 4.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.35,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.85,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.35,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.85,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.0,
+   "log": "toDoor_6.0"
+  },
+  {
+   "t": 6.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.35,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.5,
+   "log": "toDoor_6.5"
+  },
+  {
+   "t": 6.5,
+   "screenshot": "pocket_skills_door"
+  },
+  {
+   "t": 6.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.85,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.0,
+   "log": "toDoor_7.0"
+  },
+  {
+   "t": 7.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.35,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.5,
+   "log": "toDoor_7.5"
+  },
+  {
+   "t": 7.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.85,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.0,
+   "log": "toDoor_8.0"
+  },
+  {
+   "t": 8.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.35,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 8.5,
+   "log": "toDoor_8.5"
+  }
+ ],
+ "skills": [
+  0,
+  1
+ ]
+}

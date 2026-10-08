@@ -153,6 +153,7 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 - [physics-parent-before-children-one-frame-lag](gotchas/physics-parent-before-children-one-frame-lag.md) — Godot processes parents before children, so caching continuous input in `_physics_process` reintroduces a one-frame lag.
 - [input-action-press-does-not-reach-input-callbacks](gotchas/input-action-press-does-not-reach-input-callbacks.md) — `Input.action_press()`/`action_release()` only set polled state; use `Input.parse_input_event()` to also fire `_input()`.
 - [scene-resave-buries-real-edits-in-noise](gotchas/scene-resave-buries-real-edits-in-noise.md) — a `.tscn` resave mixes real property edits (a moved node) into a diff full of harmless editor metadata churn.
+- [losing-window-focus-releases-held-actions](gotchas/losing-window-focus-releases-held-actions.md) — when the window loses focus (on Windows, e.g. another Godot window opening), Godot releases every pressed action, including ones injected with `parse_input_event`; re-send long holds every 0.25 s in a timeline.
 
 ## Playtests
 
@@ -179,3 +180,4 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 - [2026-09-20-bloom-recall-and-lesson](playtests/2026-09-20-bloom-recall-and-lesson.md) — state-driven check of the recall prompt, the six-note call sheet and the staged lesson (fun 3, fluidity 3, aesthetics 4); pace throwaway scripts on physics_frame.
 - [2026-09-20-bloom-guardian-call](playtests/2026-09-20-bloom-guardian-call.md) — full Bloom Guardian call-and-response in-engine after the blur/dropped-note/call-HUD fixes; loop works, balance too punishing (fun 2, fluidity 3, aesthetics 3).
 - [2026-09-20-harness-shakedown](playtests/2026-09-20-harness-shakedown.md) — first verified run of the `tools/playtest` capture harness; found and fixed the input-simulation gotcha above.
+- [2026-10-07-empty-house](playtests/2026-10-07-empty-house.md) — PZL-05, Combinado 4 (fun 2, fluidity 2, aesthetics 3): the door needs both plates (shadow alone, load alone and the no-Solstice control all stay shut). On the final layout (far plate col 82) a walked route clears the door ~1.0 s before it closes with machine-perfect input, and a calm pace fails by ~0.75 s. The cocoon lands on its plate and stays; played from its right it blocks the corridor (one jump). The door is never on screen with either plate. Found: Soltar from under the cocoon soft-locks Ivo in the floor. Unconfirmed: a fade loop at the region seam above the pocket's wall.

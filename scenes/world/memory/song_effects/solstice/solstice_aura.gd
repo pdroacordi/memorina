@@ -2,8 +2,10 @@ class_name SolsticeAura extends PulseEffect
 
 ## Solstice stretches overlapping non-Solstice pulses (docs/design/02_mecanicas.md section 7.1).
 
+## Multiplier on a stretched pulse's reach.
 @export var reach := 1.4
-@export var duration := 2.5
+## Multiplier on a stretched pulse's sustain (docs/knowledge/systems/solstice.md).
+@export var duration := 3.0
 @export var ray_color := Color(1.0, 0.82, 0.45, 0.9)
 @export var rays := 18
 

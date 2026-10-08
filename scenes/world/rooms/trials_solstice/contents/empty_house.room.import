@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=3
+type="Resource"
+uid="uid://3pqs0vdj2uii"
+path="res://.godot/imported/empty_house.room-5cc8c81cf88f3e0aa6a932051519d269.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/trials_solstice/contents/empty_house.room"
+dest_files=["res://.godot/imported/empty_house.room-5cc8c81cf88f3e0aa6a932051519d269.res"]
+
+[params]
+
