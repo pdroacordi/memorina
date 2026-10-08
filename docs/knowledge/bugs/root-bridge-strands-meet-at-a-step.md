@@ -7,9 +7,10 @@ severity: low
 tags: [enraizar, roots, root-bridge, art, sprite-rotation]
 related: [playtests/2026-10-07-chuva-then-enraizar-wet-bridge, playtests/2026-09-30-enraizar-shaft-and-bridge, architecture/roots-join-earth-to-earth, systems/roots-and-climbing]
 created: 2026-10-07
-updated: 2026-10-07
+updated: 2026-10-08
 source_files:
   - scenes/world/memory/song_effects/roots/root_span_view.gd
+  - scenes/world/memory/song_effects/roots/root_catch.gd
   - assets/sprites/world/props/roots/root_strand.png
 ---
 
@@ -57,3 +58,11 @@ Open. Either option makes both strands draw the same world rows whatever the art
 A test can build a `RootSpanView` for a bridge, then compare the global rects of
 `sprite_a` and `sprite_b`, including the texture's opaque rows. Do not compare only the
 `position` and `offset` values: those already match.
+
+## Revision (2026-10-08)
+
+PZL-04's `RootCatch` (scenes/world/memory/song_effects/roots/root_catch.gd:27-29) copies the same
+centring for the two roots that seize a `LoweringPlatform`. The left root (rotation 0) and the
+right root (rotation PI) are drawn on the line at the platform's mid-height (`catch_edges`, top
++ 5 px), so the right root meets the plank 4 px higher than the left. Not measured on screen. A
+fix to `RootSpanView` should be applied to `RootCatch` too (or the strand built in one place).

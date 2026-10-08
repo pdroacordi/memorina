@@ -23,6 +23,8 @@ res://scenes/world/interactables/rain_basin/rising_pool.tscn
 res://scenes/world/rooms/trials_solstice/contents/solstice_trial_contents.tscn
 res://scenes/world/rooms/trials_solstice/contents/empty_house_contents.tscn
 res://scenes/world/rooms/trials_solstice/contents/water_trial_contents.tscn
+res://scenes/world/rooms/trials_solstice/contents/the_catch_contents.tscn
+res://scenes/world/interactables/lowering_platform/lowering_platform.tscn
 res://scenes/ui/life_hud/life_hud.tscn
 res://scenes/world/interactables/bench/bench.tscn
 res://scenes/ui/save_mark/save_mark.tscn

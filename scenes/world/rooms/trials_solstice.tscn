@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="2_region"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/empty_house.tscn" id="4_house"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/water_trial.tscn" id="5_water"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/the_catch.tscn" id="6_catch"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="3_regmem"]
 
 [node name="TrialsSolstice" type="Node2D"]
@@ -37,3 +38,9 @@ position = Vector2(7056, -40)
 
 [node name="WaterTrial" parent="." instance=ExtResource("5_water")]
 position = Vector2(5312, 0)
+
+[node name="CatchSpawn" type="Marker2D" parent="." groups=["trial_spawn"]]
+position = Vector2(8272, -40)
+
+[node name="TheCatch" parent="." instance=ExtResource("6_catch")]
+position = Vector2(7872, 0)

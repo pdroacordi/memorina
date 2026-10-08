@@ -1,0 +1,39 @@
+; the_catch.room - catching it in mid-fall (docs/maps/README.md), Solstice's trials region.
+; Tested by tests/scenes/world/rooms/trials/the_catch_test.gd. Base movement, a single jump.
+;
+; Combinado 3 (design 02 section 8.4, Apanhar no Ar; user, 2026-10-07: "Desce na
+; corda"): Ivo stands at the bottom of a well of earth walls. A platform hangs
+; 300 px over him, out of reach; the exit opens in the right wall 160 px up,
+; also out of reach. Soltar from under the platform frees its brake and it
+; lowers, swinging, with no footing (design 02 section 7.1: "uma plataforma
+; balancando"). Enraizar played while it is low enough to jump onto, and high
+; enough to jump from to the exit, seizes it there. Enraizar first seizes it
+; where it hangs; played too soon after Soltar, it seizes it too high.
+
+[room]
+origin = 0, -16
+
+[grid]
+SSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSS#.....#SSSSSS
+SSSSSSSSS#.....#SSSSSS
+SSSSSSSSS#.....#SSSSSS
+SSSSSSSSS#.....#SSSSSS
+SSSSSSSSS#.....#SSSSSS
+SSSSSSSSS#.....#SSSSSS
+SSSSSSSSS#.....SSSSSSS
+SSSSSSSSS#...........S
+SSSSSSSSS#...........S
+SSSSSSSSS#...........S
+SSSSSSSSS#.....#SSSSSS
+SSSSSSSSS#.....#SSSSSS
+SSSSSSSSS#.....#SSSSSS
+SSSSSSSSS#.....#SSSSSS
+SSSSSSSSS#..V..#SSSSSS
+SSSSSSSSS#######SSSSSS
+SSSSSSSSS#######SSSSSS
+SSSSSSSSS#######SSSSSS
+SSSSSSSSS#######SSSSSS
+
+[entities]
+12,15 = {"id": "catch_platform", "hang_height": 300.0, "drop": 300.0}

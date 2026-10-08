@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=4
+type="Resource"
+uid="uid://dfuapfmg2yuvp"
+path="res://.godot/imported/the_catch.room-fd3a59199139e224df7f80bdee5e95b4.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/trials_solstice/contents/the_catch.room"
+dest_files=["res://.godot/imported/the_catch.room-fd3a59199139e224df7f80bdee5e95b4.res"]
+
+[params]
+

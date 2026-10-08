@@ -116,7 +116,7 @@ A new system gets a new entry here and in `docs/knowledge/systems/` in the same 
 
 - Pure logic lives in a `RefCounted` with a suite under `tests/`, mirroring the source path. `--ignoreHeadlessMode` is required; no suite uses input.
 - Add every new playable scene to `tools/smoke/scenes.txt`.
-- **Song trials** (`scenes/world/rooms/trials_<season>.tscn`) are where song puzzles are built and tested. `DebugTrials` mounts them in debug builds only; F10 moves Ivo to the next. Playtest positions: winter x 0 (its squall puzzle 1168), summer 2400, autumn 4800, spring 7200, Solstice 9600, the empty house 12160, the water trial 14912; floor y 6000.
+- **Song trials** (`scenes/world/rooms/trials_<season>.tscn`) are where song puzzles are built and tested. `DebugTrials` mounts them in debug builds only; F10 moves Ivo to the next. Playtest positions: winter x 0 (its squall puzzle 1168), summer 2400, autumn 4800, spring 7200, Solstice 9600, the empty house 12160, the water trial 14912 (its frozen wave 15856, its wall of water 16656), the catch 17872; floor y 6000.
 
 ## Playtesting
 

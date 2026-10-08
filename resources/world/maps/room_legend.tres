@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/drawbridge/drawbridge.tscn" id="i16_bridge"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/floater/floater.tscn" id="i18_floater"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/bench.tscn" id="i19_bench"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/lowering_platform/lowering_platform.tscn" id="i20_lowering"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -81,6 +82,15 @@ water_layer = ExtResource("5_freezable")
 reach = true
 rains = false
 description = "Where water a Redoma shell holds out rises to: paint it above f or ~ water in the same pit. While a shell holds water out of its disc the pool rises around it, up to here, and Congelar can fix it there. The rain never raises it. Never alone, never over a lake."
+
+[sub_resource type="Resource" id="lowering"]
+script = ExtResource("2_entry")
+symbol = "V"
+kind = 3
+ground = 0
+scene = ExtResource("i20_lowering")
+anchor = 0
+description = "A platform hanging hang_height above this floor on a braked rope: Soltar frees the brake and it lowers (drop px) swinging, no footing until it stops; Enraizar seizes it between earth walls a few cells away; the grey winches it back up."
 
 [sub_resource type="Resource" id="floater"]
 script = ExtResource("2_entry")
@@ -185,4 +195,4 @@ description = "A bench, standing on this cell: down sits Ivo on it, which heals 
 
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("floater"), SubResource("bench")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench")])

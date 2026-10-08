@@ -1,0 +1,384 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 22.5,
+ "player_position": [
+  17872.0,
+  5960.0
+ ],
+ "known_songs": [
+  4,
+  6
+ ],
+ "steps": [
+  {
+   "t": 0.5,
+   "log": "l_00.50"
+  },
+  {
+   "t": 1.0,
+   "log": "l_01.00"
+  },
+  {
+   "t": 1.5,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 1.5,
+   "log": "l_01.50"
+  },
+  {
+   "t": 1.55,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.0,
+   "log": "l_02.00"
+  },
+  {
+   "t": 2.1,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 2.15,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "log": "l_02.50"
+  },
+  {
+   "t": 2.55,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.95,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "log": "l_03.00"
+  },
+  {
+   "t": 3.3,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.35,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.5,
+   "log": "l_03.50"
+  },
+  {
+   "t": 3.7,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.75,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "log": "l_04.00"
+  },
+  {
+   "t": 4.1,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.15,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.5,
+   "log": "l_04.50"
+  },
+  {
+   "t": 5.0,
+   "log": "l_05.00"
+  },
+  {
+   "t": 5.5,
+   "log": "l_05.50"
+  },
+  {
+   "t": 6.0,
+   "log": "l_06.00"
+  },
+  {
+   "t": 6.5,
+   "log": "l_06.50"
+  },
+  {
+   "t": 7.0,
+   "log": "l_07.00"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "catch_07.00"
+  },
+  {
+   "t": 7.5,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 7.5,
+   "log": "l_07.50"
+  },
+  {
+   "t": 7.55,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "log": "l_08.00"
+  },
+  {
+   "t": 8.1,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 8.15,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 8.5,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 8.5,
+   "log": "l_08.50"
+  },
+  {
+   "t": 8.55,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 8.9,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 8.95,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 9.0,
+   "log": "l_09.00"
+  },
+  {
+   "t": 9.3,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 9.35,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 9.5,
+   "log": "l_09.50"
+  },
+  {
+   "t": 9.7,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 9.75,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 10.0,
+   "log": "l_10.00"
+  },
+  {
+   "t": 10.1,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 10.15,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 10.5,
+   "log": "l_10.50"
+  },
+  {
+   "t": 11.0,
+   "log": "l_11.00"
+  },
+  {
+   "t": 11.0,
+   "screenshot": "catch_11.00"
+  },
+  {
+   "t": 11.5,
+   "log": "l_11.50"
+  },
+  {
+   "t": 12.0,
+   "log": "l_12.00"
+  },
+  {
+   "t": 12.5,
+   "log": "l_12.50"
+  },
+  {
+   "t": 13.0,
+   "log": "l_13.00"
+  },
+  {
+   "t": 13.5,
+   "log": "l_13.50"
+  },
+  {
+   "t": 14.0,
+   "log": "l_14.00"
+  },
+  {
+   "t": 14.0,
+   "screenshot": "catch_14.00"
+  },
+  {
+   "t": 14.5,
+   "log": "l_14.50"
+  },
+  {
+   "t": 15.0,
+   "log": "l_15.00"
+  },
+  {
+   "t": 15.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 15.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 15.5,
+   "log": "l_15.50"
+  },
+  {
+   "t": 16.0,
+   "log": "l_16.00"
+  },
+  {
+   "t": 16.0,
+   "screenshot": "catch_16.00"
+  },
+  {
+   "t": 16.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 16.3,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 16.5,
+   "log": "l_16.50"
+  },
+  {
+   "t": 16.65,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 17.0,
+   "log": "l_17.00"
+  },
+  {
+   "t": 17.5,
+   "log": "l_17.50"
+  },
+  {
+   "t": 17.8,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 18.0,
+   "log": "l_18.00"
+  },
+  {
+   "t": 18.5,
+   "log": "l_18.50"
+  },
+  {
+   "t": 19.0,
+   "log": "l_19.00"
+  },
+  {
+   "t": 19.0,
+   "screenshot": "catch_19.00"
+  },
+  {
+   "t": 19.5,
+   "log": "l_19.50"
+  },
+  {
+   "t": 20.0,
+   "log": "l_20.00"
+  },
+  {
+   "t": 20.5,
+   "log": "l_20.50"
+  },
+  {
+   "t": 21.0,
+   "log": "l_21.00"
+  },
+  {
+   "t": 21.5,
+   "log": "l_21.50"
+  },
+  {
+   "t": 22.0,
+   "log": "l_22.00"
+  },
+  {
+   "t": 22.5,
+   "log": "l_22.50"
+  }
+ ]
+}

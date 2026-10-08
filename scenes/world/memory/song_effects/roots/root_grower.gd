@@ -2,6 +2,9 @@ class_name RootGrower extends PulseEffect
 
 ## Enraizar grows roots between earth faces inside its pulse; see design 02 sections 7.1 and 7.4.
 
+## Widest gap, in cells, roots cross from an earth face to a thing hanging beside it.
+const MAX_CATCH_CELLS := 3
+
 @export var grow_speed := 110.0
 @export var wither_speed := 180.0
 ## Widest gap a bridge crosses, in cells; wet earth reaches `wet_bridge_cells`.
@@ -20,6 +23,8 @@ var _views: Array[RootSpanView] = []
 var _spans: Array[RootSpanFinder.Span] = []
 var _built := {}
 var _built_reach := 0.0
+# LoweringPlatform -> the RootCatch holding it.
+var _catches := {}
 
 ## Whether a bridge `gap` cells wide may grow: up to `dry_cells`, or up to `wet_cells` when both faces are wet.
 static func may_bridge(gap: int, dry_cells: int, wet_cells: int, wet: bool) -> bool:
@@ -45,6 +50,7 @@ func _physics_process(delta: float) -> void:
 		_build_within(pulse.max_radius())
 	for view: RootSpanView in _views:
 		view.advance(delta, self)
+	_update_catches(delta)
 
 ## The memory at a point, for the tips: 1 where there is no field.
 func memory_at(point: Vector2) -> float:
@@ -112,3 +118,42 @@ func _nearest_pillar(spans: Array[RootSpanFinder.Span]) -> RootSpanFinder.Span:
 			best_distance = distance
 			best = span
 	return best
+
+## Seizes what hangs between earth faces inside this pulse, and lets go of what the roots no longer hold.
+func _update_catches(delta: float) -> void:
+	if _room == null:
+		return
+	for node: Node in get_tree().get_nodes_in_group(LoweringPlatform.GROUP):
+		var body := node as LoweringPlatform
+		if body == null or _catches.has(body):
+			continue
+		var faces := _catch_faces(body)
+		if faces.is_empty():
+			continue
+		var catch := RootCatch.new()
+		add_child(catch)
+		catch.setup(body, faces, body.catch_edges(), strand)
+		_catches[body] = catch
+	# Untyped: a freed platform fails a typed loop variable (gotchas/a-typed-loop-variable-fails-on-a-freed-object).
+	for body in _catches.keys():
+		var catch: RootCatch = _catches[body]
+		if not is_instance_valid(body) or not catch.advance(delta, self):
+			catch.queue_free()
+			_catches.erase(body)
+
+## The earth faces left and right of `body` at its height, when both lie in this pulse's clean disc with the body; empty otherwise.
+func _catch_faces(body: LoweringPlatform) -> PackedVector2Array:
+	var edges := body.catch_edges()
+	var faces := PackedVector2Array()
+	for side in 2:
+		var direction := -1 if side == 0 else 1
+		var cell := _room.cell_at(edges[side] + Vector2(direction, 0))
+		var column := RootCatchFinder.earth_face(_room.map, cell, direction, MAX_CATCH_CELLS)
+		if column < 0 or not holds(edges[side]):
+			return PackedVector2Array()
+		var rect := _room.cell_rect(Vector2i(column, cell.y))
+		var face := Vector2(rect.end.x if side == 0 else rect.position.x, edges[side].y)
+		if not holds(face):
+			return PackedVector2Array()
+		faces.append(face)
+	return faces

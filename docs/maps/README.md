@@ -119,6 +119,7 @@ else in the code knows what a character means.
 | `D` | `[grid]` | entity | - | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
 | `r` | `[water]` | water | - | Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake. |
 | `u` | `[water]` | water | - | Where water a Redoma shell holds out rises to: paint it above f or ~ water in the same pit. While a shell holds water out of its disc the pool rises around it, up to here, and Congelar can fix it there. The rain never raises it. Never alone, never over a lake. |
+| `V` | `[grid]` | entity | - | A platform hanging hang_height above this floor on a braked rope: Soltar frees the brake and it lowers (drop px) swinging, no footing until it stops; Enraizar seizes it between earth walls a few cells away; the grey winches it back up. |
 | `O` | `[grid]` | entity | - | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
 | `R` | `[grid]` | entity | - | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
 <!-- /generated:legend -->
@@ -266,6 +267,21 @@ Scene `res://scenes/world/interactables/drawbridge/drawbridge.tscn`, anchored at
 | `length_cells` | int | `4` |
 | `side` | int | `1` |
 | `fall_time` | float | `0.45` |
+
+#### `V` - LoweringPlatform
+
+Scene `res://scenes/world/interactables/lowering_platform/lowering_platform.tscn`, anchored at its cell's bottom centre (standing on the cell below). A platform hanging hang_height above this floor on a braked rope: Soltar frees the brake and it lowers (drop px) swinging, no footing until it stops; Enraizar seizes it between earth walls a few cells away; the grey winches it back up.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `width_cells` | int | `3` |
+| `hang_height` | float | `160.0` |
+| `drop` | float | `320.0` |
+| `lower_speed` | float | `35.0` |
+| `return_speed` | float | `80.0` |
+| `swing_degrees` | float | `14.0` |
+| `swing_rate` | float | `0.8` |
 
 #### `O` - Floater
 
