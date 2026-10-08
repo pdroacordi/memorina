@@ -12,6 +12,10 @@
 - **Habilidades dos guardiões novos (GRD-04):** "Autumn: wall climb; summer: none". O guardião de outono devolve a escalada de parede (`WALL_CLIMB`); o de verão ensina só canções.
 - **Interiores:** "All doors". Toda construção tem uma porta (apertar para cima) que leva, com um fade, a uma sala interior própria.
 - **Habitantes:** "Idle villagers, no dialogue". Aldeões parados em seus afazeres, com um ciclo curto de idle, mais animais e sinais de vida. Tudo isso congela no cinza. Diálogo fica para um item de história.
+- **Terra na Caldeira e na Borda Gelada:** "No earth there" — só pedra (basalto, arenito, rocha escura, gelo); Enraizar não serve nesses dois biomas, e o material diz isso ao jogador.
+- **Chão construído (calçamento, tábuas):** "Seasonal top" — um pulso deita neve ou folhas na borda de cima do calçamento, como na terra. Isso muda a seção 6 só para o chão: construções e interiores continuam com uma versão.
+- **Estilo e paleta:** "Rewrite to the concept, palette per biome" — o texto de estilo compartilhado (`tools/art/prompts/style.md`) passa a descrever o conceito aprovado ("Yes, aim for this", a pintura da rua da vila), e cada bioma tem a própria paleta, tirada do seu quadro de estilo aprovado.
+- **Portas:** "Buffer it ~0.1 s" — um Cima apertado um instante antes de alcançar a porta ainda a toma; entrar andando continua valendo.
 - **Recomeço:** as regiões atuais (vila e borda gelada) são refeitas do zero. As salas de prova de canções (`trials_*`) continuam como laboratório de puzzles, só em builds de debug.
 
 ## 2. Visão geral

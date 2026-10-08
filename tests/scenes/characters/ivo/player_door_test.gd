@@ -43,6 +43,25 @@ func test_up_at_an_open_door_enters_it_once() -> void:
 	await _frames(5)
 	assert_array(_entered).contains_exactly([_door])
 
+## "Buffer it ~0.1 s" (user, 2026-10-08): a press just short of the door takes it when it comes in reach.
+func test_an_early_up_waits_for_the_door() -> void:
+	_door.position = Vector2(500, FLOOR_Y)
+	await _land()
+	_player_input().look_up_pressed.emit()
+	await _frames(1)
+	_door.position = Vector2(0, FLOOR_Y)
+	await _frames(4)
+	assert_array(_entered).contains_exactly([_door])
+
+func test_an_up_older_than_the_buffer_is_dropped() -> void:
+	_door.position = Vector2(500, FLOOR_Y)
+	await _land()
+	_player_input().look_up_pressed.emit()
+	await _frames(12)
+	_door.position = Vector2(0, FLOOR_Y)
+	await _frames(4)
+	assert_array(_entered).is_empty()
+
 func test_up_in_the_air_does_nothing() -> void:
 	_player_input().look_up_pressed.emit()
 	await _frames(2)

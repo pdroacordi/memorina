@@ -77,6 +77,8 @@ const AIR_ATTACK_CONTEXTS: Array[StringName] = [CTX_JUMP, CTX_FALL, CTX_POGO]
 const STILL_SPEED_EPSILON := 1.0
 ## Seconds after recall when a directionless dodge moves away from its source.
 const RECALL_ESCAPE_TIME := 0.6
+## Seconds an Up press waits for a door to come in reach ("Buffer it ~0.1 s", user, 2026-10-08).
+const DOOR_BUFFER := 0.1
 
 enum MotionState { KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 
@@ -182,8 +184,8 @@ var _death_shown: bool = false
 var _sit_requested: bool = false
 ## Pending press to stand without triggering its action.
 var _stand_requested: bool = false
-## Pending up press, handled on the next physics frame.
-var _door_requested: bool = false
+## Seconds left for a pending up press to find a door; 0 is none.
+var _door_buffer: float = 0.0
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -217,7 +219,7 @@ func _ready() -> void:
 	_input.attack_pressed.connect(_as_move.bind(_attack.buffer_attack))
 	_input.draw_memorina_pressed.connect(_unless_seated.bind(_memorina.buffer_toggle))
 	_input.look_down_pressed.connect(func() -> void: _sit_requested = true)
-	_input.look_up_pressed.connect(_as_move.bind(func() -> void: _door_requested = true))
+	_input.look_up_pressed.connect(_as_move.bind(func() -> void: _door_buffer = DOOR_BUFFER))
 	_input.note_pressed.connect(_on_note_pressed)
 	_input.debug_learn_song_pressed.connect(_on_debug_learn_song_pressed)
 	_memorina.drawn.connect(_on_memorina_drawn)
@@ -277,7 +279,7 @@ func _process_motion(delta: float) -> void:
 		# A down press under water must not sit him on whatever bench the
 		# respawn puts him beside.
 		_sit_requested = false
-		_door_requested = false
+		_door_buffer = 0.0
 		_sink_motion(delta)
 		return
 	_try_sit(on_floor)
@@ -309,7 +311,7 @@ func _process_motion(delta: float) -> void:
 	if on_floor:
 		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
-	if not _try_door(on_floor):
+	if not _try_door(on_floor, delta):
 		_try_climb()
 
 	_states.transition_to(_select_motion_state(on_floor))
@@ -512,12 +514,17 @@ func _try_sit(on_floor: bool) -> void:
 	sat_down.emit(seat)
 
 # Up pressed takes a door in reach, under the same gates as a bench except a
-# held direction: walking up to a door and pressing Up is the gesture. A door
-# taken (or knocked) is the press spent, so it does not also grab a climbable.
-func _try_door(on_floor: bool) -> bool:
-	if not _door_requested:
+# held direction: walking up to a door and pressing Up is the gesture. A press
+# made just short of the door waits DOOR_BUFFER for it; a refused press is
+# spent. A door taken (or knocked) does not also grab a climbable.
+func _try_door(on_floor: bool, delta: float) -> bool:
+	if _door_buffer <= 0.0:
 		return false
-	_door_requested = false
+	var door := _doors.reachable()
+	if door == null:
+		_door_buffer = maxf(_door_buffer - delta, 0.0)
+		return false
+	_door_buffer = 0.0
 	if not on_floor or is_rolling() or is_attacking() or is_in_knockback():
 		return false
 	if is_climbing() or is_wall_sliding() or is_memorina_drawn():
@@ -527,9 +534,6 @@ func _try_door(on_floor: bool) -> bool:
 	if _recall.is_armed() or _pending_recall != null:
 		return false
 	if Guardian.fight_at(get_tree(), global_position):
-		return false
-	var door := _doors.reachable()
-	if door == null:
 		return false
 	if door.is_open():
 		# Nothing else pressed this frame may act on the way out.
@@ -1046,7 +1050,7 @@ func _drop_buffers() -> void:
 	_memorina.clear_buffer()
 	_sit_requested = false
 	_stand_requested = false
-	_door_requested = false
+	_door_buffer = 0.0
 
 ## Puts him on `seat`, sitting, without the rest that sitting down himself
 ## asks for: arrival at the bench after a death or a load.
@@ -1079,7 +1083,7 @@ func receive_hazard(hazard: HazardZone) -> void:
 func respawn() -> void:
 	assert(not is_dead(), "A corpse is not respawned")
 	_sit_requested = false
-	_door_requested = false
+	_door_buffer = 0.0
 	teleport(_safe_ground.last_safe_position())
 	velocity = Vector2.ZERO
 	_sinking = false
