@@ -36,9 +36,9 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | MEM-09 | Water current | 03 §6 | `[ ]` | MEM-08 | 2026-10-02 | Hook: `WaterVolume.disturbances()`. |
 | MEM-10 | Waterfalls | 03 §7 | `[?]` | | 2026-10-02 | Needs its own design pass (freeze the whole fall or the base?). Inverno Espacial 1 depends on it. |
 | MEM-11 | Death marks | 03 §4.3 | `[x]` | LIFE-02 | 2026-10-02 | |
-| MEM-12 | Foreground art layer | | `[ ]` | | 2026-10-02 | Needs its own creature-bit treatment; characters draw over the finished world. |
-| MEM-13 | Starting memory per region | 03 §7 | `[?]` | WORLD-03 | 2026-10-02 | Village decided: 0.8 at the start, 1.0 at the Return. |
-| WORLD-04 | Background layers of regions placed away from the origin | | `[ ]` | | 2026-10-07 | `Parallax2D` ignores its parent's offset, so the far layers are off screen in the trials: `gotchas/parallax2d-ignores-its-parents-offset`. |
+| MEM-12 | Foreground art layer | 04 §6 | `[ ]` | | 2026-10-08 | Needs its own creature-bit treatment; characters draw over the finished world. |
+| MEM-13 | Starting memory per region | 04 §2 | `[ ]` | WORLD-05 | 2026-10-08 | Values in 04 §2 (user, 2026-10-08). The village's mid-game 0.6 lands with WORLD-11. |
+| WORLD-04 | Background layers of regions placed away from the origin | | `[ ]` | | 2026-10-08 | Fixed by WORLD-06. `Parallax2D` ignores its parent's offset, so the far layers are off screen in the trials: `gotchas/parallax2d-ignores-its-parents-offset`. |
 
 ## Songs
 
@@ -79,7 +79,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | GRD-01 | Guardian framework: phases, call, recall, AI, staging | 02 §3-4 | `[x]` | | 2026-10-02 | `systems/guardians` |
 | GRD-02 | Bloom Guardian (ROOT + DOUBLE_JUMP) | 02 §7.2 | `[x]` | | 2026-10-02 | |
 | GRD-03 | Frost Guardian (FREEZE + ROLL) | 02 §7.2 | `[x]` | | 2026-10-02 | Free sprite tier: one attack clip for all moves. Later cycles never playtested. |
-| GRD-04 | Summer and autumn guardians | 02 §7.2 | `[?]` | WORLD-03 | 2026-10-02 | Which skill each recalls is undecided (02 §4). |
+| GRD-04 | Summer and autumn guardians | 02 §7.2, 04 §2 | `[ ]` | WORLD-16, WORLD-17 | 2026-10-08 | Autumn recalls wall climb, summer none: "Autumn: wall climb; summer: none" (user, 2026-10-08). |
 | GRD-05 | Arena doors (no walking out mid-fight) | | `[ ]` | | 2026-10-02 | |
 | GRD-06 | Final battle: revelation and dissonance | 02 §5 | `[ ]` | GRD-04 | 2026-10-02 | |
 
@@ -119,9 +119,23 @@ The feature list: what is built, what is next, and what is waiting on a decision
 
 | ID | Item | Design | Status | Needs | Updated | Notes |
 |---|---|---|:-:|---|---|---|
-| WORLD-01 | Home village: downtown, woods, Bloom Hollow | 01 §8 | `[x]` | | 2026-10-02 | |
-| WORLD-02 | Frost edge: the lighthouse | | `[x]` | | 2026-10-02 | |
-| WORLD-03 | The world map: regions and their order | 01 §10 | `[?]` | | 2026-10-02 | Map is open in design. |
+| WORLD-01 | Home village: downtown, woods, Bloom Hollow | 01 §8 | `[x]` | | 2026-10-02 | Replaced by WORLD-05 and WORLD-11. |
+| WORLD-02 | Frost edge: the lighthouse | | `[x]` | | 2026-10-02 | Replaced by WORLD-05 and WORLD-13. |
+| WORLD-03 | The world map: regions and their order | 01 §10 | `[x]` | | 2026-10-08 | `docs/design/04_mapa_do_mundo.md`: seven areas, the user's approval "Approve as proposed" (2026-10-08). |
+| WORLD-05 | Clean slate and the whole-world greybox | 04 §2-3 | `[ ]` | WORLD-09 | 2026-10-08 | Remove the old village and frost edge; every room of 04 §3 as a playable `.room` with its gates, benches and arenas, in the current tiles. Trials stay. A save whose bench is gone boots at the new start. |
+| WORLD-06 | Backdrops that work vertically | 04 §6 | `[ ]` | | 2026-10-08 | Per-layer horizontal and vertical parallax, an anchor height, sky and ground past the art, surface and underground sets. Absorbs WORLD-04. |
+| WORLD-07 | Biome tilesets and a back-wall layer | 04 §6 | `[ ]` | | 2026-10-08 | One 32 px tileset per biome (PixelLab sidescroller), three season bands, `Enums.Ground` per tile; a `[back]` layer in `.room` for non-solid walls. |
+| WORLD-08 | Props and ambient motion on the memory clock | 04 §5-6 | `[ ]` | | 2026-10-08 | Placed set dressing; smoke, sway, flags and windmills stop dead in the grey. |
+| WORLD-09 | Doors and interior rooms | 04 §4 | `[ ]` | | 2026-10-08 | Press up at a door: fade, arrive at the paired door. Interiors stay off the map. A door can be locked by a save fact. "All doors" (user, 2026-10-08). |
+| WORLD-10 | Villagers and animals | 04 §5 | `[ ]` | WORLD-08 | 2026-10-08 | Idle loops from PixelLab, no dialogue, frozen in the grey. "Idle villagers, no dialogue" (user, 2026-10-08). |
+| WORLD-11 | Dress the Home Village | 04 §3.1 | `[ ]` | WORLD-05, WORLD-06, WORLD-07, WORLD-08, WORLD-10 | 2026-10-08 | Houses, tavern, bakery, elder's house, Ivo's house. Village memory falls to 0.6 from the second restored guardian. Style board approved by the user first. |
+| WORLD-12 | Dress the Threshold Road | 04 §3.2 | `[ ]` | WORLD-11 | 2026-10-08 | Style board approved by the user first. |
+| WORLD-13 | Dress the Frost Edge and the lighthouse | 04 §3.3 | `[ ]` | WORLD-11 | 2026-10-08 | The Frost Guardian leaves the lighthouse for the Frozen Lake. |
+| WORLD-14 | Dress the Spring Woods | 04 §3.4 | `[ ]` | WORLD-11 | 2026-10-08 | Bloom Hollow arena. |
+| WORLD-15 | Dress the Frozen Lake | 04 §3.5 | `[ ]` | WORLD-11 | 2026-10-08 | Frost Guardian arena. |
+| WORLD-16 | Dress the Wind Orchards | 04 §3.6 | `[ ]` | WORLD-11 | 2026-10-08 | Arena empty until GRD-04. |
+| WORLD-17 | Dress the Summer Caldera | 04 §3.7 | `[ ]` | WORLD-11 | 2026-10-08 | Arena empty until GRD-04. |
+| WORLD-18 | Connections pass | 04 §2 | `[ ]` | WORLD-12, WORLD-13, WORLD-14, WORLD-15, WORLD-16, WORLD-17 | 2026-10-08 | Shortcuts, secrets, bench spacing, the map, one traversal playtest from the opening to every arena. |
 
 ## Tools and infrastructure
 

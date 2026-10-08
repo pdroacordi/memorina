@@ -232,8 +232,8 @@ O princípio central da cena: nenhum julgamento dela sobre ele. Ela não avalia,
  
 ## 10. Perguntas em aberto — lore
  
-- Mapa concreto: quantas regiões (5 a 6 é um bom ponto de partida), quais estações se repetem onde, e em que ordem não linear elas se conectam.
-- Onde o mentor em estase fica posicionado no mapa, e como o jogador retorna a ele no fim.
+- ~~Mapa concreto: quantas regiões (5 a 6 é um bom ponto de partida), quais estações se repetem onde, e em que ordem não linear elas se conectam.~~ **Resolvida em 2026-10-08:** `04_mapa_do_mundo.md`.
+- ~~Onde o mentor em estase fica posicionado no mapa, e como o jogador retorna a ele no fim.~~ **Resolvida em 2026-10-08:** na torre do farol, na Borda Gelada; o topo do farol abre com os quatro guardiões restaurados (`04_mapa_do_mundo.md`, seção 3.3).
 - Conteúdo dos fragmentos de portadores comuns: quem foi o portador anterior de cada tubo, e o que exatamente esse fragmento revela sobre a região.
 - **Nome do guardião-mentor/guardião da rachadura.**
 - **Por quem ou o quê especificamente o guardião da rachadura tentou reter a segunda estação (motivação por amor já fechada; o alvo do amor está em aberto).**

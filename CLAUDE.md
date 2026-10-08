@@ -4,7 +4,7 @@ Godot 4.7 (GDScript, Forward+), a 2D metroidvania. Four documents answer differe
 
 | Question | Where |
 |---|---|
-| What is the game? (lore, mechanics, world; Portuguese) | [`docs/design/`](docs/design/) `01_lore_e_narrativa.md`, `02_mecanicas.md`, `03_mundo_e_ambiente.md` |
+| What is the game? (lore, mechanics, world; Portuguese) | [`docs/design/`](docs/design/) `01_lore_e_narrativa.md`, `02_mecanicas.md`, `03_mundo_e_ambiente.md`, `04_mapa_do_mundo.md` |
 | What is built, what is next? | [`docs/roadmap.md`](docs/roadmap.md) |
 | How does system X work, and what must not break? | [`docs/knowledge/systems/`](docs/knowledge/systems/) (table below) |
 | Why was it built this way; what broke before? | [`docs/knowledge/`](docs/knowledge/README.md) `architecture/`, `bugs/`, `gotchas/`, `playtests/` |

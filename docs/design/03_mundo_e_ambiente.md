@@ -264,6 +264,6 @@ Verificação obrigatória: olhar a água com a janela ampliada, em cada etapa d
 
 - **Quedas d'água** precisam de uma passada de design própria. Água **vertical** é um caso diferente: não reflete como espelho, tem geometria e colisão diferentes, e a relação dela com Congelar (congelar uma queda d'água inteira? só a base?) não está resolvida. Inverno Espacial 1 depende disso.
 - **Números de clima:** força do vento, duração das rajadas, duração das calmarias, quanto o abrigo do instrumento reduz. Tudo pendente de prototipagem, junto com as durações de efeito já listadas em `02_mecanicas.md`, seção 9.
-- **Valores de memória inicial por região.** Depende do mapa concreto, que continua em aberto (`01_lore_e_narrativa.md`, seção 10). Só a vila está parcialmente decidida: 0.8 na abertura e 1.0 no Retorno; o valor da revisita do meio do jogo fica para a sessão de mapa.
+- ~~**Valores de memória inicial por região.**~~ **Resolvida em 2026-10-08:** `04_mapa_do_mundo.md`, seção 2 (a vila cai para 0.6 a partir do segundo guardião restaurado).
 - **Perfis de clima por estação.** Inverno (nevasca) está descrito. Verão (tempestade), Outono (vento de folhas) e Primavera (garoa, a mesma chuva que a sequência **Chuva** invoca) estão apenas esboçados.
 - ~~Inconsistência herdada: Inverno com três sequências (Congelar, Ventania, Hibernação) numa grade de duas.~~ **Resolvida em 2026-09-23** pela nova matriz (`02_mecanicas.md`, seção 7.1): Inverno é Congelar + Redoma, Ventania virou Vendaval no Outono, Hibernação foi descartada.
