@@ -1,7 +1,7 @@
 ---
 id: architecture/ice-is-its-own-sheet
 type: architecture
-title: Ice is its own sheet, a per-column band captured where the water stood and decoupled from the water level (PLAN for PZL-02, base for PZL-03 and PZL-06)
+title: Ice is its own sheet, a per-column band captured where the water stood and decoupled from the water level (PZL-02, base for PZL-03 and PZL-06)
 status: active
 tags: [water, ice, freeze, rain-basin, ice-collider, shader, plan, pzl-02, pzl-03, pzl-06]
 related: [architecture/the-water-level-moves, architecture/memory-gated-height-field, architecture/wind-piles-a-bounded-crest, architecture/the-shell-displaces-water-into-the-reach, architecture/a-pool-rests-below-its-painted-reach, systems/water, bugs/ice-front-leaps-dead-columns, bugs/temporary-song-floors-are-remembered-as-safe-ground, gotchas/body-state-cannot-change-in-the-physics-flush, gotchas/screen-texture-copy-scope]
@@ -20,7 +20,7 @@ source_files:
 
 ## Summary
 
-PLAN, not built (2026-10-07). Today ice is drawn by the water shader as a band under the moving
+Built 2026-10-07 for PZL-02 (the field's `offsets` wait for PZL-03, `ice_top` of held columns for PZL-06; `IceCollider.build(count)` takes the segment count from `IceSheetShape`; there is no separate texture class, `IceSheet` owns its data; captured tops are rounded to whole px; a `Floater` the ice lets go sinks at `sink_speed`). Before it, ice was drawn by the water shader as a band under the moving
 waterline and collided by flat rectangles at the level it froze at, and the field zeroes a held
 column. PZL-02 (ice outlives the drain), PZL-03 (a frozen crest ramp) and PZL-06 (a curved wall
 against Redoma) all need ice with its own height per column. Decision: ice becomes a sheet of its
@@ -75,15 +75,15 @@ PZL-09 (`a-pool-rests-below-its-painted-reach`), PZL-02 (this), PZL-03
   `ice_top(c) -> float` (rest line minus `pinned(c)`; INF where the column holds no water; PZL-06
   adds held columns), `wet_columns() -> PackedByteArray`, `is_frozen_at(x) -> bool` (field hold
   1).
-- **`IceSheet`** (new `Node2D`, `ice_sheet.gd`, `ice_sheet.gdshader`, `ice_sheet_texture.gd`; in
+- **`IceSheet`** (new `Node2D`, `ice_sheet.gd`, `ice_sheet.gdshader`; in
   `freezable_water.tscn` and `rain_basin.tscn`): `z_index` 51 absolute, authored in the scene with
   the constraint "above `WaterQuad.Z`: ice covers water". RGBAF texture per column: r top, g bottom
   (world y), b solidity. The shader discards outside the band, stipples by solidity on the texel
   Bayer grid (as the water's ice did), samples `ice_ramp` by depth from the top. No screen texture,
   no `TIME`, no `FRAGCOORD`. Its rect is the body's width by `y_range()`, re-laid only on
   capture/release. Greyed by the greyhush like any world pixel.
-- **`IceCollider`**: `build(left, width, segment_width)` makes disabled segments;
-  `set_profile(points, walkable)` moves endpoints and sets `one_way_collision` (deferred) to
+- **`IceCollider`**: `build(count)` makes disabled segments;
+  `set_profile(points)` moves endpoints and sets `one_way_collision` (deferred) to
   walkable only (steeper than 45°, the engine's default `floor_max_angle`, is a two-sided wall);
   `set_solid(mask)` unchanged (deferred, on change). Endpoints move only while their segment is
   disabled: a column is captured at its first hold, long before `solid_at`; assert it. `set_top`

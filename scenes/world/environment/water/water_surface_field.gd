@@ -11,6 +11,9 @@ var _profile: WaterProfile
 var _heights := PackedFloat32Array()
 var _velocities := PackedFloat32Array()
 var _holds := PackedFloat32Array()
+# Per column: the height above the swell that ice holds it at, set when ice first takes it.
+var _pinned := PackedFloat32Array()
+var _swell_time := 0.0
 # Scratch buffers, reused every sub-step rather than allocated in it.
 var _targets := PackedFloat32Array()
 var _accelerations := PackedFloat32Array()
@@ -23,6 +26,7 @@ func _init(column_count: int, profile: WaterProfile) -> void:
 	_heights.resize(column_count)
 	_velocities.resize(column_count)
 	_holds.resize(column_count)
+	_pinned.resize(column_count)
 	_targets.resize(column_count)
 	_accelerations.resize(column_count)
 
@@ -44,12 +48,18 @@ func disturb(column: int, displacement: float) -> void:
 		return
 	_heights[column] += displacement * (1.0 - _holds[column])
 
-## How much of a column ice has taken, 0..1. At 1 the column is locked flat.
+## How much of a column ice has taken, 0..1. At 1 the column is locked at its height above the swell when ice first took it.
 func set_hold(column: int, hold: float) -> void:
+	if _holds[column] <= 0.0 and hold > 0.0:
+		_pinned[column] = _heights[column] - swell(column, _swell_time)
 	_holds[column] = clampf(hold, 0.0, 1.0)
 	if _holds[column] >= 1.0:
-		_heights[column] = 0.0
+		_heights[column] = _pinned[column]
 		_velocities[column] = 0.0
+
+## The height ice holds a column at, world px above the rest line.
+func pinned(column: int) -> float:
+	return _pinned[column]
 
 func hold(column: int) -> float:
 	return _holds[column]
@@ -58,6 +68,7 @@ func hold(column: int) -> float:
 ## it); `swell_time` is the body's own clock, which the swell is a function of.
 func step(delta: float, rates: PackedFloat32Array, swell_time: float) -> void:
 	assert(rates.size() == _heights.size(), "One rate per column")
+	_swell_time = swell_time
 	if delta <= 0.0:
 		return
 	var substeps := maxi(1, ceili(delta / _profile.max_substep))
@@ -83,7 +94,7 @@ func swell(column: int, time: float) -> float:
 func _substep(dt: float, rates: PackedFloat32Array, swell_time: float) -> void:
 	var count := _heights.size()
 	for i in count:
-		_targets[i] = swell(i, swell_time) * (1.0 - _holds[i])
+		_targets[i] = lerpf(swell(i, swell_time), _pinned[i], _holds[i])
 	for i in count:
 		_accelerations[i] = 0.0
 		if rates[i] <= 0.0 or _holds[i] >= 1.0:

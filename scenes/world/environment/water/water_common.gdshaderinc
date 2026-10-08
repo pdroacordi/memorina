@@ -3,7 +3,7 @@
 
 #include "res://scenes/world/memory/dither_common.gdshaderinc"
 
-// Per-column data from WaterSurfaceTexture: r height above rest line (px), g foam (0..1), b floor depth (px), a ice solidity (0..1).
+// Per-column data from WaterSurfaceTexture: r height above rest line (px), g foam (0..1), b floor depth (px), a unused (ice is its own sheet, ice_sheet.gdshader).
 uniform sampler2D surface_data : filter_nearest, repeat_disable;
 // Rest waterline y and body left-edge x in world pixels.
 uniform float rest_y = 0.0;

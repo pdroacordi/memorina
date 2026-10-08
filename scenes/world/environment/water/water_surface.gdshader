@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-// Computes water colour, transmission, reflection, caustics, top line and ice.
+// Computes water colour, transmission, reflection, caustics and top line.
 //
 // Art uses world texels; memory gates and edge stippling use game pixels on the greyhush Bayer grid.
 //
@@ -12,7 +12,6 @@ shader_type canvas_item;
 
 uniform sampler2D body_ramp : filter_nearest, repeat_disable, hint_default_transparent;
 uniform sampler2D reflection_ramp : filter_nearest, repeat_disable, hint_default_black;
-uniform sampler2D ice_ramp : filter_nearest, repeat_disable, hint_default_white;
 uniform vec4 top_line_color : source_color = vec4(0.78, 0.88, 0.9, 1.0);
 uniform vec4 foam_color : source_color = vec4(0.94, 0.97, 0.98, 1.0);
 
@@ -28,7 +27,6 @@ uniform float caustic_rate = 1.5;
 uniform float caustic_density = 0.3;
 uniform float caustic_strength = 0.35;
 
-uniform float ice_thickness = 6.0;
 // Must use WaterBody's memory-driven clock so water freezes with the world; never use TIME.
 uniform float water_time = 0.0;
 
@@ -100,18 +98,6 @@ void fragment() {
 	if (depth < 1.0 || exposed_left || exposed_right || held > -1.0) {
 		bool foam = data.g > BAYER[wd_bayer_index(texel)];
 		colour = foam ? foam_color.rgb : top_line_color.rgb;
-	}
-
-	// Ice: crystals stippling in as the column sets, then a solid band with its
-	// own top line. It replaces the reflection where it stands.
-	float solidity = data.a;
-	if (solidity > 0.0 && depth < ice_thickness) {
-		int entries = textureSize(ice_ramp, 0).x;
-		int index = int(round(clamp(depth / ice_thickness, 0.0, 1.0) * float(entries - 1)));
-		vec3 ice = texelFetch(ice_ramp, ivec2(depth < 1.0 ? 0 : index, 0), 0).rgb;
-		if (solidity >= 1.0 || solidity > BAYER[wd_bayer_index(texel)]) {
-			colour = ice;
-		}
 	}
 
 	COLOR = vec4(colour, 1.0);

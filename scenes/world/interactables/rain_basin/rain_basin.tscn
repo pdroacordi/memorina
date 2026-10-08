@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scenes/world/interactables/freezable_water/freezable_water.gd" id="1_freeze"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_pool.tscn" id="2_pool"]
@@ -6,6 +6,11 @@
 [ext_resource type="Script" path="res://scenes/world/memory/song_receiver.gd" id="4_receiver"]
 [ext_resource type="Resource" path="res://resources/world/water/frost_ice.tres" id="5_ice"]
 [ext_resource type="Script" path="res://scenes/world/interactables/rain_basin/rain_basin.gd" id="6_rain"]
+[ext_resource type="Script" path="res://scenes/world/interactables/freezable_water/ice_sheet.gd" id="8_sheet"]
+[ext_resource type="Shader" path="res://scenes/world/interactables/freezable_water/ice_sheet.gdshader" id="9_sheet_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ice"]
+shader = ExtResource("9_sheet_shader")
 
 [node name="RainBasin" type="Node2D"]
 script = ExtResource("1_freeze")
@@ -20,6 +25,12 @@ rest_depth = 56.0
 collision_layer = 1
 collision_mask = 0
 script = ExtResource("3_collider")
+
+[node name="IceSheet" type="Node2D" parent="."]
+z_index = 51
+z_as_relative = false
+material = SubResource("ShaderMaterial_ice")
+script = ExtResource("8_sheet")
 
 [node name="SongReceiver" type="Area2D" parent="."]
 collision_layer = 0

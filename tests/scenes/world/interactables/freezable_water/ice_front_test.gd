@@ -185,3 +185,29 @@ func test_each_side_grows_at_its_own_memory() -> void:
 		if ice.solidity(ORIGIN + k) > 0.0:
 			right += 1
 	assert_int(left).is_less(right)
+
+## Ice forms only on water: the front crosses a dry column at its memory and freezes what lies beyond.
+func test_a_dry_column_never_freezes_and_the_front_crosses_it() -> void:
+	var ice := _ice(_profile(60.0))
+	var wet := PackedByteArray()
+	wet.resize(COLUMNS)
+	wet.fill(1)
+	wet[ORIGIN + 3] = 0
+	ice.freeze_from(ORIGIN)
+	for frame in roundi(1.0 / FRAME):
+		ice.advance(FRAME, _rates(1.0), wet)
+	assert_float(ice.solidity(ORIGIN + 3)).is_equal(0.0)
+	assert_bool(ice.is_solid(ORIGIN + 6)).is_true()
+
+func test_a_column_wet_later_freezes_then() -> void:
+	var ice := _ice(_profile(60.0))
+	var wet := PackedByteArray()
+	wet.resize(COLUMNS)
+	ice.freeze_from(ORIGIN)
+	for frame in roundi(0.5 / FRAME):
+		ice.advance(FRAME, _rates(1.0), wet)
+	assert_float(ice.solidity(ORIGIN)).is_equal(0.0)
+	wet.fill(1)
+	for frame in roundi(1.0 / FRAME):
+		ice.advance(FRAME, _rates(1.0), wet)
+	assert_bool(ice.is_solid(ORIGIN)).is_true()

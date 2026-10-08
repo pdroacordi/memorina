@@ -61,7 +61,7 @@ a pulse edge, so one clock per body cannot express it.
 - Semi-implicit Euler at `max_substep` 1/120 is stable at the default profile
   (ω·dt ≈ 0.75 < 2); rates are clamped to 1 because a larger one would break that.
 
-## Revision (2026-10-07, planned, not built)
+## Revision (2026-10-07, built with PZL-02)
 
 - A full hold no longer zeroes a column: the first hold pins `height - swell`, and the held
   column's target moves to that pin, so calm water still freezes flat while a crest or a

@@ -73,10 +73,75 @@ func test_a_dry_basin_has_nothing_to_freeze() -> void:
 	_basin._on_song_entered(FREEZE, _water.global_position)
 	assert_bool(_basin.is_frozen()).is_false()
 
-func test_frozen_it_holds_its_level() -> void:
+## Steps the ice and the rain together, as the scene would.
+func _run_frozen(seconds: float) -> void:
+	for i in int(seconds / 0.1):
+		_basin._physics_process(0.1)
+		_rain._physics_process(0.1)
+
+## Combinado 1 (design 02 section 8.4): the water sinks under the ice, which keeps its height.
+func test_frozen_it_keeps_draining_under_its_ice() -> void:
+	_rain_on(true)
+	_run(_rain.fill_time + 0.2)
+	var full := _water.level_range().x
+	_basin._on_song_entered(FREEZE, _water.global_position)
+	_run_frozen(1.0)
+	var collider := _basin.get_node("IceCollider") as IceCollider
+	assert_bool(collider.is_solid(0)).is_true()
+	_rain_on(false)
+	_run_frozen(1.0)
+	assert_float(_water.surface_rest_y()).is_greater(full)
+	assert_float(collider.segment_start(0).y).is_equal(full)
+
+func test_frozen_it_does_not_rise() -> void:
+	_rain_on(true)
+	_run(_rain.fill_time * 0.4)
+	_basin._on_song_entered(FREEZE, _water.global_position)
+	_run_frozen(0.5)
+	var level := _water.surface_rest_y()
+	_run_frozen(1.0)
+	assert_float(_water.surface_rest_y()).is_equal(level)
+
+func test_its_ice_lies_on_whole_pixels() -> void:
 	_rain_on(true)
 	_run(_rain.fill_time + 0.2)
 	_basin._on_song_entered(FREEZE, _water.global_position)
+	_run_frozen(1.0)
+	for column in _water.column_count():
+		if _basin._shape.has(column):
+			assert_float(_basin._shape.top(column)).is_equal(roundf(_basin._shape.top(column)))
+
+func test_ice_over_drained_water_is_gone_after_the_thaw() -> void:
+	_rain_on(true)
+	_run(_rain.fill_time + 0.2)
+	_basin._on_song_entered(FREEZE, _water.global_position)
+	_run_frozen(1.0)
 	_rain_on(false)
-	_run(1.0)
-	assert_float(_water.surface_rest_y()).is_equal(_water.level_range().x)
+	_run_frozen(_rain.drain_time + 15.0)
+	assert_bool(_water.is_dry()).is_true()
+	assert_bool(_basin.is_frozen()).is_false()
+	for column in _water.column_count():
+		assert_bool(_basin._shape.has(column)).is_false()
+	assert_bool((_basin.get_node("IceCollider") as IceCollider).is_solid(0)).is_false()
+
+## A log frozen in over draining water sinks after the thaw rather than jumping down (bugs/a-log-frozen-over-draining-water-teleports-down-at-the-thaw).
+func test_a_log_the_ice_lets_go_sinks_rather_than_jumps() -> void:
+	var floater := FLOATER.instantiate() as Floater
+	floater.position = Vector2(_water.global_position.x, _water.level_range().y)
+	add_child(floater)
+	auto_free(floater)
+	_rain_on(true)
+	for i in int((_rain.fill_time + 0.2) / 0.1):
+		_rain._physics_process(0.1)
+		floater._physics_process(0.1)
+	_basin._on_song_entered(FREEZE, _water.global_position)
+	_rain_on(false)
+	var largest := 0.0
+	for i in int((_rain.drain_time + 15.0) / 0.1):
+		_basin._physics_process(0.1)
+		_rain._physics_process(0.1)
+		var before := floater.ride_y()
+		floater._physics_process(0.1)
+		largest = maxf(largest, floater.ride_y() - before)
+	assert_float(largest).is_less_equal(floater.sink_speed * 0.1 + 1.0)
+	assert_bool(floater.is_afloat()).is_false()

@@ -44,7 +44,6 @@ var _texture: WaterSurfaceTexture
 var _rates := PackedFloat32Array()
 ## The air's horizontal speed over each column (Airflow), refreshed with _rates.
 var _winds := PackedFloat32Array()
-var _solidity := PackedFloat32Array()
 var _floors := PackedFloat32Array()
 # A stepped floor handed in before _ready (see set_floor): depth in world
 # pixels below the rest line, one per span of _floor_span px from the left.
@@ -97,7 +96,6 @@ func _ready() -> void:
 	_texture = WaterSurfaceTexture.new(columns)
 	_rates.resize(columns)
 	_winds.resize(columns)
-	_solidity.resize(columns)
 	_build_floors(columns)
 	add_to_group(GROUP)
 	_top_y = global_position.y
@@ -310,12 +308,27 @@ func set_hold(column: int, hold: float) -> void:
 	assert(_field != null, "%s has no surface to hold: it has no WaterProfile" % name)
 	_field.set_hold(column, hold)
 
-## How solid the ice over a column looks, 0..1; drawn from the next upload.
-func set_solidity(column: int, solidity: float) -> void:
-	_solidity[column] = solidity
+## The world y of the water's top in `column` as ice holds it, or INF where the column holds no water.
+func ice_top(column: int) -> float:
+	if not is_wet(column):
+		return INF
+	return surface_rest_y() - (_field.pinned(column) if _field else 0.0)
 
-func set_ice_thickness(pixels: int) -> void:
-	_set_uniform(&"ice_thickness", float(pixels))
+## Whether `column` holds water: not dry, not held out of a shell.
+func is_wet(column: int) -> bool:
+	return not is_dry() and _floors[column] > 0.0 and _dry[column] == 0
+
+## One byte per column, 1 where it holds water (IceFront freezes only those).
+func wet_columns() -> PackedByteArray:
+	var wet := PackedByteArray()
+	wet.resize(_floors.size())
+	for column in wet.size():
+		wet[column] = 1 if is_wet(column) else 0
+	return wet
+
+## Whether ice fully holds the column under `world_x`.
+func is_frozen_at(world_x: float) -> bool:
+	return _field != null and _field.hold(column_of(world_x)) >= 1.0
 
 func _wade(delta: float) -> void:
 	if _volume == null:
@@ -501,7 +514,7 @@ func _refresh_winds(left: float, width: int, y: float) -> void:
 		_winds[column] = wind
 
 func _upload() -> void:
-	_texture.write(_field, _clocks, _floors, _solidity)
+	_texture.write(_field, _clocks, _floors)
 
 func _push_look() -> void:
 	var placement := {

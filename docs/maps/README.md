@@ -274,6 +274,7 @@ Scene `res://scenes/world/interactables/floater/floater.tscn`, anchored at its c
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `draft` | float | `4.0` |
+| `sink_speed` | float | `240.0` |
 
 #### `R` - Bench
 

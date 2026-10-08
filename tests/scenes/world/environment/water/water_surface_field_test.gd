@@ -126,20 +126,28 @@ func test_a_held_column_ignores_a_splash() -> void:
 	field.disturb(10, 4.0)
 	assert_float(field.height(10)).is_equal(0.0)
 
-func test_full_hold_locks_a_column_flat() -> void:
+func test_full_hold_locks_calm_water_flat() -> void:
 	var field := _field()
-	field.disturb(10, 3.0)
 	field.set_hold(10, 1.0)
 	_run(field, _rates(1.0), 1.0)
 	assert_float(field.height(10)).is_equal(0.0)
 
+## A crest ice takes stays a crest (design 03 section 6.2): the ramp of Vendaval then Congelar.
+func test_full_hold_keeps_the_shape_it_held() -> void:
+	var field := _field()
+	field.disturb(10, 3.0)
+	field.set_hold(10, 1.0)
+	_run(field, _rates(1.0), 1.0)
+	assert_float(field.height(10)).is_equal_approx(3.0, 0.01)
+	assert_float(field.pinned(10)).is_equal_approx(3.0, 0.01)
+
 func test_a_partial_hold_settles_the_surface_sooner() -> void:
 	var free := _field()
 	var held := _field()
-	free.disturb(20, 4.0)
-	held.disturb(20, 4.0)
 	for i in COLUMNS:
 		held.set_hold(i, 0.6)
+	free.disturb(20, 4.0)
+	held.disturb(20, 4.0)
 	_run(free, _rates(1.0), 0.6)
 	_run(held, _rates(1.0), 0.6)
 	assert_float(_max_abs(held)).is_less(_max_abs(free))
@@ -153,3 +161,12 @@ func test_the_zig_zag_mode_dies_quickly() -> void:
 	for i in range(1, COLUMNS - 1):
 		worst = maxf(worst, absf(field.height(i) - 0.5 * (field.height(i - 1) + field.height(i + 1))))
 	assert_float(worst).is_less(0.1)
+
+func test_a_column_frozen_on_a_crest_is_a_wall_that_keeps_it() -> void:
+	var field := _field()
+	field.disturb(24, 6.0)
+	field.set_hold(24, 1.0)
+	field.disturb(18, 4.0)
+	_run(field, _rates(1.0), 3.0)
+	assert_float(field.height(24)).is_equal_approx(6.0, 0.01)
+	assert_float(_max_abs(field, 25, COLUMNS)).is_equal(0.0)

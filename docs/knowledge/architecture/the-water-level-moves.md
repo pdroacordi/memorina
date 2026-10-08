@@ -43,7 +43,7 @@ the authored level the painted one - readable in the room's text.
 A pool rising above a painted rest level, and ice outliving the water draining under it
 (an independent ice sheet, Phase 7).
 
-## Revision (2026-10-07, planned, not built)
+## Revision (2026-10-07, built with PZL-02)
 
 Both "Not yet" items are planned. Painting at the highest level stays.
 

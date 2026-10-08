@@ -60,8 +60,8 @@ func is_active() -> bool:
 			return true
 	return false
 
-## Advances ice by `delta` seconds using per-column memory rates in 0..1.
-func advance(delta: float, rates: PackedFloat32Array) -> void:
+## Advances ice by `delta` seconds using per-column memory rates in 0..1; a column freezes only while `wet` (empty: every column).
+func advance(delta: float, rates: PackedFloat32Array, wet: PackedByteArray = PackedByteArray()) -> void:
 	assert(rates.size() == _ice.size(), "One rate per column")
 	if _origin < 0 or delta <= 0.0:
 		return
@@ -71,7 +71,7 @@ func advance(delta: float, rates: PackedFloat32Array) -> void:
 	for i in _ice.size():
 		if _thawed[i] == 1:
 			_ice[i] = maxf(_ice[i] - delta / _profile.melt_time, 0.0)
-		elif _reached[i] == 1:
+		elif _reached[i] == 1 and (wet.is_empty() or wet[i] == 1):
 			_ice[i] = minf(_ice[i] + delta * rates[i] / _profile.crystallise_time, 1.0)
 
 ## Surface hold amount, 0..1.

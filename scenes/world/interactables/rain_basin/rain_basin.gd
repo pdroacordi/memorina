@@ -1,6 +1,6 @@
 class_name RainBasin extends Node
 
-## Raises a painted WaterBody from its rest to its painted reach under a RAIN pulse and freezes its current level (docs/design/02_mecanicas.md section 7.1; docs/design/03_mundo_e_ambiente.md section 6.5).
+## Raises a painted WaterBody from its rest to its painted reach under a RAIN pulse; frozen, it only drains (docs/design/02_mecanicas.md section 7.1; docs/design/03_mundo_e_ambiente.md section 6.5).
 
 ## Seconds to rise from rest to the reach at memory 1.
 @export var fill_time := 3.0
@@ -48,7 +48,8 @@ func level() -> float:
 func _physics_process(delta: float) -> void:
 	# Shelter forces the rain target to zero, draining the basin.
 	var target := 0.0 if _sheltered() else _target
-	if is_equal_approx(_level, target) or (_freezable and _freezable.is_frozen()):
+	# Ice is a lid: a frozen basin keeps draining under it but never rises.
+	if is_equal_approx(_level, target) or (target > _level and _freezable and _freezable.is_frozen()):
 		return
 	var rates := _water.column_rates()
 	var rate := 0.0
