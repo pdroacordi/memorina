@@ -206,6 +206,32 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   depends on clip geometry; probe it headless with a bare ScrollContainer
   (`gotchas/gui-focus-skips-a-neighbour-wholly-clipped-by-a-scroll-container`).
 
+- **Learned 2026-10-07 (empty house playtest)**: **another Godot window opening takes focus from the
+  runner, and Godot releases every held action.** A concurrent playtester's window stopped Ivo
+  mid-corridor while `move_left` was still "held" in the timeline. Re-send a long hold's press every
+  0.25 s (pressed: true repeatedly, one release at the end). That recovers within one step, but a
+  ~0.2 s stall can remain, so log positions to spot it. Two playtesters share one scratchpad: keep
+  your own subfolder and wrapper script, because the parent folder's `run.sh` was rewritten under
+  me mid-session.
+
+- **Learned 2026-10-07 (squall playtest)**: the session scratchpad is SHARED with sibling agents. Another
+  playtester's `out_sol1/` already held 30 frames when this run wrote there. Work in a private
+  subfolder (`<scratchpad>/<item>/`) for `--out`, `APPDATA`, logs and helper scripts. A small
+  Python generator (song → note presses, `logs(a, b, step)`, `shots(a, b, step)`) and a
+  `summ.py` that cuts each `[playtest] log` line to label/t/pos/vel/state/drawn/hp beat
+  hand-written JSON.
+- `log` does not print the wind. Read it from `vel.x`. A standing Ivo drifts at
+  `(wind - 90) * 0.4` px/s (so -132 = 420 px/s, -22.8 = 147). Moving right, he makes +60 in a
+  full 420 gust and +192 in a lull. `state=brace` means a headwind. To find a lull, log every
+  0.05 s and look for `vel 0` / `state=run`.
+- Wind is scaled by memory: trials sit at 0.35 unless a `MemorySource` lifts a spot, and a
+  `WindZone`'s clock also runs at that memory. A song's own pulse raises the memory around it,
+  so the same squall is weak before a song and full after. A `player_position` inside a zone
+  is blown to its upwind edge within a gust or two, so a control timeline must walk in and
+  act at once.
+- When the coordinator says the code changed, run `--import` before the next run and label
+  every result with the code state it saw.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
