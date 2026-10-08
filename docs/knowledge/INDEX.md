@@ -112,6 +112,7 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 - [memorina-notes-dropped-while-previous-rings](bugs/memorina-notes-dropped-while-previous-rings.md) — presses during a ringing note were silently dropped, so a correct phrase read as wrong; fixed with `MemorinaVoice.can_play_note()` / `min_note_gap`.
 - [creature-pass-bilinear-blur](bugs/creature-pass-bilinear-blur.md) — everything drawn through `CreatureMask` was linear-filtered; fixed by mirroring the root filter.
 - [off-centre-sprite-sheet-jumps-on-flip](bugs/off-centre-sprite-sheet-jumps-on-flip.md) — the Bloom sheets' body was off-centre, so each turn shifted it; re-padded to 128-wide frames.
+- [a-released-load-presses-ivo-into-the-floor](bugs/a-released-load-presses-ivo-into-the-floor.md) — Soltar played from directly under a `HangingLoad` drops it through Ivo (its mask excludes his layer, his includes its layer), and he is pressed 54 px into the floor, stuck in a fall past the pulse's end: a soft-lock. High, open (found in PZL-05's empty house).
 
 ## Gotchas
 
