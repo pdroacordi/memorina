@@ -246,6 +246,24 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     (x 15478; the tank's rest water is rows 18-19 since the follow-up).
   - Run speed 192 px/s, held-jump peak 146 px.
 
+- **Learned 2026-10-08 (frozen wave playtest)**: an edited `.gd` takes effect at the next run with
+  no `--import`, so a sibling's mid-session fix silently splits your runs. Store your `--import` log
+  and run `find scenes resources -newer <import.log>` before writing. If anything is listed, sort
+  the runs by their log time and re-run the decisive ones on the new code. `water_body.gd` and
+  `wind_crest.gd` changed between this session's 8th and 9th run.
+- `log` does not print a water surface. Measure a wind crest from screenshots: find the waterline
+  as the first row of 4 navy pixels (`b > r + 12 and r < 70`) in two screen columns inside the
+  wedge. The rise between them divided by their distance, times `crest_length` (256), is the
+  crest height. A slope ignores camera shift, but not the zoom a performance adds, so skip frames
+  within ~0.3 s of a ring-out. The runner's `t` excludes the performance freeze, and the crest
+  does not grow during it.
+- Frozen wave (`water_trial` section 2): `CrestSpawn` is world (15856, 5960) since the follow-up
+  (col 29, the shore's edge; it was 15792) (`trials_solstice` sits at x 9600). Shore 15680..15872, pool 15872..16256,
+  wall top y 5776, flat ice y 6008. Ivo stands against the wall at x 16246. From x 15792 the wall
+  is ~35 px past the right edge of the frame; from 15864 the wall is in frame. Congelar's ice thaws from the shore
+  1.5 s after its pulse at 48 px/s, so a timeline must step onto the ice 0.6-2 s after the pulse
+  (`drawn` turns false), or it falls in at the bank.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
