@@ -264,6 +264,20 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   1.5 s after its pulse at 48 px/s, so a timeline must step onto the ice 0.6-2 s after the pulse
   (`drawn` turns false), or it falls in at the bank.
 
+- **Learned 2026-10-08 (wall of water playtest)**: a held move survives a hazard respawn. A
+  timeline that holds `move_right` through a fall walks Ivo straight back off the bank, so one
+  mistake becomes two falls. End a hold before the fall you are testing, or log the respawn and
+  stop the hold there.
+- To see a pool below the frame from a ledge, hold `look_down` (re-sent every 0.25 s); the camera
+  peeks down within ~0.5 s. From the water trial's exit wall top the pool is otherwise off frame.
+- Wall of water (`water_trial` section 3): play at `player_position` [16688, 5960] (col 55, the
+  bank's edge; `ShellSpawn` is 16656). Bank 16576..16704 (y 6000), pool 16704..17216, exit wall top
+  y 5840 from x 17216. With Redoma drawn at t 1.5: pulse ~5.7, rise 6.5-8.3, contraction from
+  ~15.0, shell gone ~19.5. The raised floor is y 5943.9 and begins at x ~16872. Run-up: walk left
+  0.4 s, run right, jump 0.45 s after the run starts (takeoff x ~16704), then jump again at x ~17155.
+  Measure the level with the grey waterline (bright, `max - min < 30`) and the navy test above, in
+  columns outside the disc. The light-blue sky inside the disc also passes a plain brightness test.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
