@@ -4,8 +4,8 @@ type: bug
 title: A wind crest rises above the bank it piles against, so a gale stands pool water in mid-air
 status: fixed
 severity: medium
-tags: [water, wind, crest, gale, pzl-03]
-related: [architecture/wind-piles-a-bounded-crest, systems/air, systems/water, bugs/a-crest-built-off-screen-springs-in-overshooting, playtests/2026-10-08-frozen-wave]
+tags: [water, wind, crest, gale, pzl-03, pzl-06, rain-basin, displacement]
+related: [architecture/wind-piles-a-bounded-crest, architecture/the-shell-displaces-water-into-the-reach, architecture/a-pool-rests-below-its-painted-reach, systems/air, systems/water, bugs/a-crest-built-off-screen-springs-in-overshooting, playtests/2026-10-08-frozen-wave]
 created: 2026-10-08
 updated: 2026-10-08
 source_files:
@@ -13,6 +13,7 @@ source_files:
   - scenes/world/environment/water/water_body.gd
   - resources/world/water/water_profile.gd
   - resources/world/water/still_pool_profile.tres
+  - scenes/world/interactables/rain_basin/rain_basin.gd
 ---
 
 ## Summary
@@ -70,3 +71,35 @@ Not fixed. Either or both:
 A shape added to the water's target must stay inside the basin that holds it. When a new
 offset or level source is added, check it against the lowest bank of every painted pool, not
 only the puzzle it was made for.
+
+## Revision (2026-10-08): the cap is measured from a line that moves
+
+Found in review of the PZL-06 diff (uncommitted, 2026-10-08). Derived from the code and the
+water trial's map; not run in the engine.
+
+The fix caps the crest by each bank's height above the rest line, read once
+(`water_body.gd:386`, `_banks_read`) at the first physics frame. By then the deferred
+`set_level` has put a rising or displacing pool at its rest line. The crest's offsets are then
+added to the CURRENT line (`surface_rest_y()`), which two things move by up to the painted reach:
+`RainBasin` (Chuva, PZL-09) and, from PZL-06, `WaterBody._step_displacement` (Redoma). A raised
+pool therefore piles water up to `raise + min(cap, bank)` above its rest line, past a bank only
+`bank` high.
+
+- Water trial, section 1 (the rising tank, cols 10-17): rest line 8 px under row 18, reach 160 px
+  up, cap 128 (0.5 x 256 px of fetch). Left wall top (col 9, row 13): 168 px above the rest line.
+  With the water at the reach, a leftward gale stands the water above that wall top as soon as the
+  crest passes 8 px, up to 120 px above it. Rightward: up to 24 px above the passage floor (col 18,
+  row 10).
+- Water trial, section 3 (the wall of water, cols 56-71): the shell raises the line 64 px. The far
+  wall (col 72, row 11) is 168 px above the rest line and the cap 160, so a rightward crest over
+  104 px stands water above the exit ledge (up to 56 px). This needs Vendaval while the shell holds,
+  and part of the pool is sheltered by the shell, so whether play reaches it is unconfirmed.
+
+Fix (not done): cap against the bank above the current line. Keep the banks as world heights
+(`_bank_heights` once, as world y), and on each `_step_crest` pass
+`bank_world_top - surface_rest_y()` to `WindCrest.set_banks` (clamped at 0). A
+`wind_crest_test` case should raise the line and check the cap shrinks.
+
+## Resolution
+
+Fixed again (2026-10-08): `WaterBody` keeps the bank tops as world heights and sets the crest's banks from the current line every step.

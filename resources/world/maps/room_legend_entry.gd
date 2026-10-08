@@ -33,6 +33,8 @@ enum Anchor {
 @export var reach := false
 ## WATER: whether a reach painted above it may join it; a lake seen from above never rises.
 @export var takes_reach := true
+## WATER reach: true where Chuva raises the water to it, false where only Redoma's displaced water does.
+@export var rains := true
 ## ENTITY: what is placed.
 @export var scene: PackedScene
 @export var anchor: Anchor = Anchor.FEET

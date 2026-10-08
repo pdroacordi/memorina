@@ -21,6 +21,8 @@ const NO_TILE := -1
 @export var water: Dictionary[String, PackedVector2Array] = {}
 ## Reach cells by the symbol of the water they raise (their own symbol when they stand alone).
 @export var reach: Dictionary[String, PackedVector2Array] = {}
+## Shell reach cells (room map `u`) by the symbol of the water a Redoma shell raises to them.
+@export var shell_reach: Dictionary[String, PackedVector2Array] = {}
 ## One per placed thing: {"symbol": String, "cell": Vector2i, "params": Dictionary}.
 @export var entities: Array[Dictionary] = []
 

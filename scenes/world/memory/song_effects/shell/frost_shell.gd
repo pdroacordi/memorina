@@ -53,6 +53,8 @@ func _physics_process(delta: float) -> void:
 		radius = minf(radius, _radius)
 		if absf(radius - _radius) > 0.5:
 			_refit(radius)
+		# A body that came to be wholly inside without crossing the ring (a respawn) may leave too.
+		_adopt(radius - CLEARANCE)
 		_let_out(radius)
 	_shelter.radius = _radius if _closed else 0.0
 	_hold_water_out(_radius if _closed else 0.0)
@@ -79,6 +81,15 @@ func holds(global_point: Vector2) -> bool:
 
 func _close(radius: float) -> void:
 	_closed = true
+	_adopt(radius)
+	_refit(radius)
+	for shape: CollisionShape2D in _shapes:
+		shape.set_deferred(&"disabled", false)
+
+## Lets every Player or Props body within `radius` of the centre pass the ring: it is inside, and may leave.
+func _adopt(radius: float) -> void:
+	if radius <= 0.0:
+		return
 	var query := PhysicsShapeQueryParameters2D.new()
 	var circle := CircleShape2D.new()
 	circle.radius = radius
@@ -90,9 +101,6 @@ func _close(radius: float) -> void:
 		if body and not _inside.has(body):
 			_collider.add_collision_exception_with(body)
 			_inside.append(body)
-	_refit(radius)
-	for shape: CollisionShape2D in _shapes:
-		shape.set_deferred(&"disabled", false)
 
 func _refit(radius: float) -> void:
 	_radius = radius

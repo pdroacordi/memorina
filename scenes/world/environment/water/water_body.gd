@@ -38,6 +38,10 @@ const HAZARD_MIN_DEPTH := 3.0
 @export var hazard_depth := 4.0
 ## World pixels from the painted waterline down to where the water rests; the painted level is Chuva's reach.
 @export var rest_depth := 0.0
+## Rises around a Redoma shell up to its painted level (room map `u`, design 02 section 7.4).
+@export var displaces := false
+## How fast water held out of a shell rises around it or falls back, px/s at memory 1.
+@export var displace_speed := 60.0
 
 var _field: WaterSurfaceField
 var _texture: WaterSurfaceTexture
@@ -48,6 +52,12 @@ var _winds := PackedFloat32Array()
 var _crest: WindCrest
 var _offsets := PackedFloat32Array()
 var _banks_read := false
+# World y of the ground's top beside the left and right ends; -INF where no room map says.
+var _bank_tops := Vector2(-INF, -INF)
+# How far water held out of shells has raised the level, px, and whether ice forbids it to rise.
+var _displaced := 0.0
+var _displace_target := 0.0
+var _lid := false
 var _floors := PackedFloat32Array()
 # A stepped floor handed in before _ready (see set_floor): depth in world
 # pixels below the rest line, one per span of _floor_span px from the left.
@@ -128,11 +138,16 @@ func _ready() -> void:
 	_push_look()
 	_refresh_rates()
 	_upload()
+	if displaces:
+		# Deferred: the FreezableWater above sizes its receiver from the full water in its _ready, which runs after this one.
+		set_level.call_deferred(rest_level())
 
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint() or _texture == null:
 		return
-	# A crest is puzzle state: it builds off screen too, and the surface follows it there.
+	# A shell's displacement and a crest are puzzle state: they move off screen too.
+	if displaces:
+		_step_displacement(delta)
 	if _crest:
 		_step_crest(delta)
 	var cresting := _crest != null and not is_zero_approx(_crest.height())
@@ -319,6 +334,10 @@ func set_hold(column: int, hold: float) -> void:
 	assert(_field != null, "%s has no surface to hold: it has no WaterProfile" % name)
 	_field.set_hold(column, hold)
 
+## While `frozen`, water around a shell may fall but never rise: ice is a lid (Congelar then Redoma raises nothing).
+func set_lid(frozen: bool) -> void:
+	_lid = frozen
+
 ## The world y of the water's top in `column` as ice holds it, or INF where the column holds no water.
 func ice_top(column: int) -> float:
 	if not is_wet(column):
@@ -347,13 +366,38 @@ func _wade(delta: float) -> void:
 	for body: Vector2 in _volume.disturbances():
 		_field.disturb(column_of(body.x), -body.y * profile.wake_per_speed * delta)
 
+## Eases the level toward the rest line raised by the water the shells hold out, no higher than the painted level.
+func _step_displacement(delta: float) -> void:
+	var rest := rest_level()
+	var target := _displace_target
+	if _lid:
+		target = minf(target, _displaced)
+	if is_equal_approx(target, _displaced):
+		return
+	var rates := column_rates()
+	var rate := 0.0
+	for value: float in rates:
+		rate += value
+	_displaced = move_toward(_displaced, target, displace_speed * rate / rates.size() * delta)
+	set_level(rest - _displaced)
+
+## The rise the discs held out now give, px.
+func _displaced_rise() -> float:
+	if _held_out.is_empty():
+		return 0.0
+	var rest := rest_level()
+	var left := global_position.x - size.x * 0.5
+	return HeldDiscs.displaced_rise(left, column_width(), rest, _floor_bottoms, _held_out.values(), rest - _top_y)
+
 ## Steps the crest under the mean wind over the pool at its mean memory, and lays its wedge as column offsets.
 func _step_crest(delta: float) -> void:
 	# Read in the first physics frame: the room's map is built by then.
 	if not _banks_read:
 		_banks_read = true
-		var banks := _bank_heights()
-		_crest.set_banks(banks.x, banks.y)
+		_bank_tops = _bank_top_ys()
+	# Measured from the line as it stands now: rain or a shell may have raised it.
+	var line := surface_rest_y()
+	_crest.set_banks(line - _bank_tops.x, line - _bank_tops.y)
 	var rates := column_rates()
 	var wind := 0.0
 	var rate := 0.0
@@ -364,40 +408,35 @@ func _step_crest(delta: float) -> void:
 	for column in _offsets.size():
 		_offsets[column] = _crest.offset(column, _offsets.size(), column_width())
 
-## The ground's height above the rest line beside the left and right ends, px; INF where no room map says.
-func _bank_heights() -> Vector2:
+## World y of the ground's top beside the left and right ends; -INF (no cap) where no room map says.
+func _bank_top_ys() -> Vector2:
 	var room := RoomMapNode.at(self, global_position)
 	if room == null:
-		return Vector2(INF, INF)
+		return Vector2(-INF, -INF)
 	var left := global_position.x - size.x * 0.5
-	return Vector2(_bank_height(room, left - 1.0), _bank_height(room, left + size.x + 1.0))
+	return Vector2(_bank_top_y(room, left - 1.0), _bank_top_y(room, left + size.x + 1.0))
 
-func _bank_height(room: RoomMapNode, x: float) -> float:
-	var line := surface_rest_y()
-	var cell := room.cell_at(Vector2(x, line))
+func _bank_top_y(room: RoomMapNode, x: float) -> float:
+	var cell := room.cell_at(Vector2(x, _bottom_y))
 	while room.map.contains(cell) and room.map.ground_at(cell) != Enums.Ground.NONE:
 		cell.y -= 1
-	return maxf(line - room.cell_rect(cell).end.y, 0.0)
+	return room.cell_rect(cell).end.y
 
 func _held_changed() -> void:
+	if displaces:
+		_displace_target = _displaced_rise()
 	_refresh_dry()
 	_push_held()
 	_refit_hazard()
 
-## Must use the same disc test as `wc_held()` in water_common.gdshaderinc.
+## HeldDiscs.contains() is the GDScript side of `wc_held()` in water_common.gdshaderinc.
 func _refresh_dry() -> void:
 	var left := global_position.x - size.x * 0.5
 	var width := column_width()
 	var line := surface_rest_y()
 	var discs: Array = _held_out.values()
 	for column in _dry.size():
-		var point := Vector2(left + (column + 0.5) * width, line)
-		var dry := 0
-		for disc: Vector3 in discs:
-			if point.distance_to(Vector2(disc.x, disc.y)) < disc.z:
-				dry = 1
-				break
-		_dry[column] = dry
+		_dry[column] = 1 if HeldDiscs.contains(Vector2(left + (column + 0.5) * width, line), discs) else 0
 
 func _push_held() -> void:
 	var discs := PackedVector4Array()

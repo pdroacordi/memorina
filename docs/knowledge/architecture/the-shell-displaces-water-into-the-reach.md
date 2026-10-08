@@ -1,7 +1,7 @@
 ---
 id: architecture/the-shell-displaces-water-into-the-reach
 type: architecture
-title: Redoma's held-out volume raises the pool into its painted reach, and Congelar freezes the raised water and its curved edge (PLAN for PZL-06)
+title: Redoma's held-out volume raises the pool into its painted reach, and Congelar freezes the raised water and its curved edge (PZL-06)
 status: active
 tags: [water, redoma, bell-jar, displacement, freeze, ice, held-discs, plan, pzl-06]
 related: [architecture/ice-is-its-own-sheet, architecture/a-pool-rests-below-its-painted-reach, architecture/the-bell-jar-closes-once, architecture/water-two-projections, systems/bell-jar, systems/water, gotchas/glsl-gdscript-math-must-be-duplicated, bugs/water-that-returns-leaves-its-dry-floor-as-safe-ground]
@@ -16,7 +16,7 @@ source_files:
 
 ## Summary
 
-PLAN, not built (2026-10-07); its geometry needs the user's confirmation (end of file). Inverno
+Built 2026-10-08 (PZL-06) with the user's answers to the questions at the end ("Chão elevado", "Só a Redoma", "Não precisa"): the cap is a shell reach of its own (`u`, not `r`), there is no dam (the floor, not the arc, is the way up), and `BasinVolume` became `HeldDiscs.displaced_rise` (held area below the rest line over the wet width). The real rise is lower than the estimate below (about 71 px, not 110-130, which counted disc area above the rest line), so the trial's reach is 2 rows and its exit 5 cells up. Inverno
 Logico 2 (design 02 §8, §7.4). The user chose "Água sobe em volta" on 2026-10-07: the water the
 shell displaces rises around it, and the frozen wall stands above the normal level. Plan: the
 volume held out of the shells' discs raises the whole body's level, solved for volume and clamped
@@ -115,3 +115,13 @@ the shell's lower arc (the curved wall). Built on `ice-is-its-own-sheet`.
    If "fica quando a casca some" must hold for the arc, either a live shell holding the body pauses
    its ice's thaw clock (one rule in `IceFront`) or this pool kind gets its own `IceProfile` (a new
    preset and character). Not needed for the solution above.
+
+## Revision (2026-10-08, as built)
+
+The Decision and Consequences above are the plan. What was built: `HeldDiscs` (pure: `contains`,
+`held_area`, `displaced_rise`; no `BasinVolume`, no `chord`/`topmost_water`); `WaterBody.displaces`,
+`displace_speed` (on the body, not the profile), `set_lid`, the target recomputed only when the
+discs change (`_held_changed`); a shell reach of its own (`u`) instead of `r`; no dam. Suites:
+`held_discs_test`, `water_displacement_test`, the parser and basins tests, `water_trial_test`
+section 3. The wind crest's bank cap is measured from the line as it stands each step, so a raised
+pool still piles no water over its banks.

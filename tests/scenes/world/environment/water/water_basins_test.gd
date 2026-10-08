@@ -104,3 +104,11 @@ func test_reach_wider_than_its_water_rests_at_the_water() -> void:
 func test_a_rest_above_row_zero_is_counted_from_the_surface() -> void:
 	var built := WaterBasins.build(_cells(["  ", "##"], Vector2i(0, -5)), _cells(["##", "  "], Vector2i(0, -5)))
 	assert_int(built.basins[0].rest).is_equal(1)
+
+func test_a_rain_reach_rains_and_a_shell_reach_does_not() -> void:
+	var water := _cells(["   ", "###"])
+	var rained := WaterBasins.build(water, _cells(["###", "   "]))
+	var held := WaterBasins.build(water, [], _cells(["###", "   "]))
+	assert_bool(rained.basins[0].rains).is_true()
+	assert_bool(held.basins[0].rains).is_false()
+	assert_int(held.basins[0].rest).is_equal(1)

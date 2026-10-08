@@ -1,0 +1,198 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 22.0,
+ "player_position": [
+  16688.0,
+  5960.0
+ ],
+ "known_songs": [
+  0,
+  1,
+  7
+ ],
+ "locale": "en",
+ "steps": [
+  {
+   "t": 1.0,
+   "log": "start"
+  },
+  {
+   "t": 1.2,
+   "screenshot": "start"
+  },
+  {
+   "t": 1.5,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 1.55,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.1,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 2.15,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 2.55,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 2.95,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.3,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 3.35,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 3.7,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.75,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.1,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 4.15,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 5.5,
+   "log": "rain_ring_05.50"
+  },
+  {
+   "t": 5.6,
+   "log": "rain_ring_05.60"
+  },
+  {
+   "t": 5.7,
+   "log": "rain_ring_05.70"
+  },
+  {
+   "t": 5.8,
+   "log": "rain_ring_05.80"
+  },
+  {
+   "t": 5.9,
+   "log": "rain_ring_05.90"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "rain_06.00"
+  },
+  {
+   "t": 6.75,
+   "screenshot": "rain_06.75"
+  },
+  {
+   "t": 7.5,
+   "screenshot": "rain_07.50"
+  },
+  {
+   "t": 8.25,
+   "screenshot": "rain_08.25"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "rain_09.00"
+  },
+  {
+   "t": 9.75,
+   "screenshot": "rain_09.75"
+  },
+  {
+   "t": 10.5,
+   "screenshot": "rain_10.50"
+  },
+  {
+   "t": 11.25,
+   "screenshot": "rain_11.25"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "rain_12.00"
+  },
+  {
+   "t": 12.75,
+   "screenshot": "rain_12.75"
+  },
+  {
+   "t": 13.5,
+   "screenshot": "rain_13.50"
+  },
+  {
+   "t": 14.25,
+   "screenshot": "rain_14.25"
+  },
+  {
+   "t": 15.0,
+   "screenshot": "rain_15.00"
+  },
+  {
+   "t": 15.75,
+   "screenshot": "rain_15.75"
+  },
+  {
+   "t": 16.5,
+   "screenshot": "rain_16.50"
+  },
+  {
+   "t": 17.25,
+   "screenshot": "rain_17.25"
+  },
+  {
+   "t": 18.0,
+   "screenshot": "rain_18.00"
+  },
+  {
+   "t": 18.75,
+   "screenshot": "rain_18.75"
+  },
+  {
+   "t": 19.5,
+   "screenshot": "rain_19.50"
+  },
+  {
+   "t": 20.25,
+   "screenshot": "rain_20.25"
+  },
+  {
+   "t": 21.0,
+   "screenshot": "rain_21.00"
+  }
+ ]
+}

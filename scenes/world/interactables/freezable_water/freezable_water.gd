@@ -34,6 +34,7 @@ func _ready() -> void:
 	_water.fit_area(_receiver_shape, -RECEIVER_HEADROOM)
 
 func _physics_process(delta: float) -> void:
+	_water.set_lid(_front.is_active())
 	if not _front.is_active():
 		return
 	_front.advance(delta, _water.column_rates(), _water.wet_columns())

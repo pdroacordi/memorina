@@ -7,6 +7,8 @@ texture = ExtResource("1_cell")
 0:0/0 = 0
 0:0/1 = 1
 0:0/1/modulate = Color(1, 1, 1, 0.45)
+0:0/2 = 2
+0:0/2/modulate = Color(0.8, 0.9, 1, 0.45)
 
 [resource]
 sources/0 = SubResource("TileSetAtlasSource_water")

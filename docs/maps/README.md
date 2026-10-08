@@ -118,6 +118,7 @@ else in the code knows what a character means.
 | `F` | `[grid]` | entity | - | A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside. |
 | `D` | `[grid]` | entity | - | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
 | `r` | `[water]` | water | - | Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake. |
+| `u` | `[water]` | water | - | Where water a Redoma shell holds out rises to: paint it above f or ~ water in the same pit. While a shell holds water out of its disc the pool rises around it, up to here, and Congelar can fix it there. The rain never raises it. Never alone, never over a lake. |
 | `O` | `[grid]` | entity | - | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
 | `R` | `[grid]` | entity | - | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
 <!-- /generated:legend -->

@@ -85,7 +85,7 @@ Read the entry before touching the system. The rule beside each is the one most 
 | Air | [`systems/air`](docs/knowledge/systems/air.md) | Wind is a velocity the air carries, never a force. |
 | Weight, presence, release | [`systems/weight-presence-release`](docs/knowledge/systems/weight-presence-release.md) | Release signals are emitted deferred (physics flush). |
 | Roots and climbing | [`systems/roots-and-climbing`](docs/knowledge/systems/roots-and-climbing.md) | Roots join earth to earth; stone never roots. |
-| Bell jar (Redoma) | [`systems/bell-jar`](docs/knowledge/systems/bell-jar.md) | `wc_held()` and `WaterBody._refresh_dry()` are the same test: change both. |
+| Bell jar (Redoma) | [`systems/bell-jar`](docs/knowledge/systems/bell-jar.md) | `wc_held()` and `HeldDiscs.contains()` are the same test: change both. |
 | Solstice | [`systems/solstice`](docs/knowledge/systems/solstice.md) | Stretch takes once, only while a pulse opens or holds. |
 | Water | [`systems/water`](docs/knowledge/systems/water.md) | Reflect below z 50, cover water above it. Never `TIME` or `FRAGCOORD` in water shaders. Hazards detect the body, never the hurtbox. |
 | Life, benches, death | [`systems/life-benches-death`](docs/knowledge/systems/life-benches-death.md) | Only benches save. Death rebuilds the world by swapping `game.tscn`, never `reload_current_scene()`. Headless runs and the tool runners (playtest, GdUnit) never touch a player's save (`BootPolicy`). Move a character with `Character.teleport`, never a position write. |

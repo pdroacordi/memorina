@@ -67,11 +67,11 @@ func _build() -> void:
 				_ground.set_cell(cell, GroundAutotile.SOURCE_ID, RoomMap.tile_coords(packed), RoomMap.tile_alternative(packed))
 	_adopt(_ground)
 	var symbols: Array[String] = map.water.keys()
-	for symbol: String in map.reach:
+	for symbol: String in map.reach.keys() + map.shell_reach.keys():
 		if not symbol in symbols:
 			symbols.append(symbol)
 	for symbol: String in symbols:
-		_pour(map.legend.entry(symbol), map.water.get(symbol, PackedVector2Array()), map.reach.get(symbol, PackedVector2Array()))
+		_pour(map.legend.entry(symbol), map.water.get(symbol, PackedVector2Array()), map.reach.get(symbol, PackedVector2Array()), map.shell_reach.get(symbol, PackedVector2Array()))
 	var entities := Node2D.new()
 	entities.name = ENTITIES
 	# Add the complete entity set together so links resolve regardless of map order.
@@ -80,11 +80,12 @@ func _build() -> void:
 	_adopt(entities)
 
 ## Paint finer water cells before adding the layer, because its `_ready` creates bodies.
-func _pour(entry: RoomLegendEntry, cells: PackedVector2Array, reach: PackedVector2Array) -> void:
+func _pour(entry: RoomLegendEntry, cells: PackedVector2Array, reach: PackedVector2Array, shell_reach: PackedVector2Array) -> void:
 	var layer := entry.water_layer.instantiate() as WaterLayer
 	assert(layer != null, "legend '%s': water_layer must be a WaterLayer preset" % entry.symbol)
 	_paint(layer, cells, 0)
 	_paint(layer, reach, WaterLayer.REACH_ALTERNATIVE)
+	_paint(layer, shell_reach, WaterLayer.SHELL_REACH_ALTERNATIVE)
 	layer.name = "Water_%s" % entry.symbol.uri_encode()
 	_adopt(layer)
 

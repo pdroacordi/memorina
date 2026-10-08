@@ -18,7 +18,7 @@ extends EditorImportPlugin
 ## (room_files_test.gd re-parses the text, so it guards the maps, not a
 ## machine's stale imports.) A legend EDIT alone needs a reimport too.
 
-const FORMAT_VERSION := 3
+const FORMAT_VERSION := 4
 
 func _get_format_version() -> int:
 	return FORMAT_VERSION

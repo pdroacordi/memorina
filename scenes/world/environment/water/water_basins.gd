@@ -9,16 +9,20 @@ var basins: Array[Basin] = []
 var unreachable: Array[Vector2i] = []
 
 ## `reach` cells are where Chuva brings the water above the painted rest (docs/knowledge/architecture/a-pool-rests-below-its-painted-reach.md).
-static func build(cells: Array[Vector2i], reach: Array[Vector2i] = []) -> WaterBasins:
+static func build(cells: Array[Vector2i], reach: Array[Vector2i] = [], shell_reach: Array[Vector2i] = []) -> WaterBasins:
 	var result := WaterBasins.new()
 	var painted: Dictionary[Vector2i, bool] = {}
 	for cell: Vector2i in cells:
 		painted[cell] = true
+	# Each reach cell, true where rain raises the water to it.
 	var reached: Dictionary[Vector2i, bool] = {}
 	for cell: Vector2i in reach:
 		painted[cell] = true
 		reached[cell] = true
-	var all := cells + reach
+	for cell: Vector2i in shell_reach:
+		painted[cell] = true
+		reached[cell] = false
+	var all := cells + reach + shell_reach
 	var seen: Dictionary[Vector2i, bool] = {}
 	for cell: Vector2i in _sorted(all):
 		if seen.has(cell):
@@ -55,6 +59,8 @@ func _pour(component: Array[Vector2i], reached: Dictionary[Vector2i, bool]) -> v
 			while cells.has(Vector2i(x, surface + depth)):
 				var cell := Vector2i(x, surface + depth)
 				claimed[cell] = true
+				if reached.get(cell, false):
+					basin.rains = true
 				if not reached.has(cell) and (not has_rest or cell.y < rest_row):
 					rest_row = cell.y
 					has_rest = true
@@ -99,6 +105,8 @@ class Basin:
 	var depths := PackedInt32Array()
 	## Rows from the surface down to the water at rest: 0 without reach, deepest() when all of it is reach (dry).
 	var rest := 0
+	## Whether Chuva raises it (a rain reach); false for water only a shell raises, or with no reach.
+	var rains := false
 
 	func width() -> int:
 		return depths.size()

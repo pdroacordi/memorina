@@ -58,7 +58,7 @@ vec4 wc_ramp_flat(sampler2D ramp, float depth) {
 	return texelFetch(ramp, ivec2(clamp(int(depth / depth_band_px), 0, entries - 1), 0), 0);
 }
 
-// Signed distance to the nearest held disc in px; positive is inside.
+// Signed distance to the nearest held disc in px; positive is inside. Must match HeldDiscs.contains() (held_discs.gd).
 float wc_held(vec2 point) {
 	float inside = -1e6;
 	for (int i = 0; i < held_count; i++) {

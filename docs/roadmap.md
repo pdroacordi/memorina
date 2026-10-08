@@ -56,6 +56,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | SONG-10 | Tune `note_cues` against each track | | `[ ]` | | 2026-10-02 | Placeholders 0.5 s apart. |
 | SONG-11 | Effect durations calibrated | 02 §9 | `[ ]` | | 2026-10-02 | `IceProfile` and other timings are first guesses. |
 | SONG-12 | Root bridge strands meet level | | `[ ]` | | 2026-10-07 | The two strands meet 4 px apart in height: `bugs/root-bridge-strands-meet-at-a-step`. |
+| SONG-13 | Ice that reads as a floor | | `[ ]` | | 2026-10-08 | A raised ice floor over open water reads as a 2-3 px pale line (`playtests/2026-10-08-wall-of-water`); the sheet is a flat fill. Needs art. |
 
 ## Puzzles
 
@@ -66,7 +67,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | PZL-03 | Combinado 2: Vendaval then Congelar, frozen crest ramp | 02 §8.4 | `[x]` | | 2026-10-08 | Wind piles a bounded crest; ice pins it. The water trial's frozen wave. `systems/air`, `architecture/wind-piles-a-bounded-crest` |
 | PZL-04 | Combinado 3: Soltar then Enraizar, catch in mid-fall | 02 §8.4 | `[ ]` | | 2026-10-02 | |
 | PZL-05 | Combinado 4: Solstício, Sombra and Soltar, the empty house | 02 §8.4 | `[x]` | | 2026-10-07 | `empty_house` in the Solstice trials; a gate's `second_trigger_path`; Solstice's stretch is 3.0x (user, 2026-10-07). `systems/solstice`, `systems/weight-presence-release` |
-| PZL-06 | Redoma then Congelar: curved ice wall (Inverno Lógico 2) | 02 §7.4 | `[ ]` | | 2026-10-02 | |
+| PZL-06 | Redoma then Congelar: curved ice wall (Inverno Lógico 2) | 02 §7.4 | `[x]` | | 2026-10-08 | Water held out of the shell rises around it to a shell reach (`u`); Congelar fixes it as a raised floor (user, 2026-10-08). The water trial's section 3. `systems/bell-jar` |
 | PZL-07 | Windy-spot puzzle for Redoma (Inverno Lógico 1) | 02 §8 | `[x]` | | 2026-10-07 | Winter trial puzzle 2: Redoma, then Soltar on a drawbridge in a remembered squall. `systems/bell-jar`, `systems/air` |
 | PZL-08 | Chuva then Enraizar in a trial (wet earth) | 02 §7.4 | `[x]` | | 2026-10-07 | Spring trial puzzle 5. A joined wet bridge holds while Enraizar does (user, 2026-10-07). `systems/roots-and-climbing` |
 | PZL-09 | Rising pool above a painted rest level | 03 §6.5 | `[x]` | | 2026-10-07 | `r` is a reach painted above `~`/`f` water; the water trial's tank. `systems/water`, `architecture/a-pool-rests-below-its-painted-reach` |

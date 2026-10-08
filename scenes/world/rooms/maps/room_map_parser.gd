@@ -140,6 +140,7 @@ static func _read_water(map: RoomMap, rows: PackedStringArray, lines: Array[int]
 		result.errors.append("%s:%d: [water] has %d rows, [grid] has %d" % [source, lines[0], rows.size(), map.size.y])
 		return
 	var reach: Dictionary[Vector2i, String] = {}
+	var shell_reach: Dictionary[Vector2i, String] = {}
 	for y: int in rows.size():
 		var row := rows[y]
 		if row.length() > map.size.x:
@@ -155,17 +156,26 @@ static func _read_water(map: RoomMap, rows: PackedStringArray, lines: Array[int]
 				continue
 			var cell := map.origin + Vector2i(x, y)
 			if entry.reach:
-				reach[cell] = symbol
+				if entry.rains:
+					reach[cell] = symbol
+				else:
+					shell_reach[cell] = symbol
 				continue
 			if not map.water.has(symbol):
 				map.water[symbol] = PackedVector2Array()
 			var cells: PackedVector2Array = map.water[symbol]
 			cells.append(Vector2(cell))
 			map.water[symbol] = cells
-	_resolve_reach(map, reach, lines, source, result)
+	_resolve_reach(map, reach, map.reach, lines, source, result)
+	_resolve_reach(map, shell_reach, map.shell_reach, lines, source, result)
+	for cell: Vector2i in shell_reach:
+		for step: Vector2i in WaterBasins.NEIGHBOURS:
+			if reach.has(cell + step):
+				_reach_error(map, cell, shell_reach[cell], "touches a rain reach: a pool rises with the rain or with a shell, not both", lines, source, result)
+				return
 
 ## Joins each group of reach cells to the one kind of water it stands on (docs/knowledge/architecture/a-pool-rests-below-its-painted-reach.md).
-static func _resolve_reach(map: RoomMap, reach: Dictionary[Vector2i, String], lines: Array[int], source: String, result: Result) -> void:
+static func _resolve_reach(map: RoomMap, reach: Dictionary[Vector2i, String], into: Dictionary[String, PackedVector2Array], lines: Array[int], source: String, result: Result) -> void:
 	var water: Dictionary[Vector2i, String] = {}
 	for symbol: String in map.water:
 		for cell: Vector2 in map.water[symbol]:
@@ -210,10 +220,13 @@ static func _resolve_reach(map: RoomMap, reach: Dictionary[Vector2i, String], li
 			if not low.is_empty():
 				_reach_error(map, low[0], reach[low[0]], "is beside or below its water's rest: a reach is only painted above it", lines, source, result)
 				continue
-		var cells: PackedVector2Array = map.reach.get(host, PackedVector2Array())
+		if hosts.is_empty() and not map.legend.entry(host).rains:
+			_reach_error(map, start, reach[start], "stands on no water: only a shell's displaced water rises to it", lines, source, result)
+			continue
+		var cells: PackedVector2Array = into.get(host, PackedVector2Array())
 		for cell: Vector2i in group:
 			cells.append(Vector2(cell))
-		map.reach[host] = cells
+		into[host] = cells
 
 static func _reach_error(map: RoomMap, cell: Vector2i, symbol: String, problem: String, lines: Array[int], source: String, result: Result) -> void:
 	var local := cell - map.origin

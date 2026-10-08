@@ -72,6 +72,16 @@ water_layer = ExtResource("5_freezable")
 reach = true
 description = "Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake."
 
+[sub_resource type="Resource" id="shell_reach"]
+script = ExtResource("2_entry")
+symbol = "u"
+kind = 2
+ground = 0
+water_layer = ExtResource("5_freezable")
+reach = true
+rains = false
+description = "Where water a Redoma shell holds out rises to: paint it above f or ~ water in the same pit. While a shell holds water out of its disc the pool rises around it, up to here, and Congelar can fix it there. The rain never raises it. Never alone, never over a lake."
+
 [sub_resource type="Resource" id="floater"]
 script = ExtResource("2_entry")
 symbol = "O"
@@ -175,4 +185,4 @@ description = "A bench, standing on this cell: down sits Ivo on it, which heals 
 
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("floater"), SubResource("bench")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("floater"), SubResource("bench")])

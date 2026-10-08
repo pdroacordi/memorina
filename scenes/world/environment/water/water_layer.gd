@@ -4,6 +4,8 @@ class_name WaterLayer extends TileMapLayer
 
 ## Tile alternative that paints a reach: where Chuva raises the water, not water at rest.
 const REACH_ALTERNATIVE := 1
+## Tile alternative that paints a shell reach: where Redoma's displaced water rises, never the rain.
+const SHELL_REACH_ALTERNATIVE := 2
 
 ## Scene instantiated for each basin; its root or `Water` child must be a WaterBody.
 @export var body_scene: PackedScene
@@ -28,12 +30,16 @@ func _ready() -> void:
 	enabled = false
 	var cells: Array[Vector2i] = []
 	var reach: Array[Vector2i] = []
+	var shell_reach: Array[Vector2i] = []
 	for cell: Vector2i in get_used_cells():
-		if get_cell_alternative_tile(cell) == REACH_ALTERNATIVE:
-			reach.append(cell)
-		else:
-			cells.append(cell)
-	var basins := WaterBasins.build(cells, reach)
+		match get_cell_alternative_tile(cell):
+			REACH_ALTERNATIVE:
+				reach.append(cell)
+			SHELL_REACH_ALTERNATIVE:
+				shell_reach.append(cell)
+			_:
+				cells.append(cell)
+	var basins := WaterBasins.build(cells, reach, shell_reach)
 	for cell: Vector2i in basins.unreachable:
 		push_warning("%s: water painted at %s is not below its basin's surface (under terrain, or a side arm) and is not drawn" % [get_path(), cell])
 	for basin: WaterBasins.Basin in basins.basins:
@@ -41,11 +47,12 @@ func _ready() -> void:
 
 func _pour(basin: WaterBasins.Basin) -> Node2D:
 	var cell := Vector2(tile_set.tile_size)
-	var rising := basin.rest > 0
+	var rising := basin.rest > 0 and basin.rains
 	assert(not rising or rising_body_scene != null, "%s: a reach is painted but this water never rises" % name)
 	var instance := (rising_body_scene if rising else body_scene).instantiate() as Node2D
 	var body := _water_body_of(instance)
 	body.rest_depth = basin.rest * cell.y
+	body.displaces = basin.rest > 0 and not basin.rains
 	# Each water column must fit within one cell to preserve its floor depth.
 	assert(tile_set.tile_size.x % body.column_width() == 0,
 		"%s: a water column (%d px) must divide a cell (%d px)" % [name, body.column_width(), tile_set.tile_size.x])

@@ -14,6 +14,7 @@ func before_test() -> void:
 		_water("f"),
 		_lake("w"),
 		_reach("r"),
+		_shell_reach("u"),
 		_thing("B"),
 	]
 
@@ -37,6 +38,11 @@ func _lake(symbol: String) -> RoomLegendEntry:
 func _reach(symbol: String) -> RoomLegendEntry:
 	var entry := _water(symbol)
 	entry.reach = true
+	return entry
+
+func _shell_reach(symbol: String) -> RoomLegendEntry:
+	var entry := _reach(symbol)
+	entry.rains = false
 	return entry
 
 func _thing(symbol: String) -> RoomLegendEntry:
@@ -227,3 +233,32 @@ func test_a_reach_beside_its_water_is_an_error() -> void:
 	var result := _parse("[grid]\n#...#\n#...#\n#####\n[water]\n.rrr.\n.r~~.\n.....\n")
 	assert_bool(result.ok()).is_false()
 	assert_str(result.errors[0]).contains("beside or below its water's rest")
+
+func test_a_shell_reach_joins_its_water_apart_from_the_rain() -> void:
+	var map := _parse("[grid]
+#..#
+#..#
+####
+[water]
+.uu.
+.ff.
+....
+").map
+	assert_int(map.shell_reach["f"].size()).is_equal(2)
+	assert_bool(map.reach.has("f")).is_false()
+
+func test_a_shell_reach_on_no_water_is_an_error() -> void:
+	var result := _parse("[grid]
+#..#
+####
+[water]
+.uu.
+....
+")
+	assert_bool(result.ok()).is_false()
+	assert_str(result.errors[0]).contains("stands on no water")
+
+func test_a_pool_rises_with_the_rain_or_a_shell_not_both() -> void:
+	var result := _parse("[grid]\n#...#\n#...#\n#####\n[water]\n.ruu.\n.fff.\n.....\n")
+	assert_bool(result.ok()).is_false()
+	assert_str(result.errors[0]).contains("rises with the rain or with a shell")

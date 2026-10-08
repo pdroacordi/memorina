@@ -20,6 +20,10 @@ const SHORE_COL := 29
 const WAVE_WALL_COL := 42
 ## World seconds from drawing the Memorina for Congelar to its ice reaching the wall, measured in playtests/2026-10-08-frozen-wave.
 const CONGELAR_TO_WALL := 7.2
+const SHELL_STATS := "res://resources/memory/bell_jar_pulse_stats.tres"
+## Where Ivo plays Redoma in the wall of water, and the far wall with the exit on top.
+const BANK_COL := 55
+const EXIT_WALL_COL := 72
 
 var _map: RoomMap
 
@@ -200,3 +204,71 @@ func test_every_part_of_the_full_ramp_is_walkable() -> void:
 	var points := shape.segment_points(per_segment)
 	for i in points.size() - 1:
 		assert_bool(IceSheetShape.walkable(points, i, IceCollider.MAX_FLOOR_ANGLE)).is_true()
+
+# --- The wall of water ---------------------------------------------------------
+
+## The wall of water's pool, as (first column, one past the last).
+func _shell_pool() -> Vector2i:
+	var start := -1
+	for col: int in range(BANK_COL, _map.size.x):
+		var open := not _solid(col, FLOOR_ROW)
+		if open and start < 0:
+			start = col
+		elif not open and start >= 0:
+			return Vector2i(start, col)
+	return Vector2i.ZERO
+
+## Height above the bank of the rest line's top painted row of `cells` in the shell pool.
+func _shell_level(cells: PackedVector2Array) -> float:
+	var pool := _shell_pool()
+	var top := _map.size.y
+	for cell: Vector2 in cells:
+		var col := int(cell.x) - _map.origin.x
+		if col >= pool.x and col < pool.y:
+			top = mini(top, int(cell.y) - _map.origin.y)
+	return (FLOOR_ROW - top) * CELL - _freezable_inset()
+
+## The rise HeldDiscs gives the real pool under the real shell played at the bank's edge, px.
+func _shell_rise() -> float:
+	var pool := _shell_pool()
+	var floors := PackedFloat32Array()
+	var column_width := float((load(POOL_PROFILE) as WaterProfile).column_width)
+	var columns := int((pool.y - pool.x) * CELL / column_width)
+	var floor_y := 0.0
+	var row := FLOOR_ROW
+	while not _solid(pool.x, row):
+		row += 1
+	floor_y = (row - FLOOR_ROW) * CELL
+	floors.resize(columns)
+	floors.fill(floor_y)
+	var rest_y := _freezable_inset()
+	var cap := _shell_level(_map.shell_reach["f"]) - _shell_level(_map.water["f"])
+	var disc := Vector3((BANK_COL + 0.5) * CELL, 0.0, (load(SHELL_STATS) as PulseStats).max_radius)
+	return HeldDiscs.displaced_rise(pool.x * CELL, column_width, rest_y, floors, [disc], cap)
+
+func test_the_rain_never_raises_the_shell_pool() -> void:
+	var pool := _shell_pool()
+	for cell: Vector2 in _map.reach.get("f", PackedVector2Array()):
+		assert_bool(int(cell.x) - _map.origin.x >= pool.x and int(cell.x) - _map.origin.x < pool.y).is_false()
+	assert_bool(_map.shell_reach.has("f")).is_true()
+
+func test_the_exit_is_out_of_reach_from_the_bank_and_from_ice_at_rest() -> void:
+	var exit := _top_from(EXIT_WALL_COL, 0)
+	assert_float(exit).is_greater(_peak())
+	assert_float(exit - _shell_level(_map.water["f"])).is_greater(_peak())
+
+func test_the_shell_raises_the_pool_to_its_reach() -> void:
+	var cap := _shell_level(_map.shell_reach["f"]) - _shell_level(_map.water["f"])
+	assert_float(_shell_rise()).is_equal_approx(cap, 0.5)
+
+func test_from_the_raised_ice_the_exit_is_in_reach() -> void:
+	var raised := _shell_level(_map.water["f"]) + _shell_rise()
+	assert_float(_top_from(EXIT_WALL_COL, 0) - raised).is_less_equal(_peak() - MARGIN)
+
+## The raised floor begins where the shell's arc crosses the raised line; a running jump from the bank's edge lands beyond it.
+func test_from_the_bank_a_jump_lands_on_the_raised_floor() -> void:
+	var raised := _shell_level(_map.water["f"]) + _shell_rise()
+	var radius := (load(SHELL_STATS) as PulseStats).max_radius
+	var arc := (BANK_COL + 0.5) * CELL + sqrt(radius * radius - raised * raised)
+	var bank_edge := _shell_pool().x * CELL
+	assert_float(MapGuide.ivo_reach().reach_at(raised)).is_greater(arc - bank_edge + MARGIN)
