@@ -9,6 +9,8 @@ const SILHOUETTE_PROPERTIES: Array[StringName] = [
 	&"texture", &"hframes", &"vframes", &"frame", &"flip_h", &"flip_v",
 	&"centered", &"offset", &"region_enabled", &"region_rect", &"texture_filter",
 ]
+## How far a character on the floor is pulled down onto it, px: walking down a frozen crest's slope stays grounded.
+const FLOOR_SNAP := 12.0
 
 @export var gravity_scale: float = 1.0
 
@@ -44,6 +46,7 @@ static func teleport_body(body: CharacterBody2D, point: Vector2) -> void:
 	PhysicsServer2D.body_set_mode(rid, PhysicsServer2D.BODY_MODE_KINEMATIC)
 
 func _ready() -> void:
+	floor_snap_length = FLOOR_SNAP
 	hurtbox.hit_received.connect(_on_hit_received)
 	health.died.connect(_on_health_died)
 	_animation_resolver.driver = _animation_driver

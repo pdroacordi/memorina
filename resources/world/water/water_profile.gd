@@ -51,11 +51,18 @@ class_name WaterProfile extends Resource
 ## Wake raised per pixel-per-second of a body wading through, per second.
 @export var wake_per_speed: float = 0.02
 
-@export_group("Wind")
-## How hard moving air (Airflow: a current, Vendaval) drags the surface
-## downwind, in px of displacement per second per px/s of wind at the body's
-## ends. Water piles against the downwind bank and draws off the upwind one -
-## a slope while it blows, a crest the springs carry when it drops - which is
-## what a FREEZE can catch into a ramp (design 02 section 7.4). 0: wind leaves
-## the water alone.
-@export var wind_stress: float = 0.05
+@export_group("Crest")
+## Highest the wind piles the water against the downwind bank, px above the rest line; 0 leaves the water flat.
+@export var crest_height: float = 160.0
+## Crest per px of pool width, so a narrow pool piles less (fetch).
+@export var crest_per_fetch: float = 0.5
+## Horizontal run of the crest's wedge from the downwind bank, px.
+@export var crest_length: float = 256.0
+## Seconds a full wind takes to pile the full crest, at memory 1.
+@export var crest_rise_time: float = 15.0
+## Seconds a full crest takes to fall flat once the wind drops, at memory 1.
+@export var crest_settle_time: float = 4.0
+## Wind under which the water does not pile, px/s.
+@export var crest_min_wind: float = 40.0
+## Wind at which it piles toward the full crest, px/s.
+@export var crest_full_wind: float = 150.0

@@ -170,3 +170,29 @@ func test_a_column_frozen_on_a_crest_is_a_wall_that_keeps_it() -> void:
 	_run(field, _rates(1.0), 3.0)
 	assert_float(field.height(24)).is_equal_approx(6.0, 0.01)
 	assert_float(_max_abs(field, 25, COLUMNS)).is_equal(0.0)
+
+## A crest's wedge is a target the springs follow, not a shape they smooth away.
+func test_offsets_are_followed_in_steady_state() -> void:
+	var field := _field()
+	var offsets := PackedFloat32Array()
+	offsets.resize(COLUMNS)
+	for i in COLUMNS:
+		offsets[i] = float(i)
+	for frame in roundi(6.0 / FRAME):
+		field.step(FRAME, _rates(1.0), frame * FRAME, offsets)
+	for i in range(2, COLUMNS - 2):
+		assert_float(field.height(i)).is_equal_approx(offsets[i], 0.2)
+
+## Ice pins a crest's height: when the wind's offset drops, the frozen column stays.
+func test_ice_keeps_a_crest_after_its_offset_drops() -> void:
+	var field := _field()
+	var offsets := PackedFloat32Array()
+	offsets.resize(COLUMNS)
+	offsets.fill(20.0)
+	for frame in roundi(6.0 / FRAME):
+		field.step(FRAME, _rates(1.0), frame * FRAME, offsets)
+	field.set_hold(10, 1.0)
+	offsets.fill(0.0)
+	for frame in roundi(3.0 / FRAME):
+		field.step(FRAME, _rates(1.0), frame * FRAME, offsets)
+	assert_float(field.height(10)).is_equal_approx(20.0, 0.3)

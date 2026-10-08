@@ -1,7 +1,7 @@
 ---
 id: architecture/wind-piles-a-bounded-crest
 type: architecture
-title: Wind piles a bounded crest against the downwind bank, and Congelar pins it into a ramp (PLAN for PZL-03)
+title: Wind piles a bounded crest against the downwind bank, and Congelar pins it into a ramp (PZL-03)
 status: active
 tags: [water, wind, crest, gale, freeze, ramp, slope, plan, pzl-03]
 related: [architecture/ice-is-its-own-sheet, architecture/memory-gated-height-field, architecture/one-air-channel, architecture/water-two-projections, systems/air, systems/water, bugs/water-swell-flattened-by-spread]
@@ -16,7 +16,7 @@ source_files:
 
 ## Summary
 
-PLAN, not built (2026-10-07). Combinado 2, "A Onda Parada" (design 02 §8.4): Vendaval from the
+Built 2026-10-08 (PZL-03), changed by the review and the playtest (`playtests/2026-10-08-frozen-wave`): the crest is capped by its downwind bank (read from the room's map) and steps the surface off screen while it stands; `crest_rise_time` is 15 s, not 12, so Congelar played at once freezes a wave clearly too low; Vendaval is played at the shore's edge (col 29) so the wall is in frame; `Character.FLOOR_SNAP` is 12 px, not 8, so the 8 px step from a bank onto ice stays grounded. The trial tests simulate the real gale over time. Combinado 2, "A Onda Parada" (design 02 §8.4): Vendaval from the
 shore raises a crest, Congelar before it settles fixes it as a ramp to the top of a wall; Congelar
 too early freezes a low wave. The spring field cannot raise such a crest, so a bounded `WindCrest`
 (one signed height per body, built by the along-body wind at the body's memory) is added to the

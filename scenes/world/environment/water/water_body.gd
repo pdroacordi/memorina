@@ -44,6 +44,10 @@ var _texture: WaterSurfaceTexture
 var _rates := PackedFloat32Array()
 ## The air's horizontal speed over each column (Airflow), refreshed with _rates.
 var _winds := PackedFloat32Array()
+# The water the wind piles against the downwind bank, and its per-column wedge (null without a crest).
+var _crest: WindCrest
+var _offsets := PackedFloat32Array()
+var _banks_read := false
 var _floors := PackedFloat32Array()
 # A stepped floor handed in before _ready (see set_floor): depth in world
 # pixels below the rest line, one per span of _floor_span px from the left.
@@ -91,6 +95,10 @@ func _ready() -> void:
 	var columns := ceili(float(size.x) / float(column_width()))
 	if profile:
 		_field = WaterSurfaceField.new(columns, profile)
+		if profile.crest_height > 0.0:
+			_crest = WindCrest.new(profile, size.x)
+			_offsets.resize(columns)
+			_layout()
 	else:
 		_clocks.resize(columns)
 	_texture = WaterSurfaceTexture.new(columns)
@@ -124,7 +132,11 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint() or _texture == null:
 		return
-	if _notifier and not _notifier.is_on_screen():
+	# A crest is puzzle state: it builds off screen too, and the surface follows it there.
+	if _crest:
+		_step_crest(delta)
+	var cresting := _crest != null and not is_zero_approx(_crest.height())
+	if _notifier and not _notifier.is_on_screen() and not cresting:
 		return
 	_refresh_rates_if_stale()
 	var fastest := 0.0
@@ -139,8 +151,7 @@ func _physics_process(delta: float) -> void:
 			_clocks[column] += delta * _rates[column]
 	else:
 		_wade(delta)
-		_blow(delta)
-		_field.step(delta, _rates, _time)
+		_field.step(delta, _rates, _time, _offsets)
 	_upload()
 
 ## Rest waterline world y shared by rendering and water components.
@@ -336,19 +347,37 @@ func _wade(delta: float) -> void:
 	for body: Vector2 in _volume.disturbances():
 		_field.disturb(column_of(body.x), -body.y * profile.wake_per_speed * delta)
 
-## Moving air drags the surface downwind: every column is pushed in
-## proportion to the wind over it and to how far downwind of the body's middle
-## it lies, so water piles on the downwind bank and draws off the upwind one.
-## The springs pull it back, so a steady wind holds a slope and a dropping one
-## lets a crest run.
-func _blow(delta: float) -> void:
-	if _airflow == null or is_zero_approx(profile.wind_stress):
-		return
-	var half := maxf((column_count() - 1) * 0.5, 1.0)
-	for column in column_count():
-		var wind := _winds[column]
-		if not is_zero_approx(wind):
-			_field.disturb(column, -wind * profile.wind_stress * delta * ((column - half) / half))
+## Steps the crest under the mean wind over the pool at its mean memory, and lays its wedge as column offsets.
+func _step_crest(delta: float) -> void:
+	# Read in the first physics frame: the room's map is built by then.
+	if not _banks_read:
+		_banks_read = true
+		var banks := _bank_heights()
+		_crest.set_banks(banks.x, banks.y)
+	var rates := column_rates()
+	var wind := 0.0
+	var rate := 0.0
+	for column in rates.size():
+		wind += _winds[column]
+		rate += rates[column]
+	_crest.step(delta, wind / rates.size(), rate / rates.size())
+	for column in _offsets.size():
+		_offsets[column] = _crest.offset(column, _offsets.size(), column_width())
+
+## The ground's height above the rest line beside the left and right ends, px; INF where no room map says.
+func _bank_heights() -> Vector2:
+	var room := RoomMapNode.at(self, global_position)
+	if room == null:
+		return Vector2(INF, INF)
+	var left := global_position.x - size.x * 0.5
+	return Vector2(_bank_height(room, left - 1.0), _bank_height(room, left + size.x + 1.0))
+
+func _bank_height(room: RoomMapNode, x: float) -> float:
+	var line := surface_rest_y()
+	var cell := room.cell_at(Vector2(x, line))
+	while room.map.contains(cell) and room.map.ground_at(cell) != Enums.Ground.NONE:
+		cell.y -= 1
+	return maxf(line - room.cell_rect(cell).end.y, 0.0)
 
 func _held_changed() -> void:
 	_refresh_dry()
@@ -542,7 +571,9 @@ func _set_uniform(uniform: StringName, value: Variant) -> void:
 func _layout() -> void:
 	if not is_inside_tree():
 		return
-	var rect := Rect2(-size.x * 0.5, -HEADROOM, size.x, size.y + HEADROOM)
+	# Room above the rest line for waves, and for the highest crest the wind can pile.
+	var headroom := maxf(HEADROOM, _crest.cap() + 4.0) if _crest else float(HEADROOM)
+	var rect := Rect2(-size.x * 0.5, -headroom, size.x, size.y + headroom)
 	for child: Node in get_children():
 		if child is WaterQuad:
 			(child as WaterQuad).rect = rect

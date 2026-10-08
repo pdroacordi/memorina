@@ -65,8 +65,9 @@ func hold(column: int) -> float:
 	return _holds[column]
 
 ## Advances the surface. `rates[i]` is column i's clock rate (the memory over
-## it); `swell_time` is the body's own clock, which the swell is a function of.
-func step(delta: float, rates: PackedFloat32Array, swell_time: float) -> void:
+## it); `swell_time` is the body's own clock, which the swell is a function of;
+## `offsets[i]` (px, may be empty) raises a column's target, as a wind crest does.
+func step(delta: float, rates: PackedFloat32Array, swell_time: float, offsets: PackedFloat32Array = PackedFloat32Array()) -> void:
 	assert(rates.size() == _heights.size(), "One rate per column")
 	_swell_time = swell_time
 	if delta <= 0.0:
@@ -74,7 +75,7 @@ func step(delta: float, rates: PackedFloat32Array, swell_time: float) -> void:
 	var substeps := maxi(1, ceili(delta / _profile.max_substep))
 	var dt := delta / float(substeps)
 	for i in substeps:
-		_substep(dt, rates, swell_time)
+		_substep(dt, rates, swell_time, offsets)
 
 ## The ambient swell a column is pulled toward: three sines at irrational-ish
 ## ratios, so the pattern never visibly repeats.
@@ -91,10 +92,11 @@ func swell(column: int, time: float) -> float:
 	)
 
 	# Couple displacement from the swell so neighbour coupling preserves its shape.
-func _substep(dt: float, rates: PackedFloat32Array, swell_time: float) -> void:
+func _substep(dt: float, rates: PackedFloat32Array, swell_time: float, offsets: PackedFloat32Array) -> void:
 	var count := _heights.size()
 	for i in count:
-		_targets[i] = lerpf(swell(i, swell_time), _pinned[i], _holds[i])
+		var free := swell(i, swell_time) + (offsets[i] if not offsets.is_empty() else 0.0)
+		_targets[i] = lerpf(free, _pinned[i], _holds[i])
 	for i in count:
 		_accelerations[i] = 0.0
 		if rates[i] <= 0.0 or _holds[i] >= 1.0:
