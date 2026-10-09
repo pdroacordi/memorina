@@ -1,6 +1,6 @@
-; lighthouse_interior.room - Torre do Farol: a spiral climb by single jumps on alternating stone ledges 4 rows
-; apart, from the door (col 4) to the sealed hatch (col 15, row 8); the mentor's room is the landing at row 25,
-; cols 9-18 (design 04 sections 3.3 and 4). Hatch gate: all_guardians_restored.
+; lighthouse_interior.room - Torre do Farol: a spiral climb by single jumps on alternating stone ledges 3 rows
+; apart with 2-cell gaps, from the door (col 4) to the sealed hatch (col 15, row 8); the mentor's room is the
+; landing at row 24, cols 1-10 (design 04 sections 3.3 and 4). Hatch gate: all_guardians_restored.
 
 [room]
 origin = 0, 0
@@ -18,37 +18,37 @@ S..............E...S
 S............SSSSS.S
 S..................S
 S..................S
+SSSSSSSSSSS........S
+S..................S
+S..................S
+S............SSSSSSS
+S..................S
 S..................S
 SSSSSSSSSSS........S
 S..................S
 S..................S
-S..................S
-S..........SSSSSSSSS
-S..................S
+S............SSSSSSS
 S..................S
 S..................S
-SSSSSSSSS..........S
+SSSSSSSSSSS........S
 S..................S
 S..................S
-S..................S
-S........SSSSSSSSSSS
-S..................S
+S............SSSSSSS
 S..................S
 S..................S
-SSSSSSSSS..........S
+SSSSSSSSSSS........S
 S..................S
 S..................S
-S..................S
-S..........SSSSSSSSS
-S..................S
+S............SSSSSSS
 S..................S
 S..................S
-SSSSSSSSS..........S
+SSSSSSSSSSS........S
 S..................S
 S..................S
+S............SSSSSSS
 S..................S
-S..........SSSSSSSSS
 S..................S
+S.....SSSSS........S
 S..................S
 S...E..............S
 SSSSSSSSSSSSSSSSSSSS

@@ -1,0 +1,115 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6.3,
+ "locale": "en",
+ "player_position": [
+  24144,
+  13435
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "log": "start"
+  },
+  {
+   "t": 1.2,
+   "log": "door_out"
+  },
+  {
+   "t": 1.2,
+   "screenshot": "n6_1_door"
+  },
+  {
+   "t": 1.3,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 1.5,
+   "log": "in00"
+  },
+  {
+   "t": 1.6,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 1.75,
+   "log": "in01"
+  },
+  {
+   "t": 2.0,
+   "log": "in02"
+  },
+  {
+   "t": 2.25,
+   "log": "in03"
+  },
+  {
+   "t": 2.5,
+   "log": "in04"
+  },
+  {
+   "t": 2.75,
+   "log": "in05"
+  },
+  {
+   "t": 3.0,
+   "log": "in06"
+  },
+  {
+   "t": 3.0,
+   "screenshot": "n6_2_inside"
+  },
+  {
+   "t": 3.3,
+   "log": "door_in"
+  },
+  {
+   "t": 3.4,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 3.6,
+   "log": "back00"
+  },
+  {
+   "t": 3.7,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 3.85,
+   "log": "back01"
+  },
+  {
+   "t": 4.1,
+   "log": "back02"
+  },
+  {
+   "t": 4.35,
+   "log": "back03"
+  },
+  {
+   "t": 4.6,
+   "log": "back04"
+  },
+  {
+   "t": 4.85,
+   "log": "back05"
+  },
+  {
+   "t": 5.1,
+   "log": "back06"
+  },
+  {
+   "t": 5.3,
+   "screenshot": "n6_4_back_out"
+  },
+  {
+   "t": 5.35,
+   "log": "back07"
+  }
+ ]
+}

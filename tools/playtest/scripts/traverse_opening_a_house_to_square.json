@@ -1,0 +1,187 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 20,
+ "locale": "en",
+ "steps": [
+  {
+   "t": 0.5,
+   "log": "spawn00"
+  },
+  {
+   "t": 1.0,
+   "log": "spawn01"
+  },
+  {
+   "t": 1.2,
+   "screenshot": "a01_house_start"
+  },
+  {
+   "t": 1.5,
+   "log": "spawn02"
+  },
+  {
+   "t": 1.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.45,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "log": "atdoor00"
+  },
+  {
+   "t": 2.6,
+   "log": "atdoor01"
+  },
+  {
+   "t": 2.6,
+   "screenshot": "a02_house_door"
+  },
+  {
+   "t": 2.7,
+   "log": "atdoor02"
+  },
+  {
+   "t": 2.8,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "log": "exit00"
+  },
+  {
+   "t": 3.1,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 3.25,
+   "log": "exit01"
+  },
+  {
+   "t": 3.5,
+   "log": "exit02"
+  },
+  {
+   "t": 3.75,
+   "log": "exit03"
+  },
+  {
+   "t": 4.0,
+   "log": "exit04"
+  },
+  {
+   "t": 4.25,
+   "log": "exit05"
+  },
+  {
+   "t": 4.5,
+   "log": "exit06"
+  },
+  {
+   "t": 4.6,
+   "screenshot": "a03_square_arrive"
+  },
+  {
+   "t": 4.75,
+   "log": "exit07"
+  },
+  {
+   "t": 5.0,
+   "log": "exit08"
+  },
+  {
+   "t": 5.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.45,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.5,
+   "log": "walk00"
+  },
+  {
+   "t": 5.7,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.95,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.0,
+   "log": "walk01"
+  },
+  {
+   "t": 6.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.45,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.5,
+   "log": "walk02"
+  },
+  {
+   "t": 6.7,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.95,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.0,
+   "log": "walk03"
+  },
+  {
+   "t": 7.2,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 7.4,
+   "screenshot": "a04_square_bench"
+  },
+  {
+   "t": 7.5,
+   "log": "walk04"
+  },
+  {
+   "t": 7.6,
+   "log": "pre00"
+  }
+ ]
+}

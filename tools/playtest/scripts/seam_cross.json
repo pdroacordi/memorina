@@ -1,0 +1,15 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 9.0,
+ "player_position": [1800, 280],
+ "_note": "WORLD-05: walk east across the village_square / village_mill seam (x 1920). One room change, no fade back (bugs/walking-across-a-room-seam-fades-back-and-forth).",
+ "steps": [
+  {"t": 1.5, "log": "before"},
+  {"t": 1.6, "action": "move_right", "pressed": true},
+  {"t": 3.0, "log": "crossing"},
+  {"t": 4.5, "log": "after"},
+  {"t": 4.6, "action": "move_right", "pressed": false},
+  {"t": 7.0, "log": "settled"},
+  {"t": 7.1, "screenshot": "00_settled"}
+ ]
+}

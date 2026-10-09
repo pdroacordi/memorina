@@ -296,6 +296,28 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     (`bugs/taking-a-door-disables-ivo-inside-his-own-physics-step`). Until it is fixed, filter them, or
     they hide new errors.
 
+- **Learned 2026-10-09 (WORLD-05 traversal playtest)**: the world is now abutting rooms (`docs/design/04`,
+  macro cell 640x384, surface floor y = 384r + 288). Until
+  `bugs/walking-across-a-room-seam-fades-back-and-forth` is fixed:
+  - every seam a timeline walks through costs ~7 s of room swaps (one physics step per ~1 s fade), so
+    budget it;
+  - a `player_position` or landing whose capsule (height 54) straddles a horizontal seam never settles,
+    so the run is wasted;
+  - grep `ROOM=` changes in the log to see it.
+- Without `player_position` a new game starts in village_house at (320, 12288). The runner's save owns
+  the Memorina, so the village fences (`X`) are always open.
+- Releasing a direction mid-air stops Ivo's horizontal motion at once. Hold the direction through the
+  landing, or a gap jump "falls short": a timeline artefact, not a level bug.
+- Python's `subprocess.run(["bash", ...])` starts WSL bash, which fails. Use
+  `C:/Program Files/Git/usr/bin/bash.exe`.
+- **Climbs:** script them closed-loop. For each jump, walk to a target take-off x (the ledge edge) for
+  `(target - logged x) / 192` s, then jump with the direction held 0.65 s. A loop that reruns and fixes
+  one step's walk per pass converges in about one pass per step (cliffs: 11 steps, ~5 min).
+  - Identical inputs land a few px differently run to run. Repeat any step with a thin margin 4+ times
+    before calling it reliable or broken.
+- A sealed door never shows `+prompt`. Its knock is visible as `shake=` going non-zero for ~0.2 s after
+  the press.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

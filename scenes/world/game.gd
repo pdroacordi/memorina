@@ -56,11 +56,26 @@ func quit_game() -> void:
 func quit_to_title() -> void:
 	_swap_to_title.call_deferred()
 
+# Rooms share edges, so the current room is the one Ivo's feet are in: a body astride a seam overlaps
+# both and would swap back and forth (bugs/walking-across-a-room-seam-fades-back-and-forth).
+func _physics_process(_delta: float) -> void:
+	if _current_room == null or _is_transitioning or _dying:
+		return
+	var feet := _player.global_position
+	if _current_room.get_bounds().has_point(feet):
+		return
+	var room := _room_at(feet)
+	if room != null:
+		_on_player_entered_room(room)
+
 func _on_player_entered_room(room: Room) -> void:
 	if room == _current_room or _is_transitioning or _dying:
 		return
+	if not room.get_bounds().has_point(_player.global_position):
+		return
 	_is_transitioning = true
-	_player.process_mode = Node.PROCESS_MODE_DISABLED
+	# Deferred: body_entered arrives inside the physics step (gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move).
+	_player.set_deferred(&"process_mode", Node.PROCESS_MODE_DISABLED)
 	if _current_room:
 		await _fade.to_black()
 	_enter_room(room)

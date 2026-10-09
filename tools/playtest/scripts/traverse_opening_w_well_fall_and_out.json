@@ -1,0 +1,334 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 30,
+ "locale": "en",
+ "player_position": [
+  930,
+  250
+ ],
+ "steps": [
+  {
+   "t": 0.6,
+   "log": "fall00"
+  },
+  {
+   "t": 0.7,
+   "log": "fall01"
+  },
+  {
+   "t": 0.8,
+   "log": "fall02"
+  },
+  {
+   "t": 0.9,
+   "log": "fall03"
+  },
+  {
+   "t": 1.0,
+   "log": "fall04"
+  },
+  {
+   "t": 1.0,
+   "screenshot": "w1.0_fall"
+  },
+  {
+   "t": 1.1,
+   "log": "fall05"
+  },
+  {
+   "t": 1.2,
+   "log": "fall06"
+  },
+  {
+   "t": 1.3,
+   "log": "fall07"
+  },
+  {
+   "t": 1.4,
+   "log": "fall08"
+  },
+  {
+   "t": 1.5,
+   "log": "fall09"
+  },
+  {
+   "t": 1.6,
+   "log": "fall10"
+  },
+  {
+   "t": 1.6,
+   "screenshot": "w1.6_fall"
+  },
+  {
+   "t": 1.7,
+   "log": "fall11"
+  },
+  {
+   "t": 1.8,
+   "log": "fall12"
+  },
+  {
+   "t": 1.9,
+   "log": "fall13"
+  },
+  {
+   "t": 2.0,
+   "log": "fall14"
+  },
+  {
+   "t": 2.1,
+   "log": "fall15"
+  },
+  {
+   "t": 2.2,
+   "log": "fall16"
+  },
+  {
+   "t": 2.3,
+   "log": "fall17"
+  },
+  {
+   "t": 2.4,
+   "log": "fall18"
+  },
+  {
+   "t": 2.4,
+   "screenshot": "w2.4_fall"
+  },
+  {
+   "t": 2.5,
+   "log": "fall19"
+  },
+  {
+   "t": 2.6,
+   "log": "fall20"
+  },
+  {
+   "t": 2.7,
+   "log": "fall21"
+  },
+  {
+   "t": 2.8,
+   "log": "fall22"
+  },
+  {
+   "t": 2.9,
+   "log": "fall23"
+  },
+  {
+   "t": 3.0,
+   "log": "fall24"
+  },
+  {
+   "t": 10.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 10.05,
+   "log": "up00"
+  },
+  {
+   "t": 10.1,
+   "log": "up01"
+  },
+  {
+   "t": 10.15,
+   "log": "up02"
+  },
+  {
+   "t": 10.2,
+   "log": "up03"
+  },
+  {
+   "t": 10.25,
+   "log": "up04"
+  },
+  {
+   "t": 10.3,
+   "log": "up05"
+  },
+  {
+   "t": 10.35,
+   "log": "up06"
+  },
+  {
+   "t": 10.38,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 10.4,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 10.4,
+   "log": "up07"
+  },
+  {
+   "t": 10.4,
+   "screenshot": "w10_up_apex"
+  },
+  {
+   "t": 10.45,
+   "log": "up08"
+  },
+  {
+   "t": 10.5,
+   "log": "up09"
+  },
+  {
+   "t": 10.55,
+   "log": "up10"
+  },
+  {
+   "t": 10.6,
+   "log": "up11"
+  },
+  {
+   "t": 10.62,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 10.65,
+   "log": "up12"
+  },
+  {
+   "t": 10.7,
+   "log": "up13"
+  },
+  {
+   "t": 10.75,
+   "log": "up14"
+  },
+  {
+   "t": 10.8,
+   "log": "up15"
+  },
+  {
+   "t": 10.85,
+   "log": "up16"
+  },
+  {
+   "t": 10.9,
+   "log": "up17"
+  },
+  {
+   "t": 10.95,
+   "log": "up18"
+  },
+  {
+   "t": 11.0,
+   "log": "up19"
+  },
+  {
+   "t": 11.05,
+   "log": "up20"
+  },
+  {
+   "t": 11.1,
+   "log": "up21"
+  },
+  {
+   "t": 11.15,
+   "log": "up22"
+  },
+  {
+   "t": 11.2,
+   "log": "up23"
+  },
+  {
+   "t": 11.2,
+   "screenshot": "w11_out"
+  },
+  {
+   "t": 11.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.65,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 11.7,
+   "log": "rim00"
+  },
+  {
+   "t": 11.8,
+   "log": "rim01"
+  },
+  {
+   "t": 11.85,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.9,
+   "log": "rim02"
+  },
+  {
+   "t": 11.95,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 12.0,
+   "log": "rim03"
+  },
+  {
+   "t": 12.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.1,
+   "log": "rim04"
+  },
+  {
+   "t": 12.2,
+   "log": "rim05"
+  },
+  {
+   "t": 12.3,
+   "log": "rim06"
+  },
+  {
+   "t": 12.35,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.4,
+   "log": "rim07"
+  },
+  {
+   "t": 12.5,
+   "log": "rim08"
+  },
+  {
+   "t": 12.6,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 12.6,
+   "log": "rim09"
+  },
+  {
+   "t": 12.7,
+   "log": "rim10"
+  },
+  {
+   "t": 12.8,
+   "log": "rim11"
+  },
+  {
+   "t": 12.8,
+   "screenshot": "w12_square"
+  }
+ ]
+}

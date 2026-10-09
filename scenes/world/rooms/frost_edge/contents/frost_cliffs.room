@@ -1,5 +1,5 @@
 ; frost_cliffs.room - Penhascos: the bench in a cave under the west crag (cols 1-12, rows 41-44), then a climb
-; by single jumps between the crag and the east cliff (ledges 3-4 rows apart, 2-cell gaps) to the cliff top
+; by single jumps between the crag and the east cliff (3-row steps, 2-cell gaps) to the cliff top
 ; (row 9) and the lighthouse (design 04 section 3.3). No gate: base kit, no earth.
 
 [room]
@@ -18,15 +18,6 @@ S.......................................
 S......................SSSSSSSSSSSSSSSSS
 S......................SSSSSSSSSSSSSSSSS
 S.............................SSSSSSSSSS
-S.............................SSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
-SSSSSSSSSSSSSSS...............SSSSSSSSSS
-SSSSSSSSSSSSSSS...............SSSSSSSSSS
-SSSSSSSSSSSSSSS...............SSSSSSSSSS
-SSSSSSSSSSSSSSS........SSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSS...............SSSSSSSSSS
-SSSSSSSSSSSSSSS...............SSSSSSSSSS
-SSSSSSSSSSSSSSS...............SSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
 SSSSSSSSSSSSS.................SSSSSSSSSS
 SSSSSSSSSSSSS.................SSSSSSSSSS
@@ -46,11 +37,20 @@ SSSSSSSSSSSSS..........SSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSS.................SSSSSSSSSS
 SSSSSSSSSSSSS.................SSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS..........SSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS..........SSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSS.................SSSSSSSSSS
 ..............................SSSSSSSSSS
-.......................SSSSSSSSSSSSSSSSS
-..............................SSSSSSSSSS
-......R.......................SSSSSSSSSS
+...............SSSSSS.........SSSSSSSSSS
+...............SSSSSS.........SSSSSSSSSS
+......R........SSSSSS.........SSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
