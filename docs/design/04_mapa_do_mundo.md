@@ -16,6 +16,9 @@
 - **Chão construído (calçamento, tábuas):** "Seasonal top" — um pulso deita neve ou folhas na borda de cima do calçamento, como na terra. Isso muda a seção 6 só para o chão: construções e interiores continuam com uma versão.
 - **Estilo e paleta:** "Rewrite to the concept, palette per biome" — o texto de estilo compartilhado (`tools/art/prompts/style.md`) passa a descrever o conceito aprovado ("Yes, aim for this", a pintura da rua da vila), e cada bioma tem a própria paleta, tirada do seu quadro de estilo aprovado.
 - **Portas:** "Buffer it ~0.1 s" — um Cima apertado um instante antes de alcançar a porta ainda a toma; entrar andando continua valendo.
+- **Movimento ambiente no cinza (2026-10-09):** "Stop below 0.2 memory" — abaixo de 0.2 de memória o ciclo para (o aldeão fica parado no meio do gesto); acima, acelera com a memória.
+- **Moinhos e roda d'água (2026-10-09):** "Baked pixel frames" — a rotação é desenhada em quadros de pixel art, nunca girada em tempo real.
+- **Construções sem porta (2026-10-09):** "Give both doors and interiors" — a casa do meio da Praça e o moinho do rio ganham porta e interior (dois interiores novos na Vila).
 - **Recomeço:** as regiões atuais (vila e borda gelada) são refeitas do zero. As salas de prova de canções (`trials_*`) continuam como laboratório de puzzles, só em builds de debug.
 
 ## 2. Visão geral

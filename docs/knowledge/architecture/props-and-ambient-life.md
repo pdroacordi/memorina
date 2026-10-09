@@ -368,3 +368,10 @@ Animals: `cat` 32x32 (tail, 6), `cat_roof` 32x16 (breathing, 4), `chicken_a`, `_
    smooth runtime rotation off the grid?
 3. "All doors": the square's building over cols 16-27 and the river mill have no `E` in the
    greybox. Give them doors and interiors, or move them into the backdrop?
+
+## User decisions (2026-10-09)
+
+- Frame cycles in the grey: "Stop below 0.2 memory" - `AmbientMotion` advances only where the memory at its point is at least 0.2.
+- Windmill sails and the water wheel: "Baked pixel frames" (`tools/art/bake_rotation.gd`), never runtime rotation.
+- The square's middle building and the river mill: "Give both doors and interiors" (two more village interiors, WORLD-11).
+- Pixel snapping: "Turn snapping on" - the project now reads `rendering/2d/snap/*` (`bugs/the-project-snap-settings-are-at-a-path-godot-never-reads`).

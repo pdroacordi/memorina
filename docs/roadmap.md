@@ -128,7 +128,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | WORLD-08 | Props and ambient motion on the memory clock | 04 §5-6 | `[ ]` | | 2026-10-08 | Placed set dressing; smoke, sway, flags and windmills stop dead in the grey. |
 | WORLD-09 | Doors and interior rooms | 04 §4 | `[x]` | | 2026-10-08 | `systems/rooms` (doors), `architecture/doors-and-interiors`. Press up at a door: fade, arrive at the paired door. Interiors stay off the map. A door can be locked by a save fact. "All doors" (user, 2026-10-08). |
 | WORLD-10 | Villagers and animals | 04 §5 | `[ ]` | WORLD-08 | 2026-10-08 | Idle loops from PixelLab, no dialogue, frozen in the grey. "Idle villagers, no dialogue" (user, 2026-10-08). |
-| WORLD-11 | Dress the Home Village | 04 §3.1 | `[ ]` | WORLD-05, WORLD-06, WORLD-07, WORLD-08, WORLD-10 | 2026-10-08 | Houses, tavern, bakery, elder's house, Ivo's house. Village memory falls to 0.6 from the second restored guardian. Style board approved by the user first. |
+| WORLD-11 | Dress the Home Village | 04 §3.1 | `[ ]` | WORLD-05, WORLD-06, WORLD-07, WORLD-08, WORLD-10 | 2026-10-08 | Houses, tavern, bakery, elder's house, Ivo's house. Village memory falls to 0.6 from the second restored guardian. Two more interiors: the square's middle house and the river mill ("Give both doors and interiors", user, 2026-10-09). Style board approved by the user first. |
 | WORLD-12 | Dress the Threshold Road | 04 §3.2 | `[ ]` | WORLD-11 | 2026-10-08 | Style board approved by the user first. |
 | WORLD-13 | Dress the Frost Edge and the lighthouse | 04 §3.3 | `[ ]` | WORLD-11 | 2026-10-08 | The Frost Guardian leaves the lighthouse for the Frozen Lake. |
 | WORLD-14 | Dress the Spring Woods | 04 §3.4 | `[ ]` | WORLD-11 | 2026-10-08 | Bloom Hollow arena. |
@@ -136,6 +136,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | WORLD-16 | Dress the Wind Orchards | 04 §3.6 | `[ ]` | WORLD-11 | 2026-10-08 | Arena empty until GRD-04. |
 | WORLD-17 | Dress the Summer Caldera | 04 §3.7 | `[ ]` | WORLD-11 | 2026-10-08 | Arena empty until GRD-04. |
 | WORLD-18 | Connections pass | 04 §2 | `[ ]` | WORLD-12, WORLD-13, WORLD-14, WORLD-15, WORLD-16, WORLD-17 | 2026-10-08 | Shortcuts, secrets, bench spacing, the map, one traversal playtest from the opening to every arena. |
+| WORLD-19 | Drop through one-way ledges | | `[ ]` | | 2026-10-09 | The legend says `=` can be dropped through; Ivo cannot (`bugs/the-tavern-upper-floor-has-no-way-down`). Down + jump on a ledge. Needs the user's go-ahead (not in design). |
 
 ## Tools and infrastructure
 

@@ -2,7 +2,7 @@
 id: bugs/the-project-snap-settings-are-at-a-path-godot-never-reads
 type: bug
 title: project.godot's 2D pixel-snap settings sit at a path Godot does not read, so nothing in the game snaps transforms or vertices to pixels
-status: active
+status: resolved
 severity: low
 tags: [rendering, project-settings, pixel-art, snap, subviewport]
 related: [gotchas/subviewport-does-not-inherit-default-texture-filter, systems/foreground]
@@ -45,3 +45,7 @@ is on.
 
 Set project settings from the editor dialog, not by hand. A test could assert that every key in
 `project.godot` exists in `ProjectSettings.get_property_list()`. Not added.
+
+## Resolution (2026-10-09)
+
+The user: "Turn snapping on". `project.godot` now has `rendering/2d/snap/snap_2d_transforms_to_pixel` and `snap_2d_vertices_to_pixel`; gates green, the foreground demo renders unchanged.
