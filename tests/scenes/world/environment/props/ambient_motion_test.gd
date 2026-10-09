@@ -35,3 +35,20 @@ func test_a_hidden_prop_holds_its_frame() -> void:
 func test_it_is_pausable_even_under_an_always_parent() -> void:
 	var sprite := _prop()
 	assert_int(sprite.get_child(0).process_mode).is_equal(Node.PROCESS_MODE_PAUSABLE)
+
+## The core contract: the clock reads the field at the prop; baseline 0 holds the frame, 1 advances it.
+func test_the_field_at_the_prop_drives_the_clock() -> void:
+	var field := auto_free(MemoryField.new()) as MemoryField
+	field.baseline = 0.0
+	add_child(field)
+	var sprite := _prop()
+	var before := sprite.frame
+	for i: int in 8:
+		await get_tree().physics_frame
+	assert_int(sprite.frame).is_equal(before)
+	field.baseline = 1.0
+	var seen := {}
+	for i: int in 8:
+		await get_tree().physics_frame
+		seen[sprite.frame] = true
+	assert_int(seen.size()).is_greater(1)

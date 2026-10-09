@@ -21,7 +21,7 @@ source_files:
   - tools/pixellab/pixellab.ps1
 ---
 
-> **Status: PLAN** (2026-10-09, roadmap WORLD-08 and WORLD-10). Nothing below is built yet.
+> **Status: BUILT (core)**, 2026-10-09 - see "Status (2026-10-09)" at the end.
 
 ## Summary
 
@@ -182,7 +182,7 @@ static func phase_for(point: Vector2) -> float  # integer hash of the rounded po
   the view (`get_canvas_transform().affine_inverse() * get_visible_rect()`); otherwise samples the
   field at `parent.to_global(sample_offset)`, advances, and writes `frame` only when it changes.
 - Time is not saved. Contents rebuilt by eviction or death restart from 0 with the same phase;
-  a deactivated room's props hold (process disabled) and resume.
+  a deactivated room's props hold (its contents are hidden, and `AmbientMotion` returns while its sprite is not visible in the tree: its explicit PAUSABLE escapes the room's DISABLED) and resume.
 
 Why not `AnimationPlayer`: it advances by the scaled delta, the same in a forgotten place and a
 remembered one; a stopped world needs a clock that advances by `delta * memory` at a point.

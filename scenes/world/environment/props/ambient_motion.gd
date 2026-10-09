@@ -23,7 +23,8 @@ func _ready() -> void:
 	_sprite = get_parent() as Sprite2D
 	assert(_sprite != null, "AmbientMotion must be the child of a Sprite2D.")
 	assert(not _under_character(), "AmbientMotion must never drive a Character: the greyhush stops the world, not the people in it.")
-	# Explicit: a parent ForegroundPiece is ALWAYS, and a prop must still stop under a performance.
+	# Explicit: a parent ForegroundPiece is ALWAYS, and a prop must still stop under a performance. An explicit mode
+	# also escapes a deactivated room's DISABLED; the visibility gate below holds those props (gotchas/an-explicit-process-mode-escapes-a-disabled-ancestor).
 	process_mode = Node.PROCESS_MODE_PAUSABLE
 	_field = MemoryField.find_in(self)
 	if phase < 0.0:
