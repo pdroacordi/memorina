@@ -11,6 +11,8 @@ const SILHOUETTE_PROPERTIES: Array[StringName] = [
 ]
 ## How far a character on the floor is pulled down onto it, px: walking down a frozen crest's slope stays grounded.
 const FLOOR_SNAP := 12.0
+## Every character joins it: what a foreground piece fades for (architecture/foreground-layer).
+const CHARACTERS_GROUP := &"characters"
 
 @export var gravity_scale: float = 1.0
 
@@ -46,6 +48,7 @@ static func teleport_body(body: CharacterBody2D, point: Vector2) -> void:
 	PhysicsServer2D.body_set_mode(rid, PhysicsServer2D.BODY_MODE_KINEMATIC)
 
 func _ready() -> void:
+	add_to_group(CHARACTERS_GROUP)
 	floor_snap_length = FLOOR_SNAP
 	hurtbox.hit_received.connect(_on_hit_received)
 	health.died.connect(_on_health_died)
@@ -63,6 +66,14 @@ func _physics_process(delta: float) -> void:
 ## Every move that is not motion (a seat, a respawn, a debug jump) goes through here.
 func teleport(point: Vector2) -> void:
 	teleport_body(self, point)
+
+## The body's collision rect in world px; empty without a CollisionShape2D child.
+func body_rect() -> Rect2:
+	var shape_node := get_node_or_null(^"CollisionShape2D") as CollisionShape2D
+	if shape_node == null or shape_node.shape == null:
+		return Rect2()
+	var rect := shape_node.shape.get_rect()
+	return Rect2(shape_node.global_position + rect.position, rect.size)
 
 func face_towards(axis: float) -> void:
 	if is_zero_approx(axis):

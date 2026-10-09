@@ -15,8 +15,9 @@
 [ext_resource type="Script" uid="uid://drctauu53sv3r" path="res://scenes/world/memory/greyhush_renderer.gd" id="8_greyh"]
 [ext_resource type="Material" uid="uid://djxjnd6bwmmlx" path="res://scenes/world/memory/greyhush_material.tres" id="9_greym"]
 [ext_resource type="PackedScene" uid="uid://cgemp6dv20p04" path="res://scenes/ui/memorina_hud/memorina_hud.tscn" id="10_hud"]
-[ext_resource type="Script" uid="uid://b2arxmilugwhb" path="res://scenes/world/memory/creature_mask.gd" id="11_cmask"]
+[ext_resource type="Script" uid="uid://b2arxmilugwhb" path="res://scenes/world/memory/canvas_pass.gd" id="11_cmask"]
 [ext_resource type="Material" path="res://scenes/world/memory/greyhush_creatures_material.tres" id="12_cmat"]
+[ext_resource type="Material" path="res://scenes/world/memory/greyhush_foreground_material.tres" id="12_fmat"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/seasonal/season_mask.tscn" id="13_smask"]
 [ext_resource type="Script" uid="uid://c1anfmns84gaa" path="res://scenes/world/world_freeze.gd" id="14_freeze"]
 [ext_resource type="PackedScene" uid="uid://c3q0k2vjhr8y" path="res://scenes/ui/recall_prompt/recall_prompt.tscn" id="15_prompt"]
@@ -42,6 +43,9 @@
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
+
+[sub_resource type="ViewportTexture" id="ViewportTexture_foreground"]
+viewport_path = NodePath("ForegroundPass")
 
 [node name="Game" type="Node2D" unique_id=585377483]
 process_mode = 1
@@ -120,6 +124,16 @@ script = ExtResource("11_cmask")
 [node name="SeasonMask" parent="." unique_id=1997444878 instance=ExtResource("13_smask")]
 process_mode = 3
 
+[node name="ForegroundPass" type="SubViewport" parent="."]
+process_mode = 3
+transparent_bg = true
+handle_input_locally = false
+size = Vector2i(640, 360)
+render_target_update_mode = 3
+script = ExtResource("11_cmask")
+layer = 4
+global_name = &"greyhush_foreground_pass"
+
 [node name="WorldFreeze" type="Node" parent="." unique_id=1632330468]
 script = ExtResource("14_freeze")
 
@@ -144,9 +158,8 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("8_greyh")
 creature_pass_path = NodePath("../Creatures")
+foreground_pass_path = NodePath("../Foreground")
 season_mask_path = NodePath("../../SeasonMask")
-
-[node name="LessonCinematic" parent="CanvasLayer" unique_id=2033014400 instance=ExtResource("18_cine")]
 
 [node name="Creatures" type="TextureRect" parent="CanvasLayer" unique_id=1302556384]
 texture_filter = 1
@@ -158,6 +171,19 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = SubResource("ViewportTexture_creatures")
+
+[node name="Foreground" type="TextureRect" parent="CanvasLayer"]
+texture_filter = 1
+material = ExtResource("12_fmat")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("ViewportTexture_foreground")
+
+[node name="LessonCinematic" parent="CanvasLayer" unique_id=2033014400 instance=ExtResource("18_cine")]
 
 [node name="MemorinaHud" parent="CanvasLayer" unique_id=1302556383 instance=ExtResource("10_hud")]
 

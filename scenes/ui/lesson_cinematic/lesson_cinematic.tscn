@@ -3,6 +3,10 @@
 [ext_resource type="Script" path="res://scenes/ui/lesson_cinematic/lesson_cinematic.gd" id="1_cine"]
 [ext_resource type="FontFile" uid="uid://dsutvchk6baqt" path="res://assets/fonts/memorina_text_font_size_8.ttf" id="2_text_font"]
 [ext_resource type="FontFile" uid="uid://dwda2yqceaac8" path="res://assets/fonts/memorina_title_font_size_17.ttf" id="3_title_font"]
+[ext_resource type="Shader" path="res://scenes/ui/lesson_cinematic/lesson_dim.gdshader" id="4_dim"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dim"]
+shader = ExtResource("4_dim")
 
 [node name="LessonCinematic" type="Control"]
 process_mode = 3
@@ -17,6 +21,7 @@ mouse_filter = 2
 script = ExtResource("1_cine")
 
 [node name="Dim" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_dim")
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0

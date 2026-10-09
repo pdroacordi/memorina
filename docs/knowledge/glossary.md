@@ -19,6 +19,7 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | cinzesquecimento / the Greyhush | `greyhush` |
 | porta (de construção) | `Door` (a puzzle's "porta" stays `Mechanism`/gate) |
 | interior (sala de uma construção) | `Room.interior` |
+| primeiro plano | foreground (`ForegroundPiece`, `ForegroundPass`) |
 | campo de memória | `MemoryField` |
 | pulso de cor | `ColorPulse` |
 | sacar / guardar (o instrumento) | `draw` / `sheathe` |

@@ -21,7 +21,7 @@ source_files:
 
 ## Summary
 
-PLAN (2026-10-08, MEM-12; design 04 §6 "Primeiro plano"). Foreground pieces are `ForegroundPiece`
+BUILT (2026-10-09, MEM-12; `systems/foreground`). Differences from the plan: the composite shader keeps its name `greyhush_creatures.gdshader` (only the script was renamed, to `canvas_pass.gd`); `stack_seasonal_sheets.gd` does not stack foreground sheets yet (with the biome art); the demo pieces are flat placeholders in the spring trial only. Plan (2026-10-08, design 04 §6 "Primeiro plano"): Foreground pieces are `ForegroundPiece`
 sprites in a room's contents scene, on their own visibility bit, rendered by a second
 `SubViewport` pass (`CreatureMask` generalised into `CanvasPass`) and composited after
 `Creatures` with the creature composite's shader (`clipped_pass = false`), so a branch greys and

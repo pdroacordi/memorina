@@ -1,5 +1,8 @@
 [gd_scene format=4]
 
+[ext_resource type="Script" path="res://scenes/world/environment/foreground/foreground_piece.gd" id="fg_piece"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/foreground/demo/column.png" id="fg_column"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/foreground/demo/branch.png" id="fg_branch"]
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/pine_woods.tres" id="bd_set"]
 [ext_resource type="Material" path="res://scenes/world/memory/seasonal/floor_tiles_seasonal_material.tres" id="tiles_season"]
@@ -19,3 +22,16 @@ script = ExtResource("room_map_node")
 map = ExtResource("room_map")
 ground_material = ExtResource("tiles_season")
 
+[node name="Foreground" type="Node2D" parent="."]
+
+[node name="Column" type="Sprite2D" parent="Foreground"]
+position = Vector2(160, -64)
+texture = ExtResource("fg_column")
+script = ExtResource("fg_piece")
+
+[node name="Branch" type="Sprite2D" parent="Foreground"]
+position = Vector2(300, -170)
+texture = ExtResource("fg_branch")
+script = ExtResource("fg_piece")
+scroll_scale = Vector2(1.4, 1.2)
+reveals = false

@@ -34,10 +34,10 @@ enum Mode {
 
 ## HALO bleeds onto the scenery; SILHOUETTE is pixel-exact to the sprite.
 ##
-## SILHOUETTE moves this creature onto CreatureMask.LAYER so it is rendered by
-## the creature pass rather than the world pass - see creature_mask.gd. The one
+## SILHOUETTE moves this creature onto CanvasPass.CREATURES so it is rendered by
+## the creature pass rather than the world pass - see canvas_pass.gd. The one
 ## consequence to know is Z ORDER: creatures on that layer composite above the
-## whole world, so they draw in front of any foreground scenery.
+## whole world, and only the foreground pass draws over them (systems/foreground).
 ## Read once, in _ready: SILHOUETTE moves the creature onto another visibility
 ## layer, and moving it back mid-game would need the whole ancestor walk undone.
 ## Change it in the inspector, not at runtime.
@@ -130,12 +130,12 @@ func _ready() -> void:
 		_field.register_shield(self)
 
 ## Moves this creature onto the layer the creature pass renders (see
-## CreatureMask.join_layer for why its ancestors are touched too).
+## CanvasPass.join_layer for why its ancestors are touched too).
 func _move_to_creature_layer() -> void:
 	var creature := get_parent() as CanvasItem
 	if creature == null:
 		return
-	CreatureMask.join_layer(creature)
+	CanvasPass.join_layer(creature, CanvasPass.CREATURES)
 
 func _exit_tree() -> void:
 	if _field:

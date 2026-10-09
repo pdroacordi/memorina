@@ -1,0 +1,12 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6.0,
+ "player_position": [7360, 5960],
+ "_note": "MEM-12: Ivo stands behind the spring trial's demo column (local x 160): it fades to 0.3, then comes back when he walks out.",
+ "steps": [
+  {"t": 2.5, "screenshot": "00_behind_faded"},
+  {"t": 2.6, "action": "move_left", "pressed": true},
+  {"t": 3.3, "action": "move_left", "pressed": false},
+  {"t": 4.2, "screenshot": "01_out_opaque"}
+ ]
+}

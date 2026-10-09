@@ -201,7 +201,10 @@ func _tween_zoom(target: Vector2, seconds: float = focus_duration,
 		trans: Tween.TransitionType = focus_transition, ease_type: Tween.EaseType = focus_ease) -> void:
 	if _focus_tween:
 		_focus_tween.kill()
+	# Physics, like the pair and look-ahead tweens: an idle tween steps after every _process, so the
+	# canvas passes would copy last frame's zoom (bugs/the-canvas-passes-draw-one-frame-behind-a-camera-zoom-tween).
 	_focus_tween = create_tween() \
+		.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS) \
 		.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
 		.set_trans(trans) \
 		.set_ease(ease_type)

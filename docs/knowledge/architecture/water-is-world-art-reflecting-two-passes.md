@@ -67,3 +67,7 @@ codebase made the obvious designs wrong:
   by its own shield.
 - Anything new that should be reflected must draw below z 50.
 - A water rect must stay inside its pit: at z 50 it covers any bank tile it overlaps.
+
+## Revision (2026-10-09, MEM-12)
+
+"z > 50" is for world art that must cover water. The foreground is not world art: it is its own canvas pass (`systems/foreground`), in neither the screen copy nor the creature pass, so water never reflects it and it covers water like any later draw.

@@ -43,10 +43,13 @@ const TIME_WRAP := 3600.0
 
 ## TextureRect that composites the creature pass; it receives the same uniforms as the world pass.
 @export var creature_pass_path: NodePath
+## TextureRect that composites the foreground pass, with the same uniforms (architecture/foreground-layer).
+@export var foreground_pass_path: NodePath
 ## SeasonMask viewport whose texture is published as `greyhush_season_mask`.
 @export var season_mask_path: NodePath
 
 var creature_pass: CanvasItem
+var foreground_pass: CanvasItem
 var season_mask: SeasonMask
 
 @onready var _field: MemoryField = MemoryField.find_in(self)
@@ -70,6 +73,10 @@ func _ready() -> void:
 		creature_pass = get_node_or_null(creature_pass_path) as CanvasItem
 	assert(creature_pass_path.is_empty() or creature_pass != null,
 		"GreyhushRenderer.creature_pass_path does not resolve to a CanvasItem; creatures would render at full colour.")
+	if not foreground_pass_path.is_empty():
+		foreground_pass = get_node_or_null(foreground_pass_path) as CanvasItem
+	assert(foreground_pass_path.is_empty() or foreground_pass != null,
+		"GreyhushRenderer.foreground_pass_path does not resolve to a CanvasItem; the foreground would render at full colour.")
 	if not season_mask_path.is_empty():
 		season_mask = get_node_or_null(season_mask_path) as SeasonMask
 	assert(season_mask_path.is_empty() or season_mask != null,
@@ -86,13 +93,13 @@ func _ready() -> void:
 	_falloff_image = Image.create_empty(FALLOFF_SAMPLES, MemoryField.MAX_SHIELDS, false, Image.FORMAT_RF)
 	_falloff_texture = ImageTexture.create_from_image(_falloff_image)
 	_set_param("shield_falloff", _falloff_texture)
-	# CreatureMask renders creatures separately, so the main viewport must cull them.
-	get_tree().root.canvas_cull_mask = CreatureMask.WORLD_CULL_MASK
 	# The passes use different clipping values.
 	if material:
 		material.set_shader_parameter("clipped_pass", false)
 	if creature_pass and creature_pass.material:
 		creature_pass.material.set_shader_parameter("clipped_pass", true)
+	if foreground_pass and foreground_pass.material:
+		foreground_pass.material.set_shader_parameter("clipped_pass", false)
 	_push_constants()
 	_push_atmosphere()
 
@@ -102,14 +109,12 @@ func _set_param(name: StringName, value: Variant) -> void:
 		material.set_shader_parameter(name, value)
 	if creature_pass and creature_pass.material:
 		creature_pass.material.set_shader_parameter(name, value)
+	if foreground_pass and foreground_pass.material:
+		foreground_pass.material.set_shader_parameter(name, value)
 	if season_mask and season_mask.mask_material():
 		season_mask.mask_material().set_shader_parameter(name, value)
 
 func _exit_tree() -> void:
-	# Restore global viewport state when this renderer leaves the tree.
-	var tree := get_tree()
-	if tree:
-		tree.root.canvas_cull_mask = 0xFFFFFFFF
 	# Clear the global texture when its viewport leaves the tree.
 	RenderingServer.global_shader_parameter_set(&"greyhush_season_mask", null)
 

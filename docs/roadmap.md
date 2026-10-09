@@ -36,7 +36,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | MEM-09 | Water current | 03 §6 | `[ ]` | MEM-08 | 2026-10-02 | Hook: `WaterVolume.disturbances()`. |
 | MEM-10 | Waterfalls | 03 §7 | `[?]` | | 2026-10-02 | Needs its own design pass (freeze the whole fall or the base?). Inverno Espacial 1 depends on it. |
 | MEM-11 | Death marks | 03 §4.3 | `[x]` | LIFE-02 | 2026-10-02 | |
-| MEM-12 | Foreground art layer | 04 §6 | `[ ]` | | 2026-10-08 | Needs its own creature-bit treatment; characters draw over the finished world. |
+| MEM-12 | Foreground art layer | 04 §6 | `[x]` | | 2026-10-09 | `systems/foreground`. A second canvas pass over the creatures; pieces fade whole while a character stands behind. Demo placeholders in the spring trial. |
 | MEM-13 | Starting memory per region | 04 §2 | `[ ]` | WORLD-05 | 2026-10-08 | Values in 04 §2 (user, 2026-10-08). The village's mid-game 0.6 lands with WORLD-11. |
 | WORLD-04 | Background layers of regions placed away from the origin | | `[x]` | | 2026-10-09 | Fixed by WORLD-06 (`systems/backdrops`). `Parallax2D` ignores its parent's offset, so the far layers are off screen in the trials: `gotchas/parallax2d-ignores-its-parents-offset`. |
 

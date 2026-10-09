@@ -2,7 +2,7 @@ shader_type canvas_item;
 // The transparent SubViewport output is premultiplied; keep this blend mode to avoid dark sprite edges.
 render_mode blend_premul_alpha;
 
-// Draws CreatureMask's isolated creature render over the drained world.
+// Draws a CanvasPass's isolated render (the creatures, or the foreground) over the drained world.
 
 //
 // Must match the world pass through the shared include; preserve alpha so transparent areas do not cover the world.

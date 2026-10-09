@@ -178,6 +178,9 @@ locale/translations=PackedStringArray("res://i18n/translations.en.translation", 
 
 [layer_names]
 
+2d_render/layer_1="World"
+2d_render/layer_2="Creatures"
+2d_render/layer_3="Foreground"
 2d_physics/layer_1="Terrain"
 2d_physics/layer_2="Props"
 2d_physics/layer_3="Climbable"
@@ -221,6 +224,10 @@ greyhush_distance_fade={
 "value": 0.0
 }
 greyhush_creature_pass={
+"type": "sampler2D",
+"value": ""
+}
+greyhush_foreground_pass={
 "type": "sampler2D",
 "value": ""
 }

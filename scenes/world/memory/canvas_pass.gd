@@ -1,51 +1,59 @@
-class_name CreatureMask extends SubViewport
+class_name CanvasPass extends SubViewport
 
-## Renders creatures into a separate texture for silhouette-accurate memory effects.
-## Must run while paused and stay composited above the world; see `game.tscn` process mode.
+## Renders one visibility layer of the world into its own texture: the creatures, or the foreground
+## (architecture/foreground-layer). Must run while paused and stay composited above the world.
 
 ## Creature visibility layer (bit 1).
-const LAYER := 2
+const CREATURES := 2
+## Foreground visibility layer (bit 2).
+const FOREGROUND := 4
 
-## Main viewport cull mask with the creature bit removed.
-const WORLD_CULL_MASK := 0xFFFFFFFF & ~LAYER
+## The visibility bit this pass draws; the root viewport culls it.
+@export_flags_2d_render var layer: int = CREATURES
+## The shader global this pass is published under (declared in project.godot [shader_globals]).
+@export var global_name: StringName = &"greyhush_creature_pass"
 
-## The shader global this pass is published under, so a world shader that must
-## see the creatures (water reflecting Ivo) can sample them without a path to
-## this node. Declared in project.godot [shader_globals].
-const GLOBAL := &"greyhush_creature_pass"
 
-## Adds the creature bit to CanvasItem ancestors and assigns it alone to `item`.
+## Puts `item` on `pass_layer` alone and adds the bit to its CanvasItem ancestors.
 # Ancestors need the bit too because a culled CanvasItem hides its whole subtree.
-static func join_layer(item: CanvasItem) -> void:
-	_set_layer(item, LAYER)
+static func join_layer(item: CanvasItem, pass_layer: int) -> void:
+	_set_layer(item, pass_layer)
 	var walker: Node = item.get_parent()
 	while walker != null and walker is CanvasItem:
-		(walker as CanvasItem).visibility_layer |= LAYER
+		(walker as CanvasItem).visibility_layer |= pass_layer
 		walker = walker.get_parent()
 
-static func _set_layer(node: Node, layer: int) -> void:
+static func _set_layer(node: Node, pass_layer: int) -> void:
 	if node is CanvasItem:
-		(node as CanvasItem).visibility_layer = layer
+		(node as CanvasItem).visibility_layer = pass_layer
 	for child: Node in node.get_children():
-		_set_layer(child, layer)
+		_set_layer(child, pass_layer)
 
 # Published on entering rather than in _ready, which runs once: a pass removed
 # and re-added would otherwise leave the global cleared by _exit_tree.
 func _enter_tree() -> void:
-	RenderingServer.global_shader_parameter_set(GLOBAL, get_texture())
+	RenderingServer.global_shader_parameter_set(global_name, get_texture())
+	# Each pass owns its bit of the root's mask, so two passes leave in any order.
+	get_tree().root.canvas_cull_mask &= ~layer
 
 func _ready() -> void:
 	# Order matters: world_2d has to be shared before the first draw, or this
 	# viewport spends a frame rendering its own empty world.
-	world_2d = get_tree().root.world_2d
-	canvas_cull_mask = LAYER
+	var root := get_tree().root
+	world_2d = root.world_2d
+	canvas_cull_mask = layer
 	transparent_bg = true
 	render_target_update_mode = SubViewport.UPDATE_ALWAYS
-	# SubViewport defaults to LINEAR, so mirror the root viewport's filter.
-	canvas_item_default_texture_filter = get_tree().root.canvas_item_default_texture_filter
+	# SubViewport defaults to LINEAR and no snapping, so mirror the root viewport.
+	canvas_item_default_texture_filter = root.canvas_item_default_texture_filter
+	snap_2d_transforms_to_pixel = root.snap_2d_transforms_to_pixel
+	snap_2d_vertices_to_pixel = root.snap_2d_vertices_to_pixel
 
 func _exit_tree() -> void:
-	RenderingServer.global_shader_parameter_set(GLOBAL, null)
+	RenderingServer.global_shader_parameter_set(global_name, null)
+	var tree := get_tree()
+	if tree != null:
+		tree.root.canvas_cull_mask |= layer
 
 func _process(_delta: float) -> void:
 	# No Camera2D of its own. Copying the main viewport's canvas transform is

@@ -55,7 +55,7 @@ func _ready() -> void:
 	_head_query.collision_mask = RAINED_ON
 	_airflow = Airflow.find_in(self)
 	var season := pulse.song().season()
-	CreatureMask.join_layer(_head_splashes)
+	CanvasPass.join_layer(_head_splashes, CanvasPass.CREATURES)
 	for clipped: CanvasItem in [self, _splashes, _head_splashes]:
 		(clipped.material as ShaderMaterial).set_shader_parameter(&"season", season)
 

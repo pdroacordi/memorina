@@ -19,7 +19,7 @@ var rect := Rect2():
 func _ready() -> void:
 	assert(z_index == Z and not z_as_relative, "A WaterQuad must draw at absolute WaterQuad.Z")
 	if creature_layer and not Engine.is_editor_hint():
-		CreatureMask.join_layer(self)
+		CanvasPass.join_layer(self, CanvasPass.CREATURES)
 
 func _draw() -> void:
 	draw_rect(rect, Color.WHITE)
