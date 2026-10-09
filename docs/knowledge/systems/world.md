@@ -1,0 +1,94 @@
+---
+id: systems/world
+type: system
+title: The world layout - seven regions on a grid of screens, interiors below, rooms generated as shells
+status: active
+tags: [world, layout, rooms, regions, interiors, generator, uid]
+related: [systems/rooms, systems/map, systems/backdrops, architecture/doors-and-interiors]
+created: 2026-10-09
+updated: 2026-10-09
+source_files:
+  - tools/maps/gen_world_shells.py
+  - tools/maps/world_uid_pool.txt
+  - scenes/world/game.tscn
+---
+
+# The world layout
+
+**Never break:** a room's bounds are a whole number of 640x384 screens on the world grid, rooms never overlap, and interiors stay in the band at y 12000 and below. A region scene, a contents scene and a `.room` file are written once by the generator; only Room triggers are regenerated.
+
+Design 04 (the approved map, "Approve as proposed", 2026-10-08), WORLD-05.
+
+- **The grid.** Macro cell (c, r) is world x [640c, 640c+640), y [384r, 384r+384): one screen, 20x12 tiles. A surface room's walkable floor is the top of grid row 9 of its bottom screen row (y = 384r + 288). Every region scene sits at (0, 0) in `game.tscn`; its rooms carry their world position. The song trials stay at y 5600..8100 (debug only).
+- **Openings.** Rooms share edges. A side opening is air in rows 5..8 of the shared screen row with a floor at row 9; a vertical opening keeps the named columns open. The current room is the one Ivo's feet are in (`systems/rooms`).
+- **Interiors** (door rooms, design 04 section 4) live at y 12000 (floor y 12288), x = region index * 12000 + n * 1600, in the generator's region order (home_village, threshold, frost_edge, spring_woods, frozen_lake, wind_orchards, summer_caldera). They never touch another room. A new game starts in `village_house` at (320, 12286).
+- **The generator.** `tools/maps/gen_world_shells.py` holds the tables (regions with name key, season, memory, guardian and wall material; rooms with macro rects; side and vertical openings; benches; interiors; doors; barriers) and writes Room triggers (always), region scenes, contents scenes and `.room` shells (once). Every scene gets a stable `uid=` from `world_uid_pool.txt` (minted by Godot; uids already in a scene header are skipped), so `SceneKey` save keys survive renames. To add a room: add its row and openings, run the tool, add the printed contents scenes to `tools/smoke/scenes.txt`, and place it in its region scene by hand (region scenes are not regenerated).
+- **Memory per region** (MEM-13, design 04 section 2): village 0.8, threshold 0.3, frost edge 0.05, woods 0.4, lake 0.3, orchards 0.25, caldera 0.15, authored on each region's `Memory` node. The village's mid-game 0.6 lands with WORLD-11.
+- **Hand-placed region memory:** the lake well's squall has its own `MemorySource` (`frozen_lake.tscn`, `WellSquallMemory`) so its gusts break a song at the region's 0.3.
+- **Known limits** (2026-10-09 traversals, `playtests/2026-10-09-traversal-opening`): in one-screen rooms the double jump reaches every height gate on the optional alcoves (woods pond, caldera seesaw, dry moat, bait); the player owns the double jump before arriving, so they stay optional. The cistern is a one-way drop into the caldera without wall climb. The cliff chimney is gated by wall climb at its top (`has_wall_climb.tres`) so nobody falls in without it.
+
+## Rooms (macro rects) (c0..c1, r0..r1 inclusive)
+
+| Region | Room | c | r | Notes |
+|---|---|---|---|---|
+| home_village | village_lane_west | -2..-1 | 0 | W edge: fence gated by owns_memorina (barrier, not a door) |
+| home_village | village_square | 0..2 | 0 | bench `village_square_bench`; doors: village_house, village_tavern, village_elder; the well's shaft opens down into village_cistern at c1 |
+| home_village | village_bell_tower | 1 | -3..-1 | vertical; reached by jumping off the square's roofs; top ledge needs double jump |
+| home_village | village_cistern | 1 | 1..2 | vertical flooded shaft (`w`/`~`); bottom passage W into caldera_cistern_bottom; Redoma |
+| home_village | village_mill | 3..4 | 0 | river; at c4 the river trail goes up into lake_waterfall_path, gated by owns_memorina |
+| home_village | village_gate_east | 5..6 | 0 | E exit to threshold |
+| threshold | threshold_fields | 7..9 | 0 | door: threshold_farmhouse |
+| threshold | threshold_bridge | 10..11 | 0 | broken bridge over a ravine (clearable with one jump); brute shadow |
+| threshold | threshold_wayshrine | 12 | 0 | bench `threshold_wayshrine_bench` |
+| frost_edge | frost_shore | 13..14 | 0 | frozen surf |
+| frost_edge | frost_cliffs | 15..16 | -3..0 | vertical climb by single jumps; bench `frost_cliffs_bench` in a sheltered cave |
+| frost_edge | lighthouse_base | 17..18 | -3 | door: lighthouse_interior |
+| frost_edge | lighthouse_top | 17..18 | -5..-4 | final arena (empty); door (hatch) to lighthouse_interior; solid floor to the base below |
+| spring_woods | woods_edge | -4..-3 | 0 | bench `woods_edge_bench`; door: woods_hut |
+| spring_woods | woods_deep | -7..-5 | -2..0 | tall trees, ledges; a high ledge (double jump) up into woods_canopy; floor hole down into woods_root_caves (drop in, way back needs Enraizar) |
+| spring_woods | woods_canopy | -7..-5 | -3 | top-left opening up into orchard_terraces at c -7 |
+| spring_woods | woods_root_caves | -7..-5 | 1..2 | earth and stone faces; root bridge, earth well; collectible |
+| spring_woods | woods_pond | -9..-8 | 0 | dry basin + floater (Chuva return) |
+| spring_woods | bloom_hollow | -11..-10 | 0 | Bloom Guardian arena (moved from the old village) |
+| frozen_lake | lake_waterfall_path | 4 | -5..-1 | vertical, single jumps; bench `lake_waterfall_bench` |
+| frozen_lake | lake_fishing_village | 1..3 | -5 | stilts over a lake; door: lake_fisher_hut; floor hole at c2 into lake_well |
+| frozen_lake | lake_well | 2 | -4 | water well (Redoma; windy spot) |
+| frozen_lake | lake_shore | -2..0 | -5 | wide lake (Congelar return); far bank secret |
+| frozen_lake | lake_high_wall | -3 | -7..-5 | lake against a wall; the high exit (Redoma+Congelar / Vendaval+Congelar) holds a collectible; floor level passes W |
+| frozen_lake | lake_ice_caves | 5..6 | -5 | path to the arena |
+| frozen_lake | lake_frost_arena | 7..8 | -5 | Frost Guardian arena (moved from the lighthouse) |
+| frozen_lake | lake_chasm | -5..-4 | -6..-5 | earth-walled chasm; Enraizar bridge W to orchard_chasm_bridge |
+| wind_orchards | orchard_chasm_bridge | -7..-6 | -6 | down into orchard_terraces at c -7 |
+| wind_orchards | orchard_terraces | -9..-7 | -5..-4 | bench `orchard_terraces_bench` |
+| wind_orchards | orchard_well | -6..-5 | -4 | Combinado 3 (Soltar+Enraizar); collectible |
+| wind_orchards | orchard_mill_town | -12..-10 | -4 | windmills; door: orchard_inn; drawbridge (Soltar, shortcut) |
+| wind_orchards | orchard_counterweights | -10 | -6..-5 | lift (Soltar), shortcut to terraces |
+| wind_orchards | orchard_windy_gap | -12..-11 | -5 | wind zone gap (Vendaval) |
+| wind_orchards | orchard_leaf_path | -14..-13 | -4 | leaf cover (Soltar) |
+| wind_orchards | orchard_arena | -16..-15 | -4 | autumn arena, empty until GRD-04 |
+| wind_orchards | orchard_cliff_chimney | -17 | -4..4 | tall chimney; bottom exit E is high on a wall: wall climb |
+| summer_caldera | caldera_chimney_base | -16..-15 | 4 | from the chimney |
+| summer_caldera | caldera_long_corridor | -14..-11 | 4 | passable; the Solstice+Sombra plate/door guards a side alcove with a collectible |
+| summer_caldera | caldera_bait | -10..-9 | 4 | territorial brute shadow (fight or Sombra) |
+| summer_caldera | caldera_dry_moat | -8..-6 | 4 | Combinado 1 (Chuva+Congelar) to an optional ledge |
+| summer_caldera | caldera_seesaw | -5..-4 | 4 | seesaw (Sombra) |
+| summer_caldera | caldera_open_crater | -3..-2 | 2..5 | tall; sky far above; bench `caldera_crater_bench` |
+| summer_caldera | caldera_cistern_bottom | -1..1 | 3..4 | from village_cistern (c1 top) |
+| summer_caldera | caldera_temple_gate | 2..3 | 4 | plate + gate (Sombra) |
+| summer_caldera | caldera_arena | 4..5 | 4 | summer arena, empty until GRD-04 |
+
+## Interiors (y >= 12000, region-local; at least 640x360; never touching another room)
+
+| Region | Interior | size (screens) | doors |
+|---|---|---|---|
+| home_village | village_house | 1x1 | village_square; Ivo's start (new game spawns here) |
+| home_village | village_tavern | 2x2 (two floors) | village_square; trapdoor to village_tavern_cellar |
+| home_village | village_tavern_cellar | 1x1 | village_tavern; Enraizar secret |
+| home_village | village_elder | 1x1 | village_square |
+| home_village | village_bakery | 1x1 | village_lane_west |
+| home_village | village_empty_house | 2x1 | village_lane_west; Combinado 4 |
+| threshold | threshold_farmhouse | 1x1 | threshold_fields; sword marker |
+| frost_edge | lighthouse_interior | 1x4 (vertical) | lighthouse_base (bottom), lighthouse_top (hatch, sealed: all_guardians_restored) |
+| spring_woods | woods_hut | 1x1 | woods_edge |
+| frozen_lake | lake_fisher_hut | 1x1 | lake_fishing_village |
+| wind_orchards | orchard_inn | 2x1 | orchard_mill_town |

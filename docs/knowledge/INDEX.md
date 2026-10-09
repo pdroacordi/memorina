@@ -19,6 +19,9 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 - [map](systems/map.md) — The map (UI-04): seen 64 px cells per room `SceneKey` in `PlayerData.map_seen`, the pausable `MapRevealer` armed by `Game.room_changed`, `MapOutline` fill runs, edges and notches, the Node2D `MapCanvas`, zoom 1/2/4/8 opening at 4, the latched real-time pan, and the opening gate and closes.
 - [notebook](systems/notebook.md) — The field notebook (UI-03): entries derived from save facts (`NotebookEntry`, `NotebookCatalog`, pure `NotebookIndex`), `met_guardians` and death-proof `notebook_read`, the spellbook screen (real-time open, close and page-turn strips, 81x106 page rects, rows by whole lines, "? ? ?" placeholders, unread marks, 16 px note glyphs), and the `NotebookWatcher` + HUD quill held through fights and lessons.
 - [rooms](systems/rooms.md) — Rooms: text maps, the importer and the legend.
+- [world](systems/world.md) — The world layout: seven regions on a grid of 640x384 screens, interiors at y 12000, rooms generated as shells by `tools/maps/gen_world_shells.py`.
+- [backdrops](systems/backdrops.md) — Backdrops that work vertically: one `Backdrop` per room, layers placed by `BackdropMath` from the room's horizon, fills from the sheet's edge rows.
+- [foreground](systems/foreground.md) — Art in front of the creatures: a second `CanvasPass`, greyed by the creature composite, pieces fade while a character stands behind them.
 - [screens](systems/screens.md) — Screens: the menu system (pause, the notebook, the map and the title): router, hold and block, `can_open()`, focus, the 2x rule, 16 px entries, the wood theme, the Blackout and leaving, the title's two screens and the flute pulse.
 - [roots-and-climbing](systems/roots-and-climbing.md) — Enraizar's roots and climbing.
 - [seasonal-art](systems/seasonal-art.md) — Seasonal art: stacked sheets, the season mask and regional weather.
