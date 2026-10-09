@@ -1,5 +1,7 @@
-; orchard_windy_gap.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; orchard_windy_gap.room - O Vao do Vento (design 04 section 3.6); entered from the mill town's lowered drawbridge onto the east ledge (cols 36-38).
+; Outono Espacial 2 (design 02 section 8): a 20-cell chasm with a westward current; double jump 13.6, with the current 19.6, with the gale
+; 18.8 cells; the gale played on the ledge into the current carries about 21.7. Logico 2: Soltar drops the cocoon on the shelf, a westward gale
+; blows it onto the plate at col 4, and the plate holds the gate at col 12 open to the alcove under the shelf. A fall drops into the mill town.
 
 [room]
 origin = 0, 0
@@ -9,11 +11,17 @@ origin = 0, 0
 #......................................#
 #......................................#
 #......................................#
-#......................................#
-#......................................#
-#......................................#
-#......................................#
-#......................................#
-########################............####
-########################............####
-########################............####
+#..SP......H...........................#
+#SSSSSSSSSSSS..........................#
+#SSS...................................#
+#SSS...................................#
+#SSS........G.............W............#
+################....................####
+################....................####
+################....................####
+
+[entities]
+4,4 = {"id": "plate_gate"}
+11,4 = {"id": "cocoon", "hang_height": 16.0}
+12,8 = {"id": "alcove_gate", "trigger_path": "plate_gate"}
+26,8 = {"size": [768, 224], "direction": [-1, 0], "speed": 90}

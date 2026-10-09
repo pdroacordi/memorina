@@ -1,5 +1,5 @@
-; orchard_chasm_bridge.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; orchard_chasm_bridge.room - Ponte do Abismo (design 04 section 3.6): the root bridge from lake_chasm lands on the east floor.
+; The floor hole at cols 4-11 drops into orchard_terraces; from the terraces' high branch (row 4) a double jump comes back up.
 
 [room]
 origin = 0, 0
@@ -9,11 +9,11 @@ origin = 0, 0
 #......................................#
 #......................................#
 #......................................#
-#......................................#
+#..........................====........#
 #.......................................
 #.......................................
-#.......................................
-#.......................................
+#SS..................####...............
+#SS................########.............
 ####........############################
 ####........############################
 ####........############################

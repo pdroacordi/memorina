@@ -1,5 +1,6 @@
-; orchard_leaf_path.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; orchard_leaf_path.room - Trilha sob a Folhagem (design 04 section 3.6): the main path climbs over a stone hill.
+; Outono Espacial 1 (design 02 section 8): a leaf curtain at col 14 closes the hill's only side tunnel; Soltar drops
+; it and the tunnel leads to the collectible alcove at cols 18-21. The main path never needs the song.
 
 [room]
 origin = 0, 0
@@ -8,12 +9,15 @@ origin = 0, 0
 #......................................#
 #......................................#
 #......................................#
-#......................................#
-#......................................#
-........................................
-........................................
-........................................
-........................................
+#..=======.............................#
+#.............##############...=====...#
+..............SSSSSSSSSSSSSS............
+......................SSSSSS............
+......................SSSSSS##..........
+..............F.......SSSSSS##..........
 ########################################
 ########################################
 ########################################
+
+[entities]
+14,8 = {"id": "leaf_curtain", "size": [32, 96]}

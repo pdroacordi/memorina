@@ -1,22 +1,22 @@
-; orchard_inn.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; orchard_inn.room - Estalagem: the mill town's inn, interior (design 04 sections 3.6 and 4).
+; Built floor (stone, so Enraizar grows no pillars indoors): bar counter, a three-step stair to the upper floor's rooms, a hearth.
 
 [room]
 origin = 0, 0
 
 [grid]
-########################################
-#......................................#
-#......................................#
-#......................................#
-#......................................#
-#......................................#
-#......................................#
-#......................................#
-#...E..................................#
-########################################
-########################################
-########################################
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+S......................................S
+S......................................S
+S......................................S
+S.................................SSSS.S
+S.......................===============S
+S......................S...........SSSSS
+S.....................SS...........SSSSS
+S...E....SSSS........SSS...........SSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 [entities]
 4,8 = {"link": "orchard_inn_door", "to_room": "orchard_mill_town", "arrive_facing": 1}

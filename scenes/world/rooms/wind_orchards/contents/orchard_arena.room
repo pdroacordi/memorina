@@ -1,5 +1,8 @@
-; orchard_arena.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; orchard_arena.room - Colina do Guardiao: the autumn guardian's arena, empty until GRD-04 (design 04 section 3.6).
+; Flat floor top at row 9 across all 40 cells, no pits, nine rows of air; the guardian stands at col 25.
+
+; The chimney gate: the cliff chimney (west) cannot be climbed back out without wall climb, so a
+; barrier holds its mouth until the save holds it (design 04 section 3.6; no softlock while GRD-04 is open).
 
 [room]
 origin = 0, 0
@@ -13,7 +16,10 @@ origin = 0, 0
 ........................................
 ........................................
 ........................................
-........................................
+.X......................................
 ########################################
 ########################################
 ########################################
+
+[entities]
+1,8 = {"requires": "res://resources/save_facts/has_wall_climb.tres"}

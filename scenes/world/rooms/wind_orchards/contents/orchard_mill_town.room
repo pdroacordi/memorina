@@ -1,22 +1,24 @@
-; orchard_mill_town.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; orchard_mill_town.room - Vila dos Moinhos (design 04 section 3.6): a flat main street from the terraces (east) to the leaf path (west); inn door at col 30.
+; Soltar on the inn gallery (row 2) drops the drawbridge 18 cells east to the stone mill loft, nine rows above the yard and beyond every
+; jump: the shortcut up into orchard_counterweights, and from the bridge a double jump up the windy gap's chasm onto its east ledge.
 
 [room]
 origin = 0, 0
 
 [grid]
 #..........................................................#
-#..........................................................#
-#..........................................................#
+#...........................D..............................#
+#......................======.................SSSSSS.......#
 #..........................................................#
 #..........................................................#
 ............................................................
-............................................................
-............................................................
-..............................E.............................
-############################################################
-############################################################
+...SSSSSSSS.............SSSSSSSS............................
+...............SSSS.........................................
+...............SSSS...........E.............................
+########################################..................##
+########################################..................##
 ############################################################
 
 [entities]
+28,1 = {"id": "mill_bridge", "length_cells": 18, "side": 1}
 30,8 = {"link": "orchard_inn_door", "to_room": "orchard_inn"}

@@ -1,31 +1,40 @@
-; orchard_counterweights.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; orchard_counterweights.room - Os Contrapesos (design 04 section 3.6): Outono Logico 1 (design 02 section 8), shortcut from the mill town to the terraces.
+; Entered from the mill loft through the floor mouth. The lift (col 10) rises 14 rows to the block tops while plate_lift holds; the load over
+; plate_jam locks it. Soltar from the east niche reaches only the right load (12 cells apart); from the lift it reaches both. From the top,
+; the drop column (cols 17-18) leads to the terraces' upper ledge; it cannot be climbed back without wall climb.
 
 [room]
 origin = 0, 0
 
 [grid]
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#...................
-#...................
-#...................
-#...................
-######........######
-######........######
-######........######
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+S..................S
+SSSSSS........SSS..S
+SSSSSS........SSS..S
+SSSSSS........SSS..S
+SSSSSS........SSS..S
+SSSSSS........SSS..S
+SSSSSS........SSS..S
+SSSSSS........SSS..S
+SSSSSS........SSS..S
+S...............S..S
+S...............S..S
+S...............S...
+S...............S...
+S.H............HS...
+S.P.......L....PS...
+SSSSSS........SSSSSS
+SSSSSS........SSSSSS
+SSSSSS........SSSSSS
+
+[entities]
+2,19 = {"id": "weight_wrong", "hang_height": 32.0}
+2,20 = {"id": "plate_jam"}
+10,20 = {"id": "lift", "trigger_path": "plate_lift", "lock_path": "plate_jam", "travel": [0, -448], "move_time": 3.5}
+15,19 = {"id": "weight_right", "hang_height": 32.0}
+15,20 = {"id": "plate_lift"}
