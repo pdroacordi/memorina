@@ -369,6 +369,10 @@ Animals: `cat` 32x32 (tail, 6), `cat_roof` 32x16 (breathing, 4), `chicken_a`, `_
 3. "All doors": the square's building over cols 16-27 and the river mill have no `E` in the
    greybox. Give them doors and interiors, or move them into the backdrop?
 
+## Status (2026-10-09)
+
+BUILT, the core: `AmbientMath`, `AmbientMotion`, `RegionPresence`, `prop_seasonal_material.tres`, `Backdrop.Z` -30, their tests and a demo flag (`systems/props`). Still to come with WORLD-11's art: the contract keys (`bands`, `palette`, `anchor`), PixelLab v2 commands, `bake_rotation.gd`, `prop_scenes_test` and `contents_layering_test`.
+
 ## User decisions (2026-10-09)
 
 - Frame cycles in the grey: "Stop below 0.2 memory" - `AmbientMotion` advances only where the memory at its point is at least 0.2.

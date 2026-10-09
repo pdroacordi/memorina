@@ -20,6 +20,9 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | porta (de construção) | `Door` (a puzzle's "porta" stays `Mechanism`/gate) |
 | interior (sala de uma construção) | `Room.interior` |
 | primeiro plano | foreground (`ForegroundPiece`, `ForegroundPass`) |
+| adereço | prop |
+| aldeão | villager (an inhabitant prop) |
+| sinais de vida | ambient motion (`AmbientMotion`) |
 | campo de memória | `MemoryField` |
 | pulso de cor | `ColorPulse` |
 | sacar / guardar (o instrumento) | `draw` / `sheathe` |

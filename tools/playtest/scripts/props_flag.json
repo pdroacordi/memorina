@@ -1,0 +1,12 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6.0,
+ "player_position": [18620, 5960],
+ "_note": "WORLD-08: a placeholder 4-frame flag on the memory clock in the door trial (region memory 0.35): it waves at 0.35 of 6 fps.",
+ "steps": [
+  {"t": 2.0, "screenshot": "f0"},
+  {"t": 2.5, "screenshot": "f1"},
+  {"t": 3.0, "screenshot": "f2"},
+  {"t": 3.5, "screenshot": "f3"}
+ ]
+}

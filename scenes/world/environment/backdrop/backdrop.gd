@@ -10,6 +10,8 @@ const HALF_VIEW := Vector2(320.0, 180.0)
 const MARGIN := 32.0
 ## Bounds relative to this node without a Room (the editor, a contents scene opened alone).
 const PREVIEW_BOUNDS := Rect2(0.0, -384.0, 1920.0, 768.0)
+## Behind a room's [back] walls (-20) and props (-10) (architecture/props-and-ambient-life).
+const Z := -30
 
 @export var backdrop_set: BackdropSet:
 	set(value):
@@ -29,6 +31,7 @@ const PREVIEW_BOUNDS := Rect2(0.0, -384.0, 1920.0, 768.0)
 
 
 func _ready() -> void:
+	z_index = Z
 	refresh()
 
 ## Rebuilds every layer; the built nodes are never saved.
