@@ -1,19 +1,19 @@
-; lake_frost_arena.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; lake_frost_arena.room - Gruta do Guardiao: the Frost Guardian's arena (design 04 section 3.5, GRD-03). Flat floor
+; (top row 9) from col 1 to col 38 with eight open rows over cols 4-36; the guardian stands at col 25.
 
 [room]
 origin = 0, 0
 
 [grid]
-########################################
-#......................................#
-#......................................#
-#......................................#
-#......................................#
-.......................................#
-.......................................#
-.......................................#
-.......................................#
-########################################
-########################################
-########################################
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSS.................................SSS
+SSSS.................................SSS
+S......................................S
+S......................................S
+.......................................S
+.......................................S
+.......................................S
+.......................................S
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

@@ -1,5 +1,5 @@
-; woods_edge.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; woods_edge.room - the forest's edge off the market lane: the woodcutter's hut (door) and the
+; region's bench (design 04 section 3.4). No gate; the hut's roof is a ledge reached from the woodpile.
 
 [room]
 origin = 0, 0
@@ -9,11 +9,11 @@ origin = 0, 0
 #......................................#
 #......................................#
 #......................................#
-#......................................#
+#.......=========.....======...........#
 ........................................
 ........................................
-........................................
-............E.................R.........
+...................##...##..............
+............E......##..####...R.........
 ########################################
 ########################################
 ########################################

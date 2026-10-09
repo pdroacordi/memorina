@@ -1,19 +1,19 @@
-; lake_ice_caves.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; lake_ice_caves.room - Grutas de Gelo: the way from the waterfall's top to the Frost Guardian (design 04 section 3.5).
+; No gate: single jumps over a hump, a dip and a raised shelf.
 
 [room]
 origin = 0, 0
 
 [grid]
-########################################
-#......................................#
-#......................................#
-#......................................#
-#......................................#
-........................................
-........................................
-........................................
-........................................
-########################################
-########################################
-########################################
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+S....SS.......SS........S........SSS...S
+S.............SS........S........SSS...S
+S.............SS.......................S
+S......................................S
+.................====...................
+..........................SSSSSS........
+.........SSSSS............SSSSSS........
+.........SSSSS.........SS.SSSSSS........
+SSSSSSSSSSSSSSSS......SSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
