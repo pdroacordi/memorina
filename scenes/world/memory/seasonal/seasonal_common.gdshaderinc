@@ -16,6 +16,15 @@ int gh_season_at(vec2 screen_uv) {
 	return int(round(texture(greyhush_season_mask, screen_uv).r * 255.0)) - 1;
 }
 
+// The band a stacked sheet shows for an Enums.Season (WINTER, SUMMER, AUTUMN, SPRING).
+// Explicit components: runtime vector indexing varies across shader backends.
+int gh_band_for(int season, ivec4 band_of_season) {
+	if (season == 0) { return band_of_season.x; }
+	if (season == 1) { return band_of_season.y; }
+	if (season == 2) { return band_of_season.z; }
+	return band_of_season.w;
+}
+
 // Smooth forgotten amount (0..1); consumers must leave dithering to the colour pass.
 float gh_forgotten_at(vec2 screen_uv) {
 	return 1.0 - texture(greyhush_season_mask, screen_uv).g;

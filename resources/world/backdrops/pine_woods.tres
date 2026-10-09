@@ -1,0 +1,51 @@
+[gd_resource type="Resource" script_class="BackdropSet" format=3]
+
+[ext_resource type="Script" path="res://resources/world/backdrops/backdrop_set.gd" id="1_set"]
+[ext_resource type="Script" path="res://resources/world/backdrops/backdrop_layer.gd" id="2_layer"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_5.png" id="3_sky"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_4.png" id="4_mountains"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_3.png" id="5_deeper"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_2.png" id="6_deep"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_1.png" id="7_front"]
+
+[sub_resource type="Resource" id="sky"]
+script = ExtResource("2_layer")
+texture = ExtResource("3_sky")
+scroll_scale = Vector2(0.1, 0.05)
+horizon_row = 191
+fill_above = 1
+fill_below = 1
+distance = 1.0
+
+[sub_resource type="Resource" id="mountains"]
+script = ExtResource("2_layer")
+texture = ExtResource("4_mountains")
+scroll_scale = Vector2(0.2, 0.1)
+horizon_row = 229
+distance = 0.85
+
+[sub_resource type="Resource" id="deeper_trees"]
+script = ExtResource("2_layer")
+texture = ExtResource("5_deeper")
+scroll_scale = Vector2(0.4, 0.2)
+horizon_row = 229
+distance = 0.6
+
+[sub_resource type="Resource" id="deep_trees"]
+script = ExtResource("2_layer")
+texture = ExtResource("6_deep")
+scroll_scale = Vector2(0.6, 0.3)
+horizon_row = 229
+distance = 0.35
+
+[sub_resource type="Resource" id="front_trees"]
+script = ExtResource("2_layer")
+texture = ExtResource("7_front")
+scroll_scale = Vector2(0.8, 0.4)
+horizon_row = 229
+distance = 0.15
+
+[resource]
+script = ExtResource("1_set")
+layers = Array[ExtResource("2_layer")]([SubResource("sky"), SubResource("mountains"), SubResource("deeper_trees"), SubResource("deep_trees"), SubResource("front_trees")])
+horizon_screen_y = 191.0

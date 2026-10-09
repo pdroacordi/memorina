@@ -1,0 +1,24 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 14.0,
+ "player_position": [7400, 5960],
+ "_note": "WORLD-06: the spring trial at x 7200 lost its far layers before (WORLD-04). Left end, a peek up and down, the Memorina zoom, then the right end.",
+ "steps": [
+  {"t": 2.0, "screenshot": "00_spring_left"},
+  {"t": 2.2, "action": "look_up", "pressed": true},
+  {"t": 3.6, "screenshot": "01_peek_up"},
+  {"t": 3.7, "action": "look_up", "pressed": false},
+  {"t": 3.8, "action": "look_down", "pressed": true},
+  {"t": 5.2, "screenshot": "02_peek_down"},
+  {"t": 5.3, "action": "look_down", "pressed": false},
+  {"t": 6.0, "action": "draw_memorina", "pressed": true},
+  {"t": 6.1, "action": "draw_memorina", "pressed": false},
+  {"t": 6.4, "screenshot": "03_zoom_tween"},
+  {"t": 7.4, "screenshot": "04_zoomed"},
+  {"t": 7.6, "action": "draw_memorina", "pressed": true},
+  {"t": 7.7, "action": "draw_memorina", "pressed": false},
+  {"t": 8.5, "action": "move_right", "pressed": true},
+  {"t": 12.5, "screenshot": "05_spring_right"},
+  {"t": 12.6, "action": "move_right", "pressed": false}
+ ]
+}

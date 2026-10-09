@@ -17,7 +17,8 @@ Third-party art used in Memorina, with the terms it was taken under.
   and fulcrum, drawbridge, hanging cocoon, root strand, fallen log, the rest bench, the door) - generated for this project with
   Codex CLI's image tool from the prompts in `tools/art/prompts/`, then keyed, snapped to
   the world palette and packed by `tools/art/process_image.gd`. No third-party art was
-  given as a reference. `leaf_wall.png`, the wind gust and dash, the rain splashes and the HUD's
+  given as a reference. The village concept painting `tools/art/references/village_concept.png` (the
+  approved look, `tools/art/prompts/style.md`) is Codex image generation too. `leaf_wall.png`, the wind gust and dash, the rain splashes and the HUD's
   life note (`assets/sprites/hud/life/life_note.png`) are drawn by `tools/art/draw_procedural_sprites.gd`.
 
 ## Ivo

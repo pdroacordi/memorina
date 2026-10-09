@@ -22,20 +22,12 @@ void vertex() {
 	modulate = COLOR;
 }
 
-// Keep explicit components because runtime vector indexing varies across shader backends.
-int band_for(int season) {
-	if (season == 0) { return band_of_season.x; }
-	if (season == 1) { return band_of_season.y; }
-	if (season == 2) { return band_of_season.z; }
-	return band_of_season.w;
-}
-
 void fragment() {
 	int season = gh_season_at(SCREEN_UV);
 	if (season < 0) {
 		season = greyhush_region_season;
 	}
-	int band = band_for(season);
+	int band = gh_band_for(season, band_of_season);
 
 	float bands = float(band_count);
 	float band_height = 1.0 / bands;

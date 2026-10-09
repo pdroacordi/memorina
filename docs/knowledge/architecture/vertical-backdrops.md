@@ -18,7 +18,7 @@ source_files:
   - tools/stack_seasonal_sheets.gd
 ---
 
-> **Status: PLAN** (2026-10-08, roadmap WORLD-06). Nothing below is built yet.
+> **Status: BUILT** (2026-10-08, WORLD-06; `systems/backdrops`). Differences from the plan: each layer's art is a `MeshInstance2D` `QuadMesh` whose shader reads the texel from `VERTEX + quad_position` (the plan's own fallback for out-of-range Sprite2D regions), not a `Sprite2D`; `BackdropMath.reference` is `reference_centre` (`RefCounted` owns `reference()`); the editor horizon line is not drawn; the art-tooling changes (`--set`, `seasons:`, `--tile`) come with the biome style boards.
 
 ## Summary
 

@@ -1,10 +1,17 @@
 [gd_scene format=3 uid="uid://bxi3j86be7i77"]
 
+[ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/pine_woods.tres" id="bd_set"]
 [ext_resource type="Material" path="res://scenes/world/memory/seasonal/floor_tiles_seasonal_material.tres" id="tiles_season"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/spring_woods/contents/woods_deep.room" id="room_map"]
 
 [node name="Contents" type="Node2D"]
+
+[node name="Backdrop" type="Node2D" parent="."]
+script = ExtResource("bd_script")
+backdrop_set = ExtResource("bd_set")
+horizon_y = 1003.0
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

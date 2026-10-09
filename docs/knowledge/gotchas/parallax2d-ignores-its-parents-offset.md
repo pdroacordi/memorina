@@ -14,6 +14,8 @@ source_files:
 
 ## Summary
 
+Resolved for room backgrounds by WORLD-06 (2026-10-08): `Backdrop` computes every layer's `scroll_offset` from the room's global position (`BackdropMath.scroll_offset`, `systems/backdrops`). The engine behaviour below still holds for any other `Parallax2D`.
+
 A `Parallax2D` overwrites its own LOCAL `position` every frame with
 `screen_offset * (1 - scroll_scale) + scroll_offset`, where `screen_offset` is the
 camera's top-left in GLOBAL coordinates. The parent's position is not subtracted. A layer

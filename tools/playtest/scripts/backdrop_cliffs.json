@@ -1,0 +1,12 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6.0,
+ "player_position": [9900, 250],
+ "_note": "WORLD-06: frost_cliffs is four screens tall (y -1152..384). The bottom, then the camera framing the top (teleport via a second run is not possible, so peek up from the bottom).",
+ "steps": [
+  {"t": 2.0, "screenshot": "00_cliffs_bottom"},
+  {"t": 2.2, "action": "look_up", "pressed": true},
+  {"t": 4.0, "screenshot": "01_cliffs_peek_up"},
+  {"t": 4.1, "action": "look_up", "pressed": false}
+ ]
+}

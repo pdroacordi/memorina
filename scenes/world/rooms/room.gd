@@ -13,6 +13,15 @@ var _contents_node: Node2D
 ## Rebuild the contents on the next activate() instead of waking them.
 var _expired: bool = false
 
+## The room `node` sits in, if any (a contents scene opened alone has none).
+static func of(node: Node) -> Room:
+	var at := node.get_parent()
+	while at != null:
+		if at is Room:
+			return at
+		at = at.get_parent()
+	return null
+
 func _enter_tree() -> void:
 	add_to_group(GROUP)
 
