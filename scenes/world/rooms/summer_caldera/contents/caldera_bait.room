@@ -1,19 +1,23 @@
-; caldera_bait.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; caldera_bait.room - a single low tunnel held by a territorial brute (design 04 section 3.7).
+; Verao Logico 1 (design 02 section 8): fight it, or cast Sombra in the open, wait on the roof
+; (cols 13-26, hidden) while it goes for the shadow, and drop down the shaft behind it (col 15 or 24).
 
 [room]
 origin = 0, 0
 
 [grid]
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+S....SS......SSSSSSSSSSSSSS.....SSS....S
+S....SS.........................SSS....S
 S......................................S
 S......................................S
-S......................................S
-S......................................S
+.............SS.SSSSSSSS.SS.............
 ........................................
 ........................................
-........................................
-........................................
+....SSS............B.............SSS....
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+[entities]
+19,8 = {"id": "bait_brute", "save_id": "caldera_bait_brute"}

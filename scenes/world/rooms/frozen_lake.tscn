@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
+[ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="3_source"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_waterfall_path.tscn" id="r0"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_fishing_village.tscn" id="r1"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_well.tscn" id="r2"]
@@ -22,6 +23,13 @@ guardian = 0
 [node name="Memory" type="Node2D" parent="."]
 script = ExtResource("2_regmem")
 authored = 0.3
+
+[node name="WellSquallMemory" type="Node2D" parent="Memory"]
+position = Vector2(1552, -1408)
+script = ExtResource("3_source")
+shape = 1
+rect_size = Vector2(416, 320)
+feather = 48.0
 
 [node name="LakeWaterfallPath" parent="." instance=ExtResource("r0")]
 position = Vector2(2560, -1920)

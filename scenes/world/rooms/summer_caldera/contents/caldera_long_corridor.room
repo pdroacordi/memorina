@@ -1,19 +1,24 @@
-; caldera_long_corridor.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; caldera_long_corridor.room - the long passage to the chimney (design 04 section 3.7); the main path runs the floor.
+; Verao Logico 2 (design 02 section 8): plate (col 6) and gate (col 72) 66 cells apart, as in solstice_trial;
+; Solstice then Sombra on the plate opens the side alcove on the slab (cols 73-78, the collectible).
 
 [room]
 origin = 0, 0
 
 [grid]
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-S..............................................................................S
-S..............................................................................S
-S..............................................................................S
-S..............................................................................S
+S.............SSS.......................SSSS........SS..................S......S
+S.............SSS.......................SSSS........SS.........................S
+S...................................................SS.........................S
+S.......................................................................G......S
+................................................................SSSSSSSSSSSSSSS.
 ................................................................................
 ................................................................................
-................................................................................
-................................................................................
+......P.......................SSSSSS............................................
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+[entities]
+6,8 = {"id": "corridor_plate"}
+72,4 = {"id": "corridor_door", "trigger_path": "corridor_plate"}

@@ -1,19 +1,19 @@
-; caldera_chimney_base.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; caldera_chimney_base.room - basalt chamber where the orchard cliff chimney lands (design 04 section 3.7).
+; No gate: the west opening continues as the floor; stone only (the Caldera has no earth).
 
 [room]
 origin = 0, 0
 
 [grid]
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+S.......SSSS..............SSS..........S
+S.......SSSS..............SSS..........S
+S.........................SSS..........S
 S......................................S
-S......................................S
-S......................................S
-S......................................S
+...............SSSSS....................
 ........................................
-........................................
-........................................
-........................................
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+...............................SS.......
+....................SSSS.......SS.......
+SSSSSSSSSSSS......SSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

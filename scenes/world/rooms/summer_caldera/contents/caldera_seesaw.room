@@ -1,19 +1,23 @@
-; caldera_seesaw.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; caldera_seesaw.room - a sunken hall under a high ledge (design 04 section 3.7); the main path runs under the ledge.
+; Verao Espacial 2 (design 02 section 8): Sombra on the long arm, Ivo on the short one, jump to the optional ledge.
+; Seesaw params and offsets copied from summer_trial (pivot col 22, ledge 5 cols right and 6 rows up).
 
 [room]
 origin = 0, 0
 
 [grid]
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-S......................................S
-S......................................S
-S......................................S
-S......................................S
+S........SSSS.....................S....S
+S........SSSS.....................S....S
+S..........................SSSSSSSS....S
+S..........................SSSSSSSS....S
 ........................................
 ........................................
 ........................................
-........................................
+......................T.................
+SSSSSS................S.......SSSSSSSSSS
+SSSSSSSS..............S.....SSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+[entities]
+22,8 = {"id": "seesaw", "length": 256.0, "pivot_at": 0.6875, "max_degrees": 30.0}

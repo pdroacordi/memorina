@@ -1,5 +1,5 @@
-; caldera_arena.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; caldera_arena.room - the Chamber of the Sun, summer guardian arena, empty until GRD-04 (design 04 section 3.7).
+; Flat floor (top row 9) 38 cells wide, 8 rows of air, no pits; the guardian stands at col 25.
 
 [room]
 origin = 0, 0
