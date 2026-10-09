@@ -1,19 +1,18 @@
-; village_bakery.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; village_bakery.room - the bakery (design 04 section 3.1): the oven and chimney, flour sacks, a shelf. No gate or puzzle.
 
 [room]
 origin = 0, 0
 
 [grid]
 ####################
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#...E..............#
+#...............SS.#
+#...............SS.#
+#...............SS.#
+#...............SS.#
+#..======.......SS.#
+#.............SSSSS#
+#.............SSSSS#
+#...E.....##..SSSSS#
 ####################
 ####################
 ####################

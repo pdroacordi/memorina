@@ -1,5 +1,4 @@
-; village_elder.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; village_elder.room - the elder's house (design 04 section 3.1): a book loft over a chest. No gate or puzzle.
 
 [room]
 origin = 0, 0
@@ -10,10 +9,10 @@ origin = 0, 0
 #..................#
 #..................#
 #..................#
+#...........=======#
 #..................#
 #..................#
-#..................#
-#...E..............#
+#...E......#.......#
 ####################
 ####################
 ####################

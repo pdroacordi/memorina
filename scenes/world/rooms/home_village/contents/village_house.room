@@ -1,16 +1,16 @@
-; village_house.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; village_house.room - Ivo's house (design 04 section 3.1), where a new game starts (x 320, floor row 9).
+; Flat floor and the bed alcove (cols 15-18). No gate or puzzle.
 
 [room]
 origin = 0, 0
 
 [grid]
 ####################
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
+#..............#####
+#..............#####
+#..............#####
+#..............#####
+#..............#####
 #..................#
 #..................#
 #...E..............#
