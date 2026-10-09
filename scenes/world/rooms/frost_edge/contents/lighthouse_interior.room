@@ -1,5 +1,6 @@
-; lighthouse_interior.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; lighthouse_interior.room - Torre do Farol: a spiral climb by single jumps on alternating stone ledges 4 rows
+; apart, from the door (col 4) to the sealed hatch (col 15, row 8); the mentor's room is the landing at row 25,
+; cols 9-18 (design 04 sections 3.3 and 4). Hatch gate: all_guardians_restored.
 
 [room]
 origin = 0, 0
@@ -18,35 +19,35 @@ S............SSSSS.S
 S..................S
 S..................S
 S..................S
+SSSSSSSSSSS........S
 S..................S
 S..................S
 S..................S
+S..........SSSSSSSSS
 S..................S
 S..................S
 S..................S
+SSSSSSSSS..........S
 S..................S
 S..................S
 S..................S
+S........SSSSSSSSSSS
 S..................S
 S..................S
 S..................S
+SSSSSSSSS..........S
 S..................S
 S..................S
 S..................S
+S..........SSSSSSSSS
 S..................S
 S..................S
 S..................S
+SSSSSSSSS..........S
 S..................S
 S..................S
 S..................S
-S..................S
-S..................S
-S..................S
-S..................S
-S..................S
-S..................S
-S..................S
-S..................S
+S..........SSSSSSSSS
 S..................S
 S..................S
 S...E..............S

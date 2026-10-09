@@ -1,5 +1,6 @@
-; threshold_bridge.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; threshold_bridge.room - Ponte Velha: a broken stone bridge (deck row 5) over a dry ravine, the first enemy
+; (design 04 section 3.2). The gap (cols 17-22) is one running jump; the fallen span (cols 18-21, top row 8)
+; climbs out of the ravine by single jumps. Base kit only.
 
 [room]
 origin = 0, 0
@@ -9,11 +10,14 @@ origin = 0, 0
 #......................................#
 #......................................#
 #......................................#
-#......................................#
-........................................
-........................................
-........................................
-........................................
+#..............................B.......#
+..........SSSSSSS......SSSSSSS####......
+........##SSS..............SSS#####.....
+......#######..............#########....
+....#########.....SSSS.....##########...
+#############.....SSSS.....#############
+#############.....SSSS.....#############
 ########################################
-########################################
-########################################
+
+[entities]
+31,4 = {"save_id": "threshold_bridge_brute"}

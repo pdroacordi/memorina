@@ -1,11 +1,14 @@
-; lighthouse_top.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; lighthouse_top.room - Lanterna do Farol: the final arena (GRD-06), a flat floor (row 21, cols 3-36) under the
+; lantern's roof, with the hatch door (col 20) down to lighthouse_interior (design 04 section 3.3).
 
 [room]
 origin = 0, 0
 
 [grid]
 S......................................S
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSS........................SSSSSSSS
+SSSS................................SSSS
 S......................................S
 S......................................S
 S......................................S
@@ -22,10 +25,7 @@ S......................................S
 S......................................S
 S......................................S
 S......................................S
-S......................................S
-S......................................S
-S......................................S
-S...................E..................S
+SSS.................E................SSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

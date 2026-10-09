@@ -1,5 +1,6 @@
-; frost_cliffs.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; frost_cliffs.room - Penhascos: the bench in a cave under the west crag (cols 1-12, rows 41-44), then a climb
+; by single jumps between the crag and the east cliff (ledges 3-4 rows apart, 2-cell gaps) to the cliff top
+; (row 9) and the lighthouse (design 04 section 3.3). No gate: base kit, no earth.
 
 [room]
 origin = 0, 0
@@ -14,42 +15,42 @@ S.......................................
 S.......................................
 S.......................................
 S.......................................
-S...............................SSSSSSSS
-S...............................SSSSSSSS
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-.......................................S
-.......................................S
-.......................................S
-......R................................S
+S......................SSSSSSSSSSSSSSSSS
+S......................SSSSSSSSSSSSSSSSS
+S.............................SSSSSSSSSS
+S.............................SSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
+SSSSSSSSSSSSSSS...............SSSSSSSSSS
+SSSSSSSSSSSSSSS...............SSSSSSSSSS
+SSSSSSSSSSSSSSS...............SSSSSSSSSS
+SSSSSSSSSSSSSSS........SSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSS...............SSSSSSSSSS
+SSSSSSSSSSSSSSS...............SSSSSSSSSS
+SSSSSSSSSSSSSSS...............SSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS..........SSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS..........SSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS..........SSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
+SSSSSSSSSSSSS.................SSSSSSSSSS
+..............................SSSSSSSSSS
+.......................SSSSSSSSSSSSSSSSS
+..............................SSSSSSSSSS
+......R.......................SSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

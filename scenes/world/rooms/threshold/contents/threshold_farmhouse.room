@@ -1,5 +1,5 @@
-; threshold_farmhouse.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3).
-; Bounds and edge openings come from the world layout (systems/world); keep them.
+; threshold_farmhouse.room - the farmhouse interior (design 04 section 3.2): the laid table on the flat floor
+; (cols 6-12, the sword mark of STORY-02), the hearth (cols 17-18) and a loft (row 5). No gate or puzzle.
 
 [room]
 origin = 0, 0
@@ -10,10 +10,10 @@ origin = 0, 0
 #..................#
 #..................#
 #..................#
+#...........=======#
 #..................#
-#..................#
-#..................#
-#...E..............#
+#................SS#
+#...E............SS#
 ####################
 ####################
 ####################
