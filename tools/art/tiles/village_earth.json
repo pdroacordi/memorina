@@ -1,8 +1,8 @@
 {
-	"about": "Village earth: PixelLab tiles-pro soil at 16 art px (tools/art/tiles/sources/village_soil_*.png), drawn at 2x like Ivo, under a painted season lip.",
+	"about": "Village earth: Codex (GPT image) soil tiles under the 2x minimal style (tools/art/tiles/sources/village_soil_codex_raw.png), reduced to 16 art px: a calm base and four detail variants (stone, root, pebble, mossy stone) placed at random.",
 	"art_scale": 2,
 	"body": {
-		"path": "res://tools/art/tiles/sources/village_soil_3.png"
+		"path": "res://tools/art/tiles/sources/village_soil_0.png"
 	},
 	"variants": [
 		{
@@ -10,6 +10,12 @@
 		},
 		{
 			"path": "res://tools/art/tiles/sources/village_soil_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/village_soil_3.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/village_soil_4.png"
 		}
 	],
 	"lips": [
@@ -58,8 +64,5 @@
 	"rim": 1,
 	"rim_dark": 0.25,
 	"edge": "none",
-	"ledge_height": 5,
-	"colors": 3,
-	"smooth": 3,
-	"contrast": 0.45
+	"ledge_height": 5
 }

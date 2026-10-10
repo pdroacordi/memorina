@@ -66,6 +66,7 @@ func _composed(recipe: Dictionary) -> Array[Dictionary]:
 	var palette := PackedColorArray()
 	if recipe.has("colors"):
 		palette = _contrasted(ImageOps.palette_of(body, int(recipe["colors"])), float(recipe.get("contrast", 1.0)))
+		palette = _toned(palette, float(recipe.get("saturation", 1.0)), float(recipe.get("value", 1.0)))
 		body = ImageOps.majority(ImageOps.quantize(body, palette), int(recipe.get("smooth", 0)))
 	var spill := int(recipe.get("spill", 6))
 	var depth := int(recipe.get("depth", 4))
@@ -125,6 +126,13 @@ func _contrasted(palette: PackedColorArray, amount: float) -> PackedColorArray:
 	for c: Color in palette:
 		var v := mean + (Vector3(c.r, c.g, c.b) - mean) * amount
 		out.append(Color(v.x, v.y, v.z))
+	return out
+
+## `palette` with its saturation and value scaled (1 keeps them).
+func _toned(palette: PackedColorArray, saturation: float, value: float) -> PackedColorArray:
+	var out := PackedColorArray()
+	for c: Color in palette:
+		out.append(Color.from_hsv(c.h, clampf(c.s * saturation, 0.0, 1.0), clampf(c.v * value, 0.0, 1.0)))
 	return out
 
 func _lip(spec: Dictionary, spill: int, depth: int) -> Image:

@@ -50,7 +50,8 @@
 	"rim_dark": 0.25,
 	"edge": "none",
 	"ledge_height": 0,
-	"colors": 5,
+	"colors": 4,
 	"smooth": 1,
-	"contrast": 0.75
+	"contrast": 0.6,
+	"saturation": 0.8
 }
