@@ -1,0 +1,65 @@
+; caldera_cistern.room - the flooded cistern under the square's well, the caldera's way in from the village (design 04 section 3.7);
+; 'O fundo do poco' (design 02 section 8, Inverno Espacial 2). Ivo drops onto the slab (row 8, cols 7-12) and plays Redoma at its
+; east edge: the shell dries the stepped pool (col 13 floor row 13) and the flooded passage (cols 11-12, rows 11-12) under the
+; sealed chamber (cols 8-11, rows 9-10), whose trapped air keeps it dry (bugs/well-water-stands-in-the-air-at-a-passage-mouth).
+; The chamber's door leads down to caldera_cistern_bottom. Back up: Redoma in the chamber, the step (col 14, row 12) to the
+; slab, then the plank beams (rows 5, 1) to the square.
+
+[room]
+origin = 0, 0
+tileset = village
+
+[grid]
+SSSSSSSS....SSSSSSSS
+S.......--.........S
+S..................S
+S..................S
+S..................S
+S.........--.......S
+S..................S
+S..................S
+S......SSSSSS......S
+S......S....S......S
+S......S.E..S......S
+S......SSSS........S
+S......SSSS...S....S
+S......SSSSSSSS....S
+S......SSSSSSSS....S
+S......SSSSSSSS....S
+S......SSSSSSSS....S
+S......SSSSSSSS....S
+S......SSSSSSSS....S
+S......SSSSSSSS....S
+S......SSSSSSSS....S
+SSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSS
+
+[water]
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+.~~~~~~......~~~~~~.
+.~~~~~~......~~~~~~.
+.~~~~~~....~~~~~~~~.
+.~~~~~~....~~~.~~~~.
+.~~~~~~........~~~~.
+.~~~~~~........~~~~.
+.~~~~~~........~~~~.
+.~~~~~~........~~~~.
+.~~~~~~........~~~~.
+.~~~~~~........~~~~.
+.~~~~~~........~~~~.
+.~~~~~~........~~~~.
+....................
+....................
+....................
+
+[entities]
+9,10 = {"link": "caldera_cistern_door", "to_room": "caldera_cistern_bottom", "arrive_facing": 1}

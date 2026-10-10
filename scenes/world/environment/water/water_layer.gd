@@ -13,6 +13,11 @@ const SHELL_REACH_ALTERNATIVE := 2
 @export var rising_body_scene: PackedScene
 ## Dry gap from painted top to waterline, in world pixels.
 @export var surface_inset := 8
+## Water under the ground fills a passage (a covered column); false for a lake, seen from above.
+@export var covers_passages := true
+
+## Whether ground fills the map cell holding a water cell (RoomMapNode sets it); without it a covered column has no waterline.
+var solid_at := Callable()
 
 # A body scene may be a WaterBody or contain one as its `Water` child.
 static func _water_body_of(instance: Node) -> WaterBody:
@@ -39,7 +44,7 @@ func _ready() -> void:
 				shell_reach.append(cell)
 			_:
 				cells.append(cell)
-	var basins := WaterBasins.build(cells, reach, shell_reach)
+	var basins := WaterBasins.build(cells, reach, shell_reach, covers_passages)
 	for cell: Vector2i in basins.unreachable:
 		push_warning("%s: water painted at %s is not below its basin's surface (under terrain, or a side arm) and is not drawn" % [get_path(), cell])
 	for basin: WaterBasins.Basin in basins.basins:
@@ -62,6 +67,16 @@ func _pour(basin: WaterBasins.Basin) -> Node2D:
 	for depth: int in basin.depths:
 		floors.append(depth * cell.y - surface_inset)
 	body.set_floor(cell.x, floors)
+	# Negative: trapped air above (a sealed pocket), so that column draws its own waterline.
+	var ceilings := PackedFloat32Array()
+	for i: int in basin.tops.size():
+		var top := basin.tops[i]
+		var ceiling := top * cell.y - surface_inset if top > 0 else 0.0
+		var above := Vector2i(basin.left + i, basin.surface + top - 1)
+		if top > 0 and solid_at.is_valid() and not solid_at.call(above):
+			ceiling = -ceiling
+		ceilings.append(ceiling)
+	body.set_ceiling(cell.x, ceilings)
 	body.mirror_axis_offset = -floori(surface_inset / 2.0)
 	# Place the body origin at the waterline center.
 	instance.position = Vector2(

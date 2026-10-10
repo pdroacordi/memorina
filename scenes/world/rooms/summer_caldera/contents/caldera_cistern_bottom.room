@@ -1,34 +1,36 @@
-; caldera_cistern_bottom.room - the vault where the village cistern shaft (cols 48-51) lands (design 04 section 3.7).
-; No gate: the dais under the shaft steps down to the floor west (crater) and east (temple gate).
-; Stone ledges (rows 14, 10, 6, 2; 4 rows apart) zigzag from the dais up the shaft into village_cistern's ledges,
-; so the Redoma route climbs back without wall climb (bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera).
+; caldera_cistern_bottom.room - the vault under caldera_cistern (design 04 section 3.7); its door on the dais (col 49) leads up
+; into the cistern's sealed chamber (bugs/well-water-stands-in-the-air-at-a-passage-mouth).
+; No gate: the dais steps down to the floor west (crater) and east (temple gate).
 
 [room]
 origin = 0, 0
 tileset = legacy
 
 [grid]
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS....SSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS....SS.....S
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS..SS.....S
-SSSSSSSSSSSSSSSS..............SS..............SS....SS.....S
-S.............SS..............SS..............SS....SS.....S
-S.............SS..............SS..............SS....SS.....S
-S.............SS..............SS..............SS..SSSS.....S
-S.............SS..............SS..............SS....SS.....S
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS.....S
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS.....S
+SSSSSSSSSSSSSSSS..............SS..............SSSSSSSS.....S
+S.............SS..............SS..............SSSSSSSS.....S
+S.............SS..............SS..............SSSSSSSS.....S
+S.............SS..............SS..............SSSSSSSS.....S
+S.............SS..............SS..............SSSSSSSS.....S
 S.............SS..............SS...........................S
 S.............SS..............SS...........................S
-S.............SS..............SS..............SSSS.........S
+S.............SS..............SS...........................S
 S.............SS..............SS...........................S
 S..........................................................S
 S.....................SSSS.................................S
-S.................................................SSSS.....S
 S..........................................................S
 S..........................................................S
-..................................SSSS......................
+S..........................................................S
+..................................SSSS...........E..........
 ...........................................SSSSSSSSSSSSS....
 ...........................................SSSSSSSSSSSSS....
 .....SSSS................................SSSSSSSSSSSSSSS....
 SSSSSSSSSSSSSSSSSSSS........SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+
+[entities]
+49,17 = {"link": "caldera_cistern_door", "to_room": "caldera_cistern"}

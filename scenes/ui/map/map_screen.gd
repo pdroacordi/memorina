@@ -114,6 +114,9 @@ func _place() -> void:
 func _seen_patches() -> Array[MapCanvas.Patch]:
 	var patches: Array[MapCanvas.Patch] = []
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
+		# A room made an interior keeps an old save's bytes (bugs/a-room-made-an-interior-keeps-its-seen-map-cells).
+		if room.interior:
+			continue
 		var key := SceneKey.of(room)
 		var bytes := SaveSystem.map_seen(key)
 		if bytes.is_empty():

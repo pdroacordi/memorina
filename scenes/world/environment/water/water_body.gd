@@ -63,6 +63,12 @@ var _floors := PackedFloat32Array()
 # pixels below the rest line, one per span of _floor_span px from the left.
 var _floor_spans := PackedFloat32Array()
 var _floor_span := 0.0
+# Each column's ceiling depth below the rest line (0: open); the per-span depths set_ceiling() handed in; each ceiling's
+# world height, so a moved level keeps it; and 1 where trapped air, not ground, lies on it (that column draws a waterline).
+var _ceilings := PackedFloat32Array()
+var _ceiling_spans := PackedFloat32Array()
+var _ceiling_tops := PackedFloat32Array()
+var _bells := PackedByteArray()
 var _time := 0.0
 # A lake keeps an independent clock per column; empty for a pool.
 var _clocks := PackedFloat32Array()
@@ -121,6 +127,9 @@ func _ready() -> void:
 	_floor_bottoms = _floors.duplicate()
 	for column in _floor_bottoms.size():
 		_floor_bottoms[column] += _top_y
+	_ceiling_tops = _ceilings.duplicate()
+	for column in _ceiling_tops.size():
+		_ceiling_tops[column] = _ceiling_tops[column] + _top_y if _ceilings[column] > 0.0 else -INF
 	_mirror_top = mirror_axis_offset
 	_dry.resize(columns)
 	_memory = MemoryField.find_in(self)
@@ -133,8 +142,7 @@ func _ready() -> void:
 	if _volume:
 		_volume.min_speed = profile.splash_min_speed
 		fit_area(_volume.get_node("Shape") as CollisionShape2D, 0.0)
-	if _hazard:
-		fit_area(_hazard.get_node("Shape") as CollisionShape2D, hazard_depth)
+	_refit_hazard()
 	_push_look()
 	_refresh_rates()
 	_upload()
@@ -271,7 +279,7 @@ func splash(world_x: float, speed: float) -> void:
 	assert(_field != null, "%s has no surface to splash: it has no WaterProfile" % name)
 	var depth := minf(speed * profile.splash_depth_per_speed, profile.splash_max_depth)
 	var centre := column_of(world_x)
-	if _dry.size() > centre and _dry[centre] == 1:
+	if _dry.size() > centre and _dry[centre] == 1 or _ceilings[centre] > 0.0:
 		return
 	var width := float(profile.splash_half_width)
 	for k in range(-3 * profile.splash_half_width, 3 * profile.splash_half_width + 1):
@@ -329,6 +337,14 @@ func set_floor(span: float, depths: PackedFloat32Array) -> void:
 	_floor_span = span
 	_floor_spans = depths
 
+## Gives covered columns a ceiling (a flooded passage, bugs/well-water-stands-in-the-air-at-a-passage-mouth): `depths`
+## per span of `span` px, in world pixels below the rest line, 0 for an open column, negative under trapped air. Called before
+## the body enters the tree.
+func set_ceiling(span: float, depths: PackedFloat32Array) -> void:
+	assert(_texture == null, "set_ceiling() must come before %s enters the tree" % name)
+	assert(is_equal_approx(span, _floor_span), "%s: ceilings and floors share their spans" % name)
+	_ceiling_spans = depths
+
 ## How much of a column ice has taken, 0..1 (see WaterSurfaceField.set_hold).
 func set_hold(column: int, hold: float) -> void:
 	assert(_field != null, "%s has no surface to hold: it has no WaterProfile" % name)
@@ -344,9 +360,9 @@ func ice_top(column: int) -> float:
 		return INF
 	return surface_rest_y() - (_field.pinned(column) if _field else 0.0)
 
-## Whether `column` holds water: not dry, not held out of a shell.
+## Whether `column` holds water with a waterline: not dry, not covered, not held out of a shell.
 func is_wet(column: int) -> bool:
-	return not is_dry() and _floors[column] > 0.0 and _dry[column] == 0
+	return not is_dry() and _floors[column] > 0.0 and _ceilings[column] <= 0.0 and _dry[column] == 0
 
 ## One byte per column, 1 where it holds water (IceFront freezes only those).
 func wet_columns() -> PackedByteArray:
@@ -364,7 +380,9 @@ func _wade(delta: float) -> void:
 	if _volume == null:
 		return
 	for body: Vector2 in _volume.disturbances():
-		_field.disturb(column_of(body.x), -body.y * profile.wake_per_speed * delta)
+		var column := column_of(body.x)
+		if _ceilings[column] <= 0.0:
+			_field.disturb(column, -body.y * profile.wake_per_speed * delta)
 
 ## Eases the level toward the rest line raised by the water the shells hold out, no higher than the painted level.
 func _step_displacement(delta: float) -> void:
@@ -447,11 +465,12 @@ func _push_held() -> void:
 	_set_uniform(&"held_discs", discs)
 	_set_uniform(&"held_count", count)
 
-## Each column's depth: its bed at its world height under the current level.
+## Each column's depth and ceiling: its bed and roof at their world heights under the current level.
 func _apply_floors() -> void:
 	var y := global_position.y
 	for column in _floors.size():
 		_floors[column] = maxf(_floor_bottoms[column] - y, 0.0)
+		_ceilings[column] = maxf(_ceiling_tops[column] - y, 0.0)
 
 ## The hazard follows the water: one rectangle over the whole body, or - while
 ## a disc is held out - outlines of the water left around it (one above the
@@ -462,10 +481,12 @@ func _refit_hazard() -> void:
 	var base := _hazard.get_node("Shape") as CollisionShape2D
 	fit_area(base, hazard_depth)
 	var shallow := size.y <= hazard_depth
-	var held := not _held_out.is_empty()
-	base.set_deferred(&"disabled", held or shallow)
+	# Covered columns start under their ceilings, never in a sealed chamber's air
+	# (bugs/trapped-air-over-a-flooded-passage-is-inside-the-pool-hazard).
+	var outlined := not _held_out.is_empty() or _any_covered()
+	base.set_deferred(&"disabled", outlined or shallow)
 	var outlines: Array[PackedVector2Array] = []
-	if held and not shallow:
+	if outlined and not shallow:
 		outlines = _wet_outlines()
 	while _outlines.size() < outlines.size():
 		var outline := CollisionPolygon2D.new()
@@ -478,9 +499,15 @@ func _refit_hazard() -> void:
 			_outlines[i].set_deferred(&"polygon", outlines[i])
 		_outlines[i].set_deferred(&"disabled", not used)
 
+func _any_covered() -> bool:
+	for ceiling: float in _ceilings:
+		if ceiling > 0.0:
+			return true
+	return false
+
 ## The water left around the held discs, as polygons in the hazard's space:
-## sampled every HAZARD_STEP px, each sample the water column from
-## `hazard_depth` down to the bottom with the discs' span cut out of it.
+## sampled every HAZARD_STEP px, each sample the water column from `hazard_depth`
+## under the surface or the column's ceiling down to the bottom, the discs' span cut out.
 func _wet_outlines() -> Array[PackedVector2Array]:
 	var top := surface_rest_y() + hazard_depth
 	var bottom := surface_rest_y() + size.y
@@ -488,10 +515,13 @@ func _wet_outlines() -> Array[PackedVector2Array]:
 	var samples := maxi(ceili(size.x / HAZARD_STEP), 1)
 	var discs: Array = _held_out.values()
 	var xs := PackedFloat32Array()
+	var tops := PackedFloat32Array()
 	var uppers := PackedFloat32Array()
 	var lowers := PackedFloat32Array()
 	for i in samples + 1:
 		var x := left + minf(i * HAZARD_STEP, size.x)
+		var column_top := top + _ceilings[column_of(minf(x, left + size.x - 0.5))]
+		tops.append(column_top)
 		var cut := Vector2(INF, -INF)
 		for disc: Vector3 in discs:
 			var dx := x - disc.x
@@ -500,10 +530,10 @@ func _wet_outlines() -> Array[PackedVector2Array]:
 				cut = Vector2(minf(cut.x, disc.y - h), maxf(cut.y, disc.y + h))
 		xs.append(x)
 		# Water above the cut (where a disc lies under the surface), and below.
-		uppers.append(clampf(cut.x, top, bottom) if cut.x < INF else top)
-		lowers.append(clampf(cut.y, top, bottom) if cut.y > -INF else top)
+		uppers.append(clampf(cut.x, column_top, bottom) if cut.x < INF else column_top)
+		lowers.append(clampf(cut.y, column_top, bottom) if cut.y > -INF else column_top)
 	var outlines: Array[PackedVector2Array] = []
-	_bands(xs, PackedFloat32Array(), uppers, top, outlines)
+	_bands(xs, tops, uppers, top, outlines)
 	_bands(xs, lowers, PackedFloat32Array(), bottom, outlines)
 	return outlines
 
@@ -535,12 +565,19 @@ func _bands(xs: PackedFloat32Array, tops: PackedFloat32Array, bottoms: PackedFlo
 func _build_floors(columns: int) -> void:
 	_floors.resize(columns)
 	_floors.fill(float(size.y))
+	_ceilings.resize(columns)
+	_ceilings.fill(0.0)
+	_bells.resize(columns)
+	_bells.fill(0)
 	if _floor_spans.is_empty():
 		return
 	var width := float(column_width())
 	for column in columns:
 		var span := clampi(floori((column + 0.5) * width / _floor_span), 0, _floor_spans.size() - 1)
 		_floors[column] = minf(_floor_spans[span], float(size.y))
+		if span < _ceiling_spans.size():
+			_ceilings[column] = absf(_ceiling_spans[span])
+			_bells[column] = 1 if _ceiling_spans[span] < 0.0 else 0
 
 func _refresh_rates_if_stale() -> void:
 	if Engine.get_physics_frames() - _rates_frame >= RATE_REFRESH_FRAMES:
@@ -582,7 +619,7 @@ func _refresh_winds(left: float, width: int, y: float) -> void:
 		_winds[column] = wind
 
 func _upload() -> void:
-	_texture.write(_field, _clocks, _floors)
+	_texture.write(_field, _clocks, _floors, _ceilings, _bells)
 
 func _push_look() -> void:
 	var placement := {

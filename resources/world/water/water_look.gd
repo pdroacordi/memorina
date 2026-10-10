@@ -39,13 +39,15 @@ class_name WaterLook extends Resource
 @export_group("Caustics")
 ## Caustic depth below the waterline, in world pixels; 0 disables caustics.
 @export var caustic_depth: float = 10.0
-## Width of one caustic band, in world pixels: coarse bands, not diffuse light.
-@export_range(1, 8) var caustic_band_px: int = 3
+## Length of one caustic glint, in world pixels.
+@export_range(1, 8) var caustic_band_px: int = 4
+## Spacing of the 1 px glint rows below the waterline, in world pixels.
+@export_range(2, 8) var caustic_row_px: int = 3
 ## Caustic rerolls per second of the water clock.
 @export var caustic_rate: float = 1.5
-## Share of bands lit at any moment.
+## Share of glints lit at any moment just under the surface, thinning to 0 at caustic_depth.
 @export_range(0.0, 1.0) var caustic_density: float = 0.3
-## Strength with which lit bands approach the top line colour.
+## Strength with which lit glints approach the top line colour.
 @export_range(0.0, 1.0) var caustic_strength: float = 0.35
 
 @export_group("Lake")

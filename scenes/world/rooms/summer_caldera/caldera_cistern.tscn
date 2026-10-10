@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://cqif8tswqmdhp"]
 
 [ext_resource type="Script" uid="uid://bpd45kolxse8x" path="res://scenes/world/rooms/room.gd" id="1_room"]
-[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/contents/village_cistern_contents.tscn" id="2_contents"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/contents/caldera_cistern_contents.tscn" id="2_contents"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_room"]
 size = Vector2(640, 768)
 
-[node name="VillageCistern" type="Area2D"]
+[node name="CalderaCistern" type="Area2D"]
 collision_mask = 256
 script = ExtResource("1_room")
 contents_scene = ExtResource("2_contents")

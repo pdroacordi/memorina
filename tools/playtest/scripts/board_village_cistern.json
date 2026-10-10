@@ -1,10 +1,19 @@
 {
  "scene": "res://scenes/world/game.tscn",
  "max_duration": 4.0,
- "player_position": [900, 700],
- "_note": "WORLD-07 village style board: the village tiles in the cistern, spring, at the village's memory.",
+ "player_position": [
+  900,
+  700
+ ],
+ "_note": "WORLD-07 style board: the village tiles in caldera_cistern (the caldera's cistern under the square's well, memory 0.15).",
  "steps": [
-  {"t": 2.6, "screenshot": "board_cistern"},
-  {"t": 2.7, "log": "board"}
+  {
+   "t": 2.6,
+   "screenshot": "board_cistern"
+  },
+  {
+   "t": 2.7,
+   "log": "board"
+  }
  ]
 }

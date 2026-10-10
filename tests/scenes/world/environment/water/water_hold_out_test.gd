@@ -43,6 +43,28 @@ func test_the_hazard_follows_the_curve() -> void:
 	assert_bool(_hazard_at(Vector2(middle, 350))).is_true()
 	assert_bool(_hazard_at(Vector2(middle + 60, 310))).is_true()
 
+## A flooded passage under a sealed chamber: the hazard starts under the column's ceiling, never in the chamber's air
+## (bugs/trapped-air-over-a-flooded-passage-is-inside-the-pool-hazard).
+func test_the_hazard_stays_under_a_covered_columns_ceiling() -> void:
+	var covered := POOL.instantiate() as WaterBody
+	covered.size = Vector2i(192, 64)
+	covered.position = Vector2(-4000, 300)
+	var floors := PackedFloat32Array()
+	var ceilings := PackedFloat32Array()
+	for span in 12:
+		floors.append(64.0)
+		ceilings.append(-32.0 if span < 2 else 0.0)
+	covered.set_floor(16.0, floors)
+	covered.set_ceiling(16.0, ceilings)
+	add_child(covered)
+	auto_free(covered)
+	await await_idle_frame()
+	_water = covered
+	var left := covered.global_position.x - 96.0
+	assert_bool(_hazard_at(Vector2(left + 8.0, 316.0))).is_false()
+	assert_bool(_hazard_at(Vector2(left + 8.0, 350.0))).is_true()
+	assert_bool(_hazard_at(Vector2(left + 100.0, 316.0))).is_true()
+
 func test_a_disc_under_the_surface_leaves_water_over_it() -> void:
 	var middle := _water.global_position.x
 	_water.hold_out(self, Vector2(middle, 335), 20.0)

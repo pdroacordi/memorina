@@ -1,0 +1,19 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 12,
+ "clock": "real",
+ "locale": "en",
+ "player_position": [656, 286],
+ "_note": "WORLD-20: the flat square, then up at the bell tower door (col 20) into the tower interior.",
+ "steps": [
+  {"t": 1.0, "screenshot": "a01_square_flat"},
+  {"t": 1.2, "action": "look_up", "pressed": true},
+  {"t": 1.4, "action": "look_up", "pressed": false},
+  {"t": 3.2, "screenshot": "a02_tower_inside"},
+  {"t": 3.3, "log": "inside"},
+  {"t": 3.5, "action": "look_up", "pressed": true},
+  {"t": 3.7, "action": "look_up", "pressed": false},
+  {"t": 5.5, "screenshot": "a03_back_in_square"},
+  {"t": 5.6, "log": "back"}
+ ]
+}

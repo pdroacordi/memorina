@@ -58,18 +58,40 @@ func test_pits_at_different_heights_keep_their_own_surface() -> void:
 	assert_int(built.basins[0].left).is_equal(6)
 	assert_int(built.basins[1].surface).is_equal(1)
 
-func test_water_under_a_ledge_cannot_be_reached_by_the_surface() -> void:
+func test_water_under_a_ledge_is_a_covered_column_of_the_body() -> void:
 	var built := WaterBasins.build(_cells(["## ", "###"]))
 	assert_int(built.basins.size()).is_equal(1)
-	assert_array(Array(built.basins[0].depths)).is_equal([2, 2])
-	assert_array(built.unreachable).is_equal([Vector2i(2, 1)])
+	assert_array(Array(built.basins[0].depths)).is_equal([2, 2, 2])
+	assert_array(Array(built.basins[0].tops)).is_equal([0, 0, 1])
+	assert_int(built.unreachable.size()).is_equal(0)
 
-func test_a_u_bend_is_two_bodies_and_its_tunnel_is_reported() -> void:
+## A flooded passage under a bank: the well's open run, then covered columns westward under the ceiling.
+func test_a_flooded_passage_joins_the_well_as_covered_columns() -> void:
+	var built := WaterBasins.build(_cells([
+		"    ####",
+		"    ####",
+		"########",
+	]))
+	assert_int(built.basins.size()).is_equal(1)
+	var basin := built.basins[0]
+	assert_int(basin.left).is_equal(0)
+	assert_array(Array(basin.depths)).is_equal([3, 3, 3, 3, 3, 3, 3, 3])
+	assert_array(Array(basin.tops)).is_equal([2, 2, 2, 2, 0, 0, 0, 0])
+	assert_int(built.unreachable.size()).is_equal(0)
+
+func test_a_u_bend_tunnel_joins_the_first_body() -> void:
 	var built := WaterBasins.build(_cells(["# #", "###"]))
 	assert_int(built.basins.size()).is_equal(2)
-	assert_array(Array(built.basins[0].depths)).is_equal([2])
+	assert_array(Array(built.basins[0].depths)).is_equal([2, 2])
+	assert_array(Array(built.basins[0].tops)).is_equal([0, 1])
 	assert_array(Array(built.basins[1].depths)).is_equal([2])
-	assert_array(built.unreachable).is_equal([Vector2i(1, 1)])
+	assert_int(built.unreachable.size()).is_equal(0)
+
+## A covered column broken by ground is not one run: it and everything past it stay unreachable.
+func test_a_broken_covered_column_is_reported() -> void:
+	var built := WaterBasins.build(_cells(["#  ", "## ", "# #", "###"]))
+	assert_array(Array(built.basins[0].depths)).is_equal([4])
+	assert_array(built.unreachable).is_equal([Vector2i(1, 1), Vector2i(2, 2), Vector2i(1, 3), Vector2i(2, 3)])
 
 func test_a_gap_in_a_column_ends_its_depth() -> void:
 	var built := WaterBasins.build(_cells(["##", "# ", "##"]))

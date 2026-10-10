@@ -152,6 +152,8 @@ func _pour(entry: RoomLegendEntry, cells: PackedVector2Array, reach: PackedVecto
 	_paint(layer, cells, 0)
 	_paint(layer, reach, WaterLayer.REACH_ALTERNATIVE)
 	_paint(layer, shell_reach, WaterLayer.SHELL_REACH_ALTERNATIVE)
+	var ratio := Vector2i(RoomMap.CELL_PX, RoomMap.CELL_PX) / Vector2i(layer.tile_set.tile_size)
+	layer.solid_at = func(water_cell: Vector2i) -> bool: return map.is_solid(Vector2i((Vector2(water_cell) / Vector2(ratio)).floor()))
 	layer.name = "Water_%s" % entry.symbol.uri_encode()
 	_adopt(layer)
 

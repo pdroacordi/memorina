@@ -1,5 +1,5 @@
-; village_square.room - the village plaza and hub (design 04 section 3.1): Ivo's house, tavern and elder's doors, the bench.
-; The well (cols 28-31) drops into village_cistern; the roofs step up 4 cells to the gable (row 1) under the bell tower's opening.
+; village_square.room - the village plaza and hub (design 04 section 3.1): Ivo's house, bell tower, tavern and elder's doors, the bench.
+; One street at ground level (design 04 section 1, "Vila plana"). The well (cols 28-31) drops into caldera_cistern; the bell tower is behind the door at col 20.
 
 [room]
 origin = 0, 0
@@ -7,14 +7,14 @@ tileset = village
 
 [grid]
 #..........................................................#
-#.......................====...............................#
 #..........................................................#
-#.................................===========..............#
 #..........................................................#
-...==========...============..................==========....
-........................................=====...............
+#..........................................................#
+#..........................................................#
 ............................................................
-........E...R.............S......S..E.............E.........
+............................................................
+............................................................
+........E...R.......E.....S......S..E.............E.........
 SSSSSSSSSSSSSSSSSSSSSSSSSS#S....S#SSSSSSSSSSSSSSSSSSSSSSSSSS
 ###########################S....S###########################
 ###########################S....S###########################
@@ -22,5 +22,6 @@ SSSSSSSSSSSSSSSSSSSSSSSSSS#S....S#SSSSSSSSSSSSSSSSSSSSSSSSSS
 [entities]
 8,8 = {"link": "village_house_door", "to_room": "village_house"}
 12,8 = {"bench_id": "village_square_bench"}
+20,8 = {"link": "village_bell_tower_door", "to_room": "village_bell_tower"}
 36,8 = {"link": "village_tavern_door", "to_room": "village_tavern"}
 50,8 = {"link": "village_elder_door", "to_room": "village_elder"}

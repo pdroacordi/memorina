@@ -5,7 +5,6 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_lane_west.tscn" id="r0"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_square.tscn" id="r1"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_bell_tower.tscn" id="r2"]
-[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_cistern.tscn" id="r3"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_mill.tscn" id="r4"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_gate_east.tscn" id="r5"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_house.tscn" id="r6"]
@@ -31,10 +30,7 @@ position = Vector2(-1280, 0)
 position = Vector2(0, 0)
 
 [node name="VillageBellTower" parent="." instance=ExtResource("r2")]
-position = Vector2(640, -1152)
-
-[node name="VillageCistern" parent="." instance=ExtResource("r3")]
-position = Vector2(640, 384)
+position = Vector2(9600, 12000)
 
 [node name="VillageMill" parent="." instance=ExtResource("r4")]
 position = Vector2(1920, 0)

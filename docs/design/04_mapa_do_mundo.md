@@ -20,6 +20,10 @@
 - **Moinhos e roda d'água (2026-10-09):** "Baked pixel frames" — a rotação é desenhada em quadros de pixel art, nunca girada em tempo real.
 - **Construções sem porta (2026-10-09):** "Give both doors and interiors" — a casa do meio da Praça e o moinho do rio ganham porta e interior (dois interiores novos na Vila).
 - **Recomeço:** as regiões atuais (vila e borda gelada) são refeitas do zero. As salas de prova de canções (`trials_*`) continuam como laboratório de puzzles, só em builds de debug.
+- **Vila plana (2026-10-10):** "The village, I think, shouldn't be so vertical. The village is the beginning of the game and is not the place for exploration, you know? That should be further from the village." Escolha: "Street only; climbs move out (Recommended)". A Vila é uma rua só, no nível do chão (Rua do Mercado, Praça, Moinho, Portão Leste), sem plataformas no ar. A Torre do Sino vira um interior opcional atrás de uma porta (o coletável continua no topo). A cisterna alagada passa para a Caldeira como sua entrada (`caldera_cistern`), alcançada pelo poço da Praça.
+- **Grama gerada (2026-10-10):** "What if the grass was generated instead of pixels? it moves when int contact with the player." Escolha: "Freeze in the grey (Recommended)". As folhas de grama são geradas, balançam e se curvam quando Ivo passa, no relógio da memória como os props: abaixo de 0.2 ficam presas no meio do gesto. Primavera e verão: folhas verdes; outono: folhas secas; inverno: nenhuma (a neve continua no tile).
+- **Segredos (2026-10-10):** "Secret places (such as the image) should be more hidden. Not impossible to find, but with only subtle hints." Escolha: "False wall that fades (Recommended)". Um espaço secreto é desenhado como chão sólido (os mesmos tiles, sem colisão) até Ivo entrar nele, e então se abre; as dicas são sutis (uma rachadura, uma falha na grama, um sopro de poeira).
+- **Emenda entre salas (2026-10-10):** "The transition in kind of the same room when a part of the room is grey and the other isn't is not that good, its just a line, could have more of a gradient or something like that." Os fundos de duas salas vizinhas se misturam numa faixa na emenda, e salas subterrâneas têm fundo próprio (seção 6, "Fundos verticais").
 
 ## 2. Visão geral
 
@@ -29,7 +33,7 @@
 [PRIMAVERA · Bosque Florido] ◄── [VILA · hub] ──► [Estrada do Limiar] ──► [BORDA GELADA · Farol]
        oeste                      │       │                leste             extremo leste
                                   │       └─ rio, para cima ──► [INVERNO · Lago Gelado]   norte
-                                  └─ cisterna alagada, para baixo (Redoma) ──► [VERÃO · Caldeira]   subterrâneo
+                                  └─ poço da Praça, para baixo: cisterna alagada (Redoma) ──► [VERÃO · Caldeira]   subterrâneo
                                                                    ▲ escalada (chaminé do penhasco do outono)
 ```
 
@@ -58,18 +62,17 @@ Convenções: o id é o nome do arquivo (`scenes/world/rooms/<área>/<id>.tscn`)
 
 | Id | Nome | Função | Portões e puzzles | Banco |
 |---|---|---|---|---|
-| `village_square` | Praça | Hub. Poço da cisterna, portas da taverna, da casa de Ivo e da casa do ancião. Aldeões. | — | sim |
+| `village_square` | Praça | Hub. O poço desce para a cisterna da Caldeira; portas da taverna, da casa de Ivo, da casa do ancião e da Torre do Sino. Aldeões. | — | sim |
 | `village_lane_west` | Rua do Mercado | Bancas, padaria (porta). Leva ao Bosque. | cerca do oeste: ter a Memorina | — |
 | `village_mill` | Moinho do Rio | Roda d'água, rio. Leva ao Lago (para cima). | trilha do rio: ter a Memorina | — |
 | `village_gate_east` | Portão Leste | Saída para o Limiar. | — | — |
-| `village_bell_tower` | Torre do Sino | Sala vertical. Coletável no topo. | pulo duplo (retorno) | — |
-| `village_cistern` | Cisterna | Poço vertical alagado sob a praça. Passagem no fundo para a Caldeira. | Redoma ("O fundo do poço", Inverno Espacial 2) | — |
 | `village_house` | Casa de Ivo (interior) | Início do jogo. Violão, cama da filha. | — | — |
 | `village_tavern` | Taverna (interior, dois andares) | Balcão, mesas, lareira, barris, quartos em cima. Taverneiro e fregueses. | — | — |
 | `village_tavern_cellar` | Adega (interior) | Segredo sob a taverna. | Enraizar (retorno) | — |
 | `village_elder` | Casa do Ancião (interior) | O ancião (que conta a história do farol). | — | — |
 | `village_bakery` | Padaria (interior) | Forno, pães, sacos de farinha. Padeira. | — | — |
 | `village_empty_house` | A Casa Vazia (interior) | Combinado 4 ("A Casa Vazia"). Recompensa tardia. | Solstício + Sombra + Soltar | — |
+| `village_bell_tower` | Torre do Sino (interior, vertical) | Porta na Praça. Escalada opcional; coletável no topo. | pulo duplo (retorno) | — |
 
 ### 3.2 Estrada do Limiar (`threshold`) — inverno, 0.3
 
@@ -137,7 +140,8 @@ Curta e atmosférica, antes de qualquer canção (`01_lore_e_narrativa.md`, seç
 
 | Id | Nome | Função | Portões e puzzles | Banco |
 |---|---|---|---|---|
-| `caldera_cistern_bottom` | Fundo da Cisterna | Chega da Cisterna da vila. | — | — |
+| `caldera_cistern` | Cisterna | Poço vertical alagado sob o poço da Praça; a entrada da Caldeira pela Vila. | Redoma ("O fundo do poço", Inverno Espacial 2) | — |
+| `caldera_cistern_bottom` | Fundo da Cisterna | Chega da Cisterna. | — | — |
 | `caldera_chimney_base` | Base da Chaminé | Chega do Pomar. | — | — |
 | `caldera_open_crater` | Cratera Aberta | A caldeira se abre para o céu (sala vertical alta). | — | sim |
 | `caldera_temple_gate` | Porta do Templo | "A porta que precisa de alguém" (Verão Espacial 1). | Sombra | — |

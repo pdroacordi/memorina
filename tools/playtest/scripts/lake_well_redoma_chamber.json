@@ -1,0 +1,157 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 20.5,
+ "locale": "en",
+ "player_position": [
+  1776,
+  -1346
+ ],
+ "known_songs": [
+  1
+ ],
+ "_note": "lake_well: Redoma at the bank's edge (col 15, floor row 6), down the dry well, west through the flooded passage, up the hole into the sealed chamber (bugs/well-water-stands-in-the-air-at-a-passage-mouth).",
+ "steps": [
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.65,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.05,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.45,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 6.4,
+   "screenshot": "lw_a_shell"
+  },
+  {
+   "t": 7.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.8,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 8.6,
+   "log": "bottom"
+  },
+  {
+   "t": 8.6,
+   "screenshot": "lw_b_bottom"
+  },
+  {
+   "t": 8.7,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.05,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 9.1,
+   "log": "under_hole"
+  },
+  {
+   "t": 9.15,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 9.3,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.45,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 9.7,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 10.2,
+   "log": "chamber"
+  },
+  {
+   "t": 10.2,
+   "screenshot": "lw_c_chamber"
+  },
+  {
+   "t": 19.5,
+   "log": "after"
+  },
+  {
+   "t": 19.5,
+   "screenshot": "lw_d_water_back"
+  }
+ ]
+}

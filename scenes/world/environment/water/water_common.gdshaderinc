@@ -3,7 +3,9 @@
 
 #include "res://scenes/world/memory/dither_common.gdshaderinc"
 
-// Per-column data from WaterSurfaceTexture: r height above rest line (px), g foam (0..1), b floor depth (px), a unused (ice is its own sheet, ice_sheet.gdshader).
+// Per-column data from WaterSurfaceTexture: r height above rest line (px), g foam (0..1), b floor depth (px), a ceiling depth
+// (px; 0 for an open column, negative under trapped air, where the column draws its own waterline).
+// Ice is its own sheet (ice_sheet.gdshader).
 uniform sampler2D surface_data : filter_nearest, repeat_disable;
 // Rest waterline y and body left-edge x in world pixels.
 uniform float rest_y = 0.0;
@@ -31,6 +33,11 @@ vec4 wc_data(int column) {
 // The first water row; round heights here so the surface moves in whole pixels.
 float wc_surface(vec4 data) {
 	return rest_y - round(data.r);
+}
+
+// The first row of water under a covered column's ceiling; far above for an open column.
+float wc_ceiling(vec4 data) {
+	return data.a != 0.0 ? rest_y + abs(data.a) : -1e9;
 }
 
 // The first row below the column's water; pixels below the floor are bank.

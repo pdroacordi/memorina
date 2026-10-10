@@ -23,18 +23,17 @@ Design 04 (the approved map, "Approve as proposed", 2026-10-08), WORLD-05.
 - **Openings.** Rooms share edges. A side opening is air in rows 5..8 of the shared screen row with a floor at row 9; a vertical opening keeps the named columns open. The current room is the one Ivo's feet are in (`systems/rooms`).
 - **Interiors** (door rooms, design 04 section 4) live at y 12000 (floor y 12288), x = region index * 12000 + n * 1600, in the generator's region order (home_village, threshold, frost_edge, spring_woods, frozen_lake, wind_orchards, summer_caldera). They never touch another room. A new game starts in `village_house` at (320, 12286).
 - **The generator.** `tools/maps/gen_world_shells.py` holds the tables (regions with name key, season, memory, guardian and wall material; rooms with macro rects; side and vertical openings; benches; interiors; doors; barriers) and writes Room triggers (always), region scenes, contents scenes and `.room` shells (once). Every scene gets a stable `uid=` from `world_uid_pool.txt` (minted by Godot; uids already in a scene header are skipped), so `SceneKey` save keys survive renames. To add a room: add its row and openings, run the tool, add the printed contents scenes to `tools/smoke/scenes.txt`, and place it in its region scene by hand (region scenes are not regenerated).
+- **The village is one street** ("Street only; climbs move out (Recommended)", user, 2026-10-10; design 04 section 1, "Vila plana"): the lane, square, mill and gate have no sky ledges; the bell tower is an interior; the cistern belongs to the caldera. Exploration starts outside the village.
 - **Memory per region** (MEM-13, design 04 section 2): village 0.8, threshold 0.3, frost edge 0.05, woods 0.4, lake 0.3, orchards 0.25, caldera 0.15, authored on each region's `Memory` node. The village's mid-game 0.6 lands with WORLD-11.
 - **Hand-placed region memory:** the lake well's squall has its own `MemorySource` (`frozen_lake.tscn`, `WellSquallMemory`) so its gusts break a song at the region's 0.3.
-- **Known limits** (2026-10-09 traversals, `playtests/2026-10-09-traversal-opening`): in one-screen rooms the double jump reaches every height gate on the optional alcoves (woods pond, caldera seesaw, dry moat, bait); the player owns the double jump before arriving, so they stay optional. The cistern is two-way without wall climb (2026-10-10): stone ledges zigzag up its shaft, and the Redoma is still needed at the top, so a player who does the Frozen Lake before the Orchards can leave the Caldera (`bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera`). The cliff chimney is gated by wall climb at its top (`has_wall_climb.tres`) and the arena's west wall is closed above the barrier, so nobody falls in without it (`bugs/the-orchard-arena-barrier-is-jumped-over-into-the-cliff-chimney`). The fishing village well's way out is a calm one-way catch above the squall (2026-10-10); from it Soltar reaches the curtain, so Lógico 1's shelter step can be skipped. Accepted until the puzzle moves to a larger room (no 20x12 layout keeps the way out calm and the curtain out of Soltar's 288 px reach).
+- **Known limits** (2026-10-09 traversals, `playtests/2026-10-09-traversal-opening`): in one-screen rooms the double jump reaches every height gate on the optional alcoves (woods pond, caldera seesaw, dry moat, bait); the player owns the double jump before arriving, so they stay optional. The caldera cistern is two-way without wall climb or double jump: its chamber's door joins caldera_cistern_bottom, and Redoma played in the chamber dries the way back to the slab (2026-10-10, `bugs/well-water-stands-in-the-air-at-a-passage-mouth`), so a player who does the Frozen Lake before the Orchards can leave the Caldera (`bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera`). The cliff chimney is gated by wall climb at its top (`has_wall_climb.tres`) and the arena's west wall is closed above the barrier, so nobody falls in without it (`bugs/the-orchard-arena-barrier-is-jumped-over-into-the-cliff-chimney`). The fishing village well's way out is a calm one-way catch above the squall (2026-10-10); from it Soltar reaches the curtain, so Lógico 1's shelter step can be skipped. Accepted until the puzzle moves to a larger room (no 20x12 layout keeps the way out calm and the curtain out of Soltar's 288 px reach).
 
 ## Rooms (macro rects) (c0..c1, r0..r1 inclusive)
 
 | Region | Room | c | r | Notes |
 |---|---|---|---|---|
 | home_village | village_lane_west | -2..-1 | 0 | W edge: fence gated by owns_memorina (barrier, not a door) |
-| home_village | village_square | 0..2 | 0 | bench `village_square_bench`; doors: village_house, village_tavern, village_elder; the well's shaft opens down into village_cistern at c1 |
-| home_village | village_bell_tower | 1 | -3..-1 | vertical; reached by jumping off the square's roofs; top ledge needs double jump |
-| home_village | village_cistern | 1 | 1..2 | vertical flooded shaft (`w`/`~`); bottom passage W into caldera_cistern_bottom; Redoma |
+| home_village | village_square | 0..2 | 0 | bench `village_square_bench`; doors: village_house, village_tavern, village_elder, village_bell_tower; the well's shaft opens down into caldera_cistern at c1 |
 | home_village | village_mill | 3..4 | 0 | river; at c4 the river trail goes up into lake_waterfall_path, gated by owns_memorina |
 | home_village | village_gate_east | 5..6 | 0 | E exit to threshold |
 | threshold | threshold_fields | 7..9 | 0 | door: threshold_farmhouse |
@@ -73,7 +72,8 @@ Design 04 (the approved map, "Approve as proposed", 2026-10-08), WORLD-05.
 | summer_caldera | caldera_dry_moat | -8..-6 | 4 | Combinado 1 (Chuva+Congelar) to an optional ledge |
 | summer_caldera | caldera_seesaw | -5..-4 | 4 | seesaw (Sombra) |
 | summer_caldera | caldera_open_crater | -3..-2 | 2..5 | tall; sky far above; bench `caldera_crater_bench` |
-| summer_caldera | caldera_cistern_bottom | -1..1 | 3..4 | from village_cistern (c1 top) |
+| summer_caldera | caldera_cistern | 1 | 1..2 | flooded cistern under the square's well; Redoma dries the passage into a sealed chamber; door: caldera_cistern_bottom |
+| summer_caldera | caldera_cistern_bottom | -1..1 | 3..4 | door on the dais up to caldera_cistern |
 | summer_caldera | caldera_temple_gate | 2..3 | 4 | plate + gate (Sombra) |
 | summer_caldera | caldera_arena | 4..5 | 4 | summer arena, empty until GRD-04 |
 
@@ -87,6 +87,7 @@ Design 04 (the approved map, "Approve as proposed", 2026-10-08), WORLD-05.
 | home_village | village_elder | 1x1 | village_square |
 | home_village | village_bakery | 1x1 | village_lane_west |
 | home_village | village_empty_house | 2x1 | village_lane_west; Combinado 4 |
+| home_village | village_bell_tower | 1x3 (vertical) | village_square; the climb and its collectible (double jump) |
 | threshold | threshold_farmhouse | 1x1 | threshold_fields; sword marker |
 | frost_edge | lighthouse_interior | 1x4 (vertical) | lighthouse_base (bottom), lighthouse_top (hatch, sealed: all_guardians_restored) |
 | spring_woods | woods_hut | 1x1 | woods_edge |

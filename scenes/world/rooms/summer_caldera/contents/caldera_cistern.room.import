@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=6
+type="Resource"
+uid="uid://cfk2m0a7ypd5u"
+path="res://.godot/imported/caldera_cistern.room-51c0610ba5780e0bc31d936ce61b967b.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/summer_caldera/contents/caldera_cistern.room"
+dest_files=["res://.godot/imported/caldera_cistern.room-51c0610ba5780e0bc31d936ce61b967b.res"]
+
+[params]
+

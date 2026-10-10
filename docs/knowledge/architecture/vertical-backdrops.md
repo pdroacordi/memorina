@@ -4,9 +4,9 @@ type: architecture
 title: Backdrops that work vertically - a Backdrop node builds one Parallax2D per BackdropSet layer, anchored to its room's horizon, with edge and repeat fills done in the shader (WORLD-06, absorbs WORLD-04)
 status: active
 tags: [backdrop, background, parallax2d, camera, seasonal-art, greyhush, shader, rooms, art-contract, plan, world-06, world-04]
-related: [gotchas/parallax2d-ignores-its-parents-offset, bugs/the-winter-trial-tree-layers-end-in-vertical-cuts-over-the-squall-puzzle, systems/seasonal-art, systems/greyhush, systems/songs-and-the-memorina, systems/rooms, systems/art-pipeline, bugs/creature-pass-frozen-transform-floats-bodies, bugs/camera-zoom-out-shows-past-room-bounds, gotchas/duplicate-copies-script-built-unowned-children, bugs/room-map-node-rebuild-renames-and-doubles-its-children, gotchas/glsl-gdscript-math-must-be-duplicated, gotchas/screen-texture-copy-scope, gotchas/logger-log-error-also-receives-warnings, architecture/rooms-are-text]
+related: [gotchas/parallax2d-ignores-its-parents-offset, bugs/the-winter-trial-tree-layers-end-in-vertical-cuts-over-the-squall-puzzle, systems/seasonal-art, systems/greyhush, systems/songs-and-the-memorina, systems/rooms, systems/art-pipeline, bugs/creature-pass-frozen-transform-floats-bodies, bugs/camera-zoom-out-shows-past-room-bounds, gotchas/duplicate-copies-script-built-unowned-children, bugs/room-map-node-rebuild-renames-and-doubles-its-children, gotchas/glsl-gdscript-math-must-be-duplicated, gotchas/screen-texture-copy-scope, gotchas/logger-log-error-also-receives-warnings, architecture/rooms-are-text, architecture/backdrop-seams]
 created: 2026-10-08
-updated: 2026-10-08
+updated: 2026-10-10
 source_files:
   - scenes/world/environment/backdrop/backdrop.gd
   - scenes/world/environment/backdrop/backdrop_math.gd
@@ -312,3 +312,20 @@ position and `half_view` = (320, 180). This is constant per room, so it is compu
   side to NONE, or fix the row.
 - **No new autoload, no new ALWAYS node, no user-facing strings.** `problems()` messages are
   developer diagnostics in English, not `tr()` keys.
+
+## Revision (2026-10-10, PLANNED in WORLD-22)
+
+`architecture/backdrop-seams` plans changes to three points above. The Decision above stays
+current until it is built.
+
+- **Horizontal anchor.** "A.x is the room's own origin" holds only on an axis where the art has
+  an edge. On an axis where a layer repeats (`repeat_x`; REPEAT both above and below), the anchor is
+  world 0. Today two rooms of one set draw a layer `dx * scroll.x mod strip_w` px apart at their
+  shared edge; with world phase they draw identical pixels. The WORLD-04 tests that pin a
+  room-relative phase are rewritten. Every layer stays on screen, because repeating quads cover
+  any x.
+- **Clip.** The `room_rect` discard becomes seam ownership. Each pixel within `SEAM_BAND / 2` of a
+  room edge is drawn by the room that holds the pixel moved by a Bayer jitter. This is the shader's
+  first dither ("no dither" above no longer holds).
+- **Art density** is 2x, not 1x ("One 2x pixel density", user, 2026-10-10, `systems/art-pipeline`).
+  Sheet sizes stay in game px, and every art pixel is a 2x2 block.

@@ -22,7 +22,9 @@ uniform float band_shift_max = 1.0;
 uniform float band_speed = 1.3;
 
 uniform float caustic_depth = 10.0;
-uniform int caustic_band_px = 3;
+// Glint length and the spacing of glint rows, in world px.
+uniform int caustic_band_px = 4;
+uniform int caustic_row_px = 3;
 uniform float caustic_rate = 1.5;
 uniform float caustic_density = 0.3;
 uniform float caustic_strength = 0.35;
@@ -46,7 +48,9 @@ void fragment() {
 	// Held out of a shell's disc, pixel for pixel: the water stands against
 	// the curve, with the lighter line along it (below).
 	float held = wc_held(centre);
-	if (texel.y < surface || texel.y >= wc_floor(data) || held > 0.0) {
+	// A covered column (a flooded passage) shows water only under its ceiling, with no reflection or caustics.
+	bool covered = data.a != 0.0;
+	if (texel.y < max(surface, wc_ceiling(data)) || texel.y >= wc_floor(data) || held > 0.0) {
 		discard;
 	}
 	float depth = texel.y - surface;
@@ -70,18 +74,17 @@ void fragment() {
 	vec3 reflected = wr_sample(uv_m, SCREEN_PIXEL_SIZE);
 	vec4 tint = wc_ramp(reflection_ramp, depth, texel);
 	float awake = wr_awake(remembered);
-	float gate = wr_gate(tint.a, awake, wr_edge(uv_m), game_px);
+	float gate = covered ? 0.0 : wr_gate(tint.a, awake, wr_edge(uv_m), game_px);
 	colour = mix(colour, reflected * tint.rgb, gate);
 
-	// Caustics: coarse vertical bands re-rolled on the water's clock. They wake
-	// with the reflection (the same memory ramp), so grey water is empty rather
-	// than speckled. The band's own falloff is art (texel grid); the waking is
-	// memory (game-pixel grid).
-	if (depth < caustic_depth) {
-		float band = floor(texel.x / float(caustic_band_px));
-		float roll = floor(water_time * caustic_rate + wd_hash11(band * 3.7) * 8.0);
-		float lit = wd_hash11(band * 7.13 + roll * 17.31) < caustic_density ? 1.0 : 0.0;
-		bool shown = lit * (1.0 - depth / caustic_depth) > BAYER[wd_bayer_index(texel)]
+	// Caustics: 1 px glints on every caustic_row_px-th row, thinning with depth, never a stippled column
+	// (bugs/pool-caustics-hang-from-the-waterline-like-drips). They wake with the reflection, so grey water is empty.
+	if (!covered && depth >= 1.0 && depth < caustic_depth && mod(depth, float(caustic_row_px)) < 1.0) {
+		float row = floor(depth / float(caustic_row_px));
+		float roll = floor(water_time * caustic_rate + wd_hash11(row * 5.3) * 8.0);
+		float dash = floor((texel.x + row * 11.0) / float(caustic_band_px));
+		float chance = caustic_density * (1.0 - depth / caustic_depth);
+		bool shown = wd_hash11(dash * 7.13 + roll * 17.31 + row * 3.1) < chance
 			&& awake > BAYER[wd_bayer_index(game_px)];
 		if (shown) {
 			colour = mix(colour, top_line_color.rgb, caustic_strength);
@@ -95,7 +98,8 @@ void fragment() {
 	bool exposed_right = in_column > float(column_width) - 1.0
 		&& column + 1 < textureSize(surface_data, 0).x
 		&& texel.y < wc_surface(wc_data(column + 1));
-	if (depth < 1.0 || exposed_left || exposed_right || held > -1.0) {
+	bool bell_line = data.a < 0.0 && texel.y < wc_ceiling(data) + 1.0;
+	if (depth < 1.0 || exposed_left || exposed_right || held > -1.0 || bell_line) {
 		bool foam = data.g > BAYER[wd_bayer_index(texel)];
 		colour = foam ? foam_color.rgb : top_line_color.rgb;
 	}

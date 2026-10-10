@@ -1,0 +1,167 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 14,
+ "locale": "en",
+ "player_position": [
+  1036,
+  630
+ ],
+ "known_songs": [
+  1
+ ],
+ "_note": "caldera_cistern: Redoma at the slab's east edge, drop into the stepped pool, west through the flooded passage, up into the sealed chamber and down its door to caldera_cistern_bottom.",
+ "steps": [
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.65,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.05,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.45,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 6.4,
+   "screenshot": "cis_a_shell"
+  },
+  {
+   "t": 6.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.7,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 7.4,
+   "screenshot": "cis_b_landed"
+  },
+  {
+   "t": 7.4,
+   "log": "landed"
+  },
+  {
+   "t": 7.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.85,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 7.9,
+   "log": "under_hole"
+  },
+  {
+   "t": 7.95,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 8.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.5,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 8.8,
+   "screenshot": "cis_c_chamber"
+  },
+  {
+   "t": 8.8,
+   "log": "chamber"
+  },
+  {
+   "t": 9.0,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 9.2,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 11.0,
+   "screenshot": "cis_d_below"
+  },
+  {
+   "t": 11.0,
+   "log": "below"
+  }
+ ]
+}

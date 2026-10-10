@@ -201,6 +201,21 @@ func test_water_may_lie_over_ground() -> void:
 	assert_int(result.map.water["~"].size()).is_equal(4)
 	assert_int(result.map.ground_at(Vector2i(0, 1))).is_equal(Enums.Ground.EARTH)
 
+## Water beside an open passage mouth stands in the air (bugs/well-water-stands-in-the-air-at-a-passage-mouth).
+func test_pool_water_beside_open_air_is_an_error() -> void:
+	var result := _parse("[grid]\n#....#\n##..##\n#...##\n######\n[water]\n......\n..~~..\n..~~..\n......\n")
+	assert_bool(result.ok()).is_false()
+	assert_str(str(result.errors)).contains("stands against open air")
+
+## A flooded passage up into a sealed chamber: the chamber's trapped air holds the water at its floor.
+func test_water_under_a_sealed_pocket_is_held() -> void:
+	var result := _parse("[grid]\n####...#\n#..#...#\n##.#...#\n##.....#\n########\n[water]\n........\n....~~~.\n..~.~~~.\n..~~~~~.\n........\n")
+	assert_bool(result.ok()).is_true()
+
+func test_water_under_air_open_to_the_sky_is_an_error() -> void:
+	var result := _parse("[grid]\n#.##...#\n#..#...#\n##.#...#\n##.....#\n########\n[water]\n........\n....~~~.\n..~.~~~.\n..~~~~~.\n........\n")
+	assert_bool(result.ok()).is_false()
+
 func test_water_in_the_ground_grid_is_an_error() -> void:
 	assert_bool(_parse("[grid]\n#~#\n").ok()).is_false()
 

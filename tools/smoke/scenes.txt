@@ -4,7 +4,7 @@ res://scenes/world/game.tscn
 res://scenes/world/rooms/home_village/contents/village_lane_west_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_square_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_bell_tower_contents.tscn
-res://scenes/world/rooms/home_village/contents/village_cistern_contents.tscn
+res://scenes/world/rooms/summer_caldera/contents/caldera_cistern_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_mill_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_gate_east_contents.tscn
 res://scenes/world/rooms/threshold/contents/threshold_fields_contents.tscn

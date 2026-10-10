@@ -29,8 +29,6 @@ REGION_ORDER = list(REGIONS)
 ROOM_LIST = [
     ("home_village", "village_lane_west", -2, -1, 0, 0, True),
     ("home_village", "village_square", 0, 2, 0, 0, True),
-    ("home_village", "village_bell_tower", 1, 1, -3, -1, True),
-    ("home_village", "village_cistern", 1, 1, 1, 2, False),
     ("home_village", "village_mill", 3, 4, 0, 0, True),
     ("home_village", "village_gate_east", 5, 6, 0, 0, True),
     ("threshold", "threshold_fields", 7, 9, 0, 0, True),
@@ -69,6 +67,7 @@ ROOM_LIST = [
     ("summer_caldera", "caldera_dry_moat", -8, -6, 4, 4, False),
     ("summer_caldera", "caldera_seesaw", -5, -4, 4, 4, False),
     ("summer_caldera", "caldera_open_crater", -3, -2, 2, 5, False),
+    ("summer_caldera", "caldera_cistern", 1, 1, 1, 2, False),
     ("summer_caldera", "caldera_cistern_bottom", -1, 1, 3, 4, False),
     ("summer_caldera", "caldera_temple_gate", 2, 3, 4, 4, False),
     ("summer_caldera", "caldera_arena", 4, 5, 4, 4, False),
@@ -98,8 +97,7 @@ H_LINKS = [
 
 # Vertical openings: (upper room, lower room, global macro col, first cell col, last cell col inside that macro col).
 V_LINKS = [
-    ("village_bell_tower", "village_square", 1, 4, 15),
-    ("village_square", "village_cistern", 1, 8, 11),
+    ("village_square", "caldera_cistern", 1, 8, 11),
     ("lake_waterfall_path", "village_mill", 4, 4, 15),
     ("lake_fishing_village", "lake_well", 2, 8, 11),
     ("woods_canopy", "woods_deep", -5, 8, 15),
@@ -108,7 +106,6 @@ V_LINKS = [
     ("orchard_chasm_bridge", "orchard_terraces", -7, 4, 11),
     ("orchard_counterweights", "orchard_mill_town", -10, 6, 13),
     ("orchard_windy_gap", "orchard_mill_town", -11, 4, 15),
-    ("village_cistern", "caldera_cistern_bottom", 1, 8, 11),
 ]
 
 # room, cell col, bench id (on the room's bottom floor)
@@ -130,6 +127,7 @@ INTERIORS = [
     ("home_village", "village_elder", 1, 1),
     ("home_village", "village_bakery", 1, 1),
     ("home_village", "village_empty_house", 2, 1),
+    ("home_village", "village_bell_tower", 1, 3),
     ("threshold", "threshold_farmhouse", 1, 1),
     ("frost_edge", "lighthouse_interior", 1, 4),
     ("spring_woods", "woods_hut", 1, 1),
@@ -145,6 +143,7 @@ DOORS = [
     ("village_square", 50, "village_elder", 4, "village_elder_door", {}, {"arrive_facing": 1}),
     ("village_lane_west", 12, "village_bakery", 4, "village_bakery_door", {}, {"arrive_facing": 1}),
     ("village_lane_west", 30, "village_empty_house", 4, "village_empty_house_door", {}, {"arrive_facing": 1}),
+    ("village_square", 20, "village_bell_tower", 4, "village_bell_tower_door", {}, {"arrive_facing": 1}),
     ("village_tavern", 34, "village_tavern_cellar", 4, "village_tavern_cellar_door", {}, {"arrive_facing": 1}),
     ("threshold_fields", 40, "threshold_farmhouse", 4, "threshold_farmhouse_door", {}, {"arrive_facing": 1}),
     ("lighthouse_base", 20, "lighthouse_interior", 4, "lighthouse_door", {}, {"arrive_facing": 1}),
@@ -154,6 +153,8 @@ DOORS = [
     ("woods_edge", 12, "woods_hut", 4, "woods_hut_door", {}, {"arrive_facing": 1}),
     ("lake_fishing_village", 40, "lake_fisher_hut", 4, "lake_fisher_hut_door", {}, {"arrive_facing": 1}),
     ("orchard_mill_town", 30, "orchard_inn", 4, "orchard_inn_door", {}, {"arrive_facing": 1}),
+    ("caldera_cistern", 9, "caldera_cistern_bottom", 49, "caldera_cistern_door",
+        {"row": 10, "arrive_facing": 1}, {"row": 17}),
 ]
 
 # room, cell col of an owns_memorina barrier on the bottom floor

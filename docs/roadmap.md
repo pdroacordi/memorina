@@ -137,6 +137,10 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | WORLD-17 | Dress the Summer Caldera | 04 §3.7 | `[ ]` | WORLD-11 | 2026-10-08 | Arena empty until GRD-04. |
 | WORLD-18 | Connections pass | 04 §2 | `[ ]` | WORLD-12, WORLD-13, WORLD-14, WORLD-15, WORLD-16, WORLD-17 | 2026-10-08 | Shortcuts, secrets, bench spacing, the map, one traversal playtest from the opening to every arena. |
 | WORLD-19 | Drop through one-way ledges | | `[ ]` | | 2026-10-09 | The legend says `=` can be dropped through; Ivo cannot (`bugs/the-tavern-upper-floor-has-no-way-down`). Down + jump on a ledge. Needs the user's go-ahead (not in design). |
+| WORLD-20 | Flat village: one street, the climbs move out | 04 §1, §3.1 | `[x]` | WORLD-05 | 2026-10-10 | "Street only; climbs move out (Recommended)" (user, 2026-10-10). No sky ledges in the street rooms; the bell tower becomes a door interior; the cistern moves to the caldera as `caldera_cistern`. `systems/world`. |
+| WORLD-21 | Secret spaces behind false walls | 04 §1 | `[ ]` | WORLD-07 | 2026-10-10 | "False wall that fades (Recommended)" (user, 2026-10-10): drawn as ground, no collision, opens when Ivo steps in; subtle hints. |
+| WORLD-22 | Backdrops blend at room seams; underground backdrops | 04 §1, §6 | `[ ]` | WORLD-06 | 2026-10-10 | A seam between a room with a backdrop and one without was a hard line (user, 2026-10-10). |
+| WORLD-23 | Generated grass that bends | 04 §1 | `[ ]` | WORLD-07, WORLD-08 | 2026-10-10 | "Freeze in the grey (Recommended)" (user, 2026-10-10): sways and bends on the memory clock; spring/summer green, autumn dry, winter none. |
 
 ## Tools and infrastructure
 
