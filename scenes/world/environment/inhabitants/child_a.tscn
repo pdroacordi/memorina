@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/world/inhabitants/child_a.png" id="1_tex"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/ambient_motion.gd" id="2_motion"]
+
+[node name="ChildA" type="Sprite2D"]
+texture = ExtResource("1_tex")
+centered = false
+offset = Vector2(-24, -48)
+hframes = 8
+
+[node name="AmbientMotion" type="Node" parent="."]
+script = ExtResource("2_motion")
+frames_per_second = 6.0
+sequence = PackedInt32Array(0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1)

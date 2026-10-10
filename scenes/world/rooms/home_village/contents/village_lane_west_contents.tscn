@@ -4,6 +4,9 @@
 [ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_set"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bakery_facade.tscn" id="pr_bakery"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/empty_house_facade.tscn" id="pr_empty_house"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/seller.tscn" id="in_seller"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/hen_white.tscn" id="in_hen_white"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/hen_brown.tscn" id="in_hen_brown"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/home_village/contents/village_lane_west.room" id="room_map"]
 
@@ -22,6 +25,17 @@ position = Vector2(400, 288)
 
 [node name="EmptyHouseFacade" parent="Props" instance=ExtResource("pr_empty_house")]
 position = Vector2(976, 288)
+
+[node name="Seller" parent="Props" instance=ExtResource("in_seller")]
+position = Vector2(560, 288)
+flip_h = true
+
+[node name="HenWhite" parent="Props" instance=ExtResource("in_hen_white")]
+position = Vector2(1128, 288)
+
+[node name="HenBrown" parent="Props" instance=ExtResource("in_hen_brown")]
+position = Vector2(1176, 288)
+flip_h = true
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

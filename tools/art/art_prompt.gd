@@ -7,7 +7,7 @@ const STYLE := "res://tools/art/prompts/style.md"
 const IGNORED := ["README.md", "style.md"]
 
 var id := ""
-## Prompt operation: `generate`, `animate`, or `tileset` (a biome look sheet, architecture/biome-tilesets).
+## Prompt operation: `generate`, `animate` (v1), `animate3` (v2 animate-with-text-v3 from our own still), or `tileset` (a biome look sheet, architecture/biome-tilesets).
 var command := "generate"
 ## Output PNG path under `res://assets/`.
 var target := ""
@@ -84,8 +84,8 @@ func problems(file_id: String) -> PackedStringArray:
 		found.append("%s: target must be a .png under res://assets/" % file_id)
 	if frame_size.x <= 0 or frame_size.y <= 0 or frames <= 0:
 		found.append("%s: frame size and frame count must be positive" % file_id)
-	if not command in ["generate", "animate", "tileset"]:
-		found.append("%s: command must be generate, animate or tileset" % file_id)
+	if not command in ["generate", "animate", "animate3", "tileset"]:
+		found.append("%s: command must be generate, animate, animate3 or tileset" % file_id)
 	if command == "tileset":
 		if sheet_size() != BiomeTileset.SHEET_SIZE:
 			found.append("%s: a tileset sheet is %s in one frame" % [file_id, BiomeTileset.SHEET_SIZE])
@@ -97,7 +97,7 @@ func problems(file_id: String) -> PackedStringArray:
 			found.append("%s: lip must be 1..16 px" % file_id)
 		if not top_size in [0.0, 0.25, 0.5, 1.0]:
 			found.append("%s: top_size must be 0, 0.25, 0.5 or 1" % file_id)
-	if command == "animate" and (action.is_empty() or reference.is_empty()):
+	if command in ["animate", "animate3"] and (action.is_empty() or reference.is_empty()):
 		found.append("%s: animate needs an action and a reference" % file_id)
 	if source in ["pixellab", "codex"] and description.is_empty():
 		found.append("%s: a generated asset's prompt needs a description" % file_id)

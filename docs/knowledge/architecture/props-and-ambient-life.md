@@ -286,6 +286,8 @@ the region never learns props exist). `AmbientMotion` pulls `MemoryField.sample`
 
 ## Art contract (props and inhabitants)
 
+> **Revision (2026-10-10, WORLD-10).** Inhabitants were made differently from the plan below: stills cut from one Codex sheet of the village's people (our concept and fronts as references), then PixelLab `animate-with-text-v3` from each still (8 frames, played ping-pong at 6 fps), not `create-character-v3` plus `animate-character`. Contracts use `command: animate3`. Frames: adults 64 px, children 48, animals 32 (the cat 32x32, not 32x16; hens 32). `prop_scenes_test` is built (Sprite2D root, no collision, visibility layer 1, sequence frames inside `hframes`); the band and contract checks it planned are left to `art_prompt_test`.
+
 - Contract keys added: `bands: 1|3` (sheet = `size.x * frames` by `size.y * bands`), `palette: <biome>`
   (`tools/art/palettes/<biome>.json`, `style.md`), `anchor: x,y` (origin in the frame; default
   bottom centre). The autumn and winter bands are edits of the processed spring band at 1x (Codex

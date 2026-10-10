@@ -35,7 +35,7 @@
 [CmdletBinding()]
 param(
   [Parameter(Position = 0, Mandatory = $true)]
-  [ValidateSet("balance", "generate", "animate", "tileset", "tiles")]
+  [ValidateSet("balance", "generate", "animate", "animate3", "tileset", "tiles")]
   [string]$Command,
 
   [string]$Description = "",
@@ -243,6 +243,42 @@ switch ($Command) {
       Write-Host "wrote $stripPath ($($frames.Count) frames of ${w}x${h})"
     }
     Show-Usage $r
+  }
+
+  "animate3" {
+    # v2 animate-with-text-v3: -Frames frames (4-16, even) of -Action from -Reference, our own still (max 256 px).
+    # Writes <Name>_<i>.png per frame; tools/art/cut_inhabitant.py turns them into the contract's strip.
+    if (-not $Action -or -not $Reference) { throw "animate3 needs -Action and -Reference." }
+    $body = @{
+      first_frame   = Read-Base64Image $Reference
+      action        = $Action
+      frame_count   = $Frames
+      no_background = $true
+    }
+    if ($Seed -ne 0) { $body.seed = $Seed }
+    $stem = if ($Name) { $Name } else { "animate3" }
+    $dir = Join-Path (Ensure-OutDir) $stem
+    New-Item -ItemType Directory -Force $dir | Out-Null
+    $r = Invoke-PixelLab POST "/animate-with-text-v3" $body $BaseUrlV2
+    $id = $r.background_job_id
+    Write-Host "submitted $id; polling every 5 s"
+    for ($i = 0; $i -lt 120; $i++) {
+      Start-Sleep -Seconds 5
+      # A poll that fails prints why (a 401 or 402 is not "busy") and keeps trying until the timeout.
+      try { $g = Invoke-PixelLab GET "/background-jobs/$id" $null $BaseUrlV2 } catch { Write-Host "poll ${i}: $($_.Exception.Message)"; continue }
+      if ($g.status -eq "completed") {
+        $k = 0
+        foreach ($img in $g.last_response.images) {
+          $path = Join-Path $dir ("{0}_{1}.png" -f $stem, $k)
+          if ($img.base64) { Write-Base64Png $img $path } else { Invoke-WebRequest -Uri $img.url -OutFile $path -UseBasicParsing; Write-Host "wrote $path" }
+          $k++
+        }
+        if ($g.last_response.usage) { Show-Usage $g.last_response } else { Show-Usage $r }
+        return
+      }
+      if ($g.status -eq "failed") { throw "PixelLab animation $id failed: $($g.last_response | ConvertTo-Json -Compress -Depth 4)" }
+    }
+    throw "PixelLab animation $id did not finish in 600 s"
   }
 
   "tileset" {

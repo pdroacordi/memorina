@@ -79,6 +79,8 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 
 ## Bugs
 
+- [the-tavern-cellar-lost-its-enraizar-secret-to-stone](bugs/the-tavern-cellar-lost-its-enraizar-secret-to-stone.md) — RESOLVED 2026-10-10 OPEN, medium (interiors review 2026-10-10): `village_tavern_cellar.room` went `#` to `S` to stop indoor grass; `RootSpanFinder` roots only EARTH, so the cellar's spans fall from 23 to 0 and the Enraizar Retorno alcove (design 04 §3.1) is unreachable; the header still says earth.
+- [interiors-still-grow-grass-on-stone-and-the-cellar-ledge](bugs/interiors-still-grow-grass-on-stone-and-the-cellar-ledge.md) — RESOLVED 2026-10-10 OPEN, low (interiors review 2026-10-10): the village biome's stone has a `GrassLook` and the cellar kept its `=` earth ledge, so the cellar (5 runs) and the bakery oven (2) still grow blades; `systems/grass` "Indoors" claims none.
 - [the-village-valley-hills-show-a-vertical-cut-where-they-wrap](bugs/the-village-valley-hills-show-a-vertical-cut-where-they-wrap.md) — RESOLVED 2026-10-10 WORLD-11 review 2026-10-10: `hills.png` does not tile; at the wrap (col 1023 to 0) field patches stop on a straight edge 38 px tall in every band (118 differing rows vs an interior max of 66). `cut_backdrop.py` `seam_cut` weights body colour 0.1 against a length bonus of 10. `backdrop_set_test` has no tiling check (open, low).
 - [facade-doors-test-subtracts-the-room-origin-the-builder-keeps](bugs/facade-doors-test-subtracts-the-room-origin-the-builder-keeps.md) — RESOLVED 2026-10-10 WORLD-11 review 2026-10-10: `facade_doors_test._doors` uses `cell - map.origin`, but `RoomMapNode._place` puts entities at the origin-inclusive cell; latent (village rooms are at 0,0), wrong in the ten rooms at origin 0,-16 / 0,-10 such as door_trial (open, low).
 - [a-bent-grass-blade-draws-doubled-corners](bugs/a-bent-grass-blade-draws-doubled-corners.md) — RESOLVED 2026-10-10 WORLD-23 review: `grass_blades.gdshader` fills each blade row from the row below's offset to its own, both ends included, so a leaning blade is a 4-connected staircase 2-3 art px wide at each step instead of the 8-connected one-pixel line in the contract (open, low).
@@ -239,6 +241,7 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 
 ## Playtests
 
+- [2026-10-10-villagers-and-animals](playtests/2026-10-10-villagers-and-animals.md) — WORLD-10: twelve idle loops in the streets, the bakery and the tavern, all running at 0.8 memory; the village interiors built of wood, no grass indoors.
 - [2026-10-10-village-fronts-and-valley](playtests/2026-10-10-village-fronts-and-valley.md) — WORLD-11: six village fronts with each street door in its doorway, the 2x valley backdrop with baked atmospheric depth (50/42/32 percent chosen over 0 and 45/35/22); approved by the user.
 - [2026-10-10-generated-grass](playtests/2026-10-10-generated-grass.md) — WORLD-23: a dense verge on the east gate's dirt road, front blades over Ivo's feet, a bent trail where he ran; the cobbles keep a short moss fringe.
 - [2026-10-10-secrets-and-seams](playtests/2026-10-10-secrets-and-seams.md) — WORLD-21 and WORLD-22: the cistern's chamber reads as stone until Ivo comes up its hole, then opens; the square's well dithers into the cistern's strata over 64 px instead of a hard line.

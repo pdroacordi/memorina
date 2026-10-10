@@ -12,6 +12,7 @@ description: Generate or animate pixel-art sprites for Memorina through the Pixe
 |---|---|---|
 | `balance` | `GET /balance` | credits left, in USD |
 | `generate` | `POST /generate-image-pixflux` | one image from a text description (optionally seeded from `-Reference`) |
+| `animate3` | `POST /v2/animate-with-text-v3` + poll `/v2/background-jobs/{id}` | `-Frames` (4-16, even) frames of `-Action` from `-Reference` (max 256 px; our own still), one PNG per frame in `-Out/<Name>/`; returns frames+1, the last repeating the first. Spends subscription generations; the job response reports no usage. Then `python -I tools/art/cut_inhabitant.py` |
 | `animate` | `POST /animate-with-text` | `-Frames` frames of `-Action` performed by the character in `-Reference`, written one PNG per frame **and** stitched into the horizontal strip this project's `AnimationPlayer` clips read (`Sprite2D.hframes` = frame count) |
 
 ## Safety rules (non-negotiable)

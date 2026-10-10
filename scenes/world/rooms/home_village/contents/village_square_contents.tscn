@@ -6,6 +6,10 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bell_tower_facade.tscn" id="pr_bell_tower"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/tavern_facade.tscn" id="pr_tavern"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/elder_house_facade.tscn" id="pr_elder_house"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/cat.tscn" id="in_cat"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/child_a.tscn" id="in_child_a"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/child_b.tscn" id="in_child_b"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/water_carrier.tscn" id="in_water_carrier"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/home_village/contents/village_square.room" id="room_map"]
 
@@ -30,6 +34,19 @@ position = Vector2(1232, 288)
 
 [node name="ElderHouseFacade" parent="Props" instance=ExtResource("pr_elder_house")]
 position = Vector2(1616, 288)
+
+[node name="Cat" parent="Props" instance=ExtResource("in_cat")]
+position = Vector2(318, 288)
+
+[node name="ChildA" parent="Props" instance=ExtResource("in_child_a")]
+position = Vector2(520, 288)
+flip_h = true
+
+[node name="ChildB" parent="Props" instance=ExtResource("in_child_b")]
+position = Vector2(566, 288)
+
+[node name="WaterCarrier" parent="Props" instance=ExtResource("in_water_carrier")]
+position = Vector2(1050, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

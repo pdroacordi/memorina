@@ -17,6 +17,8 @@ Third-party art used in Memorina, with the terms it was taken under.
 
 - **Village fronts, the door and the village backdrop** (`assets/sprites/world/props/village/`, `assets/sprites/world/props/door/door.png`, `assets/sprites/world/background/village_valley/`) - Codex image generation from the prompts in `tools/art/prompts/`, with our approved concept and our own village tiles as the only references; the raw pictures are kept in `tools/art/sources/` and cut by `tools/art/cut_facades.py` and `tools/art/cut_backdrop.py` (the sky is drawn by the latter).
 
+- **Villagers and animals** (`assets/sprites/world/inhabitants/`) - stills from one Codex sheet (our concept and our village fronts as the only references, `tools/art/sources/village_people_codex.png`), idle loops PixelLab-generated (`animate-with-text-v3`) from those stills, cut by `tools/art/cut_inhabitant.py`.
+
 - **Cave, strata and interior backdrops** (`assets/sprites/world/background/{village_strata,earth_caves,ice_caves,basalt_caves,interior_timber,interior_stone}/`) - Codex image generation (no reference image), kept in `tools/art/sources/backdrop_*_codex.png` and cut by `tools/art/cut_wall.py`.
 
 - **Village ground** (`assets/sprites/world/tilesets/village/`) - the soil and cobble textures are Codex
