@@ -38,4 +38,12 @@ func problems() -> PackedStringArray:
 			RoomLegendEntry.Kind.ENTITY:
 				if candidate.scene == null:
 					found.append("entity '%s' has no scene" % candidate.symbol)
+			RoomLegendEntry.Kind.GROUND, RoomLegendEntry.Kind.PLATFORM:
+				if candidate.ground == Enums.Ground.NONE:
+					found.append("ground '%s' has no material" % candidate.symbol)
+				if candidate.look == BiomeTileset.Look.WALL:
+					found.append("ground '%s' cannot have the wall look: walls are [back] only" % candidate.symbol)
+			RoomLegendEntry.Kind.BACK:
+				if candidate.ground != Enums.Ground.NONE:
+					found.append("back wall '%s' cannot have a material" % candidate.symbol)
 	return found

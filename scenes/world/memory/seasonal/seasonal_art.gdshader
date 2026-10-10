@@ -14,15 +14,26 @@ uniform ivec4 band_of_season = ivec4(0);
 // sky). Where the world is forgotten, distance dissolves into the haze in
 // proportion, so a dead place loses its horizon before it loses its floor.
 uniform float distance : hint_range(0.0, 1.0) = 0.0;
+// RGB multiplier, 0..1: a back wall draws darker than the ground (architecture/biome-tilesets).
+uniform float shade : hint_range(0.0, 1.0) = 1.0;
+// The owner's world rect in px (x, y, width, height): a room's dual-grid ground, drawn 16 px past its
+// edges, never shows in the running room beside it (bugs/a-rooms-ground-art-hangs-into-the-room-below-at-a-mismatched-seam).
+uniform vec4 clip_rect = vec4(-1e9, -1e9, 2e9, 2e9);
 
 // Preserve vertex modulate separately because fragment COLOR already includes the band-0 texture.
 varying vec4 modulate;
+varying vec2 world_pos;
 
 void vertex() {
 	modulate = COLOR;
+	world_pos = (MODEL_MATRIX * vec4(VERTEX, 0.0, 1.0)).xy;
 }
 
 void fragment() {
+	if (world_pos.x < clip_rect.x || world_pos.y < clip_rect.y
+			|| world_pos.x >= clip_rect.x + clip_rect.z || world_pos.y >= clip_rect.y + clip_rect.w) {
+		discard;
+	}
 	int season = gh_season_at(SCREEN_UV);
 	if (season < 0) {
 		season = greyhush_region_season;
@@ -38,6 +49,7 @@ void fragment() {
 	float y = clamp(local, half_texel, band_height - half_texel) + float(band) * band_height;
 
 	COLOR = texture(TEXTURE, vec2(UV.x, y)) * modulate;
+	COLOR.rgb *= shade;
 
 	if (distance > 0.0) {
 		float dissolve = greyhush_distance_fade * distance * gh_forgotten_at(SCREEN_UV);

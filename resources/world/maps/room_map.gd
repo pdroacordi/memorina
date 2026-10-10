@@ -1,22 +1,36 @@
 @tool
 class_name RoomMap extends Resource
 
-## Imported room data with ground tiles resolved; cells use tile coordinates from `origin`.
+## Imported room data with its dual-grid tiles resolved; cells use tile coordinates from `origin` (architecture/biome-tilesets).
 
-## A tile no cell uses.
-const NO_TILE := -1
+## Px per map cell.
+const CELL_PX := 32
+## A cell with no look: air.
+const NO_LOOK := 255
 
 @export var legend: RoomLegend
 @export var origin := Vector2i.ZERO
 @export var size := Vector2i.ZERO
 ## The text rows, kept for error messages and the map guide's examples.
 @export var rows := PackedStringArray()
+## The `[back]` rows, empty when the room has none.
+@export var back_rows := PackedStringArray()
+## The `tileset =` id, and the biome it names.
+@export var tileset := ""
+@export var biome: BiomeTileset
 ## Enums.Ground per cell, row-major. Platforms are their material too.
 @export var ground := PackedByteArray()
 ## 1 where the cell is a one-way platform.
 @export var platform := PackedByteArray()
-## The resolved atlas tile per cell, packed by pack_tile(); NO_TILE if empty.
-@export var tiles := PackedInt32Array()
+## BiomeTileset.Look per cell (NO_LOOK for air), platforms included.
+@export var looks := PackedByteArray()
+## BiomeTileset.Look of the back wall per cell (NO_LOOK for none); empty when the room has no `[back]`.
+@export var back := PackedByteArray()
+## Look -> one byte per display cell (display_size()): solid-corner mask | fill variant << 4.
+@export var ground_layers: Dictionary[int, PackedByteArray] = {}
+@export var back_layers: Dictionary[int, PackedByteArray] = {}
+## Look -> one byte per cell: ledge piece + 1, 0 for none.
+@export var ledge_layers: Dictionary[int, PackedByteArray] = {}
 ## Water cells by legend symbol: symbol -> PackedVector2Array of cells.
 @export var water: Dictionary[String, PackedVector2Array] = {}
 ## Reach cells by the symbol of the water they raise (their own symbol when they stand alone).
@@ -25,15 +39,6 @@ const NO_TILE := -1
 @export var shell_reach: Dictionary[String, PackedVector2Array] = {}
 ## One per placed thing: {"symbol": String, "cell": Vector2i, "params": Dictionary}.
 @export var entities: Array[Dictionary] = []
-
-static func pack_tile(coords: Vector2i, alternative: int) -> int:
-	return coords.x | (coords.y << 8) | (alternative << 16)
-
-static func tile_coords(packed: int) -> Vector2i:
-	return Vector2i(packed & 0xff, (packed >> 8) & 0xff)
-
-static func tile_alternative(packed: int) -> int:
-	return (packed >> 16) & 0xff
 
 func contains(cell: Vector2i) -> bool:
 	var local := cell - origin
@@ -50,8 +55,9 @@ func is_solid(cell: Vector2i) -> bool:
 func is_platform(cell: Vector2i) -> bool:
 	return contains(cell) and platform[_index(cell)] == 1
 
-func tile_at(cell: Vector2i) -> int:
-	return tiles[_index(cell)] if contains(cell) else NO_TILE
+## The dual grid is one cell larger than the map each way: a display cell sits on each cell corner.
+func display_size() -> Vector2i:
+	return size + Vector2i.ONE
 
 func _index(cell: Vector2i) -> int:
 	var local := cell - origin

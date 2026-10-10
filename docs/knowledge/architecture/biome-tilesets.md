@@ -6,7 +6,7 @@ status: active
 tags: [tileset, tiles, autotile, wang, dual-grid, rooms, room-map, importer, legend, seasonal-art, back-wall, wood, pixellab, codex, art-contract, plan, world-07]
 related: [systems/rooms, architecture/rooms-are-text, systems/seasonal-art, systems/art-pipeline, systems/roots-and-climbing, architecture/roots-join-earth-to-earth, architecture/vertical-backdrops, architecture/doors-and-interiors, architecture/foreground-layer, gotchas/tileset-padding-bakes-only-defined-tiles, gotchas/import-plugin-output-is-stale-when-its-logic-changes, gotchas/lake-hidden-under-a-tilemaplayer-parent, gotchas/tilemaplayer-enabled-does-not-hide-children, gotchas/duplicate-copies-script-built-unowned-children, gotchas/a-script-run-with-s-cannot-compile-classes-that-name-autoloads, gotchas/logger-log-error-also-receives-warnings, bugs/room-map-node-rebuild-renames-and-doubles-its-children, bugs/root-bridge-strands-meet-at-a-step]
 created: 2026-10-08
-updated: 2026-10-08
+updated: 2026-10-10
 source_files:
   - resources/world/tiles/biome_tileset.gd
   - resources/world/tiles/biomes/
@@ -26,7 +26,7 @@ source_files:
   - tools/pixellab/pixellab.ps1
 ---
 
-> **Status: PLAN** (2026-10-08, roadmap WORLD-07). Nothing below is built yet.
+> **Status: ENGINE BUILT** (2026-10-10, roadmap WORLD-07). Built: `BiomeTileset`, the dual-grid `RoomTileResolver`, `GroundCollision`, `Enums.Ground.WOOD`, the `[back]` grid, FORMAT 5, the `legacy` biome converted from the pack sheet, `WangSheet` and `assemble_tile_sheet.gd` (`--from-blob`, `--placeholder`), the five suites. Not yet built: the per-biome sheets and `.tres` (each waits for its style board), the PixelLab v2 `tileset` command, `graft`/`lip_zones`/`tiles_from_pixellab`/`preview`, the `ArtPrompt` tileset fields and per-biome palettes. Deviations: only `legacy.tres` exists (no placeholder biomes); a look's variant count is the `fill_variants` export, not an empty-slot test; the ground and back layers are clipped to the room's rect in the shader (`clip_rect`), because the touching rooms run and a mismatched seam showed the overhang; the room importer runs after textures (`_get_import_order` 50, the "Import order" risk below happened on the first import).
 
 ## Summary
 
@@ -410,7 +410,14 @@ The characters are proposals; renaming one before it lands is free. `RoomLegend.
 - **Biome ids** are load-bearing strings in `.room` headers. Renaming a biome file fails `room_files_test` with "unknown tileset".
 - **The palette.** `palette.json` was extracted from pack art. The concept needs its own palette (question 4), and 64 colours may be too few for "detailed, painterly". Measure on the preview.
 
-## Questions for the user
+## Answers (user, 2026-10-08, round 2; design 04 §1)
+
+1. "No earth there": the Caldera and the Frost Edge draw only stone (basalt, sandstone, dark rock, ice); their biomes have no `earth` sheet, so `#` and `=` there are import errors.
+2. "Seasonal top": built ground (cobbles, road stone, planks) gets the season's top like earth; built walls (`h`, the WALL look) keep one band.
+3. and 4. "Rewrite to the concept, palette per biome": `style.md` describes the approved concept; each biome gets its own palette, extracted from its approved style board.
+5. Scope (from the roadmap, WORLD-12..17: "Style board approved by the user first"): WORLD-07 builds the engine and the `legacy` biome; each biome's sheets come with its approved style board.
+
+## Questions for the user (as asked, 2026-10-08)
 
 1. **Earth in the Caldera and the Frost Edge.** 04 §6 lists no earth there (porous basalt and temple sandstone; dark rock, ice and snow), and only earth roots (02 §7.1). The plan makes basalt and dark rock `S` and gives `#` an ash-soil or frozen-soil look. Should those biomes have earth at all?
 2. **Built ground in one band.** By 04 §6 ("construções e interiores têm uma"), cobbles, road stone, the dry-stone wall and planks never change season, so a winter pulse never snows on the village street. Is that right, or should built ground get the seasonal top while built walls stay one band?

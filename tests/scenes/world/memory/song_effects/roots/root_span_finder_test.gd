@@ -3,7 +3,7 @@ class_name RootSpanFinderTest extends GdUnitTestSuite
 ## Checks that root spans connect earth surfaces and exclude stone.
 
 func _map(rows: Array[String]) -> RoomMap:
-	var text := "[room]\norigin = 0, 0\n\n[grid]\n" + "\n".join(rows) + "\n"
+	var text := "[room]\norigin = 0, 0\ntileset = legacy\n\n[grid]\n" + "\n".join(rows) + "\n"
 	var result := RoomMapParser.parse(text, RoomLegend.load_default())
 	assert(result.ok(), str(result.errors))
 	return result.map

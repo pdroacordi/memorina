@@ -394,6 +394,23 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     - A plain double jump above an open room top is a quick regression check for any "out of every room"
       logic.
 
+- **Learned 2026-10-10 (WORLD-07 tiles)**: **for a render change, diff against a HEAD export.**
+  - `git archive HEAD | tar -x -C <scratch>/head` (it does not touch `.git`), then one
+    `--headless --import` there (~40 s).
+  - Run each timeline on both trees with a second wrapper that does `cd <scratch>/head`.
+  - Same spawn means same camera, so a Pillow diff (>20, painted red on the new frame) points
+    at every changed pixel. Logged `pos` values give a collision regression check to 0.1 px.
+  - Particles and snow are the only noise.
+- A `-s` probe cannot instance room scenes (autoload names), but it can `load()` an imported
+  `.room` and read `RoomMap` fields (`ground_layers`, `display_size()`), which is how to check
+  what the resolver produced.
+- A static scan of the `.room` grids plus the region `.tscn` positions (a 40-line `world.py`)
+  finds every seam mismatch and every look-over-look case in seconds. Run it before choosing
+  where to point the camera.
+- A sibling's `.gd` and `.gdshader` edits apply at your next run. `room_map_node.gd` and the
+  seasonal shader changed between this session's trial and world batches. List
+  `find ... -newer <import.log>` with times and sort your runs around them.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

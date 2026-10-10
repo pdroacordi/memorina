@@ -226,6 +226,7 @@ class Room:
             "",
             "[room]",
             "origin = 0, 0",
+            "tileset = legacy",
             "",
             "[grid]",
         ]
@@ -314,7 +315,6 @@ def contents(room):
     rel = "res://scenes/world/rooms/%s/contents/%s.room" % (room.region, room.id)
     return """[gd_scene format=3]
 
-[ext_resource type="Material" path="res://scenes/world/memory/seasonal/floor_tiles_seasonal_material.tres" id="tiles_season"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="%s" id="room_map"]
 
@@ -323,7 +323,6 @@ def contents(room):
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
-ground_material = ExtResource("tiles_season")
 """ % rel
 
 

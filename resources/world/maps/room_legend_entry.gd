@@ -12,6 +12,8 @@ enum Kind {
 	WATER,
 	## A scene placed at the cell, configured from the map's [entities].
 	ENTITY,
+	## A wall drawn behind the room in its [back] grid: no collision, no ground.
+	BACK,
 }
 
 ## Where in its cell an ENTITY's origin goes.
@@ -27,6 +29,8 @@ enum Anchor {
 @export var kind: Kind = Kind.GROUND
 ## GROUND and PLATFORM: what it is made of.
 @export var ground: Enums.Ground = Enums.Ground.EARTH
+## GROUND, PLATFORM and BACK: which of the room's biome sheets draws it.
+@export var look: BiomeTileset.Look = BiomeTileset.Look.EARTH
 ## WATER: the WaterLayer preset that pours this kind of water.
 @export var water_layer: PackedScene
 ## WATER: a reach, the level Chuva raises the water under it to; alone it is a dry basin.

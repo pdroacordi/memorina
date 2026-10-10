@@ -26,7 +26,7 @@ func _ready() -> void:
 	# A moving bridge cannot be a safe respawn surface.
 	_plank.add_to_group(SafeGroundTracker.UNSAFE)
 	_plank.sync_to_physics = true
-	var length := length_cells * float(RoomMapNode.FLOOR_TILESET.tile_size.x)
+	var length := length_cells * float(RoomMap.CELL_PX)
 	var box := RectangleShape2D.new()
 	box.size = Vector2(length, 10)
 	_plank_shape.shape = box

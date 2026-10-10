@@ -8,6 +8,7 @@
 
 [room]
 origin = 0, 0
+tileset = legacy
 
 [grid]
 SSSS...................................#

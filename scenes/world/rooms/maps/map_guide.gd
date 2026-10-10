@@ -20,6 +20,7 @@ const KIND_NAMES := {
 	RoomLegendEntry.Kind.PLATFORM: "ledge",
 	RoomLegendEntry.Kind.WATER: "water",
 	RoomLegendEntry.Kind.ENTITY: "entity",
+	RoomLegendEntry.Kind.BACK: "back wall",
 }
 
 ## `readme` with every generated section replaced by its current text.
@@ -28,6 +29,7 @@ static func render(readme: String, legend: RoomLegend) -> String:
 		"legend": legend_section(legend),
 		"entities": entities_section(legend),
 		"reach": reach_section(),
+		"tilesets": tilesets_section(),
 	}
 	for name: String in sections:
 		var open := "<!-- generated:%s -->" % name
@@ -40,16 +42,26 @@ static func render(readme: String, legend: RoomLegend) -> String:
 
 static func legend_section(legend: RoomLegend) -> String:
 	var lines := PackedStringArray([
-		"| Character | Section | Kind | Material | What it is |",
-		"|---|---|---|---|---|",
-		"| `%s` | any grid | empty | - | Nothing: air in `[grid]`, no water in `[water]`. |" % RoomLegend.EMPTY,
+		"| Character | Section | Kind | Material | Look | What it is |",
+		"|---|---|---|---|---|---|",
+		"| `%s` | any grid | empty | - | - | Nothing: air in `[grid]` and `[back]`, no water in `[water]`. |" % RoomLegend.EMPTY,
 	])
 	for entry: RoomLegendEntry in legend.entries:
-		var section := "`[water]`" if entry.kind == RoomLegendEntry.Kind.WATER else "`[grid]`"
+		var section := "`[grid]`"
+		match entry.kind:
+			RoomLegendEntry.Kind.WATER:
+				section = "`[water]`"
+			RoomLegendEntry.Kind.GROUND:
+				section = "`[grid]`, `[back]`"
+			RoomLegendEntry.Kind.BACK:
+				section = "`[back]`"
 		var material := "-"
-		if entry.kind in [RoomLegendEntry.Kind.GROUND, RoomLegendEntry.Kind.PLATFORM]:
-			material = Enums.Ground.keys()[entry.ground].to_lower()
-		lines.append("| `%s` | %s | %s | %s | %s |" % [entry.symbol, section, KIND_NAMES[entry.kind], material, entry.description.replace("\n", " ")])
+		var look := "-"
+		if entry.kind in [RoomLegendEntry.Kind.GROUND, RoomLegendEntry.Kind.PLATFORM, RoomLegendEntry.Kind.BACK]:
+			look = BiomeTileset.Look.keys()[entry.look].to_lower()
+			if entry.kind != RoomLegendEntry.Kind.BACK:
+				material = Enums.Ground.keys()[entry.ground].to_lower()
+		lines.append("| `%s` | %s | %s | %s | %s | %s |" % [entry.symbol, section, KIND_NAMES[entry.kind], material, look, entry.description.replace("\n", " ")])
 	return "\n".join(lines) + "\n"
 
 static func entities_section(legend: RoomLegend) -> String:
@@ -96,6 +108,23 @@ static func reach_section() -> String:
 		lines.append("| %s | %d | %.1f |" % [row[0], floori(row[1]), row[1] / CELL])
 	lines.append("")
 	lines.append("Computed by `JumpReach` from `ivo_jump_stats.tres`, `ivo_locomotion_stats.tres`, the double jump's `height` and Ivo's collision radius. A gap wider than these is a song's job - that is what makes a song useful.")
+	return "\n".join(lines) + "\n"
+
+## Every biome a room may name with `tileset =`, and the looks it draws.
+static func tilesets_section() -> String:
+	var lines := PackedStringArray([
+		"| `tileset =` | Looks | What it is |",
+		"|---|---|---|",
+	])
+	var files := Array(DirAccess.get_files_at(BiomeTileset.DIRECTORY)).filter(func(file: String) -> bool: return file.ends_with(".tres"))
+	files.sort()
+	for file: String in files:
+		var biome := load(BiomeTileset.DIRECTORY + file) as BiomeTileset
+		var looks := PackedStringArray()
+		for look: int in BiomeTileset.Look.values():
+			if biome.has_look(look):
+				looks.append(BiomeTileset.Look.keys()[look].to_lower())
+		lines.append("| `%s` | %s | %s |" % [file.get_basename(), ", ".join(looks), biome.description.replace("\n", " ")])
 	return "\n".join(lines) + "\n"
 
 static func ivo_reach() -> JumpReach:

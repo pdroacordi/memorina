@@ -1,6 +1,5 @@
 [gd_scene format=3 uid="uid://bw6kphhorlof5"]
 
-[ext_resource type="Material" path="res://scenes/world/memory/seasonal/floor_tiles_seasonal_material.tres" id="tiles_season"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/summer_caldera/contents/caldera_open_crater.room" id="room_map"]
 
@@ -9,4 +8,3 @@
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
-ground_material = ExtResource("tiles_season")

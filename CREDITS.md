@@ -4,14 +4,16 @@ Third-party art used in Memorina, with the terms it was taken under.
 
 ## World
 
-- **Ground tiles and backgrounds** (`assets/sprites/world/tilesets/floor_tiles.png`,
-  `assets/sprites/world/background/`) - from the *FREE Platformer Assets* pack by
+- **Ground tiles and backgrounds** (`assets/sprites/world/tilesets/legacy/earth.png` and
+  `stone.png`, `assets/sprites/world/background/`) - from the *FREE Platformer Assets* pack by
   **GandalfHardcore**, https://gandalfhardcore.itch.io/. Licence (the pack's READ ME):
   use in commercial and non-commercial games and modification allowed; reselling,
   repackaging or redistributing the assets, AI training, NFT use and inclusion in game
-  development tools are prohibited. The STONE half of `floor_tiles.png` (columns 9-17) is
-  derived from the pack's earth tiles by `tools/art/derive_stone_tiles.gd`. Pack art is
-  never uploaded to an image generator as a reference (the AI-training clause).
+  development tools are prohibited. The legacy sheets are the pack's floor tiles (earth, and
+  stone derived from the earth) rearranged into corner-Wang quarters by
+  `tools/art/assemble_tile_sheet.gd --from-blob` (WORLD-07). Pack art is never uploaded to an
+  image generator as a reference (the AI-training clause). `legacy/wood.png` and `wall.png`
+  are flat placeholders drawn by the same tool.
 
 - **Props** (`assets/sprites/world/props/`: pressure plate, stone gate, lift, seesaw plank
   and fulcrum, drawbridge, hanging cocoon, root strand, fallen log, the rest bench, the door) - generated for this project with

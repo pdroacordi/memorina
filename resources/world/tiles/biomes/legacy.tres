@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="BiomeTileset" format=3]
+
+[ext_resource type="Script" path="res://resources/world/tiles/biome_tileset.gd" id="1_biome"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/legacy/earth.png" id="2_earth"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/legacy/stone.png" id="3_stone"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/legacy/wood.png" id="4_wood"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/legacy/wall.png" id="5_wall"]
+
+[resource]
+script = ExtResource("1_biome")
+earth = ExtResource("2_earth")
+stone = ExtResource("3_stone")
+wood = ExtResource("4_wood")
+wall = ExtResource("5_wall")
+fill_variants = PackedInt32Array(0, 0, 0, 0)
+description = "The pack's earth and stone converted to the corner-Wang contract; placeholder wood and wall. Every room until its biome's art lands."

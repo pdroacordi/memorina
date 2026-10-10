@@ -15,10 +15,11 @@ extends EditorImportPlugin
 ## unless each map is reimported. Bump FORMAT_VERSION whenever RoomMapParser,
 ## GroundAutotile or the RoomMap layout change, then force the reimport and commit
 ## the .room.import files (gotchas/import-plugin-output-is-stale-when-its-logic-changes).
+## Format 5 (WORLD-07): dual-grid layers per look and the room's BiomeTileset (architecture/biome-tilesets).
 ## (room_files_test.gd re-parses the text, so it guards the maps, not a
 ## machine's stale imports.) A legend EDIT alone needs a reimport too.
 
-const FORMAT_VERSION := 4
+const FORMAT_VERSION := 5
 
 func _get_format_version() -> int:
 	return FORMAT_VERSION
@@ -41,8 +42,9 @@ func _get_resource_type() -> String:
 func _get_priority() -> float:
 	return 1.0
 
+# After textures (0): a map loads its BiomeTileset's sheets, which a fresh checkout imports in the same pass.
 func _get_import_order() -> int:
-	return 0
+	return 50
 
 func _get_preset_count() -> int:
 	return 1

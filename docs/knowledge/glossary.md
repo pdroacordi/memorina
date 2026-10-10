@@ -19,6 +19,9 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | cinzesquecimento / the Greyhush | `greyhush` |
 | porta (de construção) | `Door` (a puzzle's "porta" stays `Mechanism`/gate) |
 | interior (sala de uma construção) | `Room.interior` |
+| madeira (chão de tábuas, vigas) | `Enums.Ground.WOOD`, legend `%` and `-` |
+| bioma (o visual do chão de uma sala) | `BiomeTileset`, a room's `tileset =` |
+| parede do fundo (de sala) | a `.room`'s `[back]` grid, legend `h` |
 | primeiro plano | foreground (`ForegroundPiece`, `ForegroundPass`) |
 | adereço | prop |
 | aldeão | villager (an inhabitant prop) |
@@ -129,6 +132,7 @@ someone's memory of the project is exactly what causes an accidental regression 
 
 | Retired term | What replaced it |
 |---|---|
+| `floor_tileset.tres`, `floor_tiles.png`, the 9-column blob layout, `GroundAutotile.tile_for` | retired 2026-10-10 (WORLD-07): a room's `tileset =` biome, corner-Wang look sheets on a dual grid, the hidden `Solid` collision layer (`architecture/biome-tilesets`) |
 | "Lembre-se!" / `RECALL_PROMPT` (the recall banner) | retired 2026-09-21: the recall shows instead of telling (`RecallAura`, `RecallPrompt` key only) |
 | `GUARDIAN_CALL_ANSWER` ("Answer on the Memorina") | retired 2026-09-21: the answer moved to Ivo's own sheet with the key blinking; no prose |
 | "one sheet at the top for the whole call" (round 4 rule) | replaced 2026-09-21 by LISTEN on the guardian's sheet, ANSWER on Ivo's |

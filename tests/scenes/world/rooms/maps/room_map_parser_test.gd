@@ -1,6 +1,6 @@
 class_name RoomMapParserTest extends GdUnitTestSuite
 
-## Checks room parsing, tile resolution and source-positioned errors.
+## Checks room parsing, dual-grid tile resolution and source-positioned errors.
 
 var _legend: RoomLegend
 
@@ -16,6 +16,8 @@ func before_test() -> void:
 		_reach("r"),
 		_shell_reach("u"),
 		_thing("B"),
+		_entry("%", RoomLegendEntry.Kind.GROUND, Enums.Ground.WOOD),
+		_back("h"),
 	]
 
 func _entry(symbol: String, kind: RoomLegendEntry.Kind, ground: Enums.Ground) -> RoomLegendEntry:
@@ -23,6 +25,16 @@ func _entry(symbol: String, kind: RoomLegendEntry.Kind, ground: Enums.Ground) ->
 	entry.symbol = symbol
 	entry.kind = kind
 	entry.ground = ground
+	match ground:
+		Enums.Ground.STONE:
+			entry.look = BiomeTileset.Look.STONE
+		Enums.Ground.WOOD:
+			entry.look = BiomeTileset.Look.WOOD
+	return entry
+
+func _back(symbol: String) -> RoomLegendEntry:
+	var entry := _entry(symbol, RoomLegendEntry.Kind.BACK, Enums.Ground.NONE)
+	entry.look = BiomeTileset.Look.WALL
 	return entry
 
 func _water(symbol: String) -> RoomLegendEntry:
@@ -51,7 +63,8 @@ func _thing(symbol: String) -> RoomLegendEntry:
 	return entry
 
 func _parse(text: String) -> RoomMapParser.Result:
-	return RoomMapParser.parse(text, _legend, "test.room")
+	# Appended, so line numbers in the asserted messages stay where the text puts them.
+	return RoomMapParser.parse(text + "\n[room]\ntileset = legacy\n", _legend, "test.room")
 
 func test_the_grid_sets_size_and_origin() -> void:
 	var result := _parse("[room]\norigin = -2, 3\n[grid]\n....\n####\n")
@@ -65,22 +78,63 @@ func test_ground_keeps_its_material() -> void:
 	assert_int(map.ground_at(Vector2i(1, 0))).is_equal(Enums.Ground.STONE)
 	assert_int(map.ground_at(Vector2i(5, 5))).is_equal(Enums.Ground.NONE)
 
-func test_a_floor_under_open_sky_draws_its_grassy_top() -> void:
+## The display cell on the corner between two air cells and two earth cells is an exposed top.
+func test_a_floor_under_open_sky_draws_its_exposed_top() -> void:
 	var map := _parse("[grid]\n....\n####\n").map
-	# Out-of-bounds cells count as solid, making this bottom row autotile as ground.
-	assert_vector(RoomMap.tile_coords(map.tile_at(Vector2i(1, 1)))).is_equal(Vector2i(1, 0))
+	var layer: PackedByteArray = map.ground_layers[BiomeTileset.Look.EARTH]
+	var width := map.display_size().x
+	assert_int(layer[1 * width + 1] & 0xf).is_equal(GroundAutotile.SW | GroundAutotile.SE)
+	# Below the map the bottom row repeats, so the floor continues past the map's bottom edge.
+	assert_int(layer[2 * width + 1] & 0xf).is_equal(GroundAutotile.FULL)
 
-func test_stone_draws_from_the_stone_block() -> void:
+func test_stone_draws_on_its_own_layer() -> void:
 	var map := _parse("[grid]\n....\nSSSS\n").map
-	assert_vector(RoomMap.tile_coords(map.tile_at(Vector2i(1, 1)))).is_equal(Vector2i(10, 0))
+	assert_array(map.ground_layers.keys()).contains_exactly([BiomeTileset.Look.STONE])
 
-func test_a_platform_is_one_way_and_not_solid() -> void:
+func test_a_platform_is_one_way_and_drawn_as_a_ledge() -> void:
 	var map := _parse("[grid]\n.===.\n.....\n").map
 	var cell := Vector2i(2, 0)
 	assert_bool(map.is_platform(cell)).is_true()
 	assert_bool(map.is_solid(cell)).is_false()
-	assert_int(RoomMap.tile_alternative(map.tile_at(cell))).is_equal(GroundAutotile.ONE_WAY_ALTERNATIVE)
-	assert_vector(RoomMap.tile_coords(map.tile_at(cell))).is_equal(GroundAutotile.PLATFORM_MIDDLE)
+	assert_bool(map.ground_layers.has(BiomeTileset.Look.EARTH)).is_false()
+	var ledges: PackedByteArray = map.ledge_layers[BiomeTileset.Look.EARTH]
+	assert_int(ledges[2]).is_equal(GroundAutotile.LEDGE_MIDDLE + 1)
+	assert_int(ledges[1]).is_equal(GroundAutotile.LEDGE_LEFT + 1)
+
+func test_wood_is_solid_wood() -> void:
+	var map := _parse("[grid]\n%%\n").map
+	assert_int(map.ground_at(Vector2i(0, 0))).is_equal(Enums.Ground.WOOD)
+	assert_bool(map.is_solid(Vector2i(1, 0))).is_true()
+
+func test_a_room_without_a_tileset_is_an_error() -> void:
+	var result := RoomMapParser.parse("[grid]\n##\n", _legend, "test.room")
+	assert_str(" ".join(result.errors)).contains("no 'tileset' in [room]")
+
+func test_an_unknown_tileset_is_an_error() -> void:
+	var result := RoomMapParser.parse("[room]\ntileset = nowhere\n[grid]\n##\n", _legend, "test.room")
+	assert_str(" ".join(result.errors)).contains("unknown tileset 'nowhere'")
+
+func test_a_malformed_tileset_is_an_error() -> void:
+	var result := RoomMapParser.parse("[room]\ntileset = Village-1\n[grid]\n##\n", _legend, "test.room")
+	assert_str(" ".join(result.errors)).contains("tileset must be a biome file name")
+
+func test_back_walls_never_change_the_ground() -> void:
+	var result := _parse("[grid]\n....\n####\n[back]\nhh..\n....\n")
+	assert_bool(result.ok()).is_true()
+	assert_int(result.map.ground_at(Vector2i(0, 0))).is_equal(Enums.Ground.NONE)
+	assert_bool(result.map.back_layers.has(BiomeTileset.Look.WALL)).is_true()
+
+func test_back_needs_the_grid_rows() -> void:
+	var result := _parse("[grid]\n....\n####\n[back]\nhh..\n")
+	assert_str(" ".join(result.errors)).contains("[back] has 1 rows, [grid] has 2")
+
+func test_a_ledge_cannot_be_a_back_wall() -> void:
+	var result := _parse("[grid]\n....\n####\n[back]\n.==.\n....\n")
+	assert_str(" ".join(result.errors)).contains("'=' cannot be a back wall")
+
+func test_a_back_wall_belongs_in_back() -> void:
+	var result := _parse("[grid]\n.h..\n####\n")
+	assert_str(" ".join(result.errors)).contains("'h' belongs in [back], not [grid]")
 
 func test_water_cells_are_grouped_by_kind() -> void:
 	var map := _parse("[room]\norigin = 10, 0\n[grid]\n#..#\n####\n[water]\n.~~.\n....\n").map

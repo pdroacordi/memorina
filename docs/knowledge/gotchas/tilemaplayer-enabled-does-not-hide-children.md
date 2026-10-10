@@ -6,9 +6,10 @@ status: active
 tags: [tilemaplayer, rendering, scene-tree, water, level-design]
 related: [architecture/water-is-world-art-reflecting-two-passes]
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-10-10
 source_files:
   - scenes/world/environment/water/water_layer.gd
+  - scenes/world/rooms/maps/room_map_node.gd
 ---
 
 ## Summary
@@ -44,3 +45,6 @@ propagating ready to its children, not to adding to yourself.
   body added under the layer. The presets use `self_modulate` for this reason.
 - A scene tile (a `TileSetScenesCollectionSource`) is not a plain child. The layer
   frees it when it is disabled, so it cannot replace this pattern.
+- `visible = false` hides a layer's tiles but keeps its collision. The hidden `Solid` layer
+  of `RoomMapNode` relies on this; `room_map_node_test.test_the_hidden_solid_layer_collides`
+  measures it with a point query (4.7.2, 2026-10-10).

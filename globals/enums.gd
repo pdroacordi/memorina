@@ -59,5 +59,7 @@ enum Guardian {
 enum Ground {
 	NONE,
 	EARTH,
-	STONE
+	STONE,
+	## Planks and beams: solid, never roots (architecture/biome-tilesets).
+	WOOD,
 }

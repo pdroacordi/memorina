@@ -6,7 +6,10 @@ const SECTION_ROOM := "room"
 const SECTION_GRID := "grid"
 const SECTION_WATER := "water"
 const SECTION_ENTITIES := "entities"
+const SECTION_BACK := "back"
 const COMMENT := ";"
+## What a `tileset =` id may look like: a biome file name.
+const TILESET_ID := "^[a-z0-9_]+$"
 
 static func parse(text: String, legend: RoomLegend, source: String = "<room>") -> Result:
 	var result := Result.new()
@@ -20,6 +23,7 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 	var grid_lines: Array[int] = []
 	var water_rows := PackedStringArray()
 	var water_lines: Array[int] = []
+	var back_lines: Array[int] = []
 	var entity_lines: Array[int] = []
 	var lines := text.replace("\r", "").split("\n")
 	for i: int in lines.size():
@@ -27,10 +31,10 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 		var line := raw.strip_edges()
 		if line.begins_with("[") and line.ends_with("]"):
 			section = line.substr(1, line.length() - 2).strip_edges().to_lower()
-			if not section in [SECTION_ROOM, SECTION_GRID, SECTION_WATER, SECTION_ENTITIES]:
+			if not section in [SECTION_ROOM, SECTION_GRID, SECTION_WATER, SECTION_ENTITIES, SECTION_BACK]:
 				result.errors.append("%s:%d: unknown section [%s]" % [source, i + 1, section])
 			continue
-		if section == SECTION_GRID or section == SECTION_WATER:
+		if section in [SECTION_GRID, SECTION_WATER, SECTION_BACK]:
 			if line.is_empty():
 				continue
 			# Every grid character is a cell, so leading whitespace would shift the row.
@@ -39,6 +43,9 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 			if section == SECTION_GRID:
 				map.rows.append(line)
 				grid_lines.append(i + 1)
+			elif section == SECTION_BACK:
+				map.back_rows.append(line)
+				back_lines.append(i + 1)
 			else:
 				water_rows.append(line)
 				water_lines.append(i + 1)
@@ -56,15 +63,18 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 			_:
 				result.errors.append("%s:%d: text outside any section" % [source, i + 1])
 
+	if map.tileset.is_empty():
+		result.errors.append("%s: no 'tileset' in [room]" % source)
 	if map.rows.is_empty():
 		result.errors.append("%s: no [grid]" % source)
 		return result
 	_read_grid(map, grid_lines, source, result)
+	_read_back(map, back_lines, source, result)
 	_read_water(map, water_rows, water_lines, source, result)
 	for line_number: int in entity_lines:
 		_parse_entity(map, _entity_line(lines[line_number - 1].strip_edges()), line_number, source, result)
 	_check_entities(map, source, result)
-	_resolve_tiles(map)
+	RoomTileResolver.resolve(map)
 	return result
 
 ## Removes a trailing entity comment while preserving semicolons inside JSON strings.
@@ -96,6 +106,14 @@ static func _parse_setting(map: RoomMap, line: String, line_number: int, source:
 				result.errors.append("%s:%d: origin must be 'x, y'" % [source, line_number])
 			else:
 				map.origin = cell
+		"tileset":
+			if not RegEx.create_from_string(TILESET_ID).search(value):
+				result.errors.append("%s:%d: tileset must be a biome file name (%s), not '%s'" % [source, line_number, TILESET_ID, value])
+				return
+			map.tileset = value
+			map.biome = BiomeTileset.find(value)
+			if map.biome == null:
+				result.errors.append("%s:%d: unknown tileset '%s'" % [source, line_number, value])
 		_:
 			result.errors.append("%s:%d: unknown room setting '%s'" % [source, line_number, key])
 
@@ -106,6 +124,9 @@ static func _read_grid(map: RoomMap, grid_lines: Array[int], source: String, res
 	map.size = Vector2i(width, map.rows.size())
 	map.ground.resize(width * map.size.y)
 	map.platform.resize(width * map.size.y)
+	map.looks.resize(width * map.size.y)
+	map.looks.fill(RoomMap.NO_LOOK)
+	var reported := {}
 	for y: int in map.size.y:
 		var row := map.rows[y]
 		if row.length() < width:
@@ -125,13 +146,54 @@ static func _read_grid(map: RoomMap, grid_lines: Array[int], source: String, res
 			match entry.kind:
 				RoomLegendEntry.Kind.GROUND:
 					map.ground[index] = entry.ground
+					map.looks[index] = entry.look
+					_check_look(map, entry, x, y, grid_lines[y], source, result, reported)
 				RoomLegendEntry.Kind.PLATFORM:
 					map.ground[index] = entry.ground
 					map.platform[index] = 1
+					map.looks[index] = entry.look
+					_check_look(map, entry, x, y, grid_lines[y], source, result, reported)
 				RoomLegendEntry.Kind.WATER:
 					result.errors.append("%s:%d:%d: water '%s' belongs in [water], not [grid]" % [source, grid_lines[y], x + 1, symbol])
+				RoomLegendEntry.Kind.BACK:
+					result.errors.append("%s:%d:%d: '%s' belongs in [back], not [grid]" % [source, grid_lines[y], x + 1, symbol])
 				RoomLegendEntry.Kind.ENTITY:
 					map.entities.append({"symbol": symbol, "cell": cell, "params": {}})
+
+## Back walls: GROUND characters (a wall of that look) and BACK characters, with [grid]'s rows; never ground or collision.
+static func _read_back(map: RoomMap, lines: Array[int], source: String, result: Result) -> void:
+	if map.back_rows.is_empty():
+		return
+	if map.back_rows.size() != map.size.y:
+		result.errors.append("%s:%d: [back] has %d rows, [grid] has %d" % [source, lines[0], map.back_rows.size(), map.size.y])
+		return
+	map.back.resize(map.size.x * map.size.y)
+	map.back.fill(RoomMap.NO_LOOK)
+	var reported := {}
+	for y: int in map.back_rows.size():
+		var row := map.back_rows[y]
+		if row.length() > map.size.x:
+			result.errors.append("%s:%d: [back] row is wider than [grid] (%d > %d)" % [source, lines[y], row.length(), map.size.x])
+			continue
+		for x: int in row.length():
+			var symbol := row[x]
+			if symbol == RoomLegend.EMPTY:
+				continue
+			var entry := map.legend.entry(symbol)
+			if entry == null:
+				result.errors.append("%s:%d:%d: unknown character '%s'" % [source, lines[y], x + 1, symbol])
+			elif entry.kind == RoomLegendEntry.Kind.GROUND or entry.kind == RoomLegendEntry.Kind.BACK:
+				map.back[y * map.size.x + x] = entry.look
+				_check_look(map, entry, x, y, lines[y], source, result, reported)
+			else:
+				result.errors.append("%s:%d:%d: '%s' cannot be a back wall" % [source, lines[y], x + 1, symbol])
+
+## Reports, once per character, a look the room's tileset does not draw.
+static func _check_look(map: RoomMap, entry: RoomLegendEntry, x: int, y: int, line_number: int, source: String, result: Result, reported: Dictionary) -> void:
+	if map.biome == null or map.biome.has_look(entry.look) or reported.has(entry.symbol):
+		return
+	reported[entry.symbol] = true
+	result.errors.append("%s:%d:%d: tileset '%s' has no %s: '%s' at %d,%d" % [source, line_number, x + 1, map.tileset, BiomeTileset.Look.keys()[entry.look].to_lower(), entry.symbol, x, y])
 
 static func _read_water(map: RoomMap, rows: PackedStringArray, lines: Array[int], source: String, result: Result) -> void:
 	if rows.is_empty():
@@ -264,35 +326,6 @@ static func _parse_cell(text: String) -> Variant:
 	if parts.size() != 2 or not parts[0].strip_edges().is_valid_int() or not parts[1].strip_edges().is_valid_int():
 		return null
 	return Vector2i(parts[0].strip_edges().to_int(), parts[1].strip_edges().to_int())
-
-## Resolves tile masks at import time; out-of-map cells are solid below and beside the map, but open above.
-static func _resolve_tiles(map: RoomMap) -> void:
-	map.tiles.resize(map.size.x * map.size.y)
-	map.tiles.fill(RoomMap.NO_TILE)
-	for y: int in map.size.y:
-		for x: int in map.size.x:
-			var cell := map.origin + Vector2i(x, y)
-			var ground := map.ground_at(cell)
-			if ground == Enums.Ground.NONE:
-				continue
-			var index := y * map.size.x + x
-			if map.is_platform(cell):
-				var tile := GroundAutotile.platform_tile(map.is_platform(cell + Vector2i.LEFT), map.is_platform(cell + Vector2i.RIGHT))
-				map.tiles[index] = RoomMap.pack_tile(GroundAutotile.in_material(tile, ground), GroundAutotile.ONE_WAY_ALTERNATIVE)
-				continue
-			var mask := 0
-			var neighbours := {
-				GroundAutotile.N: Vector2i.UP, GroundAutotile.E: Vector2i.RIGHT,
-				GroundAutotile.S: Vector2i.DOWN, GroundAutotile.W: Vector2i.LEFT,
-				GroundAutotile.NE: Vector2i(1, -1), GroundAutotile.SE: Vector2i(1, 1),
-				GroundAutotile.SW: Vector2i(-1, 1), GroundAutotile.NW: Vector2i(-1, -1),
-			}
-			for bit: int in neighbours:
-				var other: Vector2i = cell + neighbours[bit]
-				var beyond := not map.contains(other) and other.y >= map.origin.y
-				if beyond or map.is_solid(other):
-					mask |= bit
-			map.tiles[index] = RoomMap.pack_tile(GroundAutotile.in_material(GroundAutotile.tile_for(mask), ground), 0)
 
 class Result:
 	var map: RoomMap

@@ -6,9 +6,9 @@ status: active
 tags: [tileset, seasons, shader, rendering]
 related: [architecture/rooms-are-text]
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-10-10
 source_files:
-  - tools/maps/build_floor_tileset.gd
+  - resources/world/tiles/biome_tileset.gd
   - scenes/world/memory/seasonal/seasonal_art.gdshader
 ---
 
@@ -24,5 +24,5 @@ running on nothing but the ice).
 ## Fix
 
 Define the tiles of every band, bare (no collision, no custom data) -
-`build_floor_tileset.gd` does. The old inlined TileSets did this by accident (every sheet
+`BiomeTileset.tile_set()` defines all 72 slots of each look sheet (WORLD-07; `build_floor_tileset.gd` did it before). The old inlined TileSets did this by accident (every sheet
 cell was a tile); a generated TileSet has to do it on purpose.

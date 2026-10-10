@@ -30,10 +30,12 @@ scenes/world/rooms/<region>/contents/<room>.room            THIS: ground, water,
 ```
 
 The contents scene's `RoomMap` node (`scenes/world/rooms/maps/room_map_node.gd`)
-has `map` set to the `.room` file and `ground_material` set to
-`floor_tiles_seasonal_material.tres`, so a pulse redraws the ground in its
-season. It builds, as its children and in this order: the ground
-`TileMapLayer`, one `WaterLayer` per kind of water, then every entity.
+has `map` set to the `.room` file. It builds, as its children and in this
+order: one `Back_<look>` and one `Ground_<look>` `TileMapLayer` per look the
+room uses, `Ledges`, the hidden `Solid` collision layer, one `WaterLayer` per
+kind of water, then every entity. The ground draws through
+`floor_tiles_seasonal_material.tres` (back walls through the darker
+`back_tiles_seasonal_material.tres`), so a pulse redraws it in its season.
 
 ## The file
 
@@ -41,6 +43,7 @@ season. It builds, as its children and in this order: the ground
 ; downtown.room - comments start with ';' outside the grids
 [room]
 origin = -43, -6        ; tile coordinates of the grids' top-left character
+tileset = village       ; the biome whose sheets draw the ground (required)
 
 [grid]                  ; ground, ledges and entities
 ...............................................###...........
@@ -54,6 +57,12 @@ origin = -43, -6        ; tile coordinates of the grids' top-left character
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwffffff...........
 .............................................................
 
+[back]                  ; optional: walls drawn behind the room, same size as [grid]
+.............................................................
+.......................................hhhh..................
+.............................................................
+.............................................................
+
 [entities]              ; params for entities, by grid column,row
 30,1 = {"save_id": "downtown_brute"}
 ```
@@ -63,6 +72,15 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwffffff...........
   Row 0 is the top. The floor Ivo walks on is the top edge of a ground cell.
 - **`origin`** puts the grid in the room: it is the tile coordinate of the
   top-left character. Match the room's `Area2D` bounds (in its `<room>.tscn`).
+- **`tileset`** names a biome, `resources/world/tiles/biomes/<id>.tres`
+  (the table below). A character fixes what the ground is made of; the biome
+  only draws it. A character whose look the biome lacks is an import error.
+- **`[back]` is an optional third layer** of walls behind the room: a cellar's
+  earth wall, a house wall seen from the street. It takes ground characters
+  (a wall of that look) and back characters (`h`) only, never ledges, water or
+  entities, and has exactly as many rows as `[grid]`. It never changes the
+  ground, collision or `ground_at()`. A whole-room interior wall is the room's
+  backdrop strip instead (`docs/knowledge/systems/backdrops.md`).
 - **`[water]` is a second layer** because water can lie *over* ground (a lake
   in front of the land) as well as fill a pit. It has exactly as many rows as
   `[grid]`. Each 32 px water character becomes 2x2 of the water system's
@@ -79,19 +97,33 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwffffff...........
 
 ### How the ground is drawn
 
-You never pick tiles. `GroundAutotile` chooses each ground cell's tile from
-its eight neighbours at import: a grassy top where the sky is above, rounded
-bottoms, one-wide walls and pillars, one-high ledges, and inner corners where
-a diagonal opens. Past the map's **left, right and bottom** edges counts as
-solid ground (the world runs on beyond the room); past the **top** is open sky.
+You never pick tiles. The ground is drawn on a **dual grid**
+(`docs/knowledge/architecture/biome-tilesets.md`): each drawn tile sits on a
+cell corner, and its four quarters belong to the four cells around it, so
+`RoomTileResolver` picks it at import from which of those cells are solid. That
+gives a grassy (or the season's) top on every exposed top, rounded corners,
+pillars and lone boulders, and exact inner corners. Each look draws on its own
+layer; where two looks meet, the earlier look (earth, then stone, then wood) is
+laid under the later one only beside it, so cobbles over earth show earth
+between their rounded bottoms. One-way ledges draw their own thinner strip.
 
-So: to make a floor, write `#` down to the bottom of the grid. A floor that
-stops above the bottom row shows a rounded underside.
+Past the map's **left, right and bottom** edges the edge cells continue (the
+world runs on beyond the room); past the **top** is open sky. So: to make a
+floor, write `#` down to the bottom of the grid. A floor that stops above the
+bottom row shows a rounded underside.
 
-Stone (`S`) uses the same shapes cut in masonry
-(`tools/art/derive_stone_tiles.gd` derives it from the earth art). Every tile
-carries its material in the TileSet's `ground` custom data, and the map answers
+Collision never comes from the art: a hidden, cell-aligned `Solid` layer
+(`GroundCollision`) holds one full square per solid cell, carries the cell's
+material in its `ground` custom data, and the map answers
 `RoomMapNode.ground_at(point)` for anything that asks.
+
+### Tilesets
+
+<!-- generated:tilesets -->
+| `tileset =` | Looks | What it is |
+|---|---|---|
+| `legacy` | earth, stone, wood, wall | The pack's earth and stone converted to the corner-Wang contract; placeholder wood and wall. Every room until its biome's art lands. |
+<!-- /generated:tilesets -->
 
 ## The legend
 
@@ -99,31 +131,34 @@ Every character comes from `resources/world/maps/room_legend.tres`. Nothing
 else in the code knows what a character means.
 
 <!-- generated:legend -->
-| Character | Section | Kind | Material | What it is |
-|---|---|---|---|---|
-| `.` | any grid | empty | - | Nothing: air in `[grid]`, no water in `[water]`. |
-| `#` | `[grid]` | ground | earth | Earth: soil with a grassy top (the season's top). Enraizar's roots grow from it. |
-| `S` | `[grid]` | ground | stone | Stone: cut masonry. Roots never grow from it - use it where a song must NOT reach. |
-| `=` | `[grid]` | ledge | earth | One-way earth ledge, one cell high: jump up through it, stand on it, drop through it. |
-| `~` | `[water]` | water | - | Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand. |
-| `w` | `[water]` | water | - | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides. |
-| `f` | `[water]` | water | - | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
-| `B` | `[grid]` | entity | - | Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death. |
-| `W` | `[grid]` | entity | - | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
-| `P` | `[grid]` | entity | - | A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load. |
-| `G` | `[grid]` | entity | - | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved. |
-| `L` | `[grid]` | entity | - | A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go; while its lock_path holds (a counterweight on the wrong plate) it is jammed down. |
-| `T` | `[grid]` | entity | - | A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other. |
-| `H` | `[grid]` | entity | - | A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back. |
-| `F` | `[grid]` | entity | - | A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside. |
-| `D` | `[grid]` | entity | - | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
-| `r` | `[water]` | water | - | Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake. |
-| `u` | `[water]` | water | - | Where water a Redoma shell holds out rises to: paint it above f or ~ water in the same pit. While a shell holds water out of its disc the pool rises around it, up to here, and Congelar can fix it there. The rain never raises it. Never alone, never over a lake. |
-| `V` | `[grid]` | entity | - | A platform hanging hang_height above this floor on a braked rope: Soltar frees the brake and it lowers (drop px) swinging, no footing until it stops; Enraizar seizes it between earth walls a few cells away; the grey winches it back up. |
-| `O` | `[grid]` | entity | - | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
-| `R` | `[grid]` | entity | - | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
-| `E` | `[grid]` | entity | - | A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here. |
-| `X` | `[grid]` | entity | - | A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2). |
+| Character | Section | Kind | Material | Look | What it is |
+|---|---|---|---|---|---|
+| `.` | any grid | empty | - | - | Nothing: air in `[grid]` and `[back]`, no water in `[water]`. |
+| `#` | `[grid]`, `[back]` | ground | earth | earth | Earth: soil with a grassy top (the season's top). Enraizar's roots grow from it. |
+| `S` | `[grid]`, `[back]` | ground | stone | stone | Stone: the biome's rock or laid stone. Roots never grow from it - use it where a song must NOT reach. |
+| `=` | `[grid]` | ledge | earth | earth | One-way earth ledge, one cell high: jump up through it, stand on it, drop through it. |
+| `%` | `[grid]`, `[back]` | ground | wood | wood | Wood: planks, beams, stilts. Solid; roots never grow from it. |
+| `-` | `[grid]` | ledge | wood | wood | One-way plank, one cell high: jump up through it, stand on it. |
+| `h` | `[back]` | back wall | - | wall | Built wall behind the room (plaster and timber, planks, sandstone): [back] grid only, no collision. |
+| `~` | `[water]` | water | - | - | Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand. |
+| `w` | `[water]` | water | - | - | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides. |
+| `f` | `[water]` | water | - | - | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
+| `B` | `[grid]` | entity | - | - | Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death. |
+| `W` | `[grid]` | entity | - | - | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
+| `P` | `[grid]` | entity | - | - | A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load. |
+| `G` | `[grid]` | entity | - | - | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved. |
+| `L` | `[grid]` | entity | - | - | A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go; while its lock_path holds (a counterweight on the wrong plate) it is jammed down. |
+| `T` | `[grid]` | entity | - | - | A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other. |
+| `H` | `[grid]` | entity | - | - | A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back. |
+| `F` | `[grid]` | entity | - | - | A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside. |
+| `D` | `[grid]` | entity | - | - | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
+| `r` | `[water]` | water | - | - | Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake. |
+| `u` | `[water]` | water | - | - | Where water a Redoma shell holds out rises to: paint it above f or ~ water in the same pit. While a shell holds water out of its disc the pool rises around it, up to here, and Congelar can fix it there. The rain never raises it. Never alone, never over a lake. |
+| `V` | `[grid]` | entity | - | - | A platform hanging hang_height above this floor on a braked rope: Soltar frees the brake and it lowers (drop px) swinging, no footing until it stops; Enraizar seizes it between earth walls a few cells away; the grey winches it back up. |
+| `O` | `[grid]` | entity | - | - | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
+| `R` | `[grid]` | entity | - | - | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
+| `E` | `[grid]` | entity | - | - | A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here. |
+| `X` | `[grid]` | entity | - | - | A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2). |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -381,6 +416,13 @@ has a reachability test that checks both halves.
 | Message | Meaning |
 |---|---|
 | `unknown character 'X'` | not in the legend (or in the wrong grid) |
+| `no 'tileset' in [room]` | every room names its biome |
+| `unknown tileset 'x'` | no `resources/world/tiles/biomes/x.tres` |
+| `tileset must be a biome file name` | lowercase letters, digits and `_` only |
+| `tileset 'x' has no <look>: 'C' at c,r` | that biome draws no such look (the Caldera and the Frost Edge have no earth) |
+| `[back] has N rows, [grid] has M` | the two layers must line up |
+| `'=' cannot be a back wall` | only ground and back characters go in `[back]` |
+| `'h' belongs in [back], not [grid]` | a back wall has no collision; it lives in its own layer |
 | `water 'w' belongs in [water], not [grid]` | water goes in its own layer |
 | `'#' is not a kind of water` | only water characters go in `[water]` |
 | `[water] has N rows, [grid] has M` | the two layers must line up |

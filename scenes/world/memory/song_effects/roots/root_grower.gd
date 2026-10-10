@@ -78,7 +78,7 @@ func _wet(point: Vector2) -> bool:
 ## Builds views for spans reachable at `radius`, with one cell of slack.
 func _build_within(radius: float) -> void:
 	_built_reach = radius
-	var reach := radius + float(RoomMapNode.FLOOR_TILESET.tile_size.x)
+	var reach := radius + float(RoomMap.CELL_PX)
 	for span: RootSpanFinder.Span in _spans:
 		if _built.has(span) or not _within(span, reach):
 			continue

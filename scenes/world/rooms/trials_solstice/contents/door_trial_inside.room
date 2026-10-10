@@ -4,6 +4,7 @@
 
 [room]
 origin = 0, -10
+tileset = legacy
 
 [grid]
 SSSSSSSSSSSSSSSSSSSSSSSS

@@ -1,59 +1,76 @@
 class_name GroundAutotileTest extends GdUnitTestSuite
 
-## Verifies atlas tile selection from the eight solid neighbours.
+## Sheet slots, the fill variant hash and the edge-adjacent underlay rule (architecture/biome-tilesets).
 
-const ALL := GroundAutotile.N | GroundAutotile.E | GroundAutotile.S | GroundAutotile.W \
-		| GroundAutotile.NE | GroundAutotile.SE | GroundAutotile.SW | GroundAutotile.NW
+const AIR := -1
+const EARTH := BiomeTileset.Look.EARTH
+const STONE := BiomeTileset.Look.STONE
+const WOOD := BiomeTileset.Look.WOOD
 
-func test_a_buried_cell_is_the_plain_middle() -> void:
-	assert_vector(GroundAutotile.tile_for(ALL)).is_equal(Vector2i(1, 1))
 
-func test_open_sky_above_is_the_grassy_top() -> void:
-	var mask := GroundAutotile.E | GroundAutotile.S | GroundAutotile.W
-	assert_vector(GroundAutotile.tile_for(mask)).is_equal(Vector2i(1, 0))
+func test_every_mask_lands_in_the_four_by_four_block() -> void:
+	var seen := {}
+	for mask: int in range(1, 16):
+		var at := GroundAutotile.wang_coords(mask)
+		assert_bool(at.x >= 0 and at.x < 4 and at.y >= 0 and at.y < 4).is_true()
+		seen[at] = true
+	assert_int(seen.size()).is_equal(15)
+	assert_bool(seen.has(GroundAutotile.wang_coords(0))).is_false()
 
-func test_the_top_row_has_corners_at_its_ends() -> void:
-	assert_vector(GroundAutotile.tile_for(GroundAutotile.E | GroundAutotile.S)).is_equal(Vector2i(0, 0))
-	assert_vector(GroundAutotile.tile_for(GroundAutotile.W | GroundAutotile.S)).is_equal(Vector2i(2, 0))
+func test_variants_and_ledges_have_their_rows() -> void:
+	assert_vector(GroundAutotile.variant_coords(1)).is_equal(Vector2i(0, GroundAutotile.VARIANT_ROW))
+	assert_vector(GroundAutotile.variant_coords(4)).is_equal(Vector2i(3, GroundAutotile.VARIANT_ROW))
 
-func test_open_below_is_the_rounded_bottom() -> void:
-	var mask := GroundAutotile.N | GroundAutotile.E | GroundAutotile.W
-	assert_vector(GroundAutotile.tile_for(mask)).is_equal(Vector2i(1, 2))
+func test_the_four_ledge_cases() -> void:
+	assert_int(GroundAutotile.ledge_coords(false, true).x).is_equal(GroundAutotile.LEDGE_LEFT)
+	assert_int(GroundAutotile.ledge_coords(true, true).x).is_equal(GroundAutotile.LEDGE_MIDDLE)
+	assert_int(GroundAutotile.ledge_coords(true, false).x).is_equal(GroundAutotile.LEDGE_RIGHT)
+	assert_int(GroundAutotile.ledge_coords(false, false).x).is_equal(GroundAutotile.LEDGE_SINGLE)
 
-func test_sides_face_the_open_side() -> void:
-	var left := GroundAutotile.N | GroundAutotile.E | GroundAutotile.S
-	var right := GroundAutotile.N | GroundAutotile.W | GroundAutotile.S
-	assert_vector(GroundAutotile.tile_for(left)).is_equal(Vector2i(0, 1))
-	assert_vector(GroundAutotile.tile_for(right)).is_equal(Vector2i(2, 1))
+func test_the_fill_variant_is_stable_bounded_and_varied() -> void:
+	assert_int(GroundAutotile.fill_variant(Vector2i(7, -3))).is_equal(GroundAutotile.fill_variant(Vector2i(7, -3)))
+	var seen := {}
+	for y: int in 16:
+		for x: int in 16:
+			var variant := GroundAutotile.fill_variant(Vector2i(x, y))
+			assert_bool(variant >= 0 and variant <= GroundAutotile.MAX_VARIANTS).is_true()
+			seen[variant] = true
+	assert_int(seen.size()).is_greater(1)
 
-func test_a_one_wide_wall_has_edges_on_both_sides() -> void:
-	assert_vector(GroundAutotile.tile_for(GroundAutotile.N | GroundAutotile.S)).is_equal(Vector2i(3, 1))
+func test_one_look_counts_only_its_corners() -> void:
+	assert_int(GroundAutotile.corner_mask(PackedInt32Array([AIR, AIR, EARTH, EARTH]), EARTH)).is_equal(GroundAutotile.SW | GroundAutotile.SE)
 
-func test_a_one_wide_pillar_has_a_top_and_a_bottom() -> void:
-	assert_vector(GroundAutotile.tile_for(GroundAutotile.S)).is_equal(Vector2i(6, 3))
-	assert_vector(GroundAutotile.tile_for(GroundAutotile.N)).is_equal(Vector2i(6, 4))
+## Cobbles beside earth: the earth runs on under the stone corner next to it.
+func test_a_later_look_beside_an_earlier_one_is_underlaid() -> void:
+	assert_int(GroundAutotile.corner_mask(PackedInt32Array([AIR, AIR, EARTH, STONE]), EARTH)).is_equal(GroundAutotile.SW | GroundAutotile.SE)
 
-func test_a_one_high_run_is_a_platform() -> void:
-	assert_vector(GroundAutotile.tile_for(GroundAutotile.E)).is_equal(GroundAutotile.PLATFORM_LEFT)
-	assert_vector(GroundAutotile.tile_for(GroundAutotile.E | GroundAutotile.W)).is_equal(GroundAutotile.PLATFORM_MIDDLE)
-	assert_vector(GroundAutotile.tile_for(GroundAutotile.W)).is_equal(GroundAutotile.PLATFORM_RIGHT)
+func test_stone_on_earth_fills_the_earth_and_tops_the_stone() -> void:
+	var corners := PackedInt32Array([STONE, STONE, EARTH, EARTH])
+	assert_int(GroundAutotile.corner_mask(corners, EARTH)).is_equal(GroundAutotile.FULL)
+	assert_int(GroundAutotile.corner_mask(corners, STONE)).is_equal(GroundAutotile.NW | GroundAutotile.NE)
 
-func test_a_lone_cell_takes_the_platform_end() -> void:
-	assert_vector(GroundAutotile.tile_for(0)).is_equal(GroundAutotile.PLATFORM_LEFT)
+## A stone block in the air shows no earth.
+func test_stone_alone_draws_no_earth() -> void:
+	assert_int(GroundAutotile.corner_mask(PackedInt32Array([AIR, AIR, STONE, STONE]), EARTH)).is_equal(0)
 
-func test_an_open_diagonal_above_is_a_grassy_step_corner() -> void:
-	assert_vector(GroundAutotile.tile_for(ALL & ~GroundAutotile.NW)).is_equal(Vector2i(4, 3))
-	assert_vector(GroundAutotile.tile_for(ALL & ~GroundAutotile.NE)).is_equal(Vector2i(5, 3))
+func test_a_diagonal_touch_is_not_underlaid() -> void:
+	assert_int(GroundAutotile.corner_mask(PackedInt32Array([EARTH, AIR, AIR, STONE]), EARTH)).is_equal(GroundAutotile.NW)
 
-func test_an_open_diagonal_below_is_a_cave_corner() -> void:
-	assert_vector(GroundAutotile.tile_for(ALL & ~GroundAutotile.SE)).is_equal(Vector2i(6, 0))
-	assert_vector(GroundAutotile.tile_for(ALL & ~GroundAutotile.SW)).is_equal(Vector2i(8, 0))
+## bugs/stone-under-earth-draws-a-seasonal-lip-inside-the-ground: earth on stone covers the stone's top.
+func test_stone_under_earth_draws_no_top() -> void:
+	var corners := PackedInt32Array([EARTH, EARTH, STONE, STONE])
+	assert_int(GroundAutotile.corner_mask(corners, STONE)).is_equal(0)
+	assert_int(GroundAutotile.corner_mask(corners, EARTH)).is_equal(GroundAutotile.FULL)
 
-func test_stone_is_the_same_shape_one_block_over() -> void:
-	assert_vector(GroundAutotile.in_material(Vector2i(1, 0), Enums.Ground.STONE)).is_equal(Vector2i(10, 0))
-	assert_vector(GroundAutotile.in_material(Vector2i(1, 0), Enums.Ground.EARTH)).is_equal(Vector2i(1, 0))
+## bugs/an-earth-cell-boxed-in-by-stone-grows-a-corner-tuft: no inner corner inside the ground.
+func test_earth_boxed_in_by_stone_fills_its_tile() -> void:
+	assert_int(GroundAutotile.corner_mask(PackedInt32Array([STONE, STONE, STONE, EARTH]), EARTH)).is_equal(GroundAutotile.FULL)
 
-func test_platform_pieces_are_recognised_in_either_material() -> void:
-	assert_bool(GroundAutotile.is_platform_piece(Vector2i(7, 5))).is_true()
-	assert_bool(GroundAutotile.is_platform_piece(Vector2i(16, 5))).is_true()
-	assert_bool(GroundAutotile.is_platform_piece(Vector2i(1, 0))).is_false()
+func test_a_look_absent_from_a_buried_tile_draws_nothing() -> void:
+	assert_int(GroundAutotile.corner_mask(PackedInt32Array([STONE, STONE, STONE, STONE]), EARTH)).is_equal(0)
+
+func test_wood_over_stone_over_earth() -> void:
+	var corners := PackedInt32Array([WOOD, STONE, EARTH, AIR])
+	assert_int(GroundAutotile.corner_mask(corners, EARTH)).is_equal(GroundAutotile.SW | GroundAutotile.NW)
+	assert_int(GroundAutotile.corner_mask(corners, STONE)).is_equal(GroundAutotile.NE | GroundAutotile.NW)
+	assert_int(GroundAutotile.corner_mask(corners, WOOD)).is_equal(GroundAutotile.NW)

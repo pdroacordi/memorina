@@ -47,7 +47,7 @@ func _ready() -> void:
 	_top_y = global_position.y - hang_height
 	_y = _top_y
 	global_position.y = _top_y
-	var width := width_cells * float(RoomMapNode.FLOOR_TILESET.tile_size.x)
+	var width := width_cells * float(RoomMap.CELL_PX)
 	var box := RectangleShape2D.new()
 	box.size = Vector2(width, 10)
 	_shape.shape = box
@@ -99,7 +99,7 @@ func let_go(by: Object) -> void:
 
 ## World points at mid-height of its left and right edges, where roots take hold.
 func catch_edges() -> PackedVector2Array:
-	var half := width_cells * float(RoomMapNode.FLOOR_TILESET.tile_size.x) * 0.5
+	var half := width_cells * float(RoomMap.CELL_PX) * 0.5
 	var at := Vector2(global_position.x, roundf(_y))
 	return PackedVector2Array([at + Vector2(-half, 5), at + Vector2(half, 5)])
 

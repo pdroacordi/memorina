@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/pine_woods.tres" id="bd_set"]
-[ext_resource type="Material" path="res://scenes/world/memory/seasonal/floor_tiles_seasonal_material.tres" id="tiles_season"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/spring_woods/contents/woods_pond.room" id="room_map"]
 
@@ -16,4 +15,3 @@ horizon_y = 235.0
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
-ground_material = ExtResource("tiles_season")

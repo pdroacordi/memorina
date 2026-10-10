@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="RoomLegend" load_steps=13 format=3]
+[gd_resource type="Resource" script_class="RoomLegend" load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://resources/world/maps/room_legend.gd" id="1_legend"]
 [ext_resource type="Script" path="res://resources/world/maps/room_legend_entry.gd" id="2_entry"]
@@ -32,7 +32,8 @@ script = ExtResource("2_entry")
 symbol = "S"
 kind = 0
 ground = 2
-description = "Stone: cut masonry. Roots never grow from it - use it where a song must NOT reach."
+look = 1
+description = "Stone: the biome's rock or laid stone. Roots never grow from it - use it where a song must NOT reach."
 
 [sub_resource type="Resource" id="ledge"]
 script = ExtResource("2_entry")
@@ -40,6 +41,30 @@ symbol = "="
 kind = 1
 ground = 1
 description = "One-way earth ledge, one cell high: jump up through it, stand on it, drop through it."
+
+[sub_resource type="Resource" id="wood"]
+script = ExtResource("2_entry")
+symbol = "%"
+kind = 0
+ground = 3
+look = 2
+description = "Wood: planks, beams, stilts. Solid; roots never grow from it."
+
+[sub_resource type="Resource" id="plank"]
+script = ExtResource("2_entry")
+symbol = "-"
+kind = 1
+ground = 3
+look = 2
+description = "One-way plank, one cell high: jump up through it, stand on it."
+
+[sub_resource type="Resource" id="back_wall"]
+script = ExtResource("2_entry")
+symbol = "h"
+kind = 4
+ground = 0
+look = 3
+description = "Built wall behind the room (plaster and timber, planks, sandstone): [back] grid only, no collision."
 
 [sub_resource type="Resource" id="pool"]
 script = ExtResource("2_entry")
@@ -217,4 +242,4 @@ description = "A barred gate, standing on this cell, three cells tall: solid unt
 
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier")])

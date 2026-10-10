@@ -1,73 +1,78 @@
-class_name GroundAutotile extends RefCounted
+class_name GroundAutotile
+extends RefCounted
+## Where a look sheet keeps each dual-grid tile, and which tile a display cell takes (architecture/biome-tilesets, "Sheet contract").
 
-## Resolves a ground cell's atlas tile from its eight solid neighbours; material selects its column block.
+## Bits of a display tile's solid-corner mask; each corner is one map cell.
+const NW := 1
+const NE := 2
+const SW := 4
+const SE := 8
+const FULL := 15
+## Rows per season band; band 0 is spring.
+const BAND_ROWS := 6
+const VARIANT_ROW := 4
+const LEDGE_ROW := 5
+const MAX_VARIANTS := 4
+## Ledge pieces, in LEDGE_ROW order.
+const LEDGE_LEFT := 0
+const LEDGE_MIDDLE := 1
+const LEDGE_RIGHT := 2
+const LEDGE_SINGLE := 3
 
-## The `ground` custom data layer of floor_tileset.tres.
-const GROUND_DATA := "ground"
-const SOURCE_ID := 1
-const ONE_WAY_ALTERNATIVE := 1
-const STONE_COLUMN := 9
+const _BITS: Array[int] = [NW, NE, SW, SE]
+## The corners sharing a tile edge with each corner, in NW, NE, SW, SE order.
+const _EDGE_NEIGHBOURS: Array[Array] = [[1, 2], [0, 3], [0, 3], [1, 2]]
+## The corner directly above each corner in the tile, -1 for a top corner.
+const _ABOVE: Array[int] = [-1, -1, 0, 1]
 
-const PLATFORM_LEFT := Vector2i(6, 5)
-const PLATFORM_MIDDLE := Vector2i(7, 5)
-const PLATFORM_RIGHT := Vector2i(8, 5)
 
-## Bits of the neighbourhood mask.
-const N := 1
-const E := 2
-const S := 4
-const W := 8
-const NE := 16
-const SE := 32
-const SW := 64
-const NW := 128
+## The band-0 slot of the tile for solid-corner `mask` (1..15).
+static func wang_coords(mask: int) -> Vector2i:
+	return Vector2i(mask % 4, mask / 4)
 
-## The earth tile for a solid cell whose solid neighbours are `mask`.
-static func tile_for(mask: int) -> Vector2i:
-	var n := mask & N != 0
-	var e := mask & E != 0
-	var s := mask & S != 0
-	var w := mask & W != 0
-	if not n:
-		if not s:
-			return platform_tile(w, e)
-		return _row(w, e, Vector2i(0, 0), Vector2i(1, 0), Vector2i(2, 0), Vector2i(6, 3))
-	if not s:
-		return _row(w, e, Vector2i(0, 2), Vector2i(1, 2), Vector2i(2, 2), Vector2i(6, 4))
-	if w and e:
-		# Diagonal openings determine inner corners for steps and cave rims.
-		if mask & NW == 0:
-			return Vector2i(4, 3)
-		if mask & NE == 0:
-			return Vector2i(5, 3)
-		if mask & SE == 0:
-			return Vector2i(6, 0)
-		if mask & SW == 0:
-			return Vector2i(8, 0)
-		return Vector2i(1, 1)
-	return _row(w, e, Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1), Vector2i(3, 1))
+## The band-0 slot of fill variant `variant` (1..MAX_VARIANTS).
+static func variant_coords(variant: int) -> Vector2i:
+	return Vector2i(variant - 1, VARIANT_ROW)
 
-## Selects a tile for a one-tile-high run; a lone cell uses the left end because the sheet has no single-cell tile.
-static func platform_tile(west: bool, east: bool) -> Vector2i:
+## The band-0 slot of a ledge cell whose west and east cells are ledges of the same look.
+static func ledge_coords(west: bool, east: bool) -> Vector2i:
+	var piece := LEDGE_SINGLE
 	if west and east:
-		return PLATFORM_MIDDLE
-	if west:
-		return PLATFORM_RIGHT
-	return PLATFORM_LEFT
+		piece = LEDGE_MIDDLE
+	elif east:
+		piece = LEDGE_LEFT
+	elif west:
+		piece = LEDGE_RIGHT
+	return Vector2i(piece, LEDGE_ROW)
 
-## The same shape in the given material's column block.
-static func in_material(tile: Vector2i, ground: Enums.Ground) -> Vector2i:
-	return tile + Vector2i(STONE_COLUMN, 0) if ground == Enums.Ground.STONE else tile
+## 0 for the plain fill or 1..MAX_VARIANTS; stable for a cell on every platform (integer hash).
+static func fill_variant(cell: Vector2i) -> int:
+	var h := (cell.x * 73856093) ^ (cell.y * 19349663)
+	h = (h ^ (h >> 13)) * 1274126177
+	h = h ^ (h >> 16)
+	var pick := posmod(h, 10)
+	return pick - 5 if pick > 5 else 0
 
-static func is_platform_piece(coords: Vector2i) -> bool:
-	var earth := Vector2i(coords.x % STONE_COLUMN, coords.y)
-	return earth == PLATFORM_LEFT or earth == PLATFORM_MIDDLE or earth == PLATFORM_RIGHT
-
-static func _row(w: bool, e: bool, left: Vector2i, middle: Vector2i, right: Vector2i, alone: Vector2i) -> Vector2i:
-	if w and e:
-		return middle
-	if e:
-		return left
-	if w:
-		return right
-	return alone
+## The solid-corner mask `look` draws, from the looks at the corners (NW, NE, SW, SE; -1 for air).
+## A later look counts for an earlier one only beside one of its corners: the edge-adjacent underlay.
+## A corner under an earlier look is left to that look's underlay, so a buried top never draws its lip
+## (bugs/stone-under-earth-draws-a-seasonal-lip-inside-the-ground). In a tile with no air where `look`
+## appears, every later corner counts: no inner corner draws inside the ground (bugs/an-earth-cell-boxed-in-by-stone-grows-a-corner-tuft).
+static func corner_mask(corners: PackedInt32Array, look: int) -> int:
+	var buried := not corners.has(-1) and corners.has(look)
+	var mask := 0
+	for i: int in 4:
+		var at := corners[i]
+		if at == look:
+			var above := corners[_ABOVE[i]] if _ABOVE[i] >= 0 else -1
+			if above < 0 or above >= look:
+				mask |= _BITS[i]
+		elif at > look:
+			if buried:
+				mask |= _BITS[i]
+				continue
+			for j: int in _EDGE_NEIGHBOURS[i]:
+				if corners[j] == look:
+					mask |= _BITS[i]
+					break
+	return mask

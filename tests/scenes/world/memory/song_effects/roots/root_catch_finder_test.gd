@@ -3,7 +3,7 @@ class_name RootCatchFinderTest extends GdUnitTestSuite
 ## Roots seize what hangs between earth walls, never from stone, and only across a short gap.
 
 func _map(rows: String) -> RoomMap:
-	var result := RoomMapParser.parse("[grid]\n" + rows, RoomLegend.load_default())
+	var result := RoomMapParser.parse("[grid]\n" + rows + "\n[room]\ntileset = legacy\n", RoomLegend.load_default())
 	assert(result.ok(), str(result.errors))
 	return result.map
 

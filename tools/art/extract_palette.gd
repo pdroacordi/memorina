@@ -3,7 +3,8 @@ extends SceneTree
 ## Extracts a ranked, merged palette from world art for process_image.gd.
 
 const SOURCES: Array[String] = [
-	"res://assets/sprites/world/tilesets/floor_tiles.png",
+	"res://assets/sprites/world/tilesets/legacy/earth.png",
+	"res://assets/sprites/world/tilesets/legacy/stone.png",
 	"res://assets/sprites/world/background/seasonal/background_layer_1.png",
 	"res://assets/sprites/world/background/seasonal/background_layer_2.png",
 	"res://assets/sprites/world/background/seasonal/background_layer_3.png",
