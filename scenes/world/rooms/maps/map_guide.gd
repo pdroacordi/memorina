@@ -21,6 +21,7 @@ const KIND_NAMES := {
 	RoomLegendEntry.Kind.WATER: "water",
 	RoomLegendEntry.Kind.ENTITY: "entity",
 	RoomLegendEntry.Kind.BACK: "back wall",
+	RoomLegendEntry.Kind.SECRET: "secret",
 }
 
 ## `readme` with every generated section replaced by its current text.
@@ -52,14 +53,16 @@ static func legend_section(legend: RoomLegend) -> String:
 			RoomLegendEntry.Kind.WATER:
 				section = "`[water]`"
 			RoomLegendEntry.Kind.GROUND:
-				section = "`[grid]`, `[back]`"
+				section = "`[grid]`, `[back]`, `[secret]`"
 			RoomLegendEntry.Kind.BACK:
 				section = "`[back]`"
+			RoomLegendEntry.Kind.SECRET:
+				section = "`[secret]`"
 		var material := "-"
 		var look := "-"
-		if entry.kind in [RoomLegendEntry.Kind.GROUND, RoomLegendEntry.Kind.PLATFORM, RoomLegendEntry.Kind.BACK]:
+		if entry.kind in [RoomLegendEntry.Kind.GROUND, RoomLegendEntry.Kind.PLATFORM, RoomLegendEntry.Kind.BACK, RoomLegendEntry.Kind.SECRET]:
 			look = BiomeTileset.Look.keys()[entry.look].to_lower()
-			if entry.kind != RoomLegendEntry.Kind.BACK:
+			if entry.kind != RoomLegendEntry.Kind.BACK and entry.kind != RoomLegendEntry.Kind.SECRET:
 				material = Enums.Ground.keys()[entry.ground].to_lower()
 		lines.append("| `%s` | %s | %s | %s | %s | %s |" % [entry.symbol, section, KIND_NAMES[entry.kind], material, look, entry.description.replace("\n", " ")])
 	return "\n".join(lines) + "\n"

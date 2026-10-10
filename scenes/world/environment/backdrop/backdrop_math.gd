@@ -1,7 +1,18 @@
 class_name BackdropMath
 extends RefCounted
-## Where a backdrop layer draws for a camera, and which art texel a layer pixel shows (architecture/vertical-backdrops).
-## art_row and art_col must match backdrop_layer.gdshader (gotchas/glsl-gdscript-math-must-be-duplicated).
+## Where a backdrop layer draws for a camera, which art texel a layer pixel shows, and which room draws a pixel near a seam
+## (architecture/vertical-backdrops, architecture/backdrop-seams). art_row, art_col, seam_jitter and keeps must match
+## backdrop_layer.gdshader (gotchas/glsl-gdscript-math-must-be-duplicated).
+
+## Must match BAYER in dither_common.gdshaderinc.
+const BAYER: Array[float] = [
+	0.0 / 16.0, 8.0 / 16.0, 2.0 / 16.0, 10.0 / 16.0,
+	12.0 / 16.0, 4.0 / 16.0, 14.0 / 16.0, 6.0 / 16.0,
+	3.0 / 16.0, 11.0 / 16.0, 1.0 / 16.0, 9.0 / 16.0,
+	15.0 / 16.0, 7.0 / 16.0, 13.0 / 16.0, 5.0 / 16.0,
+]
+## World px a room rect is grown (own) or shrunk (neighbour) by, so float noise makes two rooms draw a pixel, never neither.
+const SEAM_EPSILON := 0.01
 
 
 ## The camera centre at which the anchor's horizon sits at `horizon_screen_y`: every layer's authored pose.
@@ -70,3 +81,29 @@ static func art_col(col: int, strip_w: int, repeat_x: bool) -> int:
 	if repeat_x:
 		return posmod(col, strip_w)
 	return col if col >= 0 and col < strip_w else -1
+
+## The anchor a layer is placed from: world 0 on an axis where the art repeats, so rooms of one set draw the same pixels,
+## and the room's horizon anchor on an axis where the art has an edge (architecture/backdrop-seams).
+static func layer_anchor(room_anchor: Vector2, repeat_x: bool, repeats_y: bool) -> Vector2:
+	return Vector2(0.0 if repeat_x else room_anchor.x, 0.0 if repeats_y else room_anchor.y)
+
+## Must match wd_bayer_index in dither_common.gdshaderinc.
+static func bayer_index(game_px: Vector2i) -> int:
+	return posmod(game_px.y, 4) * 4 + posmod(game_px.x, 4)
+
+## World px a pixel's owner test is moved by: 16 symmetric levels within +-band/2, y on the transposed cell.
+static func seam_jitter(game_px: Vector2i, band: float) -> Vector2:
+	var x := BAYER[bayer_index(game_px)] + 1.0 / 32.0 - 0.5
+	var y := BAYER[bayer_index(Vector2i(game_px.y, game_px.x))] + 1.0 / 32.0 - 0.5
+	return Vector2(x, y) * band
+
+## Whether the room `own` draws the backdrop pixel at `point`: the jittered point lies in it, or lies in no room while
+## the pixel does.
+static func keeps(point: Vector2, jitter: Vector2, own: Rect2, neighbours: Array[Rect2]) -> bool:
+	var moved := point + jitter
+	if own.grow(SEAM_EPSILON).has_point(moved):
+		return true
+	for other: Rect2 in neighbours:
+		if other.grow(-SEAM_EPSILON).has_point(moved):
+			return false
+	return own.grow(SEAM_EPSILON).has_point(point)

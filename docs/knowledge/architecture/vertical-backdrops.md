@@ -313,7 +313,7 @@ position and `half_view` = (320, 180). This is constant per room, so it is compu
 - **No new autoload, no new ALWAYS node, no user-facing strings.** `problems()` messages are
   developer diagnostics in English, not `tr()` keys.
 
-## Revision (2026-10-10, PLANNED in WORLD-22)
+## Revision (2026-10-10, BUILT in WORLD-22)
 
 `architecture/backdrop-seams` plans changes to three points above. The Decision above stays
 current until it is built.

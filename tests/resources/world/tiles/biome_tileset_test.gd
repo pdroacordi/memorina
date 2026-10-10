@@ -45,3 +45,10 @@ func test_the_tile_set_defines_every_slot_of_each_present_look() -> void:
 				continue
 			var source := tile_set.get_source(look) as TileSetAtlasSource
 			assert_int(source.get_tiles_count()).is_equal(BiomeTileset.COLUMNS * BiomeTileset.ROWS)
+
+func test_a_crack_sheet_defines_every_variant_of_every_band() -> void:
+	for biome: BiomeTileset in _biomes():
+		if biome.crack == null:
+			continue
+		var source := biome.tile_set().get_source(BiomeTileset.CRACK_SOURCE) as TileSetAtlasSource
+		assert_int(source.get_tiles_count()).is_equal(BiomeTileset.CRACK_VARIANTS * 3)

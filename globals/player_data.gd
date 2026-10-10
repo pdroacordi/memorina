@@ -23,6 +23,8 @@ class_name PlayerData extends Resource
 @export var met_guardians: Array[bool]
 ## Notebook entry ids the player has read; a death keeps them (SaveLedger.rewind).
 @export var notebook_read: Array[StringName] = []
+## Secret spaces opened, by `SecretWall.secret_id`; live data that a bench commits and a death forgets (architecture/secret-false-walls).
+@export var found_secrets: Array[StringName] = []
 
 func _init() -> void:
 	migrate()

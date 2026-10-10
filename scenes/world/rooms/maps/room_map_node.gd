@@ -10,6 +10,10 @@ const GROUND_MATERIAL := preload("res://scenes/world/memory/seasonal/floor_tiles
 const BACK_MATERIAL := preload("res://scenes/world/memory/seasonal/back_tiles_seasonal_material.tres")
 ## Behind props (-10) and in front of the Backdrop (-30) (architecture/props-and-ambient-life).
 const BACK_Z := -20
+## A closed secret's world copy: over ground, grass and entities (0), under water (50), so water reflects it closed.
+const SECRET_Z := 40
+## A closed secret's foreground copy: under every ForegroundPiece (0).
+const SECRET_FRONT_Z := -1
 
 ## The imported `.room` file.
 @export var map: RoomMap:
@@ -53,8 +57,9 @@ func _build() -> void:
 	_solid = null
 	if map == null:
 		return
+	var ground_material: Material = null
 	if map.biome != null:
-		var ground_material := _clipped(GROUND_MATERIAL)
+		ground_material = _clipped(GROUND_MATERIAL)
 		var back_material := _clipped(BACK_MATERIAL)
 		# Sorted: look order is draw order, so a later look's layer is added over an earlier one's.
 		for look: int in _sorted(map.back_layers):
@@ -71,6 +76,9 @@ func _build() -> void:
 			symbols.append(symbol)
 	for symbol: String in symbols:
 		_pour(map.legend.entry(symbol), map.water.get(symbol, PackedVector2Array()), map.reach.get(symbol, PackedVector2Array()), map.shell_reach.get(symbol, PackedVector2Array()))
+	if map.biome != null:
+		for group: int in range(1, map.secret_ids.size() + 1):
+			_adopt(_secret_wall(group, ground_material))
 	var entities := Node2D.new()
 	entities.name = ENTITIES
 	# Add the complete entity set together so links resolve regardless of map order.
@@ -97,6 +105,60 @@ func _display_layer(layer_name: String, look: int, cells: PackedByteArray, mater
 			var variant := GroundAutotile.drawn_variant(packed >> 4, variants)
 			var coords := GroundAutotile.varied_coords(mask, variant) if variant > 0 else GroundAutotile.wang_coords(mask)
 			layer.set_cell(map.origin + Vector2i(i, j), look, coords)
+	return layer
+
+## One closed secret: its owned tiles drawn twice (a reflected world copy and a foreground copy), its cracks, its trigger.
+func _secret_wall(group: int, ground_material: Material) -> SecretWall:
+	var wall := SecretWall.new()
+	var id := map.secret_ids[group - 1]
+	wall.name = "Secret_%s" % id.get_slice("@", 1).replace(",", "_")
+	var front: Array[CanvasItem] = []
+	var display := map.display_size()
+	for look: int in _sorted(map.secret_layers):
+		var source: PackedByteArray = map.secret_layers[look]
+		var cells := PackedByteArray()
+		cells.resize(source.size())
+		for j: int in display.y:
+			for i: int in display.x:
+				if map.secret_owning(Vector2i(i, j)) == group:
+					cells[j * display.x + i] = source[j * display.x + i]
+		wall.add_child(_display_layer("World_%s" % _look_name(look), look, cells, ground_material, SECRET_Z))
+		var copy := _display_layer("Front_%s" % _look_name(look), look, cells, ground_material, SECRET_FRONT_Z)
+		wall.add_child(copy)
+		front.append(copy)
+	var rects: Array[Rect2] = []
+	var cracks: Array[Vector2i] = []
+	for y: int in map.size.y:
+		var run_start := -1
+		for x: int in map.size.x + 1:
+			var inside := x < map.size.x and map.secret_groups[y * map.size.x + x] == group
+			if inside and map.secret_cracks[y * map.size.x + x] == 1:
+				cracks.append(map.origin + Vector2i(x, y))
+			if inside and run_start < 0:
+				run_start = x
+			elif not inside and run_start >= 0:
+				var first := cell_rect(map.origin + Vector2i(run_start, y))
+				var last := cell_rect(map.origin + Vector2i(x - 1, y))
+				rects.append(Rect2(to_local(first.position), last.end - first.position))
+				run_start = -1
+	if not cracks.is_empty() and map.biome.crack != null:
+		wall.add_child(_crack_layer("World_Crack", cracks, SECRET_Z))
+		var crack_copy := _crack_layer("Front_Crack", cracks, SECRET_FRONT_Z)
+		wall.add_child(crack_copy)
+		front.append(crack_copy)
+	wall.setup(StringName(id), front, rects)
+	return wall
+
+## Cell-aligned crack decals from the biome's crack sheet, a variant per cell.
+func _crack_layer(layer_name: String, cells: Array[Vector2i], z: int) -> TileMapLayer:
+	var layer := TileMapLayer.new()
+	layer.name = layer_name
+	layer.tile_set = map.biome.tile_set()
+	layer.material = GROUND_MATERIAL
+	layer.z_index = z
+	for cell: Vector2i in cells:
+		var variant := GroundAutotile.drawn_variant(maxi(GroundAutotile.edge_variant(cell), 1), BiomeTileset.CRACK_VARIANTS)
+		layer.set_cell(cell, BiomeTileset.CRACK_SOURCE, Vector2i(variant - 1, 0))
 	return layer
 
 ## One-way ledges, cell-aligned, every look in one layer (source id = look).
@@ -152,8 +214,11 @@ func _pour(entry: RoomLegendEntry, cells: PackedVector2Array, reach: PackedVecto
 	_paint(layer, cells, 0)
 	_paint(layer, reach, WaterLayer.REACH_ALTERNATIVE)
 	_paint(layer, shell_reach, WaterLayer.SHELL_REACH_ALTERNATIVE)
-	var ratio := Vector2i(RoomMap.CELL_PX, RoomMap.CELL_PX) / Vector2i(layer.tile_set.tile_size)
-	layer.solid_at = func(water_cell: Vector2i) -> bool: return map.is_solid(Vector2i((Vector2(water_cell) / Vector2(ratio)).floor()))
+	# The editor holds a non-tool WaterLayer as a placeholder that takes exported properties only
+	# (bugs/the-room-map-editor-preview-stops-at-the-first-water-layer).
+	if not Engine.is_editor_hint():
+		var ratio := Vector2i(RoomMap.CELL_PX, RoomMap.CELL_PX) / Vector2i(layer.tile_set.tile_size)
+		layer.solid_at = func(water_cell: Vector2i) -> bool: return map.is_solid(Vector2i((Vector2(water_cell) / Vector2(ratio)).floor()))
 	layer.name = "Water_%s" % entry.symbol.uri_encode()
 	_adopt(layer)
 

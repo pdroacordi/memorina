@@ -22,7 +22,11 @@ source_files:
   - scenes/world/environment/draft/draft.tscn
 ---
 
-> **Status: PLANNED** (2026-10-10, roadmap WORLD-21). Nothing is built.
+> **Status: BUILT** (2026-10-10, roadmap WORLD-21). Deviations from the plan below:
+> - **Water.** "Touches water" (8 neighbours) became "water above it" (the three cells over a secret cell). A closed secret's lip spills only upward, and the three well chambers sit right on their flooded passages.
+> - **Drawing.** No `Open_*` fallback was needed in the first playtest; the real tiles stay under the closed copy.
+> - **Not built yet:** the demo secret over the water trial's lake.
+> - **Secrets placed:** the chambers of `caldera_cistern`, `lake_well` and `winter_trial`, each with a crack above its hole. The cistern's question was answered by the user's own example: the screenshot "such as the image" is the cistern, so its chamber is hidden. The flooded passage leading in stays visible.
 
 ## Summary
 
@@ -185,6 +189,6 @@ The display layers come from `_display_layer` with the room's two clipped materi
 - **Import.** The format bump does not reimport on its own (`gotchas/import-plugin-output-is-stale-when-its-logic-changes`).
 - **Sombra's shadow.** If it is on physics layer 9 it opens secrets too. Accepted: it counts as Ivo.
 
-## Question for the user
+## Question for the user (answered)
 
-1. **The cistern.** The dry shaft in your screenshot is the Caldera's Redoma entrance from the village (04 §2, §3 `caldera_cistern`), a required route. Should that shaft stay visible, with secrets only for optional spaces (recommended: hiding a gate route works against "not impossible to find"), or should it be hidden too?
+1. **The cistern.** Answered by the user's own example ("Secret places (such as the image) should be more hidden"): its chamber is a secret, entered from the visible flooded passage.

@@ -5,6 +5,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/village/stone.png" id="3_stone"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/village/wood.png" id="4_wood"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/village/wall.png" id="5_wall"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/village/crack.png" id="6_crack"]
 
 [resource]
 script = ExtResource("1_biome")
@@ -12,5 +13,6 @@ earth = ExtResource("2_earth")
 stone = ExtResource("3_stone")
 wood = ExtResource("4_wood")
 wall = ExtResource("5_wall")
+crack = ExtResource("6_crack")
 fill_variants = PackedInt32Array(4, 3, 0, 0)
 description = "The Home Village: dark loam with a grass top, rounded street stones under a walk of pale cobbles, dark oak planks, plaster and timber walls (design 04 section 6; tools/art/tiles/village_*.json, after the approved concept)."

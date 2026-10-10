@@ -12,6 +12,10 @@ const SHEET_SIZE := Vector2i(128, 960)
 const COLUMNS := 4
 ## Three season bands.
 const ROWS := GroundAutotile.BAND_ROWS * 3
+## The crack decals' atlas source id, past every Look; 4 variants across, one row per season band.
+const CRACK_SOURCE := 16
+const CRACK_VARIANTS := 4
+const CRACK_SIZE := Vector2i(128, 96)
 
 # Each setter drops the cached TileSet, so a sheet changed in the inspector shows without a reload.
 @export var earth: Texture2D:
@@ -29,6 +33,11 @@ const ROWS := GroundAutotile.BAND_ROWS * 3
 @export var wall: Texture2D:
 	set(value):
 		wall = value
+		_tile_set = null
+## Hairline crack decals a cracked secret cell draws (architecture/secret-false-walls); null when the biome has none.
+@export var crack: Texture2D:
+	set(value):
+		crack = value
 		_tile_set = null
 ## Variants each look's sheet draws of its fill and straight edges, 0..4, indexed by Look.
 @export var fill_variants := PackedInt32Array([0, 0, 0, 0])
@@ -75,6 +84,8 @@ func problems() -> PackedStringArray:
 			found.append("%s sheet is %s, not %s" % [Look.keys()[look].to_lower(), Vector2i(texture.get_size()), SHEET_SIZE])
 		if variants(look) < 0 or variants(look) > GroundAutotile.MAX_VARIANTS:
 			found.append("%s has %d variants" % [Look.keys()[look].to_lower(), variants(look)])
+	if crack != null and Vector2i(crack.get_size()) != CRACK_SIZE:
+		found.append("crack sheet is %s, not %s" % [Vector2i(crack.get_size()), CRACK_SIZE])
 	return found
 
 ## One atlas source per present look, source id = Look; every slot defined (gotchas/tileset-padding-bakes-only-defined-tiles).
@@ -93,4 +104,12 @@ func tile_set() -> TileSet:
 				for x: int in COLUMNS:
 					source.create_tile(Vector2i(x, y))
 			_tile_set.add_source(source, look)
+		if crack != null:
+			var decals := TileSetAtlasSource.new()
+			decals.texture = crack
+			decals.texture_region_size = Vector2i(RoomMap.CELL_PX, RoomMap.CELL_PX)
+			for y: int in 3:
+				for x: int in CRACK_VARIANTS:
+					decals.create_tile(Vector2i(x, y))
+			_tile_set.add_source(decals, CRACK_SOURCE)
 	return _tile_set

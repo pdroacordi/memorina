@@ -7,6 +7,7 @@ const SECTION_GRID := "grid"
 const SECTION_WATER := "water"
 const SECTION_ENTITIES := "entities"
 const SECTION_BACK := "back"
+const SECTION_SECRET := "secret"
 const COMMENT := ";"
 ## What a `tileset =` id may look like: a biome file name.
 const TILESET_ID := "^[a-z0-9_]+$"
@@ -24,6 +25,7 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 	var water_rows := PackedStringArray()
 	var water_lines: Array[int] = []
 	var back_lines: Array[int] = []
+	var secret_lines: Array[int] = []
 	var entity_lines: Array[int] = []
 	var lines := text.replace("\r", "").split("\n")
 	for i: int in lines.size():
@@ -31,10 +33,10 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 		var line := raw.strip_edges()
 		if line.begins_with("[") and line.ends_with("]"):
 			section = line.substr(1, line.length() - 2).strip_edges().to_lower()
-			if not section in [SECTION_ROOM, SECTION_GRID, SECTION_WATER, SECTION_ENTITIES, SECTION_BACK]:
+			if not section in [SECTION_ROOM, SECTION_GRID, SECTION_WATER, SECTION_ENTITIES, SECTION_BACK, SECTION_SECRET]:
 				result.errors.append("%s:%d: unknown section [%s]" % [source, i + 1, section])
 			continue
-		if section in [SECTION_GRID, SECTION_WATER, SECTION_BACK]:
+		if section in [SECTION_GRID, SECTION_WATER, SECTION_BACK, SECTION_SECRET]:
 			if line.is_empty():
 				continue
 			# Every grid character is a cell, so leading whitespace would shift the row.
@@ -46,6 +48,9 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 			elif section == SECTION_BACK:
 				map.back_rows.append(line)
 				back_lines.append(i + 1)
+			elif section == SECTION_SECRET:
+				map.secret_rows.append(line)
+				secret_lines.append(i + 1)
 			else:
 				water_rows.append(line)
 				water_lines.append(i + 1)
@@ -71,6 +76,7 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 	_read_grid(map, grid_lines, source, result)
 	_read_back(map, back_lines, source, result)
 	_read_water(map, water_rows, water_lines, source, result)
+	_read_secret(map, secret_lines, source, result)
 	for line_number: int in entity_lines:
 		_parse_entity(map, _entity_line(lines[line_number - 1].strip_edges()), line_number, source, result)
 	_check_entities(map, source, result)
@@ -157,6 +163,8 @@ static func _read_grid(map: RoomMap, grid_lines: Array[int], source: String, res
 					result.errors.append("%s:%d:%d: water '%s' belongs in [water], not [grid]" % [source, grid_lines[y], x + 1, symbol])
 				RoomLegendEntry.Kind.BACK:
 					result.errors.append("%s:%d:%d: '%s' belongs in [back], not [grid]" % [source, grid_lines[y], x + 1, symbol])
+				RoomLegendEntry.Kind.SECRET:
+					result.errors.append("%s:%d:%d: '%s' belongs in [secret], not [grid]" % [source, grid_lines[y], x + 1, symbol])
 				RoomLegendEntry.Kind.ENTITY:
 					map.entities.append({"symbol": symbol, "cell": cell, "params": {}})
 
@@ -187,6 +195,88 @@ static func _read_back(map: RoomMap, lines: Array[int], source: String, result: 
 				_check_look(map, entry, x, y, lines[y], source, result, reported)
 			else:
 				result.errors.append("%s:%d:%d: '%s' cannot be a back wall" % [source, lines[y], x + 1, symbol])
+
+## Secrets: GROUND and SECRET characters over air, with [grid]'s rows; drawn as that ground until found, never collision.
+## Groups are 8-connected, each named `<room file>@x,y` by its first cell (architecture/secret-false-walls).
+static func _read_secret(map: RoomMap, lines: Array[int], source: String, result: Result) -> void:
+	if map.secret_rows.is_empty():
+		return
+	if map.secret_rows.size() != map.size.y:
+		result.errors.append("%s:%d: [secret] has %d rows, [grid] has %d" % [source, lines[0], map.secret_rows.size(), map.size.y])
+		return
+	var count := map.size.x * map.size.y
+	map.secret_looks.resize(count)
+	map.secret_looks.fill(RoomMap.NO_LOOK)
+	map.secret_groups.resize(count)
+	map.secret_cracks.resize(count)
+	var wet: Dictionary[Vector2i, bool] = {}
+	for kind: Dictionary in [map.water, map.reach, map.shell_reach]:
+		for symbol: String in kind:
+			for cell: Vector2 in kind[symbol]:
+				wet[Vector2i(cell) - map.origin] = true
+	var reported := {}
+	var cells: Array[Vector2i] = []
+	for y: int in map.secret_rows.size():
+		var row := map.secret_rows[y]
+		if row.length() > map.size.x:
+			result.errors.append("%s:%d: [secret] row is wider than [grid] (%d > %d)" % [source, lines[y], row.length(), map.size.x])
+			continue
+		for x: int in row.length():
+			var symbol := row[x]
+			if symbol == RoomLegend.EMPTY:
+				continue
+			var entry := map.legend.entry(symbol)
+			if entry == null:
+				result.errors.append("%s:%d:%d: unknown character '%s'" % [source, lines[y], x + 1, symbol])
+				continue
+			if entry.kind != RoomLegendEntry.Kind.GROUND and entry.kind != RoomLegendEntry.Kind.SECRET:
+				result.errors.append("%s:%d:%d: '%s' cannot be a secret" % [source, lines[y], x + 1, symbol])
+				continue
+			var index := y * map.size.x + x
+			if map.ground[index] != Enums.Ground.NONE:
+				result.errors.append("%s:%d:%d: '%s' at %d,%d is already ground: [secret] hides air" % [source, lines[y], x + 1, map.rows[y][x], x, y])
+				continue
+			if wet.has(Vector2i(x, y)) or _water_above(wet, Vector2i(x, y)):
+				result.errors.append("%s:%d:%d: secret at %d,%d holds water or has water above it: water would draw over the closed wall or its lip spill into it" % [source, lines[y], x + 1, x, y])
+			if entry.crack and map.biome != null and map.biome.crack == null and not reported.has("crack"):
+				reported["crack"] = true
+				result.errors.append("%s:%d:%d: tileset '%s' has no crack: '%s' at %d,%d" % [source, lines[y], x + 1, map.tileset, symbol, x, y])
+			_check_look(map, entry, x, y, lines[y], source, result, reported)
+			map.secret_looks[index] = entry.look
+			map.secret_cracks[index] = 1 if entry.crack else 0
+			cells.append(Vector2i(x, y))
+	_group_secrets(map, cells, source, result)
+
+## Whether any of the three cells over `cell` is in `cells`: a closed secret's top lip spills up into them.
+static func _water_above(cells: Dictionary[Vector2i, bool], cell: Vector2i) -> bool:
+	for dx: int in [-1, 0, 1]:
+		if cells.has(cell + Vector2i(dx, -1)):
+			return true
+	return false
+
+static func _group_secrets(map: RoomMap, cells: Array[Vector2i], source: String, result: Result) -> void:
+	var secret: Dictionary[Vector2i, bool] = {}
+	for cell: Vector2i in cells:
+		secret[cell] = true
+	var room := source.get_file().get_basename()
+	for start: Vector2i in cells:
+		if map.secret_groups[start.y * map.size.x + start.x] != 0:
+			continue
+		if map.secret_ids.size() >= 254:
+			result.errors.append("%s: more than 254 secrets" % source)
+			return
+		map.secret_ids.append("%s@%d,%d" % [room, start.x, start.y])
+		var group := map.secret_ids.size()
+		var queue: Array[Vector2i] = [start]
+		map.secret_groups[start.y * map.size.x + start.x] = group
+		while not queue.is_empty():
+			var cell: Vector2i = queue.pop_back()
+			for dy: int in [-1, 0, 1]:
+				for dx: int in [-1, 0, 1]:
+					var next := cell + Vector2i(dx, dy)
+					if secret.has(next) and map.secret_groups[next.y * map.size.x + next.x] == 0:
+						map.secret_groups[next.y * map.size.x + next.x] = group
+						queue.append(next)
 
 ## Reports, once per character, a look the room's tileset does not draw.
 static func _check_look(map: RoomMap, entry: RoomLegendEntry, x: int, y: int, line_number: int, source: String, result: Result, reported: Dictionary) -> void:

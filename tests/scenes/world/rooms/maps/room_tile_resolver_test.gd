@@ -67,3 +67,22 @@ func test_the_full_tile_and_straight_edges_may_carry_a_variant_and_others_never_
 			varied[mask] = true
 	assert_bool(varied.has(GroundAutotile.FULL)).is_true()
 	assert_bool(varied.has(GroundAutotile.SW | GroundAutotile.SE)).is_true()
+
+## The seam guarantee: a closed secret draws, in the tiles it owns, exactly what solid ground there would
+## draw, and every other tile is the room's own (architecture/secret-false-walls).
+func test_a_closed_secret_draws_what_solid_ground_would() -> void:
+	var grid := "......\n.####.\n.#..#.\n.####.\nSSSSSS\n"
+	var open := _map("[grid]\n" + grid + "[secret]\n......\n......\n..#S..\n......\n......\n")
+	var solid := _map("[grid]\n......\n.####.\n.##S#.\n.####.\nSSSSSS\n")
+	var display := open.display_size()
+	for look: int in solid.ground_layers:
+		var closed: PackedByteArray = solid.ground_layers[look]
+		for j: int in display.y:
+			for i: int in display.x:
+				var at := j * display.x + i
+				if open.secret_owning(Vector2i(i, j)) > 0:
+					var drawn: PackedByteArray = open.secret_layers.get(look, PackedByteArray())
+					assert_int(drawn[at] if not drawn.is_empty() else 0).is_equal(closed[at])
+				else:
+					var real: PackedByteArray = open.ground_layers.get(look, PackedByteArray())
+					assert_int(real[at] if not real.is_empty() else 0).is_equal(closed[at])

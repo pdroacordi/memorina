@@ -42,6 +42,39 @@ func test_save_ids_and_bench_ids_are_unique_across_every_map() -> void:
 				seen[id] = path
 	assert_array(Array(problems)).is_empty()
 
+## "Not impossible to find" (user, 2026-10-10): every secret shows a crack cell or has a draft within a cell of it;
+## and a secret's id is unique across every map, because the save remembers it (architecture/secret-false-walls).
+func test_every_secret_has_a_hint_and_a_unique_id() -> void:
+	var legend := RoomLegend.load_default()
+	var seen := {}
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path).map
+		for group: int in range(1, map.secret_ids.size() + 1):
+			var id := map.secret_ids[group - 1]
+			if seen.has(id):
+				problems.append("secret %s in %s and %s" % [id, seen[id], path])
+			seen[id] = path
+			if not _hinted(map, group):
+				problems.append("secret %s in %s has no crack and no draft beside it" % [id, path])
+	assert_array(Array(problems)).is_empty()
+
+func _hinted(map: RoomMap, group: int) -> bool:
+	var drafts: Array[Vector2i] = []
+	for placed: Dictionary in map.entities:
+		if placed.symbol == "d":
+			drafts.append(placed.cell)
+	for index: int in map.secret_groups.size():
+		if map.secret_groups[index] != group:
+			continue
+		if map.secret_cracks[index] == 1:
+			return true
+		var cell := map.origin + Vector2i(index % map.size.x, index / map.size.x)
+		for draft: Vector2i in drafts:
+			if absi(draft.x - cell.x) <= 1 and absi(draft.y - cell.y) <= 1:
+				return true
+	return false
+
 ## A door pair joins two rooms of one region, each naming the other's room, and every `to_room` is a Room scene of that region.
 func test_every_door_has_its_partner() -> void:
 	var legend := RoomLegend.load_default()

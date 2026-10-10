@@ -141,3 +141,14 @@ func test_a_guardian_met_since_the_bench_is_forgotten_by_a_death() -> void:
 	ledger.live.met_guardians[Enums.Guardian.FROST] = true
 	ledger.record_death("region", Vector2.ZERO)
 	assert_bool(ledger.live.met_guardians[Enums.Guardian.FROST]).is_false()
+
+## A found secret is live data: a bench keeps it, a death before one forgets it (architecture/secret-false-walls).
+func test_a_found_secret_rewinds_like_a_shortcut() -> void:
+	var ledger := _ledger()
+	ledger.live.found_secrets.append(&"cistern@8,9")
+	ledger.record_death("region", Vector2.ZERO)
+	assert_array(ledger.live.found_secrets).is_empty()
+	ledger.live.found_secrets.append(&"cistern@8,9")
+	ledger.commit()
+	ledger.record_death("region", Vector2.ZERO)
+	assert_array(ledger.live.found_secrets).contains_exactly([&"cistern@8,9"])

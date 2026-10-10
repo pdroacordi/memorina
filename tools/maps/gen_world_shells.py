@@ -312,19 +312,42 @@ shape = SubResource("RectangleShape2D_room")
 """ % (rel, w, h, tscn_name(room.id), interior, w // 2, h // 2)
 
 
+# The backdrop set an underground room of each region shows (architecture/backdrop-seams).
+UNDERGROUND_SETS = {
+    "home_village": "village_strata", "threshold": "earth_caves", "frost_edge": "ice_caves",
+    "spring_woods": "earth_caves", "frozen_lake": "ice_caves", "wind_orchards": "earth_caves",
+    "summer_caldera": "basalt_caves",
+}
+
+
 def contents(room):
+    """Every room has a backdrop: the woods at its floor's horizon outdoors, its region's caves underground, a wall indoors."""
     rel = "res://scenes/world/rooms/%s/contents/%s.room" % (room.region, room.id)
+    horizon = ""
+    if room.interior:
+        backdrop = "interior_timber"
+    elif room.surface:
+        backdrop = "pine_woods"
+        horizon = "horizon_y = %s.0\n" % (room.floor_row() * 32 - 53)
+    else:
+        backdrop = UNDERGROUND_SETS[room.region]
     return """[gd_scene format=3]
 
+[ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/%s.tres" id="bd_set"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="%s" id="room_map"]
 
 [node name="Contents" type="Node2D"]
 
+[node name="Backdrop" type="Node2D" parent="."]
+script = ExtResource("bd_script")
+backdrop_set = ExtResource("bd_set")
+%s
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
-""" % rel
+""" % (backdrop, rel, horizon)
 
 
 def region_scene(region, rooms):

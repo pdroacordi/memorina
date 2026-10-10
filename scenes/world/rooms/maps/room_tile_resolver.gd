@@ -3,11 +3,38 @@ extends RefCounted
 ## Resolves a room's dual-grid display tiles per look, and its ledge pieces, at import (architecture/biome-tilesets).
 
 
-## Fills `map`'s ground, back and ledge layers from its looks, back walls and platforms.
+## Fills `map`'s ground, back, ledge and secret layers from its looks, back walls, platforms and secrets.
 static func resolve(map: RoomMap) -> void:
 	map.ground_layers = _layers(map, map.looks, true)
 	map.back_layers = _layers(map, map.back, false)
 	map.ledge_layers = _ledges(map)
+	map.secret_layers = _secret_layers(map)
+
+## The tiles a closed secret draws: the room resolved with its secret cells filled in, kept only in display tiles with a
+## secret corner, so its edges meet the real ground exactly (architecture/secret-false-walls).
+static func _secret_layers(map: RoomMap) -> Dictionary[int, PackedByteArray]:
+	var layers: Dictionary[int, PackedByteArray] = {}
+	if map.secret_looks.is_empty():
+		return layers
+	var filled := map.looks.duplicate()
+	for index: int in filled.size():
+		if map.secret_looks[index] != RoomMap.NO_LOOK:
+			filled[index] = map.secret_looks[index]
+	var full := _layers(map, filled, true)
+	var display := map.display_size()
+	for look: int in full:
+		var layer: PackedByteArray = full[look]
+		var owned := PackedByteArray()
+		owned.resize(layer.size())
+		var any := false
+		for j: int in display.y:
+			for i: int in display.x:
+				if map.secret_owning(Vector2i(i, j)) > 0:
+					owned[j * display.x + i] = layer[j * display.x + i]
+					any = any or layer[j * display.x + i] != 0
+		if any:
+			layers[look] = owned
+	return layers
 
 ## Look -> one byte per display cell: mask | variant << 4.
 static func _layers(map: RoomMap, looks: PackedByteArray, skip_platforms: bool) -> Dictionary[int, PackedByteArray]:

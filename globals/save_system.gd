@@ -206,6 +206,15 @@ func resolve_shortcut(shortcut_id: StringName) -> void:
 	if not is_shortcut_resolved(shortcut_id):
 		player_data.resolved_shortcuts.append(shortcut_id)
 
+func is_secret_found(secret_id: StringName) -> bool:
+	return secret_id in player_data.found_secrets
+
+## Live data: a bench keeps it, a death forgets it; emits nothing, like resolve_shortcut().
+func find_secret(secret_id: StringName) -> void:
+	assert(secret_id != &"", "A secret needs an id")
+	if not is_secret_found(secret_id):
+		player_data.found_secrets.append(secret_id)
+
 ## Enemies stay down until the next rest or death - never on disk.
 func is_enemy_defeated(save_id: String) -> bool:
 	return _ledger.defeated.has(save_id)

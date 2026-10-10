@@ -17,10 +17,11 @@ extends EditorImportPlugin
 ## the .room.import files (gotchas/import-plugin-output-is-stale-when-its-logic-changes).
 ## Format 5 (WORLD-07): dual-grid layers per look and the room's BiomeTileset (architecture/biome-tilesets).
 ## Format 6: the straight edges take variants like the full tile (GroundAutotile.EDGE_MASKS).
+## Format 7: the [secret] grid, its groups and the closed tiles (architecture/secret-false-walls).
 ## (room_files_test.gd re-parses the text, so it guards the maps, not a
 ## machine's stale imports.) A legend EDIT alone needs a reimport too.
 
-const FORMAT_VERSION := 6
+const FORMAT_VERSION := 7
 
 func _get_format_version() -> int:
 	return FORMAT_VERSION

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="RoomLegend" load_steps=16 format=3]
+[gd_resource type="Resource" script_class="RoomLegend" load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://resources/world/maps/room_legend.gd" id="1_legend"]
 [ext_resource type="Script" path="res://resources/world/maps/room_legend_entry.gd" id="2_entry"]
@@ -19,6 +19,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/lowering_platform/lowering_platform.tscn" id="i20_lowering"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/door/door.tscn" id="i21_door"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/fact_barrier/fact_barrier.tscn" id="i22_barrier"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/draft/draft.tscn" id="i23_draft"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -201,6 +202,24 @@ scene = ExtResource("i15_cover")
 anchor = 0
 description = "A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside."
 
+[sub_resource type="Resource" id="cracked"]
+script = ExtResource("2_entry")
+symbol = "k"
+kind = 5
+ground = 0
+look = 1
+crack = true
+description = "[secret] only: a secret cell drawn as cracked stone until Ivo steps in - the hint that the wall is false."
+
+[sub_resource type="Resource" id="draft"]
+script = ExtResource("2_entry")
+symbol = "d"
+kind = 3
+ground = 0
+scene = ExtResource("i23_draft")
+anchor = 1
+description = "A faint draft of dust at a secret's mouth (facing 1 right, -1 left, 0 up); it freezes in the grey."
+
 [sub_resource type="Resource" id="bridge"]
 script = ExtResource("2_entry")
 symbol = "D"
@@ -242,4 +261,4 @@ description = "A barred gate, standing on this cell, three cells tall: solid unt
 
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft")])

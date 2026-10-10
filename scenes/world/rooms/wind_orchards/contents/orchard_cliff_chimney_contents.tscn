@@ -10,7 +10,7 @@
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
 backdrop_set = ExtResource("bd_set")
-horizon_y = 3307.0
+horizon_y = 235.0
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

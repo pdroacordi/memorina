@@ -63,6 +63,9 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwffffff...........
 .............................................................
 .............................................................
 
+[secret]                ; optional: false walls over air, same size as [grid]
+.............................................................
+
 [entities]              ; params for entities, by grid column,row
 30,1 = {"save_id": "downtown_brute"}
 ```
@@ -81,6 +84,19 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwffffff...........
   entities, and has exactly as many rows as `[grid]`. It never changes the
   ground, collision or `ground_at()`. A whole-room interior wall is the room's
   backdrop strip instead (`docs/knowledge/systems/backdrops.md`).
+- **`[secret]` is an optional layer** of false walls (`docs/knowledge/architecture/secret-false-walls.md`):
+  its cells must be air in `[grid]`, and each is drawn as solid ground of the
+  look given until Ivo's body enters it, then fades open for good (a bench
+  keeps it found, a death forgets it). It takes ground characters and secret
+  characters (`k`, cracked stone: the hint), never ledges, water or entities;
+  an entity in `[grid]` under a secret cell stays hidden with it. Cells are
+  grouped 8-connected, each group named `<room file>@x,y` by its first cell. A
+  secret never collides, so songs, roots and rain act on the real hollow. Keep
+  a hint by every secret: a `k` cell or a `d` draft at its mouth.
+- **Pool water must be held**: `~` or `f` with open air beside or under it is
+  an error, and so is air above it below its surface unless that air is a
+  sealed pocket. Water painted under the ground beside a pit fills a passage
+  (`docs/knowledge/systems/water.md`).
 - **`[water]` is a second layer** because water can lie *over* ground (a lake
   in front of the land) as well as fill a pit. It has exactly as many rows as
   `[grid]`. Each 32 px water character becomes 2x2 of the water system's
@@ -135,10 +151,10 @@ else in the code knows what a character means.
 | Character | Section | Kind | Material | Look | What it is |
 |---|---|---|---|---|---|
 | `.` | any grid | empty | - | - | Nothing: air in `[grid]` and `[back]`, no water in `[water]`. |
-| `#` | `[grid]`, `[back]` | ground | earth | earth | Earth: soil with a grassy top (the season's top). Enraizar's roots grow from it. |
-| `S` | `[grid]`, `[back]` | ground | stone | stone | Stone: the biome's rock or laid stone. Roots never grow from it - use it where a song must NOT reach. |
+| `#` | `[grid]`, `[back]`, `[secret]` | ground | earth | earth | Earth: soil with a grassy top (the season's top). Enraizar's roots grow from it. |
+| `S` | `[grid]`, `[back]`, `[secret]` | ground | stone | stone | Stone: the biome's rock or laid stone. Roots never grow from it - use it where a song must NOT reach. |
 | `=` | `[grid]` | ledge | earth | earth | One-way earth ledge, one cell high: jump up through it, stand on it, drop through it. |
-| `%` | `[grid]`, `[back]` | ground | wood | wood | Wood: planks, beams, stilts. Solid; roots never grow from it. |
+| `%` | `[grid]`, `[back]`, `[secret]` | ground | wood | wood | Wood: planks, beams, stilts. Solid; roots never grow from it. |
 | `-` | `[grid]` | ledge | wood | wood | One-way plank, one cell high: jump up through it, stand on it. |
 | `h` | `[back]` | back wall | - | wall | Built wall behind the room (plaster and timber, planks, sandstone): [back] grid only, no collision. |
 | `~` | `[water]` | water | - | - | Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand. |
@@ -160,6 +176,8 @@ else in the code knows what a character means.
 | `R` | `[grid]` | entity | - | - | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
 | `E` | `[grid]` | entity | - | - | A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here. |
 | `X` | `[grid]` | entity | - | - | A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2). |
+| `k` | `[secret]` | secret | - | stone | [secret] only: a secret cell drawn as cracked stone until Ivo steps in - the hint that the wall is false. |
+| `d` | `[grid]` | entity | - | - | A faint draft of dust at a secret's mouth (facing 1 right, -1 left, 0 up); it freezes in the grey. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -367,6 +385,15 @@ Scene `res://scenes/world/interactables/fact_barrier/fact_barrier.tscn`, anchore
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `requires` | SaveFact | **required** |
+
+#### `d` - Draft
+
+Scene `res://scenes/world/environment/draft/draft.tscn`, anchored at its cell's centre. A faint draft of dust at a secret's mouth (facing 1 right, -1 left, 0 up); it freezes in the grey.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `facing` | int | `1` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach
@@ -427,6 +454,13 @@ has a reachability test that checks both halves.
 | `water 'w' belongs in [water], not [grid]` | water goes in its own layer |
 | `'#' is not a kind of water` | only water characters go in `[water]` |
 | `[water] has N rows, [grid] has M` | the two layers must line up |
+| `[secret] has N rows, [grid] has M` | the two layers must line up |
+| `'=' cannot be a secret` | only ground and secret characters go in `[secret]` |
+| `'S' at c,r is already ground: [secret] hides air` | a secret cell is air in `[grid]` |
+| `secret at c,r has water above it` | a closed secret's top lip would spill into the water |
+| `tileset 'x' has no crack: 'k' at c,r` | that biome draws no crack decal |
+| `'~' at c,r stands against open air (...)` | pool water must be held by ground, water or a sealed pocket |
+| `'~' at c,r is water no surface reaches` | a covered passage must be one unbroken run per column |
 | `'r' at C,R is over 'w': a lake does not rise` | a reach only joins pool water (`~`, `f`) |
 | `'r' at C,R touches two kinds of water` | a reach joins one body: keep it over one kind |
 | `'r' at C,R is under water` | a reach is above the water it raises, never below it |

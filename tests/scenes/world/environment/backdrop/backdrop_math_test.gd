@@ -110,3 +110,59 @@ func _camera_corners(bounds: Rect2, half: Vector2) -> Array[Vector2]:
 			low[axis] = bounds.get_center()[axis]
 			high[axis] = low[axis]
 	return [low, high, Vector2(low.x, high.y), Vector2(high.x, low.y)]
+
+# Exactly one room draws every backdrop pixel near a seam, for every jitter cell (architecture/backdrop-seams).
+func _owners(rooms: Array[Rect2], point: Vector2, jitter: Vector2) -> int:
+	var count := 0
+	for room: Rect2 in rooms:
+		var others: Array[Rect2] = []
+		for other: Rect2 in rooms:
+			if other != room and room.grow(1.0).intersects(other):
+				others.append(other)
+		if BackdropMath.keeps(point, jitter, room, others):
+			count += 1
+	return count
+
+func _assert_one_owner(rooms: Array[Rect2], points: PackedVector2Array) -> void:
+	for y: int in 4:
+		for x: int in 4:
+			var jitter := BackdropMath.seam_jitter(Vector2i(x, y), Backdrop.SEAM_BAND)
+			for point: Vector2 in points:
+				var inside := false
+				for room: Rect2 in rooms:
+					inside = inside or room.has_point(point)
+				if inside:
+					assert_int(_owners(rooms, point, jitter)).is_equal(1)
+
+func test_side_by_side_rooms_share_every_seam_pixel_once() -> void:
+	var rooms: Array[Rect2] = [Rect2(0, 0, 640, 384), Rect2(640, 0, 640, 384)]
+	_assert_one_owner(rooms, PackedVector2Array([Vector2(600.5, 100.5), Vector2(639.5, 200.5), Vector2(640.5, 200.5), Vector2(671.5, 50.5)]))
+
+func test_a_corner_of_four_rooms_has_one_owner_per_pixel() -> void:
+	var rooms: Array[Rect2] = [Rect2(0, 0, 640, 384), Rect2(640, 0, 640, 384), Rect2(0, 384, 640, 384), Rect2(640, 384, 640, 384)]
+	_assert_one_owner(rooms, PackedVector2Array([Vector2(630.5, 380.5), Vector2(650.5, 390.5), Vector2(639.5, 384.5), Vector2(640.5, 383.5)]))
+
+## A room against the void keeps its whole rect: a jitter into nothing is its own.
+func test_a_room_against_the_void_keeps_its_edge() -> void:
+	var rooms: Array[Rect2] = [Rect2(0, 0, 640, 384)]
+	_assert_one_owner(rooms, PackedVector2Array([Vector2(0.5, 0.5), Vector2(639.5, 383.5)]))
+
+func test_the_jitter_is_symmetric_and_within_half_the_band() -> void:
+	var levels := {}
+	for y: int in 4:
+		for x: int in 4:
+			var jitter := BackdropMath.seam_jitter(Vector2i(x, y), Backdrop.SEAM_BAND)
+			assert_bool(absf(jitter.x) <= 32.0 and absf(jitter.y) <= 32.0).is_true()
+			levels[jitter.x] = true
+	assert_int(levels.size()).is_equal(16)
+
+func test_band_zero_is_the_room_clip() -> void:
+	var own := Rect2(0, 0, 640, 384)
+	var others: Array[Rect2] = [Rect2(640, 0, 640, 384)]
+	assert_bool(BackdropMath.keeps(Vector2(639.5, 10.0), BackdropMath.seam_jitter(Vector2i(3, 1), 0.0), own, others)).is_true()
+	assert_bool(BackdropMath.keeps(Vector2(640.5, 10.0), BackdropMath.seam_jitter(Vector2i(3, 1), 0.0), own, others)).is_false()
+
+func test_a_repeating_axis_is_placed_from_world_zero() -> void:
+	assert_vector(BackdropMath.layer_anchor(Vector2(1920, 235), true, false)).is_equal(Vector2(0, 235))
+	assert_vector(BackdropMath.layer_anchor(Vector2(1920, 235), true, true)).is_equal(Vector2.ZERO)
+	assert_vector(BackdropMath.layer_anchor(Vector2(1920, 235), false, false)).is_equal(Vector2(1920, 235))

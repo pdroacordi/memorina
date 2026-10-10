@@ -2,8 +2,10 @@ shader_type canvas_item;
 
 // One backdrop layer drawn on a quad: each pixel picks its art texel from its layer-local
 // position, so fills past the strip are row arithmetic, not texture wrap
-// (architecture/vertical-backdrops). Must match BackdropMath.art_row and art_col.
+// (architecture/vertical-backdrops). Near a seam a pixel is drawn by exactly one room (architecture/backdrop-seams).
+// Must match BackdropMath.art_row, art_col, seam_jitter and keeps.
 #include "res://scenes/world/memory/seasonal/seasonal_common.gdshaderinc"
+#include "res://scenes/world/memory/dither_common.gdshaderinc"
 
 uniform sampler2D sheet : filter_nearest, repeat_disable;
 uniform int band_count = 3;
@@ -18,8 +20,15 @@ uniform bool repeat_x = true;
 uniform float distance : hint_range(0.0, 1.0) = 0.0;
 // Layer-local position of the quad's centre (MeshInstance2D.position).
 uniform vec2 quad_position = vec2(0.0);
-// The room's bounds in world px (x, y, width, height): a running neighbour's layers never draw into this room's view.
+// The room's bounds in world px (x, y, width, height), and its touching rooms': a pixel near a seam is drawn by the room
+// holding it moved by the seam jitter, so the two backdrops meet in a dithered band, never a line.
 uniform vec4 room_rect = vec4(-1e9, -1e9, 2e9, 2e9);
+uniform vec4 neighbour_rects[8];
+uniform int neighbour_count = 0;
+// World px across the seam band; 0 clips to room_rect.
+uniform float seam_band = 0.0;
+// Must match BackdropMath.SEAM_EPSILON.
+const float SEAM_EPSILON = 0.01;
 
 varying vec2 layer_pos;
 varying vec2 world_pos;
@@ -66,9 +75,33 @@ int art_col(int col, int strip_w) {
 	return (col >= 0 && col < strip_w) ? col : -1;
 }
 
+bool inside(vec2 p, vec4 rect, float grow) {
+	return p.x >= rect.x - grow && p.y >= rect.y - grow && p.x < rect.x + rect.z + grow && p.y < rect.y + rect.w + grow;
+}
+
+// Game-pixel Bayer jitter, y on the transposed cell.
+vec2 seam_jitter(vec2 game_px) {
+	float x = BAYER[wd_bayer_index(game_px)] + 1.0 / 32.0 - 0.5;
+	float y = BAYER[wd_bayer_index(game_px.yx)] + 1.0 / 32.0 - 0.5;
+	return vec2(x, y) * seam_band;
+}
+
+bool keeps(vec2 p, vec2 jitter) {
+	vec2 moved = p + jitter;
+	if (inside(moved, room_rect, SEAM_EPSILON)) {
+		return true;
+	}
+	for (int i = 0; i < neighbour_count; i++) {
+		if (inside(moved, neighbour_rects[i], -SEAM_EPSILON)) {
+			return false;
+		}
+	}
+	return inside(p, room_rect, SEAM_EPSILON);
+}
+
 void fragment() {
-	if (world_pos.x < room_rect.x || world_pos.y < room_rect.y
-			|| world_pos.x >= room_rect.x + room_rect.z || world_pos.y >= room_rect.y + room_rect.w) {
+	vec2 game_px = floor(SCREEN_UV * vec2(textureSize(greyhush_season_mask, 0)));
+	if (!keeps(world_pos, seam_jitter(game_px))) {
 		discard;
 	}
 	ivec2 size = textureSize(sheet, 0);

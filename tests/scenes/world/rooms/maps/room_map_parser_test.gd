@@ -331,3 +331,21 @@ func test_a_pool_rises_with_the_rain_or_a_shell_not_both() -> void:
 	var result := _parse("[grid]\n#...#\n#...#\n#####\n[water]\n.ruu.\n.fff.\n.....\n")
 	assert_bool(result.ok()).is_false()
 	assert_str(result.errors[0]).contains("rises with the rain or with a shell")
+
+func test_secret_cells_stay_air_and_group_eight_connected() -> void:
+	var result := _parse("[grid]\n....\n....\n####\n[secret]\n#...\n.#.#\n....\n")
+	assert_bool(result.ok()).is_true()
+	var map := result.map
+	assert_int(map.ground_at(Vector2i(0, 0))).is_equal(Enums.Ground.NONE)
+	assert_int(map.secret_at(Vector2i(0, 0))).is_equal(map.secret_at(Vector2i(1, 1)))
+	assert_int(map.secret_at(Vector2i(3, 1))).is_not_equal(map.secret_at(Vector2i(1, 1)))
+	assert_array(Array(map.secret_ids)).contains_exactly(["test@0,0", "test@3,1"])
+
+func test_a_secret_over_ground_is_an_error() -> void:
+	assert_bool(_parse("[grid]\n#..\n###\n[secret]\n#..\n...\n").ok()).is_false()
+
+func test_a_ledge_cannot_be_a_secret() -> void:
+	assert_bool(_parse("[grid]\n...\n###\n[secret]\n.=.\n...\n").ok()).is_false()
+
+func test_a_secret_under_water_is_an_error() -> void:
+	assert_bool(_parse("[grid]\n#.#\n#.#\n###\n[water]\n.~.\n...\n...\n[secret]\n...\n.#.\n...\n").ok()).is_false()

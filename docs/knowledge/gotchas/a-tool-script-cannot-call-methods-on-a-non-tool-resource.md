@@ -4,9 +4,9 @@ type: gotcha
 title: In the editor, a custom Resource whose script is not @tool is a placeholder; a @tool node can read its exports but every method call fails with "Attempt to call a method on a placeholder instance"
 status: active
 tags: [tool-script, editor, placeholder, resource, gdscript]
-related: [bugs/the-backdrop-editor-preview-calls-methods-on-placeholder-resources, gotchas/duplicate-copies-script-built-unowned-children]
+related: [bugs/the-backdrop-editor-preview-calls-methods-on-placeholder-resources, bugs/the-room-map-editor-preview-stops-at-the-first-water-layer, gotchas/duplicate-copies-script-built-unowned-children]
 created: 2026-10-08
-updated: 2026-10-08
+updated: 2026-10-10
 source_files:
   - scenes/world/environment/backdrop/backdrop.gd
   - resources/world/backdrops/backdrop_layer.gd
@@ -36,3 +36,8 @@ Measured on 4.7.2 (WORLD-06 review). `Backdrop` (`@tool`) read `layer.texture` a
 - Editing a custom resource's exports in the inspector does not emit `changed` unless a
   setter calls `emit_changed()`. A `@tool` node listening to `changed` must not assume it
   will be told.
+- The same holds for a node instantiated from a `PackedScene` whose script is not `@tool`.
+  Writing a property that is not exported fails as well: `Invalid assignment of property or
+  key 'solid_at' ... on a base object of type 'TileMapLayer (WaterLayer)'`, and the caller
+  aborts (`bugs/the-room-map-editor-preview-stops-at-the-first-water-layer`, measured on 4.7.2).
+  Exported properties and native methods (`set_cell`) still work.

@@ -6,7 +6,7 @@ status: active
 tags: [tools, cli, autoload, typing, screenshots]
 related: [systems/notebook]
 created: 2026-10-06
-updated: 2026-10-06
+updated: 2026-10-10
 source_files: []
 ---
 
@@ -24,3 +24,8 @@ project class whose script names an autoload (`var notebook: Notebook`) fails to
 - Fix used: reach autoloads with `root.get_node(...)` and keep the script's variables untyped
   (`Node`), calling methods dynamically. Enums from a class with no autoload references
   (`Enums.Song`) compile.
+- A probe that needs a class whose dependencies name an autoload (`Backdrop` -> `Room` -> `Region` -> `SaveSystem`)
+  can run as a main scene instead: `"$GODOT" --headless --path . C:/abs/scratch/probe.tscn`. The `.tscn` and its
+  script may live outside `res://` (the ext_resource `path` is the absolute file path); autoloads load and every class
+  compiles. The script extends `Node`, starts in `_ready` and ends with `get_tree().quit()`. Measured in 4.7.2
+  (WORLD-22 review, 2026-10-10).

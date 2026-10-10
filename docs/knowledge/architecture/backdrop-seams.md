@@ -16,7 +16,13 @@ source_files:
   - tools/maps/gen_world_shells.py
 ---
 
-> **Status: PLANNED** (2026-10-10, WORLD-22; design 04 §1 "Emenda entre salas", §6 "Fundos verticais").
+> **Status: BUILT** (2026-10-10, WORLD-22; design 04 §1 "Emenda entre salas", §6 "Fundos verticais"). Deviations:
+> - **Placeholder art.** The new sets have placeholder sheets drawn by `tools/art/draw_backdrop_placeholder.gd`, which reuses `TilePainter` at a 256 art px period, instead of an `ArtPrompt` `placeholder:` key. Each placeholder has a contract under `tools/art/prompts/backdrop_*.md`.
+> - **The crater** uses `basalt_caves` until its crossing set.
+> - **One band underground and indoors,** as recommended. The user was not asked again; this note records the choice.
+> - **The dither is on the 1 game px grid,** like the greyhush edge. The `floor(game_px / 2)` fallback is unused.
+> - **Caves are one layer** (no `_near` silhouettes yet), interior sheets are 512 px (256 art px), and the underground sets are `UNDERGROUND_SETS` in the generator, not a `REGIONS` column.
+> - **Tests built:** one owner per seam pixel (side by side, a four-room corner, a room against the void), the jitter, band 0, `layer_anchor`, every set's first layer opaque, every contents scene with one `Backdrop`. Not built: the neighbour-count scan and a world-phase engine test (a headless probe checked 512 placements in review).
 
 ## Context
 

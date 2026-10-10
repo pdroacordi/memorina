@@ -14,6 +14,8 @@ enum Kind {
 	ENTITY,
 	## A wall drawn behind the room in its [back] grid: no collision, no ground.
 	BACK,
+	## A [secret] cell with a hint, drawn as ground of `look` until found; no collision (architecture/secret-false-walls).
+	SECRET,
 }
 
 ## Where in its cell an ENTITY's origin goes.
@@ -31,6 +33,8 @@ enum Anchor {
 @export var ground: Enums.Ground = Enums.Ground.EARTH
 ## GROUND, PLATFORM and BACK: which of the room's biome sheets draws it.
 @export var look: BiomeTileset.Look = BiomeTileset.Look.EARTH
+## SECRET: draws the biome's crack decal on the cell.
+@export var crack := false
 ## WATER: the WaterLayer preset that pours this kind of water.
 @export var water_layer: PackedScene
 ## WATER: a reach, the level Chuva raises the water under it to; alone it is a dry basin.

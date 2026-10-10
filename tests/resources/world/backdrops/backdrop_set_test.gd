@@ -62,3 +62,43 @@ func _contents_scenes(dir: String) -> PackedStringArray:
 		if file.ends_with("_contents.tscn"):
 			found.append(dir.path_join(file))
 	return found
+
+## A band pixel handed to a room must hit art: every set's first layer is opaque wherever it can draw
+## (architecture/backdrop-seams).
+func test_every_sets_first_layer_is_opaque_everywhere() -> void:
+	for backdrop: BackdropSet in _sets():
+		var layer := backdrop.layers[0]
+		assert_bool(layer.repeat_x).override_failure_message("%s: layer 0 must repeat across" % backdrop.resource_path).is_true()
+		assert_bool(layer.fill_above != BackdropLayer.Fill.NONE and layer.fill_below != BackdropLayer.Fill.NONE) \
+			.override_failure_message("%s: layer 0 must fill above and below" % backdrop.resource_path).is_true()
+		var image := layer.texture.get_image()
+		for y: int in image.get_height():
+			for x: int in image.get_width():
+				if image.get_pixel(x, y).a < 1.0:
+					assert_bool(false).override_failure_message("%s: layer 0 has alpha at %d,%d" % [backdrop.resource_path, x, y]).is_true()
+					return
+
+## Every room has a backdrop, so no seam hands its band to the clear colour.
+func test_every_contents_scene_has_one_backdrop_with_a_set() -> void:
+	var problems := PackedStringArray()
+	for path: String in _contents(ROOMS_DIR):
+		var root := (load(path) as PackedScene).instantiate()
+		var count := 0
+		for child: Node in root.get_children():
+			if child is Backdrop:
+				count += 1
+				if (child as Backdrop).backdrop_set == null:
+					problems.append("%s: its Backdrop has no set" % path)
+		if count != 1:
+			problems.append("%s: %d Backdrops" % [path, count])
+		root.free()
+	assert_array(Array(problems)).is_empty()
+
+func _contents(dir: String) -> PackedStringArray:
+	var found := PackedStringArray()
+	for sub: String in DirAccess.get_directories_at(dir):
+		found.append_array(_contents(dir.path_join(sub)))
+	for file: String in DirAccess.get_files_at(dir):
+		if file.ends_with("_contents.tscn"):
+			found.append(dir.path_join(file))
+	return found

@@ -57,8 +57,9 @@ func test_layers_land_where_the_model_says_at_both_zooms() -> void:
 		await _frames(3)
 		_assert_layers(backdrop)
 
-## Same camera relative to the room, room at the origin or at (12160, 6000): same picture.
-func test_a_room_far_from_the_origin_looks_the_same() -> void:
+## Same camera relative to the room, room at the origin or at (12160, 6000): the same vertical pose. A repeating layer is
+## phased on the world, so its x differs by design (architecture/backdrop-seams); a layer that does not repeat keeps it.
+func test_a_room_far_from_the_origin_keeps_its_vertical_pose() -> void:
 	var on_screen: Array[PackedVector2Array] = []
 	for origin: Vector2 in [Vector2.ZERO, Vector2(12160.0, 6000.0)]:
 		var backdrop := _backdrop_in(_room_at(origin), 235.0)
@@ -71,7 +72,9 @@ func test_a_room_far_from_the_origin_looks_the_same() -> void:
 		on_screen.append(points)
 		backdrop.get_parent().queue_free()
 	for i: int in on_screen[0].size():
-		assert_vector(on_screen[0][i]).is_equal_approx(on_screen[1][i], Vector2(0.5, 0.5))
+		assert_float(on_screen[0][i].y).is_equal_approx(on_screen[1][i].y, 0.5)
+		if not SET.layers[i].repeat_x:
+			assert_float(on_screen[0][i].x).is_equal_approx(on_screen[1][i].x, 0.5)
 
 func test_without_a_room_it_builds_from_the_preview_bounds() -> void:
 	var holder := auto_free(Node2D.new()) as Node2D

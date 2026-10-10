@@ -23,6 +23,10 @@ enum Fill { NONE, EDGE, REPEAT }
 @export_range(0.0, 1.0) var distance: float = 0.0
 
 
+## Whether the strip repeats past both its top and bottom: the layer is then placed from world 0, not the room's horizon.
+func repeats_y() -> bool:
+	return fill_above == Fill.REPEAT and fill_below == Fill.REPEAT
+
 ## Size of one band in px.
 func strip_size() -> Vector2i:
 	if texture == null:

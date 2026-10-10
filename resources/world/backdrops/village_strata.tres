@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="BackdropSet" format=3]
+
+[ext_resource type="Script" path="res://resources/world/backdrops/backdrop_set.gd" id="1_set"]
+[ext_resource type="Script" path="res://resources/world/backdrops/backdrop_layer.gd" id="2_layer"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/village_strata/far.png" id="3_wall"]
+
+[sub_resource type="Resource" id="wall"]
+script = ExtResource("2_layer")
+texture = ExtResource("3_wall")
+band_count = 1
+band_of_season = Vector4i(0, 0, 0, 0)
+scroll_scale = Vector2(0.6, 0.6)
+fill_above = 2
+fill_below = 2
+distance = 0.3
+
+[resource]
+script = ExtResource("1_set")
+layers = Array[ExtResource("2_layer")]([SubResource("wall")])

@@ -46,4 +46,9 @@ func problems() -> PackedStringArray:
 			RoomLegendEntry.Kind.BACK:
 				if candidate.ground != Enums.Ground.NONE:
 					found.append("back wall '%s' cannot have a material" % candidate.symbol)
+			RoomLegendEntry.Kind.SECRET:
+				if candidate.ground != Enums.Ground.NONE:
+					found.append("secret '%s' cannot have a material: a secret cell is air" % candidate.symbol)
+				if candidate.look == BiomeTileset.Look.WALL:
+					found.append("secret '%s' cannot have the wall look" % candidate.symbol)
 	return found
