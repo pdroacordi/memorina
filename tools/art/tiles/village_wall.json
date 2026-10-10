@@ -1,5 +1,6 @@
 {
-	"about": "Village wall: PixelLab tiles-pro plaster and timber (tools/art/tiles/sources/village_timber_0.png); a back wall, one band.",
+	"about": "Village wall: PixelLab tiles-pro plaster and timber at 16 art px (tools/art/tiles/sources/village_timber_0.png); a back wall, one band.",
+	"art_scale": 2,
 	"body": {
 		"path": "res://tools/art/tiles/sources/village_timber_0.png"
 	},
@@ -11,8 +12,9 @@
 	],
 	"spill": 1,
 	"depth": 1,
-	"radius": 2,
-	"rim": 2,
-	"edge": "#120a06",
+	"radius": 1,
+	"rim": 1,
+	"rim_dark": 0.3,
+	"edge": "#24160c",
 	"ledge_height": 0
 }

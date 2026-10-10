@@ -1,5 +1,6 @@
 {
-	"about": "Village stone: PixelLab tiles-pro mossy cobblestones (tools/art/tiles/sources/village_cobbles_*.png), the street of tools/art/references/village_concept.png.",
+	"about": "Village stone: PixelLab tiles-pro mossy cobbles at 16 art px (tools/art/tiles/sources/village_cobbles_0.png), the street of tools/art/references/village_concept.png.",
+	"art_scale": 2,
 	"body": {
 		"path": "res://tools/art/tiles/sources/village_cobbles_0.png"
 	},
@@ -9,44 +10,44 @@
 			"kind": "grass",
 			"seed": 31,
 			"greens": [
-				"#1c2410",
-				"#303810",
-				"#404810",
-				"#4c5418",
-				"#5c6420"
+				"#22300e",
+				"#34481a",
+				"#4a6222",
+				"#5e7a2c",
+				"#76923a"
 			],
 			"flowers": [],
-			"density": 0.35,
-			"ferns": 1
+			"density": 0.3,
+			"ferns": 0
 		},
 		{
 			"kind": "litter",
 			"seed": 32,
 			"leaves": [
-				"#985828",
-				"#a06838",
-				"#784020",
-				"#c08040"
+				"#b0602a",
+				"#c87c34",
+				"#8a4a22",
+				"#d89a48"
 			]
 		},
 		{
 			"kind": "snow",
 			"seed": 33,
 			"whites": [
-				"#f4ece4",
-				"#e2dad2"
+				"#f6f0e8",
+				"#e6dfd6"
 			],
 			"shades": [
-				"#a8b4c4",
-				"#7c90b4"
+				"#b0bccc",
+				"#8a9cbc"
 			]
 		}
 	],
-	"spill": 5,
-	"depth": 3,
-	"radius": 4,
-	"rim": 2,
-	"edge": "#0c0806",
-	"ledge_height": 0,
-	"rim_dark": 0.45
+	"spill": 3,
+	"depth": 2,
+	"radius": 2,
+	"rim": 1,
+	"rim_dark": 0.35,
+	"edge": "#24180e",
+	"ledge_height": 0
 }

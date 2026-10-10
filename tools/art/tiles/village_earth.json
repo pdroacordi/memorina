@@ -1,7 +1,8 @@
 {
-	"about": "Village earth: PixelLab tiles-pro soil (tools/art/tiles/sources/village_soil_*.png) under a painted season lip.",
+	"about": "Village earth: PixelLab tiles-pro soil at 16 art px (tools/art/tiles/sources/village_soil_*.png), drawn at 2x like Ivo, under a painted season lip.",
+	"art_scale": 2,
 	"body": {
-		"path": "res://tools/art/tiles/sources/village_soil_0.png"
+		"path": "res://tools/art/tiles/sources/village_soil_3.png"
 	},
 	"variants": [
 		{
@@ -9,9 +10,6 @@
 		},
 		{
 			"path": "res://tools/art/tiles/sources/village_soil_2.png"
-		},
-		{
-			"path": "res://tools/art/tiles/sources/village_soil_3.png"
 		}
 	],
 	"lips": [
@@ -19,50 +17,47 @@
 			"kind": "grass",
 			"seed": 21,
 			"greens": [
-				"#1c2410",
-				"#283010",
-				"#3a4412",
-				"#4c5618",
-				"#606a22",
-				"#748030"
+				"#22300e",
+				"#34481a",
+				"#4a6222",
+				"#5e7a2c",
+				"#76923a"
 			],
 			"flowers": [
-				"#e8e0d6",
-				"#d8b040",
-				"#e0d8d0"
+				"#efe6d6",
+				"#e8c040"
 			],
 			"density": 0.95,
-			"ferns": 3
+			"ferns": 1
 		},
 		{
 			"kind": "litter",
 			"seed": 22,
 			"leaves": [
-				"#985828",
-				"#a06838",
-				"#784020",
-				"#c08040",
-				"#604028"
+				"#b0602a",
+				"#c87c34",
+				"#8a4a22",
+				"#d89a48"
 			]
 		},
 		{
 			"kind": "snow",
 			"seed": 23,
 			"whites": [
-				"#f4ece4",
-				"#e2dad2"
+				"#f6f0e8",
+				"#e6dfd6"
 			],
 			"shades": [
-				"#a8b4c4",
-				"#7c90b4"
+				"#b0bccc",
+				"#8a9cbc"
 			]
 		}
 	],
-	"spill": 9,
-	"depth": 4,
-	"radius": 5,
-	"rim": 3,
-	"edge": "#120a07",
-	"ledge_height": 10,
-	"rim_dark": 0.45
+	"spill": 4,
+	"depth": 2,
+	"radius": 3,
+	"rim": 2,
+	"rim_dark": 0.4,
+	"edge": "#2a170c",
+	"ledge_height": 5
 }

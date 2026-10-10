@@ -13,6 +13,8 @@ extends SceneTree
 
 const BANDS := 3
 
+var art_scale := 1
+
 func _init() -> void:
 	var args := _args()
 	assert(args.has("out"), "--out=<png> is required")
@@ -21,7 +23,12 @@ func _init() -> void:
 		var text := FileAccess.get_file_as_string(ProjectSettings.globalize_path(args["recipe"]))
 		var recipe: Dictionary = JSON.parse_string(text.trim_prefix(String.chr(0xFEFF)))
 		assert(recipe != null, "--recipe=<json> could not be read")
+		# Environment art is drawn at 2x like Ivo (systems/art-pipeline): composed small, doubled on export.
+		var scale := int(recipe.get("art_scale", 1))
+		WangSheet.use_scale(scale)
+		TilePainter.use_scale(scale)
 		bands = _composed(recipe)
+		art_scale = scale
 	elif args.has("from-blob"):
 		var source := Image.load_from_file(ProjectSettings.globalize_path(args["from-blob"]))
 		assert(source != null, "--from-blob=<png> could not be read")
@@ -45,7 +52,10 @@ func _init() -> void:
 		assert(false, "give --recipe=<json>, --from-blob=<png> or --placeholder")
 	var out := ProjectSettings.globalize_path(args["out"])
 	DirAccess.make_dir_recursive_absolute(out.get_base_dir())
-	var error := WangSheet.pack(bands).save_png(out)
+	var sheet := WangSheet.pack(bands)
+	if art_scale > 1:
+		sheet.resize(sheet.get_width() * art_scale, sheet.get_height() * art_scale, Image.INTERPOLATE_NEAREST)
+	var error := sheet.save_png(out)
 	assert(error == OK, "could not write %s" % out)
 	print("wrote %s" % out)
 	quit()
@@ -94,7 +104,7 @@ func _body(spec: Dictionary) -> Image:
 			return WangSheet.tiles_from_pixellab(result)[GroundAutotile.FULL]
 	# A png body: PixelLab tiles-pro art kept in tools/art/tiles/sources/.
 	var image := Image.load_from_file(ProjectSettings.globalize_path(spec["path"]))
-	assert(image != null and image.get_size() == Vector2i(WangSheet.TILE, WangSheet.TILE), "a png body must be 32 px")
+	assert(image != null and image.get_size() == Vector2i(WangSheet.tile_px, WangSheet.tile_px), "a png body must be one tile at the art scale")
 	image.convert(Image.FORMAT_RGBA8)
 	return image
 
@@ -115,7 +125,7 @@ func _lip(spec: Dictionary, spill: int, depth: int) -> Image:
 			for layer: Dictionary in spec["layers"]:
 				strips.append(_lip(layer, spill, depth))
 			return WangSheet.layered(strips)
-	return Image.create_empty(WangSheet.TILE, spill + depth, false, Image.FORMAT_RGBA8)
+	return Image.create_empty(WangSheet.tile_px, spill + depth, false, Image.FORMAT_RGBA8)
 
 func _decor_colors(spec: Dictionary) -> Dictionary:
 	var colors := {}

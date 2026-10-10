@@ -1,6 +1,6 @@
 class_name TilePainter
 extends RefCounted
-## Paints seamless 32 px tile bodies for WangSheet.compose: everything here repeats with a 32 px period, so a body
+## Paints seamless tile bodies for WangSheet.compose: everything here repeats with the tile's period, so a body
 ## tiles with itself, and fill variants differ only away from the tile's border (architecture/biome-tilesets).
 
 const SIZE := 32
@@ -8,6 +8,16 @@ const SIZE := 32
 const MARGIN := 4
 ## Px each decoration covers from its anchor; it keeps the decoration inside the margin.
 const _DECOR_SIZE := {"pebble": Vector2i(3, 3), "root": Vector2i(8, 3), "sprig": Vector2i(5, 6), "clod": Vector2i(3, 3), "grit": Vector2i(5, 6), "fern": Vector2i(9, 8)}
+
+## The body size and margin every function paints at, px: SIZE and MARGIN / the art scale.
+static var size := SIZE
+static var margin := MARGIN
+
+
+## Paints at SIZE / `scale` px, so one art pixel is `scale` game pixels.
+static func use_scale(scale: int) -> void:
+	size = SIZE / scale
+	margin = maxi(1, MARGIN / scale)
 
 
 ## Soft loam: three octaves of periodic value noise (8, 4 and 2 px cells) mapped onto `ramp` (dark to light);
@@ -18,9 +28,9 @@ static func noise_body(rng_seed: int, ramp: PackedColorArray) -> Image:
 	var coarse := _lattice(rng, 4)
 	var middle := _lattice(rng, 8)
 	var fine := _lattice(rng, 16)
-	var image := Image.create_empty(SIZE, SIZE, false, Image.FORMAT_RGBA8)
-	for y: int in SIZE:
-		for x: int in SIZE:
+	var image := Image.create_empty(size, size, false, Image.FORMAT_RGBA8)
+	for y: int in size:
+		for x: int in size:
 			var v := 0.25 * _sample(coarse, 4, x, y) + 0.4 * _sample(middle, 8, x, y) + 0.35 * _sample(fine, 16, x, y)
 			# Stretch the narrow middle of the sum back over the ramp.
 			v = clampf((v - 0.5) * 2.2 + 0.5, 0.0, 0.999)
@@ -35,11 +45,11 @@ static func stone_body(rng_seed: int, count: int, ramp: PackedColorArray, mortar
 	var points: Array[Vector2] = []
 	var tone: Array[int] = []
 	for i: int in count:
-		points.append(Vector2(rng.randf() * SIZE, rng.randf() * SIZE))
+		points.append(Vector2(rng.randf() * size, rng.randf() * size))
 		tone.append(rng.randi_range(0, 1))
-	var image := Image.create_empty(SIZE, SIZE, false, Image.FORMAT_RGBA8)
-	for y: int in SIZE:
-		for x: int in SIZE:
+	var image := Image.create_empty(size, size, false, Image.FORMAT_RGBA8)
+	for y: int in size:
+		for x: int in size:
 			var best := 1e9
 			var second := 1e9
 			var owner := 0
@@ -70,12 +80,12 @@ static func stone_body(rng_seed: int, count: int, ramp: PackedColorArray, mortar
 static func plank_body(rng_seed: int, board: int, ramp: PackedColorArray, gap: Color, nail: Color) -> Image:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = rng_seed
-	var image := Image.create_empty(SIZE, SIZE, false, Image.FORMAT_RGBA8)
-	for row: int in SIZE / board:
-		var joint := rng.randi() % SIZE
+	var image := Image.create_empty(size, size, false, Image.FORMAT_RGBA8)
+	for row: int in size / board:
+		var joint := rng.randi() % size
 		var base := rng.randi_range(1, ramp.size() - 2)
 		for y: int in range(row * board, (row + 1) * board):
-			for x: int in SIZE:
+			for x: int in size:
 				var color := ramp[base]
 				if y == row * board + board - 1 or x == joint:
 					color = gap
@@ -84,8 +94,8 @@ static func plank_body(rng_seed: int, board: int, ramp: PackedColorArray, gap: C
 				elif rng.randf() < 0.18:
 					color = ramp[maxi(base - 1, 0)]
 				image.set_pixel(x, y, color)
-		image.set_pixel((joint + 2) % SIZE, row * board + board / 2, nail)
-		image.set_pixel((joint + SIZE - 2) % SIZE, row * board + board / 2, nail)
+		image.set_pixel((joint + 2) % size, row * board + board / 2, nail)
+		image.set_pixel((joint + size - 2) % size, row * board + board / 2, nail)
 	return image
 
 ## Plaster between dark timber: a beam along the top and one upright, plaster with soft stains.
@@ -93,8 +103,8 @@ static func timber_body(rng_seed: int, plaster: PackedColorArray, timber: Packed
 	var rng := RandomNumberGenerator.new()
 	rng.seed = rng_seed
 	var image := noise_body(rng_seed, plaster)
-	for y: int in SIZE:
-		for x: int in SIZE:
+	for y: int in size:
+		for x: int in size:
 			var beam := y < 5 or (x >= 13 and x < 18)
 			if beam:
 				var edge := y == 4 or x == 13 or x == 17
@@ -109,8 +119,8 @@ static func decorated(body: Image, rng_seed: int, count: int, kinds: PackedStrin
 	for i: int in count:
 		var kind := kinds[rng.randi() % kinds.size()]
 		# Each decoration's own size keeps it inside the margin.
-		var size: Vector2i = _DECOR_SIZE.get(kind, Vector2i(5, 6))
-		var at := Vector2i(rng.randi_range(MARGIN, SIZE - MARGIN - size.x), rng.randi_range(MARGIN, SIZE - MARGIN - size.y))
+		var extent: Vector2i = _DECOR_SIZE.get(kind, Vector2i(5, 6))
+		var at := Vector2i(rng.randi_range(margin, size - margin - extent.x), rng.randi_range(margin, size - margin - extent.y))
 		match kind:
 			"fern":
 				# A fern plant: three fronds fanning up from one root, lit at the tips.
@@ -136,10 +146,10 @@ static func decorated(body: Image, rng_seed: int, count: int, kinds: PackedStrin
 				var y := at.y
 				var x := at.x - 2
 				for step: int in rng.randi_range(6, 9):
-					image.set_pixel(clampi(x, MARGIN, SIZE - MARGIN - 1), y, root if step % 3 else root.darkened(0.25))
+					image.set_pixel(clampi(x, margin, size - margin - 1), y, root if step % 3 else root.darkened(0.25))
 					x += 1
 					if rng.randf() < 0.4:
-						y = clampi(y + rng.randi_range(-1, 1), MARGIN, SIZE - MARGIN - 1)
+						y = clampi(y + rng.randi_range(-1, 1), margin, size - margin - 1)
 			"clod":
 				# A dark lump of soil with a lit top edge.
 				var clod: Color = colors.get("clod", Color.BLACK)
@@ -169,9 +179,9 @@ static func _lattice(rng: RandomNumberGenerator, cells: int) -> PackedFloat32Arr
 		values.append(rng.randf())
 	return values
 
-## Smoothstep-interpolated lattice value at (x, y); the lattice wraps every SIZE px.
+## Smoothstep-interpolated lattice value at (x, y); the lattice wraps every size px.
 static func _sample(values: PackedFloat32Array, cells: int, x: int, y: int) -> float:
-	var step := float(SIZE) / cells
+	var step := float(size) / cells
 	var fx := (x + 0.5) / step
 	var fy := (y + 0.5) / step
 	var x0 := int(floor(fx)) % cells
@@ -187,6 +197,6 @@ static func _sample(values: PackedFloat32Array, cells: int, x: int, y: int) -> f
 ## The shortest offset from `point` to `site` on the 32 px torus.
 static func _wrapped(point: Vector2, site: Vector2) -> Vector2:
 	var d := point - site
-	d.x -= SIZE * round(d.x / SIZE)
-	d.y -= SIZE * round(d.y / SIZE)
+	d.x -= size * round(d.x / size)
+	d.y -= size * round(d.y / size)
 	return d
