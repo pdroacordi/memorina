@@ -1,0 +1,14 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6,
+ "player_position": [3920, 286],
+ "_note": "WORLD-23: Ivo stands in the east gate's grass verge, runs through it and stops; the blades lean away and spring back.",
+ "steps": [
+  {"t": 1.5, "screenshot": "g01_standing"},
+  {"t": 1.6, "action": "move_right", "pressed": true},
+  {"t": 2.0, "screenshot": "g02_running"},
+  {"t": 2.3, "action": "move_right", "pressed": false},
+  {"t": 2.35, "screenshot": "g03_stopped"},
+  {"t": 3.6, "screenshot": "g04_settled"}
+ ]
+}

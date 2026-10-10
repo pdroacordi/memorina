@@ -28,7 +28,8 @@
 			],
 			"flowers": [],
 			"density": 0.25,
-			"ferns": 0
+			"ferns": 0,
+			"max_blade": 1
 		},
 		{
 			"kind": "litter",
@@ -38,6 +39,11 @@
 				"#c87c34",
 				"#8a4a22",
 				"#d89a48"
+			],
+			"blades": [
+				"#4a3c1c",
+				"#64532a",
+				"#7e6a38"
 			]
 		},
 		{
@@ -63,5 +69,6 @@
 	"colors": 6,
 	"smooth": 1,
 	"contrast": 0.8,
-	"saturation": 0.8
+	"saturation": 0.8,
+	"grass": true
 }

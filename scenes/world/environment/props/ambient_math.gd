@@ -3,6 +3,9 @@ extends RefCounted
 ## The memory clock of an ambient prop: time that advances only where the world is remembered
 ## (design 03 section 2, architecture/props-and-ambient-life).
 
+## Memory (0..1) below which an ambient clock stops: "Stop below 0.2 memory" (user, 2026-10-09). Props and grass share it.
+const STOP_THRESHOLD := 0.2
+
 
 ## `time` advanced by `delta` at the rate the memory gives (0..1); nothing below `stop_threshold`.
 static func advance(time: float, delta: float, memory: float, stop_threshold: float) -> float:

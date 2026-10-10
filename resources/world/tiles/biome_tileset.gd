@@ -39,6 +39,10 @@ const CRACK_SIZE := Vector2i(128, 96)
 	set(value):
 		crack = value
 		_tile_set = null
+## Generated grass on each look's exposed tops (architecture/generated-grass); null grows none.
+@export var earth_grass: GrassLook
+@export var stone_grass: GrassLook
+@export var wood_grass: GrassLook
 ## Variants each look's sheet draws of its fill and straight edges, 0..4, indexed by Look.
 @export var fill_variants := PackedInt32Array([0, 0, 0, 0])
 ## Developer text for the map guide.
@@ -66,6 +70,17 @@ func sheet(look: Look) -> Texture2D:
 			return wood
 	return wall
 
+## The grass `look` grows, or null.
+func grass(look: int) -> GrassLook:
+	match look:
+		Look.EARTH:
+			return earth_grass
+		Look.STONE:
+			return stone_grass
+		Look.WOOD:
+			return wood_grass
+	return null
+
 func has_look(look: Look) -> bool:
 	return sheet(look) != null
 
@@ -84,6 +99,14 @@ func problems() -> PackedStringArray:
 			found.append("%s sheet is %s, not %s" % [Look.keys()[look].to_lower(), Vector2i(texture.get_size()), SHEET_SIZE])
 		if variants(look) < 0 or variants(look) > GroundAutotile.MAX_VARIANTS:
 			found.append("%s has %d variants" % [Look.keys()[look].to_lower(), variants(look)])
+	for look: int in [Look.EARTH, Look.STONE, Look.WOOD]:
+		var growth := grass(look)
+		if growth == null:
+			continue
+		if not has_look(look):
+			found.append("%s grass on a look the biome lacks" % Look.keys()[look].to_lower())
+		for problem: String in growth.problems():
+			found.append("%s grass: %s" % [Look.keys()[look].to_lower(), problem])
 	if crack != null and Vector2i(crack.get_size()) != CRACK_SIZE:
 		found.append("crack sheet is %s, not %s" % [Vector2i(crack.get_size()), CRACK_SIZE])
 	return found

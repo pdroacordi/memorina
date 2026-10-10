@@ -27,3 +27,4 @@ Design 04 sections 5-6, WORLD-08 (WORLD-10's villagers and animals are props of 
 - **Rotation** (windmill sails, the water wheel) is baked into frames on the 1x grid ("Baked pixel frames", user, 2026-10-09); the bake tool comes with WORLD-11's art.
 - **Lit windows, flames, smoke** are frames greyed like everything else: only characters escape the grey.
 - **Today:** a placeholder 4-frame flag in `trials_solstice/door_trial` (memory 0.35) waves on the memory clock; `tools/playtest/scripts/props_flag.json`.
+- **Shared stop threshold** (2026-10-10): `AmbientMath.STOP_THRESHOLD` (0.2) is the one constant props (`AmbientMotion.stop_threshold`) and grass (`systems/grass`) stop below.

@@ -21,6 +21,7 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | segredo, parede falsa | `SecretWall`, `[secret]`, `found_secrets` |
 | rachadura (dica de segredo) | `crack` (`BiomeTileset.crack`, legend `k`) |
 | sopro de poeira | `Draft` (legend `d`) |
+| grama gerada, folha de grama | `GrassField`, blade (`grass_blades.gdshader`) |
 | interior (sala de uma construção) | `Room.interior` |
 | madeira (chão de tábuas, vigas) | `Enums.Ground.WOOD`, legend `%` and `-` |
 | bioma (o visual do chão de uma sala) | `BiomeTileset`, a room's `tileset =` |

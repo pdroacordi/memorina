@@ -58,7 +58,32 @@ func _init() -> void:
 	var error := sheet.save_png(out)
 	assert(error == OK, "could not write %s" % out)
 	print("wrote %s" % out)
+	if args.has("recipe") and recipe_blades(args["recipe"]) != null:
+		var blades := out.get_basename() + "_blades.png"
+		error = recipe_blades(args["recipe"]).save_png(blades)
+		assert(error == OK, "could not write %s" % blades)
+		print("wrote %s" % blades)
 	quit()
+
+## A grass look's blade palette from a recipe with `"grass": true`: one row per band, dark to lit; spring the grass lip's
+## greens, autumn its litter lip's `blades`, winter transparent (architecture/generated-grass). Null without grass.
+func recipe_blades(path: String) -> Image:
+	var text := FileAccess.get_file_as_string(ProjectSettings.globalize_path(path))
+	var recipe: Dictionary = JSON.parse_string(text.trim_prefix(String.chr(0xFEFF)))
+	if not recipe.get("grass", false):
+		return null
+	var rows: Array[PackedColorArray] = [PackedColorArray(), PackedColorArray(), PackedColorArray()]
+	var lips: Array = recipe.get("lips", [])
+	for band: int in mini(lips.size(), 2):
+		var spec: Dictionary = lips[band]
+		rows[band] = _colors(spec.get("greens", spec.get("blades", [])))
+	var width := maxi(rows[0].size(), rows[1].size())
+	var palette := Image.create_empty(width, 3, false, Image.FORMAT_RGBA8)
+	for band: int in 3:
+		for x: int in width:
+			if not rows[band].is_empty():
+				palette.set_pixel(x, band, rows[band][mini(x, rows[band].size() - 1)])
+	return palette
 
 func _composed(recipe: Dictionary) -> Array[Dictionary]:
 	var body := _body(recipe["body"])
@@ -143,7 +168,7 @@ func _lip(spec: Dictionary, spill: int, depth: int) -> Image:
 	match spec.get("kind", "none"):
 		"grass":
 			return WangSheet.blade_strip(rng_seed, _colors(spec["greens"]), _colors(spec.get("flowers", [])), spill, depth,
-					float(spec.get("density", 0.85)), int(spec.get("ferns", 0)))
+					float(spec.get("density", 0.85)), int(spec.get("ferns", 0)), int(spec.get("max_blade", 0)))
 		"litter":
 			return WangSheet.litter_strip(rng_seed, _colors(spec["leaves"]), spill, depth)
 		"snow":

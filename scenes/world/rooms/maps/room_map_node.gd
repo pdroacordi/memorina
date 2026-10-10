@@ -68,6 +68,8 @@ func _build() -> void:
 			_adopt(_display_layer("Ground_%s" % _look_name(look), look, map.ground_layers[look], ground_material, 0))
 		if not map.ledge_layers.is_empty():
 			_adopt(_ledge_layer())
+		if not Engine.is_editor_hint():
+			_grow_grass()
 	_solid = _solid_layer()
 	_adopt(_solid)
 	var symbols: Array[String] = map.water.keys()
@@ -106,6 +108,21 @@ func _display_layer(layer_name: String, look: int, cells: PackedByteArray, mater
 			var coords := GroundAutotile.varied_coords(mask, variant) if variant > 0 else GroundAutotile.wang_coords(mask)
 			layer.set_cell(map.origin + Vector2i(i, j), look, coords)
 	return layer
+
+## Generated grass on every grassy top, when the biome grows any (architecture/generated-grass); a runtime-only node.
+func _grow_grass() -> void:
+	var biome := map.biome
+	var runs := GrassPlacement.runs(map, func(look: int) -> bool: return biome.grass(look) != null)
+	if runs.is_empty():
+		return
+	var looks: Array[GrassLook] = []
+	for run: GrassRun in runs:
+		looks.append(biome.grass(run.look))
+	var field := GrassField.new()
+	field.name = "Grass"
+	var top_left := to_global(Vector2(map.origin * RoomMap.CELL_PX))
+	field.setup(runs, looks, Rect2(top_left, Vector2(map.size * RoomMap.CELL_PX) * global_scale))
+	_adopt(field)
 
 ## One closed secret: its owned tiles drawn twice (a reflected world copy and a foreground copy), its cracks, its trigger.
 func _secret_wall(group: int, ground_material: Material) -> SecretWall:

@@ -33,7 +33,8 @@
 				"#efe6d6"
 			],
 			"density": 0.7,
-			"ferns": 0
+			"ferns": 0,
+			"max_blade": 1
 		},
 		{
 			"kind": "litter",
@@ -43,6 +44,12 @@
 				"#c87c34",
 				"#8a4a22",
 				"#d89a48"
+			],
+			"blades": [
+				"#4a3c1c",
+				"#64532a",
+				"#7e6a38",
+				"#988048"
 			]
 		},
 		{
@@ -64,5 +71,6 @@
 	"rim": 1,
 	"rim_dark": 0.25,
 	"edge": "none",
-	"ledge_height": 5
+	"ledge_height": 5,
+	"grass": true
 }

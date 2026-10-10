@@ -165,8 +165,9 @@ static func compose_ledge(body: Image, lip: Image, spill: int, height: int, radi
 ## A 32 px strip of grass blades over a thin mat: the walk line is row `spill`, blades rise up to `spill` px above it.
 ## Seamless sideways; `rng_seed` fixes it.
 ## `density` (0..1) is the share of columns with a blade; `ferns` is how many fern fronds rise from the mat.
+## `max_blade` caps a tuft's height in px: 1 leaves a turf under generated grass (architecture/generated-grass).
 static func blade_strip(rng_seed: int, greens: PackedColorArray, flowers: PackedColorArray, spill: int, depth: int,
-		density: float = 0.85, ferns: int = 0) -> Image:
+		density: float = 0.85, ferns: int = 0, max_blade: int = 0) -> Image:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = rng_seed
 	var strip := Image.create_empty(tile_px, spill + depth, false, Image.FORMAT_RGBA8)
@@ -182,6 +183,8 @@ static func blade_strip(rng_seed: int, greens: PackedColorArray, flowers: Packed
 		if rng.randf() < density:
 			# Tufts: heights follow a smooth periodic curve, so the top reads as clumps, not a comb.
 			var blade := clampi(int(round(spill * tufts[x])) + rng.randi_range(-1, 0), 1, spill)
+			if max_blade > 0:
+				blade = mini(blade, max_blade)
 			# Some blades are two px wide, the second a shade darker, so a tuft has body; every tip is lit.
 			var wide := rng.randf() < 0.4
 			for h: int in blade:

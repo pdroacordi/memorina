@@ -12,7 +12,7 @@ extends Node
 ## Local px where the memory is read (a flag's cloth, not its pole).
 @export var sample_offset: Vector2 = Vector2.ZERO
 ## Memory (0..1) below which the cycle stops: "Stop below 0.2 memory" (user, 2026-10-09).
-@export_range(0.0, 1.0) var stop_threshold: float = 0.2
+@export_range(0.0, 1.0) var stop_threshold: float = AmbientMath.STOP_THRESHOLD
 
 var _time: float = 0.0
 var _field: MemoryField

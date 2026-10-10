@@ -1,0 +1,14 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6,
+ "player_position": [-1000, 286],
+ "_note": "WORLD-23: walk through the lane's generated grass; standing still, then running, the blades lean away from Ivo.",
+ "steps": [
+  {"t": 1.5, "screenshot": "g01_standing"},
+  {"t": 1.6, "action": "move_right", "pressed": true},
+  {"t": 2.2, "screenshot": "g02_running"},
+  {"t": 2.6, "action": "move_right", "pressed": false},
+  {"t": 2.65, "screenshot": "g03_stopped"},
+  {"t": 3.6, "screenshot": "g04_settled"}
+ ]
+}

@@ -19,7 +19,17 @@ source_files:
   - tools/art/tiles/village_stone.json
 ---
 
-> **Status: PLANNED** (2026-10-10, roadmap WORLD-23). Design 04 §1 "Grama gerada". The user's request: "What if the grass was generated instead of pixels? it moves when int contact with the player." Their choice: "Freeze in the grey (Recommended)". Nothing is built yet.
+> **Status: BUILT** (2026-10-10, roadmap WORLD-23). Design 04 §1 "Grama gerada". The user's request: "What if the grass was generated instead of pixels? it moves when int contact with the player." Their choice: "Freeze in the grey (Recommended)". Deviations:
+> - **No separate texture class.** `GrassField` keeps one `ImageTexture` per run itself, instead of a `GrassTexture` class.
+> - **No map-guide grass column.**
+> - **No `grass_field_test`** yet; the playtest covers it.
+> - **Segments.** Each blade takes its nearest segment's bend; there is no interpolation.
+> - **Top row.** The map's top row grows no grass: its blades would stand above the room and be clipped.
+> - **Clip.** The clip gives way sideways by a blade's lean, so tips can cross room seams.
+> - **Off screen.** A run off screen does not advance.
+> - **Cost.** The review measured 0.51 ms per physics frame with 3 street rooms visible. After that measurement, the per-frame `to_global` calls, the allocations and the off-screen stepping were removed.
+> - **Wind is left out,** as recommended. The question was not put to the user again.
+> - **Dirt verges.** The village street is cobbles, whose grass is only a short moss fringe. The east gate's outer half and the lane's west end became earth, so the road out of the village has a grass verge.
 
 ## Summary
 

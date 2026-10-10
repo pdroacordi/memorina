@@ -431,3 +431,7 @@ The first village board (`playtests/screenshots/2026-10-10-world07-legacy-tiles/
 3. **`style.md`.** Its preamble ("limited muted earthy palette", "clean single-colour dark outline", the GandalfHardcore reference) predates the approved concept. Should it be rewritten to the concept now, which changes every future prompt, or should only the tile contracts carry the concept until each biome's style board?
 4. **Palettes.** Should there be one palette per biome, extracted from its approved board (village first), replacing the pack-derived `palette.json`? And how many colours?
 5. **Scope.** Should WORLD-07 generate only the village (and interior) sheets now, with placeholders for the other biomes until their style boards (WORLD-12..17: "Style board approved by the user first")?
+
+## Revision (2026-10-10, WORLD-23)
+
+A look that grows generated grass (`BiomeTileset.earth_grass`/`stone_grass`/`wood_grass`) keeps only a turf in its spring lip (`"max_blade": 1` in its recipe), because `GrassField` draws the moving blades over it (`systems/grass`). Its recipe's `"grass": true` makes `assemble_tile_sheet.gd` also write `<look>_blades.png`, the blade palette.
