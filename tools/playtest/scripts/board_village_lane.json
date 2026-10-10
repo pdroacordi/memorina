@@ -1,0 +1,10 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 4.0,
+ "player_position": [-700, 280],
+ "_note": "WORLD-07 village style board: the village tiles in the lane, spring, at the village's memory.",
+ "steps": [
+  {"t": 2.6, "screenshot": "board_lane"},
+  {"t": 2.7, "log": "board"}
+ ]
+}

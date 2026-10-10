@@ -16,6 +16,12 @@
   .\tools\pixellab\pixellab.ps1 balance
 
 .EXAMPLE
+  .\tools\pixellab\pixellab.ps1 tileset -Prompt tiles_village_earth -Season spring
+  .\tools\pixellab\pixellab.ps1 tileset -Prompt tiles_village_earth -Season autumn -BaseTile <spring lower id>
+  # v2 create-tileset-sidescroller: 16 corner-Wang tiles of 32 px in result.json, then
+  # godot -s res://tools/art/assemble_tile_sheet.gd -- --spring=<json> --autumn=<json> --winter=<json> --lip=<px> --out=<png>
+
+.EXAMPLE
   .\tools\pixellab\pixellab.ps1 generate -Description "ice golem boss, side view, dark outline" `
       -Width 128 -Height 128 -NoBackground -Direction west -Out C:\tmp\golem
 
@@ -29,7 +35,7 @@
 [CmdletBinding()]
 param(
   [Parameter(Position = 0, Mandatory = $true)]
-  [ValidateSet("balance", "generate", "animate")]
+  [ValidateSet("balance", "generate", "animate", "tileset")]
   [string]$Command,
 
   [string]$Description = "",
@@ -59,11 +65,16 @@ param(
   # description, negative, size, frames, view, direction, styles and reference
   # from the entry and the shared tools/art/prompts/style.md preamble. Explicit
   # parameters still win.
-  [string]$Prompt = ""
+  [string]$Prompt = "",
+  # tileset: which season's top to draw, and the spring run's lower terrain id so the bodies agree.
+  [ValidateSet("spring", "autumn", "winter")]
+  [string]$Season = "spring",
+  [string]$BaseTile = ""
 )
 
 $ErrorActionPreference = "Stop"
 $BaseUrl = "https://api.pixellab.ai/v1"
+$BaseUrlV2 = "https://api.pixellab.ai/v2"
 
 function Get-ApiKey {
   $key = $env:PIXELLAB_API_KEY
@@ -73,17 +84,18 @@ function Get-ApiKey {
   return $key
 }
 
-function Invoke-PixelLab([string]$Method, [string]$Path, $Body) {
+function Invoke-PixelLab([string]$Method, [string]$Path, $Body, [string]$Base = $BaseUrl) {
   $headers = @{ Authorization = "Bearer $(Get-ApiKey)" }
   try {
     if ($null -ne $Body) {
       $json = $Body | ConvertTo-Json -Depth 8 -Compress
-      return Invoke-RestMethod -Method $Method -Uri "$BaseUrl$Path" -Headers $headers -ContentType "application/json" -Body $json
+      return Invoke-RestMethod -Method $Method -Uri "$Base$Path" -Headers $headers -ContentType "application/json" -Body $json
     }
-    return Invoke-RestMethod -Method $Method -Uri "$BaseUrl$Path" -Headers $headers
+    return Invoke-RestMethod -Method $Method -Uri "$Base$Path" -Headers $headers
   } catch {
     $detail = ""
-    if ($_.Exception.Response) {
+    if ($_.ErrorDetails -and $_.ErrorDetails.Message) { $detail = $_.ErrorDetails.Message }
+    elseif ($_.Exception.Response) {
       try { $detail = (New-Object IO.StreamReader($_.Exception.Response.GetResponseStream())).ReadToEnd() } catch {}
     }
     # The key is in the headers, never in the body; the body is safe to show.
@@ -164,7 +176,7 @@ function Use-Prompt([string]$id) {
   Write-Host "prompt $id -> ${script:Width}x${script:Height}, then: godot -s res://tools/art/process_image.gd -- --prompt=$id --in=<png>"
 }
 
-if ($Prompt) { Use-Prompt $Prompt }
+if ($Prompt -and $Command -ne "tileset") { Use-Prompt $Prompt }
 
 switch ($Command) {
   "balance" {
@@ -231,5 +243,48 @@ switch ($Command) {
       Write-Host "wrote $stripPath ($($frames.Count) frames of ${w}x${h})"
     }
     Show-Usage $r
+  }
+
+  "tileset" {
+    if (-not $Prompt) { throw "tileset needs -Prompt <id> (a command: tileset entry in tools/art/prompts)." }
+    $root = Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
+    $entry = Read-PromptFile (Join-Path $root "tools\art\prompts\$Prompt.md")
+    $style = Read-PromptFile (Join-Path $root "tools\art\prompts\style.md")
+    $f = $entry.Fields
+    $top = $f["top_$Season"]
+    $body = @{
+      lower_description      = "$($style.Fields['preamble']). $($entry.Body)"
+      transition_description = if ($top) { $top } else { "" }
+      transition_size        = if ($top -and $f['top_size']) { [double]$f['top_size'] } else { 0.0 }
+      tile_size              = @{ width = 32; height = 32 }
+      text_guidance_scale    = $TextGuidance
+    }
+    if ($f['outline']) { $body.outline = $f['outline'] }
+    if ($f['shading']) { $body.shading = $f['shading'] }
+    if ($f['detail'])  { $body.detail  = $f['detail'] }
+    if ($f['seed'])    { $body.seed = [int]$f['seed'] }
+    if ($Seed -ne 0)   { $body.seed = $Seed }
+    if ($BaseTile)     { $body.lower_base_tile_id = $BaseTile }
+    foreach ($pair in @(@('reference', 'lower_reference_image'), @('top_reference', 'transition_reference_image'), @('color_image', 'color_image'))) {
+      if ($f[$pair[0]]) { $body[$pair[1]] = Read-Base64Image (Join-Path $root ($f[$pair[0]] -replace '^res://', '')) }
+    }
+    $dir = Join-Path (Ensure-OutDir) "${Prompt}_$Season"
+    New-Item -ItemType Directory -Force $dir | Out-Null
+    $r = Invoke-PixelLab POST "/create-tileset-sidescroller" $body $BaseUrlV2
+    $id = $r.tileset_id
+    Write-Host "submitted $id; polling every 10 s"
+    for ($i = 0; $i -lt 60; $i++) {
+      Start-Sleep -Seconds 10
+      try { $g = Invoke-PixelLab GET "/tilesets/$id" $null $BaseUrlV2 } catch { Write-Host "poll ${i}: busy"; continue }
+      if ($g.tileset) {
+        $g | ConvertTo-Json -Depth 12 | Out-File -Encoding utf8 (Join-Path $dir "result.json")
+        Write-Host "wrote $(Join-Path $dir 'result.json')"
+        Write-Host "lower terrain id (for -BaseTile): $($g.metadata.terrain_ids.lower)"
+        Show-Usage $r
+        return
+      }
+      if ($g.status -eq "failed") { throw "PixelLab tileset $id failed" }
+    }
+    throw "PixelLab tileset $id did not finish in 600 s"
   }
 }

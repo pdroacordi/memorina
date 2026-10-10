@@ -7,7 +7,7 @@ const STYLE := "res://tools/art/prompts/style.md"
 const IGNORED := ["README.md", "style.md"]
 
 var id := ""
-## Prompt operation: `generate` or `animate`.
+## Prompt operation: `generate`, `animate`, or `tileset` (a biome look sheet, architecture/biome-tilesets).
 var command := "generate"
 ## Output PNG path under `res://assets/`.
 var target := ""
@@ -27,6 +27,21 @@ var reference := ""
 var source := "pixellab"
 var description := ""
 var negative := ""
+## tileset: 3 for a look with season tops, 1 for one drawn three times (built walls).
+var seasons := 3
+## tileset: the decorative top per season band, PixelLab's transition description.
+var top_spring := ""
+var top_autumn := ""
+var top_winter := ""
+## tileset: PixelLab's transition_size, 0, 0.25, 0.5 or 1.
+var top_size := 0.25
+## tileset: px of each season's top grafted onto the spring body, below the walk line (1..16).
+var lip := 10
+## tileset: one seed for every season run, so the bodies agree.
+var run_seed := 0
+## tileset: palette reference and the top's style reference, our own art only.
+var color_image := ""
+var top_reference := ""
 
 static func all() -> Array[ArtPrompt]:
 	var prompts: Array[ArtPrompt] = []
@@ -69,8 +84,19 @@ func problems(file_id: String) -> PackedStringArray:
 		found.append("%s: target must be a .png under res://assets/" % file_id)
 	if frame_size.x <= 0 or frame_size.y <= 0 or frames <= 0:
 		found.append("%s: frame size and frame count must be positive" % file_id)
-	if not command in ["generate", "animate"]:
-		found.append("%s: command must be generate or animate" % file_id)
+	if not command in ["generate", "animate", "tileset"]:
+		found.append("%s: command must be generate, animate or tileset" % file_id)
+	if command == "tileset":
+		if sheet_size() != BiomeTileset.SHEET_SIZE:
+			found.append("%s: a tileset sheet is %s in one frame" % [file_id, BiomeTileset.SHEET_SIZE])
+		if not seasons in [1, 3]:
+			found.append("%s: seasons must be 1 or 3" % file_id)
+		if seasons == 3 and (top_spring.is_empty() or top_autumn.is_empty() or top_winter.is_empty()):
+			found.append("%s: a seasonal tileset needs top_spring, top_autumn and top_winter" % file_id)
+		if seasons == 3 and (lip < 1 or lip > 16):
+			found.append("%s: lip must be 1..16 px" % file_id)
+		if not top_size in [0.0, 0.25, 0.5, 1.0]:
+			found.append("%s: top_size must be 0, 0.25, 0.5 or 1" % file_id)
 	if command == "animate" and (action.is_empty() or reference.is_empty()):
 		found.append("%s: animate needs an action and a reference" % file_id)
 	if source in ["pixellab", "codex"] and description.is_empty():
@@ -100,4 +126,13 @@ func _set_field(key: String, value: String) -> void:
 		"action": action = value
 		"reference": reference = value
 		"source": source = value
+		"seasons": seasons = value.to_int()
+		"top_spring": top_spring = value
+		"top_autumn": top_autumn = value
+		"top_winter": top_winter = value
+		"top_size": top_size = value.to_float()
+		"lip": lip = value.to_int()
+		"seed": run_seed = value.to_int()
+		"color_image": color_image = value
+		"top_reference": top_reference = value
 		_: push_warning("art prompt '%s': unknown field '%s'" % [id, key])

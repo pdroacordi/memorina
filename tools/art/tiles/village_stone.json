@@ -1,0 +1,20 @@
+{
+	"about": "Village stone: a walk of small pale cobbles over rounded dark street stones with moss in the joints, after tools/art/references/village_concept.png (approved 2026-10-08).",
+	"body": {"kind": "stone", "seed": 5, "count": 7, "ramp": ["#1c1612", "#29211b", "#382f27", "#493e33", "#5b4e41", "#6e5f50"], "mortar": "#0f0a08", "moss": ["#2c3410", "#384010", "#46501a"]},
+	"variants": [],
+	"lips": [
+		{"kind": "layers", "layers": [
+			{"kind": "cobbles", "seed": 30, "stones": ["#a08c7c", "#8c7868", "#74665a", "#5c5046"], "joint": "#1c1410"},
+			{"kind": "grass", "seed": 31, "greens": ["#1c2410", "#303810", "#404810", "#4c5418"], "flowers": []}
+		]},
+		{"kind": "layers", "layers": [
+			{"kind": "cobbles", "seed": 30, "stones": ["#a08c7c", "#8c7868", "#74665a", "#5c5046"], "joint": "#1c1410"},
+			{"kind": "litter", "seed": 32, "leaves": ["#985828", "#a06838", "#784020", "#c08040"]}
+		]},
+		{"kind": "layers", "layers": [
+			{"kind": "cobbles", "seed": 30, "stones": ["#a08c7c", "#8c7868", "#74665a", "#5c5046"], "joint": "#1c1410"},
+			{"kind": "snow", "seed": 33, "whites": ["#f4ece4", "#e2dad2"], "shades": ["#a8b4c4", "#7c90b4"]}
+		]}
+	],
+	"spill": 4, "depth": 6, "radius": 4, "rim": 2, "edge": "#0c0806", "ledge_height": 0
+}

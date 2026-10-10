@@ -15,6 +15,11 @@ Third-party art used in Memorina, with the terms it was taken under.
   image generator as a reference (the AI-training clause). `legacy/wood.png` and `wall.png`
   are flat placeholders drawn by the same tool.
 
+- **Village ground** (`assets/sprites/world/tilesets/village/`) - our own art, painted by
+  `tools/art/assemble_tile_sheet.gd` from the recipes in `tools/art/tiles/village_*.json`
+  (`TilePainter`, `WangSheet`), its palette sampled from our approved concept
+  `tools/art/references/village_concept.png` (Codex).
+
 - **Props** (`assets/sprites/world/props/`: pressure plate, stone gate, lift, seesaw plank
   and fulcrum, drawbridge, hanging cocoon, root strand, fallen log, the rest bench, the door) - generated for this project with
   Codex CLI's image tool from the prompts in `tools/art/prompts/`, then keyed, snapped to

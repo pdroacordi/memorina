@@ -64,3 +64,32 @@ func test_pack_puts_tiles_and_ledges_in_their_slots() -> void:
 	var ledge := Vector2i(GroundAutotile.LEDGE_SINGLE, GroundAutotile.LEDGE_ROW + GroundAutotile.BAND_ROWS)
 	assert_that(sheet.get_pixel(ledge.x * TILE + 1, ledge.y * TILE + 1)).is_equal(Color8(0, 0, 255))
 	assert_float(sheet.get_pixel(1, 1).a).is_equal(0.0)
+
+func _flat(color: Color) -> Image:
+	var image := Image.create_empty(TILE, TILE, false, Image.FORMAT_RGBA8)
+	image.fill(color)
+	return image
+
+## A full tile is the body itself: no edge, no rim, no lip inside the ground.
+func test_a_composed_full_tile_is_the_body() -> void:
+	var lip := Image.create_empty(TILE, 8, false, Image.FORMAT_RGBA8)
+	lip.fill(LIP)
+	var tiles := WangSheet.compose(_flat(GREY), lip, 4, 5, 3, Color8(0, 0, 0))
+	for y: int in TILE:
+		for x: int in TILE:
+			assert_that(tiles[GroundAutotile.FULL].get_pixel(x, y)).is_equal(GREY)
+
+func test_an_exposed_top_carries_the_lip_on_its_walk_line() -> void:
+	var lip := Image.create_empty(TILE, 8, false, Image.FORMAT_RGBA8)
+	lip.fill(LIP)
+	var top := WangSheet.compose(_flat(GREY), lip, 4, 5, 3, Color8(0, 0, 0))[GroundAutotile.SW | GroundAutotile.SE]
+	# The lip's walk line (its row 4) lies on the cell edge, the tile's midline; it spills 4 px into the air above.
+	assert_that(top.get_pixel(8, 16)).is_equal(LIP)
+	assert_that(top.get_pixel(8, 12)).is_equal(LIP)
+	assert_float(top.get_pixel(8, 11).a).is_equal(0.0)
+
+func test_an_outer_corner_is_rounded() -> void:
+	var tiles := WangSheet.compose(_flat(GREY), Image.create_empty(TILE, 8, false, Image.FORMAT_RGBA8), 4, 5, 3, Color8(0, 0, 0))
+	# Only NW solid: its outer corner is at the tile centre, so the pixel nearest the centre is cut.
+	assert_float(tiles[GroundAutotile.NW].get_pixel(15, 15).a).is_equal(0.0)
+	assert_float(tiles[GroundAutotile.NW].get_pixel(5, 5).a).is_equal(1.0)

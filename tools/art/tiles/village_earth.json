@@ -1,0 +1,101 @@
+{
+	"about": "Village earth: dark loam under the cobbled street, after tools/art/references/village_concept.png (approved 2026-10-08).",
+	"body": {
+		"kind": "noise",
+		"seed": 7,
+		"ramp": [
+			"#160e0b",
+			"#1d1410",
+			"#251912",
+			"#2f2117",
+			"#3a2a1d"
+		]
+	},
+	"variants": [
+		{
+			"seed": 11,
+			"count": 3,
+			"kinds": [
+				"pebble",
+				"root",
+				"sprig"
+			]
+		},
+		{
+			"seed": 12,
+			"count": 3,
+			"kinds": [
+				"sprig",
+				"pebble"
+			]
+		},
+		{
+			"seed": 13,
+			"count": 2,
+			"kinds": [
+				"root",
+				"pebble"
+			]
+		},
+		{
+			"seed": 14,
+			"count": 3,
+			"kinds": [
+				"pebble",
+				"sprig",
+				"root"
+			]
+		}
+	],
+	"decor_colors": {
+		"pebble": "#86705e",
+		"root": "#8a6a4c",
+		"sprig": "#4c5a1c"
+	},
+	"lips": [
+		{
+			"kind": "grass",
+			"seed": 21,
+			"greens": [
+				"#1c2410",
+				"#283010",
+				"#384010",
+				"#485018",
+				"#5c6420"
+			],
+			"flowers": [
+				"#e0d8d0",
+				"#d8b040"
+			]
+		},
+		{
+			"kind": "litter",
+			"seed": 22,
+			"leaves": [
+				"#985828",
+				"#a06838",
+				"#784020",
+				"#c08040",
+				"#604028"
+			]
+		},
+		{
+			"kind": "snow",
+			"seed": 23,
+			"whites": [
+				"#f4ece4",
+				"#e2dad2"
+			],
+			"shades": [
+				"#a8b4c4",
+				"#7c90b4"
+			]
+		}
+	],
+	"spill": 7,
+	"depth": 4,
+	"radius": 5,
+	"rim": 3,
+	"edge": "#120a07",
+	"ledge_height": 10
+}

@@ -123,6 +123,7 @@ material in its `ground` custom data, and the map answers
 | `tileset =` | Looks | What it is |
 |---|---|---|
 | `legacy` | earth, stone, wood, wall | The pack's earth and stone converted to the corner-Wang contract; placeholder wood and wall. Every room until its biome's art lands. |
+| `village` | earth, stone, wood, wall | The Home Village: dark loam with a grass top, rounded street stones under a walk of pale cobbles, dark oak planks, plaster and timber walls (design 04 section 6; tools/art/tiles/village_*.json, after the approved concept). |
 <!-- /generated:tilesets -->
 
 ## The legend

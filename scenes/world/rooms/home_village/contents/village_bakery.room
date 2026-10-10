@@ -2,7 +2,7 @@
 
 [room]
 origin = 0, 0
-tileset = legacy
+tileset = village
 
 [grid]
 ####################

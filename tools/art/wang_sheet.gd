@@ -15,6 +15,8 @@ const _BLOB := {
 ## The legacy ledge strip: left, middle, right; the single piece reuses the left end.
 const _BLOB_LEDGE: Array[Vector2i] = [Vector2i(6, 5), Vector2i(7, 5), Vector2i(8, 5), Vector2i(6, 5)]
 const _QUADRANTS: Array[int] = [GroundAutotile.NW, GroundAutotile.NE, GroundAutotile.SW, GroundAutotile.SE]
+## PixelLab's corner names and our mask bits.
+const _CORNER_KEYS := {"NW": GroundAutotile.NW, "NE": GroundAutotile.NE, "SW": GroundAutotile.SW, "SE": GroundAutotile.SE}
 
 
 ## The 16 tiles (index = mask; mask 0 is empty) of one band, cut from the legacy sheet's block at `column0`.
@@ -71,6 +73,167 @@ static func placeholder_ledge(fill: Color, lip: Color) -> Array[Image]:
 		pieces.append(tile)
 	return pieces
 
+## The 16 tiles (index = mask) of a PixelLab v2 sidescroller tileset result; a corner is solid where it is `lower`.
+static func tiles_from_pixellab(result: Dictionary) -> Array[Image]:
+	var tiles: Array[Image] = []
+	tiles.resize(16)
+	for entry: Dictionary in result["tileset"]["tiles"]:
+		var corners: Dictionary = entry["corners"]
+		var mask := 0
+		for key: String in _CORNER_KEYS:
+			if corners[key] == "lower":
+				mask |= _CORNER_KEYS[key]
+		var image := Image.new()
+		image.load_png_from_buffer(Marshalls.base64_to_raw(entry["image"]["base64"]))
+		image.convert(Image.FORMAT_RGBA8)
+		tiles[mask] = image
+	return tiles
+
+## Tiles composed from a seamless 32 px `body`: exposed faces get `radius` px rounded outer corners, an `edge`
+## outline and a `rim` px darker band; every exposed top gets `lip`, a 32 px wide strip whose walk line is its row `spill`.
+static func compose(body: Image, lip: Image, spill: int, radius: int, rim: int, edge: Color) -> Array[Image]:
+	var tiles: Array[Image] = []
+	for mask: int in 16:
+		var tile := _empty()
+		for y: int in TILE:
+			for x: int in TILE:
+				var quadrant := _quadrant_at(x, y)
+				if mask & quadrant == 0:
+					continue
+				var d := _edge_distance(mask, quadrant, x, y, radius)
+				if d < 0:
+					continue
+				var color := body.get_pixel(x, y)
+				if d == 0:
+					color = edge
+				elif d < rim:
+					color = color.darkened(0.35 * (1.0 - float(d) / rim))
+				tile.set_pixel(x, y, color)
+		_lay_lip(tile, mask, lip, spill)
+		tiles.append(tile)
+	return tiles
+
+## Ledge pieces (left, middle, right, single): the body's top `height` rows, rounded and rimmed at open ends, with `lip` on top.
+static func compose_ledge(body: Image, lip: Image, spill: int, height: int, radius: int, rim: int, edge: Color) -> Array[Image]:
+	var pieces: Array[Image] = []
+	for piece: int in 4:
+		var open_left := piece in [GroundAutotile.LEDGE_LEFT, GroundAutotile.LEDGE_SINGLE]
+		var open_right := piece in [GroundAutotile.LEDGE_RIGHT, GroundAutotile.LEDGE_SINGLE]
+		var tile := _empty()
+		for y: int in height:
+			for x: int in TILE:
+				var dx := 99
+				if open_left:
+					dx = mini(dx, x)
+				if open_right:
+					dx = mini(dx, TILE - 1 - x)
+				var dy := height - 1 - y
+				var d := mini(dx, dy)
+				if dx < radius and dy < radius:
+					var cx := radius - dx - 0.5
+					var cy := radius - dy - 0.5
+					var arc := sqrt(cx * cx + cy * cy)
+					if arc > radius:
+						continue
+					d = int(radius - arc)
+				var color := body.get_pixel(x, y)
+				if d == 0:
+					color = edge
+				elif d < rim:
+					color = color.darkened(0.35 * (1.0 - float(d) / rim))
+				tile.set_pixel(x, y, color)
+		for x: int in TILE:
+			if tile.get_pixel(x, 0).a > 0.0:
+				_lip_column(tile, lip, spill, x, 0)
+		pieces.append(tile)
+	return pieces
+
+## A 32 px strip of grass blades over a thin mat: the walk line is row `spill`, blades rise up to `spill` px above it.
+## Seamless sideways; `rng_seed` fixes it.
+static func blade_strip(rng_seed: int, greens: PackedColorArray, flowers: PackedColorArray, spill: int, depth: int) -> Image:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = rng_seed
+	var strip := Image.create_empty(TILE, spill + depth, false, Image.FORMAT_RGBA8)
+	var tufts := _periodic_curve(rng, 4)
+	for x: int in TILE:
+		for r: int in depth:
+			if r < 2 or rng.randf() < 0.55 - r * 0.15:
+				strip.set_pixel(x, spill + r, greens[mini(r, 1)])
+		if rng.randf() < 0.85:
+			# Tufts: heights follow a smooth periodic curve, so the top reads as clumps, not a comb.
+			var blade := clampi(int(round(spill * tufts[x])) + rng.randi_range(-1, 0), 1, spill)
+			for h: int in blade:
+				strip.set_pixel(x, spill - 1 - h, greens[clampi(1 + h * (greens.size() - 1) / maxi(blade, 1), 1, greens.size() - 1)])
+			if not flowers.is_empty() and blade >= spill - 1 and rng.randf() < 0.12:
+				strip.set_pixel(x, spill - blade, flowers[rng.randi() % flowers.size()])
+	return strip
+
+## A 32 px strip of small laid cobbles on the walk line `spill`: ovals 4-6 px wide and 3 px tall in `stones`
+## (light to dark), dark joints; it covers the top `depth` px of the body.
+static func cobble_strip(rng_seed: int, stones: PackedColorArray, joint: Color, spill: int, depth: int) -> Image:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = rng_seed
+	var strip := Image.create_empty(TILE, spill + depth, false, Image.FORMAT_RGBA8)
+	for row: int in maxi(1, depth / 3):
+		var top := spill + row * 3
+		var x := rng.randi_range(0, 3)
+		while x < TILE + 4:
+			var width := rng.randi_range(4, 6)
+			var base := rng.randi_range(0, stones.size() - 2)
+			for dx: int in width:
+				for dy: int in 3:
+					var px := (x + dx) % TILE
+					var corner := (dx == 0 or dx == width - 1) and dy != 1
+					var color := joint if dx == width - 1 or corner else stones[clampi(base + dy, 0, stones.size() - 1)]
+					strip.set_pixel(px, top + dy, color)
+			x += width
+	return strip
+
+## `strips` blended in order: a cobble walk under a fringe of moss, say.
+static func layered(strips: Array[Image]) -> Image:
+	var out := Image.create_empty(TILE, strips[0].get_height(), false, Image.FORMAT_RGBA8)
+	for strip: Image in strips:
+		for y: int in mini(strip.get_height(), out.get_height()):
+			for x: int in TILE:
+				var color := strip.get_pixel(x, y)
+				if color.a > 0.0:
+					out.set_pixel(x, y, out.get_pixel(x, y).blend(color))
+	return out
+
+## A 32 px strip of leaf litter (2 px leaves) around the walk line `spill`, a few loose leaves above it.
+static func litter_strip(rng_seed: int, leaves: PackedColorArray, spill: int, depth: int) -> Image:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = rng_seed
+	var strip := Image.create_empty(TILE, spill + depth, false, Image.FORMAT_RGBA8)
+	for i: int in 70:
+		var x := rng.randi() % TILE
+		var y := spill - 2 + rng.randi_range(0, depth + 1)
+		if rng.randf() < 0.12:
+			y = rng.randi_range(0, spill - 2)
+		var color := leaves[rng.randi() % leaves.size()]
+		for dx: int in 2:
+			var px := (x + dx) % TILE
+			if y >= 0 and y < strip.get_height():
+				strip.set_pixel(px, y, color)
+	return strip
+
+## A 32 px strip of snow crust: a soft white top that rises up to `spill` px over the walk line, shaded blue below.
+static func snow_strip(rng_seed: int, whites: PackedColorArray, shades: PackedColorArray, spill: int, depth: int) -> Image:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = rng_seed
+	var strip := Image.create_empty(TILE, spill + depth, false, Image.FORMAT_RGBA8)
+	var drifts := _periodic_curve(rng, 2)
+	for x: int in TILE:
+		# The crust's height follows a smooth periodic curve, so it is seamless sideways and never a regular wave.
+		var rise := clampi(int(round(spill * drifts[x])) - 1, 1, spill)
+		for y: int in range(spill - rise, spill + depth):
+			var under := y - spill
+			var color := whites[0] if y == spill - rise else whites[mini(1, whites.size() - 1)]
+			if under >= depth - 2:
+				color = shades[mini(under - (depth - 2), shades.size() - 1)]
+			strip.set_pixel(x, y, color)
+	return strip
+
 ## A 128x576 sheet from three bands (spring, autumn, winter), each {"tiles": 16, "variants": up to 4, "ledge": 4 or none}.
 static func pack(bands: Array[Dictionary]) -> Image:
 	var sheet := Image.create_empty(BiomeTileset.SHEET_SIZE.x, BiomeTileset.SHEET_SIZE.y, false, Image.FORMAT_RGBA8)
@@ -105,6 +268,65 @@ static func _blob_quarter(tile: Image, sheet: Image, column0: int, band: int, ma
 	var source: Vector2i = _BLOB[quarter][case] + Vector2i(column0, band * GroundAutotile.BAND_ROWS)
 	var offset := Vector2i(HALF if quarter.ends_with("e") else 0, HALF if quarter.begins_with("s") else 0)
 	tile.blit_rect(sheet, Rect2i(source * TILE + offset, Vector2i(HALF, HALF)), _origin(corner))
+
+## Px from (x, y) to its quadrant's exposed edge on the tile midlines (0 = the edge pixel); -1 where a rounded corner cuts.
+static func _edge_distance(mask: int, quadrant: int, x: int, y: int, radius: int) -> int:
+	var left := x < HALF
+	var top := y < HALF
+	var h_open := mask & _horizontal_partner(quadrant) == 0
+	var v_open := mask & _vertical_partner(quadrant) == 0
+	var dx := HALF - 1 - x if left else x - HALF
+	var dy := HALF - 1 - y if top else y - HALF
+	if h_open and v_open and dx < radius and dy < radius:
+		var cx := radius - dx - 0.5
+		var cy := radius - dy - 0.5
+		var arc := sqrt(cx * cx + cy * cy)
+		if arc > radius:
+			return -1
+		return int(radius - arc)
+	var d := 99
+	if h_open:
+		d = mini(d, dx)
+	# A bottom quadrant open above is a top face: its lip draws the edge.
+	if v_open and top:
+		d = mini(d, dy)
+	return d
+
+## Lays `lip` along every exposed top of `tile`, following a rounded corner's curve.
+static func _lay_lip(tile: Image, mask: int, lip: Image, spill: int) -> void:
+	for x: int in TILE:
+		var quadrant := GroundAutotile.SW if x < HALF else GroundAutotile.SE
+		if mask & quadrant == 0 or mask & _vertical_partner(quadrant) != 0:
+			continue
+		for y: int in range(HALF, TILE):
+			if tile.get_pixel(x, y).a > 0.0:
+				_lip_column(tile, lip, spill, x, y)
+				break
+
+## Blends `lip`'s column x over `tile` with the lip's walk line at `surface`.
+static func _lip_column(tile: Image, lip: Image, spill: int, x: int, surface: int) -> void:
+	for r: int in lip.get_height():
+		var y := surface - spill + r
+		if y < 0 or y >= TILE:
+			continue
+		var color := lip.get_pixel(x, r)
+		if color.a > 0.0:
+			tile.set_pixel(x, y, tile.get_pixel(x, y).blend(color))
+
+## 32 values in 0.35..1 along a smooth curve with `bumps` bumps, wrapping at 32.
+static func _periodic_curve(rng: RandomNumberGenerator, bumps: int) -> PackedFloat32Array:
+	var phases := [rng.randf() * TAU, rng.randf() * TAU]
+	var values := PackedFloat32Array()
+	for x: int in TILE:
+		var t := TAU * x / TILE
+		var v := 0.5 + 0.3 * sin(bumps * t + phases[0]) + 0.2 * sin((bumps * 2 + 1) * t + phases[1])
+		values.append(clampf(0.35 + 0.65 * v, 0.35, 1.0))
+	return values
+
+static func _quadrant_at(x: int, y: int) -> int:
+	if y < HALF:
+		return GroundAutotile.NW if x < HALF else GroundAutotile.NE
+	return GroundAutotile.SW if x < HALF else GroundAutotile.SE
 
 static func _vertical_partner(quadrant: int) -> int:
 	match quadrant:
