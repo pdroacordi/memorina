@@ -1,6 +1,6 @@
 ---
-preamble: 16-bit pixel art for a 2D side-view metroidvania set in a lived-in medieval valley, crisp hard pixels, no anti-aliasing, no smooth gradients, simple readable shapes with clear silhouettes, limited palette of about 16 colours, base colours at MEDIUM brightness, no baked lighting, glow or cast shadows, dark brown 1 px outline on gameplay objects, no text
-negative: blurry, anti-aliased, smooth gradient, photorealistic, painterly, 3d render, text, watermark, signature, background scenery, frame border, cropped, noisy dithering, neon colours, pure black outline, baked lighting, very dark image
+preamble: minimalist 16-bit pixel art for a 2D side-view metroidvania set in a lived-in medieval valley, crisp hard pixels, no anti-aliasing, no smooth gradients, simple flat shapes with clear silhouettes and few details, limited palette of about 16 colours, base colours at MEDIUM brightness, no outlines, no baked lighting, glow or cast shadows, no text
+negative: blurry, anti-aliased, smooth gradient, photorealistic, painterly, 3d render, text, watermark, signature, background scenery, frame border, cropped, noisy dithering, busy texture, speckle, neon colours, black outline, outlines, baked lighting, very dark image
 ---
 The shared preamble every generator prompt in this library is appended to
 (tools/pixellab/pixellab.ps1 -Prompt, the codex-consult image mode). Change it
@@ -12,6 +12,8 @@ game pixels - the density Ivo's sprites already have. A 32 px tile is drawn at
 16 art px, a 96 px sprite at 48. Mixing densities (a 2x character on 1x ground)
 reads as wrong however good each piece is; `systems/art-pipeline` has the rule
 and the tools (`art_scale` in a recipe).
+
+**Minimal, no outlines** ("I think now it is kind of too polluted visually. Maybe give it a slightly more minimastic look? Also, take out the black outline (i don't like it), no outlines.", user, 2026-10-10): flat shapes, few colours per surface, no speckle, and no outline on anything; a face is marked only by a soft shade.
 
 **The rules, after FAG-orbita's pipeline** (the user's reference, 2026-10-10):
 - 16-bit pixel art, crisp hard pixels, a limited palette per biome (about 16

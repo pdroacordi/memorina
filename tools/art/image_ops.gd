@@ -53,6 +53,59 @@ static func quantize(image: Image, palette: PackedColorArray) -> Image:
 			out.set_pixel(x, y, cache[key])
 	return out
 
+## Each pixel takes the most common colour of its 3x3 neighbourhood, `passes` times, wrapping at the edges so a
+## seamless tile stays seamless: lone pixels go, flat clusters grow (a minimal look).
+static func majority(image: Image, passes: int) -> Image:
+	var out := image.duplicate() as Image
+	var w := out.get_width()
+	var h := out.get_height()
+	for pass_index: int in passes:
+		var source := out.duplicate() as Image
+		for y: int in h:
+			for x: int in w:
+				var counts := {}
+				for dy: int in [-1, 0, 1]:
+					for dx: int in [-1, 0, 1]:
+						var key := source.get_pixel(posmod(x + dx, w), posmod(y + dy, h)).to_rgba32()
+						counts[key] = counts.get(key, 0) + (2 if dx == 0 and dy == 0 else 1)
+				var best: int = source.get_pixel(x, y).to_rgba32()
+				for key: int in counts:
+					if counts[key] > counts[best] or (counts[key] == counts[best] and key < best):
+						best = key
+				out.set_pixel(x, y, Color.hex(best))
+	return out
+
+## The `count` colours that best stand for `image`'s opaque pixels: k-means seeded with its most frequent colours,
+## so the result is the same on every run.
+static func palette_of(image: Image, count: int) -> PackedColorArray:
+	var tally := {}
+	for y: int in image.get_height():
+		for x: int in image.get_width():
+			var c := image.get_pixel(x, y)
+			if c.a >= 0.5:
+				var key := c.to_rgba32()
+				tally[key] = tally.get(key, 0) + 1
+	var keys := tally.keys()
+	keys.sort_custom(func(a: int, b: int) -> bool: return tally[a] > tally[b] or (tally[a] == tally[b] and a < b))
+	var centres: Array[Color] = []
+	for i: int in mini(count, keys.size()):
+		centres.append(Color.hex(keys[i]))
+	for round_index: int in 8:
+		var sums: Array[Vector4] = []
+		sums.resize(centres.size())
+		sums.fill(Vector4.ZERO)
+		for key: int in keys:
+			var c := Color.hex(key)
+			var best := 0
+			for i: int in centres.size():
+				if _distance(c, centres[i]) < _distance(c, centres[best]):
+					best = i
+			sums[best] += Vector4(c.r, c.g, c.b, 1.0) * tally[key]
+		for i: int in centres.size():
+			if sums[i].w > 0.0:
+				centres[i] = Color(sums[i].x / sums[i].w, sums[i].y / sums[i].w, sums[i].z / sums[i].w)
+	return PackedColorArray(centres)
+
 static func nearest(color: Color, palette: PackedColorArray) -> Color:
 	var best := palette[0]
 	var best_distance := INF

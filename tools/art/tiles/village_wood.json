@@ -36,7 +36,8 @@
 	"depth": 2,
 	"radius": 1,
 	"rim": 1,
-	"rim_dark": 0.35,
-	"edge": "#24160c",
-	"ledge_height": 4
+	"rim_dark": 0.25,
+	"edge": "none",
+	"ledge_height": 4,
+	"colors": 4
 }

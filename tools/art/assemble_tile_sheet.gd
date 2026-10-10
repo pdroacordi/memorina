@@ -62,18 +62,25 @@ func _init() -> void:
 
 func _composed(recipe: Dictionary) -> Array[Dictionary]:
 	var body := _body(recipe["body"])
+	# "colors": the body is reduced to that many colours, and its variants to the same palette, so they still agree.
+	var palette := PackedColorArray()
+	if recipe.has("colors"):
+		palette = _contrasted(ImageOps.palette_of(body, int(recipe["colors"])), float(recipe.get("contrast", 1.0)))
+		body = ImageOps.majority(ImageOps.quantize(body, palette), int(recipe.get("smooth", 0)))
 	var spill := int(recipe.get("spill", 6))
 	var depth := int(recipe.get("depth", 4))
 	var radius := int(recipe.get("radius", 5))
 	var rim := int(recipe.get("rim", 3))
-	var edge := Color.html(recipe.get("edge", "#140c08"))
+	var edge_spec: String = recipe.get("edge", "none")
+	var edge := Color(0, 0, 0, 0) if edge_spec == "none" else Color.html(edge_spec)
 	var rim_dark := float(recipe.get("rim_dark", 0.35))
 	var ledge_height := int(recipe.get("ledge_height", 0))
 	var variants: Array[Image] = []
 	var decor := _decor_colors(recipe.get("decor_colors", {}))
 	for variant: Dictionary in recipe.get("variants", []):
 		if variant.has("path"):
-			variants.append(_body(variant))
+			var image := _body(variant)
+			variants.append(ImageOps.majority(ImageOps.quantize(image, palette), int(recipe.get("smooth", 0))) if not palette.is_empty() else image)
 		else:
 			variants.append(TilePainter.decorated(body, int(variant["seed"]), int(variant["count"]), PackedStringArray(variant["kinds"]), decor))
 	var lips: Array = recipe.get("lips", [])
@@ -107,6 +114,18 @@ func _body(spec: Dictionary) -> Image:
 	assert(image != null and image.get_size() == Vector2i(WangSheet.tile_px, WangSheet.tile_px), "a png body must be one tile at the art scale")
 	image.convert(Image.FORMAT_RGBA8)
 	return image
+
+## `palette` pulled toward its mean by `amount` (1 keeps it, 0 makes one colour): a calm, near-flat surface.
+func _contrasted(palette: PackedColorArray, amount: float) -> PackedColorArray:
+	var mean := Vector3.ZERO
+	for c: Color in palette:
+		mean += Vector3(c.r, c.g, c.b)
+	mean /= palette.size()
+	var out := PackedColorArray()
+	for c: Color in palette:
+		var v := mean + (Vector3(c.r, c.g, c.b) - mean) * amount
+		out.append(Color(v.x, v.y, v.z))
+	return out
 
 func _lip(spec: Dictionary, spill: int, depth: int) -> Image:
 	var rng_seed := int(spec.get("seed", 1))

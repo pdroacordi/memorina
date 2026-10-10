@@ -115,7 +115,8 @@ static func compose(body: Image, lip: Image, spill: int, radius: int, rim: int, 
 				if d < 0:
 					continue
 				var color := body.get_pixel(x, y)
-				if d == 0:
+				# A transparent edge means no outline ("no outlines", user, 2026-10-10): the rim's shade alone marks the face.
+				if d == 0 and edge.a > 0.0:
 					color = edge
 				elif d < rim:
 					color = color.darkened(rim_dark * (1.0 - float(d) / rim))
@@ -148,7 +149,7 @@ static func compose_ledge(body: Image, lip: Image, spill: int, height: int, radi
 						continue
 					d = int(radius - arc)
 				var color := body.get_pixel(x, y)
-				if d == 0:
+				if d == 0 and edge.a > 0.0:
 					color = edge
 				elif d < rim:
 					color = color.darkened(0.35 * (1.0 - float(d) / rim))

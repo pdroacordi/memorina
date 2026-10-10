@@ -17,7 +17,7 @@
 				"#76923a"
 			],
 			"flowers": [],
-			"density": 0.3,
+			"density": 0.25,
 			"ferns": 0
 		},
 		{
@@ -47,7 +47,10 @@
 	"depth": 2,
 	"radius": 2,
 	"rim": 1,
-	"rim_dark": 0.35,
-	"edge": "#24180e",
-	"ledge_height": 0
+	"rim_dark": 0.25,
+	"edge": "none",
+	"ledge_height": 0,
+	"colors": 5,
+	"smooth": 1,
+	"contrast": 0.75
 }

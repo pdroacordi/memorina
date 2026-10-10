@@ -13,8 +13,9 @@
 	"spill": 1,
 	"depth": 1,
 	"radius": 1,
-	"rim": 1,
-	"rim_dark": 0.3,
-	"edge": "#24160c",
-	"ledge_height": 0
+	"rim": 0,
+	"rim_dark": 0.0,
+	"edge": "none",
+	"ledge_height": 0,
+	"colors": 4
 }

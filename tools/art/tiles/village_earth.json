@@ -24,11 +24,10 @@
 				"#76923a"
 			],
 			"flowers": [
-				"#efe6d6",
-				"#e8c040"
+				"#efe6d6"
 			],
-			"density": 0.95,
-			"ferns": 1
+			"density": 0.7,
+			"ferns": 0
 		},
 		{
 			"kind": "litter",
@@ -56,8 +55,11 @@
 	"spill": 4,
 	"depth": 2,
 	"radius": 3,
-	"rim": 2,
-	"rim_dark": 0.4,
-	"edge": "#2a170c",
-	"ledge_height": 5
+	"rim": 1,
+	"rim_dark": 0.25,
+	"edge": "none",
+	"ledge_height": 5,
+	"colors": 3,
+	"smooth": 3,
+	"contrast": 0.45
 }
