@@ -15,6 +15,8 @@ Third-party art used in Memorina, with the terms it was taken under.
   image generator as a reference (the AI-training clause). `legacy/wood.png` and `wall.png`
   are flat placeholders drawn by the same tool.
 
+- **Village fronts, the door and the village backdrop** (`assets/sprites/world/props/village/`, `assets/sprites/world/props/door/door.png`, `assets/sprites/world/background/village_valley/`) - Codex image generation from the prompts in `tools/art/prompts/`, with our approved concept and our own village tiles as the only references; the raw pictures are kept in `tools/art/sources/` and cut by `tools/art/cut_facades.py` and `tools/art/cut_backdrop.py` (the sky is drawn by the latter).
+
 - **Placeholder backdrops** (`assets/sprites/world/background/{village_strata,earth_caves,ice_caves,basalt_caves,interior_timber,interior_stone}/`) are drawn by `tools/art/draw_backdrop_placeholder.gd` until their Codex art.
 
 - **Village ground** (`assets/sprites/world/tilesets/village/`) - the soil and cobble textures are Codex

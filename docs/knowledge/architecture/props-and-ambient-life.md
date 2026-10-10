@@ -307,6 +307,8 @@ the region never learns props exist). `AmbientMotion` pulls `MemoryField.sample`
 
 ## Village props (for WORLD-11)
 
+> **Revision (2026-10-10, WORLD-11).** The street is flat (WORLD-20), so a facade is sized by its doorway (64 px), not a roof run on a ledge row, and drawn at 2x. Built sizes: `ivo_house_facade` 238x218, `bell_tower_facade` 100x266 (new: the tower is a door interior), `tavern_facade` 356x246 at door col 38 (moved from 36 to clear the well), `elder_house_facade` 246x220, `bakery_facade` 220x166, `empty_house_facade` 232x190; `systems/props` (Facades) is the contract. The table below keeps the planned 1x sizes for the props not yet built.
+
 Size is one frame at 1x. F frames, B bands. Every one is a contract in `tools/art/prompts/`.
 
 | id | what | size | F | B | source |

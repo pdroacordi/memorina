@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="BackdropSet" format=3]
+
+[ext_resource type="Script" path="res://resources/world/backdrops/backdrop_set.gd" id="1_set"]
+[ext_resource type="Script" path="res://resources/world/backdrops/backdrop_layer.gd" id="2_layer"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/village_valley/sky.png" id="3_sky"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/village_valley/mountains.png" id="4_mountains"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/village_valley/hills.png" id="5_hills"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/village_valley/trees.png" id="6_trees"]
+
+[sub_resource type="Resource" id="sky"]
+script = ExtResource("2_layer")
+texture = ExtResource("3_sky")
+scroll_scale = Vector2(0.05, 0.03)
+horizon_row = 229
+fill_above = 1
+fill_below = 1
+distance = 1.0
+
+[sub_resource type="Resource" id="mountains"]
+script = ExtResource("2_layer")
+texture = ExtResource("4_mountains")
+scroll_scale = Vector2(0.12, 0.07)
+horizon_row = 229
+distance = 0.8
+
+[sub_resource type="Resource" id="hills"]
+script = ExtResource("2_layer")
+texture = ExtResource("5_hills")
+scroll_scale = Vector2(0.3, 0.18)
+horizon_row = 229
+distance = 0.5
+
+[sub_resource type="Resource" id="trees"]
+script = ExtResource("2_layer")
+texture = ExtResource("6_trees")
+scroll_scale = Vector2(0.55, 0.32)
+horizon_row = 229
+distance = 0.2
+
+[resource]
+script = ExtResource("1_set")
+layers = Array[ExtResource("2_layer")]([SubResource("sky"), SubResource("mountains"), SubResource("hills"), SubResource("trees")])
+horizon_screen_y = 191.0

@@ -139,7 +139,7 @@ INTERIORS = [
 # A door stands on its room's bottom floor unless a row is given as "row".
 DOORS = [
     ("village_square", 8, "village_house", 4, "village_house_door", {}, {"arrive_facing": 1}),
-    ("village_square", 36, "village_tavern", 4, "village_tavern_door", {}, {"arrive_facing": 1}),
+    ("village_square", 38, "village_tavern", 4, "village_tavern_door", {}, {"arrive_facing": 1}),
     ("village_square", 50, "village_elder", 4, "village_elder_door", {}, {"arrive_facing": 1}),
     ("village_lane_west", 12, "village_bakery", 4, "village_bakery_door", {}, {"arrive_facing": 1}),
     ("village_lane_west", 30, "village_empty_house", 4, "village_empty_house_door", {}, {"arrive_facing": 1}),

@@ -40,12 +40,40 @@ func test_every_edge_row_is_one_colour_per_band() -> void:
 					problems.append("%s band %d: bottom row is not one colour" % [layer.texture.resource_path, band])
 	assert_array(Array(problems)).is_empty()
 
+## A repeating layer's wrap differs from its neighbour no more than the art's own column steps do: a straight cut
+## at the wrap shows every repeat (bugs/the-village-valley-hills-show-a-vertical-cut-where-they-wrap).
+func test_every_repeating_layer_wraps_without_a_cut() -> void:
+	var problems := PackedStringArray()
+	for backdrop: BackdropSet in _sets():
+		for layer: BackdropLayer in backdrop.layers:
+			if not layer.repeat_x:
+				continue
+			var image := layer.texture.get_image()
+			var strip := layer.strip_size()
+			for band: int in layer.band_count:
+				var top := band * strip.y
+				var steepest := 0
+				# Every art-pixel boundary (odd to even columns, so a 2x sheet compares across art pixels).
+				for x: int in range(1, strip.x - 2, 2):
+					steepest = maxi(steepest, _differing_rows(image, x, x + 1, top, strip.y))
+				var wrap := _differing_rows(image, strip.x - 1, 0, top, strip.y)
+				if wrap > steepest:
+					problems.append("%s band %d: %d rows change at the wrap, at most %d inside" % [layer.texture.resource_path, band, wrap, steepest])
+	assert_array(Array(problems)).is_empty()
+
 func test_no_room_places_its_own_parallax_layers() -> void:
 	var offenders := PackedStringArray()
 	for path: String in _contents_scenes(ROOMS_DIR):
 		if FileAccess.get_file_as_string(path).contains("type=\"Parallax2D\""):
 			offenders.append(path)
 	assert_array(Array(offenders)).is_empty()
+
+func _differing_rows(image: Image, a: int, b: int, top: int, rows: int) -> int:
+	var count := 0
+	for y: int in range(top, top + rows):
+		if image.get_pixel(a, y) != image.get_pixel(b, y):
+			count += 1
+	return count
 
 func _flat(image: Image, row: int) -> bool:
 	var first := image.get_pixel(0, row)
