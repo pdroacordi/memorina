@@ -91,7 +91,7 @@ static func tiles_from_pixellab(result: Dictionary) -> Array[Image]:
 
 ## Tiles composed from a seamless 32 px `body`: exposed faces get `radius` px rounded outer corners, an `edge`
 ## outline and a `rim` px darker band; every exposed top gets `lip`, a 32 px wide strip whose walk line is its row `spill`.
-static func compose(body: Image, lip: Image, spill: int, radius: int, rim: int, edge: Color) -> Array[Image]:
+static func compose(body: Image, lip: Image, spill: int, radius: int, rim: int, edge: Color, rim_dark: float = 0.35) -> Array[Image]:
 	var tiles: Array[Image] = []
 	for mask: int in 16:
 		var tile := _empty()
@@ -107,7 +107,7 @@ static func compose(body: Image, lip: Image, spill: int, radius: int, rim: int, 
 				if d == 0:
 					color = edge
 				elif d < rim:
-					color = color.darkened(0.35 * (1.0 - float(d) / rim))
+					color = color.darkened(rim_dark * (1.0 - float(d) / rim))
 				tile.set_pixel(x, y, color)
 		_lay_lip(tile, mask, lip, spill)
 		tiles.append(tile)
@@ -150,23 +150,46 @@ static func compose_ledge(body: Image, lip: Image, spill: int, height: int, radi
 
 ## A 32 px strip of grass blades over a thin mat: the walk line is row `spill`, blades rise up to `spill` px above it.
 ## Seamless sideways; `rng_seed` fixes it.
-static func blade_strip(rng_seed: int, greens: PackedColorArray, flowers: PackedColorArray, spill: int, depth: int) -> Image:
+## `density` (0..1) is the share of columns with a blade; `ferns` is how many fern fronds rise from the mat.
+static func blade_strip(rng_seed: int, greens: PackedColorArray, flowers: PackedColorArray, spill: int, depth: int,
+		density: float = 0.85, ferns: int = 0) -> Image:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = rng_seed
 	var strip := Image.create_empty(TILE, spill + depth, false, Image.FORMAT_RGBA8)
 	var tufts := _periodic_curve(rng, 4)
+	var top := greens.size() - 1
 	for x: int in TILE:
-		for r: int in depth:
-			if r < 2 or rng.randf() < 0.55 - r * 0.15:
-				strip.set_pixel(x, spill + r, greens[mini(r, 1)])
-		if rng.randf() < 0.85:
+		# The mat: a lit top row, a darker one, then sparse roots of green into the soil. A sparse fringe
+		# (density under 0.5, moss on cobbles) has none, so what it grows on shows.
+		for r: int in depth if density >= 0.5 else 0:
+			var color := greens[mini(2, top)] if r == 0 else greens[1] if r == 1 else greens[0]
+			if r < 2 or rng.randf() < 0.6 - r * 0.15:
+				strip.set_pixel(x, spill + r, color)
+		if rng.randf() < density:
 			# Tufts: heights follow a smooth periodic curve, so the top reads as clumps, not a comb.
 			var blade := clampi(int(round(spill * tufts[x])) + rng.randi_range(-1, 0), 1, spill)
 			for h: int in blade:
-				strip.set_pixel(x, spill - 1 - h, greens[clampi(1 + h * (greens.size() - 1) / maxi(blade, 1), 1, greens.size() - 1)])
-			if not flowers.is_empty() and blade >= spill - 1 and rng.randf() < 0.12:
+				strip.set_pixel(x, spill - 1 - h, greens[clampi(1 + h * top / maxi(blade, 1), 1, top)])
+			if not flowers.is_empty() and blade >= spill - 2 and rng.randf() < 0.18:
 				strip.set_pixel(x, spill - blade, flowers[rng.randi() % flowers.size()])
+	for i: int in ferns:
+		_fern(strip, rng.randi() % TILE, spill, greens)
 	return strip
+
+## A fern frond rising from the mat at x: a stem leaning sideways with leaflets on both sides, seamless around x.
+static func _fern(strip: Image, x: int, spill: int, greens: PackedColorArray) -> void:
+	var lean := 1 if x % 2 == 0 else -1
+	for h: int in spill:
+		var sx := posmod(x + lean * (h / 3), TILE)
+		var y := spill - 1 - h
+		var color := greens[clampi(1 + h * (greens.size() - 1) / spill, 1, greens.size() - 1)]
+		strip.set_pixel(sx, y, color)
+		if h % 2 == 0 and h < spill - 1:
+			strip.set_pixel(posmod(sx - 1, TILE), y, color.darkened(0.15))
+			strip.set_pixel(posmod(sx + 1, TILE), y, color.darkened(0.15))
+			if h < spill - 3:
+				strip.set_pixel(posmod(sx - 2, TILE), y + 1, color.darkened(0.3))
+				strip.set_pixel(posmod(sx + 2, TILE), y + 1, color.darkened(0.3))
 
 ## A 32 px strip of small laid cobbles on the walk line `spill`: ovals 4-6 px wide and 3 px tall in `stones`
 ## (light to dark), dark joints; it covers the top `depth` px of the body.
@@ -184,6 +207,9 @@ static func cobble_strip(rng_seed: int, stones: PackedColorArray, joint: Color, 
 				for dy: int in 3:
 					var px := (x + dx) % TILE
 					var corner := (dx == 0 or dx == width - 1) and dy != 1
+					# The walk's top row is bumpy: its stones' upper corners are air, not joint.
+					if corner and dy == 0 and row == 0:
+						continue
 					var color := joint if dx == width - 1 or corner else stones[clampi(base + dy, 0, stones.size() - 1)]
 					strip.set_pixel(px, top + dy, color)
 			x += width

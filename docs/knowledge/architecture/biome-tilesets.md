@@ -410,6 +410,10 @@ The characters are proposals; renaming one before it lands is free. `RoomLegend.
 - **Biome ids** are load-bearing strings in `.room` headers. Renaming a biome file fails `room_files_test` with "unknown tileset".
 - **The palette.** `palette.json` was extracted from pack art. The concept needs its own palette (question 4), and 64 colours may be too few for "detailed, painterly". Measure on the preview.
 
+## Style board (village, 2026-10-10)
+
+The first village board (`playtests/screenshots/2026-10-10-world07-legacy-tiles/village_style_board.png`) was answered "Push it closer (Recommended)": keep the painted-by-recipe approach, make the tiles richer (fuller grass and fern tufts, a clear pale cobble walk on stone tops, more earth detail, stronger edges) and show the board again before any other biome.
+
 ## Answers (user, 2026-10-08, round 2; design 04 §1)
 
 1. "No earth there": the Caldera and the Frost Edge draw only stone (basalt, sandstone, dark rock, ice); their biomes have no `earth` sheet, so `#` and `=` there are import errors.

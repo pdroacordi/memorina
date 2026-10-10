@@ -57,6 +57,7 @@ func _composed(recipe: Dictionary) -> Array[Dictionary]:
 	var radius := int(recipe.get("radius", 5))
 	var rim := int(recipe.get("rim", 3))
 	var edge := Color.html(recipe.get("edge", "#140c08"))
+	var rim_dark := float(recipe.get("rim_dark", 0.35))
 	var ledge_height := int(recipe.get("ledge_height", 0))
 	var variants: Array[Image] = []
 	var decor := _decor_colors(recipe.get("decor_colors", {}))
@@ -66,7 +67,7 @@ func _composed(recipe: Dictionary) -> Array[Dictionary]:
 	var bands: Array[Dictionary] = []
 	for band: int in BANDS:
 		var lip := _lip(lips[mini(band, lips.size() - 1)] if not lips.is_empty() else {}, spill, depth)
-		var entry := {"tiles": WangSheet.compose(body, lip, spill, radius, rim, edge), "variants": variants}
+		var entry := {"tiles": WangSheet.compose(body, lip, spill, radius, rim, edge, rim_dark), "variants": variants}
 		if ledge_height > 0:
 			entry["ledge"] = WangSheet.compose_ledge(body, lip, spill, ledge_height, radius, rim, edge)
 		bands.append(entry)
@@ -97,7 +98,8 @@ func _lip(spec: Dictionary, spill: int, depth: int) -> Image:
 	var rng_seed := int(spec.get("seed", 1))
 	match spec.get("kind", "none"):
 		"grass":
-			return WangSheet.blade_strip(rng_seed, _colors(spec["greens"]), _colors(spec.get("flowers", [])), spill, depth)
+			return WangSheet.blade_strip(rng_seed, _colors(spec["greens"]), _colors(spec.get("flowers", [])), spill, depth,
+					float(spec.get("density", 0.85)), int(spec.get("ferns", 0)))
 		"litter":
 			return WangSheet.litter_strip(rng_seed, _colors(spec["leaves"]), spill, depth)
 		"snow":

@@ -14,43 +14,50 @@
 	"variants": [
 		{
 			"seed": 11,
-			"count": 3,
+			"count": 5,
 			"kinds": [
 				"pebble",
 				"root",
-				"sprig"
+				"sprig",
+				"clod",
+				"grit"
 			]
 		},
 		{
 			"seed": 12,
-			"count": 3,
+			"count": 4,
 			"kinds": [
 				"sprig",
-				"pebble"
+				"pebble",
+				"clod"
 			]
 		},
 		{
 			"seed": 13,
-			"count": 2,
+			"count": 4,
 			"kinds": [
 				"root",
-				"pebble"
+				"grit",
+				"clod"
 			]
 		},
 		{
 			"seed": 14,
-			"count": 3,
+			"count": 5,
 			"kinds": [
 				"pebble",
 				"sprig",
-				"root"
+				"root",
+				"grit"
 			]
 		}
 	],
 	"decor_colors": {
 		"pebble": "#86705e",
 		"root": "#8a6a4c",
-		"sprig": "#4c5a1c"
+		"sprig": "#4c5a1c",
+		"clod": "#120b08",
+		"grit": "#5a4636"
 	},
 	"lips": [
 		{
@@ -59,14 +66,18 @@
 			"greens": [
 				"#1c2410",
 				"#283010",
-				"#384010",
-				"#485018",
-				"#5c6420"
+				"#3a4412",
+				"#4c5618",
+				"#606a22",
+				"#748030"
 			],
 			"flowers": [
-				"#e0d8d0",
-				"#d8b040"
-			]
+				"#e8e0d6",
+				"#d8b040",
+				"#e0d8d0"
+			],
+			"density": 0.95,
+			"ferns": 3
 		},
 		{
 			"kind": "litter",
@@ -92,10 +103,11 @@
 			]
 		}
 	],
-	"spill": 7,
+	"spill": 8,
 	"depth": 4,
 	"radius": 5,
 	"rim": 3,
 	"edge": "#120a07",
-	"ledge_height": 10
+	"ledge_height": 10,
+	"rim_dark": 0.45
 }

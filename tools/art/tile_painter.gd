@@ -125,6 +125,17 @@ static func decorated(body: Image, rng_seed: int, count: int, kinds: PackedStrin
 					x += 1
 					if rng.randf() < 0.4:
 						y = clampi(y + rng.randi_range(-1, 1), MARGIN, SIZE - MARGIN - 1)
+			"clod":
+				# A dark lump of soil with a lit top edge.
+				var clod: Color = colors.get("clod", Color.BLACK)
+				for dx: int in 3:
+					image.set_pixel(at.x + dx, at.y + 1, clod)
+					image.set_pixel(at.x + dx, at.y + 2, clod.darkened(0.3))
+				image.set_pixel(at.x + 1, at.y, clod.lightened(0.15))
+			"grit":
+				var grit: Color = colors.get("grit", Color.GRAY)
+				for k: int in 3:
+					image.set_pixel(at.x + rng.randi_range(0, 4), at.y + rng.randi_range(0, 5), grit)
 			"sprig":
 				# A small fern: a stem with alternating fronds, darker at the base.
 				var leaf: Color = colors.get("sprig", Color.DARK_OLIVE_GREEN)
