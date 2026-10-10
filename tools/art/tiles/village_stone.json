@@ -1,10 +1,20 @@
 {
-	"about": "Village stone: PixelLab tiles-pro mossy cobbles at 16 art px (tools/art/tiles/sources/village_cobbles_0.png), the street of tools/art/references/village_concept.png.",
+	"about": "Village stone: Codex mossy cobbles reduced to 16 art px (tools/art/tiles/sources/village_cobbles_0..3.png, from village_cobbles_codex_raw.png), the street of tools/art/references/village_concept.png.",
 	"art_scale": 2,
 	"body": {
 		"path": "res://tools/art/tiles/sources/village_cobbles_0.png"
 	},
-	"variants": [],
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/village_cobbles_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/village_cobbles_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/village_cobbles_3.png"
+		}
+	],
 	"lips": [
 		{
 			"kind": "grass",
@@ -50,8 +60,8 @@
 	"rim_dark": 0.25,
 	"edge": "none",
 	"ledge_height": 0,
-	"colors": 4,
+	"colors": 6,
 	"smooth": 1,
-	"contrast": 0.6,
+	"contrast": 0.8,
 	"saturation": 0.8
 }
