@@ -5,8 +5,10 @@ class_name FrostShell extends PulseEffect
 const LAYER := 1 << 3
 const INSIDE_MASK := (1 << 8) | (1 << 1)
 const SEGMENTS := 48
-## Exit clearance in px before a body is considered outside the shell.
+## Exit clearance in px before a body is considered outside the shell, measured from a body's origin.
 const CLEARANCE := 28.0
+## Px between a body's rect and the ring before a Character is let out: the collision safe margin.
+const RING_GAP := 2.0
 ## Seconds between rime crystal rerolls.
 const RIME_PERIOD := 0.25
 
@@ -108,13 +110,24 @@ func _refit(radius: float) -> void:
 		_segments[i].a = Vector2.from_angle(TAU * i / SEGMENTS) * radius
 		_segments[i].b = Vector2.from_angle(TAU * (i + 1) / SEGMENTS) * radius
 
+## Whether `rect` lies wholly outside a ring of `radius` around `centre`.
+static func clear_of(centre: Vector2, radius: float, rect: Rect2) -> bool:
+	return centre.clamp(rect.position, rect.end).distance_to(centre) > radius
+
 func _let_out(radius: float) -> void:
 	for body: PhysicsBody2D in _inside.duplicate():
 		if not is_instance_valid(body):
 			_inside.erase(body)
-		elif body.global_position.distance_to(global_position) > radius + CLEARANCE:
+		elif _is_clear(body, radius):
 			_collider.remove_collision_exception_with(body)
 			_inside.erase(body)
+
+# By the whole body where it has one: by the feet, Ivo leaving downward hung on the ring by his head
+# (bugs/leaving-a-redoma-shell-downward-catches-ivo-on-its-ring).
+func _is_clear(body: PhysicsBody2D, radius: float) -> bool:
+	if body is Character:
+		return clear_of(global_position, radius + RING_GAP, (body as Character).body_rect())
+	return body.global_position.distance_to(global_position) > radius + CLEARANCE
 
 func _hold_water_out(radius: float) -> void:
 	for member: Node in get_tree().get_nodes_in_group(WaterBody.GROUP):

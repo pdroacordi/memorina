@@ -359,6 +359,41 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - fishing well notch (1472..1536, y -1568); village square/mill seam x 1920 (floor y 288);
   - village_lane_west/woods_edge seam x -1280 (floor y 288).
 
+- **Learned 2026-10-10 (Orchards and Caldera traversal)**:
+  - **"Visible 1.00" does not mean "in bounds".** The camera yield follows Ivo anywhere, even in an endless
+    fall outside every room. For out-of-bounds checks, compare `pos` with the rooms' bounds, and watch for
+    `room=` staying unchanged while he is far outside it.
+  - **Gate checks need late double-jump presses.** A 0.3 + 0.35 s double jump (`djump` defaults) peaks ~241 px,
+    a full one (0.45 s, then 0.4 s at +0.55) ~270. A second press at +0.65-0.75 s reaches the same height
+    further out: it took the mill loft that +0.45/+0.55 missed. Sweep the second press from +0.45 to +0.75.
+  - **Open room tops at the world's edge are exits.** Wall climb is "hold into the wall, tap jump every
+    0.55 s" (~140 px/s). Under an overhang it bobs: let go, drift 0.3 s, double jump, then hold back into the
+    wall. Try it on every outer wall, and a double jump from every barrier top.
+  - **Spawn clear of overhead corners.** A `player_position` whose capsule (radius 11) overlaps a block's
+    corner above bumps the first jump. The terraces' east floor needs x <= -4087.
+  - **Pillow scripts:** `glob` needs `C:/...` paths, not Git Bash's `/c/...`. Never clear a scratch folder (the
+    hook blocks it); copy frames into a new folder instead.
+  - **Positions (world px):**
+    - terraces bench (-4784, -1248); crest cols 22-25 top -1536; crown one-way y -1792 (x -4384..-4064);
+    - mill town inn door x -6704 (prompt from x -6699, moving left), loft (-6100, -1472), gallery
+      x -6944..-6752 y -1472;
+    - windy gap east ledge x -6528..-6432 y -1632; arena barrier x -10208..-10176;
+    - chimney floor y 1888, climb shaft x -10656..-10560, pocket floor 1824;
+    - village cistern slab (1005, 672), with Redoma at that spot for the shaft;
+    - caldera dais (945, 1728); crater bench (-1264, 2208); bait brute x -5792;
+    - temple plate x 1952..1984 on the terrace y 1696.
+
+  - **Re-verification habits (same night):**
+    - After any geometry fix, re-run both directions of every leg the edit touches. A ledge pair meeting corner
+      to corner with less than 64 px between them seals a shaft (cistern V13/V15), and only a climb or descent
+      run shows it.
+    - Vendaval has a 48 px still eye and peaks 241 px out, so a load right beside Ivo does not move. Try the
+      song from below or across, not only from beside the load.
+    - In a gusty room (lake_well), jumping into a 3-cell ledge can fail every time. Walk in lulls, and count
+      tries before calling it impossible (45 here).
+    - A plain double jump above an open room top is a quick regression check for any "out of every room"
+      logic.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

@@ -74,10 +74,27 @@ func test_the_clamp_yields_to_keep_the_body_in_frame() -> void:
 	body.global_position = Vector2(600, 20)
 	add_child(body)
 	_camera.follow(body)
+	# A room above room A: the frame may yield up into it.
 	_camera.set_bounds(ROOM_A)
-	await get_tree().physics_frame
+	_camera.set_reach(ROOM_A.merge(Rect2(0, -384, 1280, 384)))
+	await _two_steps()
 	var view := _camera.view_rect()
 	assert_float(view.position.y).is_less_equal(body.body_rect().position.y - _camera.subject_margin + 0.5)
+
+## bugs/the-out-of-room-safety-net-fires-on-a-double-jump-above-an-open-room-top: with no room above, no void shows.
+func test_the_frame_never_yields_past_the_rooms() -> void:
+	var body := auto_free(BodySubject.new()) as BodySubject
+	body.global_position = Vector2(600, 20)
+	add_child(body)
+	_camera.follow(body)
+	_camera.set_bounds(ROOM_A)
+	await _two_steps()
+	assert_float(_camera.view_rect().position.y).is_greater_equal(ROOM_A.position.y - 0.5)
+
+## physics_frame is emitted before the step's nodes process: the second await is after the camera's first step.
+func _two_steps() -> void:
+	await get_tree().physics_frame
+	await get_tree().physics_frame
 
 ## A subject with a body, as Character has: 16x48 px standing on its position.
 class BodySubject extends Node2D:

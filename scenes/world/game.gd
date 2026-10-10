@@ -26,6 +26,8 @@ var _is_transitioning: bool      = false
 var _hazard_beat     : int       = 0
 ## Prevents room transitions while the death sequence is running.
 var _dying           : bool      = false
+## Ivo left every room; set until the hazard beat puts him back.
+var _lost            : bool      = false
 
 var _residency := RoomResidency.new()
 var _baseline_tween: Tween
@@ -55,18 +57,24 @@ func quit_game() -> void:
 func quit_to_title() -> void:
 	_swap_to_title.call_deferred()
 
-# Ivo leaves the current room only when his whole body is out of it: a hop that straddles a seam never flips
-# the room (bugs/a-hop-below-a-seam-flips-the-room-twice, bugs/walking-across-a-room-seam-fades-back-and-forth);
-# the camera keeps him in frame meanwhile. Walking across a seam neither fades nor stops him
-# (bugs/a-jump-across-a-horizontal-seam-loses-its-height-in-the-fade).
+# RoomExit decides when Ivo has left the current room, so a hop astride a seam never flips it
+# (bugs/a-hop-below-a-seam-flips-the-room-twice); the camera keeps him in frame meanwhile. Walking across
+# a seam neither fades nor stops him (bugs/a-jump-across-a-horizontal-seam-loses-its-height-in-the-fade).
 func _physics_process(_delta: float) -> void:
-	if _current_room == null or _is_transitioning or _dying:
+	if _current_room == null or _is_transitioning or _dying or _lost:
 		return
 	var body := _player.body_rect()
-	if _current_room.get_bounds().intersects(body):
+	var near := RoomResidency.touching(_current_room, get_tree().get_nodes_in_group(Room.GROUP))
+	_camera.set_reach(_reach_for(body, near))
+	if not RoomExit.has_left(_current_room.get_bounds(), body, _player.is_on_floor()):
 		return
 	var room := _room_at(body.get_center())
 	if room == null:
+		# Out of the world through a gap in its walls (bugs/wall-climb-leaves-the-world-over-the-cliff-chimneys-west-wall),
+		# not over an open top he falls back through (bugs/the-safety-net-fires-when-ivo-drops-across-a-seam-above-two-open-tops).
+		if RoomExit.is_lost(body, _bounds_of(near)):
+			_lost = true
+			_player.fall_out_of_world()
 		return
 	# A region seam cuts: its memory, season and weather would show mixed in a glide
 	# (bugs/a-neighbour-room-in-another-region-runs-on-the-current-regions-memory). So does a teleport.
@@ -105,6 +113,22 @@ func _enter_room(room: Room, glide: bool = false) -> void:
 	if not room.interior:
 		_screens.clear_map_anchor()
 
+## Where the camera may yield to keep Ivo whole: the current room and the rooms his body reaches into, never the void
+## (bugs/the-camera-reach-is-a-bounding-box-and-shows-the-void-over-an-open-top).
+func _reach_for(body: Rect2, near: Array[Room]) -> Rect2:
+	var reach := _current_room.get_bounds()
+	var touch := body.grow(_camera.subject_margin)
+	for room: Room in near:
+		if room.get_bounds().intersects(touch):
+			reach = reach.merge(room.get_bounds())
+	return reach
+
+func _bounds_of(rooms: Array[Room]) -> Array[Rect2]:
+	var bounds: Array[Rect2] = []
+	for room: Room in rooms:
+		bounds.append(room.get_bounds())
+	return bounds
+
 func _set_baseline(level: float, glide: bool) -> void:
 	if _baseline_tween:
 		_baseline_tween.kill()
@@ -127,6 +151,7 @@ func _on_player_fell_into_hazard() -> void:
 	# A hit during the fade can have killed him: a corpse is not put back.
 	if not _player.is_dead():
 		_player.respawn()
+		_lost = false
 		# Firm ground can be in another room: swap to it here, behind this
 		# beat's black, so its own trigger later finds it already current.
 		var room := _room_at(_player.global_position)

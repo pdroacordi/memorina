@@ -1,6 +1,6 @@
 ; lake_fishing_village.room - Vila dos Pescadores: stone quays and stilt decks over the dead lake (`w`), the
 ; fisher hut's door (facade cols 35-45) and the well's mouth (cols 28-31) into lake_well (design 04 section 3.5).
-; No gate: base kit. From lake_well's one-way the notch (cols 26-27, 2 rows up) and the west curb (3 more) lead back out.
+; No gate: base kit. Out of the well: lake_well's catch ledge, the notch (cols 26-27, floor flush with the seam), the floor; 3 rows each.
 
 [room]
 origin = 0, 0
@@ -14,10 +14,10 @@ S..........................................................S
 ..................======....................................
 ....========...................................===..........
 ............................................................
-................SSSS.....S......S.......E...................
+................SSSS............S.......E...................
 SSSSSSSSSSSSSSSSSSSSSSSSSS......SSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSS......SSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSS....SSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSS......SSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 [water]
 ............................................................

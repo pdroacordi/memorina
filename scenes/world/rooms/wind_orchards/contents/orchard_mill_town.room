@@ -1,24 +1,26 @@
-; orchard_mill_town.room - Vila dos Moinhos (design 04 section 3.6): a flat main street from the terraces (east) to the leaf path (west); inn door at col 30.
-; Soltar on the inn gallery (row 2) drops the drawbridge 18 cells east to the stone mill loft, nine rows above the yard and beyond every
-; jump: the shortcut up into orchard_counterweights, and from the bridge a double jump up the windy gap's chasm onto its east ledge.
+; orchard_mill_town.room - Vila dos Moinhos (design 04 section 3.6): flat main street from the terraces (east) to the leaf path (west); inn door at col 30.
+; Soltar on the inn roof drops the 6-cell drawbridge east (raised, it stands rows 0-5, inside this room). From its end a double jump
+; rises through the one-way loft (row 0, under the counterweights mouth) and lands on it. Raised, the bridge seals the roof's east end
+; against windy_gap's ledge; from the street and yard the loft is 288 and 352 px up (double jump 270).
+; The dovecote ledge (row 3) is the double-jump launch onto orchard_windy_gap's east ledge (cols 36-38, six rows up).
 
 [room]
 origin = 0, 0
 
 [grid]
-#..........................................................#
-#...........................D..............................#
-#......................======.................SSSSSS.......#
+#.............................................======.......#
 #..........................................................#
 #..........................................................#
-............................................................
-...SSSSSSSS.............SSSSSSSS............................
+#..............................=====.......................#
+#..........................................................#
+......................................D.....................
+...SSSSSSSS.............SSSSSSSSSSSSSSS.....................
 ...............SSSS.........................................
 ...............SSSS...........E.............................
-########################################..................##
-########################################..................##
+#####################################.....................##
+#####################################.....................##
 ############################################################
 
 [entities]
-28,1 = {"id": "mill_bridge", "length_cells": 18, "side": 1}
 30,8 = {"link": "orchard_inn_door", "to_room": "orchard_inn"}
+38,5 = {"id": "mill_bridge", "length_cells": 6, "side": 1}

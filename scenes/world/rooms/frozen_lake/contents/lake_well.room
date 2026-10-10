@@ -1,17 +1,17 @@
 ; lake_well.room - O Poco (design 04 section 3.5). Espacial 2 (design 02 section 8): Redoma at the bank's lip (col 15)
 ; dries the well (cols 16-18); Ivo drops in and walks west through the low mouth (rows 7-8) into the chamber.
-; Logico 1: a squall (x 64-480) sweeps chamber and bank; Redoma at the calm mouth shelters a Soltar that drops the curtain (col 2).
+; Logico 1: a squall (x 64-480, y 96-288) sweeps chamber and bank; Redoma at the calm mouth shelters a Soltar that drops the curtain (col 2).
 
 [room]
 origin = 0, 0
 
 [grid]
 SSSSSSSS....SSSSSSSS
-S.......====.......S
 S..................S
 S..................S
+S============......S
 S..................S
-SSSSSSSSSSSSSSSS...S
+S............SSS...S
 SSSSSSSSSSSSSSSS...S
 S..................S
 S.F.....W..........S
@@ -35,4 +35,4 @@ SSSSSSSSSSSSSSSSSSSS
 
 [entities]
 2,8 = {"id": "well_reeds", "size": [32, 64]}
-8,8 = {"id": "well_squall", "size": [416, 320], "direction": [-1, 0], "speed": 420, "profile": "res://resources/world/wind/squall_wind.tres"}
+8,8 = {"id": "well_squall", "size": [416, 192], "direction": [-1, 0], "speed": 420, "profile": "res://resources/world/wind/squall_wind.tres"}

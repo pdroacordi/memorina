@@ -1,6 +1,7 @@
 ; village_cistern.room - the flooded cistern under the well (design 04 section 3.1); 'O fundo do poco' (design 02 section 8, Inverno Espacial 2).
 ; Redoma played at the slab's east edge (col 11) holds the water off the shelf (row 13); the mouth (col 11, rows 11-12) drops down the dry shaft to the caldera.
 ; Pool water, not lake: a lake is never held out (systems/bell-jar). The beams (rows 5, 1) climb back to the square.
+; Shaft ledges (rows 22, 19, 16, 13; 3 rows apart, 64 px under each) climb back from the caldera to the mouth; row 19 is one-way so a jump up the drop hole passes it. Redoma is still needed to cross to the shelf.
 
 [room]
 origin = 0, 0
@@ -19,16 +20,16 @@ S......SSSSS.......S
 S......SSSSS.......S
 S......S...........S
 S......S...........S
+S......SSS..SS.....S
 S......S....SS.....S
 S......S....SS.....S
+S......S..SSSS.....S
 S......S....SS.....S
 S......S....SS.....S
-S......S....SS.....S
-S......S....SS.....S
-S......S....SS.....S
+S......S==..SS.....S
 S......S....SS.....S
 SSSSSSSS....SSSSSSSS
-SSSSSSSS....SSSSSSSS
+SSSSSSSS..SSSSSSSSSS
 SSSSSSSS....SSSSSSSS
 
 [water]

@@ -1,12 +1,13 @@
 ; orchard_cliff_chimney.room - Chamine do Penhasco (design 04 section 3.6): a stone chimney from the arena down to the caldera.
 ; The fall (cols 1-5) is survivable and one-way. From its floor (top row 107) the exit pocket is reached only by wall climbing the
 ; climb shaft (cols 7-9, eleven rows, no ledges) over a wall whose top is nine rows above the pocket floor: the wall-climb gate.
+; Row 0 is a stone ceiling: col 0 is the world's west edge (bugs/wall-climb-leaves-the-world-over-the-cliff-chimneys-west-wall).
 
 [room]
 origin = 0, 0
 
 [grid]
-S..................S
+SSSSSSSSSSSSSSSSSSSS
 S..................S
 S..................S
 S..................S

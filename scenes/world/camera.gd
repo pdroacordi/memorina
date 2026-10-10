@@ -76,6 +76,8 @@ var _peek_axis: float = 0.0
 var _peek_hold: float = 0.0
 var _bounds: Rect2
 var _is_bound: bool = false
+## Where the frame may yield past `_bounds` to keep the subject in view; `_bounds` until set_reach().
+var _reach: Rect2
 ## World px from the new bounds' clamped centre to where the frame stood when they changed; scaled by `_glide_weight`.
 var _glide_from: Vector2 = Vector2.ZERO
 ## 1..0 over a glide.
@@ -102,6 +104,7 @@ func _physics_process(delta: float) -> void:
 func set_bounds(bounds: Rect2, glide: bool = false) -> void:
 	var shown := global_position
 	_bounds = bounds
+	_reach = bounds
 	_is_bound = true
 	_stop_glide()
 	if not glide or _subject == null:
@@ -119,6 +122,10 @@ func set_bounds(bounds: Rect2, glide: bool = false) -> void:
 		.set_ease(Tween.EASE_OUT)
 	# Fast first: until the glide moves, the frame still shows the old room and Ivo is leaving it.
 	_glide_tween.tween_property(self, "_glide_weight", 0.0, bounds_glide_time)
+
+## Where the frame may yield past the bounds to keep the subject whole; set before each step.
+func set_reach(reach: Rect2) -> void:
+	_reach = reach
 
 ## What the room lets the frame show, world-space; an empty rect when the
 ## room has not bound it. Read by anything that needs to know where the arena
@@ -351,9 +358,20 @@ func _keep_subject_in_view() -> void:
 	var body: Rect2 = (_subject.body_rect() as Rect2).grow(subject_margin)
 	var half: Vector2 = get_viewport_rect().size * 0.5 / zoom
 	var centre: Vector2 = global_position + offset
-	centre.x = _clamp_axis(centre.x, body.end.x - half.x, body.position.x + half.x, centre.x)
-	centre.y = _clamp_axis(centre.y, body.end.y - half.y, body.position.y + half.y, centre.y)
+	var kept := Vector2(
+		_clamp_axis(centre.x, body.end.x - half.x, body.position.x + half.x, centre.x),
+		_clamp_axis(centre.y, body.end.y - half.y, body.position.y + half.y, centre.y))
+	# The yield stops at the reach, so over an open top with nothing above no void shows; a glide in progress is never pulled back.
+	centre.x = _yield_axis(centre.x, kept.x, _reach.position.x + half.x, _reach.end.x - half.x)
+	centre.y = _yield_axis(centre.y, kept.y, _reach.position.y + half.y, _reach.end.y - half.y)
 	global_position = centre - offset
+
+func _yield_axis(from: float, to: float, min_value: float, max_value: float) -> float:
+	if to > from:
+		return minf(to, maxf(from, max_value))
+	if to < from:
+		return maxf(to, minf(from, min_value))
+	return from
 
 func _clamp_axis(value: float, min_value: float, max_value: float, fallback: float) -> float:
 	# A room smaller than the viewport on this axis has no travel: centre it.

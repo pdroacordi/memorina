@@ -1078,6 +1078,15 @@ func receive_hazard(hazard: HazardZone) -> void:
 	clear_knockback()
 	fell_into_hazard.emit()
 
+## Out of every room: held like a sink, without damage, while Game puts him back (systems/rooms).
+func fall_out_of_world() -> void:
+	if is_dead() or _sinking:
+		return
+	_sinking = true
+	_safe_ground.enabled = false
+	clear_knockback()
+	fell_into_hazard.emit()
+
 ## Puts Ivo back on the last firm ground he stood on (SafeGroundTracker),
 ## still and briefly untouchable. Called behind a fade; nothing here eases.
 func respawn() -> void:
