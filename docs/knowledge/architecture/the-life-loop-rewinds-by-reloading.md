@@ -221,7 +221,7 @@ not tell). If a label is ever wanted, the key is `BENCH_REST`.
 
 - `game.gd` takes on the death beat, rest and arrival beside the hazard beat (they share `Fade`, `_enter_room`
   and the camera). If it passes about 250 lines, extract the resident-room cache (`_enter_room`, `_room_at`,
-  `_touch_resident`, `_wake_rooms`) into its own node first.
+  `_touch_resident`, `_wake_rooms`) into its own node first. Done 2026-10-09: `RoomResidency` (`systems/rooms`).
 - Every future system that reads the save at `_ready` is rewind-correct for free. Every future piece of state
   that must OUTLIVE a death (as marks do) must be written into `committed` inside `SaveLedger.record_death`.
 - A future pause menu opening during the death beat is refused by its own "already paused" guard only if the

@@ -1,0 +1,127 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 10,
+ "locale": "en",
+ "player_position": [
+  -4925,
+  100
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "log": "s0"
+  },
+  {
+   "t": 1.2,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.4,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 1.45,
+   "log": "pre0"
+  },
+  {
+   "t": 1.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.7,
+   "log": "post0"
+  },
+  {
+   "t": 2.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.95,
+   "log": "pre1"
+  },
+  {
+   "t": 3.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.4,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "log": "post1"
+  },
+  {
+   "t": 4.3,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 4.4,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 4.45,
+   "log": "pre2"
+  },
+  {
+   "t": 4.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 4.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.7,
+   "log": "post2"
+  },
+  {
+   "t": 5.8,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 5.95,
+   "log": "pre3"
+  },
+  {
+   "t": 6.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.4,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.2,
+   "log": "post3"
+  }
+ ]
+}

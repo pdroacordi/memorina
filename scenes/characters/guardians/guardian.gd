@@ -135,7 +135,7 @@ func _process_motion(delta: float) -> void:
 		# world, and takes it back on the way down so it lands on real ground.
 		collision_mask = 0 if global_position.y < _leap_floor_y - 8.0 else _leap_mask
 		return
-	if _fight.phase() == GuardianFight.Phase.PRESSURE:
+	if _fight.phase() == GuardianFight.Phase.PRESSURE and _player_in_arena():
 		_ai.tick(delta)
 		# Where it LOOKS, not where it walks: a guardian backing out from under
 		# a player keeps watching him, and an x sitting on its own never makes
@@ -151,6 +151,8 @@ func _process_motion(delta: float) -> void:
 		velocity.y = minf(velocity.y + base_gravity() * delta, terminal_velocity)
 
 func _after_move(delta: float) -> void:
+	if is_instance_valid(_player) and not _player_in_arena():
+		_abandon_call()
 	if _lucidity_wait > 0.0:
 		_lucidity_wait = maxf(_lucidity_wait - delta, 0.0)
 		if is_zero_approx(_lucidity_wait):
@@ -501,6 +503,11 @@ func _stage() -> void:
 		return
 	_staged = true
 	_player.stage_call(self, body_height())
+
+# A walk across a seam leaves the arena running as a neighbour room, so leaving it must end the call
+# (bugs/walking-out-of-a-guardian-room-no-longer-abandons-its-call).
+func _player_in_arena() -> bool:
+	return is_instance_valid(_player) and (_arena == null or _arena.bounds().has_point(_player.global_position))
 
 func _unstage() -> void:
 	if not _staged:

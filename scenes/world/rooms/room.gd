@@ -43,7 +43,11 @@ func deactivate() -> void:
 		_contents_node.process_mode = Node.PROCESS_MODE_DISABLED
 		_contents_node.hide()
 
-## Destroys cached contents when the resident-room cache evicts this room (see game.gd).
+## Whether the contents exist and run (new contents may still be waiting for their deferred add).
+func is_active() -> bool:
+	return _contents_node != null and _contents_node.process_mode != Node.PROCESS_MODE_DISABLED
+
+## Destroys cached contents when `RoomResidency` evicts this room.
 func evict() -> void:
 	if _contents_node:
 		# Out of the tree now, not at frame end: a fresh instance may follow

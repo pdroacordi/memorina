@@ -1,0 +1,228 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 7,
+ "locale": "en",
+ "player_position": [
+  -5100,
+  340
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.0,
+   "log": "w00"
+  },
+  {
+   "t": 1.2,
+   "log": "w01"
+  },
+  {
+   "t": 1.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.4,
+   "log": "w02"
+  },
+  {
+   "t": 1.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.6,
+   "log": "w03"
+  },
+  {
+   "t": 1.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.8,
+   "log": "w04"
+  },
+  {
+   "t": 2.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "log": "w05"
+  },
+  {
+   "t": 2.15,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.2,
+   "log": "w06"
+  },
+  {
+   "t": 2.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.4,
+   "log": "w07"
+  },
+  {
+   "t": 2.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.6,
+   "log": "w08"
+  },
+  {
+   "t": 2.6,
+   "screenshot": "d_on_step"
+  },
+  {
+   "t": 2.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.8,
+   "log": "w09"
+  },
+  {
+   "t": 3.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "log": "w10"
+  },
+  {
+   "t": 3.2,
+   "log": "w11"
+  },
+  {
+   "t": 3.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.4,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "log": "w12"
+  },
+  {
+   "t": 3.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.6,
+   "log": "w13"
+  },
+  {
+   "t": 3.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.8,
+   "log": "w14"
+  },
+  {
+   "t": 4.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.0,
+   "log": "w15"
+  },
+  {
+   "t": 4.2,
+   "log": "w16"
+  },
+  {
+   "t": 4.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.4,
+   "log": "w17"
+  },
+  {
+   "t": 4.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.5,
+   "screenshot": "d_out"
+  },
+  {
+   "t": 4.6,
+   "log": "w18"
+  },
+  {
+   "t": 4.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.8,
+   "log": "w19"
+  },
+  {
+   "t": 5.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 5.0,
+   "log": "w20"
+  },
+  {
+   "t": 5.2,
+   "log": "w21"
+  },
+  {
+   "t": 5.4,
+   "log": "w22"
+  },
+  {
+   "t": 5.6,
+   "log": "w23"
+  },
+  {
+   "t": 5.8,
+   "log": "w24"
+  },
+  {
+   "t": 6.0,
+   "log": "w25"
+  }
+ ]
+}

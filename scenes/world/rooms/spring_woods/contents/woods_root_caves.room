@@ -1,22 +1,22 @@
 ; woods_root_caves.room - earth and stone caves under woods_deep (design 04 section 3.4; design 02 section 8).
-; Drop in through the hole into the earth well (Espacial 2, 10 rows to the rim: roots only). Logico 1: shaft D
+; Drop in through the hole into the earth well (Espacial 2: roots climb to the row-0 ledge, 10 rows up). Logico 1: shaft D
 ; (stone|earth) never roots, shaft A (earth|earth) does. Espacial 1: root bridge to the alcove; return by tunnel.
 
 [room]
 origin = 0, 0
 
 [grid]
-############################....############################
+############################==..############################
 ##########################S#....#SSSSSSSSSSSSSSSSSSSSSSSSSS#
 ##########################S#....#SSSSSSSSSSSSSSSSSSSSSSSSSS#
 ##########################S#....#SSSSSSSSSSSSSSSSSSSSSSSSSS#
 ##########################S#....#SSSSSSSSSSSSSSSSSSSSSSSSSS#
+#.........................S#....#..........................#
 #.........................S#...............................#
 #.........................S#...............................#
-#.........................S############....................#
-#...SSSSSSSSSSSSSSSSSS....S############....................#
-#.......SSSSSSSSSSSSSS....S######.....S....................#
-#.......SSSSSSSSSSSSSS....S######.....S....................#
+#...SSSSSSSSSSSSSSSSSS....S#...............................#
+#.......SSSSSSSSSSSSSS....S#....######S....................#
+#.......SSSSSSSSSSSSSS....S###########S....................#
 #.......SSSSSSSSSSSSSS....S...........S....................#
 #===....SSSSSSSSSSSSSS....S...........S...########...#######
 #.......SSSSSSSSSSSSSS....S...........S...########...#######

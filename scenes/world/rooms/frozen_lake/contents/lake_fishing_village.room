@@ -1,6 +1,6 @@
 ; lake_fishing_village.room - Vila dos Pescadores: stone quays and stilt decks over the dead lake (`w`), the
 ; fisher hut's door (facade cols 35-45) and the well's mouth (cols 28-31) into lake_well (design 04 section 3.5).
-; No gate: base kit; the curbs make the well a jump, not a fall.
+; No gate: base kit. From lake_well's one-way the notch (cols 26-27, 2 rows up) and the west curb (3 more) lead back out.
 
 [room]
 origin = 0, 0
@@ -14,9 +14,9 @@ S..........................................................S
 ..................======....................................
 ....========...................................===..........
 ............................................................
-................SSSS.......S....S.......E...................
-SSSSSSSSSSSSSSSSSSSSSSSSSSSS....SSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSS....SSSSSSSSSSSSSSSSSSSSSSSSSSSS
+................SSSS.....S......S.......E...................
+SSSSSSSSSSSSSSSSSSSSSSSSSS......SSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSSSSSSSS......SSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSS....SSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 [water]
@@ -30,8 +30,8 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSS....SSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ............................................................
 ............................................................
 ............................................................
-wwwwwwwwwwwwwwwwwwwwwwwwwww......wwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwwww......wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwwwwwww
+wwwwwwwwwwwwwwwwwwwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwwwwwww
 
 [entities]
 40,8 = {"link": "lake_fisher_hut_door", "to_room": "lake_fisher_hut"}

@@ -18,12 +18,17 @@ uniform bool repeat_x = true;
 uniform float distance : hint_range(0.0, 1.0) = 0.0;
 // Layer-local position of the quad's centre (MeshInstance2D.position).
 uniform vec2 quad_position = vec2(0.0);
+// The room's bounds in world px (x, y, width, height): a running neighbour's layers never draw into this room's view.
+uniform vec4 room_rect = vec4(-1e9, -1e9, 2e9, 2e9);
 
 varying vec2 layer_pos;
+varying vec2 world_pos;
 varying vec4 modulate;
 
 void vertex() {
 	layer_pos = VERTEX + quad_position;
+	// MODEL_MATRIX carries the Parallax2D's scroll, so this is where the pixel is drawn in the world.
+	world_pos = (MODEL_MATRIX * vec4(VERTEX, 0.0, 1.0)).xy;
 	modulate = COLOR;
 }
 
@@ -62,6 +67,10 @@ int art_col(int col, int strip_w) {
 }
 
 void fragment() {
+	if (world_pos.x < room_rect.x || world_pos.y < room_rect.y
+			|| world_pos.x >= room_rect.x + room_rect.z || world_pos.y >= room_rect.y + room_rect.w) {
+		discard;
+	}
 	ivec2 size = textureSize(sheet, 0);
 	int strip_h = size.y / band_count;
 	int col = art_col(int(floor(layer_pos.x)), size.x);

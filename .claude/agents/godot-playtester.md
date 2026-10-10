@@ -318,6 +318,47 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
 - A sealed door never shows `+prompt`. Its knock is visible as `shake=` going non-zero for ~0.2 s after
   the press.
 
+- **Learned 2026-10-09 (woods and lake traversal)**: the runner **silently ignores an unknown action name**.
+  `"move_up"` did nothing, with no warning. Climbing (`ClimbComponent`) grabs on `look_up`. Check every
+  action against `project.godot` before trusting a "nothing happened".
+- **Superseded 2026-10-09 evening (re-verification):** walking or jumping across a seam no longer fades or
+  disables Ivo, and every room touching the current one runs. The "hold jump ~1.6-2 s through the seam" rule
+  and the "only 2 rooms are resident" rule are both obsolete.
+  - Timelines tuned for the fade now fail for timing reasons. `g_canopy_branch_to_terraces_tap` steers at
+    T+1.4 s, after the jump has already fallen back. Retime every steer when a transition's timing changes,
+    and do not report the old timeline's failure as a regression.
+  - Inside a region the camera glides 0.45 s; across a region seam (or after a teleport) it cuts. To measure
+    a glide, `log` every 0.05 s and read `room=` and `cam_centre=`.
+  - To catch a background pop, diff consecutive frames with Pillow: count pixels with a difference > 20. A
+    still camera gives 4-6k of 921,600. A seam frame that changes 40%+ while `cam_centre` does not move is a
+    pop (`bugs/a-running-neighbour-rooms-backdrop-draws-over-the-current-room`). Running neighbours' backdrops
+    also change resting views, so compare art against frames from a build with the same residency.
+- **Learned 2026-10-10 (seam re-check)**: to measure "Ivo out of frame", compute it from the log instead of
+  eyeballing frames. Take each `log` line's `pos` (feet) and `cam_centre`, and work out the fraction of the
+  22x54 body rect above the feet that lies inside the 640x360 view around the centre (the zoom is 1 outside
+  songs). Log every 0.05 s through the crossing. Since the room point became the body centre, also hop in
+  place on any floor within ~60 px below a seam and grep for `room=` changes: a floor 32 px under a seam
+  flips the room on every hop (`bugs/a-hop-below-a-seam-flips-the-room-twice`).
+- A draw or note press during a fade or a fall is dropped. Play a song only grounded, ≥0.5 s after a landing or
+  fade.
+- **Read cells with a script, never by eye.** A small `segs.py` printing each row's runs as `S12-13[x2944..3008]`
+  in world px (room node position + 32 * col) prevented the miscount that cost this session three probe runs.
+- **Closed-loop climbs:** for each step, give a take-off x and an input:
+  - an apex steer (jump straight, direction from +0.3 s), for ledges whose underside is 10 px above Ivo's head;
+  - the direction held from take-off at the edge, for steps capped by a ledge 160 px above.
+  A held step lands far from take-off + steer distance, so give it a measured `land` x. The corrector fixes one
+  walk per pass from the logged `preNN`. The waterfall (16 steps) took ~10 passes.
+- Positions (world px):
+  - woods_deep pit east bank (-3180, 288); caves landing (-3520, 600); pond basin log (-5264, 330);
+  - canopy launch branch x -4192..-4000 at y -1024, under the terraces' hole x -4352..-4096;
+  - waterfall bench (2640, -96); waterfall top floors y -1632 (west x 2560..2752, east 3008..3200);
+  - fishing village east curb (1708, -1640); lake_shore floor (100, -1640);
+  - chasm floor (-2050, -1640); chasm east lip (-2680, -2016);
+  - root caves (since the re-verification): well floor y 704 (x -3584..-3456), shelf block top y 608
+    (x -3456..-3232), shaft one-way y 384 (x -3584..-3520);
+  - fishing well notch (1472..1536, y -1568); village square/mill seam x 1920 (floor y 288);
+  - village_lane_west/woods_edge seam x -1280 (floor y 288).
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

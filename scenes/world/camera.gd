@@ -48,6 +48,12 @@ signal focused(subject_screen_position: Vector2)
 @export var lesson_zoom           : float = 1.15
 @export var lesson_push_time      : float = 45.0
 
+@export_category("Room glide")
+## Seconds the frame takes to move into a new room's bounds after Ivo walks across a seam.
+@export var bounds_glide_time     : float = 0.45
+## Px kept between the subject's body and the frame's edge where the room clamp would cut him off.
+@export var subject_margin        : float = 8.0
+
 @export_category("Shake")
 ## The shake decays over its time; strength is the first frame's reach in px.
 @export var shake_time            : float = 0.18
@@ -70,6 +76,11 @@ var _peek_axis: float = 0.0
 var _peek_hold: float = 0.0
 var _bounds: Rect2
 var _is_bound: bool = false
+## World px from the new bounds' clamped centre to where the frame stood when they changed; scaled by `_glide_weight`.
+var _glide_from: Vector2 = Vector2.ZERO
+## 1..0 over a glide.
+var _glide_weight: float = 0.0
+var _glide_tween: Tween
 
 
 func _ready() -> void:
@@ -80,18 +91,34 @@ func _physics_process(delta: float) -> void:
 	if not _subject:
 		return
 
-	global_position = _subject.global_position
-	if is_instance_valid(_pair) and _pair_blend > 0.0:
-		var midpoint := (_subject.global_position.x + _pair.global_position.x) / 2.0
-		global_position.x = lerpf(global_position.x, midpoint, _pair_blend)
+	global_position = _framed_position()
 	_update_vertical(delta)
 	_apply_bounds()
+	global_position += _glide_from * _glide_weight
+	_keep_subject_in_view()
 	_update_shake(delta)
 
-## Confines the visible rectangle to a world-space area.
-func set_bounds(bounds: Rect2) -> void:
+## Confines the visible rectangle to a world-space area; `glide` eases the frame there from where it stands.
+func set_bounds(bounds: Rect2, glide: bool = false) -> void:
+	var shown := global_position
 	_bounds = bounds
 	_is_bound = true
+	_stop_glide()
+	if not glide or _subject == null:
+		return
+	# Measured against the new clamp of the same centre, so a glide retargeted mid-way starts from where the frame is.
+	global_position = _framed_position()
+	_apply_bounds()
+	_keep_subject_in_view()
+	_glide_from = shown - global_position
+	global_position = shown
+	_glide_weight = 1.0
+	_glide_tween = create_tween() \
+		.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS) \
+		.set_trans(Tween.TRANS_CUBIC) \
+		.set_ease(Tween.EASE_OUT)
+	# Fast first: until the glide moves, the frame still shows the old room and Ivo is leaving it.
+	_glide_tween.tween_property(self, "_glide_weight", 0.0, bounds_glide_time)
 
 ## What the room lets the frame show, world-space; an empty rect when the
 ## room has not bound it. Read by anything that needs to know where the arena
@@ -167,6 +194,7 @@ func snap() -> void:
 	if _look_ahead_tween:
 		_look_ahead_tween.kill()
 	offset.x = _look_ahead_target()
+	_stop_glide()
 	reset_smoothing()
 
 ## A decaying random offset; a stronger call while one runs replaces it.
@@ -175,6 +203,19 @@ func shake(strength: float) -> void:
 		return
 	_shake_strength = strength
 	_shake_left = shake_time
+
+## The subject, or the pair blend toward the other body, before bounds and glide.
+func _framed_position() -> Vector2:
+	var at := _subject.global_position
+	if is_instance_valid(_pair) and _pair_blend > 0.0:
+		at.x = lerpf(at.x, (at.x + _pair.global_position.x) / 2.0, _pair_blend)
+	return at
+
+func _stop_glide() -> void:
+	if _glide_tween:
+		_glide_tween.kill()
+	_glide_weight = 0.0
+	_glide_from = Vector2.ZERO
 
 func _tween_pair(target: float) -> void:
 	if _pair_tween:
@@ -300,6 +341,18 @@ func _apply_bounds() -> void:
 	centre.y = _clamp_axis(centre.y,
 		_bounds.position.y + half.y, _bounds.end.y - half.y, _bounds.get_center().y)
 
+	global_position = centre - offset
+
+# The room clamp yields to the subject: astride a seam he stays whole in frame over a sliver of the running
+# neighbour (bugs/a-hop-below-a-seam-flips-the-room-twice). A subject without body_rect() has no body to keep.
+func _keep_subject_in_view() -> void:
+	if not _is_bound or not _subject.has_method("body_rect"):
+		return
+	var body: Rect2 = (_subject.body_rect() as Rect2).grow(subject_margin)
+	var half: Vector2 = get_viewport_rect().size * 0.5 / zoom
+	var centre: Vector2 = global_position + offset
+	centre.x = _clamp_axis(centre.x, body.end.x - half.x, body.position.x + half.x, centre.x)
+	centre.y = _clamp_axis(centre.y, body.end.y - half.y, body.position.y + half.y, centre.y)
 	global_position = centre - offset
 
 func _clamp_axis(value: float, min_value: float, max_value: float, fallback: float) -> float:

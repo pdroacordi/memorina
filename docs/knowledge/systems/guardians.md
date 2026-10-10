@@ -46,5 +46,5 @@ A guardian encounter is `docs/design/02_mecanicas.md` sections 3 and 4: pressure
 ## Current limits (from the old "Known gaps", 2026-10-02)
 
 - Dying mid-fight returns Ivo to the last bench with the guardian corrupted again.
-- Arenas have no doors; the player can walk out mid-fight (roadmap GRD-05).
+- Arenas have no doors; the player can walk out mid-fight (roadmap GRD-05). The arena room keeps running as a neighbour (`systems/rooms`), so `Guardian._after_move` abandons the call once Ivo is outside the `Arena` and the PRESSURE AI ticks only while he is inside it (`bugs/walking-out-of-a-guardian-room-no-longer-abandons-its-call`).
 - (Closed 2026-10-06, UI-03.) A recalled skill is confirmed after the fight: its Memories (diary) entry appears in the notebook, and the HUD quill shows once the fight and the lesson have ended (`systems/notebook`).

@@ -1,0 +1,33 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 5,
+ "locale": "en",
+ "player_position": [
+  2645,
+  -100
+ ],
+ "steps": [
+  {
+   "t": 1.4,
+   "log": "before"
+  },
+  {
+   "t": 1.5,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 1.65,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "log": "after"
+  },
+  {
+   "t": 2.6,
+   "screenshot": "u_sitting"
+  }
+ ]
+}

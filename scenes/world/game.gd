@@ -3,15 +3,14 @@ extends Node2D
 ## The camera frames a new current room; the map reveals it from here. Emitted after an arrival's seat and snap.
 signal room_changed(room: Room)
 
-## Maximum resident rooms, including the current room.
-const MAX_RESIDENT_ROOMS := 2
-
 ## Palette lookup by region season.
 @export var song_catalog: SongCatalog
 ## Seconds Ivo sinks before the hazard fade starts.
 @export var hazard_sink_hold: float = 0.25
 ## Seconds the body remains still after its death clip.
 @export var death_hold: float = 0.6
+## Seconds the memory baseline takes to reach the new region's after a walk across a region seam.
+@export var baseline_glide_time: float = 0.45
 ## Loaded at swap time: the title exports this scene, so a PackedScene export would be a cycle.
 @export_file("*.tscn") var title_scene: String = ""
 
@@ -28,8 +27,8 @@ var _hazard_beat     : int       = 0
 ## Prevents room transitions while the death sequence is running.
 var _dying           : bool      = false
 
-## Resident rooms ordered most recently used first.
-var _resident_rooms: Array[Room] = []
+var _residency := RoomResidency.new()
+var _baseline_tween: Tween
 
 func _ready() -> void:
 	assert(SaveSystem.has_session(), "The game runs on a session that Boot or the title began")
@@ -43,7 +42,7 @@ func _ready() -> void:
 	if SaveSystem.bench_id() != &"":
 		_arrive()
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
-		room.room_entered.connect(_on_player_entered_room)
+		room.room_entered.connect(_on_room_entered)
 		var region := room.get_region()
 		if not region.memory_changed.is_connected(_on_region_memory_changed):
 			region.memory_changed.connect(_on_region_memory_changed.bind(region))
@@ -56,50 +55,64 @@ func quit_game() -> void:
 func quit_to_title() -> void:
 	_swap_to_title.call_deferred()
 
-# Rooms share edges, so the current room is the one Ivo's feet are in: a body astride a seam overlaps
-# both and would swap back and forth (bugs/walking-across-a-room-seam-fades-back-and-forth).
+# Ivo leaves the current room only when his whole body is out of it: a hop that straddles a seam never flips
+# the room (bugs/a-hop-below-a-seam-flips-the-room-twice, bugs/walking-across-a-room-seam-fades-back-and-forth);
+# the camera keeps him in frame meanwhile. Walking across a seam neither fades nor stops him
+# (bugs/a-jump-across-a-horizontal-seam-loses-its-height-in-the-fade).
 func _physics_process(_delta: float) -> void:
 	if _current_room == null or _is_transitioning or _dying:
 		return
-	var feet := _player.global_position
-	if _current_room.get_bounds().has_point(feet):
+	var body := _player.body_rect()
+	if _current_room.get_bounds().intersects(body):
 		return
-	var room := _room_at(feet)
-	if room != null:
-		_on_player_entered_room(room)
+	var room := _room_at(body.get_center())
+	if room == null:
+		return
+	# A region seam cuts: its memory, season and weather would show mixed in a glide
+	# (bugs/a-neighbour-room-in-another-region-runs-on-the-current-regions-memory). So does a teleport.
+	var glide := room.get_region() == _current_room.get_region() and RoomResidency.touches(_current_room, room)
+	_enter_room(room, glide)
+	if not glide:
+		_camera.snap()
+	room_changed.emit(room)
 
-func _on_player_entered_room(room: Room) -> void:
-	if room == _current_room or _is_transitioning or _dying:
+## Seeds the first room when no bench placed Ivo; later rooms are found from his feet.
+func _on_room_entered(room: Room) -> void:
+	if _current_room != null or _is_transitioning or _dying:
 		return
-	if not room.get_bounds().has_point(_player.global_position):
+	if not room.get_bounds().has_point(_player.body_rect().get_center()):
 		return
 	_is_transitioning = true
 	# Deferred: body_entered arrives inside the physics step (gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move).
 	_player.set_deferred(&"process_mode", Node.PROCESS_MODE_DISABLED)
-	if _current_room:
-		await _fade.to_black()
 	_enter_room(room)
 	room_changed.emit(room)
 	await _fade.to_clear()
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
 
-## Activates the room and updates its memory field and camera bounds.
-func _enter_room(room: Room) -> void:
-	if _current_room:
-		_current_room.deactivate()
+## Makes `room` current, runs its neighbours and moves the memory field and camera to it; `glide` eases both.
+func _enter_room(room: Room, glide: bool = false) -> void:
 	_current_room = room
-	_current_room.activate()
+	_residency.settle(room, get_tree().get_nodes_in_group(Room.GROUP))
 	# The greyhush is a regional property, so it follows the room the player is
 	# standing in rather than being set once at startup.
 	var region := _current_room.get_region()
-	_memory_field.baseline = region.current_baseline()
+	_set_baseline(region.current_baseline(), glide)
 	_memory_field.season = region.season
 	_memory_field.palette = song_catalog.palette_for(region.season) if song_catalog else null
-	_touch_resident(room)
-	_camera.set_bounds(_current_room.get_bounds())
+	_camera.set_bounds(_current_room.get_bounds(), glide)
 	if not room.interior:
 		_screens.clear_map_anchor()
+
+func _set_baseline(level: float, glide: bool) -> void:
+	if _baseline_tween:
+		_baseline_tween.kill()
+	if not glide:
+		_memory_field.baseline = level
+		return
+	_baseline_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
+	_baseline_tween.tween_property(_memory_field, "baseline", level, baseline_glide_time)
 
 ## Respawns at firm ground after a hazard fade; a newer fall supersedes this beat.
 func _on_player_fell_into_hazard() -> void:
@@ -205,16 +218,8 @@ func _on_player_sat_down(seat: Seat) -> void:
 	var room_key := SceneKey.of(room) if room != null else ""
 	var region_key := room.get_region().name_key if room != null else ""
 	SaveSystem.rest_at(seat.bench_id, room_key, region_key)
-	_wake_rooms()
-
-## Evicts other resident rooms and expires the current room for its next visit.
-func _wake_rooms() -> void:
-	for room: Room in _resident_rooms.duplicate():
-		if room != _current_room:
-			room.evict()
-			_resident_rooms.erase(room)
 	if _current_room != null:
-		_current_room.expire()
+		_residency.wake(_current_room, get_tree().get_nodes_in_group(Room.GROUP))
 
 ## Rewinds to the bench only after the death clip and black fade finish.
 func _on_player_died() -> void:
@@ -247,14 +252,7 @@ func _room_at(point: Vector2) -> Room:
 			return room
 	return null
 
-## Marks `room` most recently used and evicts the oldest room above the cap.
-func _touch_resident(room: Room) -> void:
-	_resident_rooms.erase(room)
-	_resident_rooms.push_front(room)
-	while _resident_rooms.size() > MAX_RESIDENT_ROOMS:
-		_resident_rooms.pop_back().evict()
-
 ## Updates the displayed region's memory immediately when it changes.
 func _on_region_memory_changed(level: float, region: Region) -> void:
 	if _current_room != null and _current_room.get_region() == region:
-		_memory_field.baseline = level
+		_set_baseline(level, false)

@@ -52,9 +52,9 @@ func refresh() -> void:
 	for i: int in backdrop_set.layers.size():
 		var layer := backdrop_set.layers[i]
 		if layer != null and layer.texture != null:
-			_add_layer(i, layer, bounds, anchor, ref, camera)
+			_add_layer(i, layer, bounds, anchor, ref, camera, room != null)
 
-func _add_layer(index: int, layer: BackdropLayer, bounds: Rect2, anchor: Vector2, ref: Vector2, camera: Camera2D) -> void:
+func _add_layer(index: int, layer: BackdropLayer, bounds: Rect2, anchor: Vector2, ref: Vector2, camera: Camera2D, clip: bool) -> void:
 	var cover := BackdropMath.cover_rect(bounds, anchor, ref, layer.scroll_scale, HALF_VIEW, MARGIN)
 	cover = BackdropMath.clip_to_fills(cover, layer.strip_size(), layer.horizon_row, layer.fill_above, layer.fill_below, layer.repeat_x)
 	if cover.size == Vector2i.ZERO:
@@ -75,7 +75,11 @@ func _add_layer(index: int, layer: BackdropLayer, bounds: Rect2, anchor: Vector2
 	mesh.size = Vector2(cover.size)
 	quad.mesh = mesh
 	quad.position = Vector2(cover.position) + Vector2(cover.size) * 0.5
-	quad.material = _material(layer, quad.position)
+	var material := _material(layer, quad.position)
+	# Clipped to the room: its neighbours run beside it, and their parallax would slide into its view (systems/backdrops).
+	if clip:
+		material.set_shader_parameter(&"room_rect", Vector4(bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y))
+	quad.material = material
 	parallax.add_child(quad)
 	add_child(parallax)
 
