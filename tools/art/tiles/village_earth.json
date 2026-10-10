@@ -1,66 +1,19 @@
 {
-	"about": "Village earth: dark loam under the cobbled street, after tools/art/references/village_concept.png (approved 2026-10-08).",
+	"about": "Village earth: PixelLab tiles-pro soil (tools/art/tiles/sources/village_soil_*.png) under a painted season lip.",
 	"body": {
-		"kind": "noise",
-		"seed": 7,
-		"ramp": [
-			"#160e0b",
-			"#1d1410",
-			"#251912",
-			"#2f2117",
-			"#3a2a1d"
-		]
+		"path": "res://tools/art/tiles/sources/village_soil_0.png"
 	},
 	"variants": [
 		{
-			"seed": 11,
-			"count": 4,
-			"kinds": [
-				"fern",
-				"root",
-				"pebble",
-				"clod",
-				"grit"
-			]
+			"path": "res://tools/art/tiles/sources/village_soil_1.png"
 		},
 		{
-			"seed": 12,
-			"count": 4,
-			"kinds": [
-				"sprig",
-				"pebble",
-				"clod",
-				"root"
-			]
+			"path": "res://tools/art/tiles/sources/village_soil_2.png"
 		},
 		{
-			"seed": 13,
-			"count": 3,
-			"kinds": [
-				"fern",
-				"grit",
-				"clod"
-			]
-		},
-		{
-			"seed": 14,
-			"count": 5,
-			"kinds": [
-				"pebble",
-				"sprig",
-				"root",
-				"grit"
-			]
+			"path": "res://tools/art/tiles/sources/village_soil_3.png"
 		}
 	],
-	"decor_colors": {
-		"pebble": "#86705e",
-		"root": "#8a6a4c",
-		"sprig": "#4c5a1c",
-		"clod": "#120b08",
-		"grit": "#5a4636",
-		"fern": "#55642a"
-	},
 	"lips": [
 		{
 			"kind": "grass",

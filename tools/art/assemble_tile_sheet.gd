@@ -62,7 +62,10 @@ func _composed(recipe: Dictionary) -> Array[Dictionary]:
 	var variants: Array[Image] = []
 	var decor := _decor_colors(recipe.get("decor_colors", {}))
 	for variant: Dictionary in recipe.get("variants", []):
-		variants.append(TilePainter.decorated(body, int(variant["seed"]), int(variant["count"]), PackedStringArray(variant["kinds"]), decor))
+		if variant.has("path"):
+			variants.append(_body(variant))
+		else:
+			variants.append(TilePainter.decorated(body, int(variant["seed"]), int(variant["count"]), PackedStringArray(variant["kinds"]), decor))
 	var lips: Array = recipe.get("lips", [])
 	var bands: Array[Dictionary] = []
 	for band: int in BANDS:
@@ -76,7 +79,7 @@ func _composed(recipe: Dictionary) -> Array[Dictionary]:
 ## The body a recipe names: a painted kind, a 32 px png, or a PixelLab tileset result's full tile.
 func _body(spec: Dictionary) -> Image:
 	var rng_seed := int(spec.get("seed", 1))
-	match spec["kind"]:
+	match spec.get("kind", "png"):
 		"noise":
 			return TilePainter.noise_body(rng_seed, _colors(spec["ramp"]))
 		"stone":
@@ -89,6 +92,7 @@ func _body(spec: Dictionary) -> Image:
 			var text := FileAccess.get_file_as_string(ProjectSettings.globalize_path(spec["path"]))
 			var result: Dictionary = JSON.parse_string(text.trim_prefix(String.chr(0xFEFF)))
 			return WangSheet.tiles_from_pixellab(result)[GroundAutotile.FULL]
+	# A png body: PixelLab tiles-pro art kept in tools/art/tiles/sources/.
 	var image := Image.load_from_file(ProjectSettings.globalize_path(spec["path"]))
 	assert(image != null and image.get_size() == Vector2i(WangSheet.TILE, WangSheet.TILE), "a png body must be 32 px")
 	image.convert(Image.FORMAT_RGBA8)

@@ -35,7 +35,7 @@
 [CmdletBinding()]
 param(
   [Parameter(Position = 0, Mandatory = $true)]
-  [ValidateSet("balance", "generate", "animate", "tileset")]
+  [ValidateSet("balance", "generate", "animate", "tileset", "tiles")]
   [string]$Command,
 
   [string]$Description = "",
@@ -286,5 +286,47 @@ switch ($Command) {
       if ($g.status -eq "failed") { throw "PixelLab tileset $id failed" }
     }
     throw "PixelLab tileset $id did not finish in 600 s"
+  }
+
+  "tiles" {
+    # v2 create-tiles-pro: independent square tiles (seamless bodies for tools/art/assemble_tile_sheet.gd recipes).
+    # -Description numbers the variations: "1). soil 2). stones"; -Reference is an optional style tile of our own art.
+    if (-not $Description) { throw "tiles needs -Description." }
+    $body = @{
+      description  = $Description
+      tile_type    = "square_topdown"
+      tile_size    = $Width
+      tile_view    = "top-down"
+      outline_mode = "segmentation"
+    }
+    if ($Seed -ne 0) { $body.seed = $Seed }
+    if ($Reference) {
+      Add-Type -AssemblyName System.Drawing
+      $bitmap = [System.Drawing.Bitmap]::FromFile((Resolve-Path $Reference))
+      $body.style_images = @(@{ base64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes((Resolve-Path $Reference))); width = $bitmap.Width; height = $bitmap.Height })
+      $bitmap.Dispose()
+    }
+    $stem = if ($Name) { $Name } else { "tiles" }
+    $dir = Join-Path (Ensure-OutDir) $stem
+    New-Item -ItemType Directory -Force $dir | Out-Null
+    $r = Invoke-PixelLab POST "/create-tiles-pro" $body $BaseUrlV2
+    $id = $r.tile_id
+    Write-Host "submitted $id; polling every 10 s"
+    for ($i = 0; $i -lt 60; $i++) {
+      Start-Sleep -Seconds 10
+      try { $g = Invoke-PixelLab GET "/tiles-pro/$id" $null $BaseUrlV2 } catch { Write-Host "poll ${i}: busy"; continue }
+      if ($g.storage_urls -and @($g.storage_urls.PSObject.Properties).Count -gt 0) {
+        $g | ConvertTo-Json -Depth 8 | Out-File -Encoding utf8 (Join-Path $dir "result.json")
+        foreach ($p in $g.storage_urls.PSObject.Properties) {
+          $path = Join-Path $dir "$($p.Name).png"
+          Invoke-WebRequest -Uri $p.Value -OutFile $path -UseBasicParsing
+          Write-Host "wrote $path"
+        }
+        Show-Usage $r
+        return
+      }
+      if ($g.status -eq "failed") { throw "PixelLab tiles $id failed" }
+    }
+    throw "PixelLab tiles $id did not finish in 600 s"
   }
 }

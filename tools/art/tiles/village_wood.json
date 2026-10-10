@@ -1,11 +1,40 @@
 {
-	"about": "Village wood: dark weathered oak planks (floors, beams, stilts); built ground with a seasonal top (\"Seasonal top\", user, 2026-10-08).",
-	"body": {"kind": "plank", "seed": 41, "board": 8, "ramp": ["#24170e", "#311f13", "#3f2a1a", "#4d3421", "#5b3f29"], "gap": "#120b07", "nail": "#8a8070"},
+	"about": "Village wood: PixelLab tiles-pro oak planks (tools/art/tiles/sources/village_planks_0.png); built ground with a seasonal top (\"Seasonal top\", user, 2026-10-08).",
+	"body": {
+		"path": "res://tools/art/tiles/sources/village_planks_0.png"
+	},
 	"variants": [],
 	"lips": [
-		{"kind": "none"},
-		{"kind": "litter", "seed": 42, "leaves": ["#985828", "#a06838", "#784020", "#c08040"]},
-		{"kind": "snow", "seed": 43, "whites": ["#f4ece4", "#e2dad2"], "shades": ["#a8b4c4", "#7c90b4"]}
+		{
+			"kind": "none"
+		},
+		{
+			"kind": "litter",
+			"seed": 42,
+			"leaves": [
+				"#985828",
+				"#a06838",
+				"#784020",
+				"#c08040"
+			]
+		},
+		{
+			"kind": "snow",
+			"seed": 43,
+			"whites": [
+				"#f4ece4",
+				"#e2dad2"
+			],
+			"shades": [
+				"#a8b4c4",
+				"#7c90b4"
+			]
+		}
 	],
-	"spill": 5, "depth": 3, "radius": 2, "rim": 2, "edge": "#0e0805", "ledge_height": 8
+	"spill": 5,
+	"depth": 3,
+	"radius": 2,
+	"rim": 2,
+	"edge": "#0e0805",
+	"ledge_height": 8
 }

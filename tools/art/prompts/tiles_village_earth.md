@@ -10,4 +10,4 @@ top_spring: see the recipe
 top_autumn: see the recipe
 top_winter: see the recipe
 ---
-Painted by tools/art/assemble_tile_sheet.gd --recipe=res://tools/art/tiles/village_earth.json --out=res://assets/sprites/world/tilesets/village/earth.png (TilePainter body, WangSheet.compose), after the approved concept tools/art/references/village_concept.png ("Yes, aim for this", user, 2026-10-08).
+Composed by tools/art/assemble_tile_sheet.gd --recipe=res://tools/art/tiles/village_earth.json --out=res://assets/sprites/world/tilesets/village/earth.png: the body is PixelLab tiles-pro art (tools/art/tiles/sources/village_soil_0..3.png, generated with a 32 px crop of the approved concept as its style tile), shaped by WangSheet.compose with a painted season lip. "Try to use pixel lab instead of codex" (user, 2026-10-10).

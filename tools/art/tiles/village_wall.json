@@ -1,7 +1,18 @@
 {
-	"about": "Village wall: plaster between dark timber, the half-timbered houses of tools/art/references/village_concept.png; a back wall, one band.",
-	"body": {"kind": "timber", "seed": 51, "plaster": ["#a89878", "#b4a484", "#c0b090", "#ccbc9c"], "timber": ["#1a1009", "#33231a", "#3f2b1d", "#4a3322"]},
+	"about": "Village wall: PixelLab tiles-pro plaster and timber (tools/art/tiles/sources/village_timber_0.png); a back wall, one band.",
+	"body": {
+		"path": "res://tools/art/tiles/sources/village_timber_0.png"
+	},
 	"variants": [],
-	"lips": [{"kind": "none"}],
-	"spill": 1, "depth": 1, "radius": 2, "rim": 2, "edge": "#120a06", "ledge_height": 0
+	"lips": [
+		{
+			"kind": "none"
+		}
+	],
+	"spill": 1,
+	"depth": 1,
+	"radius": 2,
+	"rim": 2,
+	"edge": "#120a06",
+	"ledge_height": 0
 }
