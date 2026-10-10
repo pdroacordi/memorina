@@ -6,6 +6,8 @@ extends RefCounted
 ## The contract's tile, px; a sheet is composed at `tile_px` and scaled up to it (systems/art-pipeline, art scale).
 const TILE := 32
 const HALF := 16
+## Rows per season band in the legacy 8-neighbour sheet; not the Wang sheet's GroundAutotile.BAND_ROWS.
+const _BLOB_BAND_ROWS := 6
 ## Legacy sheet tiles per quarter, by case: outer corner, open vertically, open horizontally, inner corner, fill.
 const _BLOB := {
 	"nw": [Vector2i(0, 0), Vector2i(1, 0), Vector2i(0, 1), Vector2i(4, 3), Vector2i(1, 1)],
@@ -48,7 +50,7 @@ static func tiles_from_blob(sheet: Image, column0: int, band: int) -> Array[Imag
 static func ledge_from_blob(sheet: Image, column0: int, band: int) -> Array[Image]:
 	var pieces: Array[Image] = []
 	for at: Vector2i in _BLOB_LEDGE:
-		pieces.append(sheet.get_region(Rect2i((at + Vector2i(column0, band * GroundAutotile.BAND_ROWS)) * tile_px, Vector2i(tile_px, tile_px))))
+		pieces.append(sheet.get_region(Rect2i((at + Vector2i(column0, band * _BLOB_BAND_ROWS)) * tile_px, Vector2i(tile_px, tile_px))))
 	return pieces
 
 ## Flat placeholder tiles: `fill`, a 1 px darker edge where a solid quadrant meets air, and a 4 px `lip` on exposed tops.
@@ -279,7 +281,8 @@ static func snow_strip(rng_seed: int, whites: PackedColorArray, shades: PackedCo
 			strip.set_pixel(x, y, color)
 	return strip
 
-## A 128x576 sheet from three bands (spring, autumn, winter), each {"tiles": 16, "variants": up to 4, "ledge": 4 or none}.
+## A 128x960 sheet from three bands (spring, autumn, winter), each {"tiles": 16, "variants": up to 4 sets of 16, "ledge": 4 or none}.
+## A variant set fills its column of the fill row and of every edge row (GroundAutotile.takes_variant).
 static func pack(bands: Array[Dictionary]) -> Image:
 	var sheet := Image.create_empty(BiomeTileset.SHEET_SIZE.x * tile_px / TILE, BiomeTileset.SHEET_SIZE.y * tile_px / TILE, false, Image.FORMAT_RGBA8)
 	for band: int in bands.size():
@@ -289,7 +292,9 @@ static func pack(bands: Array[Dictionary]) -> Image:
 			_blit(sheet, tiles[mask], GroundAutotile.wang_coords(mask) + Vector2i(0, row0))
 		var variants: Array = bands[band].get("variants", [])
 		for v: int in variants.size():
-			_blit(sheet, variants[v], GroundAutotile.variant_coords(v + 1) + Vector2i(0, row0))
+			var variant_tiles: Array = variants[v]
+			for mask: int in [GroundAutotile.FULL] + GroundAutotile.EDGE_MASKS:
+				_blit(sheet, variant_tiles[mask], GroundAutotile.varied_coords(mask, v + 1) + Vector2i(0, row0))
 		var ledge: Array = bands[band].get("ledge", [])
 		for piece: int in ledge.size():
 			_blit(sheet, ledge[piece], Vector2i(piece, GroundAutotile.LEDGE_ROW + row0))
@@ -310,7 +315,7 @@ static func _blob_quarter(tile: Image, sheet: Image, column0: int, band: int, ma
 		case = 2
 	elif not d:
 		case = 3
-	var source: Vector2i = _BLOB[quarter][case] + Vector2i(column0, band * GroundAutotile.BAND_ROWS)
+	var source: Vector2i = _BLOB[quarter][case] + Vector2i(column0, band * _BLOB_BAND_ROWS)
 	var offset := Vector2i(half_px if quarter.ends_with("e") else 0, half_px if quarter.begins_with("s") else 0)
 	tile.blit_rect(sheet, Rect2i(source * tile_px + offset, Vector2i(half_px, half_px)), _origin(corner))
 

@@ -21,6 +21,21 @@ func test_every_biome_is_sound_and_named_by_its_file() -> void:
 		assert_array(Array(biome.problems())).is_empty()
 		assert_object(BiomeTileset.find(biome.id())).is_same(biome)
 
+## A declared variant missing from a sheet would draw a hole in the street's top 4 cells in 5.
+func test_every_declared_variant_is_drawn_in_every_band() -> void:
+	for biome: BiomeTileset in _biomes():
+		for look: int in BiomeTileset.Look.values():
+			if not biome.has_look(look) or biome.variants(look) == 0:
+				continue
+			var image := biome.sheet(look).get_image()
+			var tile := image.get_width() / BiomeTileset.COLUMNS
+			for band: int in 3:
+				for variant: int in range(1, biome.variants(look) + 1):
+					for mask: int in [GroundAutotile.FULL] + GroundAutotile.EDGE_MASKS:
+						var at := GroundAutotile.varied_coords(mask, variant) + Vector2i(0, band * GroundAutotile.BAND_ROWS)
+						var empty := image.get_region(Rect2i(at * tile, Vector2i(tile, tile))).is_invisible()
+						assert_bool(empty).override_failure_message("%s %d: variant %d of mask %d is empty in band %d" % [biome.id(), look, variant, mask, band]).is_false()
+
 func test_the_tile_set_defines_every_slot_of_each_present_look() -> void:
 	for biome: BiomeTileset in _biomes():
 		var tile_set := biome.tile_set()

@@ -9,9 +9,13 @@ const SW := 4
 const SE := 8
 const FULL := 15
 ## Rows per season band; band 0 is spring.
-const BAND_ROWS := 6
+const BAND_ROWS := 10
 const VARIANT_ROW := 4
 const LEDGE_ROW := 5
+## The first of the edge-variant rows: one row per EDGE_MASKS entry, variant v in column v - 1.
+const EDGE_ROW := 6
+## The straight edges (top, underside, west face, east face) that take variants like the fill.
+const EDGE_MASKS: Array[int] = [SW | SE, NW | NE, NE | SE, NW | SW]
 const MAX_VARIANTS := 4
 ## Ledge pieces, in LEDGE_ROW order.
 const LEDGE_LEFT := 0
@@ -34,6 +38,17 @@ static func wang_coords(mask: int) -> Vector2i:
 static func variant_coords(variant: int) -> Vector2i:
 	return Vector2i(variant - 1, VARIANT_ROW)
 
+## True for the full tile and the straight edges, the tiles a sheet draws variants of.
+static func takes_variant(mask: int) -> bool:
+	return mask == FULL or mask in EDGE_MASKS
+
+## The band-0 slot of `mask` drawn from variant `variant` (1..MAX_VARIANTS); `mask` must take variants.
+static func varied_coords(mask: int, variant: int) -> Vector2i:
+	assert(takes_variant(mask), "mask %d has no variants" % mask)
+	if mask == FULL:
+		return variant_coords(variant)
+	return Vector2i(variant - 1, EDGE_ROW + EDGE_MASKS.find(mask))
+
 ## The band-0 slot of a ledge cell whose west and east cells are ledges of the same look.
 static func ledge_coords(west: bool, east: bool) -> Vector2i:
 	var piece := LEDGE_SINGLE
@@ -52,6 +67,19 @@ static func fill_variant(cell: Vector2i) -> int:
 	h = h ^ (h >> 16)
 	var pick := posmod(h, 10)
 	return pick - 5 if pick > 5 else 0
+
+## 0 for the plain edge or 1..MAX_VARIANTS, varied 4 cells in 5 so a one-row street does not repeat.
+static func edge_variant(cell: Vector2i) -> int:
+	var h := (cell.x * 83492791) ^ (cell.y * 2971215073)
+	h = (h ^ (h >> 13)) * 1274126177
+	h = h ^ (h >> 16)
+	return posmod(h, MAX_VARIANTS + 1)
+
+## The variant a sheet with `count` variants draws for `variant`: higher numbers fold onto the ones it has.
+static func drawn_variant(variant: int, count: int) -> int:
+	if variant <= 0 or count <= 0:
+		return 0
+	return (variant - 1) % count + 1
 
 ## The solid-corner mask `look` draws, from the looks at the corners (NW, NE, SW, SE; -1 for air).
 ## A later look counts for an earlier one only beside one of its corners: the edge-adjacent underlay.

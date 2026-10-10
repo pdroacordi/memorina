@@ -2,7 +2,7 @@
 id: tiles_village_stone
 command: tileset
 target: res://assets/sprites/world/tilesets/village/stone.png
-size: 128x576
+size: 128x960
 frames: 1
 source: procedural: tools/art/tiles/village_stone.json
 seasons: 3

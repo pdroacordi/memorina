@@ -32,7 +32,12 @@ static func _layers(map: RoomMap, looks: PackedByteArray, skip_platforms: bool) 
 					_look(map, looks, i - 1, j, skip_platforms), _look(map, looks, i, j, skip_platforms),
 				])
 				var mask := GroundAutotile.corner_mask(corners, look)
-				var variant := GroundAutotile.fill_variant(map.origin + Vector2i(i, j)) if mask == GroundAutotile.FULL else 0
+				var cell := map.origin + Vector2i(i, j)
+				var variant := 0
+				if mask == GroundAutotile.FULL:
+					variant = GroundAutotile.fill_variant(cell)
+				elif GroundAutotile.takes_variant(mask):
+					variant = GroundAutotile.edge_variant(cell)
 				layer[j * display.x + i] = mask | (variant << 4)
 		layers[look] = layer
 	return layers

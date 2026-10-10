@@ -26,7 +26,7 @@ const NO_LOOK := 255
 @export var looks := PackedByteArray()
 ## BiomeTileset.Look of the back wall per cell (NO_LOOK for none); empty when the room has no `[back]`.
 @export var back := PackedByteArray()
-## Look -> one byte per display cell (display_size()): solid-corner mask | fill variant << 4.
+## Look -> one byte per display cell (display_size()): solid-corner mask | variant << 4 (GroundAutotile.takes_variant).
 @export var ground_layers: Dictionary[int, PackedByteArray] = {}
 @export var back_layers: Dictionary[int, PackedByteArray] = {}
 ## Look -> one byte per cell: ledge piece + 1, 0 for none.

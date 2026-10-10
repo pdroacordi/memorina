@@ -65,6 +65,21 @@ func test_pack_puts_tiles_and_ledges_in_their_slots() -> void:
 	assert_that(sheet.get_pixel(ledge.x * TILE + 1, ledge.y * TILE + 1)).is_equal(Color8(0, 0, 255))
 	assert_float(sheet.get_pixel(1, 1).a).is_equal(0.0)
 
+## A variant set lands in its column of the fill row and of each edge row.
+func test_pack_puts_a_variant_set_in_the_fill_and_edge_rows() -> void:
+	var green := _flat(Color8(0, 255, 0))
+	var variant_tiles: Array[Image] = []
+	for mask: int in 16:
+		variant_tiles.append(green)
+	var bands: Array[Dictionary] = [{}, {}, {"variants": [variant_tiles, variant_tiles]}]
+	var sheet := WangSheet.pack(bands)
+	var row0 := 2 * GroundAutotile.BAND_ROWS
+	for mask: int in [GroundAutotile.FULL] + GroundAutotile.EDGE_MASKS:
+		var at := GroundAutotile.varied_coords(mask, 2) + Vector2i(0, row0)
+		assert_that(sheet.get_pixel(at.x * TILE + 1, at.y * TILE + 1)).is_equal(Color8(0, 255, 0))
+	var unused := GroundAutotile.varied_coords(GroundAutotile.FULL, 3) + Vector2i(0, row0)
+	assert_float(sheet.get_pixel(unused.x * TILE + 1, unused.y * TILE + 1).a).is_equal(0.0)
+
 func _flat(color: Color) -> Image:
 	var image := Image.create_empty(TILE, TILE, false, Image.FORMAT_RGBA8)
 	image.fill(color)

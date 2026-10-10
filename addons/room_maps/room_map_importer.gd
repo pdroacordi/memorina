@@ -16,10 +16,11 @@ extends EditorImportPlugin
 ## GroundAutotile or the RoomMap layout change, then force the reimport and commit
 ## the .room.import files (gotchas/import-plugin-output-is-stale-when-its-logic-changes).
 ## Format 5 (WORLD-07): dual-grid layers per look and the room's BiomeTileset (architecture/biome-tilesets).
+## Format 6: the straight edges take variants like the full tile (GroundAutotile.EDGE_MASKS).
 ## (room_files_test.gd re-parses the text, so it guards the maps, not a
 ## machine's stale imports.) A legend EDIT alone needs a reimport too.
 
-const FORMAT_VERSION := 5
+const FORMAT_VERSION := 6
 
 func _get_format_version() -> int:
 	return FORMAT_VERSION

@@ -140,12 +140,14 @@ The `[room]` header gains `tileset = <id>`, naming `resources/world/tiles/biomes
 The characters are proposals; renaming one before it lands is free. `RoomLegend.problems()` requires a ground other than NONE and a look other than WALL for GROUND/PLATFORM, and NONE for BACK.
 
 **Sheet contract** (every look, every biome; `GroundAutotile` constants)
-- 128x576 px: 4 columns of 32 px; 3 bands of 6 rows, spring / autumn / winter. `band_of_season` stays (2, 0, 1, 0).
+- 128x960 px: 4 columns of 32 px; 3 bands of 10 rows, spring / autumn / winter. `band_of_season` stays (2, 0, 1, 0).
 - Rows 0-3 hold the Wang tile for solid-corner mask `m` = NW·1 + NE·2 + SW·4 + SE·8, at (m mod 4, m div 4).
   - Slot (0,0) is never drawn.
   - m 12 is the exposed top, m 3 the underside, m 5/10 the faces, m 7/11/13/14 the inner corners, and m 15 the fill.
-- Row 4 holds up to four fill variants. An empty slot falls back to m 15.
+- Row 4 holds up to four fill variants; variant v is column v - 1.
 - Row 5 holds the ledge pieces: left end, middle, right end, single (the EARTH and WOOD looks only).
+- Rows 6-9 hold the same variants of the straight edges, m 12, 3, 10 and 5 (`EDGE_MASKS`), composed from the same variant bodies. A one-row street has no m 15 tile, so without them its top repeated every 32 px ("Variants on top tiles (Recommended)", user, 2026-10-10).
+- A biome's `fill_variants[look]` says how many columns the sheet draws; a higher variant folds onto one it has (`drawn_variant`). The fill varies 4 cells in 10 (`fill_variant`), an edge 4 in 5 (`edge_variant`).
 - Built looks have three identical bands, so one material serves every biome.
 
 **Autotile** (pure, static)
@@ -153,7 +155,8 @@ The characters are proposals; renaming one before it lands is free. `RoomLegend.
   - `wang_coords(mask)`
   - `variant_coords(v)`
   - `ledge_coords(west, east)`
-  - `fill_variant(display_cell) -> 0..4`, an integer hash, stable across platforms
+  - `fill_variant(display_cell) -> 0..4` and `edge_variant(display_cell) -> 0..4`, integer hashes, stable across platforms
+  - `takes_variant(mask)`, `varied_coords(mask, v)`, `drawn_variant(v, count)`
   - `corner_mask(corners: PackedInt32Array, look) -> int`, the underlay rule. Corner order is NW, NE, SW, SE, with -1 for air.
 - `RoomTileResolver.resolve(map)` replaces `RoomMapParser._resolve_tiles`.
   - Display cell (i, j), for i in 0..w and j in 0..h, has the corners: cell (i-1, j-1), (i, j-1), (i-1, j), (i, j).
@@ -190,7 +193,7 @@ The characters are proposals; renaming one before it lands is free. `RoomLegend.
 - `BiomeTileset` (Resource):
   - exports `earth`, `stone`, `wood`, `wall: Texture2D` and `description` (developer text for the guide);
   - `static find(id)`, `sheet(look)`, `has_look(look)` and `problems()`;
-  - `tile_set()`, built once and cached. It defines every slot of every band (72 per look), as `gotchas/tileset-padding-bakes-only-defined-tiles` requires, with no physics.
+  - `tile_set()`, built once and cached. It defines every slot of every band (120 per look), as `gotchas/tileset-padding-bakes-only-defined-tiles` requires, with no physics.
   - Several biomes may point at one sheet (planks shared by village, lake and interior).
 - **`seasonal_art.gdshader`** gains `uniform float shade = 1.0` (an RGB multiplier, 0..1), applied before the haze. The back material's starting values, to be tuned in the playtest:
   - `shade` 0.55;
@@ -217,7 +220,7 @@ The characters are proposals; renaming one before it lands is free. `RoomLegend.
   - `--preview=<scratchpad png>`.
 
   It snaps every tile to the palette, grafts, packs to the contract's target, and prints the per-tile silhouette difference between the bands outside the lip zones.
-- **`ArtPrompt`** gains `command: tileset` and the fields `seasons` (1 or 3; shared with the backdrop plan), `top_spring`, `top_autumn`, `top_winter`, `top_size`, `lip`, `seed`, `color_image` and `top_reference`. `problems()` requires 128x576 with 1 frame, the three tops when there are 3 seasons, and `lip` in 1..16.
+- **`ArtPrompt`** gains `command: tileset` and the fields `seasons` (1 or 3; shared with the backdrop plan), `top_spring`, `top_autumn`, `top_winter`, `top_size`, `lip`, `seed`, `color_image` and `top_reference`. `problems()` requires `BiomeTileset.SHEET_SIZE` (128x960) with 1 frame, the three tops when there are 3 seasons, and `lip` in 1..16.
 - **`make_placeholders.gd`** draws a tileset contract as real Wang geometry:
   - a flat hue per look;
   - a 1 px edge on air-facing sides;
@@ -295,13 +298,13 @@ The characters are proposals; renaming one before it lands is free. `RoomLegend.
   - the display layers at (-16, -16), `Solid` at 0 and hidden;
   - a `PhysicsServer2D` point query at a solid cell's centre hits the hidden layer, and a ledge cell is one-way;
   - `ground_at`, `cell_at` and `cell_rect` as before;
-  - an empty variant falls back to m 15;
+  - a variant above the biome's declared count folds onto one it has (`drawn_variant`); a count of 0 draws the plain tile;
   - setting `map` twice leaves one set of children.
 - **`ground_collision_test`**: one tile per EARTH/STONE/WOOD with its custom data and a full square; the alternative is one-way.
 - **`biome_tileset_test`** (every `.tres`):
   - the id equals the file name;
   - no `problems()`;
-  - `tile_set()` defines 72 tiles per present look, with source id = Look;
+  - `tile_set()` defines 120 tiles per present look, with source id = Look;
   - the earth and stone fill tiles differ in mean luminance in every band by at least legacy's measured difference (measure it first; the grey keeps only value);
   - `find()` of an unknown id is null.
 - **`wang_sheet_test`**:
@@ -356,7 +359,7 @@ The characters are proposals; renaming one before it lands is free. `RoomLegend.
 
 ## Art contract (every look sheet)
 
-- **Format.** 1x, 128x576, alpha 0 or 255, snapped to the biome's palette, in the slot layout above.
+- **Format.** 1x, 128x960, alpha 0 or 255, snapped to the biome's palette, in the slot layout above.
 - **The cell edge is the tile's midline.**
   - A solid quadrant reaches the midlines it shares with solid quadrants, and two tiles sharing two corners meet pixel for pixel. The preview is the check.
   - An edge facing air sits within ±2 px of the midline.
@@ -403,7 +406,7 @@ The characters are proposals; renaming one before it lands is free. `RoomLegend.
 - **Hidden collision.** A hidden `TileMapLayer` must still collide, and the `room_map_node_test` point query decides it. If it does not, keep it visible over the blank texture (some overdraw), or use `self_modulate` alpha 0.
 - **Graft seam.** If a season's lip meets the spring body visibly, raise `lip`, or re-run the season with the spring run's references. The preview shows every band.
 - **Underlay artefacts.** In a tile holding two looks and air, the earlier look's edge can peek past the later one's rounded corner. The preview pattern has every such case. The fallback is a one-line change in `corner_mask`: underlay only in tiles with no air corner.
-- **Repetition.** 16 tiles repeat; the fill variants and the hash break it up. PixelLab returns one fill per run, so the variants come from extra runs or Codex.
+- **Repetition.** 16 tiles repeat; the fill and edge variants and the hashes break it up. PixelLab returns one fill per run, so the variants come from extra runs or Codex.
 - **Import order.** The import now loads a `BiomeTileset` and its textures. The legend's entity scenes already do this, but if a fresh checkout's first import cannot load a sheet, raise the importer's `_get_import_order()` above the texture importer's.
 - **Legacy look.** The quartered legacy look is close, not exact: pillars and lone cells come from corner quarters instead of their own tiles. One-high solid runs become slabs, and only `=` keeps the thin ledge art.
 - **Concurrent plans.** `seasonal_art.gdshader` is also touched by `vertical-backdrops` (`gh_band_for`). `ArtPrompt.seasons` is shared with it; keep one meaning: the number of season versions.

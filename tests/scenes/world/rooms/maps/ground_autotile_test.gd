@@ -21,6 +21,22 @@ func test_variants_and_ledges_have_their_rows() -> void:
 	assert_vector(GroundAutotile.variant_coords(1)).is_equal(Vector2i(0, GroundAutotile.VARIANT_ROW))
 	assert_vector(GroundAutotile.variant_coords(4)).is_equal(Vector2i(3, GroundAutotile.VARIANT_ROW))
 
+## The full tile and the four straight edges take variants, each in its own row of the band.
+func test_the_straight_edges_take_variants_in_their_own_rows() -> void:
+	var rows := {}
+	for mask: int in range(1, 16):
+		if not GroundAutotile.takes_variant(mask):
+			continue
+		var first := GroundAutotile.varied_coords(mask, 1)
+		var last := GroundAutotile.varied_coords(mask, GroundAutotile.MAX_VARIANTS)
+		assert_int(last.x - first.x).is_equal(GroundAutotile.MAX_VARIANTS - 1)
+		assert_bool(first.y >= GroundAutotile.VARIANT_ROW and first.y < GroundAutotile.BAND_ROWS).is_true()
+		assert_bool(first.y != GroundAutotile.LEDGE_ROW).is_true()
+		rows[first.y] = true
+	assert_int(rows.size()).is_equal(5)
+	assert_bool(GroundAutotile.takes_variant(GroundAutotile.SW | GroundAutotile.SE)).is_true()
+	assert_bool(GroundAutotile.takes_variant(GroundAutotile.SE)).is_false()
+
 func test_the_four_ledge_cases() -> void:
 	assert_int(GroundAutotile.ledge_coords(false, true).x).is_equal(GroundAutotile.LEDGE_LEFT)
 	assert_int(GroundAutotile.ledge_coords(true, true).x).is_equal(GroundAutotile.LEDGE_MIDDLE)
@@ -36,6 +52,22 @@ func test_the_fill_variant_is_stable_bounded_and_varied() -> void:
 			assert_bool(variant >= 0 and variant <= GroundAutotile.MAX_VARIANTS).is_true()
 			seen[variant] = true
 	assert_int(seen.size()).is_greater(1)
+
+func test_the_edge_variant_is_stable_bounded_and_mostly_varied() -> void:
+	assert_int(GroundAutotile.edge_variant(Vector2i(-4, 9))).is_equal(GroundAutotile.edge_variant(Vector2i(-4, 9)))
+	var plain := 0
+	for x: int in 100:
+		var variant := GroundAutotile.edge_variant(Vector2i(x, 7))
+		assert_bool(variant >= 0 and variant <= GroundAutotile.MAX_VARIANTS).is_true()
+		if variant == 0:
+			plain += 1
+	assert_int(plain).is_between(5, 40)
+
+func test_a_variant_the_sheet_lacks_folds_onto_one_it_has() -> void:
+	assert_int(GroundAutotile.drawn_variant(4, 3)).is_equal(1)
+	assert_int(GroundAutotile.drawn_variant(3, 3)).is_equal(3)
+	assert_int(GroundAutotile.drawn_variant(2, 0)).is_equal(0)
+	assert_int(GroundAutotile.drawn_variant(0, 4)).is_equal(0)
 
 func test_one_look_counts_only_its_corners() -> void:
 	assert_int(GroundAutotile.corner_mask(PackedInt32Array([AIR, AIR, EARTH, EARTH]), EARTH)).is_equal(GroundAutotile.SW | GroundAutotile.SE)

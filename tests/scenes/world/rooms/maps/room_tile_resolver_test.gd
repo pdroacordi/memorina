@@ -54,13 +54,16 @@ func test_back_walls_fill_only_the_back_layers() -> void:
 	assert_bool(map.ground_layers.has(BiomeTileset.Look.WALL)).is_false()
 	assert_int(_mask(map, map.back_layers, BiomeTileset.Look.WALL, 1, 1)).is_equal(GroundAutotile.NW | GroundAutotile.NE)
 
-func test_a_full_tile_may_carry_a_fill_variant_and_others_never_do() -> void:
-	var map := _map("[grid]\n" + "########\n".repeat(8))
+## A one-row street has no full tile, so its exposed top must vary on its own.
+func test_the_full_tile_and_straight_edges_may_carry_a_variant_and_others_never_do() -> void:
+	var map := _map("[grid]\n" + "................\n".repeat(2) + "################\n".repeat(8))
 	var layer: PackedByteArray = map.ground_layers[BiomeTileset.Look.EARTH]
-	var varied := false
+	var varied := {}
 	for packed: int in layer:
-		if packed & 0xf != GroundAutotile.FULL:
+		var mask := packed & 0xf
+		if not GroundAutotile.takes_variant(mask):
 			assert_int(packed >> 4).is_equal(0)
 		elif packed >> 4 > 0:
-			varied = true
-	assert_bool(varied).is_true()
+			varied[mask] = true
+	assert_bool(varied.has(GroundAutotile.FULL)).is_true()
+	assert_bool(varied.has(GroundAutotile.SW | GroundAutotile.SE)).is_true()

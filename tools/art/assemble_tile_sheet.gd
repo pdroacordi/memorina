@@ -1,6 +1,6 @@
 extends SceneTree
 
-## Writes a 128x576 look sheet on the corner-Wang contract (architecture/biome-tilesets); inspect it in a room before use.
+## Writes a 128x960 look sheet on the corner-Wang contract (architecture/biome-tilesets); inspect it in a room before use.
 ##
 ##   Composed from a recipe (tools/art/tiles/<biome>_<look>.json: body, variants, a lip per band, edges):
 ##   "<godot>" --headless --path . -s res://tools/art/assemble_tile_sheet.gd -- --recipe=<json> --out=<png>
@@ -88,7 +88,10 @@ func _composed(recipe: Dictionary) -> Array[Dictionary]:
 	var bands: Array[Dictionary] = []
 	for band: int in BANDS:
 		var lip := _lip(lips[mini(band, lips.size() - 1)] if not lips.is_empty() else {}, spill, depth)
-		var entry := {"tiles": WangSheet.compose(body, lip, spill, radius, rim, edge, rim_dark), "variants": variants}
+		var variant_sets: Array = []
+		for variant: Image in variants:
+			variant_sets.append(WangSheet.compose(variant, lip, spill, radius, rim, edge, rim_dark))
+		var entry := {"tiles": WangSheet.compose(body, lip, spill, radius, rim, edge, rim_dark), "variants": variant_sets}
 		if ledge_height > 0:
 			entry["ledge"] = WangSheet.compose_ledge(body, lip, spill, ledge_height, radius, rim, edge)
 		bands.append(entry)

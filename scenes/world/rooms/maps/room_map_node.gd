@@ -94,8 +94,8 @@ func _display_layer(layer_name: String, look: int, cells: PackedByteArray, mater
 			var mask := packed & 0xf
 			if mask == 0:
 				continue
-			var variant := packed >> 4
-			var coords := GroundAutotile.variant_coords(variant) if variant > 0 and variant <= variants else GroundAutotile.wang_coords(mask)
+			var variant := GroundAutotile.drawn_variant(packed >> 4, variants)
+			var coords := GroundAutotile.varied_coords(mask, variant) if variant > 0 else GroundAutotile.wang_coords(mask)
 			layer.set_cell(map.origin + Vector2i(i, j), look, coords)
 	return layer
 

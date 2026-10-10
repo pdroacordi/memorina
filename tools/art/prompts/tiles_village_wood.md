@@ -2,7 +2,7 @@
 id: tiles_village_wood
 command: tileset
 target: res://assets/sprites/world/tilesets/village/wood.png
-size: 128x576
+size: 128x960
 frames: 1
 source: procedural: tools/art/tiles/village_wood.json
 seasons: 3

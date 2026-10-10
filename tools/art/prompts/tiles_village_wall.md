@@ -2,7 +2,7 @@
 id: tiles_village_wall
 command: tileset
 target: res://assets/sprites/world/tilesets/village/wall.png
-size: 128x576
+size: 128x960
 frames: 1
 source: procedural: tools/art/tiles/village_wall.json
 seasons: 1

@@ -8,7 +8,7 @@ enum Look { EARTH, STONE, WOOD, WALL }
 
 const DIRECTORY := "res://resources/world/tiles/biomes/"
 ## 4 columns of 32 px; 3 season bands of GroundAutotile.BAND_ROWS rows.
-const SHEET_SIZE := Vector2i(128, 576)
+const SHEET_SIZE := Vector2i(128, 960)
 const COLUMNS := 4
 ## Three season bands.
 const ROWS := GroundAutotile.BAND_ROWS * 3
@@ -30,7 +30,7 @@ const ROWS := GroundAutotile.BAND_ROWS * 3
 	set(value):
 		wall = value
 		_tile_set = null
-## Fill variants drawn in each look's variant row, 0..4, indexed by Look.
+## Variants each look's sheet draws of its fill and straight edges, 0..4, indexed by Look.
 @export var fill_variants := PackedInt32Array([0, 0, 0, 0])
 ## Developer text for the map guide.
 @export_multiline var description: String = ""
@@ -60,7 +60,7 @@ func sheet(look: Look) -> Texture2D:
 func has_look(look: Look) -> bool:
 	return sheet(look) != null
 
-## How many fill variants `look`'s sheet draws, 0..GroundAutotile.MAX_VARIANTS.
+## How many variants of the fill and straight edges `look`'s sheet draws, 0..GroundAutotile.MAX_VARIANTS.
 func variants(look: Look) -> int:
 	return fill_variants[look] if look < fill_variants.size() else 0
 
@@ -74,7 +74,7 @@ func problems() -> PackedStringArray:
 		if texture != null and Vector2i(texture.get_size()) != SHEET_SIZE:
 			found.append("%s sheet is %s, not %s" % [Look.keys()[look].to_lower(), Vector2i(texture.get_size()), SHEET_SIZE])
 		if variants(look) < 0 or variants(look) > GroundAutotile.MAX_VARIANTS:
-			found.append("%s has %d fill variants" % [Look.keys()[look].to_lower(), variants(look)])
+			found.append("%s has %d variants" % [Look.keys()[look].to_lower(), variants(look)])
 	return found
 
 ## One atlas source per present look, source id = Look; every slot defined (gotchas/tileset-padding-bakes-only-defined-tiles).
