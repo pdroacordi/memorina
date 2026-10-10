@@ -168,8 +168,15 @@ static func blade_strip(rng_seed: int, greens: PackedColorArray, flowers: Packed
 		if rng.randf() < density:
 			# Tufts: heights follow a smooth periodic curve, so the top reads as clumps, not a comb.
 			var blade := clampi(int(round(spill * tufts[x])) + rng.randi_range(-1, 0), 1, spill)
+			# Some blades are two px wide, the second a shade darker, so a tuft has body; every tip is lit.
+			var wide := rng.randf() < 0.4
 			for h: int in blade:
-				strip.set_pixel(x, spill - 1 - h, greens[clampi(1 + h * top / maxi(blade, 1), 1, top)])
+				var color := greens[clampi(1 + h * top / maxi(blade, 1), 1, top)]
+				if h == blade - 1:
+					color = color.lightened(0.12)
+				strip.set_pixel(x, spill - 1 - h, color)
+				if wide and h < blade - 1:
+					strip.set_pixel((x + 1) % TILE, spill - 1 - h, color.darkened(0.2))
 			if not flowers.is_empty() and blade >= spill - 2 and rng.randf() < 0.18:
 				strip.set_pixel(x, spill - blade, flowers[rng.randi() % flowers.size()])
 	for i: int in ferns:
@@ -201,7 +208,7 @@ static func cobble_strip(rng_seed: int, stones: PackedColorArray, joint: Color, 
 		var top := spill + row * 3
 		var x := rng.randi_range(0, 3)
 		while x < TILE + 4:
-			var width := rng.randi_range(4, 6)
+			var width := rng.randi_range(5, 8)
 			var base := rng.randi_range(0, stones.size() - 2)
 			for dx: int in width:
 				for dy: int in 3:

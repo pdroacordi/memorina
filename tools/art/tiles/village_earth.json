@@ -14,11 +14,11 @@
 	"variants": [
 		{
 			"seed": 11,
-			"count": 5,
+			"count": 4,
 			"kinds": [
-				"pebble",
+				"fern",
 				"root",
-				"sprig",
+				"pebble",
 				"clod",
 				"grit"
 			]
@@ -29,14 +29,15 @@
 			"kinds": [
 				"sprig",
 				"pebble",
-				"clod"
+				"clod",
+				"root"
 			]
 		},
 		{
 			"seed": 13,
-			"count": 4,
+			"count": 3,
 			"kinds": [
-				"root",
+				"fern",
 				"grit",
 				"clod"
 			]
@@ -57,7 +58,8 @@
 		"root": "#8a6a4c",
 		"sprig": "#4c5a1c",
 		"clod": "#120b08",
-		"grit": "#5a4636"
+		"grit": "#5a4636",
+		"fern": "#55642a"
 	},
 	"lips": [
 		{
@@ -103,7 +105,7 @@
 			]
 		}
 	],
-	"spill": 8,
+	"spill": 9,
 	"depth": 4,
 	"radius": 5,
 	"rim": 3,

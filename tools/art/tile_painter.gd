@@ -6,6 +6,8 @@ extends RefCounted
 const SIZE := 32
 ## Decorations stay this many px inside the border, so every variant tiles with the plain body and with each other.
 const MARGIN := 4
+## Px each decoration covers from its anchor; it keeps the decoration inside the margin.
+const _DECOR_SIZE := {"pebble": Vector2i(3, 3), "root": Vector2i(8, 3), "sprig": Vector2i(5, 6), "clod": Vector2i(3, 3), "grit": Vector2i(5, 6), "fern": Vector2i(9, 8)}
 
 
 ## Soft loam: three octaves of periodic value noise (8, 4 and 2 px cells) mapped onto `ramp` (dark to light);
@@ -105,9 +107,22 @@ static func decorated(body: Image, rng_seed: int, count: int, kinds: PackedStrin
 	rng.seed = rng_seed
 	var image := body.duplicate() as Image
 	for i: int in count:
-		# The largest decoration (a sprig) is 5 px wide and 6 px tall: it ends inside the margin.
-		var at := Vector2i(rng.randi_range(MARGIN, SIZE - MARGIN - 5), rng.randi_range(MARGIN, SIZE - MARGIN - 6))
-		match kinds[rng.randi() % kinds.size()]:
+		var kind := kinds[rng.randi() % kinds.size()]
+		# Each decoration's own size keeps it inside the margin.
+		var size: Vector2i = _DECOR_SIZE.get(kind, Vector2i(5, 6))
+		var at := Vector2i(rng.randi_range(MARGIN, SIZE - MARGIN - size.x), rng.randi_range(MARGIN, SIZE - MARGIN - size.y))
+		match kind:
+			"fern":
+				# A fern plant: three fronds fanning up from one root, lit at the tips.
+				var leaf: Color = colors.get("fern", colors.get("sprig", Color.DARK_OLIVE_GREEN))
+				var root := at + Vector2i(4, 7)
+				for frond: int in [-1, 0, 1]:
+					for step: int in 6:
+						var p := root + Vector2i(frond * (step + 1) / 2, -step - 1)
+						var shade := leaf.darkened(0.12 * (5 - step)) if step < 5 else leaf.lightened(0.1)
+						image.set_pixel(p.x, p.y, shade)
+						if step % 2 == 1:
+							image.set_pixel(p.x + (1 if frond >= 0 else -1), p.y + 1, shade.darkened(0.2))
 			"pebble":
 				# A 3x2 stone, lit from the top left, with a dark underside.
 				var light: Color = colors.get("pebble", Color.GRAY)
