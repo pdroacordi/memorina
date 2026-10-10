@@ -68,7 +68,7 @@ func _build() -> void:
 			_adopt(_display_layer("Ground_%s" % _look_name(look), look, map.ground_layers[look], ground_material, 0))
 		if not map.ledge_layers.is_empty():
 			_adopt(_ledge_layer())
-		if not Engine.is_editor_hint():
+		if not Engine.is_editor_hint() and not _indoors():
 			_grow_grass()
 	_solid = _solid_layer()
 	_adopt(_solid)
@@ -110,6 +110,11 @@ func _display_layer(layer_name: String, look: int, cells: PackedByteArray, mater
 	return layer
 
 ## Generated grass on every grassy top, when the biome grows any (architecture/generated-grass); a runtime-only node.
+# Grass needs open sky: an interior grows none, whatever its floor (systems/grass).
+func _indoors() -> bool:
+	var room := Room.of(self)
+	return room != null and room.interior
+
 func _grow_grass() -> void:
 	var biome := map.biome
 	var runs := GrassPlacement.runs(map, func(look: int) -> bool: return biome.grass(look) != null)

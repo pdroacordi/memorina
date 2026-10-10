@@ -1,23 +1,25 @@
 ; village_house.room - Ivo's house (design 04 section 3.1), where a new game starts (x 320, floor row 9).
 ; Flat floor and the bed alcove (cols 15-18). No gate or puzzle.
 
+; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
+
 [room]
 origin = 0, 0
 tileset = village
 
 [grid]
-####################
-#..............#####
-#..............#####
-#..............#####
-#..............#####
-#..............#####
-#..................#
-#..................#
-#...E..............#
-####################
-####################
-####################
+%%%%%%%%%%%%%%%%%%%%
+%..............%%%%%
+%..............%%%%%
+%..............%%%%%
+%..............%%%%%
+%..............%%%%%
+%..................%
+%..................%
+%...E..............%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%
 
 [entities]
 4,8 = {"link": "village_house_door", "to_room": "village_square", "arrive_facing": 1}

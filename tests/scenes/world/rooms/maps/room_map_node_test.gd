@@ -100,6 +100,22 @@ func test_a_variant_the_sheet_lacks_falls_back_to_the_fill() -> void:
 	for cell: Vector2i in ground.get_used_cells():
 		assert_int(ground.get_cell_atlas_coords(cell).y).is_less(GroundAutotile.VARIANT_ROW)
 
+## Grass grows on an exposed earth top outside and never inside an interior (systems/grass, Indoors).
+func test_an_interior_grows_no_grass() -> void:
+	var result := RoomMapParser.parse("[room]\ntileset = village\n[grid]\n......\n......\n######\n", RoomLegend.load_default())
+	assert_bool(result.ok()).is_true()
+	for interior: bool in [false, true]:
+		var room := Room.new()
+		room.interior = interior
+		var shape := CollisionShape2D.new()
+		shape.name = "CollisionShape2D"
+		room.add_child(shape)
+		var node := RoomMapNode.new()
+		node.map = result.map
+		room.add_child(node)
+		add_child(auto_free(room))
+		assert_bool(node.has_node("Grass")).is_equal(not interior)
+
 func test_setting_the_map_twice_leaves_one_set_of_children() -> void:
 	var result := RoomMapParser.parse("[room]\ntileset = legacy\n[grid]\n.B.\n###\n", RoomLegend.load_default())
 	var room := auto_free(RoomMapNode.new()) as RoomMapNode
