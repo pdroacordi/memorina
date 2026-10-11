@@ -31,10 +31,10 @@ z_index = -10
 position = Vector2(236, 288)
 
 [node name="Armchair1" parent="Props" instance=ExtResource("pi_elder_house_armchair")]
-position = Vector2(300, 288)
+position = Vector2(318, 288)
 
 [node name="WalkingStick2" parent="Props" instance=ExtResource("pi_elder_house_walking_stick")]
-position = Vector2(332, 288)
+position = Vector2(348, 288)
 
 [node name="DriedFlowers3" parent="Props" instance=ExtResource("pi_elder_house_dried_flowers")]
 position = Vector2(300, 150)

@@ -26,10 +26,10 @@ backdrop_set = ExtResource("bd_set")
 z_index = -10
 
 [node name="BreadRackA0" parent="Props" instance=ExtResource("pi_bakery_bread_rack_a")]
-position = Vector2(196, 288)
+position = Vector2(186, 288)
 
 [node name="BreadRackB1" parent="Props" instance=ExtResource("pi_bakery_bread_rack_b")]
-position = Vector2(246, 288)
+position = Vector2(222, 288)
 
 [node name="WallShelfBowls2" parent="Props" instance=ExtResource("pi_bakery_wall_shelf_bowls")]
 position = Vector2(220, 152)
