@@ -13,9 +13,10 @@ const FLIP_AXIS := 63.5
 const WALL_COLUMN := 75
 ## Game px (2 art px): how far a clip's body centroid may sit off the flip axis.
 const CENTRE_TOLERANCE := 4.0
-## The run is left out: its flight phase lifts both feet off the floor.
+## Game px (2 art px): how far an attack's body may move between two frames, so a swing never slides or pops.
+const STEADY_TOLERANCE := 4.0
 const GROUNDED: Array[StringName] = [
-	&"idle", &"brace", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle",
+	&"idle", &"run", &"brace", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle",
 	&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in", &"run_attack_swing_out",
 ]
 const CENTRED: Array[StringName] = [
@@ -31,7 +32,7 @@ const AIR_ATTACKS: Array[StringName] = [&"jump_attack", &"fall_attack", &"air_do
 ## Exempt from centring: they face the wall and put the front on the capsule edge instead.
 const WALL: Array[StringName] = [&"wall_landing", &"wall_slide"]
 ## The blade's colours, left out of an attack's body centroid.
-const STEEL: Array[Color] = [Color8(98, 106, 112), Color8(150, 160, 166), Color8(200, 208, 210)]
+const STEEL: Array[Color] = [Color8(98, 106, 112), Color8(150, 160, 166), Color8(200, 208, 210), Color8(234, 240, 240)]
 ## Seconds; the 2x sheets kept every clip's timing.
 const LENGTHS := {
 	&"idle": 0.8333333, &"run": 0.6666667, &"brace": 1.0, &"jump_start": 0.25, &"jump_idle": 0.083333336,
@@ -103,6 +104,17 @@ func test_body_clips_are_centred() -> void:
 		problems.append_array(_off_axis(clip, 80, 96))
 	for clip: StringName in AIR_ATTACKS:
 		problems.append_array(_off_axis(clip, 40, 70))
+	assert_array(Array(problems)).is_empty()
+
+func test_attack_bodies_hold_still_between_frames() -> void:
+	var problems := PackedStringArray()
+	for clip: StringName in GROUND_ATTACKS + AIR_ATTACKS:
+		var band := Vector2i(80, 96) if clip in GROUND_ATTACKS else Vector2i(40, 70)
+		var frames := _frames(clip)
+		for i: int in range(1, frames.size()):
+			var shift := _centroid_x(clip, frames[i], band.x, band.y) - _centroid_x(clip, frames[i - 1], band.x, band.y)
+			if absf(shift) > STEADY_TOLERANCE:
+				problems.append("%s frames %d-%d: body moves %.1f px" % [clip, frames[i - 1], frames[i], shift])
 	assert_array(Array(problems)).is_empty()
 
 func test_wall_clips_meet_the_wall_at_the_capsule_edge() -> void:

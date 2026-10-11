@@ -51,6 +51,14 @@
    "pressed": false
   },
   {
+   "t": 2.35,
+   "screenshot": "03b_jump_top"
+  },
+  {
+   "t": 2.35,
+   "log": "03b_jump_top"
+  },
+  {
    "t": 2.55,
    "screenshot": "04_fall"
   },
@@ -64,6 +72,14 @@
    "pressed": false
   },
   {
+   "t": 2.75,
+   "screenshot": "04b_fall_low"
+  },
+  {
+   "t": 2.75,
+   "log": "04b_fall_low"
+  },
+  {
    "t": 3.4,
    "action": "attack",
    "pressed": true
@@ -74,11 +90,11 @@
    "pressed": false
   },
   {
-   "t": 3.58,
+   "t": 3.53,
    "screenshot": "05_attack_ground_1"
   },
   {
-   "t": 3.58,
+   "t": 3.53,
    "log": "05_attack_ground_1"
   },
   {
@@ -172,6 +188,34 @@
   {
    "t": 7.75,
    "log": "09_air_spin"
+  },
+  {
+   "t": 7.95,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 8.0,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 8.08,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 8.28,
+   "screenshot": "09b_attack_pogo"
+  },
+  {
+   "t": 8.28,
+   "log": "09b_attack_pogo"
+  },
+  {
+   "t": 8.45,
+   "action": "look_down",
+   "pressed": false
   },
   {
    "t": 8.6,
