@@ -23,6 +23,56 @@ func test_animate_needs_a_reference() -> void:
 	var prompt := ArtPrompt.parse(_text(["---", "command: animate", "action: waves", "target: res://assets/a.png", "---", "x"]), "a")
 	assert_int(prompt.problems("a").size()).is_greater(0)
 
+func test_keep_reads_the_kept_range() -> void:
+	var prompt := ArtPrompt.parse(_text([
+		"---", "command: animate3", "frames: 6", "keep: 1-6", "generate: 8", "action: jumps", "reference: res://r.png",
+		"target: res://assets/a.png", "---", "x"]), "a")
+	assert_array(Array(prompt.keep)).is_equal([1, 2, 3, 4, 5, 6])
+	assert_array(Array(prompt.problems("a"))).is_empty()
+
+func test_keep_can_run_back_for_a_ping_pong() -> void:
+	var prompt := ArtPrompt.parse(_text([
+		"---", "command: animate3", "frames: 4", "keep: 5-7,6-6", "generate: 8", "action: sways", "reference: res://r.png",
+		"target: res://assets/a.png", "---", "x"]), "a")
+	assert_array(Array(prompt.keep)).is_equal([5, 6, 7, 6])
+	assert_array(Array(prompt.problems("a"))).is_empty()
+
+func test_keep_must_span_the_frame_count() -> void:
+	var prompt := ArtPrompt.parse(_text([
+		"---", "command: animate3", "frames: 6", "keep: 1-5", "generate: 8", "action: jumps", "reference: res://r.png",
+		"target: res://assets/a.png", "---", "x"]), "a")
+	assert_int(prompt.problems("a").size()).is_greater(0)
+
+func test_a_malformed_keep_is_a_problem() -> void:
+	var prompt := ArtPrompt.parse(_text([
+		"---", "command: animate3", "frames: 6", "keep: six", "action: jumps", "reference: res://r.png",
+		"target: res://assets/a.png", "---", "x"]), "a")
+	assert_int(prompt.problems("a").size()).is_greater(0)
+
+func test_a_kept_animation_needs_its_generation_count() -> void:
+	for generate: String in ["", "generate: 7", "generate: 18", "generate: 4"]:
+		var prompt := ArtPrompt.parse(_text([
+			"---", "command: animate3", "frames: 6", "keep: 1-6", generate, "action: jumps", "reference: res://r.png",
+			"target: res://assets/a.png", "---", "x"]), "a")
+		assert_int(prompt.problems("a").size()).override_failure_message(generate).is_greater(0)
+
+func test_a_cut_names_the_generation_it_comes_from() -> void:
+	var prompt := ArtPrompt.parse(_text([
+		"---", "command: cut", "frames: 1", "keep: 6-6", "target: res://assets/a.png", "---", "x"]), "a")
+	assert_int(prompt.problems("a").size()).is_greater(0)
+	prompt.cut_from = "b"
+	assert_array(Array(prompt.problems("a"))).is_empty()
+
+func test_every_cut_fits_its_source_generation() -> void:
+	var problems := PackedStringArray()
+	for prompt: ArtPrompt in ArtPrompt.all():
+		if prompt.command != "cut":
+			continue
+		var source := ArtPrompt.find(prompt.cut_from)
+		if source == null or source.command != "animate3" or not prompt.keep_fits(source.generate_frames):
+			problems.append("%s: cut_from %s does not hold its kept frames" % [prompt.id, prompt.cut_from])
+	assert_array(Array(problems)).is_empty()
+
 func test_the_library_is_sound() -> void:
 	var problems := PackedStringArray()
 	for prompt: ArtPrompt in ArtPrompt.all():

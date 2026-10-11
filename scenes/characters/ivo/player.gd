@@ -335,6 +335,7 @@ func _after_move(_delta: float) -> void:
 
 func _assert_clip_durations() -> void:
 	_assert_clip_length(PlayerAnimationResolver.ROLL, _roll.stats.roll_time + _roll.stats.roll_recovery_time)
+	_assert_clip_length(PlayerAnimationResolver.LAND, _landing.stats.hard_land_time)
 	for context in ATTACK_CONTEXTS:
 		var stats := _attack_stats_for(context)
 		for i in stats.phases.size():

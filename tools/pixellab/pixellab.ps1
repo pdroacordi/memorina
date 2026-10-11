@@ -153,17 +153,20 @@ function Use-Prompt([string]$id) {
   $entry = Read-PromptFile (Join-Path $dir "$id.md")
   $style = Read-PromptFile (Join-Path $dir "style.md")
   $f = $entry.Fields
+  if ($f['command'] -eq "cut") { throw "$id is cut from the $($f['cut_from']) generation; run that contract instead." }
   $bound = $script:PSBoundParameters
   if (-not $bound.ContainsKey("Description")) { $script:Description = "$($style.Fields['preamble']). $($entry.Body)" }
   if (-not $bound.ContainsKey("Negative")) { $script:Negative = (@($style.Fields['negative'], $entry.Negative) | Where-Object { $_ }) -join ", " }
   $size = $f['size'] -split "x"
   $frames = if ($f['frames']) { [int]$f['frames'] } else { 1 }
+  # A contract with a keep holds fewer frames than it generates; `generate:` is PixelLab's frame_count.
+  $requested = if ($f['generate']) { [int]$f['generate'] } else { $frames }
   $w = [int]$size[0]; $h = [int]$size[1]
   if ($script:Command -eq "generate") { $w = $w * $frames }
   $scale = [Math]::Max(1, [Math]::Ceiling(64 / [Math]::Min($w, $h)))
   if (-not $bound.ContainsKey("Width")) { $script:Width = $w * $scale }
   if (-not $bound.ContainsKey("Height")) { $script:Height = $h * $scale }
-  if (-not $bound.ContainsKey("Frames")) { $script:Frames = $frames }
+  if (-not $bound.ContainsKey("Frames")) { $script:Frames = $requested }
   if (-not $bound.ContainsKey("View") -and $f['view']) { $script:View = $f['view'] }
   if (-not $bound.ContainsKey("Direction") -and $f['direction']) { $script:Direction = $f['direction'] }
   if (-not $bound.ContainsKey("Outline") -and $f['outline']) { $script:Outline = $f['outline'] }

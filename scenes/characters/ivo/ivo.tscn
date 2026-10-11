@@ -1,32 +1,31 @@
 [gd_scene format=3 uid="uid://cxmds8nc576iu"]
 
 [ext_resource type="Script" uid="uid://cu1c1mo6x7ca6" path="res://scenes/characters/ivo/player.gd" id="1_ynyct"]
-[ext_resource type="Texture2D" uid="uid://c0bfcw6louuhh" path="res://assets/sprites/characters/ivo/player_idle_96x96.png" id="2_45amr"]
-[ext_resource type="Texture2D" uid="uid://ltw6fbmosvx8" path="res://assets/sprites/characters/ivo/player_air_spin_96x96.png" id="3_466qv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_idle.png" id="2_45amr"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_air_spin.png" id="3_466qv"]
 [ext_resource type="Script" uid="uid://c1uo8k8aac7gw" path="res://scenes/characters/ivo/player_input.gd" id="3_pinput"]
-[ext_resource type="Texture2D" uid="uid://cvsmwfqcpsebp" path="res://assets/sprites/characters/ivo/player_jump_96x96.png" id="3_soiyk"]
-[ext_resource type="Texture2D" uid="uid://6web0uujory8" path="res://assets/sprites/characters/ivo/player_land_96x96.png" id="4_466qv"]
-[ext_resource type="Texture2D" uid="uid://dewrkaj1bjon0" path="res://assets/sprites/characters/ivo/player_katana_air_downwards_attack.png" id="4_g67cj"]
-[ext_resource type="Texture2D" uid="uid://dk57og1213ae6" path="res://assets/sprites/characters/ivo/player_katana_falling_attack.png" id="5_f4vrk"]
-[ext_resource type="Texture2D" uid="uid://bn6x0lpukduy8" path="res://assets/sprites/characters/ivo/player_run_96x96.png" id="5_ip35x"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_push_96x96.png" id="60_push"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_jump.png" id="3_soiyk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_land.png" id="4_466qv"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_attack_down.png" id="4_g67cj"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_attack_air.png" id="5_f4vrk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_run.png" id="5_ip35x"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_push.png" id="60_push"]
 [ext_resource type="Script" path="res://scenes/characters/components/airflow_body.gd" id="61_airflow"]
 [ext_resource type="Script" path="res://scenes/world/interactables/weight/weight.gd" id="62_weight"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_climb_96x96.png" id="63_climb"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_climb_back_96x96.png" id="64_climbback"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_climb.png" id="63_climb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_climb_back.png" id="64_climbback"]
 [ext_resource type="Script" path="res://scenes/characters/components/climb_component.gd" id="65_climbco"]
-[ext_resource type="Texture2D" uid="uid://dk6l26iest8ah" path="res://assets/sprites/characters/ivo/player_roll_96x96.png" id="6_lk6ox"]
-[ext_resource type="Texture2D" uid="uid://dbcqeejk3rkuc" path="res://assets/sprites/characters/ivo/player_attack.png" id="6_xaiam"]
-[ext_resource type="Texture2D" uid="uid://ncv44x1nf0vl" path="res://assets/sprites/characters/ivo/player_wall_land_96x96.png" id="7_ip35x"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_roll.png" id="6_lk6ox"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_attack_ground.png" id="6_xaiam"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_wall_land.png" id="7_ip35x"]
 [ext_resource type="Script" uid="uid://branmbikueiyl" path="res://scenes/particles/dust/dust_emitter.gd" id="8_45amr"]
-[ext_resource type="Texture2D" uid="uid://ipnytibg7u74" path="res://assets/sprites/characters/ivo/player_wall_slide_96x96.png" id="8_lk6ox"]
-[ext_resource type="Texture2D" uid="uid://bsp3xo7ofkcsf" path="res://assets/sprites/characters/ivo/player_katana_jumping_attack.png" id="9_7obig"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_wall_slide.png" id="8_lk6ox"]
 [ext_resource type="PackedScene" uid="uid://cbam77lyl5m76" path="res://scenes/particles/dust/jump_dust_particles.tscn" id="9_soiyk"]
 [ext_resource type="PackedScene" uid="uid://b2a63w0vkfy3a" path="res://scenes/particles/dust/landing_dust_particles.tscn" id="10_466qv"]
-[ext_resource type="Texture2D" uid="uid://bxjy6qu7cchmp" path="res://assets/sprites/characters/ivo/player_running_katana_attack.png" id="10_f4vrk"]
-[ext_resource type="Texture2D" uid="uid://3t3wgyt240me" path="res://assets/sprites/characters/ivo/player_death.png" id="11_5ktg3"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_attack_run.png" id="10_f4vrk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_death.png" id="11_5ktg3"]
 [ext_resource type="PackedScene" path="res://scenes/combat/hurtbox/hurtbox.tscn" id="12_hurtbox"]
-[ext_resource type="Texture2D" uid="uid://cypqkl82nowd0" path="res://assets/sprites/characters/ivo/player_hurt_96x96.png" id="14_f3llk"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_hurt.png" id="14_f3llk"]
 [ext_resource type="Script" uid="uid://dsp4w4pojjffd" path="res://scenes/combat/health/health.gd" id="16_uw5th"]
 [ext_resource type="Script" uid="uid://dfbu5a2uchyf5" path="res://scenes/characters/components/locomotion_component.gd" id="17_locomo"]
 [ext_resource type="Resource" path="res://resources/characters/ivo/ivo_locomotion_stats.tres" id="18_locsta"]
@@ -63,7 +62,7 @@
 [ext_resource type="Script" uid="uid://cd0iolsgg5fll" path="res://scenes/characters/ivo/abilities/ability_recall_component.gd" id="49_recall"]
 [ext_resource type="Script" path="res://scenes/characters/ivo/recall_aura/recall_aura.gd" id="50_aura"]
 [ext_resource type="Script" path="res://scenes/characters/components/safe_ground_tracker.gd" id="60_safe_ground"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/player_sit_96x96.png" id="70_sit"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_sit.png" id="70_sit"]
 [ext_resource type="Script" path="res://scenes/characters/components/sit_component.gd" id="71_sitco"]
 [ext_resource type="Script" path="res://scenes/characters/components/door_component.gd" id="72_doorco"]
 
@@ -266,7 +265,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [7]
+"values": [6]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -323,10 +322,10 @@ tracks/6/path = NodePath("Hitbox/CollisionShape2D:scale")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0.16666667),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(3.17, 0.97)]
+"values": [Vector2(0.9, 0.268)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -335,10 +334,10 @@ tracks/7/path = NodePath("Hitbox/CollisionShape2D:position")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(0.16666667),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(9, -4)]
+"values": [Vector2(-3.5, 12)]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
@@ -347,10 +346,10 @@ tracks/8/path = NodePath("Hitbox/CollisionShape2D:shape:radius")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
-"times": PackedFloat32Array(0.25),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [16.719242]
+"values": [11.672157]
 }
 
 [sub_resource type="Animation" id="Animation_ip35x"]
@@ -461,7 +460,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [9]
+"values": [4]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -533,7 +532,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(40, -42)]
+"values": [Vector2(0.5, -3.5)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -546,6 +545,30 @@ tracks/7/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 1,
 "values": [SubResource("CapsuleShape2D_hitbox")]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Hitbox/CollisionShape2D:scale")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(2.956, 0.549)]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("Hitbox/CollisionShape2D:shape:radius")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [11.672157]
 }
 
 [sub_resource type="Animation" id="Animation_dk131"]
@@ -776,7 +799,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25, 0.33333334),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
-"values": [3, 4, 5, 6, 7]
+"values": [0, 1, 2, 3, 4]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -821,10 +844,10 @@ tracks/6/path = NodePath("Hitbox/CollisionShape2D:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0.083333336),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(40.000004, -28.000002)]
+"values": [Vector2(17.5, -23.5)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -833,10 +856,10 @@ tracks/7/path = NodePath("Hitbox/CollisionShape2D:scale")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(0.083333336),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(3.035, 1.365)]
+"values": [Vector2(1.157, 0.159)]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
@@ -845,7 +868,7 @@ tracks/8/path = NodePath("Hitbox/CollisionShape2D:shape:radius")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
-"times": PackedFloat32Array(0.083333336),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [11.672157]
@@ -889,7 +912,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [0, 1, 2, 3]
+"values": [5, 6, 7, 8]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -937,7 +960,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(38, -36)]
+"values": [Vector2(28.5, -37.5)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -949,7 +972,7 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(3.07, 1.365)]
+"values": [Vector2(2.099, 0.451)]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
@@ -978,7 +1001,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("9_7obig")]
+"values": [ExtResource("5_f4vrk")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -990,7 +1013,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [9]
+"values": [4]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1050,7 +1073,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(40, -42)]
+"values": [Vector2(0.5, -3.5)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -1062,7 +1085,19 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [16.719242]
+"values": [11.672157]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Hitbox/CollisionShape2D:scale")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(2.956, 0.549)]
 }
 
 [sub_resource type="Animation" id="Animation_yxci8"]
@@ -1645,7 +1680,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [8]
+"values": [9]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1657,7 +1692,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25, 0.33333334),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
-"values": [3, 4, 5, 6, 7]
+"values": [0, 1, 2, 3, 4]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -1702,10 +1737,10 @@ tracks/6/path = NodePath("Hitbox/CollisionShape2D:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0.083333336),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(31, -35)]
+"values": [Vector2(22.5, -46.5)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -1714,10 +1749,10 @@ tracks/7/path = NodePath("Hitbox/CollisionShape2D:scale")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(0.083333336),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(3.17, 0.97)]
+"values": [Vector2(1.756, 0.622)]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
@@ -1726,7 +1761,7 @@ tracks/8/path = NodePath("Hitbox/CollisionShape2D:shape:radius")
 tracks/8/interp = 1
 tracks/8/loop_wrap = true
 tracks/8/keys = {
-"times": PackedFloat32Array(0.083333336),
+"times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [11.672157]
@@ -1758,7 +1793,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [8]
+"values": [9]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1770,7 +1805,7 @@ tracks/2/keys = {
 "times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [0, 1, 2, 3]
+"values": [5, 6, 7, 8]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -1818,7 +1853,31 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [30.0]
+"values": [11.672157]
+}
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("Hitbox/CollisionShape2D:position")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(24.5, -50.5)]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("Hitbox/CollisionShape2D:scale")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(1.928, 0.671)]
 }
 
 [sub_resource type="Animation" id="Animation_ckagk"]
@@ -2100,7 +2159,7 @@ texture = ExtResource("2_45amr")
 hframes = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=64234537]
-position = Vector2(-1, -27)
+position = Vector2(0, -27)
 shape = SubResource("CapsuleShape2D_ynyct")
 
 [node name="Hurtbox" parent="." unique_id=184682534 instance=ExtResource("12_hurtbox")]

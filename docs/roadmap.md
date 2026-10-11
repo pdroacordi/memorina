@@ -19,9 +19,10 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | CORE-03 | Common enemies (brute shadow) | 02 §2 | `[x]` | | 2026-10-02 | Enemies take hazard damage but never respawn; nothing keeps them out of water. |
 | CORE-04 | Teaching creatures (criaturas-professoras) | 02 §2 | `[?]` | | 2026-10-02 | Design names them; behaviour undefined. |
 | CORE-05 | Gamepad layout and device glyphs | 02 Controles | `[x]` | | 2026-10-02 | `systems/input` |
-| CORE-06 | Climbing (on roots) | 02 §7.1 | `[x]` | SONG-07 | 2026-10-02 | Template ladder and ledge clips unused. |
+| CORE-06 | Climbing (on roots) | 02 §7.1 | `[x]` | SONG-07 | 2026-10-11 | |
 | CORE-07 | The camera shows where a fall lands | 02 Controles | `[x]` | | 2026-10-10 | "when we fall into a new room, the camera takes too long to follow and that is really bad for the player to track where he is going to fall." (user, 2026-10-10). `systems/rooms` (A fall shows its landing), `playtests/2026-10-10-camera-on-falls`. |
-| CORE-08 | Ivo redrawn at the world's 2x density, about 52 px tall | 03 §6 | `[ ]` | | 2026-10-10 | "Redraw at 2x, ~52 px (Recommended)" (user, 2026-10-10): body shrunk to match, jumps still clear the same gaps; style board first. |
+| CORE-08 | Ivo redrawn at the world's 2x density, about 52 px tall | 03 §6 | `[x]` | | 2026-10-11 | "Redraw at 2x, ~52 px (Recommended)" (user, 2026-10-10): body shrunk to match, jumps still clear the same gaps; style board first. Built 29 art px tall from the approved still (Codex poses, PixelLab clips); capsule and jumps unchanged, sword reach shrunk to the art. `systems/animation` (Ivo's sheets), `architecture/ivo-at-2x`, `playtests/2026-10-11-ivo-at-2x`. |
+| CORE-09 | Retune enemies and guardians to Ivo's shorter sword | 02 §2 | `[ ]` | CORE-08 | 2026-10-11 | "Shrink to the art" (user, 2026-10-11): every Hitbox now covers only the swing the 2x art shows (forward reach 31-53 px, was 52-75; `architecture/ivo-at-2x` Revision). CORE-08 review: the standing combo no longer reaches a parked brute (it stops at 90 px; idle_1 hits at <= ~46), the finisher often whiffs after swing 1's knockback, the running slash is the opener; the air slash covers y -26..19 only (nothing above the waist) and reaches 34 px behind and below; the pogo box is 21 px wide and 3.5 px behind centre (the review measured 38 and 7.5 before the attack sheets moved 4 px forward onto the flip axis); guardians can no longer be outranged by swing 1. |
 
 ## Memory and world
 

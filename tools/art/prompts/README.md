@@ -12,12 +12,12 @@ land before art does.
 ```
 ---
 id: pressure_plate                 ; must equal the file name
-command: generate                  ; generate | animate
+command: generate                  ; generate | animate | animate3 | cut (frames of another contract's generation)
 target: res://assets/sprites/world/props/pressure_plate/pressure_plate.png
 size: 32x12                        ; ONE frame, WxH, in game pixels
 frames: 2                          ; frames side by side in the sheet
 view: side                         ; side | low top-down | high top-down
-direction: west                    ; characters face LEFT (the scenes flip them)
+direction: west                    ; characters face LEFT (the scenes flip them); Ivo faces east
 no_background: true
 outline: single color black outline
 shading: basic shading
@@ -25,6 +25,9 @@ detail: medium detail
 source: codex                      ; codex | pixellab | "pack: <file>" | "procedural: <tool>"
 reference:                         ; animate / seed only - OUR art, never a pack's
 action:                            ; animate only
+keep: 1-6                          ; animate3 / cut: returned frames kept, in sheet order (5-10,9-6 runs back)
+generate: 8                        ; animate3 with keep: PixelLab's frame_count (even, 4-16); -Prompt sends it
+cut_from:                          ; cut only: the animate3 contract whose frames it keeps
 ---
 A worn stone floor plate set flush into earth, ...
 Negative: text, watermark, background scenery
@@ -38,7 +41,7 @@ the project-wide look lives.
 ## The loop
 
 1. **Write the entry** (or find it). Size it from the scene that will use it:
-   tiles are 32 px, Ivo is 96 px at 2x, props sit on 32 px cells.
+   tiles are 32 px, Ivo's frames are 128 px at 2x, props sit on 32 px cells.
 2. **Placeholder first**: `"<godot>" --headless --path . -s res://tools/art/make_placeholders.gd`
    draws the contract's exact sheet, so the scene can reference the target now.
 3. **Generate**, never into `assets/`:

@@ -1,8 +1,8 @@
 ---
 id: architecture/ivo-at-2x
 type: architecture
-title: Ivo at 2x - one 128 px frame, frames chosen from PixelLab's closed loops, body and reach unchanged
-status: proposed
+title: Ivo at 2x - one 128 px frame, frames chosen from PixelLab's returned frames, body unchanged, reach shrunk to the art
+status: active
 tags: [ivo, art, animation, pixellab, sprite, collision, jump-reach]
 related: [systems/animation, systems/art-pipeline, systems/props, gotchas/sprite-frame-out-of-bounds-on-clip-switch, gotchas/animationtree-reset-track-overwrites-script-writes, gotchas/zigzag-ledges-two-rows-apart-seal-a-shaft, bugs/off-centre-sprite-sheet-jumps-on-flip, architecture/room-reachability-audit]
 created: 2026-10-11
@@ -12,9 +12,11 @@ source_files:
   - tools/art/cut_inhabitant.py
   - tools/art/cut_props.py
   - tools/pixellab/pixellab.ps1
+  - tools/art/art_prompt.gd
+  - tests/scenes/characters/ivo/ivo_sheet_test.gd
 ---
 
-# Ivo at 2x (PROPOSED, CORE-08)
+# Ivo at 2x (BUILT, CORE-08)
 
 ## Context
 
@@ -76,3 +78,34 @@ Clip lengths, steps and the hitbox/hurtbox keys (seconds) stay. Jump and fall at
 - `_assert_clip_durations` also pins land to `hard_land_time`.
 - Capsule: `ceil(height / 32) == 2`; `MapGuide.ivo_reach()` peak and gap pinned to today's numbers.
 - Smoke, and a playtest: hair reads in run and jump; its tip is not greyed at the shield's edge.
+
+## Revision (2026-10-11, CORE-08 built)
+
+The user's decisions, in their words: "Redraw at 2x, ~52 px (Recommended)" (2026-10-10); the design "Yes, the taller one (Recommended)" (2026-10-11), 29 art px tall; the pipes on his back "Remove them (Recommended)" (2026-10-11), already gone from `ivo_still_2x.png`; the weapon "His short sword, drawn to swing (Recommended)" (2026-10-11), in its scabbard at his hip except in attacks; the sword's reach "Shrink to the art" (2026-10-11); the idle pilot "Yes, do the rest (Recommended)" (2026-10-11); the PixelLab spend "Go ahead (Recommended)" (2026-10-11), up to 30 animate3 calls. The capsule stays radius 11, height 54 (this plan's call), now centred at x 0.
+
+What changed from the decision above, and why:
+
+- **Canvas.** At 128 px PixelLab lost his face (the pilot); at 64 px it held his profile. Clips are generated on the tightest canvas that holds the motion and padded into the 128 frame by `cut_inhabitant.py --frame=128 --at=x,y`: 64 px for idle, run, push, sit, jump, land and hurt; 80 px for climb, climb_back, wall_land and air_spin (the climbing and clinging poses are 62-70 px tall); 96 px for roll, death and the attacks. The approved idle pilot is re-framed (`--strip=64`), not regenerated.
+- **`keep` lists frames**, not only a range: `5-10,9-6` plays the braced frames of `push` forward and back (frames 1-4 only lean in from the still); `0-4,6-9` builds the two-swing sheets from one generation; `6-6,0-4` puts the pogo stab (generated 2-3) on the clip's hit window (frames 3-4). `ArtPrompt.keep` holds the list; `art_prompt_test` checks it has exactly `frames` entries.
+- **Frame N does not always repeat frame 0.** The death clip (N=16 from the still, on 96 px) ends lying still; frames 6-15 keep the stagger, the fall and the rest. `wall_land` ends crouched on the wall, so `wall_slide` is its last frame rather than the Codex cling pose, and the slide follows the landing without a pop.
+- **Chained first frames.** The roll from the standing still came back as a lunge; the re-roll starts from the land clip's deep crouch. The air spin starts from the jump's top (generated frame 3 of `ivo_jump`). The attacks start from the Codex guard (`ivo_first_guard_left_96.png`, 16 px from the left so the swing has room) and air guard.
+- **Wall clips face the wall** (a slide starts while pushing into it) and put his front on the capsule's edge, column 75, instead of centring; `ivo_sheet_test` checks that edge and exempts them from the centring test.
+- **Palette.** The still has no steel, so a blade snapped to it turned cream; every sheet snaps to `tools/art/sources/ivo/ivo_palette.png`, the still's 23 colours plus three steel greys. Two blades of the Codex poses were repainted steel after the reduction (a thin blade's blocks take the magenta fringe).
+- **Hitboxes shrink to the art** ("Shrink to the art", user, 2026-10-11), replacing "Hitboxes keep today's geometry". Each attack keys the capsule's position and scale at 0 to the box its hit-window frames cover (steel, slash trails, and anything past the body's front), the front clipped at the body centre where an arc passes over his head. Body px, x forward, y up negative:
+
+| Clip | Before: x, y | After: x, y | Forward reach |
+|---|---|---|---|
+| attack_idle_1 | 4.6..75.4, -84..28 | 4..31, -30..-17 | 75 -> 31 |
+| attack_idle_2 | 2.2..73.8, -92..20 | 4..53, -56..-19 | 74 -> 53 |
+| attack_run_1 | -6..68, -75..5 | 2..43, -72..-21 | 68 -> 43 |
+| attack_run_2 | 10..70, -71..11 | 2..47, -78..-23 | 70 -> 47 |
+| attack_jump | 23.3..56.7, -83..-1 | -34..35, -26..19 | 57 -> 35 |
+| attack_fall | 28.3..51.7, -83..-1 | -34..35, -26..19 | 52 -> 35 |
+| attack_pogo | -44..62, -44..36 | -14..7, 1..23 | depth below the feet 36 -> 23, width 106 -> 21 |
+
+  The air slash's arc sweeps under and behind him, so its box now reaches behind too. Enemies and guardians were tuned against the old reach; retuning them is CORE-09.
+- **Run and push redone** after "I find that some animation that should be improved of Ivo are his pushing and his running. His running seems only like a walk." (user, 2026-10-11). Three run takes from standing or striding poses kept both feet down, however the action was worded. The fourth starts from a stride lifted 4 px off the floor, and it runs: forward lean, knees high, fists pumping, a flight phase in frames 0, 1, 5 and 6, with `run` still 8 frames at 1/12 s. Because of that flight phase, `ivo_sheet_test` no longer holds the run to the floor line. The push leans into a wall at about 30 degrees with both hands flat at chest height and the legs driving (`keep: 3-10,9-8`, placed 2 px back so the lean stays on the axis). `brace` plays when he walks into a wind that pushes back (`Player.is_bracing`); there is no wall, so the flat hands read as pushing against the wind.
+- **Flip axis and attack bodies** (CORE-08 review, 2026-10-11). `Sprite2D` is centred, so a 128 px frame mirrors about column 63.5, not 64. The attack sheets were placed by the guard pose's bounding box, which left the body 3-5 px behind the axis (feet centroids -3.1..-3.5 px on the ground swings against idle's -0.6), so the body hopped at each swing's start and end. The attack sheets now sit 4 px further forward (ground, air slash, pogo) or 2 px (running slash), the roll 2 px back and the air spin 2 px forward, and every Hitbox key moved with its sheet, so each hit window still covers the steel. `ivo_sheet_test` centres every clip on 63.5: body clips by their whole-frame centroid, ground attacks by the feet (rows 80-95) and air attacks by the head and torso (rows 40-69), leaving the steel out.
+- **Two counts in a contract.** `frames:` is the sheet; `generate:` is PixelLab's frame_count (even, 4..16, reaching every kept index), which `pixellab.ps1 -Prompt` sends. `ivo_wall_slide` is `command: cut` with `cut_from: ivo_wall_land`: it has no generation, and `-Prompt` refuses it (`bugs/an-ivo-contract-run-through-pixellab-prompt-requests-the-sheet-count`).
+- **Calls.** PixelLab: 25 animate3 generations of the user's 30. The first pass was 21 (one per clip, plus re-rolls: run once, roll once, attack_ground twice, attack_run once). The redo after the user's note added four: run twice, push once, and one hurt take that still turned toward the camera and was not kept. Two more calls failed locally before reaching the API (a missing reference). Codex: 1 image (the pose sheet, `ivo_poses_codex.png`). The hurt flinch keeps its three-quarter turn for two frames.
+- **Tests** as listed above, in `tests/scenes/characters/ivo/ivo_sheet_test.gd`; the centring test reads each frame's opaque centroid within 2 art px of the flip axis, column 63.5 (a bounding box swings with an outflung arm). `Player._assert_clip_durations` also pins `land` to `hard_land_time`.

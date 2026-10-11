@@ -1,0 +1,259 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 13.8,
+ "player_position": [
+  0.0,
+  5990.0
+ ],
+ "skills": [
+  0,
+  1,
+  2
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "screenshot": "01_idle"
+  },
+  {
+   "t": 1.0,
+   "log": "01_idle"
+  },
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "screenshot": "02_run"
+  },
+  {
+   "t": 1.75,
+   "log": "02_run"
+  },
+  {
+   "t": 1.9,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.1,
+   "screenshot": "03_jump"
+  },
+  {
+   "t": 2.1,
+   "log": "03_jump"
+  },
+  {
+   "t": 2.2,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.55,
+   "screenshot": "04_fall"
+  },
+  {
+   "t": 2.55,
+   "log": "04_fall"
+  },
+  {
+   "t": 2.7,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 3.48,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 3.58,
+   "screenshot": "05_attack_ground_1"
+  },
+  {
+   "t": 3.58,
+   "log": "05_attack_ground_1"
+  },
+  {
+   "t": 3.75,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 3.83,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 3.95,
+   "screenshot": "06_attack_ground_2"
+  },
+  {
+   "t": 3.95,
+   "log": "06_attack_ground_2"
+  },
+  {
+   "t": 4.8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.0,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 5.08,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 5.1,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.12,
+   "screenshot": "07_attack_air"
+  },
+  {
+   "t": 5.12,
+   "log": "07_attack_air"
+  },
+  {
+   "t": 6.2,
+   "action": "roll",
+   "pressed": true
+  },
+  {
+   "t": 6.28,
+   "action": "roll",
+   "pressed": false
+  },
+  {
+   "t": 6.42,
+   "screenshot": "08_roll"
+  },
+  {
+   "t": 6.42,
+   "log": "08_roll"
+  },
+  {
+   "t": 7.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 7.5,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.55,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 7.75,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.75,
+   "screenshot": "09_air_spin"
+  },
+  {
+   "t": 7.75,
+   "log": "09_air_spin"
+  },
+  {
+   "t": 8.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.9,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 8.98,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 9.05,
+   "screenshot": "10_attack_run"
+  },
+  {
+   "t": 9.05,
+   "log": "10_attack_run"
+  },
+  {
+   "t": 9.4,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 10.2,
+   "screenshot": "11_idle_left"
+  },
+  {
+   "t": 10.2,
+   "log": "11_idle_left"
+  },
+  {
+   "t": 10.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 11.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 11.7,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 11.85,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 12.15,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 12.5,
+   "screenshot": "12_wall_landing"
+  },
+  {
+   "t": 12.5,
+   "log": "12_wall_landing"
+  },
+  {
+   "t": 12.9,
+   "screenshot": "13_wall_slide"
+  },
+  {
+   "t": 12.9,
+   "log": "13_wall_slide"
+  },
+  {
+   "t": 13.3,
+   "action": "move_right",
+   "pressed": false
+  }
+ ]
+}

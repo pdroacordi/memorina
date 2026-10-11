@@ -43,12 +43,13 @@ Third-party art used in Memorina, with the terms it was taken under.
 
 ## Ivo
 
-- **Ivo's body** (`assets/sprites/characters/ivo/`) - the *2D Pixel Art Character
-  Template Asset Pack* by **ZeggyGames**, https://zegley.itch.io/2d-platformermetroidvania-asset-pack,
-  scaled 2x. Licence (the pack's page): unlimited free and commercial projects,
-  modification allowed; redistributing, reselling or sharing modified versions is not,
-  and the art may not be used to train AI/ML models - so, like the GandalfHardcore
-  packs, it is never uploaded to an image generator as a reference.
+- **Ivo's body** (`assets/sprites/characters/ivo/`, every sheet) - generated for this project from our own approved
+  still (`tools/art/sources/ivo/ivo_still_2x.png`, cut from a Codex CLI image, `ivo_lineup_codex.png`). The seated,
+  wall-cling, climbing, back-view, lying, guard and air-guard poses are one Codex image drawn beside that still
+  (`ivo_poses_codex.png`); every clip is PixelLab animate-with-text-v3 from the still or a pose, cut by
+  `tools/art/cut_inhabitant.py` (contracts `tools/art/prompts/ivo_*.md`). No third-party art was given as a reference.
+  The ZeggyGames *2D Pixel Art Character Template Asset Pack* sheets these replace are no longer in the project; that
+  licence forbids AI training, so they were never uploaded to a generator.
 
 ## Particles
 

@@ -7,7 +7,7 @@ const STYLE := "res://tools/art/prompts/style.md"
 const IGNORED := ["README.md", "style.md"]
 
 var id := ""
-## Prompt operation: `generate`, `animate` (v1), `animate3` (v2 animate-with-text-v3 from our own still), or `tileset` (a biome look sheet, architecture/biome-tilesets).
+## Prompt operation: `generate`, `animate` (v1), `animate3` (v2 animate-with-text-v3 from our own still), `cut` (frames of another animate3 contract's generation), or `tileset` (a biome look sheet, architecture/biome-tilesets).
 var command := "generate"
 ## Output PNG path under `res://assets/`.
 var target := ""
@@ -23,6 +23,12 @@ var detail := ""
 var action := ""
 ## Reference asset path for animation or generation.
 var reference := ""
+## animate3 and cut: the returned frames kept, in sheet order (`keep: 1-6` or `5-10,9-6`); empty keeps 0..frames-1.
+var keep := PackedInt32Array()
+## animate3 with a keep: PixelLab's frame_count (even, 4..16); it returns frames 0..generate_frames.
+var generate_frames := 0
+## cut: the animate3 contract whose generation this sheet is cut from.
+var cut_from := ""
 ## Art source identifier.
 var source := "pixellab"
 var description := ""
@@ -42,6 +48,8 @@ var run_seed := 0
 ## tileset: palette reference and the top's style reference, our own art only.
 var color_image := ""
 var top_reference := ""
+
+var _keep_malformed := false
 
 static func all() -> Array[ArtPrompt]:
 	var prompts: Array[ArtPrompt] = []
@@ -84,8 +92,8 @@ func problems(file_id: String) -> PackedStringArray:
 		found.append("%s: target must be a .png under res://assets/" % file_id)
 	if frame_size.x <= 0 or frame_size.y <= 0 or frames <= 0:
 		found.append("%s: frame size and frame count must be positive" % file_id)
-	if not command in ["generate", "animate", "animate3", "tileset"]:
-		found.append("%s: command must be generate, animate, animate3 or tileset" % file_id)
+	if not command in ["generate", "animate", "animate3", "cut", "tileset"]:
+		found.append("%s: command must be generate, animate, animate3, cut or tileset" % file_id)
 	if command == "tileset":
 		if sheet_size() != BiomeTileset.SHEET_SIZE:
 			found.append("%s: a tileset sheet is %s in one frame" % [file_id, BiomeTileset.SHEET_SIZE])
@@ -97,11 +105,26 @@ func problems(file_id: String) -> PackedStringArray:
 			found.append("%s: lip must be 1..16 px" % file_id)
 		if not top_size in [0.0, 0.25, 0.5, 1.0]:
 			found.append("%s: top_size must be 0, 0.25, 0.5 or 1" % file_id)
+	if _keep_malformed or (not keep.is_empty() and (not command in ["animate3", "cut"] or keep.size() != frames)):
+		found.append("%s: keep must list exactly `frames` returned animate3 frames" % file_id)
+	if command == "animate3" and not keep.is_empty() and not keep_fits(generate_frames):
+		found.append("%s: generate must be even, 4..16, and reach every kept frame" % file_id)
+	if command == "cut" and (cut_from.is_empty() or keep.is_empty()):
+		found.append("%s: a cut needs cut_from and keep" % file_id)
 	if command in ["animate", "animate3"] and (action.is_empty() or reference.is_empty()):
 		found.append("%s: animate needs an action and a reference" % file_id)
 	if source in ["pixellab", "codex"] and description.is_empty():
 		found.append("%s: a generated asset's prompt needs a description" % file_id)
 	return found
+
+## True when a generation of `count` frames (returning 0..count) is a valid frame_count holding every kept index.
+func keep_fits(count: int) -> bool:
+	if count < 4 or count > 16 or count % 2 != 0:
+		return false
+	for index: int in keep:
+		if index < 0 or index > count:
+			return false
+	return true
 
 ## Returns the sheet size with frames arranged side by side.
 func sheet_size() -> Vector2i:
@@ -125,6 +148,9 @@ func _set_field(key: String, value: String) -> void:
 		"detail": detail = value
 		"action": action = value
 		"reference": reference = value
+		"keep": _parse_keep(value)
+		"generate": generate_frames = value.to_int()
+		"cut_from": cut_from = value
 		"source": source = value
 		"seasons": seasons = value.to_int()
 		"top_spring": top_spring = value
@@ -136,3 +162,17 @@ func _set_field(key: String, value: String) -> void:
 		"color_image": color_image = value
 		"top_reference": top_reference = value
 		_: push_warning("art prompt '%s': unknown field '%s'" % [id, key])
+
+## Reads `a-b[,c-d...]`; a range may run downwards.
+func _parse_keep(value: String) -> void:
+	keep = PackedInt32Array()
+	for segment: String in value.split(","):
+		var bounds := segment.strip_edges().split("-")
+		if bounds.size() != 2 or not bounds[0].is_valid_int() or not bounds[1].is_valid_int():
+			_keep_malformed = true
+			return
+		var first := bounds[0].to_int()
+		var last := bounds[1].to_int()
+		var step := 1 if last >= first else -1
+		for index in range(first, last + step, step):
+			keep.append(index)

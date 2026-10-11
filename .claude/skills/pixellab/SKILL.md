@@ -32,12 +32,17 @@ description: Generate or animate pixel-art sprites for Memorina through the Pixe
 
 ## Project conventions the output must meet
 
-- Characters are authored **facing left** (`-Direction west`); the scenes flip via `Sprite2D.scale.x = -2`
-  and `flip_h` (see `guardian.gd`/`brute_shadow.tscn`).
+- Guardians and enemies are authored **facing left** (`-Direction west`); their scenes flip via
+  `Sprite2D.scale.x = -2` and `flip_h` (see `guardian.gd`/`brute_shadow.tscn`). Ivo is authored **facing east**
+  (`Character` sets `flip_h = facing < 0`).
 - One PNG per clip, frames side by side, all frames the same size, the body **centred in the frame**
   (an off-centre body jumps on flip — see `docs/knowledge/bugs/`). Match the existing clip's frame
   size so it drops into the same `AnimationPlayer` tracks: Frost Guardian 192×128, Bloom Guardian
-  128×96 (after re-padding), Ivo 96×96.
+  128×96 (after re-padding), Ivo 128×128 (floor on row 96, body on the flip axis, column 63.5; wall clips
+  front-aligned, `architecture/ivo-at-2x`).
+- An `animate3` contract's `frames:` is the sheet's kept count, `keep:` lists the returned frames kept, and
+  `generate:` is the count PixelLab is asked for (even, 4-16); `-Prompt` sends `generate:`. A `command: cut`
+  contract (`cut_from:`) has no generation of its own.
 - Transparent background (`-NoBackground` for `generate`; animations inherit the reference's
   transparency).
 - Clip lengths must equal the gameplay durations asserted at startup (`Guardian._assert_clip_durations`,
