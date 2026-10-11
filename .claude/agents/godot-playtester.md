@@ -411,6 +411,18 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   seasonal shader changed between this session's trial and world batches. List
   `find ... -newer <import.log>` with times and sort your runs around them.
 
+- **Learned 2026-10-10 (camera on falls)**: **measure camera motion from log-only runs.** A `log` step every
+  0.016 s with no `screenshot` steps gives one line per physics frame at a steady 60 fps. Dedupe repeated
+  lines, then diff `cam_centre` y frame to frame: that is how a 2-frame stall or a one-frame 136 px jump shows.
+  Screenshot runs on a loaded machine hitch for 0.1-0.14 s, and their frames repeat (0-pixel diffs). Use
+  them only to illustrate.
+- **Pinning a change that is being revised under you:** `git archive HEAD` into `<scratch>/head` and import it
+  once. Then `cp -r head orig` (~6 s) and re-apply the version you were asked about with a Python
+  string-replace script, so the working tree is never touched. A `.gd`-only diff needs no re-import; a new
+  `class_name` does. Label every run with the code mtime it saw.
+- "Landing on screen" = the landing floor's y lies inside the 640x360 view around `cam_centre`. Report it as
+  seconds and frames before touchdown, next to the HEAD figure.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

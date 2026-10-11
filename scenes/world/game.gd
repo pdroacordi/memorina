@@ -65,7 +65,7 @@ func _physics_process(_delta: float) -> void:
 		return
 	var body := _player.body_rect()
 	var near := RoomResidency.touching(_current_room, get_tree().get_nodes_in_group(Room.GROUP))
-	_camera.set_reach(_reach_for(body, near))
+	_camera.set_reach(_reach_for(body, near), _fall_reach_for(body, near))
 	if not RoomExit.has_left(_current_room.get_bounds(), body, _player.is_on_floor()):
 		return
 	var room := _room_at(body.get_center())
@@ -81,7 +81,8 @@ func _physics_process(_delta: float) -> void:
 	var glide := room.get_region() == _current_room.get_region() and RoomResidency.touches(_current_room, room)
 	_enter_room(room, glide)
 	if not glide:
-		_camera.snap()
+		# A region cut mid-fall keeps the fall's lead, so the landing below the cut shows at once.
+		_camera.snap(true)
 	room_changed.emit(room)
 
 ## Seeds the first room when no bench placed Ivo; later rooms are found from his feet.
@@ -122,6 +123,25 @@ func _reach_for(body: Rect2, near: Array[Room]) -> Rect2:
 		if room.get_bounds().intersects(touch):
 			reach = reach.merge(room.get_bounds())
 	return reach
+
+## Where the fall lead may yield: the current room and, under its floor seam, this region's rooms that span the frame.
+## Another region's look never shows before its cut (systems/rooms), nor the void beside a narrower room.
+func _fall_reach_for(body: Rect2, near: Array[Room]) -> Rect2:
+	var bounds := _current_room.get_bounds()
+	# A frame's height under the feet, not this step's lead: the lead is read a step late
+	# (bugs/the-frame-stalls-at-the-floor-seam-before-the-fall-lead-takes-over).
+	if _camera.fall_lead() <= 0.0:
+		return bounds
+	var lead_end := body.end.y + _camera.view_rect().size.y
+	if lead_end <= bounds.end.y:
+		return bounds
+	var same_region: Array[Rect2] = []
+	for room: Room in near:
+		if room.get_region() == _current_room.get_region():
+			same_region.append(room.get_bounds())
+	var view := _camera.steady_view_rect()
+	var below := FallReach.of(Rect2(view.position.x, bounds.end.y, view.size.x, lead_end - bounds.end.y), same_region)
+	return bounds.merge(below) if below.has_area() else bounds
 
 func _bounds_of(rooms: Array[Room]) -> Array[Rect2]:
 	var bounds: Array[Rect2] = []

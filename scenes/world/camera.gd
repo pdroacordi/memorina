@@ -5,6 +5,9 @@ extends Camera2D
 ## The focus zoom and look-ahead have landed; the position is in canvas pixels.
 signal focused(subject_screen_position: Vector2)
 
+## Px of ground kept in frame under a coming landing, so it reads as ground.
+const LANDING_GROUND := 32.0
+
 @export_category("Framing")
 ## Vertical framing bias in pixels; the script overwrites Camera2D.offset at runtime.
 @export var framing_offset_y      : float = -64.0
@@ -25,6 +28,14 @@ signal focused(subject_screen_position: Vector2)
 ## How far the camera leads at full fall speed — ahead when falling, behind when
 ## rising.
 @export var air_lead_distance     : float = 64.0
+
+@export_category("Fall view")
+## Px below the feet kept in frame at full fall speed, at least; the lead never shows less than the follow would.
+@export var fall_view             : float = 176.0
+## Px/s the lead may grow: a walk-off eases the frame down instead of dropping it in one step.
+@export var fall_lead_rise        : float = 720.0
+## Px/s the lead may move the frame down; above the fall speed, so it keeps up, but never in one jump.
+@export var fall_lead_follow      : float = 1200.0
 
 @export_category("Vertical smoothing")
 ## Seconds to close most of the gap to the vertical target. 0 snaps instantly.
@@ -78,11 +89,21 @@ var _bounds: Rect2
 var _is_bound: bool = false
 ## Where the frame may yield past `_bounds` to keep the subject in view; `_bounds` until set_reach().
 var _reach: Rect2
+## Where the fall lead may yield past `_bounds`: this region's rooms below that span the frame; `_bounds` until set_reach().
+var _fall_reach: Rect2
 ## World px from the new bounds' clamped centre to where the frame stood when they changed; scaled by `_glide_weight`.
 var _glide_from: Vector2 = Vector2.ZERO
 ## 1..0 over a glide.
 var _glide_weight: float = 0.0
 var _glide_tween: Tween
+## Px kept below the feet: rises at `fall_lead_rise`, eases back over `vertical_smooth_time`.
+var _fall_lead: float = 0.0
+## World y of the frame's centre last step, for `fall_lead_follow`; INF after a snap or before the first step.
+var _last_centre_y: float = INF
+## This step's shake, so the steady frame can be read without it.
+var _shake_offset: Vector2 = Vector2.ZERO
+## Reused by every ground ray.
+var _ground_ray := PhysicsRayQueryParameters2D.new()
 
 
 func _ready() -> void:
@@ -95,9 +116,11 @@ func _physics_process(delta: float) -> void:
 
 	global_position = _framed_position()
 	_update_vertical(delta)
+	_update_fall_lead(delta, global_position.y + offset.y + get_viewport_rect().size.y * 0.5 / zoom.y)
 	_apply_bounds()
 	global_position += _glide_from * _glide_weight
-	_keep_subject_in_view()
+	_keep_subject_in_view(delta)
+	_last_centre_y = global_position.y + offset.y
 	_update_shake(delta)
 
 ## Confines the visible rectangle to a world-space area; `glide` eases the frame there from where it stands.
@@ -105,6 +128,7 @@ func set_bounds(bounds: Rect2, glide: bool = false) -> void:
 	var shown := global_position
 	_bounds = bounds
 	_reach = bounds
+	_fall_reach = bounds
 	_is_bound = true
 	_stop_glide()
 	if not glide or _subject == null:
@@ -112,7 +136,7 @@ func set_bounds(bounds: Rect2, glide: bool = false) -> void:
 	# Measured against the new clamp of the same centre, so a glide retargeted mid-way starts from where the frame is.
 	global_position = _framed_position()
 	_apply_bounds()
-	_keep_subject_in_view()
+	_keep_subject_in_view(0.0)
 	_glide_from = shown - global_position
 	global_position = shown
 	_glide_weight = 1.0
@@ -123,9 +147,10 @@ func set_bounds(bounds: Rect2, glide: bool = false) -> void:
 	# Fast first: until the glide moves, the frame still shows the old room and Ivo is leaving it.
 	_glide_tween.tween_property(self, "_glide_weight", 0.0, bounds_glide_time)
 
-## Where the frame may yield past the bounds to keep the subject whole; set before each step.
-func set_reach(reach: Rect2) -> void:
+## Where the frame may yield past the bounds to keep the subject whole, and where the fall lead may; set before each step.
+func set_reach(reach: Rect2, fall_reach: Rect2 = Rect2()) -> void:
 	_reach = reach
+	_fall_reach = fall_reach if fall_reach.has_area() else _bounds
 
 ## What the room lets the frame show, world-space; an empty rect when the
 ## room has not bound it. Read by anything that needs to know where the arena
@@ -138,6 +163,13 @@ func bounds() -> Rect2:
 func view_rect() -> Rect2:
 	var size: Vector2 = get_viewport_rect().size / zoom
 	return Rect2(global_position + offset - size * 0.5, size)
+
+## The frame without this step's shake: Game measures the fall reach from it, so a shake never closes the reach
+## (bugs/the-frame-jumps-up-when-the-fall-reach-closes-under-a-yielded-frame).
+func steady_view_rect() -> Rect2:
+	var rect := view_rect()
+	rect.position -= _shake_offset
+	return rect
 
 # Node2D also permits cutscenes to follow a Marker2D without character facing.
 func follow(subject: Node2D) -> void:
@@ -193,10 +225,18 @@ func push_in() -> void:
 func release_push() -> void:
 	_tween_zoom(Vector2.ONE, focus_duration)
 
-## Snaps to the subject and clears smoothing for respawns behind a fade.
-func snap() -> void:
+## Px below the subject's feet the frame keeps in view now; Game counts the rooms it reaches.
+func fall_lead() -> float:
+	return _fall_lead
+
+## Snaps to the subject and clears smoothing for respawns behind a fade; `keep_fall_lead` keeps a fall's lead
+## across a region cut, so the landing below the cut still shows.
+func snap(keep_fall_lead: bool = false) -> void:
 	_peek_axis = 0.0
 	_peek_hold = 0.0
+	if not keep_fall_lead:
+		_fall_lead = 0.0
+	_last_centre_y = INF
 	offset.y = framing_offset_y
 	if _look_ahead_tween:
 		_look_ahead_tween.kill()
@@ -239,11 +279,13 @@ func _tween_pair(target: float) -> void:
 ## Applied last, on top of bounds: a shake may show a sliver past the room's
 ## edge for a frame, which is the point of a shake.
 func _update_shake(delta: float) -> void:
+	_shake_offset = Vector2.ZERO
 	if _shake_left <= 0.0:
 		return
 	_shake_left = maxf(_shake_left - delta, 0.0)
 	var reach := _shake_strength * (_shake_left / maxf(shake_time, 0.001))
-	global_position += Vector2(randf_range(-reach, reach), randf_range(-reach, reach)).round()
+	_shake_offset = Vector2(randf_range(-reach, reach), randf_range(-reach, reach)).round()
+	global_position += _shake_offset
 
 func _tween_zoom(target: Vector2, seconds: float = focus_duration,
 		trans: Tween.TransitionType = focus_transition, ease_type: Tween.EaseType = focus_ease) -> void:
@@ -303,22 +345,62 @@ func _update_vertical(delta: float) -> void:
 
 	_update_peek_axis(delta)
 
-	# GDScript has no interfaces, and air_axis()/look_axis() are camera-intent
-	# accessors that deliberately live on the one character that has camera
-	# intent, not on Character itself or a shared component — forcing every
-	# future enemy to implement camera intent it will never use would be
-	# worse. has_method() is Godot's idiom for an optional capability: a
-	# subject without it simply contributes 0.0.
-	var air_lead: float = _subject.air_axis() if _subject.has_method("air_axis") else 0.0
-
 	var target: float = framing_offset_y \
 		+ peek_distance * _peek_axis \
-		+ air_lead_distance * air_lead
+		+ air_lead_distance * _air_axis()
 
 	offset.y = lerpf(offset.y, target, 1.0 - exp(-delta / vertical_smooth_time))
 
+# Rises at `fall_lead_rise` and eases back after a landing, so the frame never jumps; never past the landing's
+# ground, which is already in view (bugs/the-fall-lead-dips-the-frame-below-a-solid-floor-on-a-hard-landing).
+# `follow_bottom` is the unclamped frame's bottom edge: matching it, the lead takes over from the follow at a seam
+# without a stall (bugs/the-frame-stalls-at-the-floor-seam-before-the-fall-lead-takes-over).
+func _update_fall_lead(delta: float, follow_bottom: float) -> void:
+	var target := 0.0
+	if _air_axis() > 0.0 and _subject.has_method("body_rect"):
+		var feet: float = (_subject.body_rect() as Rect2).end.y
+		target = maxf(fall_view * _air_axis(), follow_bottom - feet - subject_margin)
+	if target >= _fall_lead:
+		_fall_lead = minf(target, _fall_lead + fall_lead_rise * delta)
+	else:
+		_fall_lead = lerpf(_fall_lead, target, 1.0 - exp(-delta / vertical_smooth_time))
+	_fall_lead = minf(_fall_lead, _ground_below(_fall_lead, _air_axis() > 0.0))
+	# An ease never reaches 0: below half a pixel the lead is gone, and the rays and reach stop running.
+	if _fall_lead < 0.5:
+		_fall_lead = 0.0
+
+## Px from the subject's feet to the ground below plus `LANDING_GROUND`, looking `reach` px down, by a ray at each
+## side of the body. Descending, ground counts only under both sides (a body drifting off an edge does not land
+## there); standing or rising, the nearer hit counts, so a stance at an edge never dips the frame. INF if none counts.
+func _ground_below(reach: float, descending: bool) -> float:
+	if reach <= 0.0 or not _subject.has_method("body_rect"):
+		return INF
+	var body: Rect2 = _subject.body_rect()
+	var deepest := 0.0
+	var nearest := INF
+	_ground_ray.collision_mask = GroundCollision.COLLISION_LAYER
+	for x: float in [body.position.x, body.end.x]:
+		# A ray that starts on a surface misses it: start just above the feet, so a stance finds its floor.
+		_ground_ray.from = Vector2(x, body.end.y - 2.0)
+		_ground_ray.to = _ground_ray.from + Vector2(0.0, reach)
+		var hit := get_world_2d().direct_space_state.intersect_ray(_ground_ray)
+		if hit.is_empty():
+			if descending:
+				return INF
+			continue
+		var depth := maxf((hit.position as Vector2).y - body.end.y, 0.0)
+		deepest = maxf(deepest, depth)
+		nearest = minf(nearest, depth)
+	return (deepest if descending else nearest) + LANDING_GROUND
+
+## -1 rising .. 1 at full fall speed; 0 for a subject without camera intent.
+# GDScript has no interfaces, and air_axis()/look_axis() are camera-intent accessors that live on the one character
+# with camera intent, not on Character: has_method() is Godot's idiom for an optional capability.
+func _air_axis() -> float:
+	return _subject.air_axis() if _subject.has_method("air_axis") else 0.0
+
 func _update_peek_axis(delta: float) -> void:
-	# See the has_method note in _update_vertical(): look_axis() is optional
+	# See the has_method note at _air_axis(): look_axis() is optional
 	# camera intent, not part of Character.
 	var desired: float = _subject.look_axis() if _subject.has_method("look_axis") else 0.0
 
@@ -352,7 +434,7 @@ func _apply_bounds() -> void:
 
 # The room clamp yields to the subject: astride a seam he stays whole in frame over a sliver of the running
 # neighbour (bugs/a-hop-below-a-seam-flips-the-room-twice). A subject without body_rect() has no body to keep.
-func _keep_subject_in_view() -> void:
+func _keep_subject_in_view(delta: float) -> void:
 	if not _is_bound or not _subject.has_method("body_rect"):
 		return
 	var body: Rect2 = (_subject.body_rect() as Rect2).grow(subject_margin)
@@ -364,6 +446,17 @@ func _keep_subject_in_view() -> void:
 	# The yield stops at the reach, so over an open top with nothing above no void shows; a glide in progress is never pulled back.
 	centre.x = _yield_axis(centre.x, kept.x, _reach.position.x + half.x, _reach.end.x - half.x)
 	centre.y = _yield_axis(centre.y, kept.y, _reach.position.y + half.y, _reach.end.y - half.y)
+	# The lead yields only into the fall reach (bugs/the-fall-lead-jumps-the-frame-into-a-room-the-body-already-touches-below),
+	# capped so body and lead still fit the frame.
+	var lead := minf(_fall_lead, maxf(half.y * 2.0 - body.size.y, 0.0))
+	if lead > 0.0:
+		var shown := maxf(centre.y, body.end.y + lead - half.y)
+		# The lead never moves the frame faster than `fall_lead_follow`, so a room swap or glide shows no jump
+		# (bugs/the-fall-lead-jumps-the-frame-when-a-glide-swaps-into-a-narrow-room,
+		# bugs/the-fall-lead-collapses-at-a-same-region-glide-swap).
+		if delta > 0.0 and _last_centre_y != INF:
+			shown = minf(shown, maxf(centre.y, _last_centre_y + fall_lead_follow * delta))
+		centre.y = _yield_axis(centre.y, shown, _fall_reach.position.y + half.y, _fall_reach.end.y - half.y)
 	global_position = centre - offset
 
 func _yield_axis(from: float, to: float, min_value: float, max_value: float) -> float:

@@ -1,6 +1,6 @@
 class_name RoomExitTest extends GdUnitTestSuite
 
-## Sideways a body leaves once it is out; up or down only past SEAM_MARGIN, or standing.
+## Sideways or down a body leaves once it is out; up only past SEAM_MARGIN, or standing.
 
 const ROOM := Rect2(0, 0, 640, 384)
 const BODY := Vector2(16, 48)
@@ -28,9 +28,10 @@ func test_past_the_margin_it_leaves() -> void:
 func test_standing_over_the_edge_it_leaves() -> void:
 	assert_bool(RoomExit.has_left(ROOM, _body_at(Vector2(320, 0)), true)).is_true()
 
-func test_falling_below_it_leaves_past_the_margin() -> void:
-	assert_bool(RoomExit.has_left(ROOM, _body_at(Vector2(320, 384 + 48 + 10)), false)).is_false()
-	assert_bool(RoomExit.has_left(ROOM, _body_at(Vector2(320, 384 + 48 + RoomExit.SEAM_MARGIN)), false)).is_true()
+## A fall swaps as soon as the body is out, so the landing below shows sooner (user, 2026-10-10, systems/rooms).
+func test_falling_below_it_leaves_once_out() -> void:
+	assert_bool(RoomExit.has_left(ROOM, _body_at(Vector2(320, 384 + 47)), false)).is_false()
+	assert_bool(RoomExit.has_left(ROOM, _body_at(Vector2(320, 384 + 48)), false)).is_true()
 
 ## bugs/the-safety-net-fires-when-ivo-drops-across-a-seam-above-two-open-tops.
 func test_above_an_open_top_he_is_not_lost() -> void:

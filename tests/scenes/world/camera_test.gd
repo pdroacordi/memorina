@@ -4,6 +4,7 @@ class_name GameCameraTest extends GdUnitTestSuite
 
 const ROOM_A := Rect2(0, 0, 1280, 384)
 const ROOM_B := Rect2(1280, 0, 1280, 384)
+const ROOM_BELOW := Rect2(0, 384, 1280, 384)
 
 var _camera: GameCamera
 var _subject: Node2D
@@ -91,6 +92,157 @@ func test_the_frame_never_yields_past_the_rooms() -> void:
 	await _two_steps()
 	assert_float(_camera.view_rect().position.y).is_greater_equal(ROOM_A.position.y - 0.5)
 
+## Falling at full speed toward a room below, the frame yields into it to show the ground under the feet.
+func test_a_fall_keeps_the_ground_below_in_frame() -> void:
+	var body := _falling_body(1.0)
+	_camera.set_reach(ROOM_A, ROOM_A.merge(ROOM_BELOW))
+	await _lead_grown()
+	var feet := body.body_rect().end.y
+	assert_float(_camera.view_rect().end.y).is_greater_equal(feet + _camera.subject_margin + _camera.fall_view - 0.5)
+
+## A landing eases the frame back instead of jumping it up.
+func test_the_fall_view_eases_back_after_a_landing() -> void:
+	var body := _falling_body(1.0)
+	_camera.set_reach(ROOM_A, ROOM_A.merge(ROOM_BELOW))
+	await _lead_grown()
+	var falling_end := _camera.view_rect().end.y
+	body.air = 0.0
+	await get_tree().physics_frame
+	assert_float(_camera.view_rect().end.y).is_greater(falling_end - 40.0)
+	for i: int in 90:
+		await get_tree().physics_frame
+	assert_float(_camera.view_rect().end.y).is_equal_approx(ROOM_A.end.y, 0.5)
+
+## bugs/the-fall-lead-dips-the-frame-below-a-solid-floor-on-a-hard-landing: the lead stops at the coming ground.
+func test_the_fall_view_stops_at_the_ground_below() -> void:
+	var floor_body := auto_free(StaticBody2D.new()) as StaticBody2D
+	floor_body.collision_layer = GroundCollision.COLLISION_LAYER
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(1280, 32)
+	shape.shape = rect
+	floor_body.add_child(shape)
+	floor_body.position = Vector2(640, 356)
+	add_child(floor_body)
+	_falling_body(1.0)
+	_camera.set_reach(ROOM_A, ROOM_A.merge(ROOM_BELOW))
+	await _lead_grown()
+	await _two_steps()
+	assert_float(_camera.fall_lead()).is_equal_approx(10.0 + GameCamera.LANDING_GROUND, 0.5)
+	assert_float(_camera.view_rect().end.y).is_equal_approx(ROOM_A.end.y, 0.5)
+
+## bugs/the-fall-lead-jumps-the-frame-into-a-room-the-body-already-touches-below: the body's reach is not the lead's.
+func test_the_fall_view_yields_only_into_the_fall_reach() -> void:
+	_falling_body(1.0)
+	_camera.set_reach(ROOM_A.merge(ROOM_BELOW), ROOM_A)
+	await _lead_grown()
+	assert_float(_camera.view_rect().end.y).is_less_equal(ROOM_A.end.y + 0.5)
+
+## bugs/the-fall-lead-jumps-the-frame-when-a-glide-swaps-into-a-narrow-room: a reach that opens below moves the frame
+## no faster than `fall_lead_follow`.
+func test_the_lead_moves_the_frame_no_faster_than_it_follows() -> void:
+	_falling_body(1.0)
+	_camera.set_reach(ROOM_A, ROOM_A)
+	await _lead_grown()
+	var step := _camera.fall_lead_follow / Engine.physics_ticks_per_second
+	var before := _camera.view_rect().end.y
+	_camera.set_reach(ROOM_A, ROOM_A.merge(ROOM_BELOW))
+	await get_tree().physics_frame
+	assert_float(_camera.view_rect().end.y - before).is_less_equal(step + 0.5)
+	await _lead_grown()
+	assert_float(_camera.view_rect().end.y - before).is_greater(step)
+
+## With no room below, the fall view shows no void.
+func test_the_fall_view_never_yields_past_the_rooms() -> void:
+	_falling_body(1.0)
+	await _lead_grown()
+	assert_float(_camera.view_rect().end.y).is_less_equal(ROOM_A.end.y + 0.5)
+
+## A walk-off eases the frame down: no step grows the lead by more than `fall_lead_rise` allows.
+func test_the_lead_grows_no_faster_than_its_rise() -> void:
+	_falling_body(1.0)
+	_camera.set_reach(ROOM_A, ROOM_A.merge(ROOM_BELOW))
+	await _two_steps()
+	var step := _camera.fall_lead_rise / Engine.physics_ticks_per_second
+	assert_float(_camera.fall_lead()).is_less_equal(2.0 * step + 0.5)
+
+## bugs/the-frame-stalls-at-the-floor-seam-before-the-fall-lead-takes-over: the lead never shows less than the follow.
+func test_the_lead_is_never_shorter_than_the_follow() -> void:
+	_camera.framing_offset_y = 100.0
+	_camera.offset.y = 100.0
+	var body := _falling_body(1.0)
+	_camera.set_reach(ROOM_A, ROOM_A.merge(ROOM_BELOW))
+	for i: int in 30:
+		await get_tree().physics_frame
+	var follow := 100.0 + _camera.get_viewport_rect().size.y * 0.5 - _camera.subject_margin
+	assert_float(_camera.fall_lead()).is_greater(_camera.fall_view)
+	assert_float(_camera.fall_lead()).is_equal_approx(follow, 1.0)
+	assert_object(body).is_not_null()
+
+## Descending past a ledge's edge: ground under one side only does not cap the lead.
+func test_a_descent_past_an_edge_keeps_its_lead() -> void:
+	_floor(Vector2(560, 340), 36.0)
+	_falling_body(1.0)
+	_camera.set_reach(ROOM_A, ROOM_A.merge(ROOM_BELOW))
+	await _lead_grown()
+	assert_float(_camera.fall_lead()).is_equal_approx(_camera.fall_view, 0.5)
+
+## Standing at an edge after a landing: the nearer ground caps the lead, so the frame does not dip.
+func test_a_stance_at_an_edge_does_not_dip() -> void:
+	_floor(Vector2(560, 330), 36.0)
+	var body := _falling_body(1.0)
+	_camera.set_reach(ROOM_A, ROOM_A.merge(ROOM_BELOW))
+	await _lead_grown()
+	body.air = 0.0
+	await _two_steps()
+	assert_float(_camera.fall_lead()).is_less_equal(GameCamera.LANDING_GROUND + 0.5)
+
+## A region cut mid-fall keeps the lead.
+func test_a_snap_that_keeps_the_fall_lead_keeps_it() -> void:
+	_falling_body(1.0)
+	_camera.set_reach(ROOM_A, ROOM_A.merge(ROOM_BELOW))
+	await _lead_grown()
+	var lead := _camera.fall_lead()
+	_camera.snap(true)
+	assert_float(_camera.fall_lead()).is_equal(lead)
+	_camera.snap()
+	assert_float(_camera.fall_lead()).is_equal(0.0)
+
+## The steady frame leaves the shake out.
+func test_the_steady_frame_leaves_the_shake_out() -> void:
+	_falling_body(0.0)
+	await _two_steps()
+	var steady := _camera.view_rect()
+	_camera.shake(6.0)
+	await get_tree().physics_frame
+	assert_vector(_camera.steady_view_rect().position).is_equal_approx(steady.position, Vector2(0.5, 0.5))
+
+func _falling_body(air: float) -> FallingSubject:
+	var body := auto_free(FallingSubject.new()) as FallingSubject
+	body.air = air
+	body.global_position = Vector2(600, 330)
+	add_child(body)
+	_camera.follow(body)
+	_camera.set_bounds(ROOM_A)
+	return body
+
+## A world-layer floor whose top-left corner is `top_left`, `width` px wide.
+func _floor(top_left: Vector2, width: float) -> void:
+	var floor_body := auto_free(StaticBody2D.new()) as StaticBody2D
+	floor_body.collision_layer = GroundCollision.COLLISION_LAYER
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(width, 32.0)
+	shape.shape = rect
+	floor_body.add_child(shape)
+	floor_body.position = top_left + rect.size * 0.5
+	add_child(floor_body)
+
+## The lead grows at `fall_lead_rise`: enough steps for the whole `fall_view`.
+func _lead_grown() -> void:
+	for i: int in ceili(_camera.fall_view / _camera.fall_lead_rise * Engine.physics_ticks_per_second) + 2:
+		await get_tree().physics_frame
+
 ## physics_frame is emitted before the step's nodes process: the second await is after the camera's first step.
 func _two_steps() -> void:
 	await get_tree().physics_frame
@@ -100,3 +252,10 @@ func _two_steps() -> void:
 class BodySubject extends Node2D:
 	func body_rect() -> Rect2:
 		return Rect2(global_position + Vector2(-8.0, -48.0), Vector2(16.0, 48.0))
+
+## A body with camera intent, as Player has: `air` is its air_axis().
+class FallingSubject extends BodySubject:
+	var air := 0.0
+
+	func air_axis() -> float:
+		return air

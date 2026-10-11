@@ -20,6 +20,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | CORE-04 | Teaching creatures (criaturas-professoras) | 02 §2 | `[?]` | | 2026-10-02 | Design names them; behaviour undefined. |
 | CORE-05 | Gamepad layout and device glyphs | 02 Controles | `[x]` | | 2026-10-02 | `systems/input` |
 | CORE-06 | Climbing (on roots) | 02 §7.1 | `[x]` | SONG-07 | 2026-10-02 | Template ladder and ledge clips unused. |
+| CORE-07 | The camera shows where a fall lands | 02 Controles | `[x]` | | 2026-10-10 | "when we fall into a new room, the camera takes too long to follow and that is really bad for the player to track where he is going to fall." (user, 2026-10-10). `systems/rooms` (A fall shows its landing), `playtests/2026-10-10-camera-on-falls`. |
 | CORE-08 | Ivo redrawn at the world's 2x density, about 52 px tall | 03 §6 | `[ ]` | | 2026-10-10 | "Redraw at 2x, ~52 px (Recommended)" (user, 2026-10-10): body shrunk to match, jumps still clear the same gaps; style board first. |
 
 ## Memory and world
