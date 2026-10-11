@@ -5,4 +5,4 @@
 [node name="WineShelf" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-31, -62)
+offset = Vector2(-51, -100)

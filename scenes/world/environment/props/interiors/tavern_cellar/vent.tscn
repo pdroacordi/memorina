@@ -5,4 +5,4 @@
 [node name="Vent" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-17, -26)
+offset = Vector2(-23, -30)

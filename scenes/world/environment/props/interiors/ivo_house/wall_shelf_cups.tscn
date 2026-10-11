@@ -5,4 +5,4 @@
 [node name="WallShelfCups" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-25, -34)
+offset = Vector2(-34, -40)

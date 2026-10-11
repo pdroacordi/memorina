@@ -5,4 +5,4 @@
 [node name="Armchair" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-23, -42)
+offset = Vector2(-25, -54)

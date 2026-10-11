@@ -5,4 +5,4 @@
 [node name="Chandelier" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-34, -60)
+offset = Vector2(-46, -90)

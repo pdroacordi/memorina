@@ -5,4 +5,4 @@
 [node name="DrawingSun" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-9, -18)
+offset = Vector2(-10, -24)

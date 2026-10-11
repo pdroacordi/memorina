@@ -5,4 +5,4 @@
 [node name="FlourSacks" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-25, -34)
+offset = Vector2(-21, -40)

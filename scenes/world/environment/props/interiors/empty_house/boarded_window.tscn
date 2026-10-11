@@ -5,4 +5,4 @@
 [node name="BoardedWindow" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-29, -60)
+offset = Vector2(-32, -60)

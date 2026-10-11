@@ -28,44 +28,44 @@ backdrop_set = ExtResource("bd_set")
 z_index = -10
 
 [node name="Hearth0" parent="Props" instance=ExtResource("pi_ivo_house_hearth")]
-position = Vector2(248, 288)
+position = Vector2(222, 288)
 
 [node name="Firewood1" parent="Props" instance=ExtResource("pi_ivo_house_firewood")]
-position = Vector2(296, 288)
+position = Vector2(274, 288)
 
 [node name="Guitar2" parent="Props" instance=ExtResource("pi_ivo_house_guitar")]
-position = Vector2(318, 288)
+position = Vector2(306, 288)
 
 [node name="Chair3" parent="Props" instance=ExtResource("pi_ivo_house_chair")]
-position = Vector2(350, 288)
+position = Vector2(344, 288)
 flip_h = true
 
 [node name="Table4" parent="Props" instance=ExtResource("pi_ivo_house_table")]
 position = Vector2(400, 288)
 
 [node name="ChairShawl5" parent="Props" instance=ExtResource("pi_ivo_house_chair_shawl")]
-position = Vector2(450, 288)
+position = Vector2(456, 288)
 
 [node name="Window6" parent="Props" instance=ExtResource("pi_ivo_house_window")]
 position = Vector2(400, 200)
 
 [node name="Bed7" parent="Props" instance=ExtResource("pi_ivo_house_bed")]
-position = Vector2(500, 288)
+position = Vector2(540, 288)
 
 [node name="WallShelfCups8" parent="Props" instance=ExtResource("pi_ivo_house_wall_shelf_cups")]
-position = Vector2(500, 176)
+position = Vector2(540, 176)
 
 [node name="ChildBed9" parent="Props" instance=ExtResource("pi_ivo_house_child_bed")]
-position = Vector2(572, 288)
+position = Vector2(72, 288)
 
 [node name="DrawingSun10" parent="Props" instance=ExtResource("pi_ivo_house_drawing_sun")]
-position = Vector2(548, 206)
+position = Vector2(48, 206)
 
 [node name="DrawingHouse11" parent="Props" instance=ExtResource("pi_ivo_house_drawing_house")]
-position = Vector2(572, 200)
+position = Vector2(72, 200)
 
 [node name="DrawingHeart12" parent="Props" instance=ExtResource("pi_ivo_house_drawing_heart")]
-position = Vector2(596, 206)
+position = Vector2(96, 206)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

@@ -5,4 +5,4 @@
 [node name="BenchA" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-22, -18)
+offset = Vector2(-23, -24)
