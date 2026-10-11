@@ -32,7 +32,7 @@ position = Vector2(105, 288)
 position = Vector2(120, 64)
 
 [node name="Crate3" parent="Props" instance=ExtResource("pi_tavern_cellar_crate")]
-position = Vector2(120, 160)
+position = Vector2(280, 288)
 
 [node name="Lantern4" parent="Props" instance=ExtResource("pi_tavern_cellar_lantern")]
 position = Vector2(176, 128)

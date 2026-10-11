@@ -1,5 +1,5 @@
 ; village_mill.room - the river mill (design 04 section 3.1); the road runs under the trail floor to the east gate.
-; One street at ground level (design 04 section 1, "Vila plana"): plank stairs (rows 7, 6) up to the river trail floor (row 5).
+; One street at ground level (design 04 section 1, "Vila plana", no platforms in the air): the river trail floor (row 5) is one full jump (4 rows) up.
 ; River trail gate: the barrier (col 30) stands on the trail floor (row 5) under the ledge (row 0), 4 cells of headroom; past it, a step (rows 3-4, cols 33-34) and the ledge flush with the lake seam (cols 24-31) lead up to lake_waterfall_path's west stub.
 
 [room]
@@ -13,8 +13,8 @@ tileset = village
 #................................SS.SSS#
 #.............................X..SS.SSS#
 ..........................SSSSSSSSSSSS..
-.....................---................
-.................---....................
+........................................
+........................................
 ........................................
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ########################################

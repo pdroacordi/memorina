@@ -82,3 +82,7 @@ is limited to the current room and the rooms touching it (`_reach_of`). Working 
   - Frame: `playtests/screenshots/2026-10-10-traversal-orchards-caldera/rv2_double_jump_leaves_the_frame_top_on_the_threshold_bridge.png`.
   - Whether that reads as a deliberate "he went off the top" or as losing the character needs a human. It is
     the same shape as the opening report's bridge-jump note.
+
+## Regression timeline re-pointed (2026-10-11, WORLD-25)
+
+The orchard_well one-way that `rv_n2` stood on was removed, and orchard_well has no floor within 206 px of an open top any more. The check is now `traverse_woods_lake_rv_n2_pond_shelf_double_jump.json`: woods_pond's rock shelf (-5264, 64), open top y 0, peak feet -205.6, `fade` 0.00 throughout (`bugs/world-25-re-pointed-timelines-no-longer-test-their-scenario`).

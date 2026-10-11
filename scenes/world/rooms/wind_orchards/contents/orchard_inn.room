@@ -1,5 +1,5 @@
 ; orchard_inn.room - Estalagem: the mill town's inn, interior (design 04 sections 3.6 and 4).
-; Built floor (stone, so Enraizar grows no pillars indoors): bar counter, a three-step stair to the upper floor's rooms, a hearth.
+; Built floor (stone, so Enraizar grows no pillars indoors), one storey: a hearth (cols 9-12) and the bar counter (cols 35-38).
 
 [room]
 origin = 0, 0
@@ -10,11 +10,11 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 S......................................S
 S......................................S
 S......................................S
-S.................................SSSS.S
-S.......................===============S
-S......................S...........SSSSS
-S.....................SS...........SSSSS
-S...E....SSSS........SSS...........SSSSS
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S...E....SSSS......................SSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

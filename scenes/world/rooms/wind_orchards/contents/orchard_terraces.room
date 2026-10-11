@@ -1,6 +1,7 @@
 ; orchard_terraces.room - Terracos (design 04 section 3.6): stepped orchard terraces, earth tops on dry-stone walls; bench in the hollow at col 30.
 ; Entered from woods_canopy (floor hole cols 44-51) or by the drop from orchard_chasm_bridge (top cols 44-51, caught by the crown at row 4).
-; Main path west climbs the crest (row 12) by the double jump; the counterweights shortcut lands on the west hill (row 9).
+; Main path west: single jumps up the crest (row 12) and the terrace off the west hill (row 10, cols 8-15) to the west hill
+; (row 9), where the counterweights shortcut lands.
 
 [room]
 origin = 0, 0
@@ -16,8 +17,8 @@ tileset = legacy
 ..........................======...........................#
 ...................................=====...................#
 ...........................................................#
-########..........................................=====....#
-SSSSSSSS....====...........................................#
+########..........................................##########
+SSSSSSSS########...........................................#
 SSSSSSSS...................................................#
 SSSSSSSS..............####.................................#
 SSSSSSSS..............SSSS..................=====....#######

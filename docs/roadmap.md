@@ -114,7 +114,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | STORY-03 | Mentor and the opening | 01 §4, §8 | `[?]` | | 2026-10-06 | Mentor's name is open (01 §10). Notebook: two mentor entries, a short one after the Memorina is given and a real one at his restoration (the user, 2026-10-02); the Frost Guardian is not the mentor. |
 | STORY-04 | Bearer fragments, one per tube | 01 §6 | `[ ]` | UI-03 | 2026-10-02 | |
 | STORY-05 | Five playable flashbacks | 01 §9.3 | `[ ]` | | 2026-10-02 | |
-| STORY-06 | Letters, diaries and other collectibles | 01 §6 | `[ ]` | UI-03 | 2026-10-02 | |
+| STORY-06 | Letters, diaries and other collectibles | 01 §6 | `[ ]` | UI-03 | 2026-10-11 | Planned slots beyond design 04 §3: woods_root_caves' west alcove (cols 1-7, rows 9-16; the reward for Espacial 1's root bridge, WORLD-25). |
 | STORY-07 | Epilogue | 01 §9.4 | `[ ]` | GRD-06 | 2026-10-02 | |
 
 ## World
@@ -144,7 +144,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | WORLD-22 | Backdrops blend at room seams; underground backdrops | 04 §1, §6 | `[x]` | WORLD-06 | 2026-10-10 | A seam between a room with a backdrop and one without was a hard line (user, 2026-10-10). `systems/backdrops` (Seams blend). The cave, strata and interior sheets are Codex art cut by `tools/art/cut_wall.py` (2026-10-10). |
 | WORLD-23 | Generated grass that bends | 04 §1 | `[x]` | WORLD-07, WORLD-08 | 2026-10-10 | "Freeze in the grey (Recommended)" (user, 2026-10-10): sways and bends on the memory clock; spring/summer green, autumn dry, winter none. `systems/grass`. Wind does not bend it yet. |
 | WORLD-24 | Every doorway fits its place | 04 §4 | `[x]` | WORLD-09 | 2026-10-10 | "There are still doors in the middle of nowhere" (user, 2026-10-10); board "Approve (Recommended)". Five region fronts with walkable roofs (`^`), door looks (passage, stairwell, hatches). `systems/rooms` (Doors, Roofs), `systems/props` (Facades). |
-| WORLD-25 | Rework platforms and places that lead nowhere | 04 §1 | `[ ]` | TECH-05 | 2026-10-10 | "There are plenty of weird places that lead nowhere and random platforms that lead nowhere too." (user, 2026-10-10). Before/after maps shown to the user. |
+| WORLD-25 | Rework platforms and places that lead nowhere | 04 §1 | `[~]` | TECH-05 | 2026-10-11 | "There are plenty of weird places that lead nowhere and random platforms that lead nowhere too." (user, 2026-10-10). Reworked 2026-10-11 (`systems/rooms`, Reachability audit): audit errors 78 to 28 (LEADS_NOWHERE 67 to 25, NO_WAY_BACK 9 to 3, UNREACHABLE 2 to 0); of the 67 TODO entries 50 are gone and 17 stay with design reasons; the 11 STORY-06 entries are untouched (the bell tower is left to its rewrite). Playtested and revised after review (`playtests/2026-10-11-world25-rework`; six full-route timelines `world25_*`). Next: before/after boards shown to the user. Open: `bugs/the-woods-pond-shelf-jump-takes-ivo-out-of-the-top-of-the-frame` (camera). |
 | WORLD-26 | The bell tower: taller, a walkable spiral stair | 04 §3.1, §4 | `[ ]` | | 2026-10-10 | "Walkable helix (Recommended)" (user, 2026-10-10): in front of the steps on the near run, behind them (smaller, darker) on the far run; the outside redrawn taller, rising out of the frame. The lighthouse interior's spiral stair (04 §3.3) reuses it. |
 
 ## Tools and infrastructure
@@ -156,3 +156,4 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | TECH-03 | Art pipeline (contracts, Codex, PixelLab, processing) | | `[x]` | | 2026-10-02 | `systems/art-pipeline` |
 | TECH-04 | Export presets and a release build | | `[ ]` | | 2026-10-02 | No `export_presets.cfg` yet. |
 | TECH-05 | Room reachability audit | | `[x]` | | 2026-10-11 | "Audit tool + rework (Recommended)" (user, 2026-10-10). `systems/rooms` (Reachability audit); `architecture/room-reachability-audit`. 78 errors allowlisted (11 STORY-06 collectible ledges, 67 TODO WORLD-25). |
+| TECH-06 | Reach audit: dead-end ledges attached to walls | | `[ ]` | TECH-05 | 2026-10-11 | The WORLD-25 playtest found wall ledges left from a removed route that lead nowhere; the audit counts a ledge joined to a wall as ground, so they pass as pockets (`playtests/2026-10-11-world25-rework`). Also: the greedy redundancy check keeps root spans a removed ledge created. |

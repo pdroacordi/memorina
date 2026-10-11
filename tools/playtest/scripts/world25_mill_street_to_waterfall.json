@@ -1,0 +1,611 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 14,
+ "locale": "en",
+ "player_position": [
+  2500,
+  280
+ ],
+ "steps": [
+  {
+   "t": 0.9,
+   "log": "L0.90"
+  },
+  {
+   "t": 1.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.0,
+   "log": "L1.00"
+  },
+  {
+   "t": 1.1,
+   "log": "L1.10"
+  },
+  {
+   "t": 1.2,
+   "log": "L1.20"
+  },
+  {
+   "t": 1.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.3,
+   "log": "L1.30"
+  },
+  {
+   "t": 1.4,
+   "log": "L1.40"
+  },
+  {
+   "t": 1.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.5,
+   "log": "L1.50"
+  },
+  {
+   "t": 1.5,
+   "screenshot": "mill_a_street"
+  },
+  {
+   "t": 1.6,
+   "log": "L1.60"
+  },
+  {
+   "t": 1.7,
+   "log": "L1.70"
+  },
+  {
+   "t": 1.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.8,
+   "log": "L1.80"
+  },
+  {
+   "t": 1.9,
+   "log": "L1.90"
+  },
+  {
+   "t": 1.938,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "log": "L2.00"
+  },
+  {
+   "t": 2.1,
+   "log": "L2.10"
+  },
+  {
+   "t": 2.2,
+   "log": "L2.20"
+  },
+  {
+   "t": 2.2,
+   "screenshot": "mill_b_jump"
+  },
+  {
+   "t": 2.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.3,
+   "log": "L2.30"
+  },
+  {
+   "t": 2.388,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.4,
+   "log": "L2.40"
+  },
+  {
+   "t": 2.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "log": "L2.50"
+  },
+  {
+   "t": 2.6,
+   "log": "L2.60"
+  },
+  {
+   "t": 2.7,
+   "log": "L2.70"
+  },
+  {
+   "t": 2.7,
+   "screenshot": "mill_c_trail_floor"
+  },
+  {
+   "t": 2.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.8,
+   "log": "L2.80"
+  },
+  {
+   "t": 2.9,
+   "log": "L2.90"
+  },
+  {
+   "t": 3.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "log": "L3.00"
+  },
+  {
+   "t": 3.1,
+   "log": "L3.10"
+  },
+  {
+   "t": 3.2,
+   "log": "L3.20"
+  },
+  {
+   "t": 3.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.3,
+   "log": "L3.30"
+  },
+  {
+   "t": 3.4,
+   "log": "L3.40"
+  },
+  {
+   "t": 3.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.5,
+   "log": "L3.50"
+  },
+  {
+   "t": 3.6,
+   "log": "L3.60"
+  },
+  {
+   "t": 3.7,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.7,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.7,
+   "log": "L3.70"
+  },
+  {
+   "t": 3.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.8,
+   "log": "L3.80"
+  },
+  {
+   "t": 3.9,
+   "log": "L3.90"
+  },
+  {
+   "t": 3.95,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "log": "L4.00"
+  },
+  {
+   "t": 4.05,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 4.1,
+   "log": "L4.10"
+  },
+  {
+   "t": 4.15,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "log": "L4.20"
+  },
+  {
+   "t": 4.2,
+   "screenshot": "mill_d_step"
+  },
+  {
+   "t": 4.3,
+   "log": "L4.30"
+  },
+  {
+   "t": 4.4,
+   "log": "L4.40"
+  },
+  {
+   "t": 4.5,
+   "log": "L4.50"
+  },
+  {
+   "t": 4.6,
+   "log": "L4.60"
+  },
+  {
+   "t": 4.7,
+   "log": "L4.70"
+  },
+  {
+   "t": 4.8,
+   "log": "L4.80"
+  },
+  {
+   "t": 4.9,
+   "log": "L4.90"
+  },
+  {
+   "t": 5.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.0,
+   "log": "L5.00"
+  },
+  {
+   "t": 5.1,
+   "log": "L5.10"
+  },
+  {
+   "t": 5.2,
+   "log": "L5.20"
+  },
+  {
+   "t": 5.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.3,
+   "log": "L5.30"
+  },
+  {
+   "t": 5.4,
+   "log": "L5.40"
+  },
+  {
+   "t": 5.4,
+   "screenshot": "mill_e_to_ledge"
+  },
+  {
+   "t": 5.45,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.5,
+   "log": "L5.50"
+  },
+  {
+   "t": 5.6,
+   "log": "L5.60"
+  },
+  {
+   "t": 5.7,
+   "log": "L5.70"
+  },
+  {
+   "t": 5.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.8,
+   "log": "L5.80"
+  },
+  {
+   "t": 5.9,
+   "log": "L5.90"
+  },
+  {
+   "t": 6.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.0,
+   "log": "L6.00"
+  },
+  {
+   "t": 6.1,
+   "log": "L6.10"
+  },
+  {
+   "t": 6.2,
+   "log": "L6.20"
+  },
+  {
+   "t": 6.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.3,
+   "log": "L6.30"
+  },
+  {
+   "t": 6.4,
+   "log": "L6.40"
+  },
+  {
+   "t": 6.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.5,
+   "log": "L6.50"
+  },
+  {
+   "t": 6.6,
+   "log": "L6.60"
+  },
+  {
+   "t": 6.7,
+   "log": "L6.70"
+  },
+  {
+   "t": 6.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.8,
+   "log": "L6.80"
+  },
+  {
+   "t": 6.9,
+   "log": "L6.90"
+  },
+  {
+   "t": 7.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.0,
+   "log": "L7.00"
+  },
+  {
+   "t": 7.1,
+   "log": "L7.10"
+  },
+  {
+   "t": 7.2,
+   "log": "L7.20"
+  },
+  {
+   "t": 7.2,
+   "screenshot": "mill_f_ledge_end"
+  },
+  {
+   "t": 7.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.3,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 7.3,
+   "log": "L7.30"
+  },
+  {
+   "t": 7.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 7.4,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.4,
+   "log": "L7.40"
+  },
+  {
+   "t": 7.5,
+   "log": "L7.50"
+  },
+  {
+   "t": 7.6,
+   "log": "L7.60"
+  },
+  {
+   "t": 7.65,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.7,
+   "log": "L7.70"
+  },
+  {
+   "t": 7.7,
+   "screenshot": "mill_g_to_stub"
+  },
+  {
+   "t": 7.8,
+   "log": "L7.80"
+  },
+  {
+   "t": 7.85,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.9,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.9,
+   "log": "L7.90"
+  },
+  {
+   "t": 8.0,
+   "log": "L8.00"
+  },
+  {
+   "t": 8.1,
+   "log": "L8.10"
+  },
+  {
+   "t": 8.15,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 8.2,
+   "log": "L8.20"
+  },
+  {
+   "t": 8.3,
+   "log": "L8.30"
+  },
+  {
+   "t": 8.4,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 8.4,
+   "log": "L8.40"
+  },
+  {
+   "t": 8.5,
+   "log": "L8.50"
+  },
+  {
+   "t": 8.6,
+   "log": "L8.60"
+  },
+  {
+   "t": 8.7,
+   "log": "L8.70"
+  },
+  {
+   "t": 8.8,
+   "log": "L8.80"
+  },
+  {
+   "t": 8.9,
+   "log": "L8.90"
+  },
+  {
+   "t": 9.0,
+   "log": "L9.00"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "mill_h_waterfall_stub"
+  },
+  {
+   "t": 9.1,
+   "log": "L9.10"
+  },
+  {
+   "t": 9.2,
+   "log": "L9.20"
+  },
+  {
+   "t": 9.3,
+   "log": "L9.30"
+  },
+  {
+   "t": 9.4,
+   "log": "L9.40"
+  },
+  {
+   "t": 9.5,
+   "log": "L9.50"
+  },
+  {
+   "t": 9.6,
+   "log": "L9.60"
+  },
+  {
+   "t": 9.7,
+   "log": "L9.70"
+  },
+  {
+   "t": 9.8,
+   "log": "L9.80"
+  },
+  {
+   "t": 9.9,
+   "log": "L9.90"
+  },
+  {
+   "t": 10.0,
+   "log": "L10.00"
+  }
+ ]
+}

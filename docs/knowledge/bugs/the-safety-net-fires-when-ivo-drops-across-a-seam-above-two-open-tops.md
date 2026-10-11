@@ -69,3 +69,7 @@ the top line and the centre above it; void beside the world edge (must be lost).
 - **The same three double jumps as before**, re-run (`..._rv_n1/n2/n3_*.json`):
   - leaf-path hill (peak -1677.6), orchard_well one-way (-1613.6), threshold bridge deck (-109.6);
   - no fade and no pull-back; each lands where it took off.
+
+## Regression timeline re-pointed (2026-10-11, WORLD-25)
+
+WORLD-25 removed orchard_leaf_path's row-3 one-way, and no floor near its col-0 seam is within a double jump's reach of the top any more. The seam check is now `traverse_woods_lake_rv4_s1_pond_double_jump_into_bloom_hollow.json`: a running double jump west from woods_pond's west step (-5520, 160) over its col-0 wall. Ivo crosses the seam (x -5760) at feet about -110, above both open tops (y 0); peak -109.6, `fade` 0.00, lands in bloom_hollow at (-5954.2, 288). The orchard_well run is now `traverse_woods_lake_rv_n2_pond_shelf_double_jump.json` (`bugs/world-25-re-pointed-timelines-no-longer-test-their-scenario`).

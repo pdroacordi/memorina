@@ -1,4 +1,4 @@
-; threshold_wayshrine.room - Capela da Estrada: a shrine plateau (cols 6-14) with the bench under its canopy
+; threshold_wayshrine.room - Capela da Estrada: a shrine plateau (cols 6-14) with the bench on it
 ; (design 04 section 3.2). No gate or puzzle.
 
 [room]
@@ -9,7 +9,7 @@ tileset = legacy
 #..................#
 #..................#
 #..................#
-#.......=====......#
+#..................#
 #..................#
 ....................
 ..........R.........

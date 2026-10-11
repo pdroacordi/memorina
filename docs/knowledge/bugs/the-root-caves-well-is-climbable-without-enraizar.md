@@ -7,7 +7,7 @@ severity: medium
 tags: [rooms, level-design, spring-woods, world-05, gate, double-jump, root]
 related: [playtests/2026-10-09-traversal-woods-lake, systems/roots-and-climbing, systems/rooms]
 created: 2026-10-09
-updated: 2026-10-10
+updated: 2026-10-11
 source_files:
   - scenes/world/rooms/spring_woods/contents/woods_root_caves.room
 ---
@@ -74,3 +74,7 @@ tree, imported 23:58:40:
   the top rung (peak 299.6) onto the ledge, then one jump to woods_deep's floor (-3699.9, 288).
 - **Well exit and east chamber** (`..._x1_rv2_caves_well_to_shelf_and_east.json`): the shelf (672) is
   reached from the well floor, and walking east drops onto the chamber's block at (-3068.6, 768).
+
+## Revision (2026-10-11)
+
+The uncommitted WORLD-25 rework removed the row-0 one-way, which this resolution relies on ("Jump off the top rung (peak 299.6) onto the ledge"). The double-jump skip stays closed, because the shelf is unchanged. But the roots no longer end on a ledge: the same jump now falls back to the well floor. See `bugs/the-root-caves-roots-end-short-of-woods-deep-without-the-row-0-ledge`.

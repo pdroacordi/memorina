@@ -423,6 +423,21 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
 - "Landing on screen" = the landing floor's y lies inside the 640x360 view around `cam_centre`. Report it as
   seconds and frames before touchdown, next to the HEAD figure.
 
+- **Learned 2026-10-11 (WORLD-25 rework)**:
+  - **Test a climb one step at a time first.** Spawn on each platform at the planned take-off x, jump, and read
+    the final y. Sixteen 4-s runs verified the waterfall's sixteen steps, and the continuous climb built from
+    their landing x then passed first try. That is much faster than the closed-loop full climbs above.
+  - **The apex hang carries a held direction ~58 px.** A 1-cell (32 px) top is never landed with the direction
+    held, whatever the press length. Script a release 0.30-0.50 s after the press, and report it as a trap.
+  - **A ledge 6 rows above caps a jump** at 9.8 px over a 3-row step (head bump). Sweep take-off x on such steps.
+  - **The top of a root shaft is a bob, and the bob is airborne** (`climb=false`). A press there is the AIR jump.
+    For a ground jump off the rungs, press while the log still shows `climb=true`. A jump with up held from
+    under a solid cell at a shaft's edge does not grab: stand inside the shaft's columns.
+  - **The audit ignores wall-attached ledges** (only islands and one-ways are platforms). Check dead-end wall
+    ledges by eye and from the grid.
+  - A sibling reviewer may file bugs into the same worktree mid-session. `git status` the docs before writing,
+    and add evidence to an existing entry instead of filing a duplicate.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

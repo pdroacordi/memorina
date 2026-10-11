@@ -1,5 +1,5 @@
-; lake_fisher_hut.room - Cabana do Pescador (interior, design 04 sections 3.5 and 4): one room with a net loft
-; reached by two crates; barrels by the back wall. No gate.
+; lake_fisher_hut.room - Cabana do Pescador (interior, design 04 sections 3.5 and 4): one room, two crates
+; (cols 8-9) and barrels by the back wall. No gate.
 
 [room]
 origin = 0, 0
@@ -11,7 +11,7 @@ S..................S
 S..................S
 S..................S
 S..................S
-S.........=========S
+S..................S
 S..................S
 S........S.........S
 S...E...SS......SSSS
