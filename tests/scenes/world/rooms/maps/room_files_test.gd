@@ -75,6 +75,60 @@ func _hinted(map: RoomMap, group: int) -> bool:
 				return true
 	return false
 
+## Every helix stair's ends stand on floor tops, its head has a landing and its swept body is air (systems/helix-stair).
+func test_every_helix_stair_rides_clear() -> void:
+	var legend := RoomLegend.load_default()
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path).map
+		for placed: Dictionary in map.entities:
+			if placed.symbol != "@":
+				continue
+			for problem: String in HelixStair.check(placed.cell, placed.params, map):
+				problems.append("%s: helix stair at %s: %s" % [path, placed.cell, problem])
+	assert_array(Array(problems)).is_empty()
+
+## Void lies only in interiors: a surface room would reveal void cells on the map (architecture/room-void-outside-the-shell).
+func test_void_lies_only_in_interiors() -> void:
+	var legend := RoomLegend.load_default()
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path).map
+		if map.void_cells.is_empty():
+			continue
+		var trigger := path.get_base_dir().get_base_dir().path_join(path.get_file().get_basename() + ".tscn")
+		var interior := false
+		if ResourceLoader.exists(trigger):
+			var room := (load(trigger) as PackedScene).instantiate()
+			interior = room.get("interior")
+			room.free()
+		if not interior:
+			problems.append("%s has void but is no interior" % path)
+	assert_array(Array(problems)).is_empty()
+
+## A door's art, sunk steps included, never lies on void.
+func test_every_doors_art_is_clear_of_void() -> void:
+	var legend := RoomLegend.load_default()
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path).map
+		if map.void_cells.is_empty():
+			continue
+		for placed: Dictionary in map.entities:
+			if placed.symbol != "E":
+				continue
+			var look := str((placed.params as Dictionary).get("look", "door"))
+			var texture: Texture2D = Door.LOOKS[look]
+			var size := Vector2(texture.get_width() * 0.5, texture.get_height())
+			var cell: Vector2i = placed.cell
+			var feet := Vector2((cell.x + 0.5) * RoomMap.CELL_PX, (cell.y + 1) * RoomMap.CELL_PX + Door.SINKS.get(look, 0.0))
+			var art := Rect2(feet - Vector2(size.x * 0.5, size.y), size)
+			for y: int in range(floori(art.position.y / RoomMap.CELL_PX), ceili(art.end.y / RoomMap.CELL_PX)):
+				for x: int in range(floori(art.position.x / RoomMap.CELL_PX), ceili(art.end.x / RoomMap.CELL_PX)):
+					if map.is_void(Vector2i(x, y)):
+						problems.append("%s: the door at %s draws over void at %d,%d" % [path, cell, x, y])
+	assert_array(Array(problems)).is_empty()
+
 ## A door pair joins two rooms of one region, each naming the other's room, and every `to_room` is a Room scene of that region.
 func test_every_door_has_its_partner() -> void:
 	var legend := RoomLegend.load_default()

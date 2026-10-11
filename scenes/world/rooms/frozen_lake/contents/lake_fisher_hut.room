@@ -15,9 +15,9 @@ S..................S
 S..................S
 S........S.........S
 S...E...SS......SSSS
-SSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSS___
+____________________
+____________________
 
 [entities]
 4,8 = {"link": "lake_fisher_hut_door", "to_room": "lake_fishing_village", "arrive_facing": 1}

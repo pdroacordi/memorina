@@ -51,6 +51,8 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   watcher's queue. It also prints the current room id and `interior`, the camera bounds and
   centre, the fade's alpha, `transitioning`, Ivo's facing and process mode, whether the region weather
   is visible, and every loaded door (`link@x:open|sealed[+prompt] shake=<sprite x>`).
+- **Per-frame trace.** `"trace": true` prints one `[playtest] trace` line every physics frame until a
+  `"trace": false` step: Ivo's position, velocity, floor, helix ride and progress `u`, and the camera's centre.
 - `--out` must be an **absolute filesystem path** (not `res://`); the runner creates it if
   missing and writes `<name>.png` for every `screenshot` step there, then quits on its own
   once the timeline ends or `max_duration` is hit (default 60s safety cap).

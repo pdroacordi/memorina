@@ -23,6 +23,7 @@ const KIND_NAMES := {
 	RoomLegendEntry.Kind.BACK: "back wall",
 	RoomLegendEntry.Kind.SECRET: "secret",
 	RoomLegendEntry.Kind.ROOF: "roof",
+	RoomLegendEntry.Kind.VOID: "void",
 }
 
 ## `readme` with every generated section replaced by its current text.
@@ -65,7 +66,7 @@ static func legend_section(legend: RoomLegend) -> String:
 			look = BiomeTileset.Look.keys()[entry.look].to_lower()
 			if entry.kind != RoomLegendEntry.Kind.BACK and entry.kind != RoomLegendEntry.Kind.SECRET:
 				material = Enums.Ground.keys()[entry.ground].to_lower()
-		elif entry.kind == RoomLegendEntry.Kind.ROOF:
+		elif entry.kind == RoomLegendEntry.Kind.ROOF or entry.kind == RoomLegendEntry.Kind.VOID:
 			material = Enums.Ground.keys()[entry.ground].to_lower()
 		var role: String = "-" if entry.reach_role == RoomLegendEntry.ReachRole.NONE else RoomLegendEntry.ReachRole.keys()[entry.reach_role].to_lower()
 		lines.append("| `%s` | %s | %s | %s | %s | %s | %s |" % [entry.symbol, section, KIND_NAMES[entry.kind], material, look, role, entry.description.replace("\n", " ")])

@@ -45,7 +45,7 @@ func test_no_allowlist_entry_is_stale() -> void:
 			stale.append("%s %s %s,%s" % [ReachFinding.Kind.keys()[entry.kind], entry.room, entry.cell.x, entry.cell.y])
 	assert_array(stale).override_failure_message("Allowlist entries that match no error any more: remove them\n%s" % "\n".join(stale)).is_empty()
 
-func test_every_mover_and_current_answers_reach_cells() -> void:
+func test_every_mover_current_and_stair_answers_its_reach_method() -> void:
 	var missing: Array[String] = []
 	for entry: RoomLegendEntry in RoomLegend.load_default().entries:
 		if entry.reach_role in [RoomLegendEntry.ReachRole.MOVER, RoomLegendEntry.ReachRole.CURRENT]:
@@ -55,4 +55,9 @@ func test_every_mover_and_current_answers_reach_cells() -> void:
 			if entry.reach_role == RoomLegendEntry.ReachRole.CURRENT and not node.has_method(&"reach_exit_cells"):
 				missing.append(entry.symbol)
 			node.free()
+		if entry.reach_role == RoomLegendEntry.ReachRole.STAIR:
+			var stair := entry.scene.instantiate()
+			if not stair.has_method(&"reach_ends"):
+				missing.append(entry.symbol)
+			stair.free()
 	assert_array(missing).is_empty()

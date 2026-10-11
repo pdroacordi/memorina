@@ -99,6 +99,11 @@ func _build() -> void:
 			if walls.has(group):
 				(node as Door).hide_until(walls[group])
 	_adopt(entities)
+	if not map.void_cells.is_empty():
+		var mask := RoomVoid.new()
+		mask.name = "Void"
+		mask.setup(map)
+		_adopt(mask)
 
 ## One look's dual-grid tiles, half a cell up and left, so each display cell sits on a cell corner.
 func _display_layer(layer_name: String, look: int, cells: PackedByteArray, material_used: Material, z: int) -> TileMapLayer:

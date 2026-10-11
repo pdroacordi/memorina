@@ -65,6 +65,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_sit.png" id="70_sit"]
 [ext_resource type="Script" path="res://scenes/characters/components/sit_component.gd" id="71_sitco"]
 [ext_resource type="Script" path="res://scenes/characters/components/door_component.gd" id="72_doorco"]
+[ext_resource type="Script" path="res://scenes/characters/components/helix_rider_component.gd" id="73_helixrider"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_climbsensor"]
 size = Vector2(12, 28)
@@ -2217,6 +2218,9 @@ monitorable = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ClimbSensor"]
 position = Vector2(0, -30)
 shape = SubResource("RectangleShape2D_climbsensor")
+
+[node name="HelixRider" type="Node" parent="."]
+script = ExtResource("73_helixrider")
 
 [node name="Sit" type="Node" parent="."]
 script = ExtResource("71_sitco")

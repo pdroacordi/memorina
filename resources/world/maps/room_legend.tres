@@ -20,6 +20,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/door/door.tscn" id="i21_door"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/fact_barrier/fact_barrier.tscn" id="i22_barrier"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/draft/draft.tscn" id="i23_draft"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/helix_stair/helix_stair.tscn" id="i24_helix"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -283,6 +284,24 @@ anchor = 0
 required_params = PackedStringArray("requires")
 description = "A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2)."
 
+[sub_resource type="Resource" id="void"]
+script = ExtResource("2_entry")
+symbol = "_"
+kind = 7
+ground = 2
+description = "Void outside a room's shell: solid stone to gameplay, drawn black. Every one of its 8 neighbours is ground (not a ledge), void or off the map, so a drawn wall always stands between the room's air and the void; never under water, a reach or a secret, and only in interiors for now."
+
+[sub_resource type="Resource" id="helix"]
+script = ExtResource("2_entry")
+symbol = "@"
+kind = 3
+ground = 0
+scene = ExtResource("i24_helix")
+anchor = 0
+required_params = PackedStringArray("shape")
+reach_role = 7
+description = "A helix stair the tower turns around: Ivo rides straight up its axis while the view turns the stair, wall and slits by his progress. Place it on the bottom floor, its cell's bottom-left corner the axis. shape is a HelixStairShape .tres path, look a HelixLook; hand 1 climbs with right held, -1 with left. The head needs a plank gallery across the shell (one-way, so Ivo rises through it), the column up the axis must be clear of solid ground, and the shell's inner faces stand at the wall's silhouette (room_files_test)."
+
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void")])

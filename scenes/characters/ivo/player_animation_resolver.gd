@@ -53,6 +53,10 @@ func resolve() -> StringName:
 		if clip != &"":
 			return clip
 
+	# A step of the stair is ground: he walks up it or stands on it.
+	if _player.is_riding_stair():
+		return RUN if _player.is_stair_moving() else IDLE
+
 	# Holding on is not falling.
 	if _player.is_climbing():
 		var moving := _player.velocity.length() > 1.0

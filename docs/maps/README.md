@@ -179,6 +179,8 @@ else in the code knows what a character means.
 | `X` | `[grid]` | entity | - | - | content | A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2). |
 | `k` | `[secret]` | secret | - | stone | - | [secret] only: a secret cell drawn as cracked stone until Ivo steps in - the hint that the wall is false. |
 | `d` | `[grid]` | entity | - | - | - | A faint draft of dust at a secret's mouth (facing 1 right, -1 left, 0 up); it freezes in the grey. |
+| `@` | `[grid]` | entity | - | - | stair | A helix stair the tower turns around: Ivo rides straight up its axis while the view turns the stair, wall and slits by his progress. Place it on the bottom floor, its cell's bottom-left corner the axis. shape is a HelixStairShape .tres path, look a HelixLook; hand 1 climbs with right held, -1 with left. The head needs a plank gallery across the shell (one-way, so Ivo rises through it), the column up the axis must be clear of solid ground, and the shell's inner faces stand at the wall's silhouette (room_files_test). |
+| `_` | `[grid]` | void | stone | - | - | Void outside a room's shell: solid stone to gameplay, drawn black. Every one of its 8 neighbours is ground (not a ledge), void or off the map, so a drawn wall always stands between the room's air and the void; never under water, a reach or a secret, and only in interiors for now. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -396,6 +398,17 @@ Scene `res://scenes/world/environment/draft/draft.tscn`, anchored at its cell's 
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `facing` | int | `1` |
+
+#### `@` - HelixStair
+
+Scene `res://scenes/world/interactables/helix_stair/helix_stair.tscn`, anchored at its cell's bottom centre (standing on the cell below). A helix stair the tower turns around: Ivo rides straight up its axis while the view turns the stair, wall and slits by his progress. Place it on the bottom floor, its cell's bottom-left corner the axis. shape is a HelixStairShape .tres path, look a HelixLook; hand 1 climbs with right held, -1 with left. The head needs a plank gallery across the shell (one-way, so Ivo rises through it), the column up the axis must be clear of solid ground, and the shell's inner faces stand at the wall's silhouette (room_files_test).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `shape` | HelixStairShape | **required** |
+| `look` | HelixLook | `Resource("res://resources/world/helix/bell_tower_look.tres")` |
+| `hand` | int | `1` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

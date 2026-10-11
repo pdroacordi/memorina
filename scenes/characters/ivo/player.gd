@@ -80,7 +80,7 @@ const RECALL_ESCAPE_TIME := 0.6
 ## Seconds an Up press waits for a door to come in reach ("Buffer it ~0.1 s", user, 2026-10-08).
 const DOOR_BUFFER := 0.1
 
-enum MotionState { KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
+enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 
 
 @onready var _input           : PlayerInput = $PlayerInput
@@ -91,6 +91,7 @@ enum MotionState { KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 @onready var _wall_mobility   : WallMobilityComponent = $WallMobility
 @onready var _roll            : RollComponent = $Roll
 @onready var _climb           : ClimbComponent = $Climb
+@onready var _rider           : HelixRiderComponent = $HelixRider
 @onready var _sit             : SitComponent = $Sit
 @onready var _doors           : DoorComponent = $Doors
 @onready var _attack          : AttackComponent = $Attack
@@ -250,6 +251,7 @@ func _ready() -> void:
 	_wall_mobility.double_jump = _double_jump
 
 	_states = CharacterStateMachine.new()
+	_states.add_state(MotionState.STAIR, _stair_motion)
 	_states.add_state(MotionState.KNOCKBACK, _knockback_motion)
 	_states.add_state(MotionState.ROLL, _roll_motion)
 	_states.add_state(MotionState.GROUND, _ground_motion)
@@ -265,8 +267,11 @@ func _ready() -> void:
 func _process_motion(delta: float) -> void:
 	_just_double_jumped = false
 	if is_dead():
-		# A corpse still falls and stops sliding; nothing else.
-		_knockback_motion(delta)
+		# A corpse stays on its helix tread; anywhere else it still falls and stops sliding.
+		if _rider.is_riding():
+			_rider.update(delta, Vector2.ZERO, 0.0, true)
+		else:
+			_knockback_motion(delta)
 		if not _death_shown and _player_resolver.is_death_finished():
 			_death_shown = true
 			death_shown.emit()
@@ -282,6 +287,9 @@ func _process_motion(delta: float) -> void:
 		_door_buffer = 0.0
 		_sink_motion(delta)
 		return
+	# On a helix stair jump, roll, attack, doors, benches and the Memorina are refused (architecture/walkable-helix-stair).
+	if _rider.is_riding():
+		_drop_buffers()
 	_try_sit(on_floor)
 	if _sit.is_sitting():
 		if _wants_to_stand():
@@ -291,7 +299,7 @@ func _process_motion(delta: float) -> void:
 			_states.update(delta)
 			return
 
-	face_towards(move_axis())
+	face_towards(_rider.facing_axis() if _rider.is_riding() else move_axis())
 	# The recall's window is real seconds: the world is slowed while it is open,
 	# and `delta` is game time.
 	_recall.tick(delta / maxf(Engine.time_scale, 0.001))
@@ -311,7 +319,7 @@ func _process_motion(delta: float) -> void:
 	if on_floor:
 		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
-	if not _try_door(on_floor, delta):
+	if not _try_door(on_floor, delta) and not _try_board(on_floor):
 		_try_climb()
 
 	_states.transition_to(_select_motion_state(on_floor))
@@ -324,7 +332,8 @@ func _process_motion(delta: float) -> void:
 
 func _after_move(_delta: float) -> void:
 	var on_floor := is_on_floor()
-	_landing.check_landing(on_floor)
+	# A step of the stair is ground: leaving it at an end is no landing.
+	_landing.check_landing(on_floor or _rider.is_riding())
 	if on_floor:
 		_wall_mobility.stop()
 
@@ -374,6 +383,14 @@ func is_climbing() -> bool:
 func climb_grip() -> Climbable.Grip:
 	return _climb.grip()
 
+## On a helix stair (architecture/walkable-helix-stair).
+func is_riding_stair() -> bool:
+	return _rider.is_riding()
+
+## Climbing or descending a helix stair this step, between risers too.
+func is_stair_moving() -> bool:
+	return _rider.is_moving()
+
 func is_rolling() -> bool:
 	return _roll.is_rolling()
 
@@ -402,7 +419,7 @@ func is_bracing() -> bool:
 
 ## The song precondition is firm ground and near-zero horizontal speed (design 02, section 6.2).
 func is_still() -> bool:
-	if not is_on_floor() or is_dead():
+	if not is_on_floor() or is_dead() or is_riding_stair():
 		return false
 	if is_rolling() or is_attacking() or is_recovering() or is_in_knockback() or is_wall_sliding():
 		return false
@@ -421,6 +438,9 @@ func is_still() -> bool:
 ## Only a character standing still can peek, so this returns 0.0 while airborne,
 ## moving or recovering.
 func look_axis() -> float:
+	# Up and Down climb the stair.
+	if is_riding_stair():
+		return 0.0
 	if not is_on_floor() or wants_to_move() or is_recovering():
 		return 0.0
 	# Down is what sat him; the camera must not peek along with it.
@@ -432,15 +452,21 @@ func look_axis() -> float:
 	return _input.look_direction
 
 func air_axis() -> float:
-	if is_on_floor():
+	if is_on_floor() or is_riding_stair():
 		return 0.0
 	return clampf(velocity.y / _jump.terminal_velocity(), -1.0, 1.0)
+
+## Px the camera adds to the feet; on a helix stair it follows the steady rise, not each riser (systems/helix-stair).
+func frame_bias() -> float:
+	return _rider.frame_bias()
 
 #############################################
 ##  L O C O M O T I O N                    ##
 #############################################
 
 func _select_motion_state(on_floor: bool) -> MotionState:
+	if _rider.is_riding():
+		return MotionState.STAIR
 	if is_in_knockback():
 		return MotionState.KNOCKBACK
 	if is_rolling():
@@ -455,6 +481,7 @@ func _tick_input_timers(delta: float, on_floor: bool) -> void:
 	_attack.tick_timers(delta)
 	_memorina.tick_timers(delta)
 	_climb.tick(delta)
+	_rider.tick(delta, move_axis())
 
 # Sample sinking velocity to avoid classifying a water plunge as a hard landing.
 func _sink_motion(delta: float) -> void:
@@ -475,7 +502,7 @@ func _ground_motion(delta: float) -> void:
 
 # Up grabs a climbable surface only when Ivo is not rolling, hurt, or playing.
 func _try_climb() -> void:
-	if _climb.is_climbing() or is_rolling() or is_in_knockback() or is_memorina_drawn():
+	if _climb.is_climbing() or _rider.is_riding() or is_rolling() or is_in_knockback() or is_memorina_drawn():
 		return
 	# A swing or a landing's recovery finishes first: the resolver would show
 	# the attack while the body climbed.
@@ -484,6 +511,29 @@ func _try_climb() -> void:
 	if _input.look_direction < -0.5 and _climb.can_grab():
 		_climb.grab()
 		_wall_mobility.stop()
+
+# Walking into a helix stair's end, or Up at its foot or Down at its head, boards it; only on the floor and
+# when nothing else has him. Returns whether he boarded.
+func _try_board(on_floor: bool) -> bool:
+	if not on_floor or _rider.is_riding() or _climb.is_climbing() or _sit.is_sitting():
+		return false
+	if is_rolling() or is_in_knockback() or is_memorina_drawn() or is_attacking() or is_recovering():
+		return false
+	var end := _rider.end_pressed_into(_stair_axis())
+	if end == null:
+		return false
+	_rider.board(end)
+	_wall_mobility.stop()
+	# The refusal at the top of the step ran before he boarded (bugs/a-press-buffered-into-the-boarding-frame-acts-on-the-helix-stair).
+	_drop_buffers()
+	return true
+
+func _stair_axis() -> Vector2:
+	return Vector2(move_axis(), _input.look_direction)
+
+## A hit pauses the ride without unseating him.
+func _stair_motion(delta: float) -> void:
+	_rider.update(delta, _stair_axis(), _locomotion.stats.move_speed, is_in_knockback())
 
 # Benches block gravity and wind while Ivo is seated.
 func _sit_motion(_delta: float) -> void:
@@ -1016,9 +1066,15 @@ func is_death_shown() -> bool:
 func is_sitting() -> bool:
 	return _sit.is_sitting()
 
+## A move that is not motion ends any hold: nothing pulls him back toward a stair or a root.
+func teleport(point: Vector2) -> void:
+	_climb.release()
+	_rider.release()
+	super(point)
+
 ## On the floor, alive, not sinking, not climbing, with the Memorina sheathed.
 func can_open_map() -> bool:
-	return (is_on_floor() and not is_dead() and not _sinking and not is_climbing()
+	return (is_on_floor() and not is_dead() and not _sinking and not is_climbing() and not is_riding_stair()
 			and not is_wall_sliding() and not is_memorina_drawn())
 
 ## The map is open: Ivo stays in the world, hittable, but hears no input.
@@ -1034,7 +1090,6 @@ func unblock_input() -> void:
 ## `arrive_facing`, with no press of the trip still pending.
 func arrive_at(door: Door) -> void:
 	_sit.stand()
-	_climb.release()
 	_wall_mobility.stop()
 	clear_knockback()
 	_landing.cancel_recovery()
@@ -1056,7 +1111,6 @@ func _drop_buffers() -> void:
 ## Puts him on `seat`, sitting, without the rest that sitting down himself
 ## asks for: arrival at the bench after a death or a load.
 func sit(seat: Seat) -> void:
-	_climb.release()
 	_wall_mobility.stop()
 	clear_knockback()
 	_landing.cancel_recovery()

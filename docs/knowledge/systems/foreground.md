@@ -6,7 +6,7 @@ status: active
 tags: [foreground, rendering, subviewport, canvas-pass, greyhush, parallax, fade, lesson]
 related: [architecture/foreground-layer, systems/greyhush, systems/seasonal-art, systems/water, systems/backdrops, playtests/2026-10-09-foreground]
 created: 2026-10-09
-updated: 2026-10-09
+updated: 2026-10-11
 source_files:
   - scenes/world/memory/canvas_pass.gd
   - scenes/world/environment/foreground/foreground_piece.gd
@@ -28,4 +28,5 @@ Design 04 section 6, MEM-12. Plan and options: `architecture/foreground-layer`.
 - **Water** never reflects the foreground: the pass is in neither the screen copy nor the creature pass.
 - **Art contract:** `architecture/foreground-layer`, "Art contract" (1x, binary alpha, nature pieces three season bands, built pieces one; near pieces at most 640x240 per band; at most about 20% of a frame; never over a landing, bench, door or song interactable).
 - **Secret walls** (`architecture/secret-false-walls`): `SecretWall`'s `Front_*` layers are the second kind of foreground item: tiles, no parallax, z -1, drawn only in `ForegroundPass`; their world twin (z 40) is what water reflects. The "never over a landing, bench, door or song interactable" art rule is `ForegroundPiece`'s; a secret may hide those because it opens when Ivo's body enters it.
+- **Helix stairs** (`systems/helix-stair`) draw nothing in `ForegroundPass`. The tower is one `HelixView` sprite at z -15 in the world canvas, behind Ivo. The 2026-10-11 revision dropped the near-run cover (`architecture/walkable-helix-stair`, Revision).
 - **Today.** Two flat placeholders in the spring trial (`assets/sprites/world/foreground/demo/`): a column at Ivo's depth (fades) and a near branch at 1.4. Measured: `playtests/2026-10-09-foreground`.

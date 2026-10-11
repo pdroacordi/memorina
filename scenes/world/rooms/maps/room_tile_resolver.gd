@@ -5,18 +5,69 @@ extends RefCounted
 
 ## Fills `map`'s ground, back, ledge and secret layers from its looks, back walls, platforms and secrets.
 static func resolve(map: RoomMap) -> void:
-	map.ground_layers = _layers(map, map.looks, true)
+	var looks := void_filled(map)
+	map.ground_layers = _layers(map, looks, true)
+	_clear_void_tiles(map, map.ground_layers)
 	map.back_layers = _layers(map, map.back, false)
 	map.ledge_layers = _ledges(map)
-	map.secret_layers = _secret_layers(map)
+	map.secret_layers = _secret_layers(map, looks)
+
+## The room's looks with each void cell given its nearest drawn ground cell's look (4-neighbour search, ties west,
+## east, north, south), so a wall's tiles toward the void are fill and the void's mask cuts them on the cell line
+## (architecture/room-void-outside-the-shell).
+static func void_filled(map: RoomMap) -> PackedByteArray:
+	if map.void_cells.is_empty():
+		return map.looks
+	var looks := map.looks.duplicate()
+	var queue: Array[Vector2i] = []
+	for y: int in map.size.y:
+		for x: int in map.size.x:
+			var index := y * map.size.x + x
+			if map.void_cells[index] == 0 and looks[index] != RoomMap.NO_LOOK and map.platform[index] == 0:
+				queue.append(Vector2i(x, y))
+	var next := 0
+	while next < queue.size():
+		var cell := queue[next]
+		next += 1
+		var look := looks[cell.y * map.size.x + cell.x]
+		for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.UP, Vector2i.DOWN]:
+			var neighbour := cell + step
+			if neighbour.x < 0 or neighbour.y < 0 or neighbour.x >= map.size.x or neighbour.y >= map.size.y:
+				continue
+			var index := neighbour.y * map.size.x + neighbour.x
+			if map.void_cells[index] == 1 and looks[index] == RoomMap.NO_LOOK:
+				looks[index] = look
+				queue.append(neighbour)
+	return looks
+
+## Clears every display tile whose four corners are void, in every layer.
+static func _clear_void_tiles(map: RoomMap, layers: Dictionary[int, PackedByteArray]) -> void:
+	if map.void_cells.is_empty():
+		return
+	var display := map.display_size()
+	for j: int in display.y:
+		for i: int in display.x:
+			if not (_void(map, i - 1, j - 1) and _void(map, i, j - 1) and _void(map, i - 1, j) and _void(map, i, j)):
+				continue
+			for look: int in layers:
+				var layer: PackedByteArray = layers[look]
+				layer[j * display.x + i] = 0
+				layers[look] = layer
+
+## Whether local cell (x, y) is void, sampled as `_look` samples: x clamps in, rows below repeat the bottom row, rows
+## above are air.
+static func _void(map: RoomMap, x: int, y: int) -> bool:
+	if y < 0:
+		return false
+	return map.void_cells[mini(y, map.size.y - 1) * map.size.x + clampi(x, 0, map.size.x - 1)] == 1
 
 ## The tiles a closed secret draws: the room resolved with its secret cells filled in, kept only in display tiles with a
 ## secret corner, so its edges meet the real ground exactly (architecture/secret-false-walls).
-static func _secret_layers(map: RoomMap) -> Dictionary[int, PackedByteArray]:
+static func _secret_layers(map: RoomMap, looks: PackedByteArray) -> Dictionary[int, PackedByteArray]:
 	var layers: Dictionary[int, PackedByteArray] = {}
 	if map.secret_looks.is_empty():
 		return layers
-	var filled := map.looks.duplicate()
+	var filled := looks.duplicate()
 	for index: int in filled.size():
 		if map.secret_looks[index] != RoomMap.NO_LOOK:
 			filled[index] = map.secret_looks[index]

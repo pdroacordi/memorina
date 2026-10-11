@@ -6,7 +6,7 @@ status: active
 tags: [world, layout, rooms, regions, interiors, generator, uid]
 related: [systems/rooms, systems/map, systems/backdrops, architecture/doors-and-interiors]
 created: 2026-10-09
-updated: 2026-10-09
+updated: 2026-10-11
 source_files:
   - tools/maps/gen_world_shells.py
   - tools/maps/world_uid_pool.txt
@@ -87,7 +87,7 @@ Design 04 (the approved map, "Approve as proposed", 2026-10-08), WORLD-05.
 | home_village | village_elder | 1x1 | village_square |
 | home_village | village_bakery | 1x1 | village_lane_west |
 | home_village | village_empty_house | 2x1 | village_lane_west; Combinado 4 |
-| home_village | village_bell_tower | 1x3 (vertical) | village_square; the climb and its collectible (double jump) |
+| home_village | village_bell_tower | 1x4 (vertical) | village_square; a slim stone shell in void, the helix stair turning around Ivo from the bell floor up through the plank gallery, the alcove above it (double jump) holds the collectible (WORLD-26, "4 screens (Recommended)", user, 2026-10-11; `systems/helix-stair`) |
 | threshold | threshold_farmhouse | 1x1 | threshold_fields; sword marker |
 | frost_edge | lighthouse_interior | 1x4 (vertical) | lighthouse_base (bottom), lighthouse_top (hatch, sealed: all_guardians_restored) |
 | spring_woods | woods_hut | 1x1 | woods_edge |

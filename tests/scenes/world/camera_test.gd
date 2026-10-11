@@ -5,6 +5,7 @@ class_name GameCameraTest extends GdUnitTestSuite
 const ROOM_A := Rect2(0, 0, 1280, 384)
 const ROOM_B := Rect2(1280, 0, 1280, 384)
 const ROOM_BELOW := Rect2(0, 384, 1280, 384)
+const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 
 var _camera: GameCamera
 var _subject: Node2D
@@ -216,6 +217,28 @@ func test_the_steady_frame_leaves_the_shake_out() -> void:
 	_camera.shake(6.0)
 	await get_tree().physics_frame
 	assert_vector(_camera.steady_view_rect().position).is_equal_approx(steady.position, Vector2(0.5, 0.5))
+
+## bugs/a-facing-turn-in-a-one-screen-wide-room-slides-the-frame-past-its-bounds: a turn's look-ahead never shows past
+## a room one screen wide, read after every tween step.
+func test_a_turn_in_a_room_one_screen_wide_keeps_the_frame_inside() -> void:
+	var ivo := IVO.instantiate() as Player
+	ivo.position = Vector2(_half_width(), 330.0)
+	add_child(ivo)
+	auto_free(ivo)
+	_floor(Vector2(0.0, 330.0), _half_width() * 2.0)
+	var room := Rect2(0.0, 0.0, _half_width() * 2.0, 384.0)
+	_camera.set_bounds(room)
+	_camera.follow(ivo)
+	_camera.snap()
+	await _two_steps()
+	for facing: float in [-1.0, 1.0]:
+		ivo.face_towards(facing)
+		for i: int in ceili(_camera.look_ahead_duration * Engine.physics_ticks_per_second) + 4:
+			await get_tree().physics_frame
+			var view := _camera.view_rect()
+			assert_float(view.position.x).is_greater_equal(room.position.x - 0.01)
+			assert_float(view.end.x).is_less_equal(room.end.x + 0.01)
+	assert_float(_camera.offset.x).is_equal_approx(_camera.look_ahead_distance, 0.01)
 
 func _falling_body(air: float) -> FallingSubject:
 	var body := auto_free(FallingSubject.new()) as FallingSubject

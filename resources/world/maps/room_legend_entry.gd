@@ -18,6 +18,8 @@ enum Kind {
 	SECRET,
 	## A one-way ledge with no tile art: a building's facade prop draws it (systems/props, Facades).
 	ROOF,
+	## Outside a room's shell: solid `ground` to gameplay, drawn black (architecture/room-void-outside-the-shell).
+	VOID,
 }
 
 ## What the reachability audit makes of a character (architecture/room-reachability-audit).
@@ -36,6 +38,8 @@ enum ReachRole {
 	HAZARD,
 	## WATER: passable under a Redoma shell, and its top freezes into a floor.
 	ICE,
+	## ENTITY: a stair joining two feet cells both ways; its root script answers `reach_ends(cell)`.
+	STAIR,
 }
 
 ## Where in its cell an ENTITY's origin goes.

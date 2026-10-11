@@ -104,3 +104,30 @@ func test_doors_join_their_rooms_both_ways() -> void:
 	assert_array(_kinds(report)).is_empty()
 	for tier: PackedByteArray in report.reached:
 		assert_array(Array(tier)).contains_exactly([1, 1])
+
+# A ledge too high for any jump, and the same ledge at the head of a helix stair (role STAIR).
+func _high_ledge() -> PackedStringArray:
+	return _room({2: "..................SSSS"})
+
+func test_a_ledge_too_high_to_jump_to_is_unreached() -> void:
+	assert_array(_kinds(_audit(ReachFixture.grid(_high_ledge(), Vector2i(2, 10))))).contains(["UNREACHABLE 18,1 warning"])
+
+func test_a_stair_joins_its_foot_and_head_both_ways() -> void:
+	var grid := ReachFixture.grid(_high_ledge(), Vector2i(2, 10))
+	grid.add_stair(Vector2i(6, 10), Vector2i(18, 1))
+	var report := _audit(grid)
+	assert_array(_kinds(report)).is_empty()
+	for tier: PackedByteArray in report.reached:
+		assert_array(Array(tier)).contains_exactly([1, 1])
+
+func test_a_stair_out_of_a_pit_is_a_way_back() -> void:
+	var rows := PackedStringArray()
+	for y: int in 7:
+		rows.append("................")
+	rows.append("#####...########")
+	for y: int in 9:
+		rows.append("SSSSS...SSSSSSSS")
+	rows.append("SSSSSSSSSSSSSSSS")
+	var grid := ReachFixture.grid(rows, Vector2i(1, 6))
+	grid.add_stair(Vector2i(6, 16), Vector2i(9, 6))
+	assert_array(_kinds(_audit(grid)).filter(func(kind: String) -> bool: return kind.begins_with("NO_WAY_BACK"))).is_empty()

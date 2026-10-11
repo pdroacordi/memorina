@@ -135,6 +135,8 @@ func _mark_anchors() -> void:
 	var cells: Array[Vector2i] = _grid.anchors.duplicate()
 	for door: Dictionary in _grid.doors:
 		cells.append(door.cell)
+	for ends: Array in _grid.stairs:
+		cells.append_array(ends)
 	for cell: Vector2i in cells:
 		var node := _surface_under(cell)
 		if node >= 0:
@@ -161,10 +163,11 @@ func _surface_under(cell: Vector2i) -> int:
 			return node
 	return -1
 
-# Each door pair of one region joined both ways, then one lattice search per node the start reaches: an unreached node's
-# edges change no finding.
+# Each door pair of one region and each stair's two ends joined both ways, then one lattice search per node the start
+# reaches: an unreached node's edges change no finding.
 func _connect() -> void:
 	var partners: Dictionary[int, Array] = {}
+	var pairs: Array[Array] = _grid.stairs.duplicate()
 	var by_link: Dictionary[String, Array] = {}
 	for door: Dictionary in _grid.doors:
 		var key := "%s/%s" % [door.region, door.link]
@@ -177,7 +180,9 @@ func _connect() -> void:
 			for door: Dictionary in pair:
 				_add_door_finding(door)
 			continue
-		var ends: Array[int] = [_surface_under(pair[0].cell), _surface_under(pair[1].cell)]
+		pairs.append([pair[0].cell, pair[1].cell])
+	for pair: Array in pairs:
+		var ends: Array[int] = [_surface_under(pair[0]), _surface_under(pair[1])]
 		if ends.has(-1):
 			continue
 		for end: int in 2:

@@ -77,6 +77,7 @@ static func parse(text: String, legend: RoomLegend, source: String = "<room>") -
 	_read_back(map, back_lines, source, result)
 	_read_water(map, water_rows, water_lines, source, result)
 	_read_secret(map, secret_lines, source, result)
+	_check_void(map, grid_lines, source, result)
 	for line_number: int in entity_lines:
 		_parse_entity(map, _entity_line(lines[line_number - 1].strip_edges()), line_number, source, result)
 	_check_entities(map, source, result)
@@ -162,6 +163,11 @@ static func _read_grid(map: RoomMap, grid_lines: Array[int], source: String, res
 				RoomLegendEntry.Kind.ROOF:
 					map.ground[index] = entry.ground
 					map.platform[index] = 1
+				RoomLegendEntry.Kind.VOID:
+					map.ground[index] = entry.ground
+					if map.void_cells.is_empty():
+						map.void_cells.resize(width * map.size.y)
+					map.void_cells[index] = 1
 				RoomLegendEntry.Kind.WATER:
 					result.errors.append("%s:%d:%d: water '%s' belongs in [water], not [grid]" % [source, grid_lines[y], x + 1, symbol])
 				RoomLegendEntry.Kind.BACK:
@@ -280,6 +286,35 @@ static func _group_secrets(map: RoomMap, cells: Array[Vector2i], source: String,
 					if secret.has(next) and map.secret_groups[next.y * map.size.x + next.x] == 0:
 						map.secret_groups[next.y * map.size.x + next.x] = group
 						queue.append(next)
+
+## A void cell's 8 neighbours are ground (not a ledge), void or off the map, and nothing wet or secret lies on it
+## (architecture/room-void-outside-the-shell).
+static func _check_void(map: RoomMap, lines: Array[int], source: String, result: Result) -> void:
+	if map.void_cells.is_empty():
+		return
+	var wet: Dictionary[Vector2i, bool] = {}
+	for kind: Dictionary in [map.water, map.reach, map.shell_reach]:
+		for symbol: String in kind:
+			for cell: Vector2 in kind[symbol]:
+				wet[Vector2i(cell)] = true
+	for y: int in map.size.y:
+		for x: int in map.size.x:
+			var cell := map.origin + Vector2i(x, y)
+			if not map.is_void(cell):
+				continue
+			var symbol := map.rows[y][x]
+			if wet.has(cell):
+				result.errors.append("%s:%d:%d: void '%s' at %d,%d lies under water or a reach" % [source, lines[y], x + 1, symbol, x, y])
+			if map.secret_at(cell) > 0:
+				result.errors.append("%s:%d:%d: void '%s' at %d,%d lies under a secret" % [source, lines[y], x + 1, symbol, x, y])
+			for dy: int in [-1, 0, 1]:
+				for dx: int in [-1, 0, 1]:
+					var next := cell + Vector2i(dx, dy)
+					if (dx == 0 and dy == 0) or not map.contains(next) or map.is_void(next):
+						continue
+					if map.ground_at(next) == Enums.Ground.NONE or map.is_platform(next):
+						result.errors.append("%s:%d:%d: void '%s' at %d,%d touches %s at %d,%d: a drawn wall must stand between the room and the void" % [source, lines[y], x + 1, symbol, x, y, "a ledge" if map.is_platform(next) else "air", next.x - map.origin.x, next.y - map.origin.y])
+						return
 
 ## Reports, once per character, a look the room's tileset does not draw.
 static func _check_look(map: RoomMap, entry: RoomLegendEntry, x: int, y: int, line_number: int, source: String, result: Result, reported: Dictionary) -> void:

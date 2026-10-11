@@ -87,41 +87,6 @@ cell = Vector2i(1, 106)
 kind = 4
 reason = "WORLD-25: only wall climbers come down the chimney (orchard_arena's barrier requires has_wall_climb, design 04 section 3.6); the audit opens every barrier for every tier"
 
-[sub_resource type="Resource" id="entry_13"]
-script = ExtResource("2_entry")
-room = &"village_bell_tower"
-cell = Vector2i(5, 12)
-kind = 1
-reason = "STORY-06: the climb to the bell tower collectible at the top (design 04 section 3.1); stale once it lands"
-
-[sub_resource type="Resource" id="entry_14"]
-script = ExtResource("2_entry")
-room = &"village_bell_tower"
-cell = Vector2i(11, 16)
-kind = 1
-reason = "STORY-06: the climb to the bell tower collectible at the top (design 04 section 3.1); stale once it lands"
-
-[sub_resource type="Resource" id="entry_15"]
-script = ExtResource("2_entry")
-room = &"village_bell_tower"
-cell = Vector2i(5, 20)
-kind = 1
-reason = "STORY-06: the climb to the bell tower collectible at the top (design 04 section 3.1); stale once it lands"
-
-[sub_resource type="Resource" id="entry_16"]
-script = ExtResource("2_entry")
-room = &"village_bell_tower"
-cell = Vector2i(11, 24)
-kind = 1
-reason = "STORY-06: the climb to the bell tower collectible at the top (design 04 section 3.1); stale once it lands"
-
-[sub_resource type="Resource" id="entry_17"]
-script = ExtResource("2_entry")
-room = &"village_bell_tower"
-cell = Vector2i(5, 28)
-kind = 1
-reason = "STORY-06: the climb to the bell tower collectible at the top (design 04 section 3.1); stale once it lands"
-
 [sub_resource type="Resource" id="entry_18"]
 script = ExtResource("2_entry")
 room = &"village_tavern"
@@ -201,4 +166,4 @@ reason = "STORY-06: the ledges to the woods_hut letter (design 04 section 3.4); 
 
 [resource]
 script = ExtResource("1_list")
-entries = Array[ExtResource("2_entry")]([SubResource("entry_1"), SubResource("entry_2"), SubResource("entry_3"), SubResource("entry_4"), SubResource("entry_5"), SubResource("entry_6"), SubResource("entry_7"), SubResource("entry_8"), SubResource("entry_9"), SubResource("entry_10"), SubResource("entry_11"), SubResource("entry_12"), SubResource("entry_13"), SubResource("entry_14"), SubResource("entry_15"), SubResource("entry_16"), SubResource("entry_17"), SubResource("entry_18"), SubResource("entry_19"), SubResource("entry_20"), SubResource("entry_21"), SubResource("entry_22"), SubResource("entry_23"), SubResource("entry_24"), SubResource("entry_25"), SubResource("entry_26"), SubResource("entry_27"), SubResource("entry_28")])
+entries = Array[ExtResource("2_entry")]([SubResource("entry_1"), SubResource("entry_2"), SubResource("entry_3"), SubResource("entry_4"), SubResource("entry_5"), SubResource("entry_6"), SubResource("entry_7"), SubResource("entry_8"), SubResource("entry_9"), SubResource("entry_10"), SubResource("entry_11"), SubResource("entry_12"), SubResource("entry_18"), SubResource("entry_19"), SubResource("entry_20"), SubResource("entry_21"), SubResource("entry_22"), SubResource("entry_23"), SubResource("entry_24"), SubResource("entry_25"), SubResource("entry_26"), SubResource("entry_27"), SubResource("entry_28")])

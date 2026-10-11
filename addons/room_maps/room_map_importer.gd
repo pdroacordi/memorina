@@ -19,10 +19,12 @@ extends EditorImportPlugin
 ## Format 6: the straight edges take variants like the full tile (GroundAutotile.EDGE_MASKS).
 ## Format 7: the [secret] grid, its groups and the closed tiles (architecture/secret-false-walls).
 ## Format 8: ROOF cells, one-way ground with no look (systems/props, Facades).
+## Format 9: the helix stair entity `@` (systems/helix-stair).
+## Format 10: VOID cells, their mask and the resolver's section cut (architecture/room-void-outside-the-shell).
 ## (room_files_test.gd re-parses the text, so it guards the maps, not a
 ## machine's stale imports.) A legend EDIT alone needs a reimport too.
 
-const FORMAT_VERSION := 8
+const FORMAT_VERSION := 10
 
 func _get_format_version() -> int:
 	return FORMAT_VERSION

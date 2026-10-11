@@ -1,0 +1,130 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 31,
+ "locale": "en",
+ "player_position": [
+  656,
+  286
+ ],
+ "_note": "WORLD-26, the rotating helix: up at the bell tower door, hold right from the door up the axis to the gallery, then left back onto the head and down to the floor; stills at u 0, a quarter turn, mid and head, and six frames 0.25 s apart mid-climb. Traced every physics frame from 16.4 to 29.2 s, the descent from the head.",
+ "steps": [
+  {
+   "t": 1.0,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 1.2,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 3.3,
+   "screenshot": "a00_inside_door"
+  },
+  {
+   "t": 3.35,
+   "log": "inside"
+  },
+  {
+   "t": 3.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.15,
+   "screenshot": "a01_u0_foot"
+  },
+  {
+   "t": 4.2,
+   "log": "boarded"
+  },
+  {
+   "t": 4.95,
+   "screenshot": "a02_quarter_turn"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "b00_motion_7.00s"
+  },
+  {
+   "t": 7.25,
+   "screenshot": "b01_motion_7.25s"
+  },
+  {
+   "t": 7.5,
+   "screenshot": "b02_motion_7.50s"
+  },
+  {
+   "t": 7.75,
+   "screenshot": "b03_motion_7.75s"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "b04_motion_8.00s"
+  },
+  {
+   "t": 8.25,
+   "screenshot": "b05_motion_8.25s"
+  },
+  {
+   "t": 9.6,
+   "screenshot": "a03_mid"
+  },
+  {
+   "t": 9.65,
+   "log": "mid"
+  },
+  {
+   "t": 14.9,
+   "screenshot": "a04_head"
+  },
+  {
+   "t": 15.8,
+   "screenshot": "a05_gallery"
+  },
+  {
+   "t": 15.85,
+   "log": "gallery"
+  },
+  {
+   "t": 16.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 16.4,
+   "trace": true
+  },
+  {
+   "t": 16.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 17.6,
+   "log": "descending"
+  },
+  {
+   "t": 20.0,
+   "screenshot": "a06_descending"
+  },
+  {
+   "t": 28.9,
+   "screenshot": "a07_back_at_the_foot"
+  },
+  {
+   "t": 28.95,
+   "log": "foot"
+  },
+  {
+   "t": 29.2,
+   "trace": false
+  },
+  {
+   "t": 29.5,
+   "action": "move_left",
+   "pressed": false
+  }
+ ]
+}

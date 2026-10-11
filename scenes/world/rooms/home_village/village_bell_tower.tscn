@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/contents/village_bell_tower_contents.tscn" id="2_contents"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_room"]
-size = Vector2(640, 1152)
+size = Vector2(640, 1536)
 
 [node name="VillageBellTower" type="Area2D"]
 collision_mask = 256
@@ -13,7 +13,7 @@ contents_scene = ExtResource("2_contents")
 interior = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(320, 576)
+position = Vector2(320, 768)
 shape = SubResource("RectangleShape2D_room")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -1,0 +1,20 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 3,
+ "locale": "en",
+ "player_position": [
+  1744,
+  12670
+ ],
+ "_note": "The void outside the tavern's shell (architecture/room-void-outside-the-shell).",
+ "steps": [
+  {
+   "t": 1.5,
+   "screenshot": "v01_tavern"
+  },
+  {
+   "t": 1.55,
+   "log": "tavern"
+  }
+ ]
+}

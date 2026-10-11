@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="HelixLook" format=3]
+
+[ext_resource type="Script" path="res://resources/world/helix/helix_look.gd" id="1_look"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/helix_stair/bell_tower_bell.png" id="2_bell"]
+
+[resource]
+script = ExtResource("1_look")
+bell = ExtResource("2_bell")

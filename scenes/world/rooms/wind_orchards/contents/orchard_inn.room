@@ -15,9 +15,9 @@ S......................................S
 S......................................S
 S......................................S
 S...E....SSSS......................SSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSS__SSSSSSSSSSSSSSSSSSSSSSSS____
+________________________________________
+________________________________________
 
 [entities]
 4,8 = {"link": "orchard_inn_door", "to_room": "orchard_mill_town", "arrive_facing": 1}

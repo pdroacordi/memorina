@@ -62,16 +62,19 @@ static func _add_room(loaded: Loaded, room: Room, region: Region, legend: RoomLe
 		return
 	loaded.problems.append("%s: its contents have no RoomMap" % room.id())
 
-# Floors that movers sweep, and currents' boxes and downwind edges, from each entity's own authored values.
+# Floors that movers sweep, currents' boxes and downwind edges, and stairs' ends, from each entity's own authored values.
 static func _add_movers(grid: ReachGrid, map: RoomMap, cell_origin: Vector2i) -> void:
 	for placed: Dictionary in map.entities:
 		var entry := map.legend.entry(placed.symbol)
-		if not entry.reach_role in [RoomLegendEntry.ReachRole.MOVER, RoomLegendEntry.ReachRole.CURRENT]:
+		if not entry.reach_role in [RoomLegendEntry.ReachRole.MOVER, RoomLegendEntry.ReachRole.CURRENT, RoomLegendEntry.ReachRole.STAIR]:
 			continue
 		var node := entry.scene.instantiate() as Node2D
 		EntityParams.apply(node, placed.params)
 		var at := RoomMapNode.entity_position(placed.cell, entry.anchor)
-		if entry.reach_role == RoomLegendEntry.ReachRole.MOVER:
+		if entry.reach_role == RoomLegendEntry.ReachRole.STAIR:
+			var ends := _world(node.call(&"reach_ends", placed.cell), map, cell_origin)
+			grid.add_stair(ends[0], ends[1])
+		elif entry.reach_role == RoomLegendEntry.ReachRole.MOVER:
 			grid.add_cells(_world(node.call(&"reach_cells", map, at), map, cell_origin), ReachGrid.SONG_FLOOR)
 		else:
 			grid.add_cells(_world(node.call(&"reach_cells", map, at), map, cell_origin), ReachGrid.CURRENT)

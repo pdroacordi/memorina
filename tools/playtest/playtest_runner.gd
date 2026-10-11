@@ -27,6 +27,8 @@ var _start_msec := 0
 var _out_dir := ""
 var _max_duration := DEFAULT_MAX_DURATION
 var _pending_captures := 0
+## While true, every physics frame prints one `trace` line (a `"trace"` step sets it).
+var _tracing := false
 
 func _ready() -> void:
 	var args := _parse_args()
@@ -127,6 +129,29 @@ func _run_step(step: Dictionary) -> void:
 		Input.parse_input_event(motion)
 	if step.has("log"):
 		_log_state(String(step["log"]))
+	if step.has("trace"):
+		_tracing = bool(step["trace"])
+
+func _physics_process(_delta: float) -> void:
+	if _tracing:
+		_trace()
+
+## One line per physics frame: Ivo's position, velocity, floor, helix ride and progress, and the camera's centre.
+func _trace() -> void:
+	var player := get_tree().get_first_node_in_group(Player.GROUP) as Player
+	if player == null:
+		return
+	var rider := player.get_node_or_null("HelixRider") as HelixRiderComponent
+	var line := "[playtest] trace t=%.3f pos=(%.2f,%.2f) vel=(%.1f,%.1f) floor=%s riding=%s moving=%s u=%.4f" % [
+		_elapsed, player.global_position.x, player.global_position.y, player.velocity.x, player.velocity.y,
+		player.is_on_floor(), player.is_riding_stair(), player.is_stair_moving(),
+		rider.progress() if rider != null else -1.0,
+	]
+	var game := get_tree().root.find_child("Game", true, false)
+	var camera := game.get("_camera") as GameCamera if game != null else null
+	if camera != null:
+		line += " cam_centre=(%.1f,%.1f)" % [camera.get_screen_center_position().x, camera.get_screen_center_position().y]
+	print(line)
 
 ## Prints what a screenshot cannot show: pause, focus and Ivo's motion.
 func _log_state(label: String) -> void:

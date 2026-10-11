@@ -80,6 +80,12 @@ var _pair_tween: Tween
 var _shake_strength: float = 0.0
 var _shake_left: float = 0.0
 var _look_ahead_tween: Tween
+## Px the frame leads the subject by. The look-ahead tween steps after the physics step's clamp, so a write never moves
+## the frame past the reach (bugs/a-facing-turn-in-a-one-screen-wide-room-slides-the-frame-past-its-bounds).
+var _look_ahead := 0.0:
+	set(value):
+		_look_ahead = value
+		_set_offset_x_within_reach(value)
 var _focus_tween: Tween
 ## True between focus() and the `focused` it owes.
 var _focus_pending: bool = false
@@ -185,7 +191,7 @@ func follow(subject: Node2D) -> void:
 		_subject.facing_changed.connect(_on_subject_facing_changed)
 		# An edge-triggered signal delivers nothing on connect, so seed the
 		# current facing directly rather than waiting for the first turn.
-		offset.x = _look_ahead_target()
+		_look_ahead = _look_ahead_target()
 
 ## Eases in on the subject while the instrument is out. The tween runs through
 ## a paused tree, because the world is frozen while a performance plays and
@@ -240,7 +246,7 @@ func snap(keep_fall_lead: bool = false) -> void:
 	offset.y = framing_offset_y
 	if _look_ahead_tween:
 		_look_ahead_tween.kill()
-	offset.x = _look_ahead_target()
+	_look_ahead = _look_ahead_target()
 	_stop_glide()
 	reset_smoothing()
 
@@ -254,6 +260,7 @@ func shake(strength: float) -> void:
 ## The subject, or the pair blend toward the other body, before bounds and glide.
 func _framed_position() -> Vector2:
 	var at := _subject.global_position
+	at.y += _frame_bias()
 	if is_instance_valid(_pair) and _pair_blend > 0.0:
 		at.x = lerpf(at.x, (at.x + _pair.global_position.x) / 2.0, _pair_blend)
 	return at
@@ -321,7 +328,7 @@ func _tween_look_ahead() -> void:
 		.set_pause_mode(Tween.TWEEN_PAUSE_PROCESS) \
 		.set_trans(look_ahead_transition) \
 		.set_ease(look_ahead_ease)
-	_look_ahead_tween.tween_property(self, "offset:x",
+	_look_ahead_tween.tween_property(self, "_look_ahead",
 		_look_ahead_target(), look_ahead_duration)
 	_look_ahead_tween.finished.connect(_check_focused)
 
@@ -399,6 +406,10 @@ func _ground_below(reach: float, descending: bool) -> float:
 func _air_axis() -> float:
 	return _subject.air_axis() if _subject.has_method("air_axis") else 0.0
 
+## Px added to the subject's height before framing: on a helix stair, the steady rise under the risers (systems/helix-stair).
+func _frame_bias() -> float:
+	return _subject.frame_bias() if _subject.has_method("frame_bias") else 0.0
+
 func _update_peek_axis(delta: float) -> void:
 	# See the has_method note at _air_axis(): look_axis() is optional
 	# camera intent, not part of Character.
@@ -458,6 +469,16 @@ func _keep_subject_in_view(delta: float) -> void:
 			shown = minf(shown, maxf(centre.y, _last_centre_y + fall_lead_follow * delta))
 		centre.y = _yield_axis(centre.y, shown, _fall_reach.position.y + half.y, _fall_reach.end.y - half.y)
 	global_position = centre - offset
+
+## Sets `offset.x` and moves the frame's centre with it only as far as the reach allows; a glide outside it holds.
+func _set_offset_x_within_reach(value: float) -> void:
+	var centre := global_position.x + offset.x
+	offset.x = value
+	if not _is_bound:
+		return
+	var half := get_viewport_rect().size.x * 0.5 / zoom.x
+	var shown := _yield_axis(centre, global_position.x + value, _reach.position.x + half, _reach.end.x - half)
+	global_position.x = shown - value
 
 func _yield_axis(from: float, to: float, min_value: float, max_value: float) -> float:
 	if to > from:

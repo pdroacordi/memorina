@@ -127,7 +127,7 @@ INTERIORS = [
     ("home_village", "village_elder", 1, 1),
     ("home_village", "village_bakery", 1, 1),
     ("home_village", "village_empty_house", 2, 1),
-    ("home_village", "village_bell_tower", 1, 3),
+    ("home_village", "village_bell_tower", 1, 4),
     ("threshold", "threshold_farmhouse", 1, 1),
     ("frost_edge", "lighthouse_interior", 1, 4),
     ("spring_woods", "woods_hut", 1, 1),
@@ -220,6 +220,18 @@ class Room:
         if params:
             self.entities.append((col, row, params))
 
+    def voided(self):
+        """An interior's grid with every wall cell beyond the one next to its room turned to void `_` (architecture/room-void-outside-the-shell)."""
+        if not self.interior:
+            return self.grid
+        ground = set("#S%")
+
+        def solid(x, y):
+            return not (0 <= x < self.w and 0 <= y < self.h) or self.grid[y][x] in ground
+
+        return [["_" if self.grid[y][x] in ground and all(solid(x + dx, y + dy) for dx in (-1, 0, 1) for dy in (-1, 0, 1))
+                 else self.grid[y][x] for x in range(self.w)] for y in range(self.h)]
+
     def room_text(self):
         lines = [
             "; %s.room - WORLD-05 greybox shell (docs/design/04_mapa_do_mundo.md section 3)." % self.id,
@@ -231,7 +243,7 @@ class Room:
             "",
             "[grid]",
         ]
-        lines += ["".join(row) for row in self.grid]
+        lines += ["".join(row) for row in self.voided()]
         if self.entities:
             lines += ["", "[entities]"]
             for col, row, params in sorted(self.entities, key=lambda e: (e[0], e[1])):

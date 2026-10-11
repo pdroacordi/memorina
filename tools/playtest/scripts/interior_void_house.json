@@ -1,0 +1,20 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 3,
+ "locale": "en",
+ "player_position": [
+  320,
+  12286
+ ],
+ "_note": "The void outside Ivo's house's shell (architecture/room-void-outside-the-shell).",
+ "steps": [
+  {
+   "t": 1.5,
+   "screenshot": "v00_house"
+  },
+  {
+   "t": 1.55,
+   "log": "house"
+  }
+ ]
+}

@@ -49,6 +49,8 @@ const NO_LOOK := 255
 @export var secret_ids := PackedStringArray()
 ## Look -> one byte per display cell, as `ground_layers`, for the display tiles a secret owns (0 elsewhere).
 @export var secret_layers: Dictionary[int, PackedByteArray] = {}
+## Per cell: 1 where the cell is void, outside the room's shell; empty when the room has none.
+@export var void_cells := PackedByteArray()
 ## One per placed thing: {"symbol": String, "cell": Vector2i, "params": Dictionary}.
 @export var entities: Array[Dictionary] = []
 
@@ -75,6 +77,10 @@ func secret_owning(display: Vector2i) -> int:
 		if group > 0:
 			return group
 	return 0
+
+## Whether `cell` is void: solid to gameplay, drawn black.
+func is_void(cell: Vector2i) -> bool:
+	return contains(cell) and not void_cells.is_empty() and void_cells[_index(cell)] == 1
 
 func is_platform(cell: Vector2i) -> bool:
 	return contains(cell) and platform[_index(cell)] == 1

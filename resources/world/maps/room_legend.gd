@@ -46,6 +46,9 @@ func problems() -> PackedStringArray:
 			RoomLegendEntry.Kind.ROOF:
 				if candidate.ground == Enums.Ground.NONE:
 					found.append("roof '%s' has no material" % candidate.symbol)
+			RoomLegendEntry.Kind.VOID:
+				if candidate.ground == Enums.Ground.NONE:
+					found.append("void '%s' has no material" % candidate.symbol)
 			RoomLegendEntry.Kind.GROUND, RoomLegendEntry.Kind.PLATFORM:
 				if candidate.ground == Enums.Ground.NONE:
 					found.append("ground '%s' has no material" % candidate.symbol)

@@ -28,6 +28,8 @@ var start := Vector2i.ZERO
 var anchors: Array[Vector2i] = []
 ## Each door: {"cell": Vector2i, "link": StringName, "region": StringName, "room": StringName}.
 var doors: Array[Dictionary] = []
+## Each stair's two feet cells, world cells, joined both ways.
+var stairs: Array[Array] = []
 
 var _cells: Dictionary[Vector2i, int] = {}
 var _room_ids: Array[StringName] = []
@@ -84,6 +86,10 @@ func add_roots(spans: Array[RootSpanFinder.Span], map: RoomMap, cell_origin: Vec
 func add_cells(cells: Array[Vector2i], flag: int) -> void:
 	for cell: Vector2i in cells:
 		_flag(cell, flag)
+
+## A stair (role STAIR) from world feet cell `foot` to `head`, ridden both ways.
+func add_stair(foot: Vector2i, head: Vector2i) -> void:
+	stairs.append([foot, head])
 
 func set_start(cell: Vector2i) -> void:
 	start = cell

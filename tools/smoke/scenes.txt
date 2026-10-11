@@ -72,6 +72,7 @@ res://scenes/world/interactables/drawbridge/drawbridge.tscn
 res://scenes/world/interactables/floater/floater.tscn
 res://scenes/world/interactables/rain_basin/rain_basin.tscn
 res://scenes/world/interactables/rain_basin/rising_pool.tscn
+res://scenes/world/interactables/helix_stair/helix_stair.tscn
 res://scenes/world/rooms/trials_solstice/contents/solstice_trial_contents.tscn
 res://scenes/world/rooms/trials_solstice/contents/empty_house_contents.tscn
 res://scenes/world/rooms/trials_solstice/contents/water_trial_contents.tscn
