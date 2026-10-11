@@ -4,12 +4,14 @@ type: system
 title: Rooms: text maps, the importer and the legend
 status: active
 tags: [rooms, map, importer, legend, tilemap]
-related: [systems/map, architecture/rooms-are-text, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/import-plugin-output-is-stale-when-its-logic-changes]
+related: [systems/map, architecture/room-reachability-audit, architecture/rooms-are-text, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/import-plugin-output-is-stale-when-its-logic-changes]
 created: 2026-10-02
-updated: 2026-10-10
+updated: 2026-10-11
 source_files:
   - addons/room_maps/room_map_importer.gd
   - resources/world/maps/room_legend.tres
+  - resources/world/maps/reach_allowlist.tres
+  - scenes/world/rooms/maps/reach/reach_audit.gd
   - scenes/world/rooms/room_residency.gd
   - scenes/world/game.gd
 ---
@@ -41,3 +43,16 @@ Moved verbatim from `CLAUDE.md` ("Project structure") on 2026-10-02. The file fo
 - **The current room's neighbours run** (`RoomResidency`, 2026-10-09): `settle` activates the current room and every room whose bounds share an edge or a corner with it, so the ground across a seam exists (`bugs/a-neighbour-room-has-no-ground-until-ivo-enters-it`); rooms out of reach idle (hidden, DISABLED) and beyond `MAX_IDLE_ROOMS` (2) are evicted. `wake` (after a rest) evicts every other room, expires the current one and settles again; an expired room still in reach keeps its contents and rebuilds when it next comes back into reach. A neighbour's enemies and props run off screen, on the current region's memory even when the neighbour is in another region (accepted). The current room is pushed to the front last, so a door trip idles the room Ivo left instead of evicting it. A guardian ends its call when Ivo leaves its `Arena` (`systems/guardians`): its room keeps running after a walk out.
 
 - **Format 8** (2026-10-10, WORLD-24): ROOF cells. **Format 3** (2026-10-07, PZL-09): `RoomMap.reach`. **Format 4** (2026-10-08, PZL-06): `RoomMap.shell_reach`. A format bump does not reimport on a headless `--import`: delete `.godot/imported/*.room-*` and import again, and commit the `.room.import` files (`gotchas/import-plugin-output-is-stale-when-its-logic-changes`).
+
+## Reachability audit (TECH-05, `architecture/room-reachability-audit`)
+
+User, 2026-10-10: "There are plenty of weird places that lead nowhere and random platforms that lead nowhere too." Choice: "Audit tool + rework (Recommended)".
+
+- **What it checks.** `room_reach_test` stitches every room `game.tscn` places (`ReachWorldLoader`, `.room` text parsed fresh, each map the size of its room's bounds) into one `ReachGrid` and runs `ReachAudit`. Errors: UNREACHABLE (a platform the start cannot reach with the full kit), LEADS_NOWHERE (a reached platform that holds no anchor and that no way to an anchor or back to the start needs, in any tier), NO_WAY_BACK (a reached surface that tier cannot return to the start from). UNPAIRED_DOOR (a door whose `link` no other door of its region shares). Warnings, never failing: unreached ground, REDUNDANT_ROUTE (the last of parallel routes, kept), DEAD_END_POCKET (the ground and roofs of a group that holds and serves nothing; its platforms are still LEADS_NOWHERE; promoting pockets is the user's call).
+- **Anchors**: the new-game start (the Player's place in `game.tscn`), doors (a pair is a two-way edge), entities whose legend `reach_role` is CONTENT, and surfaces touching a secret.
+- **A platform** is held only by one-way ledges or islands (solid groups touching no room edge). A roof (`^`) moves Ivo like a one-way and counts as ground. A surface only on a song's floor, or in water a Redoma shell holds back, is a song's and never flagged.
+- **Movement** (`ReachLattice`): Ivo's footprint is his capsule in whole cells (`MapGuide.ivo_body`, 1x2), so CORE-08's redraw changes only data. One step is the time he runs one cell; the rise or fall comes from `JumpReach.heights`. One-ways pass upward and land downward, with no drop-through (WORLD-19). Tiers: BASE, +DOUBLE_JUMP (the air jump at any step), +WALL_CLIMB (a wall the body's height is a take-off). Pinned in `reach_lattice_test`: 4 cells up and 8 across, 8 up with the double jump; a late air jump clears about 15 cells, more than the guide's 13 (apex press).
+- **Songs, all at once**: root spans at the wet length (a bridge is an optional floor, a shaft or pillar is climbed), ice on the top of ICE water, pools passable, the lake (HAZARD) not, gates, barriers, covers and sealed doors open, a current (CURRENT) takes Ivo in anywhere in its box and sets him down on its downwind edge, falling with the air jump kept (never a ground jump from mid-air), and each MOVER's root script answers `reach_cells(map, at)` from its authored values and its placement `at`, never its live position: the floor cells it passes (`MapCells`). A current also answers `reach_exit_cells`. A new mover implements them (`room_reach_test` checks).
+- **Exceptions** live in `resources/world/maps/reach_allowlist.tres` (`room`, the `.room` column and row of the surface's left feet cell, `kind`, a non-empty `reason`); an entry that matches no error fails the test. On 2026-10-11 every error was listed: STORY-06 for the ledges a planned collectible will anchor (woods_hut, the bell tower climb, lake_high_wall's ladder), "TODO WORLD-25: rework" for the rest.
+- **Boards**: `"<godot>" --headless --path . res://tools/maps/reach_boards.tscn -- --out <dir>` (default `user://reach_boards`) writes `<room>.txt` (marks on the feet row, never a legend symbol: `!` unreachable, `*` leads nowhere, `+` redundant route, `:` dead-end pocket, `&` no way back, `?` unpaired door) and `<room>.png` (8 px per cell) and a summary.
+- **Limits**: the union is not a real state, so a barrier that needs a skill (the orchard arena's wall climb fence) lets the base tier in; timing, Vendaval without a current and Sombra are not modelled. About 6 s headless.

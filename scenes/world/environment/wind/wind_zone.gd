@@ -37,6 +37,26 @@ func _ready() -> void:
 func rect() -> Rect2:
 	return Rect2(Vector2(-size.x * 0.5, -size.y), size)
 
+## Map cells inside the box standing at `at` (map px): the reachability audit carries Ivo in through any of them.
+func reach_cells(_map: RoomMap, at: Vector2) -> Array[Vector2i]:
+	return MapCells.box_cells(Rect2(at + rect().position, size))
+
+## Map cells along the box's downwind side, where the reachability audit lets the current set Ivo down.
+func reach_exit_cells(map: RoomMap, at: Vector2) -> Array[Vector2i]:
+	var flow := direction.normalized()
+	var axis := 0 if absf(flow.x) >= absf(flow.y) else 1
+	var downwind := 1 if flow[axis] > 0.0 else -1
+	var cells := reach_cells(map, at)
+	var edge := cells[0][axis]
+	for cell: Vector2i in cells:
+		if cell[axis] * downwind > edge * downwind:
+			edge = cell[axis]
+	var exits: Array[Vector2i] = []
+	for cell: Vector2i in cells:
+		if cell[axis] == edge:
+			exits.append(cell)
+	return exits
+
 func is_frozen() -> bool:
 	return _frozen
 

@@ -89,6 +89,13 @@ func _physics_process(delta: float) -> void:
 		_solid = not moving
 		_shape.set_deferred(&"disabled", moving)
 
+## Map cells its top passes from where it hangs over `at` (map px) to `drop` below, as floors for the reachability
+## audit. Reads only authored values.
+func reach_cells(_map: RoomMap, at: Vector2) -> Array[Vector2i]:
+	var half := width_cells * float(RoomMap.CELL_PX) * 0.5
+	var top := at.y - hang_height
+	return MapCells.floor_cells(at.x - half, at.x + half, top, top + drop)
+
 ## Roots hold it where it is until every root that seized it lets go.
 func seize(by: Object) -> void:
 	if not by in _seized_by:

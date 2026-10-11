@@ -80,3 +80,20 @@ func test_with_a_second_trigger_both_move_it() -> void:
 	second.deactivated.emit()
 	_settle()
 	assert_bool(_gate.is_moved()).is_false()
+
+func test_a_gate_is_no_floor_for_the_reach_audit() -> void:
+	assert_array(auto_free(GATE.instantiate()).reach_cells(RoomMap.new(), Vector2(16, 32))).is_empty()
+
+func test_a_lift_is_a_floor_all_along_its_travel() -> void:
+	var lift := auto_free((load("res://scenes/world/interactables/lift/lift.tscn") as PackedScene).instantiate()) as Mechanism
+	var cells := lift.reach_cells(RoomMap.new(), RoomMapNode.entity_position(Vector2i(0, 1), RoomLegendEntry.Anchor.FEET))
+	assert_array(cells).contains([Vector2i(0, 2), Vector2i(0, -2)])
+	assert_int(cells.size()).is_equal(15)
+
+# The audit reads a placed scene: the live position, which _ready and travel move, never counts.
+func test_a_lifts_reach_ignores_where_it_has_moved() -> void:
+	var lift := auto_free((load("res://scenes/world/interactables/lift/lift.tscn") as PackedScene).instantiate()) as Mechanism
+	var at := RoomMapNode.entity_position(Vector2i(0, 1), RoomLegendEntry.Anchor.FEET)
+	var before := lift.reach_cells(RoomMap.new(), at)
+	lift.position = Vector2(500, -500)
+	assert_array(lift.reach_cells(RoomMap.new(), at)).is_equal(before)

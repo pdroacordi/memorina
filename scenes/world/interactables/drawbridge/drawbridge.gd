@@ -45,6 +45,12 @@ func _ready() -> void:
 	_rider_sensor.body_entered.connect(func(body: Node2D) -> void: if body is Player: _releasable.hold())
 	_rider_sensor.body_exited.connect(func(body: Node2D) -> void: if body is Player: _releasable.let_go())
 
+## Map cells of the lowered plank hinged at `at` (map px), as floors for the reachability audit; raised, it is a wall
+## the audit assumes down. Reads only authored values.
+func reach_cells(_map: RoomMap, at: Vector2) -> Array[Vector2i]:
+	var length := length_cells * float(RoomMap.CELL_PX)
+	return MapCells.floor_cells(minf(at.x, at.x + length * side), maxf(at.x, at.x + length * side), at.y, at.y)
+
 func is_down() -> bool:
 	return is_zero_approx(_plank.rotation)
 

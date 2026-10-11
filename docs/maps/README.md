@@ -148,37 +148,37 @@ Every character comes from `resources/world/maps/room_legend.tres`. Nothing
 else in the code knows what a character means.
 
 <!-- generated:legend -->
-| Character | Section | Kind | Material | Look | What it is |
-|---|---|---|---|---|---|
-| `.` | any grid | empty | - | - | Nothing: air in `[grid]` and `[back]`, no water in `[water]`. |
-| `#` | `[grid]`, `[back]`, `[secret]` | ground | earth | earth | Earth: soil with a grassy top (the season's top). Enraizar's roots grow from it. |
-| `S` | `[grid]`, `[back]`, `[secret]` | ground | stone | stone | Stone: the biome's rock or laid stone. Roots never grow from it - use it where a song must NOT reach. |
-| `=` | `[grid]` | ledge | earth | earth | One-way earth ledge, one cell high: jump up through it, stand on it, drop through it. |
-| `%` | `[grid]`, `[back]`, `[secret]` | ground | wood | wood | Wood: planks, beams, stilts. Solid; roots never grow from it. |
-| `-` | `[grid]` | ledge | wood | wood | One-way plank, one cell high: jump up through it, stand on it. |
-| `^` | `[grid]` | roof | wood | - | Roof: a one-way ledge with no tile art, drawn by the building's facade prop; it lies on the facade's roof line (facade_doors_test). |
-| `h` | `[back]` | back wall | - | wall | Built wall behind the room (plaster and timber, planks, sandstone): [back] grid only, no collision. |
-| `~` | `[water]` | water | - | - | Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand. |
-| `w` | `[water]` | water | - | - | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides. |
-| `f` | `[water]` | water | - | - | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
-| `B` | `[grid]` | entity | - | - | Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death. |
-| `W` | `[grid]` | entity | - | - | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
-| `P` | `[grid]` | entity | - | - | A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load. |
-| `G` | `[grid]` | entity | - | - | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved. |
-| `L` | `[grid]` | entity | - | - | A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go; while its lock_path holds (a counterweight on the wrong plate) it is jammed down. |
-| `T` | `[grid]` | entity | - | - | A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other. |
-| `H` | `[grid]` | entity | - | - | A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back. |
-| `F` | `[grid]` | entity | - | - | A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside. |
-| `D` | `[grid]` | entity | - | - | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
-| `r` | `[water]` | water | - | - | Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake. |
-| `u` | `[water]` | water | - | - | Where water a Redoma shell holds out rises to: paint it above f or ~ water in the same pit. While a shell holds water out of its disc the pool rises around it, up to here, and Congelar can fix it there. The rain never raises it. Never alone, never over a lake. |
-| `V` | `[grid]` | entity | - | - | A platform hanging hang_height above this floor on a braked rope: Soltar frees the brake and it lowers (drop px) swinging, no footing until it stops; Enraizar seizes it between earth walls a few cells away; the grey winches it back up. |
-| `O` | `[grid]` | entity | - | - | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
-| `R` | `[grid]` | entity | - | - | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
-| `E` | `[grid]` | entity | - | - | A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here. |
-| `X` | `[grid]` | entity | - | - | A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2). |
-| `k` | `[secret]` | secret | - | stone | [secret] only: a secret cell drawn as cracked stone until Ivo steps in - the hint that the wall is false. |
-| `d` | `[grid]` | entity | - | - | A faint draft of dust at a secret's mouth (facing 1 right, -1 left, 0 up); it freezes in the grey. |
+| Character | Section | Kind | Material | Look | Reach | What it is |
+|---|---|---|---|---|---|---|
+| `.` | any grid | empty | - | - | - | Nothing: air in `[grid]` and `[back]`, no water in `[water]`. |
+| `#` | `[grid]`, `[back]`, `[secret]` | ground | earth | earth | - | Earth: soil with a grassy top (the season's top). Enraizar's roots grow from it. |
+| `S` | `[grid]`, `[back]`, `[secret]` | ground | stone | stone | - | Stone: the biome's rock or laid stone. Roots never grow from it - use it where a song must NOT reach. |
+| `=` | `[grid]` | ledge | earth | earth | - | One-way earth ledge, one cell high: jump up through it, stand on it, drop through it. |
+| `%` | `[grid]`, `[back]`, `[secret]` | ground | wood | wood | - | Wood: planks, beams, stilts. Solid; roots never grow from it. |
+| `-` | `[grid]` | ledge | wood | wood | - | One-way plank, one cell high: jump up through it, stand on it. |
+| `^` | `[grid]` | roof | wood | - | - | Roof: a one-way ledge with no tile art, drawn by the building's facade prop; it lies on the facade's roof line (facade_doors_test). |
+| `h` | `[back]` | back wall | - | wall | - | Built wall behind the room (plaster and timber, planks, sandstone): [back] grid only, no collision. |
+| `~` | `[water]` | water | - | - | - | Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand. |
+| `w` | `[water]` | water | - | - | hazard | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides. |
+| `f` | `[water]` | water | - | - | ice | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
+| `B` | `[grid]` | entity | - | - | - | Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death. |
+| `W` | `[grid]` | entity | - | - | current | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
+| `P` | `[grid]` | entity | - | - | content | A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load. |
+| `G` | `[grid]` | entity | - | - | content | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved. |
+| `L` | `[grid]` | entity | - | - | mover | A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go; while its lock_path holds (a counterweight on the wrong plate) it is jammed down. |
+| `T` | `[grid]` | entity | - | - | mover | A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other. |
+| `H` | `[grid]` | entity | - | - | content | A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back. |
+| `F` | `[grid]` | entity | - | - | content | A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside. |
+| `D` | `[grid]` | entity | - | - | mover | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
+| `r` | `[water]` | water | - | - | ice | Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake. |
+| `u` | `[water]` | water | - | - | ice | Where water a Redoma shell holds out rises to: paint it above f or ~ water in the same pit. While a shell holds water out of its disc the pool rises around it, up to here, and Congelar can fix it there. The rain never raises it. Never alone, never over a lake. |
+| `V` | `[grid]` | entity | - | - | mover | A platform hanging hang_height above this floor on a braked rope: Soltar frees the brake and it lowers (drop px) swinging, no footing until it stops; Enraizar seizes it between earth walls a few cells away; the grey winches it back up. |
+| `O` | `[grid]` | entity | - | - | mover | A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it. |
+| `R` | `[grid]` | entity | - | - | content | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
+| `E` | `[grid]` | entity | - | - | door | A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here. |
+| `X` | `[grid]` | entity | - | - | content | A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2). |
+| `k` | `[secret]` | secret | - | stone | - | [secret] only: a secret cell drawn as cracked stone until Ivo steps in - the hint that the wall is false. |
+| `d` | `[grid]` | entity | - | - | - | A faint draft of dust at a secret's mouth (facing 1 right, -1 left, 0 up); it freezes in the grey. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -416,6 +416,21 @@ Computed by `JumpReach` from `ivo_jump_stats.tres`, `ivo_locomotion_stats.tres`,
 A puzzle for a song should be a gap (or a height, or a door) these numbers say
 Ivo cannot clear alone, and the song makes clearable. Each song-trials room
 has a reachability test that checks both halves.
+
+The air jump carries further than the table's apex press when pressed later in
+the fall: about 15 cells across, not 13.
+
+**The reachability audit** (`room_reach_test.gd`) steps Ivo's arc over every
+world room stitched together, every song assumed at once, and fails on a
+platform he cannot reach, a platform that leads nowhere, a place he cannot
+come back from, or a door with no partner, unless `resources/world/maps/reach_allowlist.tres` lists it with
+a reason. The legend's Reach column is what it makes of each character. See the
+findings room by room:
+`"<godot>" --headless --path . res://tools/maps/reach_boards.tscn -- --out <dir>`
+writes `<room>.txt` and `<room>.png` (`!` unreachable, `*` leads nowhere, `+`
+redundant route, `:` dead-end pocket, `&` no way back, `?` unpaired door, on the
+feet row). Rules:
+`docs/knowledge/systems/rooms.md`, "Reachability audit".
 
 ## The loop
 

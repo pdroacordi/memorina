@@ -33,6 +33,11 @@ static func at(node: Node, global_point: Vector2) -> RoomMapNode:
 			return room
 	return null
 
+## Where an entity placed at `cell` stands, in this node's space: its cell's bottom centre or centre.
+static func entity_position(cell: Vector2i, anchor: RoomLegendEntry.Anchor) -> Vector2:
+	var rect := Rect2(Vector2(cell * RoomMap.CELL_PX), Vector2(RoomMap.CELL_PX, RoomMap.CELL_PX))
+	return Vector2(rect.get_center().x, rect.end.y) if anchor == RoomLegendEntry.Anchor.FEET else rect.get_center()
+
 func _ready() -> void:
 	add_to_group(GROUP)
 	_build()
@@ -262,9 +267,7 @@ func _paint(layer: WaterLayer, cells: PackedVector2Array, alternative: int) -> v
 func _place(entry: RoomLegendEntry, placed: Dictionary, entities: Node2D) -> Node2D:
 	var node := entry.scene.instantiate() as Node2D
 	assert(node != null, "legend '%s': an entity scene's root must be a Node2D" % entry.symbol)
-	var size := Vector2(RoomMap.CELL_PX, RoomMap.CELL_PX)
-	var rect := Rect2(_solid.map_to_local(placed.cell) - size * 0.5, size)
-	node.position = Vector2(rect.get_center().x, rect.end.y) if entry.anchor == RoomLegendEntry.Anchor.FEET else rect.get_center()
+	node.position = entity_position(placed.cell, entry.anchor)
 	node.name = "%s_%d_%d" % [entry.symbol.uri_encode(), placed.cell.x, placed.cell.y]
 	EntityParams.apply(node, placed.params)
 	entities.add_child(node)

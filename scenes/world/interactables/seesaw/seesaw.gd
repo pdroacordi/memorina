@@ -40,6 +40,23 @@ func _ready() -> void:
 	_plank_sprite.region_rect = Rect2(art.x * 0.5 - pivot_at * length, 0.0, length, art.y)
 	_plank_sprite.position.x = centre
 
+## Map cells its plank's top passes at every tilt up to `max_degrees`, pivoted over `at` (map px), as floors for the
+## reachability audit. Reads only authored values.
+func reach_cells(_map: RoomMap, at: Vector2) -> Array[Vector2i]:
+	var plank := get_node("Plank") as Node2D
+	var thickness := ((get_node("Plank/CollisionShape2D") as CollisionShape2D).shape as RectangleShape2D).size.y
+	var pivot := at + plank.position - Vector2(0, thickness * 0.5)
+	var tilt := deg_to_rad(max_degrees)
+	var cells: Array[Vector2i] = []
+	var along := -pivot_at * length
+	while along < (1.0 - pivot_at) * length:
+		var x := pivot.x + along * cos(tilt)
+		for cell: Vector2i in MapCells.floor_cells(x, x + 1.0, pivot.y + along * sin(tilt), pivot.y - along * sin(tilt)):
+			if not cell in cells:
+				cells.append(cell)
+		along += RoomMap.CELL_PX * 0.5
+	return cells
+
 ## The height of the plank's surface at its ends above the pivot, px, when
 ## tilted by `angle` (radians, positive = right side down): (left, right).
 func end_rise(angle: float) -> Vector2:

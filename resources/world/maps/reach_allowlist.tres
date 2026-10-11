@@ -1,0 +1,554 @@
+[gd_resource type="Resource" script_class="ReachAllowlist" load_steps=81 format=3]
+
+[ext_resource type="Script" path="res://resources/world/maps/reach_allowlist.gd" id="1_list"]
+[ext_resource type="Script" path="res://resources/world/maps/reach_allowlist_entry.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="entry_1"]
+script = ExtResource("2_entry")
+room = &"caldera_bait"
+cell = Vector2i(13, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_2"]
+script = ExtResource("2_entry")
+room = &"caldera_bait"
+cell = Vector2i(16, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_3"]
+script = ExtResource("2_entry")
+room = &"caldera_bait"
+cell = Vector2i(25, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_4"]
+script = ExtResource("2_entry")
+room = &"caldera_chimney_base"
+cell = Vector2i(15, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_5"]
+script = ExtResource("2_entry")
+room = &"caldera_cistern_bottom"
+cell = Vector2i(22, 12)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_6"]
+script = ExtResource("2_entry")
+room = &"caldera_cistern_bottom"
+cell = Vector2i(34, 16)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_7"]
+script = ExtResource("2_entry")
+room = &"caldera_dry_moat"
+cell = Vector2i(26, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_8"]
+script = ExtResource("2_entry")
+room = &"caldera_open_crater"
+cell = Vector2i(13, 7)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_9"]
+script = ExtResource("2_entry")
+room = &"caldera_open_crater"
+cell = Vector2i(21, 11)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_10"]
+script = ExtResource("2_entry")
+room = &"caldera_open_crater"
+cell = Vector2i(27, 15)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_11"]
+script = ExtResource("2_entry")
+room = &"caldera_open_crater"
+cell = Vector2i(33, 19)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_12"]
+script = ExtResource("2_entry")
+room = &"caldera_open_crater"
+cell = Vector2i(27, 23)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_13"]
+script = ExtResource("2_entry")
+room = &"caldera_open_crater"
+cell = Vector2i(33, 27)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_14"]
+script = ExtResource("2_entry")
+room = &"caldera_open_crater"
+cell = Vector2i(18, 30)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_15"]
+script = ExtResource("2_entry")
+room = &"lake_chasm"
+cell = Vector2i(30, 17)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_16"]
+script = ExtResource("2_entry")
+room = &"lake_fisher_hut"
+cell = Vector2i(10, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_17"]
+script = ExtResource("2_entry")
+room = &"lake_fishing_village"
+cell = Vector2i(5, 1)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_18"]
+script = ExtResource("2_entry")
+room = &"lake_fishing_village"
+cell = Vector2i(18, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_19"]
+script = ExtResource("2_entry")
+room = &"lake_fishing_village"
+cell = Vector2i(4, 5)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_20"]
+script = ExtResource("2_entry")
+room = &"lake_fishing_village"
+cell = Vector2i(47, 5)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_21"]
+script = ExtResource("2_entry")
+room = &"lake_high_wall"
+cell = Vector2i(15, 17)
+kind = 4
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_22"]
+script = ExtResource("2_entry")
+room = &"lake_high_wall"
+cell = Vector2i(16, 20)
+kind = 4
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_23"]
+script = ExtResource("2_entry")
+room = &"lake_high_wall"
+cell = Vector2i(16, 23)
+kind = 4
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_24"]
+script = ExtResource("2_entry")
+room = &"lake_high_wall"
+cell = Vector2i(16, 26)
+kind = 4
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_25"]
+script = ExtResource("2_entry")
+room = &"lake_high_wall"
+cell = Vector2i(16, 29)
+kind = 4
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_26"]
+script = ExtResource("2_entry")
+room = &"lake_high_wall"
+cell = Vector2i(16, 20)
+kind = 1
+reason = "STORY-06: the ladder to the high exit collectible (design 04 section 3.5); stale once it lands"
+
+[sub_resource type="Resource" id="entry_27"]
+script = ExtResource("2_entry")
+room = &"lake_high_wall"
+cell = Vector2i(16, 23)
+kind = 1
+reason = "STORY-06: the ladder to the high exit collectible (design 04 section 3.5); stale once it lands"
+
+[sub_resource type="Resource" id="entry_28"]
+script = ExtResource("2_entry")
+room = &"lake_high_wall"
+cell = Vector2i(16, 26)
+kind = 1
+reason = "STORY-06: the ladder to the high exit collectible (design 04 section 3.5); stale once it lands"
+
+[sub_resource type="Resource" id="entry_29"]
+script = ExtResource("2_entry")
+room = &"lake_high_wall"
+cell = Vector2i(16, 29)
+kind = 1
+reason = "STORY-06: the ladder to the high exit collectible (design 04 section 3.5); stale once it lands"
+
+[sub_resource type="Resource" id="entry_30"]
+script = ExtResource("2_entry")
+room = &"lake_ice_caves"
+cell = Vector2i(17, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_31"]
+script = ExtResource("2_entry")
+room = &"lake_shore"
+cell = Vector2i(6, 5)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_32"]
+script = ExtResource("2_entry")
+room = &"lake_waterfall_path"
+cell = Vector2i(5, 20)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_33"]
+script = ExtResource("2_entry")
+room = &"lake_waterfall_path"
+cell = Vector2i(6, 26)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_34"]
+script = ExtResource("2_entry")
+room = &"lake_waterfall_path"
+cell = Vector2i(4, 35)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_35"]
+script = ExtResource("2_entry")
+room = &"lake_waterfall_path"
+cell = Vector2i(5, 47)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_36"]
+script = ExtResource("2_entry")
+room = &"lake_waterfall_path"
+cell = Vector2i(5, 53)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_37"]
+script = ExtResource("2_entry")
+room = &"orchard_chasm_bridge"
+cell = Vector2i(27, 3)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_38"]
+script = ExtResource("2_entry")
+room = &"orchard_cliff_chimney"
+cell = Vector2i(1, 39)
+kind = 4
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_39"]
+script = ExtResource("2_entry")
+room = &"orchard_cliff_chimney"
+cell = Vector2i(6, 69)
+kind = 4
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_40"]
+script = ExtResource("2_entry")
+room = &"orchard_cliff_chimney"
+cell = Vector2i(1, 106)
+kind = 4
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_41"]
+script = ExtResource("2_entry")
+room = &"orchard_inn"
+cell = Vector2i(34, 3)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_42"]
+script = ExtResource("2_entry")
+room = &"orchard_inn"
+cell = Vector2i(24, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_43"]
+script = ExtResource("2_entry")
+room = &"orchard_inn"
+cell = Vector2i(38, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_44"]
+script = ExtResource("2_entry")
+room = &"orchard_leaf_path"
+cell = Vector2i(3, 2)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_45"]
+script = ExtResource("2_entry")
+room = &"orchard_mill_town"
+cell = Vector2i(3, 5)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_46"]
+script = ExtResource("2_entry")
+room = &"orchard_terraces"
+cell = Vector2i(50, 8)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_47"]
+script = ExtResource("2_entry")
+room = &"orchard_terraces"
+cell = Vector2i(12, 9)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_48"]
+script = ExtResource("2_entry")
+room = &"orchard_well"
+cell = Vector2i(2, 5)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_49"]
+script = ExtResource("2_entry")
+room = &"threshold_farmhouse"
+cell = Vector2i(12, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_50"]
+script = ExtResource("2_entry")
+room = &"threshold_wayshrine"
+cell = Vector2i(8, 2)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_51"]
+script = ExtResource("2_entry")
+room = &"village_bell_tower"
+cell = Vector2i(5, 12)
+kind = 1
+reason = "STORY-06: the climb to the bell tower collectible at the top (design 04 section 3.1); stale once it lands"
+
+[sub_resource type="Resource" id="entry_52"]
+script = ExtResource("2_entry")
+room = &"village_bell_tower"
+cell = Vector2i(11, 16)
+kind = 1
+reason = "STORY-06: the climb to the bell tower collectible at the top (design 04 section 3.1); stale once it lands"
+
+[sub_resource type="Resource" id="entry_53"]
+script = ExtResource("2_entry")
+room = &"village_bell_tower"
+cell = Vector2i(5, 20)
+kind = 1
+reason = "STORY-06: the climb to the bell tower collectible at the top (design 04 section 3.1); stale once it lands"
+
+[sub_resource type="Resource" id="entry_54"]
+script = ExtResource("2_entry")
+room = &"village_bell_tower"
+cell = Vector2i(11, 24)
+kind = 1
+reason = "STORY-06: the climb to the bell tower collectible at the top (design 04 section 3.1); stale once it lands"
+
+[sub_resource type="Resource" id="entry_55"]
+script = ExtResource("2_entry")
+room = &"village_bell_tower"
+cell = Vector2i(5, 28)
+kind = 1
+reason = "STORY-06: the climb to the bell tower collectible at the top (design 04 section 3.1); stale once it lands"
+
+[sub_resource type="Resource" id="entry_56"]
+script = ExtResource("2_entry")
+room = &"village_mill"
+cell = Vector2i(21, 5)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_57"]
+script = ExtResource("2_entry")
+room = &"village_mill"
+cell = Vector2i(17, 6)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_58"]
+script = ExtResource("2_entry")
+room = &"village_tavern"
+cell = Vector2i(19, 16)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_59"]
+script = ExtResource("2_entry")
+room = &"village_tavern_cellar"
+cell = Vector2i(2, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_60"]
+script = ExtResource("2_entry")
+room = &"woods_canopy"
+cell = Vector2i(9, 3)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_61"]
+script = ExtResource("2_entry")
+room = &"woods_canopy"
+cell = Vector2i(36, 4)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_62"]
+script = ExtResource("2_entry")
+room = &"woods_deep"
+cell = Vector2i(44, 3)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_63"]
+script = ExtResource("2_entry")
+room = &"woods_deep"
+cell = Vector2i(50, 7)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_64"]
+script = ExtResource("2_entry")
+room = &"woods_deep"
+cell = Vector2i(44, 10)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_65"]
+script = ExtResource("2_entry")
+room = &"woods_deep"
+cell = Vector2i(10, 14)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_66"]
+script = ExtResource("2_entry")
+room = &"woods_deep"
+cell = Vector2i(50, 14)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_67"]
+script = ExtResource("2_entry")
+room = &"woods_deep"
+cell = Vector2i(5, 18)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_68"]
+script = ExtResource("2_entry")
+room = &"woods_deep"
+cell = Vector2i(28, 18)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_69"]
+script = ExtResource("2_entry")
+room = &"woods_deep"
+cell = Vector2i(8, 22)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_70"]
+script = ExtResource("2_entry")
+room = &"woods_deep"
+cell = Vector2i(44, 29)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_71"]
+script = ExtResource("2_entry")
+room = &"woods_deep"
+cell = Vector2i(28, 35)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_72"]
+script = ExtResource("2_entry")
+room = &"woods_edge"
+cell = Vector2i(22, 3)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_73"]
+script = ExtResource("2_entry")
+room = &"woods_hut"
+cell = Vector2i(10, 4)
+kind = 1
+reason = "STORY-06: the ledges to the woods_hut letter (design 04 section 3.4); stale once the letter lands"
+
+[sub_resource type="Resource" id="entry_74"]
+script = ExtResource("2_entry")
+room = &"woods_hut"
+cell = Vector2i(7, 6)
+kind = 1
+reason = "STORY-06: the ledges to the woods_hut letter (design 04 section 3.4); stale once the letter lands"
+
+[sub_resource type="Resource" id="entry_75"]
+script = ExtResource("2_entry")
+room = &"woods_pond"
+cell = Vector2i(24, 3)
+kind = 1
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_76"]
+script = ExtResource("2_entry")
+room = &"woods_root_caves"
+cell = Vector2i(4, 7)
+kind = 0
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_77"]
+script = ExtResource("2_entry")
+room = &"woods_root_caves"
+cell = Vector2i(1, 11)
+kind = 0
+reason = "TODO WORLD-25: rework"
+
+[sub_resource type="Resource" id="entry_78"]
+script = ExtResource("2_entry")
+room = &"woods_root_caves"
+cell = Vector2i(26, 20)
+kind = 4
+reason = "TODO WORLD-25: rework"
+
+[resource]
+script = ExtResource("1_list")
+entries = Array[ExtResource("2_entry")]([SubResource("entry_1"), SubResource("entry_2"), SubResource("entry_3"), SubResource("entry_4"), SubResource("entry_5"), SubResource("entry_6"), SubResource("entry_7"), SubResource("entry_8"), SubResource("entry_9"), SubResource("entry_10"), SubResource("entry_11"), SubResource("entry_12"), SubResource("entry_13"), SubResource("entry_14"), SubResource("entry_15"), SubResource("entry_16"), SubResource("entry_17"), SubResource("entry_18"), SubResource("entry_19"), SubResource("entry_20"), SubResource("entry_21"), SubResource("entry_22"), SubResource("entry_23"), SubResource("entry_24"), SubResource("entry_25"), SubResource("entry_26"), SubResource("entry_27"), SubResource("entry_28"), SubResource("entry_29"), SubResource("entry_30"), SubResource("entry_31"), SubResource("entry_32"), SubResource("entry_33"), SubResource("entry_34"), SubResource("entry_35"), SubResource("entry_36"), SubResource("entry_37"), SubResource("entry_38"), SubResource("entry_39"), SubResource("entry_40"), SubResource("entry_41"), SubResource("entry_42"), SubResource("entry_43"), SubResource("entry_44"), SubResource("entry_45"), SubResource("entry_46"), SubResource("entry_47"), SubResource("entry_48"), SubResource("entry_49"), SubResource("entry_50"), SubResource("entry_51"), SubResource("entry_52"), SubResource("entry_53"), SubResource("entry_54"), SubResource("entry_55"), SubResource("entry_56"), SubResource("entry_57"), SubResource("entry_58"), SubResource("entry_59"), SubResource("entry_60"), SubResource("entry_61"), SubResource("entry_62"), SubResource("entry_63"), SubResource("entry_64"), SubResource("entry_65"), SubResource("entry_66"), SubResource("entry_67"), SubResource("entry_68"), SubResource("entry_69"), SubResource("entry_70"), SubResource("entry_71"), SubResource("entry_72"), SubResource("entry_73"), SubResource("entry_74"), SubResource("entry_75"), SubResource("entry_76"), SubResource("entry_77"), SubResource("entry_78")])

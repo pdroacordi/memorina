@@ -155,4 +155,4 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | TECH-02 | Rooms as text maps | | `[x]` | | 2026-10-02 | `systems/rooms` |
 | TECH-03 | Art pipeline (contracts, Codex, PixelLab, processing) | | `[x]` | | 2026-10-02 | `systems/art-pipeline` |
 | TECH-04 | Export presets and a release build | | `[ ]` | | 2026-10-02 | No `export_presets.cfg` yet. |
-| TECH-05 | Room reachability audit | | `[ ]` | | 2026-10-10 | "Audit tool + rework (Recommended)" (user, 2026-10-10). Plan: `architecture/room-reachability-audit`. |
+| TECH-05 | Room reachability audit | | `[x]` | | 2026-10-11 | "Audit tool + rework (Recommended)" (user, 2026-10-10). `systems/rooms` (Reachability audit); `architecture/room-reachability-audit`. 78 errors allowlisted (11 STORY-06 collectible ledges, 67 TODO WORLD-25). |

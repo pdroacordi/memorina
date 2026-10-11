@@ -48,6 +48,24 @@ func _ready() -> void:
 func is_moved() -> bool:
 	return _progress >= 1.0
 
+## Map cells its top passes from rest to `travel`, placed at `at` (map px), as floors for the reachability audit; none
+## for a body taller than wide (a gate), a wall the audit assumes open. Reads only authored values.
+func reach_cells(_map: RoomMap, at: Vector2) -> Array[Vector2i]:
+	var shape := get_node("CollisionShape2D") as CollisionShape2D
+	var box := (shape.shape as RectangleShape2D).size
+	if box.y >= box.x:
+		return []
+	var left := at.x + shape.position.x - box.x * 0.5
+	var top := at.y + shape.position.y - box.y * 0.5
+	var cells: Array[Vector2i] = []
+	var steps := ceili(travel.length() / RoomMap.CELL_PX)
+	for i: int in steps + 1:
+		var moved := travel * (float(i) / maxf(steps, 1))
+		for cell: Vector2i in MapCells.floor_cells(left + moved.x, left + moved.x + box.x, top + moved.y, top + moved.y):
+			if not cell in cells:
+				cells.append(cell)
+	return cells
+
 func _physics_process(delta: float) -> void:
 	if is_equal_approx(_progress, _target):
 		return

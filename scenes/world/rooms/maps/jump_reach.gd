@@ -82,6 +82,20 @@ func arc(with_double_jump: bool = false) -> PackedVector2Array:
 			break
 	return points
 
+## Height above the start per physics step, up positive, of a launch that rises `height` px (0: stepping off a
+## ledge), in still air, until it falls at terminal velocity below the start.
+func heights(height: float) -> PackedFloat32Array:
+	var points := PackedFloat32Array([0.0])
+	var y := 0.0
+	var velocity := _launch(height) if height > 0.0 else 0.0
+	for i: int in MAX_STEPS:
+		velocity = minf(velocity + gravity * _gravity_mult(velocity) * STEP, jump.terminal_velocity)
+		y += velocity * STEP
+		points.append(-y)
+		if y > 0.0 and velocity >= jump.terminal_velocity:
+			break
+	return points
+
 func _launch(height: float) -> float:
 	return -sqrt(gravity * jump.rise_gravity_mult * height * 2.0)
 

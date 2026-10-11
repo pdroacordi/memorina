@@ -44,9 +44,9 @@ static func render(readme: String, legend: RoomLegend) -> String:
 
 static func legend_section(legend: RoomLegend) -> String:
 	var lines := PackedStringArray([
-		"| Character | Section | Kind | Material | Look | What it is |",
-		"|---|---|---|---|---|---|",
-		"| `%s` | any grid | empty | - | - | Nothing: air in `[grid]` and `[back]`, no water in `[water]`. |" % RoomLegend.EMPTY,
+		"| Character | Section | Kind | Material | Look | Reach | What it is |",
+		"|---|---|---|---|---|---|---|",
+		"| `%s` | any grid | empty | - | - | - | Nothing: air in `[grid]` and `[back]`, no water in `[water]`. |" % RoomLegend.EMPTY,
 	])
 	for entry: RoomLegendEntry in legend.entries:
 		var section := "`[grid]`"
@@ -67,7 +67,8 @@ static func legend_section(legend: RoomLegend) -> String:
 				material = Enums.Ground.keys()[entry.ground].to_lower()
 		elif entry.kind == RoomLegendEntry.Kind.ROOF:
 			material = Enums.Ground.keys()[entry.ground].to_lower()
-		lines.append("| `%s` | %s | %s | %s | %s | %s |" % [entry.symbol, section, KIND_NAMES[entry.kind], material, look, entry.description.replace("\n", " ")])
+		var role: String = "-" if entry.reach_role == RoomLegendEntry.ReachRole.NONE else RoomLegendEntry.ReachRole.keys()[entry.reach_role].to_lower()
+		lines.append("| `%s` | %s | %s | %s | %s | %s | %s |" % [entry.symbol, section, KIND_NAMES[entry.kind], material, look, role, entry.description.replace("\n", " ")])
 	return "\n".join(lines) + "\n"
 
 static func entities_section(legend: RoomLegend) -> String:
@@ -144,6 +145,13 @@ static func ivo_reach() -> JumpReach:
 		(ivo.get_node("CollisionShape2D").shape as CapsuleShape2D).radius)
 	ivo.free()
 	return reach
+
+## Ivo's collision capsule in whole cells, rounded up: the footprint the reachability audit moves.
+static func ivo_body() -> Vector2i:
+	var ivo := (load(IVO_SCENE) as PackedScene).instantiate()
+	var capsule := (ivo.get_node("CollisionShape2D") as CollisionShape2D).shape as CapsuleShape2D
+	ivo.free()
+	return Vector2i(ceili(capsule.radius * 2.0 / CELL), ceili(capsule.height / CELL))
 
 static func _type_name(property: Dictionary) -> String:
 	if property.hint == PROPERTY_HINT_ENUM:

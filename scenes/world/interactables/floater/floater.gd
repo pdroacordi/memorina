@@ -36,6 +36,25 @@ func _physics_process(delta: float) -> void:
 	_ride_y = target if target < _ride_y else roundf(move_toward(_ride_y, target, sink_speed * delta))
 	global_position.y = _ride_y
 
+## Map cells its top passes from where it lies at `at` (map px) up to the top of the water or reach its own cell is
+## in, through open cells only, as floors for the reachability audit. Reads only authored values.
+func reach_cells(map: RoomMap, at: Vector2) -> Array[Vector2i]:
+	var shape := get_node("CollisionShape2D") as CollisionShape2D
+	var box := (shape.shape as RectangleShape2D).size
+	var left := at.x + shape.position.x - box.x * 0.5
+	var top := at.y + shape.position.y - box.y * 0.5
+	var wet: Dictionary[Vector2i, bool] = {}
+	for kind: Dictionary in [map.water, map.reach, map.shell_reach]:
+		for symbol: String in kind:
+			for point: Vector2 in kind[symbol]:
+				wet[Vector2i(point)] = true
+	var cell := Vector2i(floori(at.x / RoomMap.CELL_PX), ceili(at.y / RoomMap.CELL_PX) - 1)
+	var risen := top
+	while wet.has(cell) and not map.is_solid(cell):
+		risen = cell.y * float(RoomMap.CELL_PX)
+		cell += Vector2i.UP
+	return MapCells.floor_cells(left, left + box.x, risen, top)
+
 ## Whether the water has lifted it off where it rests.
 func is_afloat() -> bool:
 	return _ride_y < _rest_y

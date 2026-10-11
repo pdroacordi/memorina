@@ -20,6 +20,24 @@ enum Kind {
 	ROOF,
 }
 
+## What the reachability audit makes of a character (architecture/room-reachability-audit).
+enum ReachRole {
+	## Nothing beyond its kind.
+	NONE,
+	## ENTITY: worth reaching (a bench, a puzzle piece, a collectible).
+	CONTENT,
+	## ENTITY: a door, joined to its partner by `link`.
+	DOOR,
+	## ENTITY: a floor that moves; its root script answers `reach_cells(map)`.
+	MOVER,
+	## ENTITY: an air current that carries Ivo anywhere in its box; its root script answers `reach_cells(map)`.
+	CURRENT,
+	## WATER: a hazard no song holds back.
+	HAZARD,
+	## WATER: passable under a Redoma shell, and its top freezes into a floor.
+	ICE,
+}
+
 ## Where in its cell an ENTITY's origin goes.
 enum Anchor {
 	## Bottom centre: things that stand on the floor below their cell.
@@ -52,5 +70,6 @@ enum Anchor {
 ## save remembers it by, which a scene default would quietly share between
 ## every placement. RoomMapValidator rejects a placement missing one.
 @export var required_params: PackedStringArray = PackedStringArray()
+@export var reach_role: ReachRole = ReachRole.NONE
 ## One line for the map guide: what the character is and when to use it.
 @export_multiline var description: String = ""
