@@ -5,4 +5,4 @@
 [node name="ChairShawl" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-17, -48)
+offset = Vector2(-12, -34)

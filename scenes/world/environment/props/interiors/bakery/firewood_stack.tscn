@@ -5,4 +5,4 @@
 [node name="FirewoodStack" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-27, -32)
+offset = Vector2(-15, -18)

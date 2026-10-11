@@ -5,4 +5,4 @@
 [node name="ChairOldA" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-15, -50)
+offset = Vector2(-10, -34)

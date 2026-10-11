@@ -5,4 +5,4 @@
 [node name="Map" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-22, -70)
+offset = Vector2(-9, -30)

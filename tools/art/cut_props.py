@@ -1,7 +1,7 @@
 """Cut a Codex sheet of separate props, drawn beside our Ivo as the scale figure, into 2x-density prop PNGs.
 
 python -I tools/art/cut_props.py <sheet.png> <out dir> [--names=a,b,...] [--ref-height=29] [--merge=24] [--colors=24]
-    [--flat=N] [--base-shade]
+    [--flat=N] [--base-shade] [--size=name:hN,name:wN,...]
     Objects are the magenta-keyed sheet's connected parts, merged when closer than --merge source px. The leftmost
     object at least 1.6 times taller than wide is Ivo: every object is scaled by the factor that makes him --ref-height
     art px (his approved still, tools/art/sources/ivo/ivo_still_2x.png), reduced by each block's most common colour, snapped to one shared
@@ -11,6 +11,8 @@ python -I tools/art/cut_props.py <sheet.png> <out dir> [--names=a,b,...] [--ref-
     --flat=N reduces each object to N colours of its own and repaints every speck (a pixel no 8-neighbour shares) with
     its neighbours' most common colour, so a reduced drawing keeps flat areas. --base-shade darkens each object's
     bottom row by a fifth, a contact line where it meets the floor.
+    --size gives a named object its own art size, its height (hN) or width (wN) in art px, for a sheet whose scale
+    figure is not in proportion with every object.
 """
 import os
 import sys
@@ -86,10 +88,16 @@ def main(sheet: str, out_dir: str, options: dict) -> None:
     figure = min(standing, key=lambda o: o[1].start)
     scale = int(options.get("ref-height", 29)) / (figure[0].stop - figure[0].start)
     ordered = reading_order([o for o in found if o is not figure], rgb.shape[0] * 0.12)
+    names = options["names"].split(",") if "names" in options else [f"prop_{i:02d}" for i in range(len(ordered))]
+    sizes = dict((k, v) for k, v in (s.split(":") for s in options.get("size", "").split(",") if s))
     arts = []
-    for ys, xs, mask in ordered:
+    for i, (ys, xs, mask) in enumerate(ordered):
         part = rgb[ys, xs]
-        art = reduce(part, mask, max(1, round(part.shape[1] * scale)), max(1, round(part.shape[0] * scale)))
+        own = scale
+        size = sizes.get(names[i]) if i < len(names) else None
+        if size:
+            own = int(size[1:]) / (part.shape[0] if size[0] == "h" else part.shape[1])
+        art = reduce(part, mask, max(1, round(part.shape[1] * own)), max(1, round(part.shape[0] * own)))
         if "flat" in options:
             flatten(art, int(options["flat"]))
         arts.append(art)
@@ -99,7 +107,6 @@ def main(sheet: str, out_dir: str, options: dict) -> None:
             despeckle(art)
         if "base-shade" in options:
             shade_base(art)
-    names = options["names"].split(",") if "names" in options else [f"prop_{i:02d}" for i in range(len(arts))]
     for i, art in enumerate(arts):
         if i < len(names) and names[i] != "-":
             image = save_2x(art, f"{out_dir}/{names[i]}.png")

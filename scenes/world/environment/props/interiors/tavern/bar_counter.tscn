@@ -5,4 +5,4 @@
 [node name="BarCounter" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-114, -42)
+offset = Vector2(-98, -36)

@@ -5,4 +5,4 @@
 [node name="Window" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-21, -38)
+offset = Vector2(-19, -34)

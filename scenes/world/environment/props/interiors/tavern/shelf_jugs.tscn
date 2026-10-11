@@ -5,4 +5,4 @@
 [node name="ShelfJugs" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-43, -38)
+offset = Vector2(-22, -20)

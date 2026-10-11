@@ -5,4 +5,4 @@
 [node name="ColdFireplace" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
-offset = Vector2(-45, -128)
+offset = Vector2(-30, -128)
