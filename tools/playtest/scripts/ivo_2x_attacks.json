@@ -1,0 +1,371 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 8.2,
+ "player_position": [
+  0.0,
+  5990.0
+ ],
+ "skills": [
+  0,
+  1,
+  2
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "screenshot": "g00"
+  },
+  {
+   "t": 2.0,
+   "log": "g00"
+  },
+  {
+   "t": 2.06,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 2.083,
+   "screenshot": "g01"
+  },
+  {
+   "t": 2.083,
+   "log": "g01"
+  },
+  {
+   "t": 2.167,
+   "screenshot": "g02"
+  },
+  {
+   "t": 2.167,
+   "log": "g02"
+  },
+  {
+   "t": 2.25,
+   "screenshot": "g03"
+  },
+  {
+   "t": 2.25,
+   "log": "g03"
+  },
+  {
+   "t": 2.333,
+   "screenshot": "g04"
+  },
+  {
+   "t": 2.333,
+   "log": "g04"
+  },
+  {
+   "t": 2.38,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 2.417,
+   "screenshot": "g05"
+  },
+  {
+   "t": 2.417,
+   "log": "g05"
+  },
+  {
+   "t": 2.44,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "screenshot": "g06"
+  },
+  {
+   "t": 2.5,
+   "log": "g06"
+  },
+  {
+   "t": 2.583,
+   "screenshot": "g07"
+  },
+  {
+   "t": 2.583,
+   "log": "g07"
+  },
+  {
+   "t": 2.667,
+   "screenshot": "g08"
+  },
+  {
+   "t": 2.667,
+   "log": "g08"
+  },
+  {
+   "t": 2.75,
+   "screenshot": "g09"
+  },
+  {
+   "t": 2.75,
+   "log": "g09"
+  },
+  {
+   "t": 3.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.75,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 3.75,
+   "screenshot": "a00"
+  },
+  {
+   "t": 3.75,
+   "log": "a00"
+  },
+  {
+   "t": 3.81,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 3.833,
+   "screenshot": "a01"
+  },
+  {
+   "t": 3.833,
+   "log": "a01"
+  },
+  {
+   "t": 3.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 3.917,
+   "screenshot": "a02"
+  },
+  {
+   "t": 3.917,
+   "log": "a02"
+  },
+  {
+   "t": 4.0,
+   "screenshot": "a03"
+  },
+  {
+   "t": 4.0,
+   "log": "a03"
+  },
+  {
+   "t": 4.083,
+   "screenshot": "a04"
+  },
+  {
+   "t": 4.083,
+   "log": "a04"
+  },
+  {
+   "t": 4.8,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.1,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 5.1,
+   "screenshot": "r00"
+  },
+  {
+   "t": 5.1,
+   "log": "r00"
+  },
+  {
+   "t": 5.16,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 5.183,
+   "screenshot": "r01"
+  },
+  {
+   "t": 5.183,
+   "log": "r01"
+  },
+  {
+   "t": 5.267,
+   "screenshot": "r02"
+  },
+  {
+   "t": 5.267,
+   "log": "r02"
+  },
+  {
+   "t": 5.35,
+   "screenshot": "r03"
+  },
+  {
+   "t": 5.35,
+   "log": "r03"
+  },
+  {
+   "t": 5.433,
+   "screenshot": "r04"
+  },
+  {
+   "t": 5.433,
+   "log": "r04"
+  },
+  {
+   "t": 5.48,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 5.517,
+   "screenshot": "r05"
+  },
+  {
+   "t": 5.517,
+   "log": "r05"
+  },
+  {
+   "t": 5.54,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 5.6,
+   "screenshot": "r06"
+  },
+  {
+   "t": 5.6,
+   "log": "r06"
+  },
+  {
+   "t": 5.683,
+   "screenshot": "r07"
+  },
+  {
+   "t": 5.683,
+   "log": "r07"
+  },
+  {
+   "t": 5.767,
+   "screenshot": "r08"
+  },
+  {
+   "t": 5.767,
+   "log": "r08"
+  },
+  {
+   "t": 5.85,
+   "screenshot": "r09"
+  },
+  {
+   "t": 5.85,
+   "log": "r09"
+  },
+  {
+   "t": 6.0,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 6.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 6.95,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.0,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 7.0,
+   "screenshot": "p00"
+  },
+  {
+   "t": 7.0,
+   "log": "p00"
+  },
+  {
+   "t": 7.06,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 7.083,
+   "screenshot": "p01"
+  },
+  {
+   "t": 7.083,
+   "log": "p01"
+  },
+  {
+   "t": 7.167,
+   "screenshot": "p02"
+  },
+  {
+   "t": 7.167,
+   "log": "p02"
+  },
+  {
+   "t": 7.25,
+   "screenshot": "p03"
+  },
+  {
+   "t": 7.25,
+   "log": "p03"
+  },
+  {
+   "t": 7.333,
+   "screenshot": "p04"
+  },
+  {
+   "t": 7.333,
+   "log": "p04"
+  },
+  {
+   "t": 7.417,
+   "screenshot": "p05"
+  },
+  {
+   "t": 7.417,
+   "log": "p05"
+  },
+  {
+   "t": 7.5,
+   "screenshot": "p06"
+  },
+  {
+   "t": 7.5,
+   "log": "p06"
+  },
+  {
+   "t": 7.6,
+   "action": "look_down",
+   "pressed": false
+  }
+ ]
+}

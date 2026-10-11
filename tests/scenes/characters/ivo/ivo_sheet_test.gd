@@ -109,7 +109,9 @@ func test_body_clips_are_centred() -> void:
 func test_attack_bodies_hold_still_between_frames() -> void:
 	var problems := PackedStringArray()
 	for clip: StringName in GROUND_ATTACKS + AIR_ATTACKS:
-		var band := Vector2i(80, 96) if clip in GROUND_ATTACKS else Vector2i(40, 70)
+		# A running attack's legs keep the run cycle's stride, so its upper body is what must hold still.
+		var standing := clip in GROUND_ATTACKS and not String(clip).begins_with("run_")
+		var band := Vector2i(80, 96) if standing else Vector2i(40, 70)
 		var frames := _frames(clip)
 		for i: int in range(1, frames.size()):
 			var shift := _centroid_x(clip, frames[i], band.x, band.y) - _centroid_x(clip, frames[i - 1], band.x, band.y)

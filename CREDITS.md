@@ -47,8 +47,10 @@ Third-party art used in Memorina, with the terms it was taken under.
 - **Ivo's body** (`assets/sprites/characters/ivo/`, every sheet) - generated for this project from our own approved
   still (`tools/art/sources/ivo/ivo_still_2x.png`, cut from a Codex CLI image, `ivo_lineup_codex.png`). The seated,
   wall-cling, climbing, back-view, lying, guard and air-guard poses are one Codex image drawn beside that still
-  (`ivo_poses_codex.png`); every clip is PixelLab animate-with-text-v3 from the still or a pose, cut by
-  `tools/art/cut_inhabitant.py` (contracts `tools/art/prompts/ivo_*.md`). No third-party art was given as a reference.
+  (`ivo_poses_codex.png`); every clip but the attacks is PixelLab animate-with-text-v3 from the still or a pose, cut by
+  `tools/art/cut_inhabitant.py`. The attacks are Codex key poses drawn beside the same still
+  (`ivo_attack_poses_ground_codex.png`, `ivo_attack_poses_air_codex.png`) with smears drawn by
+  `tools/art/build_ivo_attacks.py` (contracts `tools/art/prompts/ivo_*.md`). No third-party art was given as a reference.
   The ZeggyGames *2D Pixel Art Character Template Asset Pack* sheets these replace are no longer in the project; that
   licence forbids AI training, so they were never uploaded to a generator.
 

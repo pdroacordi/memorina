@@ -1,17 +1,13 @@
 ---
 id: ivo_attack_air
-command: animate3
+command: generate
 target: res://assets/sprites/characters/ivo/ivo_attack_air.png
 size: 128x128
 frames: 4
-keep: 1-4
-generate: 4
 view: side
 direction: east
 no_background: true
-reference: res://tools/art/sources/ivo/ivo_first_air_guard_long_96.png
-action: air slash in exact beats: the same man, always in right-facing profile, in mid-air with his knees tucked, staying in the same place in the frame: frame 1 the short sword sweeping from above his head forward and down with a bright white slash arc in front of him; frame 2 the hit, sword arm fully extended straight forward, the long steel blade horizontal in front of his chest and clearly visible; frame 3 the follow-through, blade pointing down in front of him; then back to this raised guard; his short hair and the ends of his blue scarf lift up
-source: pixellab
+source: codex
 ---
-Ivo's `attack_air` sheet (serves attack_jump, attack_fall): 128x128 frames at the 2x density, the floor line on row 96 and his body on the flip axis (between columns 63 and 64), facing east (Character flips it). PixelLab animate-with-text-v3 from `ivo_first_air_guard_long_96.png` (96 px canvas), 4 frames (`generate:`): `tools/pixellab/pixellab.ps1 animate3 -Prompt ivo_attack_air`; the returned frames are kept in tools/art/sources/ivo/attack_air/. Cut by `python -I tools/art/cut_inhabitant.py tools/art/sources/ivo/attack_air ivo_attack_air tools/art/sources/ivo/ivo_palette.png assets/sprites/characters/ivo/ivo_attack_air.png --keep=1-4 --frame=128 --at=18,32 --centre=40-70`: each 2x2 block to its most common colour, every pixel snapped to the still's colours plus three steel greys and a white (`ivo_palette.png`), each frame placed at 18,32 in the 128 px frame. Redone after "The jumping and falling animation could be improved. The attacking animation is weird as well. ... Many things on the game seem to just be flaoting. ivo while running doesn't touch the ground." (user, 2026-10-11; on the attack: "The swing itself", "Too short/weak", "Sliding or popping"). The arc sweeps in front of, under and behind him. Centred on the axis by the head and torso.
-Negative: outlines, black contour, front view, facing left, glow, text, ground, scenery, pipes on his back
+Ivo's `attack_air` sheet: 128x128 frames at the 2x density, facing east (Character flips it). attack_jump and attack_fall: the wind-up, the strike with the arm and blade straight out, its smear, the follow-through. Built by `python -I tools/art/build_ivo_attacks.py` from key-pose stills in tools/art/sources/ivo/attack_poses/, cut by `cut_props.py --ref-height=29 --colors=48 --merge=8` from two Codex sheets drawn beside the approved still (`ivo_attack_poses_ground_codex.png`, `ivo_attack_poses_air_codex.png`) and snapped to `ivo_palette.png`. Each pose sits with its feet on row 95 and its body on the flip axis. A smear frame is the strike pose with the blade erased and a crescent of pale steel and white along the swing's path, drawn by the tool. Timing is by holds within the clip's existing frames at 1/12 s, and the Hitbox window covers the strike and smear frames. Rebuilt after "The attack animation still very strange. Not good, not fluid, doesn't even seem like an attack. The running attack is weird too, because the character is moving, but it's legs aren't" (user, 2026-10-11).
+Negative: outlines, black contour, front view, facing left, glow, text, ground, scenery, motion lines, pipes on his back

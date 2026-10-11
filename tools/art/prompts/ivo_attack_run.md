@@ -1,17 +1,13 @@
 ---
 id: ivo_attack_run
-command: animate3
+command: generate
 target: res://assets/sprites/characters/ivo/ivo_attack_run.png
 size: 128x128
 frames: 9
-keep: 2-10
-generate: 10
 view: side
 direction: east
 no_background: true
-reference: res://tools/art/sources/ivo/ivo_first_guard_long_96.png
-action: two lunging sword slashes in exact beats: the same man, always in right-facing profile, in a deep lunge with the front knee bent and the back leg stretched, boots fixed on the ground and never sliding: frame 1 a big wind-up, the short sword pulled back over his shoulder; frame 2 a flat sweep forward with a bright white slash arc; frame 3 the hit, sword arm fully extended straight forward at waist height, the long steel blade horizontal and clearly visible; frame 4 the follow-through across his body; frame 5 the sword drawn back across his chest for the second cut; frame 6 a flat backhand sweep forward with a bright white slash arc; frame 7 the hit, sword arm fully extended forward at chest height, blade clearly visible; frame 8 the follow-through; frame 9 recovering; then back to this guard; his short hair and the ends of his blue scarf stream back with each lunge
-source: pixellab
+source: codex
 ---
-Ivo's `attack_run` sheet (serves attack_run_1 (0-4), attack_run_2 (5-8)): 128x128 frames at the 2x density, the floor line on row 96 and his body on the flip axis (between columns 63 and 64), facing east (Character flips it). PixelLab animate-with-text-v3 from `ivo_first_guard_long_96.png` (96 px canvas), 10 frames (`generate:`): `tools/pixellab/pixellab.ps1 animate3 -Prompt ivo_attack_run`; the returned frames are kept in tools/art/sources/ivo/attack_run/. Cut by `python -I tools/art/cut_inhabitant.py tools/art/sources/ivo/attack_run ivo_attack_run tools/art/sources/ivo/ivo_palette.png assets/sprites/characters/ivo/ivo_attack_run.png --keep=2-10 --frame=128 --at=32,2 --floor=95 --centre=80-96`: each 2x2 block to its most common colour, every pixel snapped to the still's colours plus three steel greys and a white (`ivo_palette.png`), each frame placed at 32,2 in the 128 px frame. Redone after "The jumping and falling animation could be improved. The attacking animation is weird as well. ... Many things on the game seem to just be flaoting. ivo while running doesn't touch the ground." (user, 2026-10-11; on the attack: "The swing itself", "Too short/weak", "Sliding or popping"). Swing 1 winds the sword back and thrusts (generated 2-6), swing 2 is the white backhand slash (7-10). Settled on the floor line and on the axis by the feet.
-Negative: outlines, black contour, front view, facing left, glow, text, ground, scenery, pipes on his back
+Ivo's `attack_run` sheet: 128x128 frames at the 2x density, facing east (Character flips it). The same two swings above the hips, over the legs of run frames 0-7 then 0, so his legs keep running while the attack carries him forward (Player keeps velocity in a running attack). Built by `python -I tools/art/build_ivo_attacks.py` from key-pose stills in tools/art/sources/ivo/attack_poses/, cut by `cut_props.py --ref-height=29 --colors=48 --merge=8` from two Codex sheets drawn beside the approved still (`ivo_attack_poses_ground_codex.png`, `ivo_attack_poses_air_codex.png`) and snapped to `ivo_palette.png`. Each pose sits with its feet on row 95 and its body on the flip axis. A smear frame is the strike pose with the blade erased and a crescent of pale steel and white along the swing's path, drawn by the tool. Timing is by holds within the clip's existing frames at 1/12 s, and the Hitbox window covers the strike and smear frames. Rebuilt after "The attack animation still very strange. Not good, not fluid, doesn't even seem like an attack. The running attack is weird too, because the character is moving, but it's legs aren't" (user, 2026-10-11).
+Negative: outlines, black contour, front view, facing left, glow, text, ground, scenery, motion lines, pipes on his back
