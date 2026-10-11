@@ -85,7 +85,8 @@ static func _ledges(map: RoomMap) -> Dictionary[int, PackedByteArray]:
 	for y: int in map.size.y:
 		for x: int in map.size.x:
 			var index := y * map.size.x + x
-			if map.platform[index] != 1:
+			# A roof has no look: its facade draws it.
+			if map.platform[index] != 1 or map.looks[index] == RoomMap.NO_LOOK:
 				continue
 			var look := map.looks[index]
 			if not layers.has(look):

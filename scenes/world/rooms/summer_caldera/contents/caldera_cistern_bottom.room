@@ -33,4 +33,4 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 [entities]
-49,17 = {"link": "caldera_cistern_door", "to_room": "caldera_cistern"}
+49,17 = {"look": "passage", "link": "caldera_cistern_door", "to_room": "caldera_cistern"}

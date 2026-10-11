@@ -8,12 +8,12 @@ tileset = legacy
 
 [grid]
 SSSSSSSSSSSSSSSSSSSS
-S..................S
-S..................S
-S..................S
-S..................S
-S..................S
-S..................S
+S.............SSSSSS
+S.............SSSSSS
+S.............SSSSSS
+S.............SSSSSS
+S.............SSSSSS
+S.............SSSSSS
 S..................S
 S..............E...S
 S............SSSSS.S
@@ -58,4 +58,4 @@ SSSSSSSSSSSSSSSSSSSS
 
 [entities]
 4,44 = {"link": "lighthouse_door", "to_room": "lighthouse_base", "arrive_facing": 1}
-15,8 = {"link": "lighthouse_hatch", "to_room": "lighthouse_top", "requires": "res://resources/save_facts/all_guardians_restored.tres", "arrive_facing": -1}
+15,8 = {"look": "hatch_up", "link": "lighthouse_hatch", "to_room": "lighthouse_top", "requires": "res://resources/save_facts/all_guardians_restored.tres", "arrive_facing": -1}

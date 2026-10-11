@@ -16,6 +16,8 @@ enum Kind {
 	BACK,
 	## A [secret] cell with a hint, drawn as ground of `look` until found; no collision (architecture/secret-false-walls).
 	SECRET,
+	## A one-way ledge with no tile art: a building's facade prop draws it (systems/props, Facades).
+	ROOF,
 }
 
 ## Where in its cell an ENTITY's origin goes.

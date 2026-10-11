@@ -59,6 +59,13 @@ ground = 3
 look = 2
 description = "One-way plank, one cell high: jump up through it, stand on it."
 
+[sub_resource type="Resource" id="roof"]
+script = ExtResource("2_entry")
+symbol = "^"
+kind = 6
+ground = 3
+description = "Roof: a one-way ledge with no tile art, drawn by the building's facade prop; it lies on the facade's roof line (facade_doors_test)."
+
 [sub_resource type="Resource" id="back_wall"]
 script = ExtResource("2_entry")
 symbol = "h"
@@ -261,4 +268,4 @@ description = "A barred gate, standing on this cell, three cells tall: solid unt
 
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft")])

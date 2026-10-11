@@ -1,12 +1,19 @@
 """Cut Codex building fronts (and the door) into 2x-density prop sheets.
 
 Facades: python -I tools/art/cut_facades.py facades <sheet.png> <out dir> <name,name,...> [--grid=3x2] [--colors=20]
-    [--crop-top=name:rows]. Each building is scaled so its doorway (the dark opening that reaches the ground line) is
+    [--crop-top=name:rows] [--dark=name:luma] [--rows=name:at:delta]. Each building is scaled so its doorway (the dark opening that reaches the ground line) is
     32 art px tall, reduced by each block's most common colour, snapped to one shared palette, given a flat 16x32 art px
     doorway recess and written at 2x as <name>_facade.png. Prints each sheet's size and its anchor (the doorway's
     sill centre, game px): the prop scene's offset is minus the anchor (architecture/props-and-ambient-life).
+    --rows repeats (delta > 0) or drops (delta < 0) |delta| art rows of plain wall starting `at` art px above the ground,
+    so a walkable roof lands on the 32 px room grid.
 Door: python -I tools/art/cut_facades.py door <sheet.png> <out.png> [--colors=10]: two doors side by side, each cut
     to its plank body and reduced to 16x32 art px, written at 2x as a 64x64 two-frame strip.
+Doorways: python -I tools/art/cut_facades.py doorways <sheet.png> <out dir> <name:art_width,...> [--colors=16]: a 3x2
+    sheet, open pieces on top and their sealed versions below; each column is scaled so its open piece is art_width art
+    px wide and written at 2x as <name>.png, two bottom-aligned frames (open, sealed) of one size. --side reads one piece
+    drawn open on the left and sealed on the right; --opening=px scales by the open piece's dark opening width instead;
+    --keep-x=l:r keeps only art columns l..r of each frame.
 """
 import sys
 from collections import Counter
@@ -68,6 +75,9 @@ def facades(sheet: str, out_dir: str, names: list[str], options: dict) -> None:
     rgb, solid = keyed(sheet)
     cols, rows = map(int, options.get("grid", "3x2").split("x"))
     crop_top = dict((k, int(v)) for k, v in (c.split(":") for c in options.get("crop-top", "").split(",") if c))
+    # A wall nearly as dark as its doorway merges with it at the default threshold (the fisher hut's tarred planks).
+    dark_luma = dict((k, int(v)) for k, v in (c.split(":") for c in options.get("dark", "").split(",") if c))
+    rows_at = dict((k, (int(a), int(d))) for k, a, d in (c.split(":") for c in options.get("rows", "").split(",") if c))
     labels, count = ndimage.label(solid)
     sizes = ndimage.sum(solid, labels, range(1, count + 1))
     centres = ndimage.center_of_mass(solid, labels, range(1, count + 1))
@@ -83,7 +93,7 @@ def facades(sheet: str, out_dir: str, names: list[str], options: dict) -> None:
     for name, mask in zip(names, cells):
         ys, xs = np.nonzero(mask)
         part, inside = rgb[ys.min():ys.max() + 1, xs.min():xs.max() + 1], mask[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
-        dark = (part @ LUMA < 48) & inside
+        dark = (part @ LUMA < dark_luma.get(name, 48)) & inside
         dark_labels, dark_count = ndimage.label(dark)
         best = None
         for d in range(1, dark_count + 1):
@@ -93,6 +103,8 @@ def facades(sheet: str, out_dir: str, names: list[str], options: dict) -> None:
         assert best is not None, f"{name}: no doorway reaches the ground line"
         scale = DOOR_ART[1] / (part.shape[0] - best[1])
         art = reduce(part, inside, round(part.shape[1] * scale), round(part.shape[0] * scale))
+        if name in rows_at:
+            art = resized_rows(art, *rows_at[name])
         arts.append(art[crop_top.get(name, 0):])
         centres_x.append(int(round((best[2] + best[3] + 1) / 2 * scale)))
     palette = snap(arts, int(options.get("colors", 20)))
@@ -102,6 +114,14 @@ def facades(sheet: str, out_dir: str, names: list[str], options: dict) -> None:
         art[-DOOR_ART[1]:, cx - half:cx + half] = (*darkest, 255)
         image = save_2x(art, f"{out_dir}/{name}_facade.png")
         print(f"{name}_facade {image.width}x{image.height} anchor {cx * ART_SCALE},{image.height}")
+
+
+def resized_rows(art: np.ndarray, at: int, delta: int) -> np.ndarray:
+    top = art.shape[0] - at - abs(delta)
+    band = art[top:art.shape[0] - at]
+    if delta > 0:
+        return np.concatenate([art[:top], band, band, art[art.shape[0] - at:]])
+    return np.concatenate([art[:top], art[art.shape[0] - at:]])
 
 
 def door(sheet: str, out: str, options: dict) -> None:
@@ -122,10 +142,63 @@ def door(sheet: str, out: str, options: dict) -> None:
     print(f"door {image.width}x{image.height}")
 
 
+def doorways(sheet: str, out_dir: str, specs: list[str], options: dict) -> None:
+    rgb, solid = keyed(sheet)
+    labels, count = ndimage.label(solid)
+    sizes = ndimage.sum(solid, labels, range(1, count + 1))
+    centres = ndimage.center_of_mass(solid, labels, range(1, count + 1))
+    h, w = solid.shape
+    side = "side" in options
+    cells = [np.zeros_like(solid) for _ in range(6)]
+    for i, (cy, cx) in enumerate(centres):
+        if sizes[i] < 30:
+            continue
+        # --side: the open piece is cell 0 and the sealed one cell 3, as in the grid layout's first column.
+        cell = (3 if cx > w / 2 else 0) if side else min(1, int(cy / (h / 2))) * 3 + min(2, int(cx / (w / 3)))
+        cells[cell] |= labels == i + 1
+    arts, names = [], []
+    for column, spec in enumerate(specs):
+        name, art_width = spec.split(":")
+        open_mask = cells[column]
+        if "opening" in options:
+            # The widest run of dark pixels inside the open piece's bounds: its opening.
+            ys, xs = np.nonzero(open_mask)
+            part = rgb[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+            dark = (part @ LUMA < 48).sum(0) > 0.3 * part.shape[0]
+            runs = np.diff(np.concatenate([[0], dark.astype(int), [0]]))
+            widths = np.nonzero(runs == -1)[0] - np.nonzero(runs == 1)[0]
+            scale = int(options["opening"]) / ART_SCALE / widths.max()
+        else:
+            xs_open = np.nonzero(open_mask.any(0))[0]
+            scale = int(art_width) / (xs_open.max() - xs_open.min() + 1)
+        pair = []
+        for mask in (open_mask, cells[3 + column]):
+            ys, xs = np.nonzero(mask)
+            part, inside = rgb[ys.min():ys.max() + 1, xs.min():xs.max() + 1], mask[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+            pair.append(reduce(part, inside, max(1, round(part.shape[1] * scale)), max(1, round(part.shape[0] * scale))))
+        if "keep-x" in options:
+            left, right = map(int, options["keep-x"].split(":"))
+            pair = [a[:, left:right] for a in pair]
+        fw, fh = max(a.shape[1] for a in pair), max(a.shape[0] for a in pair)
+        fw += fw % 2
+        strip = np.zeros((fh, fw * 2, 4), dtype=np.uint8)
+        for i, a in enumerate(pair):
+            x0 = i * fw + (fw - a.shape[1]) // 2
+            strip[fh - a.shape[0]:, x0:x0 + a.shape[1]] = a
+        arts.append(strip)
+        names.append(name)
+    snap(arts, int(options.get("colors", 16)))
+    for name, art in zip(names, arts):
+        image = save_2x(art, f"{out_dir}/{name}.png")
+        print(f"{name} {image.width}x{image.height} frame {image.width // 2}x{image.height}")
+
+
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     opts = dict((a[2:].split("=", 1) + [""])[:2] for a in sys.argv[1:] if a.startswith("--"))
     if args[0] == "facades":
         facades(args[1], args[2], args[3].split(","), opts)
+    elif args[0] == "doorways":
+        doorways(args[1], args[2], args[3].split(","), opts)
     else:
         door(args[1], args[2], opts)

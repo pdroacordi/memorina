@@ -1,6 +1,6 @@
 class_name Door
 extends Area2D
-## A building's doorway: Up in reach takes Ivo to the door sharing its `link` in `to_room` (design 04 section 4, architecture/doors-and-interiors).
+## A doorway: Up in reach takes Ivo to the door sharing its `link` in `to_room` (design 04 section 4, architecture/doors-and-interiors).
 
 ## A press at a sealed door.
 signal knocked
@@ -10,6 +10,18 @@ const GROUP := &"doors"
 const KNOCK_TIME := 0.2
 ## Pixels the sprite shakes either way on a knock.
 const KNOCK_PX := 2.0
+## Art per kind of doorway: two frames (open, sealed) standing on the door's floor (systems/rooms, Doors).
+const LOOKS: Dictionary[String, Texture2D] = {
+	"door": preload("res://assets/sprites/world/props/door/door.png"),
+	"passage": preload("res://assets/sprites/world/props/door/door_passage.png"),
+	"stairwell": preload("res://assets/sprites/world/props/door/door_stairwell.png"),
+	"hatch_up": preload("res://assets/sprites/world/props/door/door_hatch_up.png"),
+	"hatch_down": preload("res://assets/sprites/world/props/door/door_hatch_down.png"),
+}
+## Px of a look's art below the floor line. Must match the floor line in tools/art/prompts/door_stairwell.md.
+const SINKS: Dictionary[String, float] = {"stairwell": 67.0}
+## Px between the top of the art and the prompt's bottom edge.
+const PROMPT_GAP := 8.0
 
 ## Name of the doorway, shared by exactly two doors across the world.
 @export var link: StringName = &""
@@ -19,9 +31,13 @@ const KNOCK_PX := 2.0
 @export var requires: SaveFact
 ## Facing on arrival through the partner: 0 keeps Ivo's, 1 right, -1 left.
 @export_range(-1, 1) var arrive_facing: int = 0
+## A building door, a passage cut in stone, a stairwell down through a stone floor, or a ladder hatch up or down.
+@export_enum("door", "passage", "stairwell", "hatch_up", "hatch_down") var look: String = "door"
 
 var _bodies: int = 0
 var _knock: Tween
+## The closed secret the doorway stands in, if any.
+var _hidden_by: SecretWall
 
 @onready var _sprite: Sprite2D = $Sprite2D
 @onready var _prompt: KeyGlyph = $Prompt
@@ -49,6 +65,8 @@ func _ready() -> void:
 	body_exited.connect(_on_body_exited)
 	SaveSystem.progress_changed.connect(_refresh)
 	_prompt.show_action(&"look_up")
+	_dress()
+	_hide_in_secret()
 	_refresh()
 
 func is_open_for(data: PlayerData) -> bool:
@@ -71,6 +89,26 @@ func knock() -> void:
 	for x: float in [KNOCK_PX, -KNOCK_PX, KNOCK_PX, 0.0]:
 		_knock.tween_property(_sprite, "position:x", x, step)
 	knocked.emit()
+
+## Hides the art until `wall` opens: a doorway inside a closed secret must not show through the stone around it
+## (bugs/the-cistern-stairwell-shows-through-the-closed-secret-wall).
+func hide_until(wall: SecretWall) -> void:
+	_hidden_by = wall
+	if is_node_ready():
+		_hide_in_secret()
+
+func _hide_in_secret() -> void:
+	if _hidden_by == null or SaveSystem.is_secret_found(_hidden_by.secret_id):
+		return
+	_sprite.visible = false
+	_hidden_by.found.connect(func(_id: StringName) -> void: _sprite.visible = true, CONNECT_ONE_SHOT)
+
+func _dress() -> void:
+	var texture: Texture2D = LOOKS.get(look, LOOKS["door"])
+	_sprite.texture = texture
+	var sink: float = SINKS.get(look, 0.0)
+	_sprite.position.y = sink - texture.get_height() * 0.5
+	_prompt.position.y = minf(_prompt.position.y, sink - texture.get_height() - PROMPT_GAP - _prompt.size.y)
 
 func _refresh() -> void:
 	var open := is_open()

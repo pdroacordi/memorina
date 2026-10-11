@@ -20,6 +20,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | CORE-04 | Teaching creatures (criaturas-professoras) | 02 §2 | `[?]` | | 2026-10-02 | Design names them; behaviour undefined. |
 | CORE-05 | Gamepad layout and device glyphs | 02 Controles | `[x]` | | 2026-10-02 | `systems/input` |
 | CORE-06 | Climbing (on roots) | 02 §7.1 | `[x]` | SONG-07 | 2026-10-02 | Template ladder and ledge clips unused. |
+| CORE-08 | Ivo redrawn at the world's 2x density, about 52 px tall | 03 §6 | `[ ]` | | 2026-10-10 | "Redraw at 2x, ~52 px (Recommended)" (user, 2026-10-10): body shrunk to match, jumps still clear the same gaps; style board first. |
 
 ## Memory and world
 
@@ -141,6 +142,9 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | WORLD-21 | Secret spaces behind false walls | 04 §1 | `[x]` | WORLD-07 | 2026-10-10 | "False wall that fades (Recommended)" (user, 2026-10-10): drawn as ground, no collision, opens when Ivo steps in; subtle hints. `systems/rooms` (Secrets), `architecture/secret-false-walls`. |
 | WORLD-22 | Backdrops blend at room seams; underground backdrops | 04 §1, §6 | `[x]` | WORLD-06 | 2026-10-10 | A seam between a room with a backdrop and one without was a hard line (user, 2026-10-10). `systems/backdrops` (Seams blend). The cave, strata and interior sheets are Codex art cut by `tools/art/cut_wall.py` (2026-10-10). |
 | WORLD-23 | Generated grass that bends | 04 §1 | `[x]` | WORLD-07, WORLD-08 | 2026-10-10 | "Freeze in the grey (Recommended)" (user, 2026-10-10): sways and bends on the memory clock; spring/summer green, autumn dry, winter none. `systems/grass`. Wind does not bend it yet. |
+| WORLD-24 | Every doorway fits its place | 04 §4 | `[x]` | WORLD-09 | 2026-10-10 | "There are still doors in the middle of nowhere" (user, 2026-10-10); board "Approve (Recommended)". Five region fronts with walkable roofs (`^`), door looks (passage, stairwell, hatches). `systems/rooms` (Doors, Roofs), `systems/props` (Facades). |
+| WORLD-25 | Rework platforms and places that lead nowhere | 04 §1 | `[ ]` | TECH-05 | 2026-10-10 | "There are plenty of weird places that lead nowhere and random platforms that lead nowhere too." (user, 2026-10-10). Before/after maps shown to the user. |
+| WORLD-26 | The bell tower: taller, a walkable spiral stair | 04 §3.1, §4 | `[ ]` | | 2026-10-10 | "Walkable helix (Recommended)" (user, 2026-10-10): in front of the steps on the near run, behind them (smaller, darker) on the far run; the outside redrawn taller, rising out of the frame. The lighthouse interior's spiral stair (04 §3.3) reuses it. |
 
 ## Tools and infrastructure
 
@@ -150,3 +154,4 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | TECH-02 | Rooms as text maps | | `[x]` | | 2026-10-02 | `systems/rooms` |
 | TECH-03 | Art pipeline (contracts, Codex, PixelLab, processing) | | `[x]` | | 2026-10-02 | `systems/art-pipeline` |
 | TECH-04 | Export presets and a release build | | `[ ]` | | 2026-10-02 | No `export_presets.cfg` yet. |
+| TECH-05 | Room reachability audit | | `[ ]` | | 2026-10-10 | "Audit tool + rework (Recommended)" (user, 2026-10-10). Plan: `architecture/room-reachability-audit`. |

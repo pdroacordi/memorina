@@ -1,9 +1,15 @@
 class_name FacadeDoorsTest extends GdUnitTestSuite
 
-## A facade stands on a door, and every door on a village street stands in a facade (systems/props, Facades).
+## A facade stands on a door, every outdoor door stands in a facade or is a passage or hatch, and every roof cell lies
+## on a facade's roof line (systems/props, Facades; systems/rooms, Doors).
 
 const ROOMS_DIR := "res://scenes/world/rooms"
-const STREET_BACKDROP := "res://resources/world/backdrops/village_valley.tres"
+## Debug-only test beds (CLAUDE.md, Song trials): their doors test the door, not the world.
+const TRIALS_PREFIX := "trials_"
+## Doorways that make sense without a building around them.
+const ALONE_LOOKS := ["passage", "stairwell", "hatch_up", "hatch_down"]
+## Px a roof cell's top may sit off the facade's top edge above it.
+const ROOF_TOLERANCE := 8
 
 
 func _contents_scenes(dir: String) -> PackedStringArray:
@@ -15,49 +21,138 @@ func _contents_scenes(dir: String) -> PackedStringArray:
 			found.append(dir.path_join(file))
 	return found
 
-# Door feet in the contents' space: the bottom centre of each `E` cell (a cell already counts the room's origin).
-func _doors(contents: Node) -> Array[Vector2]:
-	var doors: Array[Vector2] = []
+## The Room trigger scene beside `<region>/contents/<room>_contents.tscn`.
+func _is_interior(contents_path: String) -> bool:
+	var region_dir := contents_path.get_base_dir().get_base_dir()
+	var room_path := region_dir.path_join(contents_path.get_file().trim_suffix("_contents.tscn") + ".tscn")
+	var room := (load(room_path) as PackedScene).instantiate()
+	var interior: bool = room.get("interior")
+	room.free()
+	return interior
+
+func _is_trial(contents_path: String) -> bool:
+	return contents_path.trim_prefix(ROOMS_DIR + "/").begins_with(TRIALS_PREFIX)
+
+# Each `E` with its feet in the contents' space (the bottom centre of its cell; a cell already counts the room's origin).
+func _doors(contents: Node) -> Array[Dictionary]:
+	var doors: Array[Dictionary] = []
 	var map: RoomMap = contents.get_node("RoomMap").map
 	for placed: Dictionary in map.entities:
 		if placed.symbol == "E":
 			var cell: Vector2i = placed.cell
-			doors.append(Vector2((cell.x + 0.5) * RoomMap.CELL_PX, (cell.y + 1) * RoomMap.CELL_PX))
+			var feet := Vector2((cell.x + 0.5) * RoomMap.CELL_PX, (cell.y + 1) * RoomMap.CELL_PX)
+			doors.append({"feet": feet, "look": (placed.params as Dictionary).get("look", "door")})
 	return doors
 
-func _facades(contents: Node) -> Array[Vector2]:
-	var facades: Array[Vector2] = []
+func _facades(contents: Node) -> Array[Sprite2D]:
+	var facades: Array[Sprite2D] = []
 	var props := contents.get_node_or_null("Props")
 	if props != null:
 		for prop: Node in props.get_children():
 			if prop.scene_file_path.ends_with("_facade.tscn"):
-				facades.append((prop as Node2D).position)
+				facades.append(prop as Sprite2D)
 	return facades
+
+func _feet(facades: Array[Sprite2D]) -> Array[Vector2]:
+	var feet: Array[Vector2] = []
+	for facade: Sprite2D in facades:
+		feet.append(facade.position)
+	return feet
+
+## The facade's top opaque pixel at contents-space `x`, or INF where it draws nothing.
+func _top_at(facade: Sprite2D, image: Image, x: float) -> float:
+	var left := facade.position + facade.offset
+	var column := int(x - left.x)
+	if column < 0 or column >= image.get_width():
+		return INF
+	for row: int in image.get_height():
+		if image.get_pixel(column, row).a > 0.5:
+			return left.y + row
+	return INF
 
 func test_every_facade_stands_on_a_door() -> void:
 	var problems := PackedStringArray()
 	for path: String in _contents_scenes(ROOMS_DIR):
 		var contents := (load(path) as PackedScene).instantiate()
-		var doors := _doors(contents)
-		for facade: Vector2 in _facades(contents):
-			if not facade in doors:
+		var feet: Array[Vector2] = []
+		for door: Dictionary in _doors(contents):
+			feet.append(door.feet)
+		for facade: Vector2 in _feet(_facades(contents)):
+			if not facade in feet:
 				problems.append("%s: a facade at %s has no door" % [path, facade])
 		contents.free()
 	assert_array(Array(problems)).is_empty()
 
-## A street door never stands alone: its building's front surrounds it (systems/props, Facades).
-func test_every_street_door_stands_in_a_facade() -> void:
+## An outdoor door never stands alone: its building's front surrounds it, unless it is a passage or a hatch.
+func test_every_outdoor_door_stands_in_a_facade() -> void:
 	var problems := PackedStringArray()
-	var streets := 0
+	var outdoor := 0
+	for path: String in _contents_scenes(ROOMS_DIR):
+		if _is_trial(path) or _is_interior(path):
+			continue
+		var contents := (load(path) as PackedScene).instantiate()
+		var facades := _feet(_facades(contents))
+		for door: Dictionary in _doors(contents):
+			outdoor += 1
+			if not door.look in ALONE_LOOKS and not door.feet in facades:
+				problems.append("%s: the %s at %s stands in no facade" % [path, door.look, door.feet])
+		contents.free()
+	assert_int(outdoor).is_greater(0)
+	assert_array(Array(problems)).is_empty()
+
+func test_every_door_look_is_known() -> void:
+	var problems := PackedStringArray()
 	for path: String in _contents_scenes(ROOMS_DIR):
 		var contents := (load(path) as PackedScene).instantiate()
-		var backdrop := contents.get_node_or_null("Backdrop")
-		if backdrop != null and backdrop.backdrop_set != null and backdrop.backdrop_set.resource_path == STREET_BACKDROP:
-			streets += 1
-			var facades := _facades(contents)
-			for door: Vector2 in _doors(contents):
-				if not door in facades:
-					problems.append("%s: the door at %s stands in no facade" % [path, door])
+		for door: Dictionary in _doors(contents):
+			if not Door.LOOKS.has(door.look):
+				problems.append("%s: unknown door look '%s'" % [path, door.look])
 		contents.free()
-	assert_int(streets).is_greater(0)
 	assert_array(Array(problems)).is_empty()
+
+## A roof has no art of its own: each run of roof cells lies over a facade, with both ends on its top edge (a dovecote
+## may stand on the roof between them).
+func test_every_roof_lies_on_a_facade_roof() -> void:
+	var problems := PackedStringArray()
+	var roofs := 0
+	for path: String in _contents_scenes(ROOMS_DIR):
+		var contents := (load(path) as PackedScene).instantiate()
+		var map: RoomMap = contents.get_node("RoomMap").map
+		var facades := _facades(contents)
+		var images: Array[Image] = []
+		for facade: Sprite2D in facades:
+			images.append(facade.texture.get_image())
+		for y: int in map.size.y:
+			var run: Array[Vector2i] = []
+			for x: int in map.size.x + 1:
+				var index := y * map.size.x + x
+				if x < map.size.x and map.platform[index] == 1 and map.looks[index] == RoomMap.NO_LOOK:
+					run.append(map.origin + Vector2i(x, y))
+					continue
+				if run.is_empty():
+					continue
+				roofs += run.size()
+				for cell: Vector2i in run:
+					if _roof_gap(facades, images, cell) < -ROOF_TOLERANCE:
+						problems.append("%s: roof cell %s lies over no facade" % [path, cell])
+				for end: Vector2i in [run[0], run[-1]]:
+					if absf(_roof_gap(facades, images, end)) > ROOF_TOLERANCE:
+						problems.append("%s: roof cell %s is off its facade's roof line" % [path, end])
+				run.clear()
+		contents.free()
+	assert_int(roofs).is_greater(0)
+	assert_array(Array(problems)).is_empty()
+
+## Px from the cell's top up to the highest facade top above its centre: 0 on a roof line, positive under a taller part,
+## -INF over no facade.
+func _roof_gap(facades: Array[Sprite2D], images: Array[Image], cell: Vector2i) -> float:
+	var top := float(cell.y * RoomMap.CELL_PX)
+	var centre := (cell.x + 0.5) * RoomMap.CELL_PX
+	var best := -INF
+	for i: int in facades.size():
+		var drawn := _top_at(facades[i], images[i], centre)
+		if drawn != INF:
+			var gap := top - drawn
+			if absf(gap) < absf(best) or best == -INF:
+				best = gap
+	return best

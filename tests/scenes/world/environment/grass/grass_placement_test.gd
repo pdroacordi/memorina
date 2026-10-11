@@ -35,6 +35,11 @@ func test_a_top_under_water_grows_none() -> void:
 	var runs := GrassPlacement.runs(_map("[grid]\n#..#\n#..#\n####\n[water]\n....\n.~~.\n....\n"), _earth_only)
 	assert_int(runs.size()).is_equal(0)
 
+## A roof has no look of its own, but it is no open sky.
+func test_a_top_under_a_roof_grows_none() -> void:
+	var runs := GrassPlacement.runs(_map("[grid]\n^^^^\n####\n"), _earth_only)
+	assert_int(runs.size()).is_equal(0)
+
 func test_a_top_under_a_secret_grows_none() -> void:
 	var runs := GrassPlacement.runs(_map("[grid]\n....\n....\n####\n[secret]\n....\n.S..\n....\n"), _earth_only)
 	assert_int(runs.size()).is_equal(2)

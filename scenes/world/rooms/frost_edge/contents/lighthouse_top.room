@@ -32,4 +32,4 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 [entities]
-20,20 = {"link": "lighthouse_hatch", "to_room": "lighthouse_interior", "arrive_facing": -1}
+20,20 = {"look": "hatch_down", "link": "lighthouse_hatch", "to_room": "lighthouse_interior", "arrive_facing": -1}

@@ -1,0 +1,15 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 3,
+ "locale": "en",
+ "player_position": [
+  24440,
+  12286
+ ],
+ "steps": [
+  {
+   "t": 1.2,
+   "screenshot": "shot"
+  }
+ ]
+}

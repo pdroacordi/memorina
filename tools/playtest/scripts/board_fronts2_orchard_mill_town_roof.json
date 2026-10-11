@@ -1,0 +1,15 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 3,
+ "locale": "en",
+ "player_position": [
+  -6696,
+  -1346
+ ],
+ "steps": [
+  {
+   "t": 1.2,
+   "screenshot": "roof"
+  }
+ ]
+}

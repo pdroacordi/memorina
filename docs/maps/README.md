@@ -156,6 +156,7 @@ else in the code knows what a character means.
 | `=` | `[grid]` | ledge | earth | earth | One-way earth ledge, one cell high: jump up through it, stand on it, drop through it. |
 | `%` | `[grid]`, `[back]`, `[secret]` | ground | wood | wood | Wood: planks, beams, stilts. Solid; roots never grow from it. |
 | `-` | `[grid]` | ledge | wood | wood | One-way plank, one cell high: jump up through it, stand on it. |
+| `^` | `[grid]` | roof | wood | - | Roof: a one-way ledge with no tile art, drawn by the building's facade prop; it lies on the facade's roof line (facade_doors_test). |
 | `h` | `[back]` | back wall | - | wall | Built wall behind the room (plaster and timber, planks, sandstone): [back] grid only, no collision. |
 | `~` | `[water]` | water | - | - | Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand. |
 | `w` | `[water]` | water | - | - | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides. |
@@ -376,6 +377,7 @@ Scene `res://scenes/world/interactables/door/door.tscn`, anchored at its cell's 
 | `to_room` | StringName | **required** |
 | `requires` | SaveFact | `null` |
 | `arrive_facing` | int | `0` |
+| `look` | enum (door,passage,stairwell,hatch_up,hatch_down) | `"door"` |
 
 #### `X` - FactBarrier
 

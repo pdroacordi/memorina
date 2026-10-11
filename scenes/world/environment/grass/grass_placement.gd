@@ -28,8 +28,10 @@ static func _is_top(map: RoomMap, x: int, y: int, wet: Dictionary[Vector2i, bool
 	if look == RoomMap.NO_LOOK or not grows.call(look) or y == 0:
 		return false
 	var above := map.origin + Vector2i(x, y - 1)
-	# Grass under a secret would draw its front row over the closed wall (architecture/secret-false-walls).
-	return map.looks[(y - 1) * map.size.x + x] == RoomMap.NO_LOOK and not wet.has(above) and map.secret_at(above) == 0
+	var index_above := (y - 1) * map.size.x + x
+	# Grass under a secret would draw its front row over the closed wall (architecture/secret-false-walls); a roof has no
+	# look but is a building's roof, not sky (systems/rooms, Roofs).
+	return map.looks[index_above] == RoomMap.NO_LOOK and map.platform[index_above] != 1 and not wet.has(above) 			and map.secret_at(above) == 0
 
 static func _run(map: RoomMap, y: int, from: int, to: int) -> GrassRun:
 	var look := map.looks[y * map.size.x + from]

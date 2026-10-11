@@ -159,6 +159,9 @@ static func _read_grid(map: RoomMap, grid_lines: Array[int], source: String, res
 					map.platform[index] = 1
 					map.looks[index] = entry.look
 					_check_look(map, entry, x, y, grid_lines[y], source, result, reported)
+				RoomLegendEntry.Kind.ROOF:
+					map.ground[index] = entry.ground
+					map.platform[index] = 1
 				RoomLegendEntry.Kind.WATER:
 					result.errors.append("%s:%d:%d: water '%s' belongs in [water], not [grid]" % [source, grid_lines[y], x + 1, symbol])
 				RoomLegendEntry.Kind.BACK:

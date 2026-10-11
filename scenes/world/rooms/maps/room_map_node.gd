@@ -78,14 +78,21 @@ func _build() -> void:
 			symbols.append(symbol)
 	for symbol: String in symbols:
 		_pour(map.legend.entry(symbol), map.water.get(symbol, PackedVector2Array()), map.reach.get(symbol, PackedVector2Array()), map.shell_reach.get(symbol, PackedVector2Array()))
+	var walls: Dictionary[int, SecretWall] = {}
 	if map.biome != null:
 		for group: int in range(1, map.secret_ids.size() + 1):
-			_adopt(_secret_wall(group, ground_material))
+			walls[group] = _secret_wall(group, ground_material)
+			_adopt(walls[group])
 	var entities := Node2D.new()
 	entities.name = ENTITIES
 	# Add the complete entity set together so links resolve regardless of map order.
 	for placed: Dictionary in map.entities:
-		_place(map.legend.entry(placed.symbol), placed, entities)
+		var node := _place(map.legend.entry(placed.symbol), placed, entities)
+		if node is Door and not walls.is_empty():
+			var local: Vector2i = placed.cell - map.origin
+			var group := map.secret_groups[local.y * map.size.x + local.x]
+			if walls.has(group):
+				(node as Door).hide_until(walls[group])
 	_adopt(entities)
 
 ## One look's dual-grid tiles, half a cell up and left, so each display cell sits on a cell corner.
@@ -252,7 +259,7 @@ func _paint(layer: WaterLayer, cells: PackedVector2Array, alternative: int) -> v
 			for dx: int in ratio.x:
 				layer.set_cell(Vector2i(cell) * ratio + Vector2i(dx, dy), 0, Vector2i.ZERO, alternative)
 
-func _place(entry: RoomLegendEntry, placed: Dictionary, entities: Node2D) -> void:
+func _place(entry: RoomLegendEntry, placed: Dictionary, entities: Node2D) -> Node2D:
 	var node := entry.scene.instantiate() as Node2D
 	assert(node != null, "legend '%s': an entity scene's root must be a Node2D" % entry.symbol)
 	var size := Vector2(RoomMap.CELL_PX, RoomMap.CELL_PX)
@@ -261,6 +268,7 @@ func _place(entry: RoomLegendEntry, placed: Dictionary, entities: Node2D) -> voi
 	node.name = "%s_%d_%d" % [entry.symbol.uri_encode(), placed.cell.x, placed.cell.y]
 	EntityParams.apply(node, placed.params)
 	entities.add_child(node)
+	return node
 
 func _adopt(node: Node) -> void:
 	add_child(node)

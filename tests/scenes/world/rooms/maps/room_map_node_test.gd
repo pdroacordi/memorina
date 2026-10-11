@@ -90,6 +90,30 @@ func test_the_hidden_solid_layer_collides() -> void:
 	var ledge := room.get_node("Solid") as TileMapLayer
 	assert_int(ledge.get_cell_alternative_tile(Vector2i(1, 0))).is_equal(GroundCollision.ONE_WAY)
 
+## A roof collides one-way like a ledge and draws no tile: its facade draws it.
+func test_a_roof_is_a_one_way_ledge_without_art() -> void:
+	var result := RoomMapParser.parse("[room]\ntileset = legacy\n[grid]\n.^^.\n....\n####\n", RoomLegend.load_default())
+	assert_bool(result.ok()).is_true()
+	var room := auto_free(RoomMapNode.new()) as RoomMapNode
+	room.map = result.map
+	add_child(room)
+	var solid := room.get_node("Solid") as TileMapLayer
+	assert_int(solid.get_cell_alternative_tile(Vector2i(1, 0))).is_equal(GroundCollision.ONE_WAY)
+	var ledges := room.get_node_or_null("Ledges") as TileMapLayer
+	assert_bool(ledges == null or ledges.get_used_cells().is_empty()).is_true()
+	assert_int(room.ground_at(room.to_global(Vector2(48, 16)))).is_equal(Enums.Ground.WOOD)
+
+## bugs/the-cistern-stairwell-shows-through-the-closed-secret-wall: a doorway in a closed secret shows nothing.
+func test_a_door_inside_a_closed_secret_is_hidden() -> void:
+	var text := "[room]\ntileset = village\n[grid]\n....\n.E..\n####\n[secret]\n....\n.S..\n....\n[entities]\n1,1 = {\"look\": \"stairwell\", \"link\": \"a\", \"to_room\": \"b\"}\n"
+	var result := RoomMapParser.parse(text, RoomLegend.load_default())
+	assert_bool(result.ok()).is_true()
+	var room := auto_free(RoomMapNode.new()) as RoomMapNode
+	room.map = result.map
+	add_child(room)
+	var door := room.get_node("Entities").get_child(0) as Door
+	assert_bool((door.get_node("Sprite2D") as Sprite2D).visible).is_false()
+
 ## The legacy sheets draw no variants: a full tile that drew from the variant row would be a hole in the fill.
 func test_a_variant_the_sheet_lacks_falls_back_to_the_fill() -> void:
 	var result := RoomMapParser.parse("[room]\ntileset = legacy\n[grid]\n" + "########\n".repeat(8), RoomLegend.load_default())

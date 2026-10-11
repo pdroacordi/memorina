@@ -20,7 +20,7 @@ S..................S
 S..................S
 S......SSSSSS......S
 S......S....S......S
-S......S.E..S......S
+S......SE...S......S
 S......SSSS........S
 S......SSSS...S....S
 S......SSSSSSSS....S
@@ -88,4 +88,4 @@ SSSSSSSSSSSSSSSSSSSS
 ....................
 
 [entities]
-9,10 = {"link": "caldera_cistern_door", "to_room": "caldera_cistern_bottom", "arrive_facing": 1}
+8,10 = {"look": "stairwell", "link": "caldera_cistern_door", "to_room": "caldera_cistern_bottom", "arrive_facing": 1}
