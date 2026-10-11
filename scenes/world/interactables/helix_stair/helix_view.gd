@@ -15,6 +15,8 @@ var _stair: HelixStair
 ## The view's top-left and size in game px, from the axis base.
 var _origin := Vector2.ZERO
 var _size := Vector2i.ZERO
+## Px from the axis base up to where the wall ends.
+var _ceiling := 0.0
 var _phi := NAN
 var _eye := NAN
 var _faces: Array[HelixFaces.Face] = []
@@ -23,11 +25,13 @@ var _canvas: Node2D
 var _sprite: Sprite2D
 
 
-## Called by HelixStair before the view enters the tree: the rect it covers, px from the axis base (even, on the 2x grid).
-func setup(stair: HelixStair, origin: Vector2, size: Vector2i) -> void:
+## Called by HelixStair before the view enters the tree: the rect it covers, px from the axis base (even, on the 2x grid),
+## and the px above the base the wall rises to.
+func setup(stair: HelixStair, origin: Vector2, size: Vector2i, ceiling: float) -> void:
 	_stair = stair
 	_origin = origin
 	_size = size
+	_ceiling = ceiling
 
 func _ready() -> void:
 	_viewport = SubViewport.new()
@@ -62,7 +66,8 @@ func refresh(phi: float, eye: float) -> void:
 	_phi = phi
 	_eye = eye
 	var half := get_viewport_rect().size.y * 0.5
-	_faces = HelixFaces.build(_stair.shape, _stair.look, _stair.hand, phi, eye, eye - half, eye + half, -_origin.y)
+	_faces = HelixFaces.build(_stair.shape, _stair.look, _stair.hand, phi, eye, eye - half, eye + half, _ceiling,
+			_stair.rise_below(), _stair.turn_below())
 	_canvas.queue_redraw()
 	_viewport.render_target_update_mode = SubViewport.UPDATE_ONCE
 	redraws += 1

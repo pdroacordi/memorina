@@ -1,61 +1,65 @@
-; lighthouse_interior.room - Torre do Farol: a spiral climb by single jumps on alternating stone ledges 3 rows
-; apart with 2-cell gaps, from the door (col 4) to the sealed hatch (col 15, row 8); the mentor's room is the
-; landing at row 24, cols 1-10 (design 04 sections 3.3 and 4). Hatch gate: all_guardians_restored.
+; lighthouse_interior.room - Torre do Farol (design 04 section 3.3), 1x4 screens: a slim stone shell (inner faces x 192
+; and 448) in void, two flights of one rotating helix stair in stone and iron (@, systems/helix-stair) on one axis
+; (x 320): from the floor (row 45) to the mentor's floor (row 25, an iron gallery; the mentor's room is its left half,
+; design 04 section 3.3, STORY-03), then on to the attic gallery (row 5) under the sealed hatch (col 12, row 4; its
+; ceiling 64 px over the landing). Hatch gate: all_guardians_restored.
 
 [room]
 origin = 0, 0
 tileset = legacy
 
 [grid]
-SSSSSSSSSSSSSSSSSSSS
-S.............SSSSSS
-S.............SSSSSS
-S.............SSSSSS
-S.............SSSSSS
-S.............SSSSSS
-S.............SSSSSS
-S..................S
-S..............E...S
-S............SSSSS.S
-S..................S
-S..................S
-SSSSSSSSSSS........S
-S..................S
-S..................S
-S............SSSSSSS
-S..................S
-S..................S
-SSSSSSSSSSS........S
-S..................S
-S..................S
-S............SSSSSSS
-S..................S
-S..................S
-SSSSSSSSSSS........S
-S..................S
-S..................S
-S............SSSSSSS
-S..................S
-S..................S
-SSSSSSSSSSS........S
-S..................S
-S..................S
-S............SSSSSSS
-S..................S
-S..................S
-SSSSSSSSSSS........S
-S..................S
-S..................S
-S............SSSSSSS
-S..................S
-S..................S
-S.....SSSSS........S
-S..................S
-S...E..............S
-SSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSS
+____________________
+____________________
+_____SSSSSSSSSS_____
+_____S........S_____
+_____S......E.S_____
+_____S--------S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S....@...S_____
+_____S--------S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____S........S_____
+_____SE...@...S_____
+_____SSSSSSSSSS_____
+____________________
+____________________
 
 [entities]
-4,44 = {"link": "lighthouse_door", "to_room": "lighthouse_base", "arrive_facing": 1}
-15,8 = {"look": "hatch_up", "link": "lighthouse_hatch", "to_room": "lighthouse_top", "requires": "res://resources/save_facts/all_guardians_restored.tres", "arrive_facing": -1}
+6,44 = {"link": "lighthouse_door", "to_room": "lighthouse_base", "arrive_facing": 1}
+10,44 = {"shape": "res://resources/world/helix/lighthouse_helix.tres", "look": "res://resources/world/helix/lighthouse_look.tres", "hand": 1}
+10,24 = {"shape": "res://resources/world/helix/lighthouse_helix.tres", "look": "res://resources/world/helix/lighthouse_look.tres", "hand": 1}
+12,4 = {"look": "hatch_up", "link": "lighthouse_hatch", "to_room": "lighthouse_top", "requires": "res://resources/save_facts/all_guardians_restored.tres", "arrive_facing": -1}

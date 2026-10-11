@@ -1,6 +1,7 @@
 class_name HelixStair extends Node2D
 
 ## A helix stair, legend `@` (systems/helix-stair): its two ends and the view of the tower turning around its rider.
+## A stair whose foot stands on another's head, on the same axis with the same hand, continues it: one tower, one turn.
 
 ## The axis base: the `@` cell's bottom-left corner, half a cell left of the entity's origin.
 const AXIS := Vector2(-RoomMap.CELL_PX * 0.5, 0.0)
@@ -26,9 +27,12 @@ const VIEW_ABOVE_HEAD := 64.0
 ## 1: the stair climbs toward the right at its front; -1 mirrors it.
 @export_range(-1, 1, 2) var hand := 1
 
-## Radians the tower is turned by: the rider's progress, 0 at the foot, head_u at the head.
+## Radians the tower is turned by from the lowest stair's foot; only the lowest stair of a tower keeps it.
 var _angle := 0.0
 var _view: HelixView
+## The stair whose head this one's foot stands on, and the one standing on this one's head.
+var _below: HelixStair
+var _above: HelixStair
 
 
 ## Why the stair placed at `cell` with `params` cannot be ridden in `map`, as messages; empty when it can.
@@ -118,12 +122,8 @@ func _ready() -> void:
 		return
 	add_child(_end(false))
 	add_child(_end(true))
-	var half := 2.0 * ceilf(HelixProjection.silhouette(shape) * 0.5)
-	var top := _view_top()
-	_view = HelixView.new()
-	_view.name = "View"
-	_view.setup(self, Vector2(-half, top), Vector2i(int(half * 2.0), int(-top)))
-	add_child(_view)
+	_link()
+	_build_view()
 
 func head_u() -> float:
 	return HelixMath.head_u(shape)
@@ -136,17 +136,33 @@ func feet_global(u: float) -> Vector2:
 func stand_global(u: float) -> Vector2:
 	return to_global(AXIS + HelixMath.stand(shape, u))
 
-## Radians the tower is turned by.
+## Radians the tower is turned by, from this stair's foot.
 func angle() -> float:
-	return _angle
+	return _lowest()._angle - turn_below()
 
 ## The rider stands at progress `u`: the tower turns by it.
 func set_rider_angle(u: float) -> void:
-	_angle = u
+	_lowest()._angle = turn_below() + u
 
 ## The rider left: the tower rests as he left it at an end, at the head on the gallery, else at the foot.
 func clear_rider(at_head: bool) -> void:
-	_angle = head_u() if at_head else 0.0
+	set_rider_angle(head_u() if at_head else 0.0)
+
+## The stair standing on this one's head, or null.
+func above() -> HelixStair:
+	return _above
+
+## The stair whose head this one's foot stands on, or null.
+func below() -> HelixStair:
+	return _below
+
+## Radians of the tower's turn under this stair's foot: the turns of every stair below it.
+func turn_below() -> float:
+	return 0.0 if _below == null else _below.turn_below() + _below.head_u()
+
+## Px from the tower's lowest foot up to this stair's foot.
+func rise_below() -> float:
+	return 0.0 if _below == null else _below.rise_below() + _below.shape.head_rise()
 
 func view() -> HelixView:
 	return _view
@@ -159,8 +175,48 @@ func reach_ends(cell: Vector2i) -> Array[Vector2i]:
 	var head := base + Vector2(hand, -1.0 - shape.head_rise())
 	return [Vector2i((foot / RoomMap.CELL_PX).floor()), Vector2i((head / RoomMap.CELL_PX).floor())]
 
+## Finds the stairs of the same tower among the siblings: same hand, one's foot on the other's head.
+func _link() -> void:
+	var parent := get_parent()
+	if parent == null:
+		return
+	var base := position + AXIS
+	var head := base - Vector2(0.0, shape.head_rise())
+	for node: Node in parent.get_children():
+		var other := node as HelixStair
+		if other == null or other == self or other.shape == null or other.hand != hand:
+			continue
+		var other_base := other.position + AXIS
+		if other_base.is_equal_approx(head):
+			_above = other
+			other._below = self
+			other._rebuild_view()
+		elif (other_base - Vector2(0.0, other.shape.head_rise())).is_equal_approx(base):
+			_below = other
+			other._above = self
+			other._rebuild_view()
+
+## A stair that joined the tower after this one was ready changes where its view stops.
+func _rebuild_view() -> void:
+	if _view != null:
+		remove_child(_view)
+		_view.free()
+		_build_view()
+
+## Under another stair the view stops at this head; its wall still rises to the room's top.
+func _build_view() -> void:
+	var half := 2.0 * ceilf(HelixProjection.silhouette(shape) * 0.5)
+	var top := -shape.head_rise() if _above != null else _room_top()
+	_view = HelixView.new()
+	_view.name = "View"
+	_view.setup(self, Vector2(-half, top), Vector2i(int(half * 2.0), int(-top)), -_room_top())
+	add_child(_view)
+
+func _lowest() -> HelixStair:
+	return self if _below == null else _below._lowest()
+
 ## Px from the axis base up to the room map's top edge, or above the head without a room map.
-func _view_top() -> float:
+func _room_top() -> float:
 	var room_map := get_parent().get_parent() as RoomMapNode
 	if room_map != null and room_map.map != null:
 		return room_map.map.origin.y * RoomMap.CELL_PX - position.y - AXIS.y

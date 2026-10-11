@@ -197,3 +197,91 @@ func test_a_release_mid_stair_leaves_the_tower_at_rest() -> void:
 	assert_float(_stair.angle()).is_greater(0.0)
 	_rider.release()
 	assert_float(_stair.angle()).is_equal(0.0)
+
+## A second stair standing on the first one's head, one tower (systems/helix-stair, The lighthouse).
+func _add_stair_above() -> HelixStair:
+	var upper := STAIR.instantiate() as HelixStair
+	upper.position = _stair.position - Vector2(0.0, _stair.shape.head_rise())
+	_stair.get_parent().add_child(upper)
+	_stair.get_parent().add_child(_floor(upper.feet_global(upper.head_u()), true))
+	return upper
+
+## Rides with `axis` held to the first stair's head and on for `frames` more.
+func _ride_past_the_joint(axis: Vector2, frames: int) -> HelixRiderComponent.Exit:
+	await _ride(axis, 900, func() -> bool: return _rider.progress() >= _stair.head_u())
+	return await _ride(axis, frames)
+
+func test_up_at_a_head_under_another_stair_rides_on_up_it() -> void:
+	var upper := _add_stair_above()
+	assert_object(_stair.above()).is_same(upper)
+	assert_bool(await _board(UP)).is_true()
+	assert_int(await _ride_past_the_joint(UP, 30)).is_equal(HelixRiderComponent.Exit.RIDING)
+	assert_float(_body.global_position.y).is_less(upper.feet_global(0.0).y - 20.0)
+	assert_float(upper.angle()).is_equal_approx(_rider.progress(), 0.0001)
+	assert_float(_stair.angle()).is_equal_approx(_stair.head_u() + _rider.progress(), 0.0001)
+
+## "Walk left into it" (user, 2026-10-11): the joint's lower end is a head like the bell tower's.
+func test_the_hand_side_walks_off_a_joined_head_onto_the_floor_above() -> void:
+	var upper := _add_stair_above()
+	assert_bool(await _board(RIGHT)).is_true()
+	var exit: HelixRiderComponent.Exit = await _ride(RIGHT, 900)
+	assert_int(exit).is_equal(HelixRiderComponent.Exit.OFF_HEAD)
+	assert_float(_body.global_position.distance_to(upper.feet_global(0.0))).is_less(1.0)
+	assert_bool(_rider.is_riding()).is_false()
+
+func test_walking_left_into_the_joint_from_the_hand_side_boards_the_flight_below() -> void:
+	var upper := _add_stair_above()
+	await _stand_beside_the_joint(upper, 4.0)
+	var end := _rider.end_pressed_into(LEFT)
+	assert_object(end).is_not_null()
+	assert_object(end.stair).is_same(_stair)
+	assert_bool(end.at_head).is_true()
+	_rider.board(end)
+	assert_int(await _ride(LEFT, 60)).is_equal(HelixRiderComponent.Exit.RIDING)
+	assert_float(_body.global_position.y).is_greater(upper.feet_global(0.0).y + 10.0)
+
+func test_walking_right_into_the_joint_from_the_other_side_boards_the_flight_above() -> void:
+	var upper := _add_stair_above()
+	await _stand_beside_the_joint(upper, -4.0)
+	var end := _rider.end_pressed_into(RIGHT)
+	assert_object(end).is_not_null()
+	assert_object(end.stair).is_same(upper)
+	assert_bool(end.at_head).is_false()
+	assert_object(_rider.end_pressed_into(DOWN).stair).is_same(_stair)
+	assert_object(_rider.end_pressed_into(UP).stair).is_same(upper)
+
+## Left and right alone: up the lower flight onto the joint's hand side, back left down to the lowest foot.
+func test_left_and_right_alone_go_up_to_the_joint_and_back_down() -> void:
+	var upper := _add_stair_above()
+	assert_bool(await _board(RIGHT)).is_true()
+	assert_int(await _ride(RIGHT, 900)).is_equal(HelixRiderComponent.Exit.OFF_HEAD)
+	# Back from the floor's hand side, walking left into the axis.
+	await _stand_beside_the_joint(upper, 4.0)
+	assert_bool(await _board(LEFT)).is_true()
+	assert_int(await _ride(LEFT, 900)).is_equal(HelixRiderComponent.Exit.OFF_FOOT)
+	assert_float(_body.global_position.distance_to(_stair.feet_global(0.0))).is_less(1.0)
+
+## Puts the body on the joint's floor `dx` px beside the axis, settled and past the regrab delay.
+func _stand_beside_the_joint(upper: HelixStair, dx: float) -> void:
+	Character.teleport_body(_body, upper.feet_global(0.0) + Vector2(dx, -2.0))
+	for i: int in 4:
+		_body.velocity = Vector2(0.0, 60.0)
+		_body.move_and_slide()
+		await get_tree().physics_frame
+	_rider.tick(0.5, 0.0)
+	await get_tree().physics_frame
+
+func test_down_at_a_foot_on_another_stair_rides_on_down_it() -> void:
+	var upper := _add_stair_above()
+	assert_bool(await _board(UP)).is_true()
+	await _ride_past_the_joint(UP, 30)
+	assert_int(await _ride(DOWN, 90)).is_equal(HelixRiderComponent.Exit.RIDING)
+	assert_float(_body.global_position.y).is_greater(upper.feet_global(0.0).y + 20.0)
+
+func test_the_other_side_at_a_joined_foot_walks_onto_its_floor() -> void:
+	var upper := _add_stair_above()
+	assert_bool(await _board(UP)).is_true()
+	await _ride_past_the_joint(UP, 30)
+	assert_int(await _ride(LEFT, 200)).is_equal(HelixRiderComponent.Exit.OFF_FOOT)
+	assert_float(_body.global_position.distance_to(upper.feet_global(0.0))).is_less(1.0)
+	assert_float(upper.angle()).is_equal(0.0)

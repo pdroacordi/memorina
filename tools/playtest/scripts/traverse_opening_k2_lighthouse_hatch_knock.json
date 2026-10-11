@@ -1,11 +1,12 @@
 {
  "scene": "res://scenes/world/game.tscn",
- "max_duration": 10,
+ "max_duration": 6,
  "locale": "en",
  "player_position": [
-  24335,
-  12410
+  24350,
+  12158
  ],
+ "_note": "lighthouse_interior after WORLD-26: on the attic gallery (row 5), walk right to the sealed hatch (col 12, x 24400) and press Up: it knocks.",
  "steps": [
   {
    "t": 1.0,
@@ -13,264 +14,59 @@
   },
   {
    "t": 1.0,
-   "screenshot": "k2_01_top_ledge"
+   "screenshot": "k2_01_attic"
   },
   {
-   "t": 1.3,
-   "action": "jump",
-   "pressed": true
-  },
-  {
-   "t": 1.3,
+   "t": 1.2,
    "action": "move_right",
    "pressed": true
-  },
-  {
-   "t": 1.35,
-   "log": "j00"
   },
   {
    "t": 1.45,
-   "log": "j01"
-  },
-  {
-   "t": 1.55,
-   "action": "move_right",
-   "pressed": true
-  },
-  {
-   "t": 1.55,
-   "log": "j02"
-  },
-  {
-   "t": 1.65,
-   "log": "j03"
-  },
-  {
-   "t": 1.7,
-   "action": "jump",
-   "pressed": false
-  },
-  {
-   "t": 1.75,
-   "log": "j04"
-  },
-  {
-   "t": 1.8,
-   "action": "move_right",
-   "pressed": true
-  },
-  {
-   "t": 1.85,
-   "log": "j05"
-  },
-  {
-   "t": 1.95,
-   "log": "j06"
-  },
-  {
-   "t": 2.05,
-   "action": "move_right",
-   "pressed": true
-  },
-  {
-   "t": 2.05,
-   "log": "j07"
-  },
-  {
-   "t": 2.15,
    "action": "move_right",
    "pressed": false
   },
   {
-   "t": 2.15,
-   "log": "j08"
-  },
-  {
-   "t": 2.25,
-   "log": "j09"
-  },
-  {
-   "t": 2.35,
-   "log": "j10"
-  },
-  {
-   "t": 2.45,
-   "log": "j11"
-  },
-  {
-   "t": 2.55,
-   "log": "j12"
-  },
-  {
-   "t": 2.7,
+   "t": 2.0,
    "log": "hatch"
   },
   {
-   "t": 2.7,
+   "t": 2.0,
    "screenshot": "k2_02_at_hatch"
   },
   {
-   "t": 2.9,
+   "t": 2.2,
    "action": "look_up",
    "pressed": true
   },
   {
-   "t": 2.95,
+   "t": 2.3,
    "log": "knock00"
   },
   {
-   "t": 3.0,
+   "t": 2.3,
+   "screenshot": "k2_03_knock_2.30"
+  },
+  {
+   "t": 2.4,
+   "screenshot": "k2_03_knock_2.40"
+  },
+  {
+   "t": 2.5,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
    "log": "knock01"
   },
   {
    "t": 3.0,
-   "screenshot": "k2_03_knock_3.00"
-  },
-  {
-   "t": 3.05,
-   "log": "knock02"
-  },
-  {
-   "t": 3.1,
-   "log": "knock03"
-  },
-  {
-   "t": 3.1,
-   "screenshot": "k2_03_knock_3.10"
-  },
-  {
-   "t": 3.15,
-   "log": "knock04"
-  },
-  {
-   "t": 3.2,
-   "action": "look_up",
-   "pressed": false
-  },
-  {
-   "t": 3.2,
-   "log": "knock05"
-  },
-  {
-   "t": 3.2,
-   "screenshot": "k2_03_knock_3.20"
-  },
-  {
-   "t": 3.25,
-   "log": "knock06"
-  },
-  {
-   "t": 3.3,
-   "log": "knock07"
-  },
-  {
-   "t": 3.35,
-   "log": "knock08"
-  },
-  {
-   "t": 3.35,
-   "screenshot": "k2_03_knock_3.35"
-  },
-  {
-   "t": 3.4,
-   "log": "knock09"
-  },
-  {
-   "t": 3.45,
-   "log": "knock10"
-  },
-  {
-   "t": 3.5,
-   "log": "knock11"
-  },
-  {
-   "t": 3.55,
-   "log": "knock12"
-  },
-  {
-   "t": 3.6,
-   "log": "knock13"
-  },
-  {
-   "t": 3.65,
-   "log": "knock14"
-  },
-  {
-   "t": 3.7,
-   "log": "knock15"
-  },
-  {
-   "t": 3.75,
-   "log": "knock16"
-  },
-  {
-   "t": 3.8,
-   "log": "knock17"
-  },
-  {
-   "t": 3.85,
-   "log": "knock18"
-  },
-  {
-   "t": 3.9,
-   "log": "knock19"
-  },
-  {
-   "t": 3.95,
-   "log": "knock20"
-  },
-  {
-   "t": 4.0,
-   "log": "knock21"
-  },
-  {
-   "t": 4.05,
-   "log": "knock22"
-  },
-  {
-   "t": 4.1,
-   "log": "knock23"
-  },
-  {
-   "t": 4.15,
-   "log": "knock24"
-  },
-  {
-   "t": 4.2,
-   "log": "knock25"
-  },
-  {
-   "t": 4.25,
-   "log": "knock26"
-  },
-  {
-   "t": 4.3,
-   "log": "knock27"
-  },
-  {
-   "t": 4.35,
-   "log": "knock28"
-  },
-  {
-   "t": 4.4,
-   "log": "knock29"
-  },
-  {
-   "t": 4.45,
-   "log": "knock30"
-  },
-  {
-   "t": 4.5,
-   "log": "knock31"
-  },
-  {
-   "t": 5.0,
-   "log": "final"
-  },
-  {
-   "t": 5.0,
    "screenshot": "k2_04_after"
+  },
+  {
+   "t": 3.0,
+   "log": "after"
   }
  ]
 }

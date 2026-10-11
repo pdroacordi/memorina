@@ -90,3 +90,67 @@ func test_the_tower_turns_with_its_rider_and_rests_at_an_end() -> void:
 	assert_float(stair.angle()).is_equal(stair.head_u())
 	stair.clear_rider(false)
 	assert_float(stair.angle()).is_equal(0.0)
+
+func test_the_lighthouse_stairs_ride_clear() -> void:
+	var path := "res://scenes/world/rooms/frost_edge/contents/lighthouse_interior.room"
+	var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), RoomLegend.load_default(), path).map
+	var stairs := 0
+	for placed: Dictionary in map.entities:
+		if placed.symbol == "@":
+			stairs += 1
+			assert_str("\n".join(HelixStair.check(placed.cell, placed.params, map))).is_empty()
+	assert_int(stairs).is_equal(2)
+
+## Two lighthouse stairs on one axis, the second's foot on the first's head, as siblings.
+func _tower() -> Array[HelixStair]:
+	var holder := auto_free(Node2D.new()) as Node2D
+	var shape := load("res://resources/world/helix/lighthouse_helix.tres") as HelixStairShape
+	var stairs: Array[HelixStair] = []
+	for n: int in 2:
+		var stair := STAIR.instantiate() as HelixStair
+		stair.shape = shape
+		stair.position = Vector2(336.0, 1440.0 - n * shape.head_rise())
+		holder.add_child(stair)
+		stairs.append(stair)
+	# Added whole, as RoomMapNode adds its entities.
+	add_child(holder)
+	return stairs
+
+func test_a_stair_on_anothers_head_continues_it() -> void:
+	var tower := _tower()
+	assert_object(tower[0].above()).is_same(tower[1])
+	assert_object(tower[1].below()).is_same(tower[0])
+	assert_object(tower[0].below()).is_null()
+	assert_object(tower[1].above()).is_null()
+
+func test_the_stairs_of_one_tower_turn_as_one() -> void:
+	var tower := _tower()
+	tower[0].set_rider_angle(2.0)
+	assert_float(tower[1].angle()).is_equal_approx(2.0 - tower[0].head_u(), 0.0001)
+	tower[1].set_rider_angle(1.5)
+	assert_float(tower[0].angle()).is_equal_approx(tower[0].head_u() + 1.5, 0.0001)
+	tower[1].clear_rider(false)
+	assert_float(tower[0].angle()).is_equal_approx(tower[0].head_u(), 0.0001)
+	assert_float(tower[1].angle()).is_equal_approx(0.0, 0.0001)
+
+func test_a_view_under_another_stair_stops_at_its_head() -> void:
+	var tower := _tower()
+	var art_rise := int(tower[0].shape.head_rise()) / HelixView.ART_SCALE
+	assert_int(tower[0].view().viewport().size.y).is_equal(art_rise)
+	assert_float(tower[0].view().sprite().global_position.y).is_equal(tower[1].global_position.y)
+
+func test_a_stair_joining_later_still_stops_the_view_below_at_its_head() -> void:
+	var holder := auto_free(Node2D.new()) as Node2D
+	add_child(holder)
+	var shape := load("res://resources/world/helix/lighthouse_helix.tres") as HelixStairShape
+	var lower := STAIR.instantiate() as HelixStair
+	lower.shape = shape
+	lower.position = Vector2(336.0, 1440.0)
+	holder.add_child(lower)
+	var upper := STAIR.instantiate() as HelixStair
+	upper.shape = shape
+	upper.position = lower.position - Vector2(0.0, shape.head_rise())
+	holder.add_child(upper)
+	assert_object(lower.above()).is_same(upper)
+	assert_int(lower.view().viewport().size.y).is_equal(int(shape.head_rise()) / HelixView.ART_SCALE)
+	assert_int(lower.get_children().filter(func(child: Node) -> bool: return child is HelixView).size()).is_equal(1)

@@ -75,3 +75,52 @@ func test_the_gallery_and_the_front_band_lie_in_ivos_plane() -> void:
 	assert_bool(faces.back().step == -2).is_true()
 	var band := _faces(3.0, -500.0).filter(func(face: HelixFaces.Face) -> bool: return face.fill == LOOK.stringer[1] and face.depth > SHAPE.walk_radius - 0.01)
 	assert_array(band).is_not_empty()
+
+func test_the_handrail_stands_behind_ivos_plane_and_only_where_the_look_has_one() -> void:
+	var stone := preload("res://resources/world/helix/lighthouse_look.tres")
+	var shape := preload("res://resources/world/helix/lighthouse_helix.tres")
+	for phi: float in [0.0, 1.0, 2.5, 4.0]:
+		var rails := HelixFaces.build(shape, stone, 1, phi, -300.0, -480.0, -120.0, 1440.0).filter(
+				func(face: HelixFaces.Face) -> bool: return face.fill == stone.rail)
+		assert_array(rails).is_not_empty()
+		for face: HelixFaces.Face in rails:
+			assert_float(face.nearest).is_less_equal(shape.inner_radius + 0.001)
+	assert_bool(_faces(1.0, -300.0).any(func(face: HelixFaces.Face) -> bool: return face.fill == LOOK.rail)).is_false()
+
+## Joined stairs count wall courses from the tower's lowest foot: the upper flight's wall above its foot is the lower
+## flight's wall moved by the rise, block for block.
+func test_a_stair_on_anothers_head_continues_its_wall_courses() -> void:
+	var stone := preload("res://resources/world/helix/lighthouse_look.tres")
+	var shape := preload("res://resources/world/helix/lighthouse_helix.tres")
+	var rise := shape.head_rise()
+	var turn := HelixMath.head_u(shape)
+	var phi := 1.3
+	var eye := -60.0
+	var upper := HelixFaces.build(shape, stone, 1, phi, eye, eye - HALF_SCREEN, eye + HALF_SCREEN, 800.0, rise, turn)
+	var lower := HelixFaces.build(shape, stone, 1, phi + turn, eye - rise, eye - rise - HALF_SCREEN, eye - rise + HALF_SCREEN, 1440.0)
+	var lower_walls: Array[PackedVector2Array] = []
+	for face: HelixFaces.Face in lower:
+		if face.step == -1 and stone.stone.has(face.fill):
+			lower_walls.append(face.points)
+	var compared := 0
+	for face: HelixFaces.Face in upper:
+		if face.step != -1 or not stone.stone.has(face.fill) or face.points.size() == 0:
+			continue
+		var lowest := -INF
+		for point: Vector2 in face.points:
+			lowest = maxf(lowest, point.y)
+		if lowest > -30.0:
+			continue
+		var moved := PackedVector2Array()
+		for point: Vector2 in face.points:
+			moved.append(point - Vector2(0.0, rise))
+		var found := lower_walls.any(func(points: PackedVector2Array) -> bool:
+			if points.size() != moved.size():
+				return false
+			for n: int in points.size():
+				if points[n].distance_to(moved[n]) > 0.01:
+					return false
+			return true)
+		assert_bool(found).is_true()
+		compared += 1
+	assert_int(compared).is_greater(10)

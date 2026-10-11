@@ -88,18 +88,27 @@ func update(delta: float, axis: Vector2, run_speed: float, held: bool = false) -
 		_direction = 0
 		_step_to(_stair.stand_global(_u), delta)
 		return Exit.RIDING
-	var head := _stair.head_u()
 	var direction := HelixSteer.direction(axis, _stair.hand)
+	var vertical := absf(axis.y) >= HelixSteer.VERTICAL
+	if _u >= _stair.head_u() and direction > 0 and vertical and _stair.above() != null:
+		# Up rides on up the stair standing on this head; the hand side still walks onto the floor (systems/helix-stair).
+		_stair = _stair.above()
+		_u = 0.0
+	var head := _stair.head_u()
 	if _u >= head and direction > 0:
 		# The hand side walks onto the gallery, fresh or held; Up holds.
-		if absf(axis.y) < HelixSteer.VERTICAL:
+		if not vertical:
 			_leave(_sign(axis.x), delta)
 			return Exit.OFF_HEAD
 		direction = 0
 	_u = clampf(_u + direction * HelixMath.angular_speed(_stair.shape, run_speed) * delta, 0.0, head)
 	if _u <= 0.0 and direction < 0:
-		_leave(_sign(axis.x), delta)
-		return Exit.OFF_FOOT
+		if not vertical or _stair.below() == null:
+			_leave(_sign(axis.x), delta)
+			return Exit.OFF_FOOT
+		# Down rides on down the stair under this foot; the other side still walks onto the floor.
+		_stair = _stair.below()
+		_u = _stair.head_u()
 	_direction = direction
 	_step_to(_stair.stand_global(_u), delta)
 	_stair.set_rider_angle(_u)

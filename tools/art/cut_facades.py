@@ -1,12 +1,15 @@
 """Cut Codex building fronts (and the door) into 2x-density prop sheets.
 
 Facades: python -I tools/art/cut_facades.py facades <sheet.png> <out dir> <name,name,...> [--grid=3x2] [--colors=20]
-    [--crop-top=name:rows] [--dark=name:luma] [--rows=name:at:delta]. Each building is scaled so its doorway (the dark opening that reaches the ground line) is
+    [--crop-top=name:rows] [--dark=name:luma] [--rows=name:at:delta] [--doorway=name:x0:y0:x1:y1]. Each building is scaled so its
+    doorway (the dark opening that reaches the ground line) is
     32 art px tall, reduced by each block's most common colour, snapped to one shared palette, given a flat 16x32 art px
     doorway recess and written at 2x as <name>_facade.png. Prints each sheet's size and its anchor (the doorway's
     sill centre, game px): the prop scene's offset is minus the anchor (architecture/props-and-ambient-life).
     --rows repeats (delta > 0) or drops (delta < 0) |delta| art rows of plain wall starting `at` art px above the ground,
-    so a walkable roof lands on the 32 px room grid.
+    so a walkable roof lands on the 32 px room grid. --doorway gives the doorway's box in sheet px (x1, y1 exclusive) for a
+    front drawn with its door shut; the front is cut at the box's bottom, its sill, which becomes the ground line.
+    A name `-` skips that grid cell. --write=name,... writes only those fronts; the palette still comes from every cell.
 Door: python -I tools/art/cut_facades.py door <sheet.png> <out.png> [--colors=10]: two doors side by side, each cut
     to its plank body and reduced to 16x32 art px, written at 2x as a 64x64 two-frame strip.
 Doorways: python -I tools/art/cut_facades.py doorways <sheet.png> <out dir> <name:art_width,...> [--colors=16]: a 3x2
@@ -78,6 +81,7 @@ def facades(sheet: str, out_dir: str, names: list[str], options: dict) -> None:
     # A wall nearly as dark as its doorway merges with it at the default threshold (the fisher hut's tarred planks).
     dark_luma = dict((k, int(v)) for k, v in (c.split(":") for c in options.get("dark", "").split(",") if c))
     rows_at = dict((k, (int(a), int(d))) for k, a, d in (c.split(":") for c in options.get("rows", "").split(",") if c))
+    boxes = dict((k, tuple(int(v) for v in rest)) for k, *rest in (c.split(":") for c in options.get("doorway", "").split(",") if c))
     labels, count = ndimage.label(solid)
     sizes = ndimage.sum(solid, labels, range(1, count + 1))
     centres = ndimage.center_of_mass(solid, labels, range(1, count + 1))
@@ -89,17 +93,18 @@ def facades(sheet: str, out_dir: str, names: list[str], options: dict) -> None:
         cell = min(rows - 1, int(cy / (h / rows))) * cols + min(cols - 1, int(cx / (w / cols)))
         if cell < len(cells):
             cells[cell] |= labels == i + 1
-    arts, centres_x = [], []
+    arts, centres_x, kept = [], [], []
     for name, mask in zip(names, cells):
+        if name == "-":
+            continue
         ys, xs = np.nonzero(mask)
         part, inside = rgb[ys.min():ys.max() + 1, xs.min():xs.max() + 1], mask[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
-        dark = (part @ LUMA < dark_luma.get(name, 48)) & inside
-        dark_labels, dark_count = ndimage.label(dark)
-        best = None
-        for d in range(1, dark_count + 1):
-            dy, dx = np.nonzero(dark_labels == d)
-            if dy.max() >= part.shape[0] - 12 and (best is None or dy.size > best[0]):
-                best = (dy.size, dy.min(), dx.min(), dx.max())
+        if name in boxes:
+            x0, y0, x1, y1 = boxes[name]
+            part, inside = part[:y1 - ys.min()], inside[:y1 - ys.min()]
+            best = (0, y0 - ys.min(), x0 - xs.min(), x1 - 1 - xs.min())
+        else:
+            best = _dark_doorway(part, inside, dark_luma.get(name, 48))
         assert best is not None, f"{name}: no doorway reaches the ground line"
         scale = DOOR_ART[1] / (part.shape[0] - best[1])
         art = reduce(part, inside, round(part.shape[1] * scale), round(part.shape[0] * scale))
@@ -107,13 +112,29 @@ def facades(sheet: str, out_dir: str, names: list[str], options: dict) -> None:
             art = resized_rows(art, *rows_at[name])
         arts.append(art[crop_top.get(name, 0):])
         centres_x.append(int(round((best[2] + best[3] + 1) / 2 * scale)))
+        kept.append(name)
     palette = snap(arts, int(options.get("colors", 20)))
     darkest = palette[(palette @ LUMA).argmin()]
-    for name, art, cx in zip(names, arts, centres_x):
+    written = [n for n in options.get("write", "").split(",") if n]
+    for name, art, cx in zip(kept, arts, centres_x):
+        if written and name not in written:
+            continue
         half = DOOR_ART[0] // 2
         art[-DOOR_ART[1]:, cx - half:cx + half] = (*darkest, 255)
         image = save_2x(art, f"{out_dir}/{name}_facade.png")
         print(f"{name}_facade {image.width}x{image.height} anchor {cx * ART_SCALE},{image.height}")
+
+
+def _dark_doorway(part: np.ndarray, inside: np.ndarray, luma: int) -> tuple | None:
+    """The largest dark opening that reaches the ground line: (size, top, left, right) in part px."""
+    dark = (part @ LUMA < luma) & inside
+    dark_labels, dark_count = ndimage.label(dark)
+    best = None
+    for d in range(1, dark_count + 1):
+        dy, dx = np.nonzero(dark_labels == d)
+        if dy.max() >= part.shape[0] - 12 and (best is None or dy.size > best[0]):
+            best = (dy.size, dy.min(), dx.min(), dx.max())
+    return best
 
 
 def resized_rows(art: np.ndarray, at: int, delta: int) -> np.ndarray:

@@ -24,6 +24,10 @@ class_name HelixLook extends Resource
 @export var stringer := PackedColorArray([Color("#805538"), Color("#6b482f"), Color("#312724")])
 ## Px a step is thick, top to soffit.
 @export var step_depth := 20.0
+## Px the handrail on the well side runs above the tread tops (0: no rail), its colour, and px of its bar.
+@export var rail_height := 0.0
+@export var rail := Color("#24262b")
+@export var rail_width := 2.0
 ## Px of the stringer band across the front, below the tread sections in Ivo's plane.
 @export var band_depth := 28.0
 ## The gallery's planks (face, shade) and their joint line, and px of its edge seen across the shell.

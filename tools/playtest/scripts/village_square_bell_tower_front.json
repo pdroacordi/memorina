@@ -1,0 +1,15 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6,
+ "locale": "en",
+ "player_position": [470, 286],
+ "_note": "WORLD-26: the tall bell tower front in the square, seen from the street; Ivo walks right past its door.",
+ "steps": [
+  {"t": 1.5, "screenshot": "a00_street_west_of_the_tower"},
+  {"t": 1.6, "action": "move_right", "pressed": true},
+  {"t": 2.6, "screenshot": "a01_at_the_tower_door"},
+  {"t": 3.4, "screenshot": "a02_past_the_tower"},
+  {"t": 3.5, "action": "move_right", "pressed": false},
+  {"t": 4.5, "screenshot": "a03_standing_east"}
+ ]
+}

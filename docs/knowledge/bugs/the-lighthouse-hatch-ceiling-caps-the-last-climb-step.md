@@ -65,3 +65,5 @@ Not fixed (review only). Possible fixes:
 ## Resolution (2026-10-11)
 
 The lowered ceiling now covers only cols 14-19 (rows 1-6), over the hatch and the landing's east part; the jump from the row-12 ledge arcs through open air over cols 9-13. Re-run in game: the scratchpad timelines `lh_run_a`, `lh_r025` and `lh_r035` (the late-steer cases that fell) all land on the landing at y 12288.
+
+WORLD-26 (2026-10-11) rebuilt `lighthouse_interior` around a helix stair: the ledge climb and this landing are gone, the hatch is at col 12, row 4 on the attic gallery under a 64 px attic, and `traverse_opening_k_lighthouse_interior_climb.json` was deleted (`lighthouse_helix_climb.json` rides the new stair; `traverse_opening_k2_lighthouse_hatch_knock.json` was re-recorded at the new hatch).

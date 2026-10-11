@@ -27,11 +27,13 @@ class Face:
 
 
 ## The faces of the tower turned by `phi`, seen from eye height `eye`, that can show between screen heights `top` and
-## `bottom` (px from the axis base, down positive). The wall rises to `ceiling` px above the base.
-static func build(shape: HelixStairShape, look: HelixLook, hand: int, phi: float, eye: float, top: float, bottom: float, ceiling: float) -> Array[Face]:
+## `bottom` (px from the axis base, down positive). The wall rises to `ceiling` px above the base; its courses are counted
+## from the tower's lowest foot, `rise_below` px and `turn_below` radians under this stair's, so joined stairs share them.
+static func build(shape: HelixStairShape, look: HelixLook, hand: int, phi: float, eye: float, top: float, bottom: float, ceiling: float,
+		rise_below := 0.0, turn_below := 0.0) -> Array[Face]:
 	var span := _world_span(shape, eye, top, bottom)
 	var back: Array[Face] = []
-	_wall(back, shape, look, hand, phi, eye, span, ceiling)
+	_wall(back, shape, look, hand, phi, eye, span, ceiling, rise_below, turn_below)
 	_posts(back, shape, look, hand, phi, eye, span, ceiling)
 	_beams(back, shape, look, hand, phi, eye, span)
 	_slits(back, shape, look, hand, phi, eye, span)
@@ -39,6 +41,7 @@ static func build(shape: HelixStairShape, look: HelixLook, hand: int, phi: float
 	var steps: Array[Face] = []
 	for index: int in shape.step_count():
 		_step(steps, shape, look, hand, phi, eye, span, index)
+		_rail(steps, shape, look, hand, phi, eye, span, index)
 	_front_band(steps, shape, look, hand, phi, span)
 	steps.sort_custom(func(a: Face, b: Face) -> bool: return a.depth < b.depth)
 	back.append_array(steps)
@@ -127,16 +130,18 @@ static func _world_span(shape: HelixStairShape, eye: float, top: float, bottom: 
 	var k := HelixProjection.scale_at(shape, -shape.wall_radius)
 	return Vector2(eye + (top - eye) / k if top < eye else top, eye + (bottom - eye) / k if bottom > eye else bottom)
 
-static func _wall(out: Array[Face], shape: HelixStairShape, look: HelixLook, hand: int, phi: float, eye: float, span: Vector2, ceiling: float) -> void:
+static func _wall(out: Array[Face], shape: HelixStairShape, look: HelixLook, hand: int, phi: float, eye: float, span: Vector2, ceiling: float,
+		rise_below: float, turn_below: float) -> void:
 	var band := visible_band(shape, phi)
 	var r := shape.wall_radius
-	var courses := ceili(ceiling / look.course_height)
-	for course: int in courses:
-		var y1 := -course * look.course_height
-		var y0 := maxf(y1 - look.course_height, -ceiling)
-		if y1 < span.x or y0 > span.y:
+	for course: int in range(floori(rise_below / look.course_height), ceili((rise_below + ceiling) / look.course_height)):
+		var y1 := minf(rise_below - course * look.course_height, 0.0)
+		var y0 := maxf(rise_below - (course + 1) * look.course_height, -ceiling)
+		if y1 <= y0 or y1 < span.x or y0 > span.y:
 			continue
 		var bounds := _course_bounds(look, r, course)
+		for j: int in bounds.size():
+			bounds[j] -= turn_below
 		var period := TAU
 		for j: int in bounds.size() - 1:
 			var lap := floorf((band.x - bounds[j + 1]) / period) + 1.0
@@ -272,6 +277,51 @@ static func _step(out: Array[Face], shape: HelixStairShape, look: HelixLook, han
 		face.nearest = shape.walk_radius
 		face.step = index
 		out.append(face)
+
+## Step `index`'s piece of the handrail on the well side, rising with the stair, and its baluster at the step's middle.
+## It stands at the inner radius, so always behind Ivo's plane.
+static func _rail(out: Array[Face], shape: HelixStairShape, look: HelixLook, hand: int, phi: float, eye: float, span: Vector2, index: int) -> void:
+	if look.rail_height <= 0.0:
+		return
+	var delta := TAU / shape.steps_per_turn
+	var a := index * delta
+	var b := a + delta
+	var tread := -HelixMath.tread_rise(shape, index)
+	var bar := tread - look.rail_height
+	if tread < span.x or bar - look.rail_width - shape.riser() > span.y:
+		return
+	var r := shape.inner_radius
+	var rise := shape.pitch / TAU
+	var middle := (a + b) * 0.5
+	var rail := PackedVector3Array()
+	var count := maxi(1, ceili((b - a) / ARC_STEP))
+	for n: int in count + 1:
+		var theta := lerpf(a, b, float(n) / count)
+		rail.append(HelixProjection.view_point(hand, theta, r, bar - rise * (theta - middle), phi))
+	for n: int in range(count, -1, -1):
+		var theta := lerpf(a, b, float(n) / count)
+		rail.append(HelixProjection.view_point(hand, theta, r, bar - rise * (theta - middle) + look.rail_width, phi))
+	_add_flat(out, shape, eye, rail, look.rail, index)
+	var half := look.rail_width * 0.5 / r
+	_add_flat(out, shape, eye, PackedVector3Array([
+		HelixProjection.view_point(hand, middle - half, r, bar, phi), HelixProjection.view_point(hand, middle + half, r, bar, phi),
+		HelixProjection.view_point(hand, middle + half, r, tread, phi), HelixProjection.view_point(hand, middle - half, r, tread, phi),
+	]), look.rail, index)
+
+## Adds the view-space polygon `points`, seen from either side.
+static func _add_flat(out: Array[Face], shape: HelixStairShape, eye: float, points: PackedVector3Array, fill: Color, index: int) -> void:
+	var face := Face.new()
+	var centre := Vector3.ZERO
+	var nearest := -INF
+	for point: Vector3 in points:
+		face.points.append(HelixProjection.project(shape, point, eye))
+		centre += point
+		nearest = maxf(nearest, point.z)
+	face.fill = fill
+	face.depth = centre.z / points.size()
+	face.nearest = nearest
+	face.step = index
+	out.append(face)
 
 ## Clips `points` to Ivo's plane and behind, culls it when `normal` faces away from the eye, and adds it.
 static func _add(out: Array[Face], shape: HelixStairShape, eye: float, eye_point: Vector3, points: PackedVector3Array, normal: Vector3,
