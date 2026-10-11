@@ -1,10 +1,23 @@
 {
-	"about": "Village wood: PixelLab tiles-pro oak planks at 16 art px (tools/art/tiles/sources/village_planks_0.png); built ground with a seasonal top (\"Seasonal top\", user, 2026-10-08).",
+	"about": "Village wood: 16 art px oak planks painted by tools/art/tiles/paint_planks.py in the PixelLab tiles-pro body's colours (tools/art/tiles/sources/village_planks_0.png): 7 px boards, grain, and four variants with staggered butt joints and nails (\"The house interiors tiles could be improved\", user, 2026-10-10); built ground with a seasonal top (\"Seasonal top\", user, 2026-10-08).",
 	"art_scale": 2,
 	"body": {
 		"path": "res://tools/art/tiles/sources/village_planks_0.png"
 	},
-	"variants": [],
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/village_planks_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/village_planks_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/village_planks_3.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/village_planks_4.png"
+		}
+	],
 	"lips": [
 		{
 			"kind": "none"
@@ -38,6 +51,5 @@
 	"rim": 1,
 	"rim_dark": 0.25,
 	"edge": "none",
-	"ledge_height": 4,
-	"colors": 4
+	"ledge_height": 4
 }

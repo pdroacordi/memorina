@@ -1,11 +1,14 @@
 """Cut a Codex texture into a seamless 2x backdrop wall (caves, strata, interiors): opaque, one band, wraps both ways.
 
 python -I tools/art/cut_wall.py <texture.png> <out.png> --colors=#hex,#hex,... [--size=512] [--tile=PX] [--levels=5]
+    [--flat=#dark,#light --edge=#hex]
 Reduces the picture to size/2 + OVERLAP art px by each block's most common colour, snaps it to LEVELS colours, then
 stitches each wrap along the cut of least colour difference through an OVERLAP-px band (image quilting: the pixels
 are cut, never blended), and maps the value range onto the contract's colours (darkest to lightest) keeping each
 colour's hue, so the wall stays one value step darker than the ground in front of it (architecture/backdrop-seams).
 --tile cuts a smaller seamless tile (game px) and repeats it to fill the sheet: the picture's features shrink with it.
+--flat replaces the value mapping with two flat tones: the darkest level takes #dark, every other level #light, and
+--edge paints the light pixels beside a dark one (4-neighbours, wrapping), a one-pixel line along each dark shape.
 """
 import colorsys
 import sys
@@ -77,13 +80,26 @@ def remap(art, colors):
     return out.reshape(art.shape)
 
 
-def main(texture, out_path, colors, size, tile, levels):
+def flat(art, dark, light, edge):
+    darkest = art.reshape(-1, 3).sum(axis=1).min()
+    is_dark = art.sum(axis=2) == darkest
+    out = np.where(is_dark[..., None], np.array(dark), np.array(light))
+    if edge is not None:
+        beside = np.zeros_like(is_dark)
+        for axis in (0, 1):
+            for step in (-1, 1):
+                beside |= np.roll(is_dark, step, axis=axis)
+        out[beside & ~is_dark] = edge
+    return out
+
+
+def main(texture, out_path, colors, size, tile, levels, flat_tones=None, edge=None):
     art_size = tile // ART_SCALE
     rgb = np.asarray(Image.open(texture).convert("RGB")).astype(int)
     art = snap(reduce(rgb, art_size + OVERLAP), levels)
     art = wrap_columns(art, art_size)
     art = wrap_columns(art.transpose(1, 0, 2), art_size).transpose(1, 0, 2)
-    art = remap(art, colors)
+    art = flat(art, flat_tones[0], flat_tones[1], edge) if flat_tones else remap(art, colors)
     repeats = size // tile
     art = np.tile(art, (repeats, repeats, 1))
     image = Image.fromarray(art.astype(np.uint8), "RGB").convert("RGBA")
@@ -93,6 +109,9 @@ def main(texture, out_path, colors, size, tile, levels):
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     opts = dict((a[2:].split("=", 1) + [""])[:2] for a in sys.argv[1:] if a.startswith("--"))
-    hexes = [tuple(int(h.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)) for h in opts["colors"].split(",")]
+    def parse(spec):
+        return [tuple(int(h.lstrip("#")[i:i + 2], 16) for i in (0, 2, 4)) for h in spec.split(",")]
     size = int(opts.get("size", 512))
-    main(args[0], args[1], hexes, size, int(opts.get("tile", size)), int(opts.get("levels", 5)))
+    main(args[0], args[1], parse(opts.get("colors", opts.get("flat", ""))), size, int(opts.get("tile", size)),
+        int(opts.get("levels", 5)), parse(opts["flat"]) if "flat" in opts else None,
+        parse(opts["edge"])[0] if "edge" in opts else None)

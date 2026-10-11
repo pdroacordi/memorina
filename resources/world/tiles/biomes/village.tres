@@ -18,5 +18,5 @@ wall = ExtResource("5_wall")
 crack = ExtResource("6_crack")
 earth_grass = ExtResource("7_earth_grass")
 stone_grass = ExtResource("8_stone_grass")
-fill_variants = PackedInt32Array(4, 3, 0, 0)
+fill_variants = PackedInt32Array(4, 3, 4, 0)
 description = "The Home Village: dark loam with a grass top, rounded street stones under a walk of pale cobbles, dark oak planks, plaster and timber walls (design 04 section 6; tools/art/tiles/village_*.json, after the approved concept)."

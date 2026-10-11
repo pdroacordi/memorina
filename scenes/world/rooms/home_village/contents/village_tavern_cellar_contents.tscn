@@ -4,12 +4,47 @@
 [ext_resource type="Resource" path="res://resources/world/backdrops/interior_stone.tres" id="bd_set"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/home_village/contents/village_tavern_cellar.room" id="room_map"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/tavern_cellar/wine_shelf.tscn" id="pi_tavern_cellar_wine_shelf"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/tavern_cellar/sack_pile.tscn" id="pi_tavern_cellar_sack_pile"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/tavern_cellar/vent.tscn" id="pi_tavern_cellar_vent"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/tavern_cellar/crate.tscn" id="pi_tavern_cellar_crate"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/tavern_cellar/lantern.tscn" id="pi_tavern_cellar_lantern"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/tavern_cellar/ham_rail.tscn" id="pi_tavern_cellar_ham_rail"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/tavern_cellar/barrel_stack.tscn" id="pi_tavern_cellar_barrel_stack"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/tavern_cellar/wall_roots.tscn" id="pi_tavern_cellar_wall_roots"]
 
 [node name="Contents" type="Node2D"]
 
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
 backdrop_set = ExtResource("bd_set")
+
+[node name="Props" type="Node2D" parent="."]
+z_index = -10
+
+[node name="WineShelf0" parent="Props" instance=ExtResource("pi_tavern_cellar_wine_shelf")]
+position = Vector2(62, 288)
+
+[node name="SackPile1" parent="Props" instance=ExtResource("pi_tavern_cellar_sack_pile")]
+position = Vector2(105, 288)
+
+[node name="Vent2" parent="Props" instance=ExtResource("pi_tavern_cellar_vent")]
+position = Vector2(120, 64)
+
+[node name="Crate3" parent="Props" instance=ExtResource("pi_tavern_cellar_crate")]
+position = Vector2(120, 160)
+
+[node name="Lantern4" parent="Props" instance=ExtResource("pi_tavern_cellar_lantern")]
+position = Vector2(176, 128)
+
+[node name="HamRail5" parent="Props" instance=ExtResource("pi_tavern_cellar_ham_rail")]
+position = Vector2(216, 112)
+
+[node name="BarrelStack6" parent="Props" instance=ExtResource("pi_tavern_cellar_barrel_stack")]
+position = Vector2(560, 288)
+
+[node name="WallRoots7" parent="Props" instance=ExtResource("pi_tavern_cellar_wall_roots")]
+position = Vector2(360, 264)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

@@ -6,3 +6,6 @@ reports/
 *.tmp
 # Personal Claude Code settings (the shared ones are .claude/settings.json)
 .claude/settings.local.json
+
+# Python bytecode from the tools/ scripts.
+__pycache__/

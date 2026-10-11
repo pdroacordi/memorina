@@ -5,6 +5,18 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/elder.tscn" id="in_elder"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/home_village/contents/village_elder.room" id="room_map"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/fireplace_lit.tscn" id="pi_elder_house_fireplace_lit"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/armchair.tscn" id="pi_elder_house_armchair"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/walking_stick.tscn" id="pi_elder_house_walking_stick"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/dried_flowers.tscn" id="pi_elder_house_dried_flowers"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/desk.tscn" id="pi_elder_house_desk"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/stool.tscn" id="pi_elder_house_stool"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/lighthouse_painting.tscn" id="pi_elder_house_lighthouse_painting"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/globe.tscn" id="pi_elder_house_globe"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/map.tscn" id="pi_elder_house_map"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/chest.tscn" id="pi_elder_house_chest"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/book_pile.tscn" id="pi_elder_house_book_pile"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/bookshelf_lighthouse.tscn" id="pi_elder_house_bookshelf_lighthouse"]
 
 [node name="Contents" type="Node2D"]
 
@@ -14,6 +26,42 @@ backdrop_set = ExtResource("bd_set")
 
 [node name="Props" type="Node2D" parent="."]
 z_index = -10
+
+[node name="FireplaceLit0" parent="Props" instance=ExtResource("pi_elder_house_fireplace_lit")]
+position = Vector2(236, 288)
+
+[node name="Armchair1" parent="Props" instance=ExtResource("pi_elder_house_armchair")]
+position = Vector2(300, 288)
+
+[node name="WalkingStick2" parent="Props" instance=ExtResource("pi_elder_house_walking_stick")]
+position = Vector2(332, 288)
+
+[node name="DriedFlowers3" parent="Props" instance=ExtResource("pi_elder_house_dried_flowers")]
+position = Vector2(300, 150)
+
+[node name="Desk4" parent="Props" instance=ExtResource("pi_elder_house_desk")]
+position = Vector2(410, 288)
+
+[node name="Stool5" parent="Props" instance=ExtResource("pi_elder_house_stool")]
+position = Vector2(452, 288)
+
+[node name="LighthousePainting6" parent="Props" instance=ExtResource("pi_elder_house_lighthouse_painting")]
+position = Vector2(410, 196)
+
+[node name="Globe7" parent="Props" instance=ExtResource("pi_elder_house_globe")]
+position = Vector2(492, 288)
+
+[node name="Map8" parent="Props" instance=ExtResource("pi_elder_house_map")]
+position = Vector2(500, 192)
+
+[node name="Chest9" parent="Props" instance=ExtResource("pi_elder_house_chest")]
+position = Vector2(540, 288)
+
+[node name="BookPile10" parent="Props" instance=ExtResource("pi_elder_house_book_pile")]
+position = Vector2(540, 264)
+
+[node name="BookshelfLighthouse11" parent="Props" instance=ExtResource("pi_elder_house_bookshelf_lighthouse")]
+position = Vector2(584, 288)
 
 [node name="Elder" parent="Props" instance=ExtResource("in_elder")]
 position = Vector2(272, 288)

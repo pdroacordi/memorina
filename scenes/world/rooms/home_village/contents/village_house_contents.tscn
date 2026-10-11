@@ -4,12 +4,68 @@
 [ext_resource type="Resource" path="res://resources/world/backdrops/interior_timber.tres" id="bd_set"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/home_village/contents/village_house.room" id="room_map"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/hearth.tscn" id="pi_ivo_house_hearth"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/firewood.tscn" id="pi_ivo_house_firewood"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/guitar.tscn" id="pi_ivo_house_guitar"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/chair.tscn" id="pi_ivo_house_chair"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/table.tscn" id="pi_ivo_house_table"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/chair_shawl.tscn" id="pi_ivo_house_chair_shawl"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/window.tscn" id="pi_ivo_house_window"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/bed.tscn" id="pi_ivo_house_bed"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/wall_shelf_cups.tscn" id="pi_ivo_house_wall_shelf_cups"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/child_bed.tscn" id="pi_ivo_house_child_bed"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/drawing_sun.tscn" id="pi_ivo_house_drawing_sun"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/drawing_house.tscn" id="pi_ivo_house_drawing_house"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/drawing_heart.tscn" id="pi_ivo_house_drawing_heart"]
 
 [node name="Contents" type="Node2D"]
 
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
 backdrop_set = ExtResource("bd_set")
+
+[node name="Props" type="Node2D" parent="."]
+z_index = -10
+
+[node name="Hearth0" parent="Props" instance=ExtResource("pi_ivo_house_hearth")]
+position = Vector2(248, 288)
+
+[node name="Firewood1" parent="Props" instance=ExtResource("pi_ivo_house_firewood")]
+position = Vector2(296, 288)
+
+[node name="Guitar2" parent="Props" instance=ExtResource("pi_ivo_house_guitar")]
+position = Vector2(318, 288)
+
+[node name="Chair3" parent="Props" instance=ExtResource("pi_ivo_house_chair")]
+position = Vector2(350, 288)
+flip_h = true
+
+[node name="Table4" parent="Props" instance=ExtResource("pi_ivo_house_table")]
+position = Vector2(400, 288)
+
+[node name="ChairShawl5" parent="Props" instance=ExtResource("pi_ivo_house_chair_shawl")]
+position = Vector2(450, 288)
+
+[node name="Window6" parent="Props" instance=ExtResource("pi_ivo_house_window")]
+position = Vector2(400, 200)
+
+[node name="Bed7" parent="Props" instance=ExtResource("pi_ivo_house_bed")]
+position = Vector2(500, 288)
+
+[node name="WallShelfCups8" parent="Props" instance=ExtResource("pi_ivo_house_wall_shelf_cups")]
+position = Vector2(500, 176)
+
+[node name="ChildBed9" parent="Props" instance=ExtResource("pi_ivo_house_child_bed")]
+position = Vector2(572, 288)
+
+[node name="DrawingSun10" parent="Props" instance=ExtResource("pi_ivo_house_drawing_sun")]
+position = Vector2(548, 206)
+
+[node name="DrawingHouse11" parent="Props" instance=ExtResource("pi_ivo_house_drawing_house")]
+position = Vector2(572, 200)
+
+[node name="DrawingHeart12" parent="Props" instance=ExtResource("pi_ivo_house_drawing_heart")]
+position = Vector2(596, 206)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
