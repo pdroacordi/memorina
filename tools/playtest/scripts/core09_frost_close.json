@@ -1,0 +1,15 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 4,
+ "locale": "en",
+ "player_position": [5130, -1638],
+ "skills": [0, 2],
+ "steps": [
+  {"t": 0.7, "trace": true},
+  {"t": 1.0, "action": "move_right", "pressed": true},
+  {"t": 1.35, "action": "move_right", "pressed": false},
+  {"t": 1.9, "screenshot": "f1_close_telegraph"},
+  {"t": 2.08, "screenshot": "f2_close_swipe"},
+  {"t": 3.5, "trace": false}
+ ]
+}

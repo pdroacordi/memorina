@@ -16,6 +16,8 @@ const DEFAULT_MAX_DURATION := 60.0
 ## Real-time watchdog: a run that outlives `max_duration * WATCHDOG_FACTOR + WATCHDOG_SLACK` real seconds is hung.
 const WATCHDOG_FACTOR := 3.0
 const WATCHDOG_SLACK := 30.0
+## Enemies and guardians farther than this from Ivo, in px, are left out of `log` and `trace` lines.
+const FOE_RADIUS := 600.0
 
 var _steps: Array = []
 var _step_index := 0
@@ -136,7 +138,7 @@ func _physics_process(_delta: float) -> void:
 	if _tracing:
 		_trace()
 
-## One line per physics frame: Ivo's position, velocity, floor, helix ride and progress, and the camera's centre.
+## One line per physics frame: Ivo's position, velocity, floor, helix ride and progress, the camera's centre, hp and nearby foes.
 func _trace() -> void:
 	var player := get_tree().get_first_node_in_group(Player.GROUP) as Player
 	if player == null:
@@ -151,7 +153,33 @@ func _trace() -> void:
 	var camera := game.get("_camera") as GameCamera if game != null else null
 	if camera != null:
 		line += " cam_centre=(%.1f,%.1f)" % [camera.get_screen_center_position().x, camera.get_screen_center_position().y]
+	line += " hp=%d" % player.health.current_hp
+	line += _foes_state(player)
 	print(line)
+
+## Every enemy and guardian within FOE_RADIUS of Ivo: its offset from him, hp or fight phase, and what it is doing.
+func _foes_state(player: Player) -> String:
+	if player == null:
+		return ""
+	var foes: PackedStringArray = []
+	for node: Node in get_tree().get_nodes_in_group(Character.CHARACTERS_GROUP):
+		var foe := node as Character
+		if foe == null or foe == player or not foe.is_visible_in_tree():
+			continue
+		var offset := foe.global_position - player.global_position
+		if offset.length() > FOE_RADIUS:
+			continue
+		var state := ""
+		if foe is Guardian:
+			var guardian := foe as Guardian
+			state = "%s hits=%.2f %s" % [GuardianFight.Phase.keys()[guardian.phase()], guardian.pressure_progress(),
+				"swing" if guardian.is_swinging() else ("telegraph" if guardian.is_telegraphing() else "-")]
+		elif foe is BruteShadow:
+			var brute := foe as BruteShadow
+			state = "hp=%d %s%s" % [brute.health.current_hp, "swing" if brute.is_attacking() else "-",
+				" knocked" if brute.is_in_knockback() else ""]
+		foes.append("%s dx=%.1f dy=%.1f %s" % [foe.name, offset.x, offset.y, state])
+	return " foes=[%s]" % ", ".join(foes)
 
 ## Prints what a screenshot cannot show: pause, focus and Ivo's motion.
 func _log_state(label: String) -> void:
@@ -176,6 +204,7 @@ func _log_state(label: String) -> void:
 			player.is_memorina_drawn(), player.get_node("PlayerInput").get("blocked"),
 		]
 	line += _room_state(player)
+	line += _foes_state(player)
 	line += _map_state()
 	line += _notebook_state()
 	print(line)

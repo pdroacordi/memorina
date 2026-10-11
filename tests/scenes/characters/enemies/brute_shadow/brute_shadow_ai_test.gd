@@ -57,6 +57,49 @@ func test_waiting_out_the_cooldown_in_reach_turns_without_walking() -> void:
 	assert_float(_ai.direction).is_equal(0.0)
 	assert_float(_ai.facing_direction).is_equal(1.0)
 
+## A swing thrown from afar is followed by closing to the stop distance, inside Ivo's reach.
+func test_after_a_long_swing_it_closes_to_the_stop_distance() -> void:
+	_ai.attack_stats.attack_range = 90.0
+	_ai.attack_stats.stop_distance = 48.0
+	_place_target(Vector2(70, 0))
+	_swing_to_the_end()
+	_ai.tick(STEP)
+	assert_bool(_ai.is_attacking).is_false()
+	assert_float(_ai.direction).is_equal(1.0)
+	_place_target(Vector2(40, 0))
+	_ai.tick(STEP)
+	assert_float(_ai.direction).is_equal(0.0)
+	assert_float(_ai.facing_direction).is_equal(1.0)
+
+## Ivo jumping in place from where it parks is not moving away: it must not walk under his landing
+## (docs/knowledge/bugs/the-brute-walks-under-ivo-when-he-jumps-from-where-it-parks.md).
+func test_a_jump_from_the_parking_spot_does_not_draw_it_under_ivo() -> void:
+	_ai.attack_stats.attack_range = 90.0
+	_ai.attack_stats.stop_distance = 48.0
+	_place_target(Vector2(70, 0))
+	_swing_to_the_end()
+	for height: float in [-60.0, -144.0]:
+		_place_target(Vector2(48, height))
+		_ai.tick(STEP)
+		assert_bool(_ai.is_attacking).is_false()
+		assert_float(_ai.direction).is_equal(0.0)
+
+## A target on a ledge nearly overhead neither draws it back and forth nor flips it.
+func test_a_target_nearly_overhead_on_a_ledge_does_not_flip_it() -> void:
+	_ai.attack_stats.attack_range = 90.0
+	_ai.attack_stats.stop_distance = 48.0
+	_place_target(Vector2(70, 0))
+	_swing_to_the_end()
+	for dx: float in [2.0, -2.0, 6.0, -6.0]:
+		_place_target(Vector2(dx, -60))
+		_ai.tick(STEP)
+		assert_float(_ai.direction).is_equal(0.0)
+		assert_float(_ai.facing_direction).is_equal(1.0)
+	_place_target(Vector2(-30, -60))
+	_ai.tick(STEP)
+	assert_float(_ai.direction).is_equal(0.0)
+	assert_float(_ai.facing_direction).is_equal(-1.0)
+
 func test_out_of_reach_it_faces_where_it_walks() -> void:
 	_place_target(FAR_BEHIND)
 	_ai.tick(STEP)

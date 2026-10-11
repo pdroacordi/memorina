@@ -93,10 +93,11 @@ func tick(delta: float) -> void:
 	_update_look()
 	super.tick(delta)
 
-## The side the guardian should face: where it walks, or - standing still -
-## where the player is. Read by the guardian instead of `direction`, so it
-## keeps watching a player it has just backed away from.
+## The side to face: where it walks, else where the player is, so it watches a player it backed away from.
+## 0 during a swing, so a lunge or leap keeps its side and carries past a player who crosses under it.
 func facing_intent() -> float:
+	if _swinging:
+		return 0.0
 	if not is_zero_approx(_current_direction):
 		return _current_direction
 	return _look_direction

@@ -1,0 +1,33 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 9,
+ "locale": "en",
+ "player_position": [-5640, 1822],
+ "steps": [
+  {"t": 0.6, "action": "move_left", "pressed": true},
+  {"t": 0.65, "action": "move_left", "pressed": false},
+  {"t": 0.7, "trace": true},
+  {"t": 2.4, "action": "move_right", "pressed": true},
+  {"t": 2.45, "screenshot": "a1_windup_step_back"},
+  {"t": 2.62, "action": "move_right", "pressed": false},
+  {"t": 2.85, "screenshot": "a2_spikes_miss"},
+  {"t": 3.2, "action": "move_left", "pressed": true},
+  {"t": 3.55, "action": "move_left", "pressed": false},
+  {"t": 3.6, "action": "attack", "pressed": true},
+  {"t": 3.65, "action": "attack", "pressed": false},
+  {"t": 3.8, "screenshot": "a3_slash"},
+  {"t": 3.85, "action": "attack", "pressed": true},
+  {"t": 3.9, "action": "attack", "pressed": false},
+  {"t": 4.15, "screenshot": "a4_chop"},
+  {"t": 4.5, "screenshot": "a5_after_combo"},
+  {"t": 5.3, "action": "move_left", "pressed": true},
+  {"t": 5.55, "action": "move_left", "pressed": false},
+  {"t": 5.6, "action": "attack", "pressed": true},
+  {"t": 5.65, "action": "attack", "pressed": false},
+  {"t": 5.85, "action": "attack", "pressed": true},
+  {"t": 5.9, "action": "attack", "pressed": false},
+  {"t": 6.15, "screenshot": "a6_second_combo"},
+  {"t": 7.2, "screenshot": "a7_end"},
+  {"t": 8.5, "trace": false}
+ ]
+}

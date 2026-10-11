@@ -3,6 +3,8 @@ extends EnemyAI
 ## BruteShadow adds a stationary melee attack state to the common AI baseline.
 
 const ATTACK := 2
+## Horizontal dead band, in px: a target this close to overhead keeps the side it was last on.
+const TURN_BAND := 10.0
 
 @export var attack_stats: BruteShadowAttackStats
 
@@ -12,6 +14,8 @@ var _attack_timer: float = 0.0
 var _attack_cooldown: float = 0.0
 ## Side the current swing was aimed at, -1/1; held until the swing ends.
 var _swing_side: float = 0.0
+## Side the target was last seen on outside TURN_BAND, -1/1.
+var _side: float = 1.0
 
 
 func _ready() -> void:
@@ -31,9 +35,11 @@ func _select_state() -> int:
 		return ATTACK
 	return super._select_state()
 
-## Stops inside melee range while waiting for cooldown; the base chase has no stop distance.
+## Closes to `stop_distance` while the cooldown runs, so a brute that swung from afar ends up inside Ivo's reach.
+## Horizontal only: a jump or a ledge above is not the target moving away
+## (docs/knowledge/bugs/the-brute-walks-under-ivo-when-he-jumps-from-where-it-parks.md).
 func _chase_tick(delta: float) -> void:
-	if _in_melee_range():
+	if absf(_target.global_position.x - _body.global_position.x) <= attack_stats.stop_distance:
 		_current_direction = 0.0
 	else:
 		super._chase_tick(delta)
@@ -70,4 +76,7 @@ func _get_facing_direction() -> float:
 	return super._get_facing_direction()
 
 func _target_side() -> float:
-	return signf(_target.global_position.x - _body.global_position.x)
+	var dx := _target.global_position.x - _body.global_position.x
+	if absf(dx) > TURN_BAND:
+		_side = signf(dx)
+	return _side

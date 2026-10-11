@@ -35,7 +35,7 @@ Ivo is drawn at the world's 2x density, 29 art px (58 px) tall, by Codex and Pix
 - **No clip's length, step or timing changed.** The attack clips' frame indices, hframes and Hitbox geometry did change. A sheet holds exactly the frames its clips key, chosen from PixelLab's returned frames by the contract's `keep`, settled by `--floor` (feet on row 95) and `--centre` (body on the axis) (`tools/art/prompts/ivo_<clip>.md`; `cut_inhabitant.py --keep`); the contract's `generate:` is the count PixelLab was asked for. The two-swing sheets put swing 1 in frames 0-4 and swing 2 in 5-8; jump and fall attacks share `ivo_attack_air`.
 - **The body is unchanged:** capsule radius 11, height 54, now centred at x 0 (was -1). Hair is not body, so every authored jump clears the same gaps (`ivo_sheet_test` pins `MapGuide.ivo_reach()`).
 - **Attacks are key poses, smears and holds** (`tools/art/build_ivo_attacks.py`), not generated in-betweens; the running attack is its upper body over the run cycle's legs.
-- **The Hitbox matches the swing the art shows.** Each attack clip keys the capsule's position and scale to the box its active frames cover; reaches and the retuning still owed to enemies and guardians are in the plan (CORE-09).
+- **The Hitbox matches the swing the art shows.** Each attack clip keys the capsule's position and scale to the box its active frames cover; reaches are in `architecture/ivo-at-2x`; enemies and guardians were retuned to them in CORE-09 (`systems/guardians`, "Reach against Ivo's sword"), and `tests/scenes/combat/combat_reach_test.gd` measures the keyed boxes.
 - `tests/scenes/characters/ivo/ivo_sheet_test.gd` holds the contract: sheet width = hframes x 128, frame keys below hframes, texture and hframes keyed before frame, clip lengths, feet on row 95 in every grounded frame, every clip's body within 2 art px of the flip axis (attacks measured on the feet or torso without the steel), an attack's body moving at most 2 art px between frames, wall clips at the capsule edge instead, no frame touching its border, every colour from `tools/art/sources/ivo/ivo_palette.png`.
 
 The user's decisions, in their words:
@@ -44,7 +44,7 @@ The user's decisions, in their words:
 - The design: "Yes, the taller one (Recommended)" (2026-10-11): 29 art px tall.
 - The pipes on his back: "Remove them (Recommended)" (2026-10-11).
 - The weapon: "His short sword, drawn to swing (Recommended)" (2026-10-11): the sword stays in its scabbard at his hip and comes out only for attacks.
-- The sword's reach: "Shrink to the art" (2026-10-11): every Hitbox shape is resized to the swing the new art shows; enemy and guardian retuning is CORE-09.
+- The sword's reach: "Shrink to the art" (2026-10-11): every Hitbox shape is resized to the swing the new art shows; enemies and guardians were retuned to it in CORE-09 (2026-10-11).
 - The idle pilot: "Yes, do the rest (Recommended)" (2026-10-11).
 - PixelLab spend for the clips: "Go ahead (Recommended)" (2026-10-11), up to 30 animate3 calls.
 - On the first clips: "I find that some animation that should be improved of Ivo are his pushing and his running. His running seems only like a walk." (2026-10-11): run and brace were redrawn (`architecture/ivo-at-2x` Revision).

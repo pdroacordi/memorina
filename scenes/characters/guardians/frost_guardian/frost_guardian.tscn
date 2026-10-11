@@ -143,7 +143,7 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(92, -76)]
+"values": [Vector2(92, -70)]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
@@ -155,7 +155,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(3.4, 2.4)]
+"values": [Vector2(3.4, 3.0)]
 }
 
 [sub_resource type="Animation" id="Animation_idle"]
@@ -325,10 +325,10 @@ tracks/6/path = NodePath("Hitbox/CollisionShape2D:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [Vector2(92, -76)]
+"times": PackedFloat32Array(0, 0.5, 0.5833334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(56, -70), Vector2(56, -70), Vector2(92, -70)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -337,10 +337,10 @@ tracks/7/path = NodePath("Hitbox/CollisionShape2D:scale")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [Vector2(3.4, 2.4)]
+"times": PackedFloat32Array(0, 0.5, 0.5833334),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(3.0, 3.0), Vector2(3.0, 3.0), Vector2(3.4, 3.0)]
 }
 
 [sub_resource type="Animation" id="Animation_attack_2"]
@@ -429,7 +429,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(92, -76)]
+"values": [Vector2(92, -70)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -441,7 +441,7 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(3.4, 2.4)]
+"values": [Vector2(3.4, 3.0)]
 }
 
 [sub_resource type="Animation" id="Animation_attack_3"]
@@ -530,7 +530,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(56, -118)]
+"values": [Vector2(56, -96)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -542,7 +542,7 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [Vector2(3.0, 5.2)]
+"values": [Vector2(3.0, 7.4)]
 }
 
 [sub_resource type="Animation" id="Animation_hurt"]
@@ -775,8 +775,8 @@ knockback_strength = 420.0
 knockback_lift = 120.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(92, -76)
-scale = Vector2(3.4, 2.4)
+position = Vector2(92, -70)
+scale = Vector2(3.4, 3.0)
 shape = SubResource("CircleShape2D_hit")
 debug_color = Color(0.93, 0.23, 0.34, 0.42)
 

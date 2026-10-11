@@ -1,0 +1,161 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 8,
+ "locale": "en",
+ "player_position": [
+  -6560,
+  284
+ ],
+ "skills": [
+  0,
+  2
+ ],
+ "steps": [
+  {
+   "t": 0.7,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.25,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 1.45,
+   "screenshot": "c1_pounce_telegraph"
+  },
+  {
+   "t": 1.7,
+   "action": "roll",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "roll",
+   "pressed": false
+  },
+  {
+   "t": 1.9,
+   "screenshot": "c2_roll_under_pounce"
+  },
+  {
+   "t": 2.4,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.85,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.88,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 2.93,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 3.05,
+   "screenshot": "c3_slash"
+  },
+  {
+   "t": 3.18,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 3.23,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "screenshot": "c4_chop"
+  },
+  {
+   "t": 3.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.85,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 3.9,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 3.95,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.9,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 5.0,
+   "screenshot": "c5_step_out"
+  },
+  {
+   "t": 5.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.54,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 5.62,
+   "action": "roll",
+   "pressed": true
+  },
+  {
+   "t": 5.67,
+   "action": "roll",
+   "pressed": false
+  },
+  {
+   "t": 5.85,
+   "screenshot": "c6_second_pounce_rolled"
+  },
+  {
+   "t": 6.6,
+   "screenshot": "c7_end"
+  },
+  {
+   "t": 7.5,
+   "trace": false
+  }
+ ]
+}

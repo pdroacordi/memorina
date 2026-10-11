@@ -1,0 +1,19 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6,
+ "locale": "en",
+ "player_position": [-5586, 1822],
+ "steps": [
+  {"t": 0.7, "trace": true},
+  {"t": 1.5, "action": "move_left", "pressed": true},
+  {"t": 1.9, "action": "attack", "pressed": true},
+  {"t": 1.95, "action": "attack", "pressed": false},
+  {"t": 2.12, "screenshot": "b1_running_slash"},
+  {"t": 2.2, "action": "attack", "pressed": true},
+  {"t": 2.25, "action": "attack", "pressed": false},
+  {"t": 2.45, "screenshot": "b2_backhand"},
+  {"t": 2.5, "action": "move_left", "pressed": false},
+  {"t": 3.0, "screenshot": "b3_after"},
+  {"t": 5.5, "trace": false}
+ ]
+}

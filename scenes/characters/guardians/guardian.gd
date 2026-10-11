@@ -215,6 +215,10 @@ func is_swinging() -> bool:
 func current_attack() -> GuardianAttack:
 	return _ai.current_attack
 
+## Hits counted toward the next lucidity window, 0..1.
+func pressure_progress() -> float:
+	return _fight.pressure_progress()
+
 func wants_to_move() -> bool:
 	return not is_zero_approx(_ai.direction)
 

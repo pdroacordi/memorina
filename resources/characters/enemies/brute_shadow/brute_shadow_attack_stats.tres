@@ -4,4 +4,6 @@
 
 [resource]
 script = ExtResource("1_attack_stats")
+attack_duration = 1.1666667
 attack_range = 90.0
+stop_distance = 48.0
