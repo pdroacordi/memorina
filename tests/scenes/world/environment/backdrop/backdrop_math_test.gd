@@ -119,9 +119,15 @@ func _owners(rooms: Array[Rect2], point: Vector2, jitter: Vector2) -> int:
 		for other: Rect2 in rooms:
 			if other != room and room.grow(1.0).intersects(other):
 				others.append(other)
-		if BackdropMath.keeps(point, jitter, room, others):
+		if BackdropMath.keeps(point, jitter, room, others, RoomRing.WIDTH):
 			count += 1
 	return count
+
+func _nearest_distance(rooms: Array[Rect2], point: Vector2) -> float:
+	var nearest := INF
+	for room: Rect2 in rooms:
+		nearest = minf(nearest, BackdropMath.rect_distance(room, point))
+	return nearest
 
 func _assert_one_owner(rooms: Array[Rect2], points: PackedVector2Array) -> void:
 	for y: int in 4:
@@ -131,7 +137,7 @@ func _assert_one_owner(rooms: Array[Rect2], points: PackedVector2Array) -> void:
 				var inside := false
 				for room: Rect2 in rooms:
 					inside = inside or room.has_point(point)
-				if inside:
+				if inside or _nearest_distance(rooms, point) <= RoomRing.WIDTH:
 					assert_int(_owners(rooms, point, jitter)).is_equal(1)
 
 func test_side_by_side_rooms_share_every_seam_pixel_once() -> void:
@@ -142,10 +148,70 @@ func test_a_corner_of_four_rooms_has_one_owner_per_pixel() -> void:
 	var rooms: Array[Rect2] = [Rect2(0, 0, 640, 384), Rect2(640, 0, 640, 384), Rect2(0, 384, 640, 384), Rect2(640, 384, 640, 384)]
 	_assert_one_owner(rooms, PackedVector2Array([Vector2(630.5, 380.5), Vector2(650.5, 390.5), Vector2(639.5, 384.5), Vector2(640.5, 383.5)]))
 
-## A room against the void keeps its whole rect: a jitter into nothing is its own.
-func test_a_room_against_the_void_keeps_its_edge() -> void:
+## A room against the void keeps its whole rect, and draws the void within its ring.
+func test_a_room_against_the_void_keeps_its_edge_and_its_ring() -> void:
 	var rooms: Array[Rect2] = [Rect2(0, 0, 640, 384)]
-	_assert_one_owner(rooms, PackedVector2Array([Vector2(0.5, 0.5), Vector2(639.5, 383.5)]))
+	_assert_one_owner(rooms, PackedVector2Array([Vector2(0.5, 0.5), Vector2(639.5, 383.5), Vector2(-100.5, -100.5), Vector2(700.5, 200.5)]))
+	var none: Array[Rect2] = []
+	assert_bool(BackdropMath.keeps(Vector2(320.5, -150.5), Vector2.ZERO, rooms[0], none, RoomRing.WIDTH)).is_true()
+	assert_bool(BackdropMath.keeps(Vector2(320.5, -170.5), Vector2.ZERO, rooms[0], none, RoomRing.WIDTH)).is_false()
+
+## bugs/the-ring-tie-wedge-draws-a-hard-diagonal-between-two-backdrops: over two open tops side by side, the seam runs
+## on straight up, not on a 45-degree line: a pixel over a room's columns is that room's.
+func test_the_seam_runs_straight_over_two_open_tops() -> void:
+	var left := Rect2(0, 0, 640, 384)
+	var right := Rect2(640, 0, 640, 384)
+	var lefts: Array[Rect2] = [left]
+	var rights: Array[Rect2] = [right]
+	for point: Vector2 in [Vector2(660.5, -60.5), Vector2(700.5, -150.5), Vector2(641.5, -20.5)]:
+		assert_bool(BackdropMath.keeps(point, Vector2.ZERO, right, lefts, RoomRing.WIDTH)).is_true()
+		assert_bool(BackdropMath.keeps(point, Vector2.ZERO, left, rights, RoomRing.WIDTH)).is_false()
+	for point: Vector2 in [Vector2(620.5, -60.5), Vector2(580.5, -150.5)]:
+		assert_bool(BackdropMath.keeps(point, Vector2.ZERO, left, rights, RoomRing.WIDTH)).is_true()
+	# The seam band dithers on past the tops: some jitter cells hand a pixel just over the seam to the other room.
+	var owners := {}
+	for y: int in 4:
+		for x: int in 4:
+			var jitter := BackdropMath.seam_jitter(Vector2i(x, y), Backdrop.SEAM_BAND)
+			owners[BackdropMath.keeps(Vector2(650.5, -60.5), jitter, right, lefts, RoomRing.WIDTH)] = true
+	assert_int(owners.size()).is_equal(2)
+	var rooms: Array[Rect2] = [left, right]
+	var points := PackedVector2Array()
+	for y: float in [-0.5, -40.5, -100.5, -159.5]:
+		for x: float in [600.5, 630.5, 639.5, 640.5, 650.5, 700.5]:
+			points.append(Vector2(x, y))
+	_assert_one_owner(rooms, points)
+
+## bugs/the-ring-dividing-line-leaves-a-one-pixel-diagonal-hole-above-a-seam: two rooms' quads place one pixel a hair
+## apart; judged by its pixel centre, it still has exactly one owner, on the old diagonal tie line included.
+func test_two_quads_that_disagree_on_a_pixel_give_it_one_owner() -> void:
+	# The inner corner between a tall room and a short one beside it: the gaps tie on a diagonal through pixel centres.
+	var tall := Rect2(0, 0, 640, 768)
+	var short := Rect2(640, 384, 640, 384)
+	var talls: Array[Rect2] = [tall]
+	var shorts: Array[Rect2] = [short]
+	for d: int in range(0, 150, 7):
+		for noise: Vector2 in [Vector2(0.0004, -0.0003), Vector2(-0.0004, 0.0003), Vector2(0.0003, 0.0004)]:
+			var exact := Vector2(640.5 + d, 383.5 - d)
+			var by_tall := BackdropMath.pixel_centre(exact + noise)
+			var by_short := BackdropMath.pixel_centre(exact - noise)
+			var count := int(BackdropMath.keeps(by_tall, Vector2.ZERO, tall, shorts, RoomRing.WIDTH)) \
+				+ int(BackdropMath.keeps(by_short, Vector2.ZERO, short, talls, RoomRing.WIDTH))
+			assert_int(count).is_equal(1)
+
+## bugs/the-drawn-frame-correction-flips-between-candidates-and-drops-ivo-out-of-frame: the void beside a short room and
+## above it, next to a taller one, has one owner everywhere: the nearer room.
+func test_the_void_between_a_tall_and_a_short_room_has_one_owner() -> void:
+	var rooms: Array[Rect2] = [Rect2(0, 0, 640, 768), Rect2(640, 384, 640, 384)]
+	var points := PackedVector2Array()
+	for y: float in [230.5, 300.5, 383.5]:
+		for x: float in [641.5, 700.5, 800.5, 1270.5]:
+			points.append(Vector2(x, y))
+	_assert_one_owner(rooms, points)
+	var others: Array[Rect2] = [rooms[1]]
+	assert_bool(BackdropMath.keeps(Vector2(660.5, 300.5), Vector2.ZERO, rooms[0], others, RoomRing.WIDTH)).is_true()
+	var tall: Array[Rect2] = [rooms[0]]
+	assert_bool(BackdropMath.keeps(Vector2(900.5, 300.5), Vector2.ZERO, rooms[1], tall, RoomRing.WIDTH)).is_true()
 
 func test_the_jitter_is_symmetric_and_within_half_the_band() -> void:
 	var levels := {}
@@ -156,11 +222,13 @@ func test_the_jitter_is_symmetric_and_within_half_the_band() -> void:
 			levels[jitter.x] = true
 	assert_int(levels.size()).is_equal(16)
 
+## Band and ring 0: the room's own rect, nothing past it.
 func test_band_zero_is_the_room_clip() -> void:
 	var own := Rect2(0, 0, 640, 384)
 	var others: Array[Rect2] = [Rect2(640, 0, 640, 384)]
-	assert_bool(BackdropMath.keeps(Vector2(639.5, 10.0), BackdropMath.seam_jitter(Vector2i(3, 1), 0.0), own, others)).is_true()
-	assert_bool(BackdropMath.keeps(Vector2(640.5, 10.0), BackdropMath.seam_jitter(Vector2i(3, 1), 0.0), own, others)).is_false()
+	assert_bool(BackdropMath.keeps(Vector2(639.5, 10.0), BackdropMath.seam_jitter(Vector2i(3, 1), 0.0), own, others, 0.0)).is_true()
+	assert_bool(BackdropMath.keeps(Vector2(640.5, 10.0), BackdropMath.seam_jitter(Vector2i(3, 1), 0.0), own, others, 0.0)).is_false()
+	assert_bool(BackdropMath.keeps(Vector2(320.0, -0.5), Vector2.ZERO, own, others, 0.0)).is_false()
 
 func test_a_repeating_axis_is_placed_from_world_zero() -> void:
 	assert_vector(BackdropMath.layer_anchor(Vector2(1920, 235), true, false)).is_equal(Vector2(0, 235))

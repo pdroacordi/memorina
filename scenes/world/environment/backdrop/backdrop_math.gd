@@ -1,8 +1,8 @@
 class_name BackdropMath
 extends RefCounted
-## Where a backdrop layer draws for a camera, which art texel a layer pixel shows, and which room draws a pixel near a seam
-## (architecture/vertical-backdrops, architecture/backdrop-seams). art_row, art_col, seam_jitter and keeps must match
-## backdrop_layer.gdshader (gotchas/glsl-gdscript-math-must-be-duplicated).
+## Where a backdrop layer draws, which texel a pixel shows, and which room draws a pixel (systems/backdrops).
+## art_row, art_col, seam_jitter, pixel_centre, keeps, void_owner and rect_distance must match backdrop_layer.gdshader
+## (gotchas/glsl-gdscript-math-must-be-duplicated).
 
 ## Must match BAYER in dither_common.gdshaderinc.
 const BAYER: Array[float] = [
@@ -97,13 +97,57 @@ static func seam_jitter(game_px: Vector2i, band: float) -> Vector2:
 	var y := BAYER[bayer_index(Vector2i(game_px.y, game_px.x))] + 1.0 / 32.0 - 0.5
 	return Vector2(x, y) * band
 
-## Whether the room `own` draws the backdrop pixel at `point`: the jittered point lies in it, or lies in no room while
-## the pixel does.
-static func keeps(point: Vector2, jitter: Vector2, own: Rect2, neighbours: Array[Rect2]) -> bool:
+## The centre of the world pixel holding `point`: what every quad judges a pixel by, so two quads that place one pixel a
+## hair apart give one answer (gotchas/two-quads-disagree-on-a-pixels-world-position).
+static func pixel_centre(point: Vector2) -> Vector2:
+	return point.floor() + Vector2(0.5, 0.5)
+
+## Whether the room `own` draws the backdrop pixel centred at `point`: the jittered point lies in it, or lies in no room
+## and `own` is the void's owner there (`void_owner`) within `ring` px.
+static func keeps(point: Vector2, jitter: Vector2, own: Rect2, neighbours: Array[Rect2], ring: float) -> bool:
 	var moved := point + jitter
 	if own.grow(SEAM_EPSILON).has_point(moved):
 		return true
 	for other: Rect2 in neighbours:
 		if other.grow(-SEAM_EPSILON).has_point(moved):
 			return false
-	return own.grow(SEAM_EPSILON).has_point(point)
+	if rect_distance(own, point) > ring:
+		return false
+	var rooms: Array[Rect2] = [own]
+	rooms.append_array(neighbours)
+	return void_owner(point, moved, rooms) == 0
+
+## The index in `rooms` of the room that draws the void pixel at `point`: the nearest, measured by the gap in y for a room
+## whose columns hold the jittered x, in x for one whose rows hold the jittered y, else by `rect_distance`. Ties go to a
+## room whose columns or rows hold it, so a seam runs on straight and dithered past the rooms, then to the lower x, then y.
+static func void_owner(point: Vector2, moved: Vector2, rooms: Array[Rect2]) -> int:
+	var best := -1
+	var best_gap := INF
+	var best_span := false
+	for i: int in rooms.size():
+		var rect := rooms[i]
+		var span := true
+		var gap: float
+		if moved.x >= rect.position.x and moved.x < rect.end.x:
+			gap = maxf(maxf(rect.position.y - point.y, point.y - rect.end.y), 0.0)
+		elif moved.y >= rect.position.y and moved.y < rect.end.y:
+			gap = maxf(maxf(rect.position.x - point.x, point.x - rect.end.x), 0.0)
+		else:
+			gap = rect_distance(rect, point)
+			span = false
+		if best < 0 or gap < best_gap or (gap == best_gap and (span and not best_span \
+				or span == best_span and _before(rect, rooms[best]))):
+			best = i
+			best_gap = gap
+			best_span = span
+	return best
+
+## World px from `point` to `rect` along the farther axis, 0 inside it: the ring is `rect.grow(ring)`, square-cornered
+## like the camera's reach.
+static func rect_distance(rect: Rect2, point: Vector2) -> float:
+	var dx := maxf(rect.position.x - point.x, point.x - rect.end.x)
+	var dy := maxf(rect.position.y - point.y, point.y - rect.end.y)
+	return maxf(maxf(dx, dy), 0.0)
+
+static func _before(a: Rect2, b: Rect2) -> bool:
+	return a.position.x < b.position.x or (a.position.x == b.position.x and a.position.y < b.position.y)

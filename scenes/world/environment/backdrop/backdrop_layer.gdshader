@@ -3,7 +3,7 @@ shader_type canvas_item;
 // One backdrop layer drawn on a quad: each pixel picks its art texel from its layer-local
 // position, so fills past the strip are row arithmetic, not texture wrap
 // (architecture/vertical-backdrops). Near a seam a pixel is drawn by exactly one room (architecture/backdrop-seams).
-// Must match BackdropMath.art_row, art_col, seam_jitter and keeps.
+// Must match BackdropMath.art_row, art_col, seam_jitter, pixel_centre, keeps, void_owner and rect_distance.
 #include "res://scenes/world/memory/seasonal/seasonal_common.gdshaderinc"
 #include "res://scenes/world/memory/dither_common.gdshaderinc"
 
@@ -25,8 +25,10 @@ uniform vec2 quad_position = vec2(0.0);
 uniform vec4 room_rect = vec4(-1e9, -1e9, 2e9, 2e9);
 uniform vec4 neighbour_rects[8];
 uniform int neighbour_count = 0;
-// World px across the seam band; 0 clips to room_rect.
+// World px across the seam band.
 uniform float seam_band = 0.0;
+// World px of void around the rooms the nearest room draws (RoomRing.WIDTH); 0 clips to room_rect.
+uniform float ring = 0.0;
 // Must match BackdropMath.SEAM_EPSILON.
 const float SEAM_EPSILON = 0.01;
 
@@ -86,6 +88,41 @@ vec2 seam_jitter(vec2 game_px) {
 	return vec2(x, y) * seam_band;
 }
 
+float rect_distance(vec4 rect, vec2 p) {
+	vec2 d = max(rect.xy - p, p - (rect.xy + rect.zw));
+	return max(max(d.x, d.y), 0.0);
+}
+
+bool before(vec4 a, vec4 b) {
+	return a.x < b.x || (a.x == b.x && a.y < b.y);
+}
+
+// The gap from p to rect for the void owner: by y in its columns, by x in its rows (z 1), else rect_distance (z 0).
+vec2 owner_gap(vec4 rect, vec2 p, vec2 moved) {
+	if (moved.x >= rect.x && moved.x < rect.x + rect.z) {
+		return vec2(max(max(rect.y - p.y, p.y - (rect.y + rect.w)), 0.0), 1.0);
+	}
+	if (moved.y >= rect.y && moved.y < rect.y + rect.w) {
+		return vec2(max(max(rect.x - p.x, p.x - (rect.x + rect.z)), 0.0), 1.0);
+	}
+	return vec2(rect_distance(rect, p), 0.0);
+}
+
+// Whether room_rect owns the void pixel at p: void_owner in BackdropMath.
+bool owns_void(vec2 p, vec2 moved) {
+	vec2 mine = owner_gap(room_rect, p, moved);
+	for (int i = 0; i < neighbour_count; i++) {
+		vec2 theirs = owner_gap(neighbour_rects[i], p, moved);
+		if (theirs.x < mine.x) {
+			return false;
+		}
+		if (theirs.x == mine.x && (theirs.y > mine.y || (theirs.y == mine.y && before(neighbour_rects[i], room_rect)))) {
+			return false;
+		}
+	}
+	return true;
+}
+
 bool keeps(vec2 p, vec2 jitter) {
 	vec2 moved = p + jitter;
 	if (inside(moved, room_rect, SEAM_EPSILON)) {
@@ -96,12 +133,16 @@ bool keeps(vec2 p, vec2 jitter) {
 			return false;
 		}
 	}
-	return inside(p, room_rect, SEAM_EPSILON);
+	if (rect_distance(room_rect, p) > ring) {
+		return false;
+	}
+	return owns_void(p, moved);
 }
 
 void fragment() {
 	vec2 game_px = floor(SCREEN_UV * vec2(textureSize(greyhush_season_mask, 0)));
-	if (!keeps(world_pos, seam_jitter(game_px))) {
+	// Pixel centres: two quads never disagree on a pixel (gotchas/two-quads-disagree-on-a-pixels-world-position).
+	if (!keeps(floor(world_pos) + 0.5, seam_jitter(game_px))) {
 		discard;
 	}
 	ivec2 size = textureSize(sheet, 0);

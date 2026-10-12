@@ -433,6 +433,12 @@ has a reachability test that checks both halves.
 The air jump carries further than the table's apex press when pressed later in
 the fall: about 15 cells across, not 13.
 
+**Under an open top** (no room above), the camera may rise 160 px over the room
+(`RoomRing.WIDTH`), enough for a full jump from a floor 2 rows below the top.
+Keep every required take-off at row 2 or lower; `room_ring_test.gd` fails on a
+floor in row 1 unless its `NEAR_TOP` says why no route jumps from it
+(`docs/knowledge/systems/rooms.md`, "Room ring").
+
 **The reachability audit** (`room_reach_test.gd`) steps Ivo's arc over every
 world room stitched together, every song assumed at once, and fails on a
 platform he cannot reach, a platform that leads nowhere, a place he cannot

@@ -61,7 +61,7 @@ func refresh() -> void:
 			var ref := BackdropMath.reference_centre(layer_anchor, backdrop_set.horizon_screen_y, HALF_VIEW)
 			_add_layer(i, layer, bounds, layer_anchor, ref, camera, room != null, neighbours)
 
-# The touching rooms' bounds, for the seam band; none without a Room (the editor).
+# The touching rooms' bounds, for the seam band and the ring; none without a Room (the editor).
 func _neighbours(room: Room) -> Array[Rect2]:
 	var rects: Array[Rect2] = []
 	if room == null:
@@ -73,7 +73,9 @@ func _neighbours(room: Room) -> Array[Rect2]:
 
 func _add_layer(index: int, layer: BackdropLayer, bounds: Rect2, anchor: Vector2, ref: Vector2, camera: Camera2D, clip: bool,
 		neighbours: Array[Rect2]) -> void:
-	var cover := BackdropMath.cover_rect(bounds, anchor, ref, layer.scroll_scale, HALF_VIEW, MARGIN + (SEAM_BAND * 0.5 if clip else 0.0))
+	# Under a Room the camera may show the ring too (RoomRing.reach).
+	var shown := RoomRing.reach(bounds) if clip else bounds
+	var cover := BackdropMath.cover_rect(shown, anchor, ref, layer.scroll_scale, HALF_VIEW, MARGIN + (SEAM_BAND * 0.5 if clip else 0.0))
 	cover = BackdropMath.clip_to_fills(cover, layer.strip_size(), layer.horizon_row, layer.fill_above, layer.fill_below, layer.repeat_x)
 	if cover.size == Vector2i.ZERO:
 		return
@@ -94,7 +96,8 @@ func _add_layer(index: int, layer: BackdropLayer, bounds: Rect2, anchor: Vector2
 	quad.mesh = mesh
 	quad.position = Vector2(cover.position) + Vector2(cover.size) * 0.5
 	var material := _material(layer, quad.position)
-	# Clipped to the room and dithered into its neighbours across the seam band (systems/backdrops).
+	# Clipped to the room and the void it is nearest within the ring, dithered into its neighbours across the seam band
+	# (systems/backdrops).
 	if clip:
 		material.set_shader_parameter(&"room_rect", Vector4(bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y))
 		var rects := PackedVector4Array()
@@ -104,6 +107,7 @@ func _add_layer(index: int, layer: BackdropLayer, bounds: Rect2, anchor: Vector2
 		material.set_shader_parameter(&"neighbour_rects", rects)
 		material.set_shader_parameter(&"neighbour_count", neighbours.size())
 		material.set_shader_parameter(&"seam_band", SEAM_BAND)
+		material.set_shader_parameter(&"ring", RoomRing.WIDTH)
 	quad.material = material
 	parallax.add_child(quad)
 	add_child(parallax)

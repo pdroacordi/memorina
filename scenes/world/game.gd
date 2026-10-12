@@ -64,8 +64,7 @@ func _physics_process(_delta: float) -> void:
 	if _current_room == null or _is_transitioning or _dying or _lost:
 		return
 	var body := _player.body_rect()
-	var near := RoomResidency.touching(_current_room, get_tree().get_nodes_in_group(Room.GROUP))
-	_camera.set_reach(_reach_for(body, near), _fall_reach_for(body, near))
+	var near := _set_camera_reach(body)
 	if not RoomExit.has_left(_current_room.get_bounds(), body, _player.is_on_floor()):
 		return
 	var room := _room_at(body.get_center())
@@ -77,9 +76,14 @@ func _physics_process(_delta: float) -> void:
 			_player.fall_out_of_world()
 		return
 	# A region seam cuts: its memory, season and weather would show mixed in a glide
-	# (bugs/a-neighbour-room-in-another-region-runs-on-the-current-regions-memory). So does a teleport.
-	var glide := room.get_region() == _current_room.get_region() and RoomResidency.touches(_current_room, room)
+	# (bugs/a-neighbour-room-in-another-region-runs-on-the-current-regions-memory). So does a teleport, and a corner: a glide
+	# through it would cross the void beyond both rings (bugs/a-glide-skips-the-drawn-frame-correction-and-snaps-when-it-ends).
+	var glide := room.get_region() == _current_room.get_region() \
+		and RoomResidency.share_an_edge(_current_room.get_bounds(), room.get_bounds())
 	_enter_room(room, glide)
+	# set_bounds reset the reach: the new room's, with its open sky, before the camera steps
+	# (bugs/a-region-cut-frames-one-step-without-the-open-sky).
+	_set_camera_reach(body)
 	if not glide:
 		# A region cut mid-fall keeps the fall's lead, so the landing below the cut shows at once.
 		_camera.snap(true)
@@ -110,19 +114,18 @@ func _enter_room(room: Room, glide: bool = false) -> void:
 	_set_baseline(region.current_baseline(), glide)
 	_memory_field.season = region.season
 	_memory_field.palette = song_catalog.palette_for(region.season) if song_catalog else null
-	_camera.set_bounds(_current_room.get_bounds(), glide)
+	_camera.set_bounds(_current_room.get_bounds(), glide, RoomRing.reach(_current_room.get_bounds()))
 	if not room.interior:
 		_screens.clear_map_anchor()
 
-## Where the camera may yield to keep Ivo whole: the current room and the rooms his body reaches into, never the void
-## (bugs/the-camera-reach-is-a-bounding-box-and-shows-the-void-over-an-open-top).
-func _reach_for(body: Rect2, near: Array[Room]) -> Rect2:
-	var reach := _current_room.get_bounds()
-	var touch := body.grow(_camera.subject_margin)
-	for room: Room in near:
-		if room.get_bounds().intersects(touch):
-			reach = reach.merge(room.get_bounds())
-	return reach
+## Sets where the camera may yield around the current room this step; returns the rooms touching it.
+func _set_camera_reach(body: Rect2) -> Array[Room]:
+	var rooms := get_tree().get_nodes_in_group(Room.GROUP)
+	var near := RoomResidency.touching(_current_room, rooms)
+	# The ring around the room: drawn everywhere by resident rooms, so no void shows
+	# (bugs/the-drawn-frame-correction-flips-between-candidates-and-drops-ivo-out-of-frame).
+	_camera.set_reach(RoomRing.reach(_current_room.get_bounds()), _fall_reach_for(body, near))
+	return near
 
 ## Where the fall lead may yield: the current room and, under its floor seam, this region's rooms that span the frame.
 ## Another region's look never shows before its cut (systems/rooms), nor the void beside a narrower room.

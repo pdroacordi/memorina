@@ -22,6 +22,11 @@ static func touching(room: Room, rooms: Array[Node]) -> Array[Room]:
 static func touches(a: Room, b: Room) -> bool:
 	return a.get_bounds().grow(1.0).intersects(b.get_bounds())
 
+## Whether rects `a` and `b` share a stretch of edge, not only a corner.
+static func share_an_edge(a: Rect2, b: Rect2) -> bool:
+	var shared := a.grow(1.0).intersection(b)
+	return maxf(shared.size.x, shared.size.y) > 1.0
+
 ## Runs `current` and its neighbours, so the ground across a seam exists; idles the rest and evicts the oldest.
 func settle(current: Room, rooms: Array[Node]) -> void:
 	var near := touching(current, rooms)

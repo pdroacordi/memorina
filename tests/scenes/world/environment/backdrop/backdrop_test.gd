@@ -84,6 +84,20 @@ func test_without_a_room_it_builds_from_the_preview_bounds() -> void:
 	holder.add_child(backdrop)
 	assert_int(backdrop.get_child_count()).is_equal(SET.layers.size())
 
+## The camera may yield into the room's ring (RoomRing.reach), so its backdrop draws the void it is nearest there; the
+## shader keeps the room's own bounds to judge that.
+func test_a_room_draws_its_ring() -> void:
+	var room := _room_at(Vector2.ZERO)
+	var backdrop := _backdrop_in(room, 235.0)
+	var bounds := room.get_bounds()
+	var material := _material_of(backdrop)
+	assert_that(material.get_shader_parameter(&"room_rect")).is_equal(Vector4(bounds.position.x, bounds.position.y, bounds.size.x, bounds.size.y))
+	assert_float(material.get_shader_parameter(&"ring")).is_equal(RoomRing.WIDTH)
+
+func _material_of(backdrop: Backdrop) -> ShaderMaterial:
+	var quad := backdrop.get_child(0).get_node("Art") as MeshInstance2D
+	return quad.material as ShaderMaterial
+
 func test_setting_the_set_again_rebuilds_once() -> void:
 	var backdrop := _backdrop_in(_room_at(Vector2.ZERO), 235.0)
 	backdrop.backdrop_set = SET

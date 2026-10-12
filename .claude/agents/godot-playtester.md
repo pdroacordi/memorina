@@ -438,6 +438,36 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - A sibling reviewer may file bugs into the same worktree mid-session. `git status` the docs before writing,
     and add evidence to an existing entry instead of filing a duplicate.
 
+- **Learned 2026-10-11 (open sky playtest)**:
+  - **Never spawn above an open room top.** A `player_position` whose body lies outside every room starts with no current
+    room, so no contents load. Ivo then falls through every room below: from (-5740, -2) he landed 1500 px down in
+    caldera_bait. Spawn inside a room and jump up. Check that the first `log` shows `room=` and not `cam=(0,0 0x0)`.
+  - A `"trace": true` step prints one line per physics frame (pos, vel, floor, `cam_centre`, hp) until `"trace": false`.
+    Use it for per-frame camera deltas instead of 0.016 s `log` steps. Trace lines carry no `room=`, so add sparse `log`
+    steps for that.
+  - **In a worktree-isolated session, compound Bash commands are refused** ("too complex to verify that it stays inside the
+    worktree"): a `cd` plus pipes, a heredoc plus a run, or `&&` chains with redirects. Write helper scripts with the Write
+    tool and call each as one plain command. A `run.sh` wrapper that does the `cd` itself is fine.
+  - To check a seam inside the sky band, compare the column-to-column colour step at the seam's window column
+    (`(seam_x - (cam_x - 320)) * 2`) inside rows `0..-view_top*2` with the median step. Use only frames where Ivo is clear of
+    the seam column. During a glide, the nearest `trace` line's camera can be ~100 px off the frame's real camera, so judge
+    glide frames by eye.
+
+- **Learned 2026-10-11 (room-ring regression against main)**:
+  - **Two-tree comparisons:** `git archive <main commit>` into the scratchpad and import it once. Keep every timeline
+    variant in the scratchpad too: `--script` accepts an absolute path. A wrapper that `cd`s into the tree breaks a
+    relative path ("Playtest script not found").
+  - **Compare traces, not stills.** The same timeline lands inputs on different physics frames in two trees: a walk-off
+    differed by 25 px, and a pond jump missed its shelf 2 runs in 3. Align the two traces by the frame shift that best
+    matches Ivo's path, then compare `cam_centre - feet` per frame. Screenshot runs only illustrate.
+  - Trace `t` is the `_process` clock: several physics frames share one `t`, and a hitch is a `t` gap. Never drop a step
+    across a gap. Each trace line is one physics frame, and a region cut often sits right at a gap.
+  - **Side-overshoot detector:** flag frames where the view passes the current room's side bound while the body is inside
+    the room and no `room=` change happened in the last 30 frames. That is how the look-ahead drift showed (6-11 px for
+    26-74 frames), where eyeballing missed it.
+  - Before claiming a camera rule untested, scan the region scenes' room rects for the case. In this run no same-region
+    corner-only pair could be crossed in play, so "corner cuts" could not be played at all.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

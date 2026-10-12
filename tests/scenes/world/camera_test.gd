@@ -93,6 +93,54 @@ func test_the_frame_never_yields_past_the_rooms() -> void:
 	await _two_steps()
 	assert_float(_camera.view_rect().position.y).is_greater_equal(ROOM_A.position.y - 0.5)
 
+## bugs/the-woods-pond-shelf-jump-takes-ivo-out-of-the-top-of-the-frame: a full jump's apex over an open top, the frame
+## rises into the room's ring to keep him whole.
+func test_over_an_open_top_the_frame_yields_into_the_ring() -> void:
+	var body := _body_at(Vector2(600, -80))
+	_camera.set_bounds(ROOM_A)
+	_camera.set_reach(RoomRing.reach(ROOM_A))
+	await _two_steps()
+	assert_float(_camera.view_rect().position.y).is_less_equal(body.body_rect().position.y - _camera.subject_margin + 0.5)
+
+## bugs/a-hop-above-a-neighbours-open-top-drops-it-from-the-camera-reach: a jump on the seam wall top, over room A's
+## columns while room B is current, keeps him whole sideways at any height inside the ring.
+func test_a_jump_over_a_neighbours_columns_stays_in_frame() -> void:
+	for feet: float in [-16.0, -90.0]:
+		var body := _body_at(Vector2(1270, feet))
+		_camera.set_bounds(ROOM_B)
+		_camera.set_reach(RoomRing.reach(ROOM_B))
+		await _two_steps()
+		var view := _camera.view_rect()
+		assert_float(view.position.x).is_less_equal(body.body_rect().position.x - _camera.subject_margin + 0.5)
+		assert_float(view.position.y).is_less_equal(body.body_rect().position.y - _camera.subject_margin + 0.5)
+
+## bugs/a-region-cut-frames-one-step-without-the-open-sky: set_bounds drops the reach to the room, so Game sets the new
+## room's reach after the swap; with it, the cut frame keeps his head in the ring.
+func test_a_region_cut_keeps_the_ring_when_the_reach_follows_the_swap() -> void:
+	var body := _body_at(Vector2(1300, 27))
+	_camera.set_bounds(ROOM_A)
+	await _two_steps()
+	_camera.set_bounds(ROOM_B)
+	_camera.set_reach(RoomRing.reach(ROOM_B))
+	_camera.snap(true)
+	await _two_steps()
+	assert_float(_camera.view_rect().position.y).is_less_equal(body.body_rect().position.y - _camera.subject_margin + 0.5)
+
+func test_set_bounds_drops_the_reach_to_the_room() -> void:
+	_body_at(Vector2(1300, 27))
+	_camera.set_reach(RoomRing.reach(ROOM_B))
+	_camera.set_bounds(ROOM_B)
+	await _two_steps()
+	assert_float(_camera.view_rect().position.y).is_equal_approx(ROOM_B.position.y, 0.5)
+
+## A double jump's apex is past the ring: the frame stops at its edge, never in the void.
+func test_the_frame_never_yields_past_the_ring() -> void:
+	_body_at(Vector2(600, -400))
+	_camera.set_bounds(ROOM_A)
+	_camera.set_reach(RoomRing.reach(ROOM_A))
+	await _two_steps()
+	assert_float(_camera.view_rect().position.y).is_equal_approx(ROOM_A.position.y - RoomRing.WIDTH, 0.5)
+
 ## Falling at full speed toward a room below, the frame yields into it to show the ground under the feet.
 func test_a_fall_keeps_the_ground_below_in_frame() -> void:
 	var body := _falling_body(1.0)
@@ -227,7 +275,8 @@ func test_a_turn_in_a_room_one_screen_wide_keeps_the_frame_inside() -> void:
 	auto_free(ivo)
 	_floor(Vector2(0.0, 330.0), _half_width() * 2.0)
 	var room := Rect2(0.0, 0.0, _half_width() * 2.0, 384.0)
-	_camera.set_bounds(room)
+	# The reach Game sets: the ring around the room (bugs/a-facing-turn-in-a-one-screen-wide-room-slides-the-frame-past-its-bounds).
+	_camera.set_bounds(room, false, RoomRing.reach(room))
 	_camera.follow(ivo)
 	_camera.snap()
 	await _two_steps()
@@ -247,6 +296,14 @@ func _falling_body(air: float) -> FallingSubject:
 	add_child(body)
 	_camera.follow(body)
 	_camera.set_bounds(ROOM_A)
+	return body
+
+## A BodySubject at `feet` the camera follows.
+func _body_at(feet: Vector2) -> BodySubject:
+	var body := auto_free(BodySubject.new()) as BodySubject
+	body.global_position = feet
+	add_child(body)
+	_camera.follow(body)
 	return body
 
 ## A world-layer floor whose top-left corner is `top_left`, `width` px wide.

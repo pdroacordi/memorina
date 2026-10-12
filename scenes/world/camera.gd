@@ -81,7 +81,7 @@ var _shake_strength: float = 0.0
 var _shake_left: float = 0.0
 var _look_ahead_tween: Tween
 ## Px the frame leads the subject by. The look-ahead tween steps after the physics step's clamp, so a write never moves
-## the frame past the reach (bugs/a-facing-turn-in-a-one-screen-wide-room-slides-the-frame-past-its-bounds).
+## the frame past the room (bugs/a-facing-turn-in-a-one-screen-wide-room-slides-the-frame-past-its-bounds).
 var _look_ahead := 0.0:
 	set(value):
 		_look_ahead = value
@@ -97,10 +97,12 @@ var _is_bound: bool = false
 var _reach: Rect2
 ## Where the fall lead may yield past `_bounds`: this region's rooms below that span the frame; `_bounds` until set_reach().
 var _fall_reach: Rect2
-## World px from the new bounds' clamped centre to where the frame stood when they changed; scaled by `_glide_weight`.
+## World px from the new bounds' clamped centre to where the frame stood when they changed; eased out by `_glide_weight`.
 var _glide_from: Vector2 = Vector2.ZERO
-## 1..0 over a glide.
+## 1..0 over a glide, linear in time: `RoomRing.glide_offset` eases each leg.
 var _glide_weight: float = 0.0
+## Whether the glide's axes ease together or one after the other, so no frame of it leaves the two rooms' rings.
+var _glide_order: RoomRing.GlideOrder = RoomRing.GlideOrder.TOGETHER
 var _glide_tween: Tween
 ## Px kept below the feet: rises at `fall_lead_rise`, eases back over `vertical_smooth_time`.
 var _fall_lead: float = 0.0
@@ -124,16 +126,18 @@ func _physics_process(delta: float) -> void:
 	_update_vertical(delta)
 	_update_fall_lead(delta, global_position.y + offset.y + get_viewport_rect().size.y * 0.5 / zoom.y)
 	_apply_bounds()
-	global_position += _glide_from * _glide_weight
+	global_position += RoomRing.glide_offset(_glide_from, _glide_weight, _glide_order)
 	_keep_subject_in_view(delta)
 	_last_centre_y = global_position.y + offset.y
 	_update_shake(delta)
 
-## Confines the visible rectangle to a world-space area; `glide` eases the frame there from where it stands.
-func set_bounds(bounds: Rect2, glide: bool = false) -> void:
+## Confines the visible rectangle to a world-space area, yielding up to `reach` (the area itself when empty) to keep the
+## subject whole; `glide` eases the frame there from where it stands.
+func set_bounds(bounds: Rect2, glide: bool = false, reach: Rect2 = Rect2()) -> void:
 	var shown := global_position
+	var shown_reach := _reach
 	_bounds = bounds
-	_reach = bounds
+	_reach = reach if reach.has_area() else bounds
 	_fall_reach = bounds
 	_is_bound = true
 	_stop_glide()
@@ -144,13 +148,13 @@ func set_bounds(bounds: Rect2, glide: bool = false) -> void:
 	_apply_bounds()
 	_keep_subject_in_view(0.0)
 	_glide_from = shown - global_position
+	var size := get_viewport_rect().size / zoom
+	var to := Rect2(global_position + offset - size * 0.5, size)
+	_glide_order = RoomRing.glide_order(Rect2(to.position + _glide_from, size), to, shown_reach, _reach)
 	global_position = shown
 	_glide_weight = 1.0
-	_glide_tween = create_tween() \
-		.set_process_mode(Tween.TWEEN_PROCESS_PHYSICS) \
-		.set_trans(Tween.TRANS_CUBIC) \
-		.set_ease(Tween.EASE_OUT)
-	# Fast first: until the glide moves, the frame still shows the old room and Ivo is leaving it.
+	# Linear: glide_offset eases each leg out (fast first: until the glide moves, the frame still shows the old room).
+	_glide_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	_glide_tween.tween_property(self, "_glide_weight", 0.0, bounds_glide_time)
 
 ## Where the frame may yield past the bounds to keep the subject whole, and where the fall lead may; set before each step.
@@ -470,14 +474,15 @@ func _keep_subject_in_view(delta: float) -> void:
 		centre.y = _yield_axis(centre.y, shown, _fall_reach.position.y + half.y, _fall_reach.end.y - half.y)
 	global_position = centre - offset
 
-## Sets `offset.x` and moves the frame's centre with it only as far as the reach allows; a glide outside it holds.
+## Sets `offset.x` and moves the frame's centre with it only as far as the room's clamp allows: the ring is for keeping
+## the subject whole, not for leading him. A frame already past the clamp (a yield, a glide) holds.
 func _set_offset_x_within_reach(value: float) -> void:
 	var centre := global_position.x + offset.x
 	offset.x = value
 	if not _is_bound:
 		return
 	var half := get_viewport_rect().size.x * 0.5 / zoom.x
-	var shown := _yield_axis(centre, global_position.x + value, _reach.position.x + half, _reach.end.x - half)
+	var shown := _yield_axis(centre, global_position.x + value, _bounds.position.x + half, _bounds.end.x - half)
 	global_position.x = shown - value
 
 func _yield_axis(from: float, to: float, min_value: float, max_value: float) -> float:
