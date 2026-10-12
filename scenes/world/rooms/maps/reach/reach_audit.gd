@@ -6,6 +6,10 @@ class_name ReachAudit extends RefCounted
 const TIERS: Array[ReachLattice.Tier] = [ReachLattice.Tier.BASE, ReachLattice.Tier.DOUBLE_JUMP, ReachLattice.Tier.WALL_CLIMB]
 ## Rows under an anchor's cell searched for the surface it stands on.
 const ANCHOR_DROP := 3
+## Widest ground run, in cells, that can be a shelf.
+const SHELF_CELLS := 6
+## Thickest slab, in rows, under a shelf: deeper solid is the ground below.
+const SHELF_DEPTH := 2
 
 enum _Node { SURFACE, TRANSIT, GRIP }
 
@@ -20,6 +24,11 @@ var _node_of: Dictionary[Vector2i, int] = {}
 var _edges: Array[Array] = []
 var _start := -1
 var _anchors := PackedInt32Array()
+# Each island cell's group, and each group's cells.
+var _island_of: Dictionary[Vector2i, int] = {}
+var _island_cells: Array[Array] = []
+# Each cell a root span bridges or climbs: the indices in ReachGrid.roots of every span crossing it.
+var _roots_at: Dictionary[Vector2i, PackedInt32Array] = {}
 
 static func run(grid: ReachGrid, lattice: ReachLattice) -> ReachReport:
 	return ReachAudit.new(grid, lattice)._run()
@@ -82,26 +91,80 @@ func _find_surfaces() -> void:
 		_add_node(_Node.SURFACE, surface.cells)
 
 func _classify() -> void:
-	var islands := _islands()
+	_find_islands()
 	for surface: ReachReport.Surface in _report.surfaces:
 		var ground := false
+		var roof := false
 		var platform := false
 		if _lattice.is_wet(surface.cells[0]):
 			surface.support = ReachReport.Support.SONG
 			continue
-		for feet: Vector2i in surface.cells:
-			for i: int in _lattice.body.x:
-				var under := feet + Vector2i(i, 1)
-				var flags := _grid.flags(under)
-				if flags & ReachGrid.ROOF != 0 or (flags & ReachGrid.SOLID != 0 and not islands.has(under)):
-					ground = true
-				elif flags & (ReachGrid.SOLID | ReachGrid.ONE_WAY) != 0:
-					platform = true
-		surface.support = ReachReport.Support.GROUND if ground else ReachReport.Support.PLATFORM if platform else ReachReport.Support.SONG
+		for under: Vector2i in _supports(surface):
+			var flags := _grid.flags(under)
+			if flags & ReachGrid.ROOF != 0:
+				roof = true
+			elif flags & ReachGrid.SOLID != 0 and not _island_of.has(under):
+				ground = true
+			elif flags & (ReachGrid.SOLID | ReachGrid.ONE_WAY) != 0:
+				platform = true
+		if roof or (ground and not _is_shelf(surface)):
+			surface.support = ReachReport.Support.GROUND
+		elif ground:
+			surface.support = ReachReport.Support.SHELF
+		else:
+			surface.support = ReachReport.Support.PLATFORM if platform else ReachReport.Support.SONG
+
+# The cells under a surface's feet, left to right.
+func _supports(surface: ReachReport.Surface) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	for feet: Vector2i in surface.cells:
+		for i: int in _lattice.body.x:
+			if not cells.has(feet + Vector2i(i, 1)):
+				cells.append(feet + Vector2i(i, 1))
+	return cells
+
+# A narrow run with a drop at an end, where most of the solid or one-way cells holding it have air within SHELF_DEPTH
+# rows below.
+func _is_shelf(surface: ReachReport.Surface) -> bool:
+	if surface.cells.size() > SHELF_CELLS or not (_drops(surface, -1) or _drops(surface, 1)):
+		return false
+	var held := 0
+	var thin := 0
+	for under: Vector2i in _supports(surface):
+		if _grid.flags(under) & (ReachGrid.SOLID | ReachGrid.ONE_WAY) == 0:
+			continue
+		held += 1
+		if _overhangs(under):
+			thin += 1
+	return thin * 2 > held
+
+# Whether walking off the run's left (-1) or right (1) end falls past SHELF_DEPTH + 1 rows: a ledge's edge, not a step
+# down, a wall or the world's edge.
+func _drops(surface: ReachReport.Surface, side: int) -> bool:
+	var x := surface.cells[0].x - 1 if side < 0 else surface.cells[-1].x + _lattice.body.x
+	var feet := surface.cells[0].y
+	if _grid.room_at(Vector2i(x, feet)) < 0:
+		return false
+	for j: int in _lattice.body.y:
+		if _grid.flags(Vector2i(x, feet - j)) & ReachGrid.SOLID != 0:
+			return false
+	for depth: int in range(1, SHELF_DEPTH + 2):
+		if _grid.flags(Vector2i(x, feet + depth)) & (ReachGrid.SOLID | ReachGrid.ONE_WAY) != 0:
+			return false
+	return true
+
+# Whether air lies within SHELF_DEPTH rows below `cell`; outside every room counts as solid.
+func _overhangs(cell: Vector2i) -> bool:
+	for depth: int in range(1, SHELF_DEPTH + 1):
+		var below := cell + Vector2i(0, depth)
+		if _grid.room_at(below) < 0:
+			return false
+		if _grid.flags(below) & ReachGrid.SOLID == 0:
+			return true
+	return false
 
 # Solid cells in 4-connected groups that touch no edge of the room each cell is in.
-func _islands() -> Dictionary[Vector2i, bool]:
-	var islands: Dictionary[Vector2i, bool] = {}
+func _find_islands() -> void:
 	var seen: Dictionary[Vector2i, bool] = {}
 	for i: int in _grid.room_count():
 		var rect := _grid.room_rect(i)
@@ -127,8 +190,8 @@ func _islands() -> Dictionary[Vector2i, bool]:
 							group.append(neighbour)
 				if not edge:
 					for cell: Vector2i in group:
-						islands[cell] = true
-	return islands
+						_island_of[cell] = _island_cells.size()
+					_island_cells.append(group)
 
 func _mark_anchors() -> void:
 	var marked: Dictionary[int, bool] = {_start: true}
@@ -321,11 +384,19 @@ func _flag_useless(forward: Array[Array], backward: Array[Array], reach: Array[P
 		_mark_dominators(_dominators(forward[tier], backward[tier]), useful)
 		_mark_dominators(_dominators(backward[tier], forward[tier]), useful)
 	var full := reach[ReachLattice.Tier.WALL_CLIMB]
+	var grown: Dictionary[int, PackedInt32Array] = {}
 	var useless := PackedByteArray()
 	useless.resize(_kinds.size())
 	for node: int in _report.surfaces.size():
-		if full[node] == 1 and useful[node] == 0 and _report.surfaces[node].support != ReachReport.Support.SONG:
-			useless[node] = 1
+		var support := _report.surfaces[node].support
+		if full[node] == 0 or useful[node] == 1 or support == ReachReport.Support.SONG:
+			continue
+		if support != ReachReport.Support.GROUND:
+			grown[node] = _grown_from(node)
+			# Sound only because a node is credited when nothing but this ledge's roots make it.
+			if Array(grown[node]).any(func(root: int) -> bool: return useful[root] == 1):
+				continue
+		useless[node] = 1
 	var candidates: Array[int] = []
 	var grouped := PackedByteArray()
 	grouped.resize(_kinds.size())
@@ -358,12 +429,78 @@ func _flag_useless(forward: Array[Array], backward: Array[Array], reach: Array[P
 	var removed := PackedByteArray()
 	removed.resize(_kinds.size())
 	for node: int in candidates:
-		removed[node] = 1
+		# Removing a ledge removes the roots that grow from it.
+		var taken: Array[int] = [node]
+		for root: int in grown[node]:
+			if removed[root] == 0:
+				taken.append(root)
+		for at: int in taken:
+			removed[at] = 1
 		if _cuts(forward, backward, reach, back, removed):
-			removed[node] = 0
+			for at: int in taken:
+				removed[at] = 0
 			_add_finding(ReachFinding.Kind.REDUNDANT_ROUTE, false, [node])
 		else:
 			_add_finding(ReachFinding.Kind.LEADS_NOWHERE, true, [node])
+
+# The root nodes that only this platform's or shelf's solid grows: its island, or the slab under its feet. A node
+# that another span or a current also makes stays when the ledge goes, so it is not credited
+# (bugs/a-ledge-is-credited-with-a-whole-merged-root-node-and-its-dead-end-goes-unreported).
+func _grown_from(node: int) -> PackedInt32Array:
+	var solid: Dictionary[Vector2i, bool] = {}
+	for under: Vector2i in _supports(_report.surfaces[node]):
+		if _island_of.has(under):
+			for cell: Vector2i in _island_cells[_island_of[under]]:
+				solid[cell] = true
+			continue
+		var depth := SHELF_DEPTH if _overhangs(under) else 0
+		var cell := under
+		while _grid.flags(cell) & (ReachGrid.SOLID | ReachGrid.ONE_WAY) != 0 and cell.y - under.y <= depth:
+			solid[cell] = true
+			cell += Vector2i.DOWN
+	var own: Dictionary[int, bool] = {}
+	for i: int in _grid.roots.size():
+		if _grid.roots[i].ends.any(func(end: Vector2i) -> bool: return solid.has(end)):
+			own[i] = true
+	var nodes: Dictionary[int, bool] = {}
+	for i: int in own:
+		for cell: Vector2i in _grid.roots[i].cells:
+			for feet: Vector2i in _feet_over(cell):
+				var at: int = _node_of.get(feet, -1)
+				if at >= 0 and _kinds[at] == _Node.TRANSIT and not nodes.has(at):
+					nodes[at] = _made_only_by(at, own)
+	var credited := PackedInt32Array()
+	for at: int in nodes:
+		if nodes[at]:
+			credited.append(at)
+	return credited
+
+# Whether every cell of transit node `at` holds only roots in `own`, and no current.
+func _made_only_by(at: int, own: Dictionary[int, bool]) -> bool:
+	if _roots_at.is_empty():
+		for i: int in _grid.roots.size():
+			for cell: Vector2i in _grid.roots[i].cells:
+				var list: PackedInt32Array = _roots_at.get(cell, PackedInt32Array())
+				list.append(i)
+				_roots_at[cell] = list
+	for feet: Vector2i in _cells[at]:
+		for j: int in _lattice.body.y:
+			for i: int in _lattice.body.x:
+				var cell := feet + Vector2i(i, -j)
+				if _grid.flags(cell) & ReachGrid.CURRENT != 0:
+					return false
+				for root: int in _roots_at.get(cell, PackedInt32Array()):
+					if not own.has(root):
+						return false
+	return true
+
+# The feet cells whose footprint covers `cell`.
+func _feet_over(cell: Vector2i) -> Array[Vector2i]:
+	var feet: Array[Vector2i] = []
+	for j: int in _lattice.body.y:
+		for i: int in _lattice.body.x:
+			feet.append(cell + Vector2i(-i, j))
+	return feet
 
 # Immediate dominators from the start over `succ` (Cooper, Harvey and Kennedy), -1 where unreached.
 func _dominators(succ: Array[PackedInt32Array], pred: Array[PackedInt32Array]) -> PackedInt32Array:

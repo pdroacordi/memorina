@@ -10,6 +10,9 @@ enum Support {
 	PLATFORM,
 	## Only floors a song makes, or in water a song holds back: never flagged.
 	SONG,
+	## Ground at most ReachAudit.SHELF_CELLS wide, mostly over air within SHELF_DEPTH rows: a ledge out of a wall,
+	## judged as a platform for LEADS_NOWHERE.
+	SHELF,
 }
 
 var surfaces: Array[Surface] = []

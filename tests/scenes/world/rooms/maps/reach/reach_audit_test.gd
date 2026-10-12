@@ -1,6 +1,7 @@
 class_name ReachAuditTest extends GdUnitTestSuite
 
-## One fixture per finding: unreachable, leads nowhere, redundant route, dead-end pocket, no way back; and doors.
+## One fixture per finding: unreachable, leads nowhere, redundant route, dead-end pocket, no way back; doors, wall
+## shelves and the roots a ledge grows.
 
 func _audit(grid: ReachGrid) -> ReachReport:
 	return ReachAudit.run(grid, ReachFixture.ivo())
@@ -37,8 +38,42 @@ func test_a_platform_holding_content_is_fine() -> void:
 	assert_array(_kinds(_audit(grid))).is_empty()
 
 func test_ground_that_holds_nothing_is_a_dead_end_pocket() -> void:
-	var report := _audit(ReachFixture.grid(_room({8: "SSSS.................."}), Vector2i(10, 10)))
+	var report := _audit(ReachFixture.grid(_terrace(), Vector2i(10, 10)))
 	assert_array(_kinds(report)).contains_exactly(["DEAD_END_POCKET 0,7 warning"])
+
+# A raised terrace, solid down to the floor.
+func _terrace() -> PackedStringArray:
+	return _room({8: "SSSS..................", 9: "SSSS..................", 10: "SSSS.................."})
+
+# The wall of the room's west edge, with `extra` rows by index.
+func _walled(extra: Dictionary) -> PackedStringArray:
+	var rows := PackedStringArray()
+	for y: int in 11:
+		rows.append(extra.get(y, "S....................."))
+	rows.append("######################")
+	return rows
+
+func test_a_wall_shelf_that_holds_nothing_leads_nowhere() -> void:
+	var report := _audit(ReachFixture.grid(_walled({8: "SSSS.................."}), Vector2i(10, 10)))
+	assert_array(_kinds(report)).contains_exactly(["LEADS_NOWHERE 1,7 error"])
+
+func test_a_wall_shelf_on_the_way_to_content_is_fine() -> void:
+	var grid := ReachFixture.grid(_walled({4: "S......R..............", 5: "S.....====............", 8: "SSSS.................."}), Vector2i(10, 10),
+		PackedStringArray(), PackedStringArray(["7,4 = {\"bench_id\": \"fixture_bench\"}"]))
+	assert_array(_kinds(_audit(grid))).is_empty()
+
+func test_a_roof_that_holds_nothing_is_a_dead_end_pocket() -> void:
+	var report := _audit(ReachFixture.grid(_room({8: "..........^^^^........"}), Vector2i(2, 10)))
+	assert_array(_kinds(report)).contains_exactly(["DEAD_END_POCKET 10,7 warning"])
+
+# A block on a floor one cell thick: thin underneath, but its ends step down onto the floor, so it is no shelf.
+func test_a_block_on_a_thin_floor_is_a_step_not_a_shelf() -> void:
+	var rows := PackedStringArray()
+	for y: int in 7:
+		rows.append("S....................S")
+	rows.append_array(["S.........SS.........S", "SSSSSSSSSSSSSSSSSSSSSS", "SSSSSSSSSS..SSSSSSSSSS", "SSSSSSSSSSSSSSSSSSSSSS"])
+	var report := _audit(ReachFixture.grid(rows, Vector2i(2, 7)))
+	assert_array(_kinds(report)).contains_exactly(["DEAD_END_POCKET 10,6 warning"])
 
 func test_a_platform_next_to_a_secret_is_fine() -> void:
 	var rows := _room({8: "..........====........"})
@@ -53,7 +88,9 @@ func test_a_platform_next_to_a_secret_is_fine() -> void:
 	assert_array(_kinds(_audit(grid))).is_empty()
 
 func test_a_platform_beside_a_dead_end_pocket_still_leads_nowhere() -> void:
-	var report := _audit(ReachFixture.grid(_room({5: "......====............", 8: "SSSS.................."}), Vector2i(10, 10)))
+	var rows := _terrace()
+	rows[5] = "......====............"
+	var report := _audit(ReachFixture.grid(rows, Vector2i(10, 10)))
 	assert_array(_kinds(report)).contains_exactly_in_any_order(["DEAD_END_POCKET 0,7 warning", "LEADS_NOWHERE 6,4 error"])
 
 func test_a_door_without_a_partner_in_its_region_is_an_error() -> void:
@@ -131,3 +168,79 @@ func test_a_stair_out_of_a_pit_is_a_way_back() -> void:
 	var grid := ReachFixture.grid(rows, Vector2i(1, 6))
 	grid.add_stair(Vector2i(6, 16), Vector2i(9, 6))
 	assert_array(_kinds(_audit(grid)).filter(func(kind: String) -> bool: return kind.begins_with("NO_WAY_BACK"))).is_empty()
+
+# An earth block whose root pillar from the floor is the only base-kit way up to a bench on a stone ledge; `stone`
+# adds a stepping stone, a second way.
+func _rooted(stone: bool) -> ReachGrid:
+	var rows := PackedStringArray()
+	for y: int in 13:
+		match y:
+			3:
+				rows.append("...##.........................")
+			4:
+				rows.append("...##.........R...............")
+			5:
+				rows.append("..........SSSSSSSSSS..........")
+			9:
+				rows.append("........................SSS..." if stone else "..............................")
+			_:
+				rows.append("..............................")
+	rows.append("##############################")
+	return ReachFixture.rooted_grid(rows, Vector2i(26, 12), PackedStringArray(["14,4 = {\"bench_id\": \"fixture_bench\"}"]))
+
+func test_a_ledge_whose_roots_lead_to_content_is_fine() -> void:
+	assert_array(_kinds(_audit(_rooted(false)))).is_empty()
+
+# Removing the block removes its pillar too, so the stepping stone is the last way up.
+func test_removing_a_ledge_removes_the_roots_it_grows() -> void:
+	assert_array(_kinds(_audit(_rooted(true)))).contains_exactly(["LEADS_NOWHERE 3,2 error", "REDUNDANT_ROUTE 24,8 warning"])
+
+# A 4-wide earth shaft, the only way up to a bench, with a 2-cell earth shelf out of its east wall at row 12. The
+# shelf's pillars join the shaft's roots in one transit node; the shaft stays when the shelf goes.
+func test_a_shelf_in_a_needed_root_shaft_still_leads_nowhere() -> void:
+	var rows := PackedStringArray(["SSSSSSSSSSSSSSSSSSSS", "S..................S", "S..................S", "S...........R......S"])
+	for y: int in range(4, 21):
+		rows.append("SSSS#..###SSSSSSSSSS" if y == 12 else "SSSS#....#SSSSSSSSSS")
+	rows.append_array(["SSSS######SSSSSSSSSS", "SSSSSSSSSSSSSSSSSSSS"])
+	var grid := ReachFixture.rooted_grid(rows, Vector2i(6, 20), PackedStringArray(["12,3 = {\"bench_id\": \"fixture_bench\"}"]))
+	assert_array(_kinds(_audit(grid))).contains_exactly(["LEADS_NOWHERE 7,11 error"])
+
+# The support of the surface holding feet cell `cell`, -1 if none does.
+func _support_at(report: ReachReport, cell: Vector2i) -> int:
+	for surface: ReachReport.Surface in report.surfaces:
+		if surface.cells.has(cell):
+			return surface.support
+	return -1
+
+func test_a_shelf_is_six_cells_at_most() -> void:
+	var six := _audit(ReachFixture.grid(_walled({8: "SSSSSSS..............."}), Vector2i(10, 10)))
+	assert_int(_support_at(six, Vector2i(1, 7))).is_equal(ReachReport.Support.SHELF)
+	var seven := _audit(ReachFixture.grid(_walled({8: "SSSSSSSS.............."}), Vector2i(10, 10)))
+	assert_int(_support_at(seven, Vector2i(1, 7))).is_equal(ReachReport.Support.GROUND)
+	assert_array(_kinds(seven)).contains_exactly(["DEAD_END_POCKET 1,7 warning"])
+
+func test_a_slab_two_rows_thick_is_a_shelf_and_three_is_ground() -> void:
+	var two := _audit(ReachFixture.grid(_walled({8: "SSSS..................", 9: "SSSS.................."}), Vector2i(10, 10)))
+	assert_int(_support_at(two, Vector2i(1, 7))).is_equal(ReachReport.Support.SHELF)
+	var three := _audit(ReachFixture.grid(_walled({6: "SSSS..................", 7: "SSSS..................", 8: "SSSS.................."}), Vector2i(10, 10)))
+	assert_int(_support_at(three, Vector2i(1, 5))).is_equal(ReachReport.Support.GROUND)
+
+# A shelf hanging off a wall down from the room's top, running east to the room's edge or stopping one cell short.
+func _edge_shelf(to_edge: bool) -> PackedStringArray:
+	var rows := PackedStringArray()
+	for y: int in 11:
+		if y == 8:
+			rows.append(".................SSSSS" if to_edge else ".................SSSS.")
+		else:
+			rows.append(".................S...." if y < 8 else "......................")
+	rows.append("######################")
+	return rows
+
+func test_a_cell_beside_a_shelf_outside_every_room_is_no_drop() -> void:
+	assert_int(_support_at(_audit(ReachFixture.grid(_edge_shelf(false), Vector2i(2, 10))), Vector2i(18, 7))).is_equal(ReachReport.Support.SHELF)
+	assert_int(_support_at(_audit(ReachFixture.grid(_edge_shelf(true), Vector2i(2, 10))), Vector2i(18, 7))).is_equal(ReachReport.Support.GROUND)
+
+# A wall ledge on the room's last row: nothing is below it, which counts as solid, so it is no shelf.
+func test_outside_every_room_under_a_slab_counts_as_solid() -> void:
+	var report := _audit(ReachFixture.grid(PackedStringArray(["S.......", "S.......", "SSSS...."]), Vector2i(1, 1)))
+	assert_int(_support_at(report, Vector2i(1, 1))).is_equal(ReachReport.Support.GROUND)

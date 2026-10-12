@@ -30,6 +30,8 @@ var anchors: Array[Vector2i] = []
 var doors: Array[Dictionary] = []
 ## Each stair's two feet cells, world cells, joined both ways.
 var stairs: Array[Array] = []
+## Each root span added, so a removed ledge also removes the roots it grows.
+var roots: Array[Root] = []
 
 var _cells: Dictionary[Vector2i, int] = {}
 var _room_ids: Array[StringName] = []
@@ -70,22 +72,29 @@ func add_room(id: StringName, map: RoomMap, cell_origin: Vector2i, region: Strin
 func add_roots(spans: Array[RootSpanFinder.Span], map: RoomMap, cell_origin: Vector2i) -> void:
 	var offset := cell_origin - map.origin
 	for span: RootSpanFinder.Span in spans:
+		var root := Root.new()
 		match span.kind:
 			RootSpanFinder.Kind.BRIDGE:
+				root.ends.assign([offset + span.a, offset + span.b])
 				for x: int in range(span.a.x + 1, span.b.x):
-					_flag(offset + Vector2i(x, span.a.y), SONG_FLOOR)
+					root.cells.append(offset + Vector2i(x, span.a.y))
+				_flag_all(root.cells, SONG_FLOOR)
 			RootSpanFinder.Kind.SHAFT:
 				for y: int in range(span.rows.x, span.rows.y + 1):
+					root.ends.append_array([offset + Vector2i(span.a.x, y), offset + Vector2i(span.b.x, y)])
 					for x: int in range(span.a.x + 1, span.b.x):
-						_flag(offset + Vector2i(x, y), CLIMB)
+						root.cells.append(offset + Vector2i(x, y))
+				_flag_all(root.cells, CLIMB)
 			RootSpanFinder.Kind.PILLAR:
+				root.ends.assign([offset + span.a, offset + span.b])
 				for y: int in range(span.rows.x + 1, span.rows.y):
-					_flag(offset + Vector2i(span.a.x, y), CLIMB)
+					root.cells.append(offset + Vector2i(span.a.x, y))
+				_flag_all(root.cells, CLIMB)
+		roots.append(root)
 
 ## Marks world `cells` with `flag` (SONG_FLOOR from a mover, CURRENT or CURRENT_EXIT from a current).
 func add_cells(cells: Array[Vector2i], flag: int) -> void:
-	for cell: Vector2i in cells:
-		_flag(cell, flag)
+	_flag_all(cells, flag)
 
 ## A stair (role STAIR) from world feet cell `foot` to `head`, ridden both ways.
 func add_stair(foot: Vector2i, head: Vector2i) -> void:
@@ -141,3 +150,14 @@ func _add_water(map: RoomMap, offset: Vector2i) -> void:
 
 func _flag(cell: Vector2i, flag: int) -> void:
 	_cells[cell] = _cells.get(cell, 0) | flag
+
+func _flag_all(cells: Array[Vector2i], flag: int) -> void:
+	for cell: Vector2i in cells:
+		_flag(cell, flag)
+
+## One root span in world cells.
+class Root:
+	## The earth cells it grows from (a shaft: both walls on every row).
+	var ends: Array[Vector2i] = []
+	## The cells it bridges or climbs.
+	var cells: Array[Vector2i] = []

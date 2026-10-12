@@ -28,6 +28,15 @@ static func grid(rows: PackedStringArray, start: Vector2i, water: PackedStringAr
 	built.set_start(start)
 	return built
 
+## grid() with every root span Enraizar grows at RootGrower's wet reach (bridge 14, shaft 4 wide and 2 rows, pillar 8).
+static func rooted_grid(rows: PackedStringArray, start: Vector2i, entities: PackedStringArray = PackedStringArray()) -> ReachGrid:
+	var built := ReachGrid.new()
+	var room_map := map(rows, PackedStringArray(), entities)
+	built.add_room(&"fixture", room_map, Vector2i.ZERO)
+	built.add_roots(RootSpanFinder.find(room_map, 14, 4, 2, 8), room_map, Vector2i.ZERO)
+	built.set_start(start)
+	return built
+
 ## Every cell reached from `from` over any number of jumps and falls in `tier`.
 static func closure(grid: ReachGrid, from: Vector2i, tier: ReachLattice.Tier) -> Dictionary[Vector2i, bool]:
 	var reached: Dictionary[Vector2i, bool] = {from: true}

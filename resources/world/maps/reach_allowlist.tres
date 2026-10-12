@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ReachAllowlist" load_steps=31 format=3]
+[gd_resource type="Resource" script_class="ReachAllowlist" load_steps=30 format=3]
 
 [ext_resource type="Script" path="res://resources/world/maps/reach_allowlist.gd" id="1_list"]
 [ext_resource type="Script" path="res://resources/world/maps/reach_allowlist_entry.gd" id="2_entry"]
@@ -41,51 +41,86 @@ reason = "WORLD-25: the stepping stone over the bench funnel on the caldera's ea
 [sub_resource type="Resource" id="entry_6"]
 script = ExtResource("2_entry")
 room = &"lake_high_wall"
-cell = Vector2i(16, 20)
+cell = Vector2i(15, 17)
 kind = 1
-reason = "STORY-06: the ladder to the high exit collectible (design 04 section 3.5); stale once it lands"
+reason = "STORY-06: the top step of the ladder to the high exit collectible (design 04 section 3.5); stale once it lands"
 
 [sub_resource type="Resource" id="entry_7"]
 script = ExtResource("2_entry")
 room = &"lake_high_wall"
-cell = Vector2i(16, 23)
+cell = Vector2i(16, 20)
 kind = 1
 reason = "STORY-06: the ladder to the high exit collectible (design 04 section 3.5); stale once it lands"
 
 [sub_resource type="Resource" id="entry_8"]
 script = ExtResource("2_entry")
 room = &"lake_high_wall"
-cell = Vector2i(16, 26)
+cell = Vector2i(16, 23)
 kind = 1
 reason = "STORY-06: the ladder to the high exit collectible (design 04 section 3.5); stale once it lands"
 
 [sub_resource type="Resource" id="entry_9"]
 script = ExtResource("2_entry")
 room = &"lake_high_wall"
-cell = Vector2i(16, 29)
+cell = Vector2i(16, 26)
 kind = 1
 reason = "STORY-06: the ladder to the high exit collectible (design 04 section 3.5); stale once it lands"
 
 [sub_resource type="Resource" id="entry_10"]
+script = ExtResource("2_entry")
+room = &"lake_high_wall"
+cell = Vector2i(16, 29)
+kind = 1
+reason = "STORY-06: the ladder to the high exit collectible (design 04 section 3.5); stale once it lands"
+
+[sub_resource type="Resource" id="entry_11"]
+script = ExtResource("2_entry")
+room = &"lake_shore"
+cell = Vector2i(6, 5)
+kind = 1
+reason = "TECH-06: the base-kit step from lake_high_wall's floor passage back up onto the causeway (lake_shore header: the causeway is the way west with no song); only the audit's song union opens a way round"
+
+[sub_resource type="Resource" id="entry_12"]
 script = ExtResource("2_entry")
 room = &"orchard_cliff_chimney"
 cell = Vector2i(1, 39)
 kind = 4
 reason = "WORLD-25: only wall climbers come down the chimney (orchard_arena's barrier requires has_wall_climb, design 04 section 3.6); the audit opens every barrier for every tier"
 
-[sub_resource type="Resource" id="entry_11"]
+[sub_resource type="Resource" id="entry_13"]
 script = ExtResource("2_entry")
 room = &"orchard_cliff_chimney"
 cell = Vector2i(6, 69)
 kind = 4
 reason = "WORLD-25: only wall climbers come down the chimney (orchard_arena's barrier requires has_wall_climb, design 04 section 3.6); the audit opens every barrier for every tier"
 
-[sub_resource type="Resource" id="entry_12"]
+[sub_resource type="Resource" id="entry_14"]
 script = ExtResource("2_entry")
 room = &"orchard_cliff_chimney"
 cell = Vector2i(1, 106)
 kind = 4
 reason = "WORLD-25: only wall climbers come down the chimney (orchard_arena's barrier requires has_wall_climb, design 04 section 3.6); the audit opens every barrier for every tier"
+
+[sub_resource type="Resource" id="entry_15"]
+script = ExtResource("2_entry")
+room = &"orchard_windy_gap"
+cell = Vector2i(11, 3)
+kind = 1
+reason = "TECH-06: the stop at the shelf's east end that holds the cocoon on the plate (col 10) when the gale blows it east (design 02 section 8, Outono Logico 2; orchard_windy_gap header); a puzzle part"
+
+[sub_resource type="Resource" id="entry_16"]
+script = ExtResource("2_entry")
+room = &"village_bell_tower"
+cell = Vector2i(12, 3)
+kind = 1
+reason = "STORY-06: the alcove ledge, left empty for the bell tower's collectible (design 04 section 3.1; village_bell_tower header); stale once it lands"
+
+[sub_resource type="Resource" id="entry_17"]
+script = ExtResource("2_entry")
+room = &"village_tavern"
+cell = Vector2i(33, 12)
+kind = 1
+reason = "TECH-06: the floor of the tavern's east upper room (design 04 section 3.1, 'quartos em cima'), dressed with a chest and a bed; the audit anchors no dressing"
 
 [sub_resource type="Resource" id="entry_18"]
 script = ExtResource("2_entry")
@@ -125,39 +160,32 @@ reason = "WORLD-25: the single-jump climb to the ressalto alto (design 04 sectio
 [sub_resource type="Resource" id="entry_23"]
 script = ExtResource("2_entry")
 room = &"woods_deep"
-cell = Vector2i(50, 14)
+cell = Vector2i(44, 18)
 kind = 1
 reason = "WORLD-25: the single-jump climb to the ressalto alto (design 04 section 3.4, 'plataformas nas copas'); before the double jump it shows the canopy gate, after it the double jump and root pillars between the aligned earth ledges skip it"
 
 [sub_resource type="Resource" id="entry_24"]
 script = ExtResource("2_entry")
 room = &"woods_deep"
-cell = Vector2i(44, 18)
+cell = Vector2i(38, 22)
 kind = 1
 reason = "WORLD-25: the single-jump climb to the ressalto alto (design 04 section 3.4, 'plataformas nas copas'); before the double jump it shows the canopy gate, after it the double jump and root pillars between the aligned earth ledges skip it"
 
 [sub_resource type="Resource" id="entry_25"]
 script = ExtResource("2_entry")
 room = &"woods_deep"
-cell = Vector2i(38, 22)
-kind = 1
-reason = "WORLD-25: the single-jump climb to the ressalto alto (design 04 section 3.4, 'plataformas nas copas'); before the double jump it shows the canopy gate, after it the double jump and root pillars between the aligned earth ledges skip it"
-
-[sub_resource type="Resource" id="entry_26"]
-script = ExtResource("2_entry")
-room = &"woods_deep"
 cell = Vector2i(28, 35)
 kind = 1
 reason = "WORLD-25: woods_root_caves' row-0 one-way, where the Enraizar rungs out of the earth well end and one jump reaches woods_deep (bugs/the-root-caves-roots-end-short-of-woods-deep-without-the-row-0-ledge); the audit climbs a root shaft to the top of its walls"
 
-[sub_resource type="Resource" id="entry_27"]
+[sub_resource type="Resource" id="entry_26"]
 script = ExtResource("2_entry")
 room = &"woods_hut"
 cell = Vector2i(10, 4)
 kind = 1
 reason = "STORY-06: the ledges to the woods_hut letter (design 04 section 3.4); stale once the letter lands"
 
-[sub_resource type="Resource" id="entry_28"]
+[sub_resource type="Resource" id="entry_27"]
 script = ExtResource("2_entry")
 room = &"woods_hut"
 cell = Vector2i(7, 6)
@@ -166,4 +194,4 @@ reason = "STORY-06: the ledges to the woods_hut letter (design 04 section 3.4); 
 
 [resource]
 script = ExtResource("1_list")
-entries = Array[ExtResource("2_entry")]([SubResource("entry_1"), SubResource("entry_2"), SubResource("entry_3"), SubResource("entry_4"), SubResource("entry_5"), SubResource("entry_6"), SubResource("entry_7"), SubResource("entry_8"), SubResource("entry_9"), SubResource("entry_10"), SubResource("entry_11"), SubResource("entry_12"), SubResource("entry_18"), SubResource("entry_19"), SubResource("entry_20"), SubResource("entry_21"), SubResource("entry_22"), SubResource("entry_23"), SubResource("entry_24"), SubResource("entry_25"), SubResource("entry_26"), SubResource("entry_27"), SubResource("entry_28")])
+entries = Array[ExtResource("2_entry")]([SubResource("entry_1"), SubResource("entry_2"), SubResource("entry_3"), SubResource("entry_4"), SubResource("entry_5"), SubResource("entry_6"), SubResource("entry_7"), SubResource("entry_8"), SubResource("entry_9"), SubResource("entry_10"), SubResource("entry_11"), SubResource("entry_12"), SubResource("entry_13"), SubResource("entry_14"), SubResource("entry_15"), SubResource("entry_16"), SubResource("entry_17"), SubResource("entry_18"), SubResource("entry_19"), SubResource("entry_20"), SubResource("entry_21"), SubResource("entry_22"), SubResource("entry_23"), SubResource("entry_24"), SubResource("entry_25"), SubResource("entry_26"), SubResource("entry_27")])

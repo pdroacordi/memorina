@@ -21,6 +21,16 @@ func test_a_room_is_placed_at_its_cell_origin() -> void:
 	assert_that(grid.bounds()).is_equal(Rect2i(10, 20, 2, 2))
 	assert_str(String(grid.room_id(grid.room_at(Vector2i(11, 21))))).is_equal("far")
 
+func test_a_root_span_keeps_its_earth_ends_and_its_cells() -> void:
+	var room_map := ReachFixture.map(PackedStringArray(["#.", "..", "..", "##"]))
+	var grid := ReachGrid.new()
+	grid.add_room(&"fixture", room_map, Vector2i(10, 20))
+	grid.add_roots(RootSpanFinder.find(room_map, 14, 4, 2, 8), room_map, Vector2i(10, 20))
+	assert_int(grid.roots.size()).is_equal(1)
+	assert_array(grid.roots[0].ends).contains_exactly([Vector2i(10, 23), Vector2i(10, 20)])
+	assert_array(grid.roots[0].cells).contains_exactly([Vector2i(10, 21), Vector2i(10, 22)])
+	assert_int(grid.flags(Vector2i(10, 21))).is_equal(ReachGrid.CLIMB)
+
 func test_a_lake_is_a_hazard() -> void:
 	var grid := ReachFixture.grid(PackedStringArray(["....", "####"]), Vector2i.ZERO, PackedStringArray(["www.", "...."]))
 	assert_int(grid.flags(Vector2i(1, 0)) & ReachGrid.HAZARD).is_not_equal(0)
