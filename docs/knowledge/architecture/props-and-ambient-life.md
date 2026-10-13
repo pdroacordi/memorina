@@ -239,6 +239,7 @@ centre, so the frame is square. The tower or mill body is a separate still prop.
   The village is 0.8 at the start and 1.0 at the Return, so nobody needs an upper bound. The drop
   to 0.6 itself is MEM-13.
 - A hidden parent also stops its `AmbientMotion` (it tests visibility first).
+- **Built (WORLD-11, 2026-10-13):** the drop is `RegionMemory.steps` (`systems/guardians`), and the village's leavers are listed in `systems/props` (The village street). Lit windows are one overlay per front rather than a `window_light_<size>` sprite per pane (`systems/props`, Facades).
 - The change applies when the signal arrives. The drop happens while Ivo is in another region; the
   Return is staged by its STORY item, which should change the baseline behind a fade.
 

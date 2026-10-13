@@ -6,7 +6,7 @@ status: active
 tags: [world, layout, rooms, regions, interiors, generator, uid]
 related: [systems/rooms, systems/map, systems/backdrops, architecture/doors-and-interiors]
 created: 2026-10-09
-updated: 2026-10-11
+updated: 2026-10-13
 source_files:
   - tools/maps/gen_world_shells.py
   - tools/maps/world_uid_pool.txt
@@ -21,10 +21,10 @@ Design 04 (the approved map, "Approve as proposed", 2026-10-08), WORLD-05.
 
 - **The grid.** Macro cell (c, r) is world x [640c, 640c+640), y [384r, 384r+384): one screen, 20x12 tiles. A surface room's walkable floor is the top of grid row 9 of its bottom screen row (y = 384r + 288). Every region scene sits at (0, 0) in `game.tscn`; its rooms carry their world position. The song trials stay at y 5600..8100 (debug only).
 - **Openings.** Rooms share edges. A side opening is air in rows 5..8 of the shared screen row with a floor at row 9; a vertical opening keeps the named columns open. The current room is the one Ivo's feet are in (`systems/rooms`).
-- **Interiors** (door rooms, design 04 section 4) live at y 12000 (floor y 12288), x = region index * 12000 + n * 1600, in the generator's region order (home_village, threshold, frost_edge, spring_woods, frozen_lake, wind_orchards, summer_caldera). They never touch another room. A new game starts in `village_house` at (320, 12286).
+- **Interiors** (door rooms, design 04 section 4) live at y 12000 (floor y 12288), x = region index * 12000 + n * 1600, in the generator's region order (home_village, threshold, frost_edge, spring_woods, frozen_lake, wind_orchards, summer_caldera). They never touch another room. A region keeps to its 12000 px x band, less two rings (`RING_GAP`, 320 px: rooms that do not touch are two `RoomRing.WIDTH` apart, `room_ring_test`): a slot whose room would reach past that starts a further row 2000 px lower (`INTERIOR_ROW_SPACING`, past the tallest 4-screen interior), n from 0 again. WORLD-11 (2026-10-13): slot 7 at x 11200 ends 160 px from threshold_farmhouse (x 12000) and slot 8 lies in the threshold's band, so the village's eighth and ninth interiors start row 1: the mill house at (0, 14000), the house of notes at (1600, 14000). A new game starts in `village_house` at (320, 12286).
 - **The generator.** `tools/maps/gen_world_shells.py` holds the tables (regions with name key, season, memory, guardian and wall material; rooms with macro rects; side and vertical openings; benches; interiors; doors; barriers) and writes Room triggers (always), region scenes, contents scenes and `.room` shells (once). Every scene gets a stable `uid=` from `world_uid_pool.txt` (minted by Godot; uids already in a scene header are skipped), so `SceneKey` save keys survive renames. Every contents scene gets a `Backdrop`: the woods at the floor's horizon outdoors, its region's cave set underground (`UNDERGROUND_SETS`), `interior_timber` indoors (`systems/backdrops`). To add a room: add its row and openings, run the tool, add the printed contents scenes to `tools/smoke/scenes.txt`, and place it in its region scene by hand (region scenes are not regenerated).
 - **The village is one street** ("Street only; climbs move out (Recommended)", user, 2026-10-10; design 04 section 1, "Vila plana"): the lane, square, mill and gate have no sky ledges; the bell tower is an interior; the cistern belongs to the caldera. Exploration starts outside the village.
-- **Memory per region** (MEM-13, design 04 section 2): village 0.8, threshold 0.3, frost edge 0.05, woods 0.4, lake 0.3, orchards 0.25, caldera 0.15, authored on each region's `Memory` node. The village's mid-game 0.6 lands with WORLD-11.
+- **Memory per region** (MEM-13, design 04 section 2): village 0.8, threshold 0.3, frost edge 0.05, woods 0.4, lake 0.3, orchards 0.25, caldera 0.15, authored on each region's `Memory` node. The village falls to 0.6 from the second restored guardian (`RegionMemory.steps = {2: 0.6}`, WORLD-11, 2026-10-13; `systems/guardians`).
 - **Hand-placed region memory:** the lake well's squall has its own `MemorySource` (`frozen_lake.tscn`, `WellSquallMemory`) so its gusts break a song at the region's 0.3.
 - **Known limits** (2026-10-09 traversals, `playtests/2026-10-09-traversal-opening`): in one-screen rooms the double jump reaches every height gate on the optional alcoves (woods pond, caldera seesaw, dry moat, bait); the player owns the double jump before arriving, so they stay optional. The caldera cistern is two-way without wall climb or double jump: its chamber's door joins caldera_cistern_bottom, and Redoma played in the chamber dries the way back to the slab (2026-10-10, `bugs/well-water-stands-in-the-air-at-a-passage-mouth`), so a player who does the Frozen Lake before the Orchards can leave the Caldera (`bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera`). The cliff chimney is gated by wall climb at its top (`has_wall_climb.tres`) and the arena's west wall is closed above the barrier, so nobody falls in without it (`bugs/the-orchard-arena-barrier-is-jumped-over-into-the-cliff-chimney`). The fishing village well's way out is a calm one-way catch above the squall (2026-10-10); from it Soltar reaches the curtain, so Lógico 1's shelter step can be skipped. Accepted until the puzzle moves to a larger room (no 20x12 layout keeps the way out calm and the curtain out of Soltar's 288 px reach).
 
@@ -33,8 +33,8 @@ Design 04 (the approved map, "Approve as proposed", 2026-10-08), WORLD-05.
 | Region | Room | c | r | Notes |
 |---|---|---|---|---|
 | home_village | village_lane_west | -2..-1 | 0 | W edge: fence gated by owns_memorina (barrier, not a door) |
-| home_village | village_square | 0..2 | 0 | bench `village_square_bench`; doors: village_house, village_tavern, village_elder, village_bell_tower; the well's shaft opens down into caldera_cistern at c1 |
-| home_village | village_mill | 3..4 | 0 | river; at c4 the river trail goes up into lake_waterfall_path, gated by owns_memorina |
+| home_village | village_square | 0..2 | 0 | bench `village_square_bench`; doors: village_house, village_notes_house (col 15), village_tavern, village_elder, village_bell_tower; the well's shaft opens down into caldera_cistern at c1 |
+| home_village | village_mill | 3..4 | 0 | door: village_mill_house (col 3); river under a plank bridge (cols 4-13 of the street are one-way planks `-` over the lake in rows 10-11, so the wheel stands in visible water and Ivo crosses on the planks; "Open a plank bridge (Recommended)", user, 2026-10-13); at c4 the river trail goes up into lake_waterfall_path, gated by owns_memorina |
 | home_village | village_gate_east | 5..6 | 0 | E exit to threshold |
 | threshold | threshold_fields | 7..9 | 0 | door: threshold_farmhouse |
 | threshold | threshold_bridge | 10..11 | 0 | broken bridge over a ravine (clearable with one jump); brute shadow |
@@ -88,6 +88,8 @@ Design 04 (the approved map, "Approve as proposed", 2026-10-08), WORLD-05.
 | home_village | village_bakery | 1x1 | village_lane_west |
 | home_village | village_empty_house | 2x1 | village_lane_west; Combinado 4 |
 | home_village | village_bell_tower | 1x4 (vertical) | village_square; a slim stone shell in void, the helix stair turning around Ivo from the bell floor up through the plank gallery, the alcove above it (double jump) holds the collectible (WORLD-26, "4 screens (Recommended)", user, 2026-10-11; `systems/helix-stair`) |
+| home_village | village_mill_house | 1x1 | village_mill; the working mill (row 1, (0, 14000)) |
+| home_village | village_notes_house | 1x1 | village_square; the house of notes (row 1, (1600, 14000)) |
 | threshold | threshold_farmhouse | 1x1 | threshold_fields; sword marker |
 | frost_edge | lighthouse_interior | 1x4 (vertical) | lighthouse_base (bottom), lighthouse_top (hatch, sealed: all_guardians_restored) |
 | spring_woods | woods_hut | 1x1 | woods_edge |

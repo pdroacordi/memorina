@@ -1,0 +1,24 @@
+; village_mill_house.room - the working mill (WORLD-11, "A: Working mill (Recommended)", user, 2026-10-13): millstones, the gear on the wheel's shaft, flour for the bakery: one flat floor; the furniture is props (systems/props, Interiors). No gate or puzzle.
+
+; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
+
+[room]
+origin = 0, 0
+tileset = village
+
+[grid]
+%%%%%%%%%%%%%%%%%%%%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%...E..............%
+%%%%%%%%%%%%%%%%%%%%
+____________________
+____________________
+
+[entities]
+4,8 = {"link": "village_mill_house_door", "to_room": "village_mill", "arrive_facing": 1}

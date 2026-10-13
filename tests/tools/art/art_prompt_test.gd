@@ -15,6 +15,14 @@ func test_frontmatter_and_body_are_read() -> void:
 	assert_str(prompt.description).is_equal("A small thing.")
 	assert_str(prompt.negative).is_equal("big things")
 
+func test_bands_stack_under_the_frames() -> void:
+	var prompt := ArtPrompt.parse(_text([
+		"---", "id: bush", "target: res://assets/x/bush.png", "size: 16x8", "frames: 4", "bands: 3", "---", "A bush."]), "bush")
+	assert_vector(prompt.sheet_size()).is_equal(Vector2i(64, 24))
+	assert_array(Array(prompt.problems("bush"))).is_empty()
+	prompt.bands = 2
+	assert_int(prompt.problems("bush").size()).is_greater(0)
+
 func test_a_mismatched_id_is_a_problem() -> void:
 	var prompt := ArtPrompt.parse(_text(["---", "id: other", "target: res://assets/a.png", "---", "x"]), "thing")
 	assert_int(prompt.problems("thing").size()).is_greater(0)

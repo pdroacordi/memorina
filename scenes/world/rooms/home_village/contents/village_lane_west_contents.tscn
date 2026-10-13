@@ -9,6 +9,15 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/hen_brown.tscn" id="in_hen_brown"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/home_village/contents/village_lane_west.room" id="room_map"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/flower_pot_c.tscn" id="w11_flower_pot_c"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/cart.tscn" id="w11_cart"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/barrel.tscn" id="w11_barrel"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/sacks.tscn" id="w11_sacks"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/market_stall_apples.tscn" id="w11_market_stall_apples"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/market_stall_bread.tscn" id="w11_market_stall_bread"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/lantern_post.tscn" id="w11_lantern_post"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/fence_wood_b.tscn" id="w11_fence_wood_b"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bush.tscn" id="w11_bush"]
 
 [node name="Contents" type="Node2D"]
 
@@ -25,6 +34,33 @@ position = Vector2(400, 288)
 
 [node name="EmptyHouseFacade" parent="Props" instance=ExtResource("pr_empty_house")]
 position = Vector2(976, 288)
+
+[node name="FlowerPotC" parent="Props" instance=ExtResource("w11_flower_pot_c")]
+position = Vector2(368, 288)
+
+[node name="Cart" parent="Props" instance=ExtResource("w11_cart")]
+position = Vector2(194, 288)
+
+[node name="Barrel" parent="Props" instance=ExtResource("w11_barrel")]
+position = Vector2(452, 288)
+
+[node name="Sacks" parent="Props" instance=ExtResource("w11_sacks")]
+position = Vector2(490, 288)
+
+[node name="MarketStallApples" parent="Props" instance=ExtResource("w11_market_stall_apples")]
+position = Vector2(580, 288)
+
+[node name="MarketStallBread" parent="Props" instance=ExtResource("w11_market_stall_bread")]
+position = Vector2(732, 288)
+
+[node name="LanternPost" parent="Props" instance=ExtResource("w11_lantern_post")]
+position = Vector2(822, 288)
+
+[node name="FenceWoodB" parent="Props" instance=ExtResource("w11_fence_wood_b")]
+position = Vector2(844, 288)
+
+[node name="Bush" parent="Props" instance=ExtResource("w11_bush")]
+position = Vector2(1084, 288)
 
 [node name="Seller" parent="Props" instance=ExtResource("in_seller")]
 position = Vector2(560, 288)

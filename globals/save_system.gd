@@ -175,6 +175,9 @@ func set_item_owned(item: Enums.PlayerItem, owned: bool) -> void:
 func is_guardian_restored(guardian: Enums.Guardian) -> bool:
 	return player_data.restored_guardians[guardian]
 
+func restored_guardian_count() -> int:
+	return player_data.restored_guardians.count(true)
+
 ## Guardian restoration persists only at a bench; an earlier death rewinds it.
 func restore_guardian(guardian: Enums.Guardian) -> void:
 	player_data.restored_guardians[guardian] = true

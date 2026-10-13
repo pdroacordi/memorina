@@ -1,0 +1,24 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/village/notes_house_facade.png" id="1_tex"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/notes_house_lights.tscn" id="5_lights"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/chimney_smoke.tscn" id="6_smoke"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/region_presence.gd" id="3_presence"]
+
+[node name="NotesHouseFacade" type="Sprite2D"]
+texture = ExtResource("1_tex")
+centered = false
+offset = Vector2(-56, -206)
+
+[node name="Lights" parent="." instance=ExtResource("5_lights")]
+
+[node name="RegionPresence" type="Node" parent="Lights"]
+script = ExtResource("3_presence")
+min_baseline = 0.7
+
+[node name="ChimneySmoke" parent="." instance=ExtResource("6_smoke")]
+position = Vector2(62, -200)
+
+[node name="RegionPresence" type="Node" parent="ChimneySmoke"]
+script = ExtResource("3_presence")
+min_baseline = 0.7

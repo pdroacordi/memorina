@@ -13,6 +13,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_elder.tscn" id="r9"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_bakery.tscn" id="r10"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_empty_house.tscn" id="r11"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_mill_house.tscn" id="r12"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_notes_house.tscn" id="r13"]
 
 [node name="HomeVillage" type="Node2D"]
 script = ExtResource("1_region")
@@ -22,6 +24,9 @@ season = 3
 [node name="Memory" type="Node2D" parent="."]
 script = ExtResource("2_regmem")
 authored = 0.8
+steps = Dictionary[int, float]({
+2: 0.6
+})
 
 [node name="VillageLaneWest" parent="." instance=ExtResource("r0")]
 position = Vector2(-1280, 0)
@@ -55,3 +60,9 @@ position = Vector2(6400, 12000)
 
 [node name="VillageEmptyHouse" parent="." instance=ExtResource("r11")]
 position = Vector2(8000, 12000)
+
+[node name="VillageMillHouse" parent="." instance=ExtResource("r12")]
+position = Vector2(0, 14000)
+
+[node name="VillageNotesHouse" parent="." instance=ExtResource("r13")]
+position = Vector2(1600, 14000)

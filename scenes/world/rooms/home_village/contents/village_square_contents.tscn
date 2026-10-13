@@ -12,6 +12,24 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/water_carrier.tscn" id="in_water_carrier"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/home_village/contents/village_square.room" id="room_map"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/notes_house_facade.tscn" id="w11_notes_house_facade"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/lantern_post.tscn" id="w11_lantern_post"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/flower_pot_a.tscn" id="w11_flower_pot_a"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/flower_pot_b.tscn" id="w11_flower_pot_b"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bunting_pole.tscn" id="w11_bunting_pole"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/laundry_line.tscn" id="w11_laundry_line"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bunting.tscn" id="w11_bunting"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/well_head.tscn" id="w11_well_head"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/barrel_stack.tscn" id="w11_barrel_stack"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/barrel.tscn" id="w11_barrel"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/sacks.tscn" id="w11_sacks"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/wall_lantern.tscn" id="w11_wall_lantern"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/tavern_sign.tscn" id="w11_tavern_sign"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/flag.tscn" id="w11_flag"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/woodpile.tscn" id="w11_woodpile"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/chopping_block.tscn" id="w11_chopping_block"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/crate.tscn" id="w11_crate"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bush.tscn" id="w11_bush"]
 
 [node name="Contents" type="Node2D"]
 
@@ -35,11 +53,68 @@ position = Vector2(1232, 288)
 [node name="ElderHouseFacade" parent="Props" instance=ExtResource("pr_elder_house")]
 position = Vector2(1616, 288)
 
+[node name="NotesHouseFacade" parent="Props" instance=ExtResource("w11_notes_house_facade")]
+position = Vector2(496, 288)
+
+[node name="LanternPost" parent="Props" instance=ExtResource("w11_lantern_post")]
+position = Vector2(120, 288)
+
+[node name="FlowerPotA" parent="Props" instance=ExtResource("w11_flower_pot_a")]
+position = Vector2(238, 288)
+
+[node name="FlowerPotB" parent="Props" instance=ExtResource("w11_flower_pot_b")]
+position = Vector2(251, 288)
+
+[node name="BuntingPole" parent="Props" instance=ExtResource("w11_bunting_pole")]
+position = Vector2(838, 256)
+
+[node name="LaundryLine" parent="Props" instance=ExtResource("w11_laundry_line")]
+position = Vector2(782, 288)
+
+[node name="Bunting" parent="Props" instance=ExtResource("w11_bunting")]
+position = Vector2(767, 178)
+
+[node name="WellHead" parent="Props" instance=ExtResource("w11_well_head")]
+position = Vector2(964, 288)
+
+[node name="BarrelStack" parent="Props" instance=ExtResource("w11_barrel_stack")]
+position = Vector2(1100, 288)
+
+[node name="Barrel" parent="Props" instance=ExtResource("w11_barrel")]
+position = Vector2(1136, 288)
+
+[node name="Sacks" parent="Props" instance=ExtResource("w11_sacks")]
+position = Vector2(1164, 288)
+
+[node name="WallLantern" parent="Props" instance=ExtResource("w11_wall_lantern")]
+position = Vector2(1262, 226)
+
+[node name="TavernSign" parent="Props" instance=ExtResource("w11_tavern_sign")]
+position = Vector2(1404, 222)
+
+[node name="Flag" parent="Props" instance=ExtResource("w11_flag")]
+position = Vector2(1240, 77)
+
+[node name="LanternPost2" parent="Props" instance=ExtResource("w11_lantern_post")]
+position = Vector2(1438, 288)
+
+[node name="Woodpile" parent="Props" instance=ExtResource("w11_woodpile")]
+position = Vector2(1748, 288)
+
+[node name="ChoppingBlock" parent="Props" instance=ExtResource("w11_chopping_block")]
+position = Vector2(1800, 288)
+
+[node name="Crate" parent="Props" instance=ExtResource("w11_crate")]
+position = Vector2(1838, 288)
+
+[node name="Bush" parent="Props" instance=ExtResource("w11_bush")]
+position = Vector2(1890, 288)
+
 [node name="Cat" parent="Props" instance=ExtResource("in_cat")]
 position = Vector2(318, 288)
 
 [node name="ChildA" parent="Props" instance=ExtResource("in_child_a")]
-position = Vector2(520, 288)
+position = Vector2(600, 288)
 flip_h = true
 
 [node name="ChildB" parent="Props" instance=ExtResource("in_child_b")]

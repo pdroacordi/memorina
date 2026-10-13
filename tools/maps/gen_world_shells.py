@@ -12,6 +12,9 @@ SW, SH = 20, 12  # cells per macro cell
 PX_W, PX_H = SW * 32, SH * 32
 INTERIOR_Y = 12000
 INTERIOR_SPACING = 1600
+REGION_BAND = 12000  # px of world x each region's interiors keep to
+INTERIOR_ROW_SPACING = 2000  # a further row of interiors starts this far below, past the tallest (4 screens)
+RING_GAP = 320  # px kept clear before the next region's band: rooms that do not touch are two RoomRing.WIDTH apart
 
 # name_key, season (Enums.Season: WINTER 0, SUMMER 1, AUTUMN 2, SPRING 3), memory, guardian (Enums.Guardian or None), wall
 REGIONS = {
@@ -128,6 +131,8 @@ INTERIORS = [
     ("home_village", "village_bakery", 1, 1),
     ("home_village", "village_empty_house", 2, 1),
     ("home_village", "village_bell_tower", 1, 4),
+    ("home_village", "village_mill_house", 1, 1),
+    ("home_village", "village_notes_house", 1, 1),
     ("threshold", "threshold_farmhouse", 1, 1),
     ("frost_edge", "lighthouse_interior", 1, 4),
     ("spring_woods", "woods_hut", 1, 1),
@@ -145,6 +150,8 @@ DOORS = [
     ("village_lane_west", 30, "village_empty_house", 4, "village_empty_house_door", {}, {"arrive_facing": 1}),
     ("village_square", 20, "village_bell_tower", 6, "village_bell_tower_door", {}, {"arrive_facing": 1}),
     ("village_tavern", 34, "village_tavern_cellar", 4, "village_tavern_cellar_door", {}, {"arrive_facing": 1}),
+    ("village_mill", 3, "village_mill_house", 4, "village_mill_house_door", {}, {"arrive_facing": 1}),
+    ("village_square", 15, "village_notes_house", 4, "village_notes_house_door", {}, {"arrive_facing": 1}),
     ("threshold_fields", 40, "threshold_farmhouse", 4, "threshold_farmhouse_door", {}, {"arrive_facing": 1}),
     ("lighthouse_base", 20, "lighthouse_interior", 6, "lighthouse_door", {}, {"arrive_facing": 1}),
     ("lighthouse_top", 20, "lighthouse_interior", 12, "lighthouse_hatch",
@@ -387,10 +394,14 @@ def main():
         rooms[rid] = Room(region, rid, c0, c1, r0, r1, surface)
     counters = {}
     for region, rid, ws, hs in INTERIORS:
-        index = counters.get(region, 0)
-        counters[region] = index + 1
-        x = REGION_ORDER.index(region) * 12000 + index * INTERIOR_SPACING
-        room = Room(region, rid, 0, ws - 1, 0, hs - 1, False, interior=True, origin=(x, INTERIOR_Y))
+        row, index = counters.get(region, (0, 0))
+        base = REGION_ORDER.index(region) * REGION_BAND
+        # A slot whose room would come within two rings of the next region's band starts the next row (systems/world).
+        if index * INTERIOR_SPACING + ws * PX_W > REGION_BAND - RING_GAP:
+            row, index = row + 1, 0
+        counters[region] = (row, index + 1)
+        origin = (base + index * INTERIOR_SPACING, INTERIOR_Y + row * INTERIOR_ROW_SPACING)
+        room = Room(region, rid, 0, ws - 1, 0, hs - 1, False, interior=True, origin=origin)
         rooms[rid] = room
     for west, east, row in H_LINKS:
         rooms[west].open_side(True, row)

@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/village/bush.png" id="1_tex"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/ambient_motion.gd" id="2_motion"]
+[ext_resource type="Material" path="res://scenes/world/environment/props/prop_seasonal_material.tres" id="4_season"]
+
+[node name="Bush" type="Sprite2D"]
+material = ExtResource("4_season")
+texture = ExtResource("1_tex")
+centered = false
+offset = Vector2(-26, -28)
+hframes = 4
+vframes = 3
+
+[node name="AmbientMotion" type="Node" parent="."]
+script = ExtResource("2_motion")
+frames_per_second = 4.0
+sequence = PackedInt32Array(0, 1, 2, 3, 2, 1)
+sample_offset = Vector2(0, -14)

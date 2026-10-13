@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/village/flower_pot_b.png" id="1_tex"]
+[ext_resource type="Material" path="res://scenes/world/environment/props/prop_seasonal_material.tres" id="4_season"]
+
+[node name="FlowerPotB" type="Sprite2D"]
+material = ExtResource("4_season")
+texture = ExtResource("1_tex")
+centered = false
+offset = Vector2(-6, -20)
+vframes = 3

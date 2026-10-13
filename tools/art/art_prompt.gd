@@ -13,6 +13,8 @@ var command := "generate"
 var target := ""
 var frame_size := Vector2i(32, 32)
 var frames := 1
+## Season bands stacked under the frames: 1, or 3 for a nature prop (spring, autumn, winter; systems/seasonal-art).
+var bands := 1
 var view := "side"
 var direction := "west"
 var no_background := true
@@ -92,6 +94,8 @@ func problems(file_id: String) -> PackedStringArray:
 		found.append("%s: target must be a .png under res://assets/" % file_id)
 	if frame_size.x <= 0 or frame_size.y <= 0 or frames <= 0:
 		found.append("%s: frame size and frame count must be positive" % file_id)
+	if not bands in [1, 3]:
+		found.append("%s: bands must be 1 or 3" % file_id)
 	if not command in ["generate", "animate", "animate3", "cut", "tileset"]:
 		found.append("%s: command must be generate, animate, animate3, cut or tileset" % file_id)
 	if command == "tileset":
@@ -126,9 +130,9 @@ func keep_fits(count: int) -> bool:
 			return false
 	return true
 
-## Returns the sheet size with frames arranged side by side.
+## Returns the sheet size: frames side by side, season bands stacked.
 func sheet_size() -> Vector2i:
-	return Vector2i(frame_size.x * frames, frame_size.y)
+	return Vector2i(frame_size.x * frames, frame_size.y * bands)
 
 func _set_field(key: String, value: String) -> void:
 	match key:
@@ -140,6 +144,7 @@ func _set_field(key: String, value: String) -> void:
 			if parts.size() == 2:
 				frame_size = Vector2i(parts[0].to_int(), parts[1].to_int())
 		"frames": frames = value.to_int()
+		"bands": bands = value.to_int()
 		"view": view = value
 		"direction": direction = value
 		"no_background": no_background = value == "true"

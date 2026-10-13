@@ -1,5 +1,6 @@
 ; village_mill.room - the river mill (design 04 section 3.1); the road runs under the trail floor to the east gate.
 ; One street at ground level (design 04 section 1, "Vila plana", no platforms in the air): the river trail floor (row 5) is one full jump (4 rows) up.
+; The mill house's door is col 3 (WORLD-11); cols 4-13 of the street are a plank bridge over the river (rows 10-11), so the wheel stands in visible water and Ivo crosses on the planks ("Open a plank bridge (Recommended)", user, 2026-10-13).
 ; River trail gate: the barrier (col 30) stands on the trail floor (row 5) under the ledge (row 0), 4 cells of headroom; past it, a step (rows 3-4, cols 33-34) and the ledge flush with the lake seam (cols 24-31) lead up to lake_waterfall_path's west stub.
 
 [room]
@@ -15,8 +16,8 @@ tileset = village
 ..........................SSSSSSSSSSSS..
 ........................................
 ........................................
-........................................
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
+...E....................................
+SSSS----------SSSSSSSSSSSSSSSSSSSSSSSSSS
 ########################################
 ########################################
 
@@ -35,4 +36,5 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ....wwwwwwwwww..........................
 
 [entities]
+3,8 = {"link": "village_mill_house_door", "to_room": "village_mill_house"}
 30,4 = {"requires": "res://resources/save_facts/owns_memorina.tres"}

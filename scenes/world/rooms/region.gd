@@ -21,21 +21,21 @@ func _ready() -> void:
 	_memory.changed.connect(memory_changed.emit)
 	# Mount marks even when restored; only newer deaths remain in the save.
 	_memory.mark_deaths(SaveSystem.deaths_in(SceneKey.of(self)))
-	if not has_guardian:
-		return
-	if SaveSystem.is_guardian_restored(guardian):
+	_memory.follow_restorations(SaveSystem.restored_guardian_count())
+	var own_unrestored: bool = has_guardian and not SaveSystem.is_guardian_restored(guardian)
+	if has_guardian and not own_unrestored:
 		_memory.restore(0.0)
-		return
-	SaveSystem.guardian_restored.connect(_on_guardian_restored)
+	if own_unrestored or not _memory.steps.is_empty():
+		SaveSystem.guardian_restored.connect(_on_guardian_restored)
 
 ## Current baseline memory value.
 func current_baseline() -> float:
 	return _memory.current()
 
 func _on_guardian_restored(restored: Enums.Guardian) -> void:
-	if restored != guardian:
-		return
-	_memory.restore(_memory.lift_time)
-	# Death marks follow the live save and return on death before the next bench.
-	SaveSystem.clear_deaths(SceneKey.of(self))
-	_memory.erase_marks(_memory.lift_time)
+	if has_guardian and restored == guardian:
+		_memory.restore(_memory.lift_time)
+		# Death marks follow the live save and return on death before the next bench.
+		SaveSystem.clear_deaths(SceneKey.of(self))
+		_memory.erase_marks(_memory.lift_time)
+	_memory.follow_restorations(SaveSystem.restored_guardian_count())

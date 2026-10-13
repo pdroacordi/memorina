@@ -11,13 +11,25 @@ signal changed(level: float)
 @export var lift_time: float = 6.0
 ## How the player's deaths here become marks.
 @export var death_mark_stats: DeathMarkStats = preload("res://resources/memory/death_mark_stats.tres")
+## Baseline (0..1) from this many restored guardians on; the highest key reached replaces authored.
+@export var steps: Dictionary[int, float] = {}
 
 var _level: float = 1.0
+# Set by restore(): the region's own restoration outranks every step.
+var _whole: bool = false
 var _wells: Array[MemorySource] = []
 var _tween: Tween
 var _marks: Node2D
 var _marks_tween: Tween
 
+
+## The value of the highest key of `steps` at or below `restored`, else `authored`.
+static func level_for(authored_level: float, level_steps: Dictionary[int, float], restored: int) -> float:
+	var best := -1
+	for key: int in level_steps:
+		if key <= restored and key > best:
+			best = key
+	return authored_level if best < 0 else level_steps[best]
 
 func _ready() -> void:
 	_level = authored
@@ -32,8 +44,17 @@ func _ready() -> void:
 func current() -> float:
 	return _level
 
+## Sets the level `steps` gives for `restored` guardians at once, unless the region is restored.
+func follow_restorations(restored: int) -> void:
+	if _whole:
+		return
+	var level := level_for(authored, steps, restored)
+	if level != _level:
+		_set_level(level)
+
 ## Restores memory over `seconds`; see design 03 section 4.1.
 func restore(seconds: float) -> void:
+	_whole = true
 	if _tween != null:
 		_tween.kill()
 	if seconds <= 0.0:

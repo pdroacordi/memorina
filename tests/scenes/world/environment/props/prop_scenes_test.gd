@@ -41,9 +41,11 @@ func test_every_prop_is_a_still_sprite_that_never_collides() -> void:
 				if node is CollisionObject2D:
 					problems.append("%s: %s collides" % [path, node.name])
 				var motion := node as AmbientMotion
-				if motion != null and sprite != null:
+				# A motion drives its own parent: a front's composed lights and smoke have frames of their own.
+				var driven: Sprite2D = node.get_parent() as Sprite2D if motion != null else null
+				if driven != null:
 					for frame: int in motion.sequence:
-						if frame < 0 or frame >= sprite.hframes:
-							problems.append("%s: sequence frame %d is outside the %d frames" % [path, frame, sprite.hframes])
+						if frame < 0 or frame >= driven.hframes:
+							problems.append("%s: sequence frame %d is outside the %d frames" % [path, frame, driven.hframes])
 			root.free()
 	assert_array(Array(problems)).is_empty()

@@ -1,8 +1,15 @@
 [gd_scene format=3]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/world/props/village/elder_house_facade.png" id="1_tex"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/elder_house_lights.tscn" id="5_lights"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/chimney_smoke.tscn" id="6_smoke"]
 
 [node name="ElderHouseFacade" type="Sprite2D"]
 texture = ExtResource("1_tex")
 centered = false
 offset = Vector2(-158, -220)
+
+[node name="Lights" parent="." instance=ExtResource("5_lights")]
+
+[node name="ChimneySmoke" parent="." instance=ExtResource("6_smoke")]
+position = Vector2(-88, -216)

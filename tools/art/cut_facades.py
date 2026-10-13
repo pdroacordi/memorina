@@ -10,6 +10,8 @@ Facades: python -I tools/art/cut_facades.py facades <sheet.png> <out dir> <name,
     so a walkable roof lands on the 32 px room grid. --doorway gives the doorway's box in sheet px (x1, y1 exclusive) for a
     front drawn with its door shut; the front is cut at the box's bottom, its sill, which becomes the ground line.
     A name `-` skips that grid cell. --write=name,... writes only those fronts; the palette still comes from every cell.
+    --palette=a.png,b.png,... snaps every front to the colours those built fronts use instead of a palette of its own,
+    so a front cut from a later sheet shares the street's colours.
 Door: python -I tools/art/cut_facades.py door <sheet.png> <out.png> [--colors=10]: two doors side by side, each cut
     to its plank body and reduced to 16x32 art px, written at 2x as a 64x64 two-frame strip.
 Doorways: python -I tools/art/cut_facades.py doorways <sheet.png> <out dir> <name:art_width,...> [--colors=16]: a 3x2
@@ -67,6 +69,22 @@ def snap(arts: list[np.ndarray], colors: int) -> np.ndarray:
     return palette
 
 
+def palette_of(paths: list[str]) -> np.ndarray:
+    colours = set()
+    for path in paths:
+        a = np.asarray(Image.open(path).convert("RGBA"))
+        colours |= set(map(tuple, a[a[..., 3] > 0][:, :3]))
+    return np.array(sorted(colours))
+
+
+def snap_to(arts: list[np.ndarray], palette: np.ndarray) -> np.ndarray:
+    for a in arts:
+        opaque = a[..., 3] > 0
+        px = a[..., :3][opaque].astype(int)
+        a[..., :3][opaque] = palette[((px[:, None] - palette[None]) ** 2).sum(-1).argmin(1)]
+    return palette
+
+
 def save_2x(art: np.ndarray, path: str) -> Image.Image:
     image = Image.fromarray(art, "RGBA")
     image = image.resize((image.width * ART_SCALE, image.height * ART_SCALE), Image.NEAREST)
@@ -113,7 +131,10 @@ def facades(sheet: str, out_dir: str, names: list[str], options: dict) -> None:
         arts.append(art[crop_top.get(name, 0):])
         centres_x.append(int(round((best[2] + best[3] + 1) / 2 * scale)))
         kept.append(name)
-    palette = snap(arts, int(options.get("colors", 20)))
+    if "palette" in options:
+        palette = snap_to(arts, palette_of(options["palette"].split(",")))
+    else:
+        palette = snap(arts, int(options.get("colors", 20)))
     darkest = palette[(palette @ LUMA).argmin()]
     written = [n for n in options.get("write", "").split(",") if n]
     for name, art, cx in zip(kept, arts, centres_x):

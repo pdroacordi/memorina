@@ -52,6 +52,8 @@ res://scenes/world/rooms/home_village/contents/village_tavern_cellar_contents.ts
 res://scenes/world/rooms/home_village/contents/village_elder_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_bakery_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_empty_house_contents.tscn
+res://scenes/world/rooms/home_village/contents/village_mill_house_contents.tscn
+res://scenes/world/rooms/home_village/contents/village_notes_house_contents.tscn
 res://scenes/world/rooms/threshold/contents/threshold_farmhouse_contents.tscn
 res://scenes/world/rooms/frost_edge/contents/lighthouse_interior_contents.tscn
 res://scenes/world/rooms/spring_woods/contents/woods_hut_contents.tscn

@@ -1,0 +1,6 @@
+{
+	"about": "Art-px size per village street prop (hN height, wN width of its drawn pixels), against Ivo's 29 art px (58 px, about 1.75 m), approved on the WORLD-11 board: \"Approve (Recommended)\" (user, 2026-10-13). The well head was redrawn wider and lower (its posts on the shaft's lips, village_square cols 27 and 32). prop_grounding_test holds every prop to its entry within 2 art px.",
+	"street_big": "water_wheel:w55,well_head:w112,market_stall_bread:h46,market_stall_apples:h46,village_tree:h84",
+	"street_small": "cart:h26,barrel:h14,barrel_stack:h26,crate:h10,sacks:h11,woodpile:h15,chopping_block:h12,fence_wood_a:h16,fence_wood_b:h16,flower_pot_a:h10,flower_pot_b:h10,flower_pot_c:h8,bush:h15",
+	"street_cloth": "lantern_post:h41,laundry_line:h34,wall_lantern:h11,tavern_sign:h15,flag:h16,bunting:w69"
+}

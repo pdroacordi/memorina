@@ -11,6 +11,8 @@ python -I tools/art/cut_props.py <sheet.png> <out dir> [--names=a,b,...] [--ref-
     --flat=N reduces each object to N colours of its own and repaints every speck (a pixel no 8-neighbour shares) with
     its neighbours' most common colour, so a reduced drawing keeps flat areas. --base-shade darkens each object's
     bottom row by a fifth, a contact line where it meets the floor.
+    Every object is trimmed to its opaque bounds, so its bottom row is its base and an offset of minus the bottom centre
+    stands it on the floor (a keyed fringe dropped from the box left 2 px floats, WORLD-11).
     --size gives a named object its own art size, its height (hN) or width (wN) in art px, for a sheet whose scale
     figure is not in proportion with every object.
 """
@@ -63,6 +65,11 @@ def despeckle(art: np.ndarray) -> None:
                 art[y, x, :3] = Counter(neighbours).most_common(1)[0][0]
 
 
+def trim(art: np.ndarray) -> np.ndarray:
+    ys, xs = np.nonzero(art[..., 3] > 0)
+    return art[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+
+
 def shade_base(art: np.ndarray) -> None:
     bottom = art[-1]
     opaque = bottom[:, 3] > 0
@@ -100,7 +107,7 @@ def main(sheet: str, out_dir: str, options: dict) -> None:
         art = reduce(part, mask, max(1, round(part.shape[1] * own)), max(1, round(part.shape[0] * own)))
         if "flat" in options:
             flatten(art, int(options["flat"]))
-        arts.append(art)
+        arts.append(trim(art))
     snap(arts, int(options.get("colors", 24)))
     for art in arts:
         if "flat" in options:
