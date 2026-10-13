@@ -1741,7 +1741,7 @@ tracks/6/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(20, -53)]
+"values": [Vector2(20, -57)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -1866,7 +1866,7 @@ tracks/7/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(21, -33)]
+"values": [Vector2(21, -40)]
 }
 tracks/8/type = "value"
 tracks/8/imported = false
@@ -1878,7 +1878,7 @@ tracks/8/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector2(1.6278, 0.6585)]
+"values": [Vector2(1.6278, 0.6341)]
 }
 
 [sub_resource type="Animation" id="Animation_ckagk"]
@@ -2314,6 +2314,7 @@ collision_mask = 65536
 monitoring = false
 monitorable = false
 script = ExtResource("29_hitbox")
+strikes_once = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1610903019]
 position = Vector2(40, -30)

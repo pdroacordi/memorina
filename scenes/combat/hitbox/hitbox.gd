@@ -11,14 +11,22 @@ signal connected(target: Hurtbox)
 @export var knockback_lift: float = 0.0
 ## Reapplies damage each physics frame while overlapping; the hurtbox's invulnerability sets the cadence.
 @export var continuous: bool = false
+## Strikes each hurtbox once until monitoring turns off; for attack windows, never for contact damage that stays on.
+@export var strikes_once: bool = false
 
 ## Below this horizontal direction magnitude, use a sideward push to avoid bouncing a target back into the hitbox.
 const INSIDE_PUSH_X := 0.5
 ## Keeps near-centered hits moving sideways, with only a small vertical component.
 const INSIDE_PUSH_Y := 0.35
 
+## Hurtboxes struck since monitoring last turned on, by instance id.
+var _struck: Dictionary[int, bool] = {}
+
 
 func _physics_process(_delta: float) -> void:
+	# Cleared on a frame with monitoring off: every window has at least one between hits.
+	if not monitoring and not _struck.is_empty():
+		_struck.clear()
 	if not continuous or not monitoring:
 		return
 	for area: Area2D in get_overlapping_areas():
@@ -28,6 +36,11 @@ func _physics_process(_delta: float) -> void:
 			_hit(area)
 
 func _on_area_entered(area: Area2D) -> void:
+	if strikes_once:
+		# A knockback can carry the target out and back in during one window.
+		if _struck.has(area.get_instance_id()):
+			return
+		_struck[area.get_instance_id()] = true
 	_hit(area)
 
 func _hit(area: Area2D) -> void:

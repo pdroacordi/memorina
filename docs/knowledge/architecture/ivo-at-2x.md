@@ -6,11 +6,12 @@ status: active
 tags: [ivo, art, animation, pixellab, sprite, collision, jump-reach]
 related: [systems/animation, systems/art-pipeline, systems/props, gotchas/sprite-frame-out-of-bounds-on-clip-switch, gotchas/animationtree-reset-track-overwrites-script-writes, gotchas/zigzag-ledges-two-rows-apart-seal-a-shaft, bugs/off-centre-sprite-sheet-jumps-on-flip, architecture/room-reachability-audit]
 created: 2026-10-11
-updated: 2026-10-11
+updated: 2026-10-13
 source_files:
   - scenes/characters/ivo/ivo.tscn
   - tools/art/cut_inhabitant.py
   - tools/art/cut_props.py
+  - tools/art/build_ivo_run.py
   - tools/pixellab/pixellab.ps1
   - tools/art/art_prompt.gd
   - tests/scenes/characters/ivo/ivo_sheet_test.gd
@@ -97,8 +98,8 @@ What changed from the decision above, and why:
 |---|---|---|---|
 | attack_idle_1 | 4.6..75.4, -84..28 | 0..48, -66..-14 | 75 -> 48 (the slash's leading and trailing smears) |
 | attack_idle_2 | 2.2..73.8, -92..20 | 0..40, -62..0 | 74 -> 40 (the chop's smears, down to the floor) |
-| attack_run_1 | -6..68, -75..5 | 0..40, -72..-34 | 68 -> 40 |
-| attack_run_2 | 10..70, -71..11 | 2..40, -60..-6 | 70 -> 40 |
+| attack_run_1 | -6..68, -75..5 | 0..40, -76..-38 (the run's bob, sixth round) | 68 -> 40 |
+| attack_run_2 | 10..70, -71..11 | 2..40, -66..-14 (the run's bob, sixth round) | 70 -> 40 |
 | attack_jump | 23.3..56.7, -83..-1 | 0..38, -60..-24 | 57 -> 38 |
 | attack_fall | 28.3..51.7, -83..-1 | 0..38, -60..-24 | 52 -> 38 |
 | attack_pogo | -44..62, -44..36 | -10..8, 0..22 | depth below the feet 36 -> 22, width 106 -> 18 |
@@ -128,3 +129,10 @@ What changed from the decision above, and why:
 - **Two counts in a contract.** `frames:` is the sheet; `generate:` is PixelLab's frame_count (even, 4..16, reaching every kept index), which `pixellab.ps1 -Prompt` sends. `ivo_wall_slide` is `command: cut` with `cut_from: ivo_wall_land`: it has no generation, and `-Prompt` refuses it (`bugs/an-ivo-contract-run-through-pixellab-prompt-requests-the-sheet-count`).
 - **Calls.** PixelLab: 31 animate3 generations of the 45 the user approved; none in the fourth round (30, then "Approve 15 more (Recommended)", 2026-10-11). The first pass was 21 (one per clip, plus re-rolls: run once, roll once, attack_ground twice, attack_run once). The run/push redo added four: run twice, push once, and one hurt take that still turned toward the camera and was not kept. The third round added six: jump, ground combo twice, running slash, air slash, pogo. Two more calls failed locally before reaching the API (a missing reference). Codex: 3 images (the pose sheet, `ivo_poses_codex.png`, and the two attack key-pose sheets of the fourth round). The hurt flinch keeps its three-quarter turn for two frames.
 - **Tests** as listed above, in `tests/scenes/characters/ivo/ivo_sheet_test.gd`; the centring test reads each frame's opaque centroid within 2 art px of the flip axis, column 63.5 (a bounding box swings with an outflung arm). `Player._assert_clip_durations` also pins `land` to `hard_land_time`.
+- **Sixth round: the run** (user, verbatim): "the run animation should still be worked on, it does not look natural as of now." (2026-10-12), after "His running seems only like a walk" and "ivo while running doesn't touch the ground" (2026-10-11). The old run had a frame with the legs together, strides that changed from frame to frame, weak arms, and `--floor=95` had removed its flight phase and sank the hips whenever a leg stretched back. Asked how to rebuild it, the user answered "Try both 1 and 2" (key poses, or a PixelLab retake from a better start); of the two candidates the user picked "2: PixelLab" (2026-10-13).
+  - **Change of course** (user, 2026-10-13, verbatim): "the new running animation changes too much of the Ivo style. The one you presented me before we removed the beard was far better (the pixel lab one)". A first pass had redrawn the head, re-timed the bob and grounded frame 4; it was dropped. The run: "Stubble pixels only (Recommended)" ("The run exactly as first presented: same frames, timing and head. The only change is the few stubble pixels on the jaw recoloured to skin."). The attacks: "Revert to before" ("Restore the attack faces as they were before the edit, so the attacks keep their committed look.").
+  - **Start and take.** The start frame is the push-off pose of a Codex key-pose sheet drawn beside the approved still (`run_keyposes/ivo_run_keyposes_codex.png`; the key-pose candidate itself was not kept). Of five `animate3` takes from the contact, push-off and flight poses, only the push-off take had two even strides; it is kept in `run_v5/ivo_run_t2_passing/`, frames `2-3,5-8,0-1`.
+  - **Built by `tools/art/build_ivo_run.py`**: the cut of `cut_inhabitant.py --keep=2-3,5-8,0-1 --frame=128 --at=32,34 --centre=0-128`, then every ground frame on row 95 and the flight frames 3, 4 and 7 at PixelLab's own height above its ground level, limited to 1-3 art px (2, 2 and 3), then the olive (141, 115, 63) in the top 10 rows of the figure recoloured to skin (191, 126, 74): 22 art px of stubble on the jaw. PixelLab's own bob is kept: the head is lowest at the contact frames and highest in flight (head centroid, art px from frame 0, - is higher: 0, -1.3, -2.8, -3.6, -3.1, -1.3, -2.6, -2.7). The planted boot slips +4.0 and -1.5 art px a frame in the first stride and -3.5 at the second push-off, against 8 art px a frame (192 px/s at 12 fps); the old run slipped +3 to +6, and 20 at each new stride.
+  - **Running attack.** `build_ivo_attacks.py` rebuilt `ivo_attack_run.png` on the new legs with the attack poses' own faces (`ivo_attack_ground`, `ivo_attack_air` and `ivo_attack_down` rebuild byte for byte). It keeps the run's flight frames (sheet frames 3, 4 and 7) so the stride does not hitch under the slash. Its upper body rides the run's bob, so the steel in the hit windows rose 4-8 px and the Hitbox keys moved with it (table above).
+  - **Tests.** `ivo_sheet_test` keeps every check and adds `FLIGHT`: the run's frames 3, 4 and 7 and the running attack's frames 3, 4 and 7 must be 1-3 art px above the floor, every other grounded frame on it. The running attack is centred on its head and torso (rows 40-69), since its legs are the run's stride.
+  - **Calls.** PixelLab: 5 `animate3` takes, each printing "usage: 0,0000 generations" (`balance` printed "0,00 usd" before; the user: "Codex and I'll approve as many pixel lab requests as you want", 2026-10-13). Codex: 1 image (the key-pose sheet).

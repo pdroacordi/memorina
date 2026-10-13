@@ -50,7 +50,10 @@ Third-party art used in Memorina, with the terms it was taken under.
   (`ivo_poses_codex.png`); every clip but the attacks is PixelLab animate-with-text-v3 from the still or a pose, cut by
   `tools/art/cut_inhabitant.py`. The attacks are Codex key poses drawn beside the same still
   (`ivo_attack_poses_ground_codex.png`, `ivo_attack_poses_air_codex.png`) with smears drawn by
-  `tools/art/build_ivo_attacks.py` (contracts `tools/art/prompts/ivo_*.md`). No third-party art was given as a reference.
+  `tools/art/build_ivo_attacks.py` (contracts `tools/art/prompts/ivo_*.md`). The run (2026-10-13) is PixelLab
+  animate-with-text-v3 from the push-off pose of a Codex key-pose sheet drawn beside the same still
+  (`tools/art/sources/ivo/run_keyposes/ivo_run_keyposes_codex.png`), its frames in `tools/art/sources/ivo/run_v5/`,
+  cut and settled by `tools/art/build_ivo_run.py`. No third-party art was given as a reference.
   The ZeggyGames *2D Pixel Art Character Template Asset Pack* sheets these replace are no longer in the project; that
   licence forbids AI training, so they were never uploaded to a generator.
 

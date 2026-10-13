@@ -6,12 +6,13 @@ status: active
 tags: [animation, animation-tree, resolver, driver]
 related: [architecture/animation-driver-resolver-pattern, gotchas/animationtree-reset-track-overwrites-script-writes, architecture/ivo-at-2x]
 created: 2026-10-02
-updated: 2026-10-11
+updated: 2026-10-13
 source_files:
   - scenes/characters/animation_resolver.gd
   - scenes/characters/character.gd
   - scenes/characters/ivo/ivo.tscn
   - tools/art/cut_inhabitant.py
+  - tools/art/build_ivo_run.py
 ---
 
 # Animation: code decides, the AnimationTree renders
@@ -32,11 +33,11 @@ Moved verbatim from `CLAUDE.md` ("Animation") on 2026-10-02.
 Ivo is drawn at the world's 2x density, 29 art px (58 px) tall, by Codex and PixelLab from our own still; the plan and its revisions are [`architecture/ivo-at-2x`](../architecture/ivo-at-2x.md).
 
 - **One 128x128 frame for every sheet** (`assets/sprites/characters/ivo/ivo_<clip>.png`): the floor line is row 96 and the body sits on the flip axis, column 63.5 (`Sprite2D` is centred), so `Sprite2D.position` stays `(0, -32)` and no clip keys an offset. Wall clips put his front on the capsule's edge (column 75) instead of the centre. The art faces east; `Character` flips it (`flip_h = facing < 0`).
-- **No clip's length, step or timing changed.** The attack clips' frame indices, hframes and Hitbox geometry did change. A sheet holds exactly the frames its clips key, chosen from PixelLab's returned frames by the contract's `keep`, settled by `--floor` (feet on row 95) and `--centre` (body on the axis) (`tools/art/prompts/ivo_<clip>.md`; `cut_inhabitant.py --keep`); the contract's `generate:` is the count PixelLab was asked for. The two-swing sheets put swing 1 in frames 0-4 and swing 2 in 5-8; jump and fall attacks share `ivo_attack_air`.
+- **No clip's length, step or timing changed.** The attack clips' frame indices, hframes and Hitbox geometry did change. A sheet holds exactly the frames its clips key, chosen from PixelLab's returned frames by the contract's `keep`, settled by `--floor` (feet on row 95) and `--centre` (body on the axis) (`tools/art/prompts/ivo_<clip>.md`; `cut_inhabitant.py --keep`); the contract's `generate:` is the count PixelLab was asked for. The run is cut the same way by `tools/art/build_ivo_run.py`, which keeps its three flight frames off the floor and recolours the jaw's stubble to skin. The two-swing sheets put swing 1 in frames 0-4 and swing 2 in 5-8; jump and fall attacks share `ivo_attack_air`.
 - **The body is unchanged:** capsule radius 11, height 54, now centred at x 0 (was -1). Hair is not body, so every authored jump clears the same gaps (`ivo_sheet_test` pins `MapGuide.ivo_reach()`).
 - **Attacks are key poses, smears and holds** (`tools/art/build_ivo_attacks.py`), not generated in-betweens; the running attack is its upper body over the run cycle's legs.
 - **The Hitbox matches the swing the art shows.** Each attack clip keys the capsule's position and scale to the box its active frames cover; reaches are in `architecture/ivo-at-2x`; enemies and guardians were retuned to them in CORE-09 (`systems/guardians`, "Reach against Ivo's sword"), and `tests/scenes/combat/combat_reach_test.gd` measures the keyed boxes.
-- `tests/scenes/characters/ivo/ivo_sheet_test.gd` holds the contract: sheet width = hframes x 128, frame keys below hframes, texture and hframes keyed before frame, clip lengths, feet on row 95 in every grounded frame, every clip's body within 2 art px of the flip axis (attacks measured on the feet or torso without the steel), an attack's body moving at most 2 art px between frames, wall clips at the capsule edge instead, no frame touching its border, every colour from `tools/art/sources/ivo/ivo_palette.png`.
+- `tests/scenes/characters/ivo/ivo_sheet_test.gd` holds the contract: sheet width = hframes x 128, frame keys below hframes, texture and hframes keyed before frame, clip lengths, feet on row 95 in every grounded frame but the flight frames listed in `FLIGHT` (run 3, 4 and 7, the running attack 3, 4 and 7, 1-3 art px up), every clip's body within 2 art px of the flip axis (attacks measured on the feet or torso without the steel; the running attack on the torso, its legs being the run's), an attack's body moving at most 2 art px between frames, wall clips at the capsule edge instead, no frame touching its border, every colour from `tools/art/sources/ivo/ivo_palette.png`.
 
 The user's decisions, in their words:
 
@@ -51,3 +52,4 @@ The user's decisions, in their words:
 - Third round: "The jumping and falling animation could be improved. The attacking animation is weird as well. ... Many things on the game seem to just be flaoting. ivo while running doesn't touch the ground." (2026-10-11); on the attack: "The swing itself", "Too short/weak", "Sliding or popping"; PixelLab: "Approve 15 more (Recommended)". The jump and all attacks were redrawn, and every grounded frame was settled on the floor line (`architecture/ivo-at-2x` Revision).
 - Fourth round: "The attack animation still very strange. Not good, not fluid, doesn't even seem like an attack. The running attack is weird too, because the character is moving, but it's legs aren't" (2026-10-11). The attacks are rebuilt from key poses and smear frames, and the running attack runs on the run cycle's legs (`architecture/ivo-at-2x` Revision).
 - Fifth round: "The attacks are mostly fine, just need to improve the swish from the standing attack the flowness." (2026-10-11). The standing combo gained a rising smear, a leading and a trailing smear, and an ease back to guard; the running attack, air slash and pogo stayed as they were.
+- Sixth round: "the run animation should still be worked on, it does not look natural as of now." (2026-10-12); of a key-pose build and a PixelLab retake the user picked "2: PixelLab" (2026-10-13). After a redrawn head and re-timed bob: "the new running animation changes too much of the Ivo style. The one you presented me before we removed the beard was far better (the pixel lab one)" (2026-10-13), then "Stubble pixels only (Recommended)" for the run and "Revert to before" for the attack faces. The run is the PixelLab take as first presented, its jaw stubble recoloured to skin, with flight frames, and the running attack was rebuilt on its legs (`architecture/ivo-at-2x` Revision).

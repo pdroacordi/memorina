@@ -19,11 +19,15 @@ const GROUNDED: Array[StringName] = [
 	&"idle", &"run", &"brace", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle",
 	&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in", &"run_attack_swing_out",
 ]
+## Sheet frames in flight, both boots off the floor 1-3 art px; the running attack keeps the run's legs.
+const FLIGHT := {&"run": [3, 4, 7], &"run_attack_swing_in": [3, 4], &"run_attack_swing_out": [7]}
+## Game px: how far a flight frame's lowest row may sit above the feet row.
+const FLIGHT_LIFT := Vector2i(2, 6)
 const CENTRED: Array[StringName] = [
 	&"idle", &"run", &"brace", &"jump_start", &"jump_idle", &"fall_start", &"fall_idle", &"air_spin", &"land",
 	&"hurt", &"roll", &"sit", &"climb", &"climb_back", &"death",
 ]
-## Measured on the feet (rows 80-95), where no blade or trail passes.
+## Measured on the feet (rows 80-95), where no blade or trail passes; the running attacks are measured on the torso (their legs are the run's stride).
 const GROUND_ATTACKS: Array[StringName] = [
 	&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in", &"run_attack_swing_out",
 ]
@@ -91,9 +95,10 @@ func test_grounded_clips_stand_on_the_floor_line() -> void:
 	var problems := PackedStringArray()
 	for clip: StringName in GROUNDED:
 		for frame: int in _frames(clip):
-			var used := _used(clip, frame)
-			if used.end.y - 1 != FEET_ROW:
-				problems.append("%s frame %d: lowest row %d" % [clip, frame, used.end.y - 1])
+			var lift := FEET_ROW - (_used(clip, frame).end.y - 1)
+			var flying: bool = frame in FLIGHT.get(clip, [])
+			if (flying and (lift < FLIGHT_LIFT.x or lift > FLIGHT_LIFT.y)) or (not flying and lift != 0):
+				problems.append("%s frame %d: lowest row %d" % [clip, frame, FEET_ROW - lift])
 	assert_array(Array(problems)).is_empty()
 
 func test_body_clips_are_centred() -> void:
@@ -101,7 +106,9 @@ func test_body_clips_are_centred() -> void:
 	for clip: StringName in CENTRED:
 		problems.append_array(_off_axis(clip, 0, FRAME))
 	for clip: StringName in GROUND_ATTACKS:
-		problems.append_array(_off_axis(clip, 80, 96))
+		# A running attack's legs are the run's stride, centred with the run; its head and torso are measured.
+		var band := Vector2i(40, 70) if String(clip).begins_with("run_") else Vector2i(80, 96)
+		problems.append_array(_off_axis(clip, band.x, band.y))
 	for clip: StringName in AIR_ATTACKS:
 		problems.append_array(_off_axis(clip, 40, 70))
 	assert_array(Array(problems)).is_empty()
