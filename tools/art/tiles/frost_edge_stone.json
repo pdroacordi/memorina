@@ -1,0 +1,61 @@
+{
+	"about": "Frost Edge dark sea-cliff rock: the shared rock body (Codex, tools/art/tiles/sources/frost_edge_tiles_codex_raw.png row 1, quilted seamless by tools/art/cut_tile_bodies.py) in its dark slate palette (\"One rock, two palettes (Recommended)\", user, 2026-10-13); bare lichen, grey litter, snow.",
+	"art_scale": 2,
+	"body": {
+		"path": "res://tools/art/tiles/sources/frost_edge_rock_0.png"
+	},
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/frost_edge_rock_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/frost_edge_rock_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/frost_edge_rock_3.png"
+		}
+	],
+	"lips": [
+		{
+			"kind": "grass",
+			"greens": [
+				"#3a4440",
+				"#56625a",
+				"#748072"
+			],
+			"flowers": [],
+			"density": 0.18,
+			"ferns": 0,
+			"max_blade": 1,
+			"seed": 58
+		},
+		{
+			"kind": "litter",
+			"leaves": [
+				"#6a6458",
+				"#847a68",
+				"#544e46"
+			],
+			"seed": 59
+		},
+		{
+			"kind": "snow",
+			"whites": [
+				"#f6f0e8",
+				"#e6dfd6"
+			],
+			"shades": [
+				"#b0bccc",
+				"#8a9cbc"
+			],
+			"seed": 60
+		}
+	],
+	"spill": 3,
+	"depth": 2,
+	"radius": 2,
+	"rim": 1,
+	"rim_dark": 0.25,
+	"edge": "none",
+	"ledge_height": 0
+}

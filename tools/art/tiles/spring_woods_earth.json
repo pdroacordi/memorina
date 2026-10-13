@@ -1,0 +1,74 @@
+{
+	"about": "Spring Woods forest earth (Codex, tools/art/tiles/sources/spring_woods_tiles_codex_raw.png row 1, quilted seamless): moss and blossom turf.",
+	"art_scale": 2,
+	"body": {
+		"path": "res://tools/art/tiles/sources/spring_woods_earth_0.png"
+	},
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/spring_woods_earth_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/spring_woods_earth_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/spring_woods_earth_3.png"
+		}
+	],
+	"lips": [
+		{
+			"kind": "grass",
+			"greens": [
+				"#22300e",
+				"#34481a",
+				"#4a6222",
+				"#5e7a2c",
+				"#76923a"
+			],
+			"flowers": [
+				"#e8b8c8",
+				"#efe6d6"
+			],
+			"density": 0.9,
+			"ferns": 1,
+			"max_blade": 1,
+			"seed": 70
+		},
+		{
+			"kind": "litter",
+			"leaves": [
+				"#b0602a",
+				"#c87c34",
+				"#8a4a22",
+				"#d89a48"
+			],
+			"blades": [
+				"#4a3c1c",
+				"#64532a",
+				"#7e6a38",
+				"#988048"
+			],
+			"seed": 71
+		},
+		{
+			"kind": "snow",
+			"whites": [
+				"#f6f0e8",
+				"#e6dfd6"
+			],
+			"shades": [
+				"#b0bccc",
+				"#8a9cbc"
+			],
+			"seed": 72
+		}
+	],
+	"spill": 3,
+	"depth": 2,
+	"radius": 3,
+	"rim": 1,
+	"rim_dark": 0.25,
+	"edge": "none",
+	"ledge_height": 5,
+	"grass": true
+}

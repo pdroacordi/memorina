@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GrassLook" format=3]
+
+[ext_resource type="Script" path="res://resources/world/grass/grass_look.gd" id="1_look"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/threshold/stone_blades.png" id="2_palette"]
+[ext_resource type="Resource" path="res://resources/world/grass/grass_profile.tres" id="3_profile"]
+
+[resource]
+script = ExtResource("1_look")
+palette = ExtResource("2_palette")
+density = Vector3(0.2, 0.12, 0)
+height_min = Vector3i(1, 1, 0)
+height_max = Vector3i(3, 2, 0)
+profile = ExtResource("3_profile")

@@ -1,0 +1,40 @@
+{
+	"about": "Lighthouse white masonry: two courses of 8 art px whitewashed blocks offset by half, thin grey joints (colours from tools/art/tiles/sources/frost_edge_tiles_codex_raw.png row 2).",
+	"kind": "ashlar",
+	"block": 8,
+	"seed": 41,
+	"wear": 2,
+	"colors": {
+		"faces": [
+			"#d6d3cc",
+			"#dcdad4",
+			"#cfccc5"
+		],
+		"light": [
+			"#e6e4df"
+		],
+		"joint": [
+			"#a6a7a5"
+		],
+		"stain": [
+			"#c2beb2"
+		],
+		"crack": [
+			"#a6a7a5"
+		]
+	},
+	"variants": [
+		{
+			"detail": "chip",
+			"seed": 1
+		},
+		{
+			"detail": "stain",
+			"seed": 2
+		},
+		{
+			"detail": "crack",
+			"seed": 3
+		}
+	]
+}

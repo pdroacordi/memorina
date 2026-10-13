@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="BiomeTileset" format=3]
+
+[ext_resource type="Script" path="res://resources/world/tiles/biome_tileset.gd" id="1_biome"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/summer_caldera/ash.png" id="2_stone"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/village/wood.png" id="3_wood"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/summer_caldera/wall.png" id="4_wall"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/summer_caldera/ash_crack.png" id="5_crack"]
+
+[resource]
+script = ExtResource("1_biome")
+stone = ExtResource("2_stone")
+wood = ExtResource("3_wood")
+wall = ExtResource("4_wall")
+crack = ExtResource("5_crack")
+fill_variants = PackedInt32Array(0, 4, 4, 3)
+description = "Summer Caldera ash scree: loose ash and cinders drawn as the STONE look, so S cells are Ground STONE and roots never take them (\"Caldera ash as scree\", user, 2026-10-13); temple sandstone back walls, the village oak planks."

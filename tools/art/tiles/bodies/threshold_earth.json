@@ -1,0 +1,50 @@
+{
+	"about": "Threshold dry pale earth with embedded stones and a rootlet (colours from tools/art/tiles/sources/threshold_tiles_codex_raw.png row 1, one value step darker for contrast against the pale backdrop).",
+	"kind": "soil",
+	"seed": 11,
+	"stones": 0,
+	"roots": 0,
+	"stone_sizes": [
+		[
+			1,
+			0
+		]
+	],
+	"cuts": [
+		0.28,
+		0.78
+	],
+	"colors": {
+		"tones": [
+			"#83694c",
+			"#8f7553",
+			"#9c815b"
+		],
+		"stone": [
+			"#6c6458",
+			"#97928a",
+			"#b6b0a4"
+		],
+		"root": [
+			"#c4ae84"
+		]
+	},
+	"variants": [
+		{
+			"detail": "stone",
+			"seed": 1
+		},
+		{
+			"detail": "root",
+			"seed": 2
+		},
+		{
+			"detail": "pebbles",
+			"seed": 3
+		},
+		{
+			"detail": "stone",
+			"seed": 4
+		}
+	]
+}

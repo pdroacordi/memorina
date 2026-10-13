@@ -1,0 +1,44 @@
+{
+	"about": "Caldera ash scree: loose grey ash strewn with dark angular cinders and pale pumice chips; drawn as STONE, never earth (colours from the Codex sheet row 3).",
+	"kind": "scree",
+	"seed": 33,
+	"cinders": 2,
+	"pumice": 1,
+	"colors": {
+		"tones": [
+			"#76757c",
+			"#807f86",
+			"#8a898f"
+		],
+		"cinder": [
+			"#3c3c46"
+		],
+		"cinder_lit": [
+			"#5a5a68"
+		],
+		"pumice": [
+			"#b2aeaa"
+		],
+		"pumice_shade": [
+			"#989490"
+		]
+	},
+	"variants": [
+		{
+			"detail": "block",
+			"seed": 1
+		},
+		{
+			"detail": "pumice",
+			"seed": 2
+		},
+		{
+			"detail": "grit",
+			"seed": 3
+		},
+		{
+			"detail": "block",
+			"seed": 4
+		}
+	]
+}

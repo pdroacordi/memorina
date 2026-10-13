@@ -1,12 +1,16 @@
 """Cut a Codex landscape strip into a seamless 2x backdrop layer sheet with spring, autumn and winter bands.
 
-Layer: python -I tools/art/cut_backdrop.py layer <strip.png> <out.png> --kind=mountains|hills|trees --colors=N --top=ROW
-    [--x-max=PX] [--cut=X0,X1] [--overlap=ART_PX]. Keys the magenta, cuts the strip between the two columns whose
+Layer: python -I tools/art/cut_backdrop.py layer <strip.png> <out.png> --kind=mountains|hills|trees|broadleaf|pines|sea --colors=N --top=ROW
+    [--x-max=PX] [--cut=X0,X1] [--overlap=ART_PX] [--aerial=0..1] [--snow=ART_PX]. Keys the magenta, cuts the strip between the two columns whose
     silhouettes match best (or at --cut, source px), reduces it to 512x192 art px with its silhouette top at art row
     ROW, stitches the wrap through up to --overlap art px of strip past the cut along the cut of least difference,
     snaps it to N colours, removes single-pixel
     speckle, recolours the autumn and winter bands from the spring drawing and mixes each band toward its season's
-    horizon sky by the layer's depth (AERIAL). --x-max ignores the strip right of PX (the hills' sea cliff cannot wrap).
+    horizon sky by the layer's depth (AERIAL, or --aerial). --x-max ignores the strip right of PX (the hills' sea cliff
+    cannot wrap). A layer drawn in spring gets its winter by recolour: --kind=sea turns open water to ice, --kind=pines keeps
+    the firs green in autumn and winter, --kind=broadleaf turns winter crowns to snow and bare branches, and --snow caps
+    the top N art px under every edge of the silhouette with snow in the winter band ("Draw spring, recolour to winter
+    (Recommended)", user, 2026-10-13).
 Sky: python -I tools/art/cut_backdrop.py sky <out.png>: stepped bands and four flat clouds, per season.
 Layout rules (one flat EDGE row per band, a transparent top row): architecture/vertical-backdrops, "Art contract".
 """
@@ -28,7 +32,9 @@ ZENITH = {"spring": (86, 136, 200), "autumn": (110, 140, 180), "winter": (128, 1
 CLOUD = {"spring": ((242, 244, 246), (206, 218, 230)), "autumn": ((236, 232, 224), (200, 198, 196)),
          "winter": ((226, 230, 234), (196, 204, 212))}
 # 0..1 mix toward the horizon sky: atmospheric depth, so the play plane stands out (systems/backdrops).
-AERIAL = {"mountains": 0.5, "hills": 0.42, "trees": 0.32}
+AERIAL = {"mountains": 0.5, "hills": 0.42, "trees": 0.32, "sea": 0.35, "pines": 0.32, "broadleaf": 0.32}
+# Art px of snow laid under each top edge of the silhouette in the winter band (0: none).
+SNOW = 0
 
 
 def keyed(path):
@@ -102,6 +108,31 @@ def hsv_to_rgb(h, s, v):
 def season(colour, kind, band):
     h, s, v = colorsys.rgb_to_hsv(*(np.array(colour) / 255.0))
     green = 0.15 < h < 0.48 and s > 0.15
+    if kind == "broadleaf":
+        if band != "winter":
+            return season(colour, "trees", band)
+        if green:
+            if v >= 0.45:
+                return hsv_to_rgb(0.58, 0.05 + (1 - v) * 0.1, 0.82 + v * 0.12)  # snow lying on the crowns
+            return hsv_to_rgb(0.07, 0.14, 0.26 + v * 0.4)  # bare branches
+        if s < 0.3 and v > 0.6:
+            return hsv_to_rgb(0.58, 0.05, 0.92)  # blossom under snow
+        return hsv_to_rgb(h, s * 0.8, v * 0.9)  # trunks and stones keep their colour
+    if kind == "pines":
+        if not green:
+            return season(colour, "trees", band)
+        if v >= 0.55:
+            return season(colour, "hills", band)  # grass under the firs turns like the hills
+        return tuple(colour) if band == "autumn" else hsv_to_rgb(h, s * 0.8, v * 0.95)  # evergreen
+    if kind == "sea":
+        water = 0.45 < h < 0.72 and s > 0.18
+        if green and not water:
+            return season(colour, "hills", band)  # a grassy bank turns like the hills
+        if band == "autumn":
+            return hsv_to_rgb(h, s * 0.85, v * 0.97) if water else tuple(colour)
+        if band == "winter" and water:
+            return hsv_to_rgb(0.56, 0.08 + (1 - v) * 0.16, 0.78 + v * 0.18)  # ice, bright and cold
+        return tuple(colour)
     if band == "autumn":
         if kind == "mountains" or not green or (kind == "trees" and v < 0.36):
             return tuple(colour)  # rock, snow and pines keep their colour
@@ -127,10 +158,29 @@ def band_of(spring, kind, band):
     opaque = spring[..., 3] > 0
     mapping = {c: season(c, kind, band) for c in {tuple(c) for c in spring[opaque][:, :3]}}
     recoloured = np.array([mapping[tuple(p)] for p in spring[..., :3][opaque]], dtype=float)
+    if band == "winter" and SNOW > 0:
+        recoloured = capped(spring, opaque, recoloured)
     k = AERIAL[kind]
     out[..., :3][opaque] = np.round(recoloured * (1 - k) + np.array(HORIZON[band]) * k).astype(np.uint8)
     out[-8:] = out[-9, 0]  # EDGE below: the bottom rows are one colour
     out[0, :, 3] = 0  # NONE above: the top row is transparent
+    return out
+
+
+def capped(spring, opaque, recoloured):
+    # Snow on every top edge: a pixel with air within SNOW px above it, never in the EDGE rows.
+    cap = np.zeros(opaque.shape, dtype=bool)
+    for k in range(1, SNOW + 1):
+        above = np.zeros_like(opaque)
+        above[k:] = ~opaque[:-k]
+        cap |= opaque & above
+    cap[-9:] = False
+    flat = cap[opaque]
+    out = recoloured.copy()
+    lit, shade = hsv_to_rgb(0.58, 0.05, 0.94), hsv_to_rgb(0.6, 0.1, 0.84)
+    edge = np.zeros(opaque.shape, dtype=bool)
+    edge[1:] = opaque[1:] & ~opaque[:-1]
+    out[flat] = [lit if edge[y, x] or SNOW == 1 else shade for y, x in zip(*np.nonzero(cap))]
     return out
 
 
@@ -211,5 +261,8 @@ if __name__ == "__main__":
         sky(args[1])
     else:
         cut = tuple(int(v) for v in opts["cut"].split(",")) if opts.get("cut") else None
+        if opts.get("aerial"):
+            AERIAL[opts["kind"]] = float(opts["aerial"])
+        SNOW = int(opts.get("snow", 0))
         layer(args[1], args[2], opts["kind"], int(opts["colors"]), int(opts["top"]), int(opts.get("x-max", 0)), cut,
                 int(opts.get("overlap", OVERLAP)))

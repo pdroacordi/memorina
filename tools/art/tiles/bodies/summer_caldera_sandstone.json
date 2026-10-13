@@ -1,0 +1,40 @@
+{
+	"about": "Caldera temple sandstone: two courses of long ashlar blocks (16 art px) offset by half, thin darker joints (colours from the Codex sheet row 2).",
+	"kind": "ashlar",
+	"block": 16,
+	"seed": 32,
+	"wear": 3,
+	"colors": {
+		"faces": [
+			"#bc965c",
+			"#c49d61",
+			"#b48f58"
+		],
+		"light": [
+			"#d0a86a"
+		],
+		"joint": [
+			"#8a6c44"
+		],
+		"stain": [
+			"#a8844f"
+		],
+		"carving": [
+			"#8a6c44"
+		]
+	},
+	"variants": [
+		{
+			"detail": "chip",
+			"seed": 1
+		},
+		{
+			"detail": "carving",
+			"seed": 2
+		},
+		{
+			"detail": "stain",
+			"seed": 3
+		}
+	]
+}

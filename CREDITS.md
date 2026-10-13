@@ -38,6 +38,21 @@ Third-party art used in Memorina, with the terms it was taken under.
   recipes in `tools/art/tiles/village_*.json` (`WangSheet`); the secret walls' crack decals (`crack.png`, here and in
   `legacy/`) are drawn by `tools/art/draw_cracks.gd`.
 
+- **Region ground** (WORLD-07, 2026-10-13; `assets/sprites/world/tilesets/{threshold,frost_edge,lighthouse,spring_woods,frozen_lake,wind_orchards,summer_caldera}/`) -
+  one Codex tile sheet per region (`tools/art/tiles/sources/<region>_tiles_codex_raw.png`; our five village tile
+  bodies, enlarged, the only reference). The rock, woods and lake earth bodies are those Codex tiles reduced to 16 art
+  px and quilted seamless by `tools/art/cut_tile_bodies.py` (the lake's stone is the Frost Edge rock recoloured, its
+  planks our village planks recoloured); the other bodies are painted by `tools/art/paint_tile_bodies.py` from the specs
+  in `tools/art/tiles/bodies/`, in colours sampled from those sheets. Sheets composed by
+  `tools/art/assemble_tile_sheet.gd` from `tools/art/tiles/<region>_<look>.json`; cracks by `tools/art/draw_cracks.gd`.
+  The approved style boards are in `tools/art/references/regions/` (our own art only).
+
+- **Region backdrops and rock walls** (WORLD-07, 2026-10-13; `assets/sprites/world/background/{threshold,frost_edge,spring_woods,frozen_lake,wind_orchards,summer_caldera,sea_cliff_rock,lake_cliff_rock,orchard_limestone}/`) -
+  Codex image generation, one strip per layer and one texture per wall (`tools/art/sources/<region>_<layer>_codex.png`,
+  `tools/art/sources/backdrop_<wall>_codex.png`; our approved village concept, our village valley's spring band and
+  our `ice_caves` and `earth_caves` walls the only references), cut by `tools/art/cut_backdrop.py` and
+  `tools/art/cut_wall.py`. Every region set shares the village valley's sky.
+
 - **Props** (`assets/sprites/world/props/`: pressure plate, stone gate, lift, seesaw plank
   and fulcrum, drawbridge, hanging cocoon, root strand, fallen log, the rest bench, the door) - generated for this project with
   Codex CLI's image tool from the prompts in `tools/art/prompts/`, then keyed, snapped to

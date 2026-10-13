@@ -1,0 +1,39 @@
+{
+	"about": "Threshold worn road slabs: two courses of 8 art px slabs offset by half, dusty joints, rounded worn corners (colours from the Codex sheet row 2).",
+	"kind": "slabs",
+	"seed": 12,
+	"wear": 2,
+	"colors": {
+		"faces": [
+			"#9c957f",
+			"#a59e8a",
+			"#aea794"
+		],
+		"light": [
+			"#b9b19d"
+		],
+		"joint": [
+			"#7a6a50"
+		],
+		"crack": [
+			"#80725a"
+		],
+		"groove": [
+			"#8c846f"
+		]
+	},
+	"variants": [
+		{
+			"detail": "crack",
+			"seed": 1
+		},
+		{
+			"detail": "groove",
+			"seed": 2
+		},
+		{
+			"detail": "chip",
+			"seed": 3
+		}
+	]
+}

@@ -5,6 +5,16 @@ class_name BackdropSetTest extends GdUnitTestSuite
 
 const SETS_DIR := "res://resources/world/backdrops"
 const ROOMS_DIR := "res://scenes/world/rooms"
+## The surface sets that share one sky and one horizon, so a seam between regions mixes sky with sky.
+const SHARED_SKY_SETS: Array[String] = ["village_valley", "threshold", "frost_edge", "spring_woods", "frozen_lake", "wind_orchards", "summer_caldera"]
+const SHARED_SKY := "res://assets/sprites/world/background/village_valley/sky.png"
+## Game px from a band's top within which a layer with nothing above may not run opaque, and the longest run allowed.
+const FLAT_TOP_ROWS := 16
+const FLAT_TOP_RUN := 32
+## Layers meant to end in a straight top line, with the reason.
+const FLAT_TOP_ALLOWED := {
+	"res://assets/sprites/world/background/basalt_caves/far.png": "caldera_crater: the crater's wall stops at a straight rim under the sky (WORLD-28)",
+}
 
 
 func _sets() -> Array[BackdropSet]:
@@ -61,12 +71,51 @@ func test_every_repeating_layer_wraps_without_a_cut() -> void:
 					problems.append("%s band %d: %d rows change at the wrap, at most %d inside" % [layer.texture.resource_path, band, wrap, steepest])
 	assert_array(Array(problems)).is_empty()
 
+## "Our own per region (Recommended)" (user, 2026-10-13): one set per region on the shared sky and horizon.
+func test_the_region_sets_share_the_sky_and_the_horizon() -> void:
+	for id: String in SHARED_SKY_SETS:
+		var backdrop := load(SETS_DIR.path_join(id + ".tres")) as BackdropSet
+		assert_object(backdrop).override_failure_message("%s is missing" % id).is_not_null()
+		assert_str(backdrop.layers[0].texture.resource_path).override_failure_message("%s: its sky" % id).is_equal(SHARED_SKY)
+		assert_float(backdrop.horizon_screen_y).override_failure_message("%s: its eye level" % id).is_equal(191.0)
+		for layer: BackdropLayer in backdrop.layers:
+			assert_int(layer.horizon_row).override_failure_message("%s: a horizon row" % id).is_equal(229)
+
+## A layer with nothing above it must close its shapes inside the strip: an opaque run along its top rows is drawn as
+## a straight cut wherever the vertical parallax brings it on screen
+## (bugs/the-spring-woods-near-trees-are-cut-flat-at-the-strip-top).
+func test_no_layer_with_nothing_above_is_cut_flat_at_its_top() -> void:
+	var problems := PackedStringArray()
+	for backdrop: BackdropSet in _sets():
+		for layer: BackdropLayer in backdrop.layers:
+			var path := layer.texture.resource_path
+			if layer.fill_above != BackdropLayer.Fill.NONE or FLAT_TOP_ALLOWED.has(path):
+				continue
+			var image := layer.texture.get_image()
+			var strip := layer.strip_size()
+			for band: int in layer.band_count:
+				var run := _longest_opaque_run(image, band * strip.y, FLAT_TOP_ROWS)
+				if run > FLAT_TOP_RUN:
+					problems.append("%s band %d: %d opaque px in a row within the top %d rows" % [path, band, run, FLAT_TOP_ROWS])
+	assert_array(Array(problems)).is_empty()
+
 func test_no_room_places_its_own_parallax_layers() -> void:
 	var offenders := PackedStringArray()
 	for path: String in _contents_scenes(ROOMS_DIR):
 		if FileAccess.get_file_as_string(path).contains("type=\"Parallax2D\""):
 			offenders.append(path)
 	assert_array(Array(offenders)).is_empty()
+
+## The longest run of opaque pixels along any of `rows` rows from `top`, wrapping sideways.
+func _longest_opaque_run(image: Image, top: int, rows: int) -> int:
+	var width := image.get_width()
+	var longest := 0
+	for y: int in range(top, top + rows):
+		var run := 0
+		for i: int in width * 2:
+			run = run + 1 if image.get_pixel(i % width, y).a > 0.0 else 0
+			longest = maxi(longest, mini(run, width))
+	return longest
 
 func _differing_rows(image: Image, a: int, b: int, top: int, rows: int) -> int:
 	var count := 0

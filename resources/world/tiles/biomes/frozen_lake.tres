@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="BiomeTileset" format=3]
+
+[ext_resource type="Script" path="res://resources/world/tiles/biome_tileset.gd" id="1_biome"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/frozen_lake/earth.png" id="2_earth"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/frozen_lake/stone.png" id="3_stone"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/frozen_lake/wood.png" id="4_wood"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/tilesets/frozen_lake/crack.png" id="5_crack"]
+[ext_resource type="Resource" path="res://resources/world/grass/frozen_lake_earth_grass.tres" id="6_earth_grass"]
+[ext_resource type="Resource" path="res://resources/world/grass/frozen_lake_stone_grass.tres" id="7_stone_grass"]
+
+[resource]
+script = ExtResource("1_biome")
+earth = ExtResource("2_earth")
+stone = ExtResource("3_stone")
+wood = ExtResource("4_wood")
+crack = ExtResource("5_crack")
+earth_grass = ExtResource("6_earth_grass")
+stone_grass = ExtResource("7_stone_grass")
+fill_variants = PackedInt32Array(3, 3, 4, 0)
+description = "Frozen Lake: bluish lake stone (the shared rock body, blue palette), cold dark chasm earth, grey stilt planks (design 04 section 6; tools/art/tiles/frozen_lake_*.json)."

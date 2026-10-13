@@ -1,0 +1,10 @@
+---
+id: backdrop_frost_edge_mid
+command: generate
+target: res://assets/sprites/world/background/frost_edge/mid.png
+size: 1024x1152
+frames: 1
+source: codex
+---
+The mid layer of `resources/world/backdrops/frost_edge.tres` (design 04 section 6: the frozen sea and its cliffs): open sea breakers in spring, white foam crests and dark rocks with surf; ice plates in winter by recolour. Backdrops: "Our own per region (Recommended)" (user, 2026-10-13) - one set per region, the shared sky (`village_valley/sky.png`, `backdrop_village_valley_sky`) and the shared horizon: horizon row 229, eye level 191, scroll 0.3, 0.18 as on the board and in `village_valley.tres`. 1024x384 per band at 2x, spring, autumn and winter stacked, autumn and winter recoloured from the spring drawing (kind `sea`); every band mixed toward its season's horizon sky by 0.28 (atmospheric depth); silhouette top at art row 124; 7 colours. Seamless sideways; EDGE rows one colour per band (architecture/vertical-backdrops, "Art contract"). Redrawn in spring for production ("Draw spring, recolour to winter (Recommended)", user, 2026-10-13: each layer drawn without snow, the winter band made by recolour plus snow caps). Raw kept in `tools/art/sources/frost_edge_mid_codex.png`; cut by `python -I tools/art/cut_backdrop.py layer tools/art/sources/frost_edge_mid_codex.png assets/sprites/world/background/frost_edge/mid.png --kind=sea --colors=7 --top=124 --aerial=0.28`. Reference: the approved board `tools/art/references/regions/board_frost_edge.png`; our village concept and the village valley's spring band were the Codex style references. Approved board (2026-10-13): "Approve, fix the flat ground (Recommended)" - "Approve all six. In production: the Threshold and Orchard ground came out nearly flat beige, so give them texture (stones, roots, slabs) like our village earth; brighten the Frost Edge sea; make the woods trees less dense and the orchard windmills bigger." Tiles: "Own tiles per region (Recommended)"; "We should only our set of tiles from now on and not mix em."
+Negative: outlines, sky, clouds, sun, birds, snow, ice, text, frame, speckle, busy texture

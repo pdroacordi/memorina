@@ -1,0 +1,70 @@
+{
+	"about": "Frozen Lake cold dark earth of the chasm (Codex, tools/art/tiles/sources/frozen_lake_tiles_codex_raw.png row 2, quilted seamless).",
+	"art_scale": 2,
+	"body": {
+		"path": "res://tools/art/tiles/sources/frozen_lake_earth_0.png"
+	},
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/frozen_lake_earth_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/frozen_lake_earth_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/frozen_lake_earth_3.png"
+		}
+	],
+	"lips": [
+		{
+			"kind": "grass",
+			"greens": [
+				"#2c3c30",
+				"#40543e",
+				"#587050",
+				"#6c8460"
+			],
+			"flowers": [],
+			"density": 0.5,
+			"ferns": 0,
+			"max_blade": 1,
+			"seed": 82
+		},
+		{
+			"kind": "litter",
+			"leaves": [
+				"#b0602a",
+				"#c87c34",
+				"#8a4a22",
+				"#d89a48"
+			],
+			"blades": [
+				"#4a3c1c",
+				"#64532a",
+				"#7e6a38",
+				"#988048"
+			],
+			"seed": 83
+		},
+		{
+			"kind": "snow",
+			"whites": [
+				"#f6f0e8",
+				"#e6dfd6"
+			],
+			"shades": [
+				"#b0bccc",
+				"#8a9cbc"
+			],
+			"seed": 84
+		}
+	],
+	"spill": 3,
+	"depth": 2,
+	"radius": 3,
+	"rim": 1,
+	"rim_dark": 0.25,
+	"edge": "none",
+	"ledge_height": 5,
+	"grass": true
+}

@@ -1,0 +1,53 @@
+{
+	"about": "Orchard ochre earth with flat embedded stones and a dark root (colours from tools/art/tiles/sources/wind_orchards_tiles_codex_raw.png row 1, browner and a step darker).",
+	"kind": "soil",
+	"seed": 21,
+	"stones": 0,
+	"roots": 0,
+	"stone_sizes": [
+		[
+			1,
+			0
+		]
+	],
+	"cuts": [
+		0.28,
+		0.78
+	],
+	"colors": {
+		"tones": [
+			"#80602f",
+			"#8e6834",
+			"#9c743b"
+		],
+		"stone": [
+			"#655c4a",
+			"#8f8670",
+			"#aca288"
+		],
+		"root": [
+			"#5a4122"
+		],
+		"twig": [
+			"#5a4122"
+		]
+	},
+	"variants": [
+		{
+			"detail": "twig",
+			"seed": 1
+		},
+		{
+			"detail": "stone",
+			"seed": 2
+		},
+		{
+			"detail": "pebbles",
+			"seed": 3
+		},
+		{
+			"detail": "root",
+			"seed": 4
+		}
+	]
+}

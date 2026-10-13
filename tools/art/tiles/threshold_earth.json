@@ -1,0 +1,74 @@
+{
+	"about": "Threshold dry pale earth (tools/art/tiles/bodies/threshold_earth.json, painted in the colours of tools/art/tiles/sources/threshold_tiles_codex_raw.png): a calm base and four variants with a stone, a root, pebbles and a second stone, the texture the user asked for (\"give them texture (stones, roots, slabs) like our village earth\", 2026-10-13); dry straw turf.",
+	"art_scale": 2,
+	"body": {
+		"path": "res://tools/art/tiles/sources/threshold_earth_0.png"
+	},
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/threshold_earth_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/threshold_earth_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/threshold_earth_3.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/threshold_earth_4.png"
+		}
+	],
+	"lips": [
+		{
+			"kind": "grass",
+			"greens": [
+				"#3e4420",
+				"#5a5e2c",
+				"#767a3a",
+				"#949046",
+				"#b0a85a"
+			],
+			"flowers": [],
+			"density": 0.55,
+			"ferns": 0,
+			"max_blade": 1,
+			"seed": 50
+		},
+		{
+			"kind": "litter",
+			"leaves": [
+				"#b0602a",
+				"#c87c34",
+				"#8a4a22",
+				"#d89a48"
+			],
+			"blades": [
+				"#4a3c1c",
+				"#64532a",
+				"#7e6a38",
+				"#988048"
+			],
+			"seed": 51
+		},
+		{
+			"kind": "snow",
+			"whites": [
+				"#f6f0e8",
+				"#e6dfd6"
+			],
+			"shades": [
+				"#b0bccc",
+				"#8a9cbc"
+			],
+			"seed": 52
+		}
+	],
+	"spill": 3,
+	"depth": 2,
+	"radius": 3,
+	"rim": 1,
+	"rim_dark": 0.25,
+	"edge": "none",
+	"ledge_height": 5,
+	"grass": true
+}

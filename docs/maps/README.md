@@ -140,8 +140,16 @@ material in its `ground` custom data, and the map answers
 <!-- generated:tilesets -->
 | `tileset =` | Looks | What it is |
 |---|---|---|
+| `frost_edge` | stone, wood, wall | Frost Edge: dark sea-cliff rock (the shared rock body, dark palette), the village oak planks, white masonry back walls; no earth ("No earth there", user, 2026-10-08). |
+| `frozen_lake` | earth, stone, wood | Frozen Lake: bluish lake stone (the shared rock body, blue palette), cold dark chasm earth, grey stilt planks (design 04 section 6; tools/art/tiles/frozen_lake_*.json). |
 | `legacy` | earth, stone, wood, wall | The pack's earth and stone converted to the corner-Wang contract; placeholder wood and wall. Every room until its biome's art lands. |
+| `lighthouse` | stone, wood, wall | The lighthouse rooms: white masonry ground and back walls, the village oak planks ("Lighthouse masonry tiles", user, 2026-10-13); no earth. |
+| `spring_woods` | earth, stone, wood | Spring Woods: forest earth under a moss and blossom turf, mossy cave rock, the village oak planks (design 04 section 6; tools/art/tiles/spring_woods_*.json). |
+| `summer_caldera` | stone, wood, wall | Summer Caldera: porous basalt, temple sandstone back walls, the village oak planks; no earth ("No earth there", user, 2026-10-08). |
+| `summer_caldera_ash` | stone, wood, wall | Summer Caldera ash scree: loose ash and cinders drawn as the STONE look, so S cells are Ground STONE and roots never take them ("Caldera ash as scree", user, 2026-10-13); temple sandstone back walls, the village oak planks. |
+| `threshold` | earth, stone, wood | Threshold Road: dry pale earth with stones and roots under a straw turf, worn road slabs, the village oak planks (design 04 section 6; tools/art/tiles/threshold_*.json, after the approved style board). |
 | `village` | earth, stone, wood, wall | The Home Village: dark loam with a grass top, rounded street stones under a walk of pale cobbles, dark oak planks, plaster and timber walls (design 04 section 6; tools/art/tiles/village_*.json, after the approved concept). |
+| `wind_orchards` | earth, stone, wood | Wind Orchards: ochre earth with stones and roots under a golden turf, a dry-stone wall, the village oak planks (design 04 section 6; tools/art/tiles/wind_orchards_*.json). |
 <!-- /generated:tilesets -->
 
 ## The legend

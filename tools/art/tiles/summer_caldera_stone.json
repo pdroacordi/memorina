@@ -1,0 +1,62 @@
+{
+	"about": "Summer Caldera porous basalt (tools/art/tiles/bodies/summer_caldera_basalt.json, colours of tools/art/tiles/sources/summer_caldera_tiles_codex_raw.png row 1): pores, columnar cracks, a sulphur fleck; sparse dry tufts, no generated grass.",
+	"art_scale": 2,
+	"body": {
+		"path": "res://tools/art/tiles/sources/summer_caldera_basalt_0.png"
+	},
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/summer_caldera_basalt_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/summer_caldera_basalt_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/summer_caldera_basalt_3.png"
+		}
+	],
+	"lips": [
+		{
+			"kind": "grass",
+			"greens": [
+				"#4a4420",
+				"#6a6028",
+				"#8a7c34",
+				"#a89848"
+			],
+			"flowers": [],
+			"density": 0.2,
+			"ferns": 0,
+			"max_blade": 1,
+			"seed": 98
+		},
+		{
+			"kind": "litter",
+			"leaves": [
+				"#5a5450",
+				"#7a726a",
+				"#4a4440"
+			],
+			"seed": 99
+		},
+		{
+			"kind": "snow",
+			"whites": [
+				"#f6f0e8",
+				"#e6dfd6"
+			],
+			"shades": [
+				"#b0bccc",
+				"#8a9cbc"
+			],
+			"seed": 100
+		}
+	],
+	"spill": 3,
+	"depth": 2,
+	"radius": 2,
+	"rim": 1,
+	"rim_dark": 0.25,
+	"edge": "none",
+	"ledge_height": 0
+}

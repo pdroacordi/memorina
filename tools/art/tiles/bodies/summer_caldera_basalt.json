@@ -1,0 +1,40 @@
+{
+	"about": "Caldera porous basalt: three columnar blocks, cracks, round pores (a dark pixel over a lit rim) (colours from tools/art/tiles/sources/summer_caldera_tiles_codex_raw.png row 1).",
+	"kind": "basalt",
+	"seed": 31,
+	"pores": 6,
+	"colors": {
+		"faces": [
+			"#4c4a56",
+			"#54525e",
+			"#5c5966"
+		],
+		"crack": [
+			"#3a3844"
+		],
+		"pore": [
+			"#2e2c36"
+		],
+		"rim": [
+			"#706e78"
+		],
+		"sulphur": [
+			"#9a7c3a",
+			"#7e6630"
+		]
+	},
+	"variants": [
+		{
+			"detail": "pores",
+			"seed": 1
+		},
+		{
+			"detail": "crack",
+			"seed": 2
+		},
+		{
+			"detail": "sulphur",
+			"seed": 3
+		}
+	]
+}

@@ -1,0 +1,30 @@
+{
+	"about": "Summer Caldera temple sandstone as a back wall (tools/art/tiles/bodies/summer_caldera_sandstone.json): one band.",
+	"art_scale": 2,
+	"body": {
+		"path": "res://tools/art/tiles/sources/summer_caldera_sandstone_0.png"
+	},
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/summer_caldera_sandstone_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/summer_caldera_sandstone_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/summer_caldera_sandstone_3.png"
+		}
+	],
+	"lips": [
+		{
+			"kind": "none"
+		}
+	],
+	"spill": 1,
+	"depth": 1,
+	"radius": 1,
+	"rim": 0,
+	"rim_dark": 0.0,
+	"edge": "none",
+	"ledge_height": 0
+}

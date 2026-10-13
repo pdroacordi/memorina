@@ -1,0 +1,55 @@
+{
+	"about": "Frozen Lake grey stilt planks: our village planks recoloured to weathered grey (tools/art/cut_tile_bodies.py --recolour).",
+	"art_scale": 2,
+	"body": {
+		"path": "res://tools/art/tiles/sources/frozen_lake_planks_0.png"
+	},
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/frozen_lake_planks_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/frozen_lake_planks_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/frozen_lake_planks_3.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/frozen_lake_planks_4.png"
+		}
+	],
+	"lips": [
+		{
+			"kind": "none"
+		},
+		{
+			"kind": "litter",
+			"leaves": [
+				"#b0602a",
+				"#c87c34",
+				"#8a4a22",
+				"#d89a48"
+			],
+			"seed": 87
+		},
+		{
+			"kind": "snow",
+			"whites": [
+				"#f6f0e8",
+				"#e6dfd6"
+			],
+			"shades": [
+				"#b0bccc",
+				"#8a9cbc"
+			],
+			"seed": 88
+		}
+	],
+	"spill": 3,
+	"depth": 2,
+	"radius": 1,
+	"rim": 1,
+	"rim_dark": 0.25,
+	"edge": "none",
+	"ledge_height": 4
+}

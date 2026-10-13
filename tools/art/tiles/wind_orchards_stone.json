@@ -1,0 +1,67 @@
+{
+	"about": "Wind Orchards dry-stone wall (tools/art/tiles/bodies/wind_orchards_drystone.json): flat stones in two rough courses.",
+	"art_scale": 2,
+	"body": {
+		"path": "res://tools/art/tiles/sources/wind_orchards_drystone_0.png"
+	},
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/wind_orchards_drystone_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/wind_orchards_drystone_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/wind_orchards_drystone_3.png"
+		}
+	],
+	"lips": [
+		{
+			"kind": "grass",
+			"greens": [
+				"#3c4418",
+				"#58601e",
+				"#76802a"
+			],
+			"flowers": [],
+			"density": 0.35,
+			"ferns": 0,
+			"max_blade": 1,
+			"seed": 94
+		},
+		{
+			"kind": "litter",
+			"leaves": [
+				"#a8402a",
+				"#c86030",
+				"#d89040"
+			],
+			"blades": [
+				"#4a3c1c",
+				"#64532a",
+				"#7e6a38"
+			],
+			"seed": 95
+		},
+		{
+			"kind": "snow",
+			"whites": [
+				"#f6f0e8",
+				"#e6dfd6"
+			],
+			"shades": [
+				"#b0bccc",
+				"#8a9cbc"
+			],
+			"seed": 96
+		}
+	],
+	"spill": 3,
+	"depth": 2,
+	"radius": 2,
+	"rim": 1,
+	"rim_dark": 0.25,
+	"edge": "none",
+	"ledge_height": 0,
+	"grass": true
+}

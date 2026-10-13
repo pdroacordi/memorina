@@ -1,0 +1,10 @@
+---
+id: backdrop_threshold_far
+command: generate
+target: res://assets/sprites/world/background/threshold/far.png
+size: 1024x1152
+frames: 1
+source: codex
+---
+The far layer of `resources/world/backdrops/threshold.tres` (design 04 section 6: an empty plain, low horizon, mist; no trees ("There is no sense in trees there.", user)): a low faint line of pale blue-grey ridges with a mist band. Backdrops: "Our own per region (Recommended)" (user, 2026-10-13) - one set per region, the shared sky (`village_valley/sky.png`, `backdrop_village_valley_sky`) and the shared horizon: horizon row 229, eye level 191, scroll 0.12, 0.07 as on the board and in `village_valley.tres`. 1024x384 per band at 2x, spring, autumn and winter stacked, autumn and winter recoloured from the spring drawing (kind `mountains`); every band mixed toward its season's horizon sky by 0.5 (atmospheric depth); silhouette top at art row 98; 5 colours. Seamless sideways; EDGE rows one colour per band (architecture/vertical-backdrops, "Art contract"). The Codex strip drawn for the approved board. Raw kept in `tools/art/sources/threshold_far_codex.png`; cut by `python -I tools/art/cut_backdrop.py layer tools/art/sources/threshold_far_codex.png assets/sprites/world/background/threshold/far.png --kind=mountains --colors=5 --top=98 --aerial=0.5 --overlap=40` (the default 32 art px overlap left one row too many changing at the wrap). Reference: the approved board `tools/art/references/regions/board_threshold.png`; our village concept and the village valley's spring band were the Codex style references. Approved board (2026-10-13): "Approve, fix the flat ground (Recommended)" - "Approve all six. In production: the Threshold and Orchard ground came out nearly flat beige, so give them texture (stones, roots, slabs) like our village earth; brighten the Frost Edge sea; make the woods trees less dense and the orchard windmills bigger." Tiles: "Own tiles per region (Recommended)"; "We should only our set of tiles from now on and not mix em."
+Negative: outlines, sky, clouds, sun, birds, snow, ice, text, frame, speckle, busy texture

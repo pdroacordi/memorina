@@ -1,0 +1,30 @@
+{
+	"about": "Lighthouse white masonry as a back wall: one band (built walls stay one band, systems/seasonal-art).",
+	"art_scale": 2,
+	"body": {
+		"path": "res://tools/art/tiles/sources/lighthouse_masonry_0.png"
+	},
+	"variants": [
+		{
+			"path": "res://tools/art/tiles/sources/lighthouse_masonry_1.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/lighthouse_masonry_2.png"
+		},
+		{
+			"path": "res://tools/art/tiles/sources/lighthouse_masonry_3.png"
+		}
+	],
+	"lips": [
+		{
+			"kind": "none"
+		}
+	],
+	"spill": 1,
+	"depth": 1,
+	"radius": 1,
+	"rim": 0,
+	"rim_dark": 0.0,
+	"edge": "none",
+	"ledge_height": 0
+}

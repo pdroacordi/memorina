@@ -1,0 +1,46 @@
+{
+	"about": "Orchard dry-stone wall: flat irregular stones in three rough courses, dark gaps, lit tops (colours from the Codex sheet row 2).",
+	"kind": "drystone",
+	"seed": 22,
+	"rows": 2,
+	"per_row": [
+		2,
+		3
+	],
+	"flat": 0.5,
+	"gap": 0.55,
+	"colors": {
+		"faces": [
+			"#8c785c",
+			"#9e8764",
+			"#ad9162",
+			"#958670"
+		],
+		"joint": [
+			"#64523a"
+		],
+		"light": [
+			"#bea06c"
+		],
+		"shade": [
+			"#7e6c50"
+		],
+		"lichen": [
+			"#a2a04a"
+		]
+	},
+	"variants": [
+		{
+			"detail": "wedge",
+			"seed": 1
+		},
+		{
+			"detail": "lichen",
+			"seed": 2
+		},
+		{
+			"detail": "gap",
+			"seed": 3
+		}
+	]
+}
