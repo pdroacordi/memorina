@@ -83,7 +83,9 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwffffff...........
   (a wall of that look) and back characters (`h`) only, never ledges, water or
   entities, and has exactly as many rows as `[grid]`. It never changes the
   ground, collision or `ground_at()`. A whole-room interior wall is the room's
-  backdrop strip instead (`docs/knowledge/systems/backdrops.md`).
+  backdrop strip instead (`docs/knowledge/systems/backdrops.md`). A `[back]`
+  wall in a passage between two rooms with different backdrops hides the hard
+  cut between them (`backdrop_seams_test` names the cells it needs).
 - **`[secret]` is an optional layer** of false walls (`docs/knowledge/architecture/secret-false-walls.md`):
   its cells must be air in `[grid]`, and each is drawn as solid ground of the
   look given until Ivo's body enters it, then fades open for good (a bench

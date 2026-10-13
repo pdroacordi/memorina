@@ -12,6 +12,10 @@ signal memory_changed(level: float)
 ## Guardian that keeps this region; restoring it sets memory to 1.0.
 @export var has_guardian: bool = false
 @export var guardian: Enums.Guardian = Enums.Guardian.FROST
+## The backdrop every room shows unless its Backdrop overrides it (systems/backdrops).
+@export var backdrop_set: BackdropSet
+## The region's one horizon, px below this node: where each backdrop layer's horizon row stands at the reference camera.
+@export var horizon_y: float = 0.0
 
 @onready var _memory: RegionMemory = $Memory
 

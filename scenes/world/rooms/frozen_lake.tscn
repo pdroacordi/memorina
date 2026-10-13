@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_frost_arena.tscn" id="r6"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_chasm.tscn" id="r7"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_fisher_hut.tscn" id="r8"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
 
 [node name="FrozenLake" type="Node2D"]
 script = ExtResource("1_region")
@@ -19,6 +20,8 @@ name_key = "REGION_FROZEN_LAKE"
 season = 0
 has_guardian = true
 guardian = 0
+backdrop_set = ExtResource("bd_region_set")
+horizon_y = -1685.0
 
 [node name="Memory" type="Node2D" parent="."]
 script = ExtResource("2_regmem")

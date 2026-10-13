@@ -1,7 +1,7 @@
 [gd_scene format=4]
 
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
-[ext_resource type="Resource" path="res://resources/world/backdrops/pine_woods.tres" id="bd_set"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/earth_caves.tres" id="bd_set"]
 
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/trials_solstice/contents/the_catch.room" id="room_map"]
@@ -11,7 +11,6 @@
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
 backdrop_set = ExtResource("bd_set")
-horizon_y = -53.0
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="BackdropSet" format=3]
+
+[ext_resource type="Script" path="res://resources/world/backdrops/backdrop_set.gd" id="1_set"]
+[ext_resource type="Script" path="res://resources/world/backdrops/backdrop_layer.gd" id="2_layer"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/village_valley/sky.png" id="3_sky"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/basalt_caves/far.png" id="4_wall"]
+
+[sub_resource type="Resource" id="sky"]
+script = ExtResource("2_layer")
+texture = ExtResource("3_sky")
+scroll_scale = Vector2(0.05, 0.03)
+horizon_row = 229
+fill_above = 1
+fill_below = 1
+distance = 1.0
+
+[sub_resource type="Resource" id="wall"]
+script = ExtResource("2_layer")
+texture = ExtResource("4_wall")
+band_count = 1
+band_of_season = Vector4i(0, 0, 0, 0)
+scroll_scale = Vector2(0.5, 0.5)
+fill_below = 2
+distance = 0.4
+
+[resource]
+script = ExtResource("1_set")
+layers = Array[ExtResource("2_layer")]([SubResource("sky"), SubResource("wall")])
+horizon_screen_y = 191.0

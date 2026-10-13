@@ -4,11 +4,14 @@
 [ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="2_region"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="3_regmem"]
 [ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="4_source"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
 
 [node name="TrialsWinter" type="Node2D"]
 script = ExtResource("2_region")
 name_key = "REGION_TRIALS"
 season = 0
+backdrop_set = ExtResource("bd_region_set")
+horizon_y = -53.0
 
 [node name="Memory" type="Node2D" parent="."]
 script = ExtResource("3_regmem")

@@ -69,7 +69,7 @@ ROOM_LIST = [
     ("summer_caldera", "caldera_bait", -10, -9, 4, 4, False),
     ("summer_caldera", "caldera_dry_moat", -8, -6, 4, 4, False),
     ("summer_caldera", "caldera_seesaw", -5, -4, 4, 4, False),
-    ("summer_caldera", "caldera_open_crater", -3, -2, 2, 5, False),
+    ("summer_caldera", "caldera_open_crater", -3, -2, 2, 5, True),
     ("summer_caldera", "caldera_cistern", 1, 1, 1, 2, False),
     ("summer_caldera", "caldera_cistern_bottom", -1, 1, 3, 4, False),
     ("summer_caldera", "caldera_temple_gate", 2, 3, 4, 4, False),
@@ -331,6 +331,18 @@ shape = SubResource("RectangleShape2D_room")
 """ % (rel, w, h, tscn_name(room.id), interior, w // 2, h // 2)
 
 
+# Each region's backdrop set and its one horizon, px below the region node: every open room shows it (systems/backdrops).
+REGION_BACKDROPS = {
+    "home_village": ("village_valley", 235), "threshold": ("village_valley", 235), "frost_edge": ("village_valley", 235),
+    "spring_woods": ("village_valley", 235), "frozen_lake": ("village_valley", -1685),
+    "wind_orchards": ("village_valley", -1301), "summer_caldera": ("caldera_crater", 768),
+}
+# Open rooms inside rock override their region's set with a rock wall (WORLD-28).
+ROCK_SETS = {
+    "lighthouse_top": "interior_stone", "frost_cliffs": "ice_caves", "lake_waterfall_path": "ice_caves",
+    "lake_high_wall": "ice_caves", "lake_chasm": "ice_caves", "orchard_counterweights": "earth_caves",
+    "orchard_cliff_chimney": "basalt_caves",
+}
 # The backdrop set an underground room of each region shows (architecture/backdrop-seams).
 UNDERGROUND_SETS = {
     "home_village": "village_strata", "threshold": "earth_caves", "frost_edge": "ice_caves",
@@ -340,33 +352,36 @@ UNDERGROUND_SETS = {
 
 
 def contents(room):
-    """Every room has a backdrop: the woods at its floor's horizon outdoors, its region's caves underground, a wall indoors."""
+    """Every room has a backdrop: its region's set outdoors (no override), a rock wall inside rock, its region's caves
+    underground, a wall indoors."""
     rel = "res://scenes/world/rooms/%s/contents/%s.room" % (room.region, room.id)
-    horizon = ""
     if room.interior:
         backdrop = "interior_timber"
+    elif room.id in ROCK_SETS:
+        backdrop = ROCK_SETS[room.id]
     elif room.surface:
-        backdrop = "pine_woods"
-        horizon = "horizon_y = %s.0\n" % (room.floor_row() * 32 - 53)
+        backdrop = None
     else:
         backdrop = UNDERGROUND_SETS[room.region]
+    own_ext = own_set = ""
+    if backdrop is not None:
+        own_ext = '[ext_resource type="Resource" path="res://resources/world/backdrops/%s.tres" id="bd_set"]\n' % backdrop
+        own_set = 'backdrop_set = ExtResource("bd_set")\n'
     return """[gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
-[ext_resource type="Resource" path="res://resources/world/backdrops/%s.tres" id="bd_set"]
-[ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
+%s[ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="%s" id="room_map"]
 
 [node name="Contents" type="Node2D"]
 
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
-backdrop_set = ExtResource("bd_set")
 %s
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
-""" % (backdrop, rel, horizon)
+""" % (own_ext, rel, own_set)
 
 
 def region_scene(region, rooms):
@@ -374,12 +389,15 @@ def region_scene(region, rooms):
     lines = ["[gd_scene format=3]", ""]
     lines.append('[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]')
     lines.append('[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]')
+    backdrop, horizon = REGION_BACKDROPS[region]
+    lines.append('[ext_resource type="Resource" path="res://resources/world/backdrops/%s.tres" id="bd_region_set"]' % backdrop)
     for i, room in enumerate(rooms):
         lines.append('[ext_resource type="PackedScene" path="res://scenes/world/rooms/%s/%s.tscn" id="r%d"]' % (region, room.id, i))
     lines += ["", '[node name="%s" type="Node2D"]' % tscn_name(region), 'script = ExtResource("1_region")',
               'name_key = "%s"' % key, "season = %d" % season]
     if guardian is not None:
         lines += ["has_guardian = true", "guardian = %d" % guardian]
+    lines += ['backdrop_set = ExtResource("bd_region_set")', "horizon_y = %s.0" % horizon]
     lines += ["", '[node name="Memory" type="Node2D" parent="."]', 'script = ExtResource("2_regmem")',
               "authored = %s" % memory]
     for i, room in enumerate(rooms):

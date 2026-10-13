@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://31j4tvsbgsfp"]
 
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
-[ext_resource type="Resource" path="res://resources/world/backdrops/pine_woods.tres" id="bd_set"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="PackedScene" uid="uid://cbloomguard1" path="res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn" id="20_guardian"]
 [ext_resource type="Script" path="res://scenes/world/rooms/arena.gd" id="30_arena"]
@@ -14,8 +13,6 @@ size = Vector2(1280, 384)
 
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
-backdrop_set = ExtResource("bd_set")
-horizon_y = 235.0
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

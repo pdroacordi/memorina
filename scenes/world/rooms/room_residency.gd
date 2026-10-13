@@ -27,9 +27,13 @@ static func share_an_edge(a: Rect2, b: Rect2) -> bool:
 	var shared := a.grow(1.0).intersection(b)
 	return maxf(shared.size.x, shared.size.y) > 1.0
 
-## Runs `current` and its neighbours, so the ground across a seam exists; idles the rest and evicts the oldest.
-func settle(current: Room, rooms: Array[Node]) -> void:
+## Runs `current` and its neighbours, so the ground across a seam exists; idles the rest and evicts the oldest. Rooms in
+## `keep` run too: a glide still frames the ring of the room it left, which they draw (systems/rooms, Glides).
+func settle(current: Room, rooms: Array[Node], keep: Array[Room] = []) -> void:
 	var near := touching(current, rooms)
+	for room: Room in keep:
+		if not room in near:
+			near.append(room)
 	for room: Room in near:
 		# A running room keeps its contents even when expired: it rebuilds when it next comes back into reach.
 		if not room.is_active():

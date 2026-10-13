@@ -114,7 +114,7 @@ func test_a_body_swept_around_every_room_stays_in_a_drawn_frame() -> void:
 	assert_array(failures).is_empty()
 
 ## A walk across a seam between two rooms of one region glides the frame from the old clamp to the new: every frame of
-## the glide has exactly one resident owner per pixel.
+## the glide has exactly one resident owner per pixel. The left room's neighbours run until the glide ends (Game).
 func test_a_glide_between_touching_rooms_shows_no_void() -> void:
 	var failures: Array[String] = []
 	for i: int in _bounds.size():
@@ -128,7 +128,7 @@ func test_a_glide_between_touching_rooms_shows_no_void() -> void:
 				var order := RoomRing.glide_order(from, to, RoomRing.reach(_bounds[i]), RoomRing.reach(_bounds[j]))
 				for weight: float in [0.9, 0.75, 0.5, 0.25, 0.1]:
 					var frame := Rect2(to.position + RoomRing.glide_offset(from.position - to.position, weight, order), VIEW)
-					var hole := _unowned(j, frame)
+					var hole := _unowned(j, frame, i)
 					if hole != "":
 						failures.append("glide %s -> %s at %s, weight %.2f: %s" % [_bounds[i], _bounds[j], body, weight, hole])
 	assert_array(failures).is_empty()
@@ -164,11 +164,14 @@ func _frame(room: Rect2, touch: Rect2) -> Rect2:
 	return Rect2(centre - half, VIEW)
 
 # "" when every sampled pixel of `frame` has exactly one owner among the current room `current` and the rooms touching
-# it, each judging by BackdropMath.keeps with its own touching rooms; else the first bad pixel.
-func _unowned(current: int, frame: Rect2) -> String:
+# it (and, in a glide, the room `left` and its neighbours), each judging by BackdropMath.keeps with its own touching rooms;
+# else the first bad pixel.
+func _unowned(current: int, frame: Rect2, left: int = -1) -> String:
 	var resident: Array[int] = [current]
 	for k: int in _bounds.size():
-		if k != current and _bounds[current].grow(1.0).intersects(_bounds[k]):
+		if k == current or resident.has(k):
+			continue
+		if _bounds[current].grow(1.0).intersects(_bounds[k]) or (left >= 0 and _bounds[left].grow(1.0).intersects(_bounds[k])):
 			resident.append(k)
 	var neighbours: Dictionary[int, Array] = {}
 	for k: int in resident:
@@ -180,14 +183,13 @@ func _unowned(current: int, frame: Rect2) -> String:
 	for y: float in _samples(frame.position.y, frame.end.y):
 		for x: float in _samples(frame.position.x, frame.end.x):
 			var point := Vector2(x, y)
-			for jitter: Vector2 in [Vector2.ZERO, BackdropMath.seam_jitter(Vector2i(1, 2), Backdrop.SEAM_BAND)]:
-				var owners := 0
-				for k: int in resident:
-					var list: Array[Rect2] = neighbours[k]
-					if BackdropMath.keeps(point, jitter, _bounds[k], list, RoomRing.WIDTH):
-						owners += 1
-				if owners != 1:
-					return "has %d owners at %s" % [owners, point]
+			var owners := 0
+			for k: int in resident:
+				var list: Array[Rect2] = neighbours[k]
+				if BackdropMath.keeps(point, _bounds[k], list, RoomRing.WIDTH):
+					owners += 1
+			if owners != 1:
+				return "has %d owners at %s" % [owners, point]
 	return ""
 
 # Lines across the room's four edges and over its top.

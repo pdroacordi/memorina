@@ -30,11 +30,14 @@ var _dying           : bool      = false
 var _lost            : bool      = false
 
 var _residency := RoomResidency.new()
+## Rooms a running glide keeps resident: the neighbours of every room it left.
+var _glide_keep: Array[Room] = []
 var _baseline_tween: Tween
 
 func _ready() -> void:
 	assert(SaveSystem.has_session(), "The game runs on a session that Boot or the title began")
 	_camera.follow(_player)
+	_camera.glide_finished.connect(_on_camera_glide_finished)
 	_player.fell_into_hazard.connect(_on_player_fell_into_hazard)
 	_player.died.connect(_on_player_died)
 	_player.sat_down.connect(_on_player_sat_down)
@@ -106,8 +109,17 @@ func _on_room_entered(room: Room) -> void:
 
 ## Makes `room` current, runs its neighbours and moves the memory field and camera to it; `glide` eases both.
 func _enter_room(room: Room, glide: bool = false) -> void:
+	var rooms := get_tree().get_nodes_in_group(Room.GROUP)
+	if glide and _current_room != null:
+		# The left room's neighbours draw its ring, which the glide still frames; a retargeted glide keeps the earlier ones
+		# too. They idle when the camera's glide ends (bugs/a-stale-glide-timer-idles-the-left-rooms-neighbours-mid-glide).
+		for near: Room in RoomResidency.touching(_current_room, rooms):
+			if not near in _glide_keep:
+				_glide_keep.append(near)
+	else:
+		_glide_keep.clear()
 	_current_room = room
-	_residency.settle(room, get_tree().get_nodes_in_group(Room.GROUP))
+	_residency.settle(room, rooms, _glide_keep)
 	# The greyhush is a regional property, so it follows the room the player is
 	# standing in rather than being set once at startup.
 	var region := _current_room.get_region()
@@ -117,6 +129,13 @@ func _enter_room(room: Room, glide: bool = false) -> void:
 	_camera.set_bounds(_current_room.get_bounds(), glide, RoomRing.reach(_current_room.get_bounds()))
 	if not room.interior:
 		_screens.clear_map_anchor()
+
+# Idles the rooms the glide kept running.
+func _on_camera_glide_finished() -> void:
+	if _glide_keep.is_empty() or _current_room == null:
+		return
+	_glide_keep.clear()
+	_residency.settle(_current_room, get_tree().get_nodes_in_group(Room.GROUP))
 
 ## Sets where the camera may yield around the current room this step; returns the rooms touching it.
 func _set_camera_reach(body: Rect2) -> Array[Room]:

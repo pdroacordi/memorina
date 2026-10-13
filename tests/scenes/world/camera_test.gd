@@ -64,6 +64,38 @@ func test_a_glide_while_a_pair_is_framed_starts_where_the_frame_stood() -> void:
 	await get_tree().physics_frame
 	assert_float(absf(_centre().x - before)).is_less(40.0)
 
+## bugs/a-stale-glide-timer-idles-the-left-rooms-neighbours-mid-glide: crossing A, B, A, B within one glide time
+## retargets the glide, so glide_finished fires once, when the last glide ends, never mid-glide.
+func test_a_retargeted_glide_finishes_once_at_its_end() -> void:
+	var finished: Array[int] = []
+	_camera.glide_finished.connect(func() -> void: finished.append(Engine.get_physics_frames()))
+	await _cross_into_b(true)
+	var started := Engine.get_physics_frames()
+	for target: Rect2 in [ROOM_A, ROOM_B]:
+		for i: int in 3:
+			await get_tree().physics_frame
+		_subject.global_position = Vector2(1270 if target == ROOM_A else 1290, 300)
+		_camera.set_bounds(target, true)
+		started = Engine.get_physics_frames()
+	var ticks := ceili(_camera.bounds_glide_time * Engine.physics_ticks_per_second)
+	for i: int in ticks - 2:
+		await get_tree().physics_frame
+	assert_array(finished).is_empty()
+	for i: int in 6:
+		await get_tree().physics_frame
+	assert_int(finished.size()).is_equal(1)
+	assert_int(finished[0] - started).is_greater_equal(ticks - 1)
+
+func test_snap_mid_glide_finishes_it() -> void:
+	var finished := [0]
+	_camera.glide_finished.connect(func() -> void: finished[0] += 1)
+	await _cross_into_b(true)
+	await get_tree().physics_frame
+	_camera.snap()
+	assert_int(finished[0]).is_equal(1)
+	_camera.snap()
+	assert_int(finished[0]).is_equal(1)
+
 func test_snap_ends_a_glide() -> void:
 	await _cross_into_b(true)
 	_camera.snap()

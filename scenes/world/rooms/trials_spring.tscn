@@ -3,11 +3,14 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_spring/spring_trial.tscn" id="1_room"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="2_region"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="3_regmem"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
 
 [node name="TrialsSpring" type="Node2D"]
 script = ExtResource("2_region")
 name_key = "REGION_TRIALS"
 season = 3
+backdrop_set = ExtResource("bd_region_set")
+horizon_y = -53.0
 
 [node name="Memory" type="Node2D" parent="."]
 script = ExtResource("3_regmem")

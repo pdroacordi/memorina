@@ -13,7 +13,10 @@ Third-party art used in Memorina, with the terms it was taken under.
   stone derived from the earth) rearranged into corner-Wang quarters by
   `tools/art/assemble_tile_sheet.gd --from-blob` (WORLD-07). Pack art is never uploaded to an
   image generator as a reference (the AI-training clause). `legacy/wood.png` and `wall.png`
-  are flat placeholders drawn by the same tool.
+  are flat placeholders drawn by the same tool. Since WORLD-28 (2026-10-13) the pack's forest
+  backgrounds (`background/seasonal/`, `spring/`, `autumn/`, `winter/`, and their set
+  `resources/world/backdrops/pine_woods.tres`) are no room's or trial's backdrop; the files stay,
+  and the title screen still draws `background/seasonal/`.
 
 - **Village fronts, the door and the village backdrop** (`assets/sprites/world/props/village/` but the bell tower's front, `assets/sprites/world/props/door/door.png`, `assets/sprites/world/background/village_valley/`) - Codex image generation from the prompts in `tools/art/prompts/`, with our approved concept and our own village tiles as the only references; the raw pictures are kept in `tools/art/sources/` and cut by `tools/art/cut_facades.py` and `tools/art/cut_backdrop.py` (the sky is drawn by the latter).
 
@@ -25,7 +28,7 @@ Third-party art used in Memorina, with the terms it was taken under.
 - **Village street props and the two new interiors** (WORLD-11, 2026-10-13; `assets/sprites/world/props/village/` street props, `mill_house_facade.png`, `notes_house_facade.png`, `assets/sprites/world/props/interiors/{notes_house,mill_house}/`) - Codex image generation: three street sheets, the house of notes' front, the well head and two prop sheets per new interior (`tools/art/sources/village/*_codex.png`, `tools/art/sources/interiors/{notes_house,mill_house}_{board,props,props2}_codex.png`; our Ivo still, our village fronts, our approved concept and our own interior boards the only references), cut by `tools/art/cut_props.py` and `tools/art/cut_facades.py`. The lantern post, wall lantern, cart, tavern sign, barrel, crate and chopping block were redrawn at their exact size by PixelLab (pixflux, our own cut as the init image; raws in `tools/art/sources/village/pixellab/`), and the flag, bunting, laundry line and bush loops are PixelLab `animate-with-text-v3` from our stills. Procedural (our tools): lit panes, lantern flames, the sign's swing and chimney smoke (`tools/art/draw_ambient_frames.py`), the water wheel's and the mill gear's turn (`tools/art/bake_rotation.gd`), season bands (`tools/art/season_bands.py`), the picture notes, recipe and tally board (`tools/art/draw_pictograms.py`) and the bridge piles and the bunting's pole (`tools/art/draw_post.py`).
 - **Village plank tiles** (`tools/art/tiles/sources/village_planks_*.png`) - painted by `tools/art/tiles/paint_planks.py` in the colours of the PixelLab tiles-pro plank body they replace (2026-10-11).
 
-- **Cave, strata and interior backdrops** (`assets/sprites/world/background/{village_strata,earth_caves,ice_caves,basalt_caves,interior_timber,interior_stone}/`) - Codex image generation (no reference image), kept in `tools/art/sources/backdrop_*_codex.png` and cut by `tools/art/cut_wall.py`.
+- **Cave, strata and interior backdrops** (`assets/sprites/world/background/{village_strata,earth_caves,ice_caves,basalt_caves,interior_timber,interior_stone}/`) - Codex image generation (no reference image), kept in `tools/art/sources/backdrop_*_codex.png` and cut by `tools/art/cut_wall.py`. The interim crater set (`resources/world/backdrops/caldera_crater.tres`, WORLD-28) reuses the village valley's sky over the basalt wall: no new art.
 
 - **Village ground** (`assets/sprites/world/tilesets/village/`) - the soil and cobble textures are Codex
   image generation reduced to 16 px, the planks and plaster-and-timber are PixelLab-generated

@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://jqsxv5sk6t3d"]
 
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
-[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_set"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bakery_facade.tscn" id="pr_bakery"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/empty_house_facade.tscn" id="pr_empty_house"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/seller.tscn" id="in_seller"]
@@ -23,8 +22,6 @@
 
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
-backdrop_set = ExtResource("bd_set")
-horizon_y = 235.0
 
 [node name="Props" type="Node2D" parent="."]
 z_index = -10

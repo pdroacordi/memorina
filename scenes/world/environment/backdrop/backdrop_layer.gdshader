@@ -2,10 +2,9 @@ shader_type canvas_item;
 
 // One backdrop layer drawn on a quad: each pixel picks its art texel from its layer-local
 // position, so fills past the strip are row arithmetic, not texture wrap
-// (architecture/vertical-backdrops). Near a seam a pixel is drawn by exactly one room (architecture/backdrop-seams).
-// Must match BackdropMath.art_row, art_col, seam_jitter, pixel_centre, keeps, void_owner and rect_distance.
+// (architecture/vertical-backdrops). A pixel is drawn by exactly one room: a seam is a hard cut (architecture/backdrop-seams).
+// Must match BackdropMath.art_row, art_col, pixel_centre, keeps, void_owner, over_top and rect_distance.
 #include "res://scenes/world/memory/seasonal/seasonal_common.gdshaderinc"
-#include "res://scenes/world/memory/dither_common.gdshaderinc"
 
 uniform sampler2D sheet : filter_nearest, repeat_disable;
 uniform int band_count = 3;
@@ -20,15 +19,15 @@ uniform bool repeat_x = true;
 uniform float distance : hint_range(0.0, 1.0) = 0.0;
 // Layer-local position of the quad's centre (MeshInstance2D.position).
 uniform vec2 quad_position = vec2(0.0);
-// The room's bounds in world px (x, y, width, height), and its touching rooms': a pixel near a seam is drawn by the room
-// holding it moved by the seam jitter, so the two backdrops meet in a dithered band, never a line.
+// The room's bounds in world px (x, y, width, height), and its touching rooms': a pixel in a room is that room's, a
+// pixel in the void the void owner's.
 uniform vec4 room_rect = vec4(-1e9, -1e9, 2e9, 2e9);
 uniform vec4 neighbour_rects[8];
 uniform int neighbour_count = 0;
-// World px across the seam band.
-uniform float seam_band = 0.0;
 // World px of void around the rooms the nearest room draws (RoomRing.WIDTH); 0 clips to room_rect.
 uniform float ring = 0.0;
+// Backdrop.Part: 0 every pixel the room owns, 1 all but the void over its top, 2 only that void.
+uniform int part = 0;
 // Must match BackdropMath.SEAM_EPSILON.
 const float SEAM_EPSILON = 0.01;
 
@@ -81,13 +80,6 @@ bool inside(vec2 p, vec4 rect, float grow) {
 	return p.x >= rect.x - grow && p.y >= rect.y - grow && p.x < rect.x + rect.z + grow && p.y < rect.y + rect.w + grow;
 }
 
-// Game-pixel Bayer jitter, y on the transposed cell.
-vec2 seam_jitter(vec2 game_px) {
-	float x = BAYER[wd_bayer_index(game_px)] + 1.0 / 32.0 - 0.5;
-	float y = BAYER[wd_bayer_index(game_px.yx)] + 1.0 / 32.0 - 0.5;
-	return vec2(x, y) * seam_band;
-}
-
 float rect_distance(vec4 rect, vec2 p) {
 	vec2 d = max(rect.xy - p, p - (rect.xy + rect.zw));
 	return max(max(d.x, d.y), 0.0);
@@ -97,52 +89,63 @@ bool before(vec4 a, vec4 b) {
 	return a.x < b.x || (a.x == b.x && a.y < b.y);
 }
 
-// The gap from p to rect for the void owner: by y in its columns, by x in its rows (z 1), else rect_distance (z 0).
-vec2 owner_gap(vec4 rect, vec2 p, vec2 moved) {
-	if (moved.x >= rect.x && moved.x < rect.x + rect.z) {
-		return vec2(max(max(rect.y - p.y, p.y - (rect.y + rect.w)), 0.0), 1.0);
+// The gap from p to rect for the void owner and how the rect holds p: z 3 over its top and 1 under its floor (its columns,
+// gap in y), 2 beside it (its rows, gap in x), 0 past a corner (rect_distance). Must match BackdropMath.ABOVE, BESIDE,
+// BELOW and CORNER.
+vec2 owner_gap(vec4 rect, vec2 p) {
+	if (p.x >= rect.x && p.x < rect.x + rect.z) {
+		float hold = p.y >= rect.y + rect.w ? 1.0 : 3.0;
+		return vec2(max(max(rect.y - p.y, p.y - (rect.y + rect.w)), 0.0), hold);
 	}
-	if (moved.y >= rect.y && moved.y < rect.y + rect.w) {
-		return vec2(max(max(rect.x - p.x, p.x - (rect.x + rect.z)), 0.0), 1.0);
+	if (p.y >= rect.y && p.y < rect.y + rect.w) {
+		return vec2(max(max(rect.x - p.x, p.x - (rect.x + rect.z)), 0.0), 2.0);
 	}
 	return vec2(rect_distance(rect, p), 0.0);
 }
 
-// Whether room_rect owns the void pixel at p: void_owner in BackdropMath.
-bool owns_void(vec2 p, vec2 moved) {
-	vec2 mine = owner_gap(room_rect, p, moved);
+// Whether room_rect owns the void pixel at p: void_owner in BackdropMath. Rooms past the ring never own it; a higher
+// hold beats a nearer one, so every boundary is straight.
+bool owns_void(vec2 p) {
+	vec2 mine = owner_gap(room_rect, p);
 	for (int i = 0; i < neighbour_count; i++) {
-		vec2 theirs = owner_gap(neighbour_rects[i], p, moved);
-		if (theirs.x < mine.x) {
+		if (rect_distance(neighbour_rects[i], p) > ring) {
+			continue;
+		}
+		vec2 theirs = owner_gap(neighbour_rects[i], p);
+		if (theirs.y > mine.y) {
 			return false;
 		}
-		if (theirs.x == mine.x && (theirs.y > mine.y || (theirs.y == mine.y && before(neighbour_rects[i], room_rect)))) {
+		if (theirs.y == mine.y && (theirs.x < mine.x || (theirs.x == mine.x && before(neighbour_rects[i], room_rect)))) {
 			return false;
 		}
 	}
 	return true;
 }
 
-bool keeps(vec2 p, vec2 jitter) {
-	vec2 moved = p + jitter;
-	if (inside(moved, room_rect, SEAM_EPSILON)) {
+bool keeps(vec2 p) {
+	if (inside(p, room_rect, SEAM_EPSILON)) {
 		return true;
 	}
 	for (int i = 0; i < neighbour_count; i++) {
-		if (inside(moved, neighbour_rects[i], -SEAM_EPSILON)) {
+		if (inside(p, neighbour_rects[i], -SEAM_EPSILON)) {
 			return false;
 		}
 	}
 	if (rect_distance(room_rect, p) > ring) {
 		return false;
 	}
-	return owns_void(p, moved);
+	return owns_void(p);
 }
 
 void fragment() {
-	vec2 game_px = floor(SCREEN_UV * vec2(textureSize(greyhush_season_mask, 0)));
 	// Pixel centres: two quads never disagree on a pixel (gotchas/two-quads-disagree-on-a-pixels-world-position).
-	if (!keeps(floor(world_pos) + 0.5, seam_jitter(game_px))) {
+	vec2 p = floor(world_pos) + 0.5;
+	if (!keeps(p)) {
+		discard;
+	}
+	// BackdropMath.over_top.
+	bool over = p.y < room_rect.y;
+	if ((part == 1 && over) || (part == 2 && !over)) {
 		discard;
 	}
 	ivec2 size = textureSize(sheet, 0);

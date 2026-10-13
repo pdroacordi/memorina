@@ -56,6 +56,17 @@ func test_the_current_room_and_its_neighbours_run() -> void:
 	assert_object((rooms[3] as Room).contents()).is_null()
 	await _flush()
 
+## A glide still frames the room left behind, so its neighbours keep running until the glide ends and settle runs again.
+func test_rooms_kept_for_a_glide_run_until_the_next_settle() -> void:
+	var rooms := _row(4)
+	var residency := RoomResidency.new()
+	residency.settle(rooms[1], rooms)
+	residency.settle(rooms[2], rooms, RoomResidency.touching(rooms[1] as Room, rooms))
+	assert_bool((rooms[0] as Room).is_active()).is_true()
+	residency.settle(rooms[2], rooms)
+	assert_bool((rooms[0] as Room).is_active()).is_false()
+	await _flush()
+
 func test_a_room_out_of_reach_idles() -> void:
 	var rooms := _row(4)
 	var residency := RoomResidency.new()

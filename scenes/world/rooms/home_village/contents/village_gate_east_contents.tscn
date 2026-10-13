@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://2ov5so7aqarp"]
 
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
-[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_set"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/farmer.tscn" id="in_farmer"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/home_village/contents/village_gate_east.room" id="room_map"]
@@ -18,8 +17,6 @@
 
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
-backdrop_set = ExtResource("bd_set")
-horizon_y = 235.0
 
 [node name="Props" type="Node2D" parent="."]
 z_index = -10

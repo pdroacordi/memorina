@@ -15,11 +15,14 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_empty_house.tscn" id="r11"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_mill_house.tscn" id="r12"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_notes_house.tscn" id="r13"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
 
 [node name="HomeVillage" type="Node2D"]
 script = ExtResource("1_region")
 name_key = "REGION_HOME_VILLAGE"
 season = 3
+backdrop_set = ExtResource("bd_region_set")
+horizon_y = 235.0
 
 [node name="Memory" type="Node2D" parent="."]
 script = ExtResource("2_regmem")

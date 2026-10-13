@@ -6,7 +6,7 @@ status: active
 tags: [backdrop, background, parallax2d, camera, seasonal-art, greyhush, shader, rooms, art-contract, plan, world-06, world-04]
 related: [gotchas/parallax2d-ignores-its-parents-offset, bugs/the-winter-trial-tree-layers-end-in-vertical-cuts-over-the-squall-puzzle, systems/seasonal-art, systems/greyhush, systems/songs-and-the-memorina, systems/rooms, systems/art-pipeline, bugs/creature-pass-frozen-transform-floats-bodies, bugs/camera-zoom-out-shows-past-room-bounds, gotchas/duplicate-copies-script-built-unowned-children, bugs/room-map-node-rebuild-renames-and-doubles-its-children, gotchas/glsl-gdscript-math-must-be-duplicated, gotchas/screen-texture-copy-scope, gotchas/logger-log-error-also-receives-warnings, architecture/rooms-are-text, architecture/backdrop-seams]
 created: 2026-10-08
-updated: 2026-10-10
+updated: 2026-10-13
 source_files:
   - scenes/world/environment/backdrop/backdrop.gd
   - scenes/world/environment/backdrop/backdrop_math.gd
@@ -329,3 +329,10 @@ current until it is built.
   first dither ("no dither" above no longer holds).
 - **Art density** is 2x, not 1x ("One 2x pixel density", user, 2026-10-10, `systems/art-pipeline`).
   Sheet sizes stay in game px, and every art pixel is a 2x2 block.
+
+## Revision (2026-10-13, BUILT in WORLD-28)
+
+- **One horizon and one set per region.** Option (c), "the set on `Region`", was rejected because underground rooms inside a surface region need their own set. It is now built with an override that answers that: `Region.backdrop_set` and `Region.horizon_y` (px below the region node), and a contents `Backdrop.backdrop_set` that is null to show the region's set or names a cave, interior or rock-wall set. `Backdrop.horizon_y` is deleted; the anchor is the node's x and the region's horizon y. Per-layer `horizon_row` and the set's `horizon_screen_y` stay (art-local). Reason: per-room horizons drew one set at two heights at stacked seams, 384 to 1536 px apart (12 seams in the 2026-10-13 audit). A tall room shows the horizon only near the region's eye line, the sky above it (EDGE) and its set's bottom row below; the rooms where that made no sense were inside rock and now show a rock wall.
+- **Interim sets.** Every open region shows `village_valley` (horizons 235, -1685, -1301; the trials -53) until its own set is drawn; the pack forest `pine_woods` is no room's backdrop. The Caldera's `caldera_crater` is the valley's sky over the basalt wall (`horizon_row` 0, NONE above, REPEAT below) at the crater's rim (768): the first "crossing" set, sky over rock in one tall room.
+- **Seams** are hard cuts (`architecture/backdrop-seams`, revision 2026-10-13): the "first dither" of the 2026-10-10 revision is gone.
+- **Editor preview.** A contents scene opened alone has no Region, so a room without an override previews no backdrop (accepted).

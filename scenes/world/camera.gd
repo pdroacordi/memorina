@@ -4,6 +4,8 @@ extends Camera2D
 
 ## The focus zoom and look-ahead have landed; the position is in canvas pixels.
 signal focused(subject_screen_position: Vector2)
+## A glide between room bounds ran out, or snap() cut it; a glide retargeted by set_bounds() emits only when the new one ends.
+signal glide_finished
 
 ## Px of ground kept in frame under a coming landing, so it reads as ground.
 const LANDING_GROUND := 32.0
@@ -156,6 +158,7 @@ func set_bounds(bounds: Rect2, glide: bool = false, reach: Rect2 = Rect2()) -> v
 	# Linear: glide_offset eases each leg out (fast first: until the glide moves, the frame still shows the old room).
 	_glide_tween = create_tween().set_process_mode(Tween.TWEEN_PROCESS_PHYSICS)
 	_glide_tween.tween_property(self, "_glide_weight", 0.0, bounds_glide_time)
+	_glide_tween.finished.connect(glide_finished.emit)
 
 ## Where the frame may yield past the bounds to keep the subject whole, and where the fall lead may; set before each step.
 func set_reach(reach: Rect2, fall_reach: Rect2 = Rect2()) -> void:
@@ -251,7 +254,10 @@ func snap(keep_fall_lead: bool = false) -> void:
 	if _look_ahead_tween:
 		_look_ahead_tween.kill()
 	_look_ahead = _look_ahead_target()
+	var gliding := _glide_tween != null and _glide_tween.is_running()
 	_stop_glide()
+	if gliding:
+		glide_finished.emit()
 	reset_smoothing()
 
 ## A decaying random offset; a stronger call while one runs replaces it.
