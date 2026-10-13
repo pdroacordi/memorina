@@ -32,7 +32,7 @@ func test_a_root_span_keeps_its_earth_ends_and_its_cells() -> void:
 	assert_int(grid.flags(Vector2i(10, 21))).is_equal(ReachGrid.CLIMB)
 
 func test_a_lake_is_a_hazard() -> void:
-	var grid := ReachFixture.grid(PackedStringArray(["....", "####"]), Vector2i.ZERO, PackedStringArray(["www.", "...."]))
+	var grid := ReachFixture.grid(PackedStringArray(["....", "####"]), Vector2i.ZERO, PackedStringArray(["wwww", "...."]))
 	assert_int(grid.flags(Vector2i(1, 0)) & ReachGrid.HAZARD).is_not_equal(0)
 
 func test_a_freezable_pool_is_water_with_ice_on_its_top() -> void:

@@ -5,9 +5,9 @@ title: In lake_well, the squall (now 352 px tall) blows Ivo off the 3-cell catch
 status: resolved
 severity: high
 tags: [world-05, frozen-lake, well, squall, wind, softlock, base-kit]
-related: [playtests/2026-10-10-traversal-orchards-caldera, bugs/the-fishing-village-well-has-no-way-out, playtests/2026-10-09-traversal-woods-lake, systems/air]
+related: [playtests/2026-10-10-traversal-orchards-caldera, bugs/the-fishing-village-well-has-no-way-out, playtests/2026-10-09-traversal-woods-lake, systems/air, systems/world, architecture/water-two-projections]
 created: 2026-10-10
-updated: 2026-10-10
+updated: 2026-10-13
 source_files:
   - scenes/world/rooms/frozen_lake/contents/lake_well.room
   - scenes/world/rooms/frozen_lake/contents/lake_fishing_village.room
@@ -87,3 +87,10 @@ x 1312..1696, y -1440). Working tree on 5062946 with the coordinator's second ro
   - Control (`..._1620`): 30 px further west, outside the shell, the Soltar performance is broken by the
     squall, and the reeds stop him at x 1388.
 - Known and accepted (coordinator): Soltar on the reeds can also be played from the catch.
+
+## Superseded (2026-10-13, WORLD-29)
+
+The well mouth, the notch and the curbs are gone: lake_well's row 0 is closed and the fishing village reaches it by the
+stairwell on its shore landing (col 3), a door pair with the hatch over the catch (col 9). No fall leads into the well.
+From the bank, the step and one jump west still put Ivo on the catch with the base kit (`systems/world`, Known limits).
+The timelines named above start from a layout that no longer exists.

@@ -9,5 +9,5 @@ self_modulate = Color(0.45, 0.55, 0.85, 1)
 tile_set = ExtResource("2_tiles")
 script = ExtResource("1_layer")
 body_scene = ExtResource("3_lake")
-surface_inset = 8
+surface_inset = 0
 covers_passages = false

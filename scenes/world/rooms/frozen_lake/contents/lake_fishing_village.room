@@ -1,10 +1,11 @@
-; lake_fishing_village.room - Vila dos Pescadores: stone quays over the dead lake (`w`), the
-; fisher hut's door (facade cols 35-45) and the well's mouth (cols 28-31) into lake_well (design 04 section 3.5).
-; No gate: base kit. Out of the well: lake_well's catch ledge, the notch (cols 26-27, floor flush with the seam), the floor; 3 rows each.
+; lake_fishing_village.room - Vila dos Pescadores: a plank deck on stilts (row 9, cols 6-59) over the dead lake (`w`, rows 10-11,
+; one body from the landing to the east side), the fisher hut's door (facade cols 35-45) and, on the stone landing by lake_shore
+; (cols 0-5), the stairwell down to lake_well's hatch (design 04 section 3.5; WORLD-29, "Stilt piers (Recommended)", "Continuous
+; deck (Recommended)", "Well as a door (Recommended)", user, 2026-10-13). No gate: base kit; the deck has no drop-through.
 
 [room]
 origin = 0, 0
-tileset = legacy
+tileset = village
 
 [grid]
 S..........................................................S
@@ -15,10 +16,10 @@ S..........................................................S
 ............................................................
 ............................................................
 ............................................................
-................SSSS............S.......E...................
-SSSSSSSSSSSSSSSSSSSSSSSSSS......SSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSS......SSSSSSSSSSSSSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSSSSSSSSSSSSSSS......SSSSSSSSSSSSSSSSSSSSSSSSSSSS
+...E....................................E...................
+SSSSSS------------------------------------------------------
+SSSSSS......................................................
+SSSSSS......................................................
 
 [water]
 ............................................................
@@ -31,8 +32,9 @@ SSSSSSSSSSSSSSSSSSSSSSSSSS......SSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ............................................................
 ............................................................
 ............................................................
-wwwwwwwwwwwwwwwwwwwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwwwwwww
-wwwwwwwwwwwwwwwwwwwwwwwwww.......wwwwwwwwwwwwwwwwwwwwwwwwwww
+......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+......wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 
 [entities]
+3,8 = {"look": "stairwell", "link": "lake_well_stairwell", "to_room": "lake_well", "arrive_facing": 1}
 40,8 = {"link": "lake_fisher_hut_door", "to_room": "lake_fisher_hut"}

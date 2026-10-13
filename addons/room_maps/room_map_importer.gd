@@ -21,10 +21,11 @@ extends EditorImportPlugin
 ## Format 8: ROOF cells, one-way ground with no look (systems/props, Facades).
 ## Format 9: the helix stair entity `@` (systems/helix-stair).
 ## Format 10: VOID cells, their mask and the resolver's section cut (architecture/room-void-outside-the-shell).
+## Format 11 (WORLD-29): a lake lies only over air and each row ends at a room side or solid ground (systems/water).
 ## (room_files_test.gd re-parses the text, so it guards the maps, not a
 ## machine's stale imports.) A legend EDIT alone needs a reimport too.
 
-const FORMAT_VERSION := 10
+const FORMAT_VERSION := 11
 
 func _get_format_version() -> int:
 	return FORMAT_VERSION

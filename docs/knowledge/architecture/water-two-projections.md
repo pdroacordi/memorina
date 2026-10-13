@@ -6,7 +6,7 @@ status: active
 tags: [water, lake, pool, shader, tilemap, authoring, performance]
 related: [architecture/water-is-world-art-reflecting-two-passes, architecture/memory-gated-height-field, bugs/lake-clock-runs-at-the-fastest-memory-across-the-room, gotchas/tilemaplayer-enabled-does-not-hide-children]
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-10-13
 source_files:
   - scenes/world/environment/water/water_lake.gdshader
   - scenes/world/environment/water/water_surface.gdshader
@@ -14,6 +14,8 @@ source_files:
   - scenes/world/environment/water/water_body.gd
   - scenes/world/environment/water/water_layer.gd
   - scenes/world/environment/water/water_basins.gd
+  - scenes/world/rooms/maps/room_map_parser.gd
+  - scenes/world/environment/water/water_lake_layer.tscn
 ---
 
 ## Context
@@ -65,3 +67,28 @@ They also asked whether water should be authored some other way than a scene wit
 - The editor preview is the painted swatch; the shaded water only exists at runtime.
 - Rule: a lake that ends mid-screen reads as a rectangle. Run it off the room or end it behind art
   drawn above z 50.
+
+## Revision (2026-10-13, WORLD-29)
+
+The rule above was advice, and three maps broke it: the fishing village and the frost shore painted lakes over stone
+(each lake cell under a solid cell drew over the quay at z 50) and ended them mid-screen against the well mouth, a
+pillar and the beach (user, 2026-10-13: "Maybe we could improve the visual in these
+parts in which water is separated. i know that could happen, but the way we've done it, it just seems broken").
+User decisions, 2026-10-13: "Stilt piers (Recommended)" ("One lake runs the whole room width; the quays become wooden
+stilt piers over it, and the well mouth moves onto the shore (this changes the route into lake_well, which stays
+reachable). frost_shore's lake runs off its side, and lakes stop drawing over solid ground."), "Continuous deck
+(Recommended)" ("One plank deck across the room on posts; no falling into the lake, no new hazard.") and "Well as a
+door (Recommended)" ("A stairwell on a stone landing by the shore, linked to a hatch in lake_well, with a short fade,
+like the caldera cistern already does.").
+
+- **The rule is now an import error** (`RoomMapParser._check_lakes`, room format 11): a lake cell over ground or a
+  ledge, or a lake row whose end touches air or a ledge instead of a room side or solid ground. The second option
+  above (art drawn above z 50 at a lake's end) is not offered by the parser; a lake that must end mid-screen ends
+  against ground.
+- **No dry lip under a lake.** `water_lake_layer.tscn` has `surface_inset` 0 (was 8): a lake lies over air, so there
+  is no bank top inside its cells, and the mirror axis sits on the cell top.
+- **Piers stand in a lake as props in two parts** (`props/frozen_lake/pier_post.tscn`): the post above the waterline
+  under `Props` (z -10, so the lake reflects it) and its foot at absolute z 52 (over water 50 and ice 51, under the
+  void 60), a ripple row and the post pulled toward the lake's blue.
+- The fishing village is a plank deck on posts over one lake from its shore landing to its east side; the frost shore's
+  lake runs off both sides; the mill's river runs between its banks over air. `systems/water`, `systems/world`.

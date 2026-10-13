@@ -272,6 +272,119 @@ func test_a_reach_over_a_lake_is_an_error() -> void:
 	assert_bool(result.ok()).is_false()
 	assert_str(result.errors[0]).contains("a lake does not rise")
 
+func test_a_lake_over_air_running_off_both_sides_parses() -> void:
+	var result := _parse("[grid]
+====
+....
+[water]
+....
+wwww
+")
+	assert_bool(result.ok()).is_true()
+	assert_int(result.map.water["w"].size()).is_equal(4)
+
+func test_a_lake_ending_against_ground_on_every_row_parses() -> void:
+	var result := _parse("[grid]
+S..#
+S..#
+[water]
+.ww.
+.ww.
+")
+	assert_bool(result.ok()).is_true()
+
+func test_a_lake_over_ground_is_an_error() -> void:
+	var result := _parse("[grid]
+....
+SSSS
+[water]
+....
+wwww
+")
+	assert_bool(result.ok()).is_false()
+	assert_str(result.errors[0]).contains("'w' at 0,1 lies over ground (and 3 more cells)")
+
+func test_a_lake_over_a_ledge_is_an_error() -> void:
+	var result := _parse("[grid]
+..=.
+....
+[water]
+..w.
+wwww
+")
+	assert_bool(result.ok()).is_false()
+	assert_str(result.errors[0]).contains("'w' at 2,0 lies over a ledge")
+
+func test_a_lake_ending_in_the_air_is_an_error() -> void:
+	var result := _parse("[grid]
+S...
+S...
+[water]
+.ww.
+.www
+")
+	assert_bool(result.ok()).is_false()
+	assert_int(result.errors.size()).is_equal(1)
+	assert_str(result.errors[0]).contains("'w' at 2,0 ends in the air: run each row")
+
+func test_a_lake_ending_beside_a_ledge_is_an_error() -> void:
+	var result := _parse("[grid]
+#..=
+[water]
+.ww.
+")
+	assert_bool(result.ok()).is_false()
+	assert_str(result.errors[0]).contains("'w' at 2,0 ends in the air")
+
+func test_a_lake_column_stopping_in_the_air_is_an_error() -> void:
+	var result := _parse("[grid]
+....
+....
+####
+[water]
+wwww
+....
+....
+")
+	assert_bool(result.ok()).is_false()
+	assert_int(result.errors.size()).is_equal(1)
+	assert_str(result.errors[0]).contains("'w' at 0,0 stops in the air (and 3 more cells): run each column")
+
+func test_a_lake_column_on_solid_ground_parses() -> void:
+	var result := _parse("[grid]
+....
+####
+[water]
+wwww
+....
+")
+	assert_bool(result.ok()).is_true()
+
+func test_a_lake_row_meeting_a_pool_is_its_own_error() -> void:
+	var result := _parse("[grid]
+#....#
+######
+[water]
+.ww~~.
+......
+")
+	assert_bool(result.ok()).is_false()
+	assert_int(result.errors.size()).is_equal(1)
+	assert_str(result.errors[0]).contains("'w' at 2,0 meets '~' water: a lake and another kind of water need solid ground")
+
+func test_a_lake_over_a_pool_is_its_own_error() -> void:
+	var result := _parse("[grid]
+#..#
+#..#
+####
+[water]
+.ww.
+.~~.
+....
+")
+	assert_bool(result.ok()).is_false()
+	assert_str(result.errors[0]).contains("'w' at 1,0 meets '~' water (and 1 more cells)")
+
 func test_a_reach_touching_two_waters_is_an_error() -> void:
 	var result := _parse("[grid]
 #...#

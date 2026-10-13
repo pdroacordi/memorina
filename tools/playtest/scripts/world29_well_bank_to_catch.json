@@ -1,0 +1,195 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6.0,
+ "locale": "en",
+ "player_position": [
+  1776,
+  -1346
+ ],
+ "steps": [
+  {
+   "t": 0.9,
+   "log": "start"
+  },
+  {
+   "t": 0.9,
+   "screenshot": "b01_bank"
+  },
+  {
+   "t": 0.95,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.2,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 1.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 1.9,
+   "log": "on_step"
+  },
+  {
+   "t": 1.9,
+   "screenshot": "b02_step"
+  },
+  {
+   "t": 2.2,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.3,
+   "log": "c02.30"
+  },
+  {
+   "t": 2.4,
+   "log": "c02.40"
+  },
+  {
+   "t": 2.45,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "log": "c02.50"
+  },
+  {
+   "t": 2.6,
+   "log": "c02.60"
+  },
+  {
+   "t": 2.7,
+   "log": "c02.70"
+  },
+  {
+   "t": 2.8,
+   "log": "c02.80"
+  },
+  {
+   "t": 2.9,
+   "log": "c02.90"
+  },
+  {
+   "t": 3.0,
+   "log": "c03.00"
+  },
+  {
+   "t": 3.1,
+   "log": "c03.10"
+  },
+  {
+   "t": 3.2,
+   "log": "c03.20"
+  },
+  {
+   "t": 3.3,
+   "log": "c03.30"
+  },
+  {
+   "t": 3.3,
+   "screenshot": "b03_catch"
+  },
+  {
+   "t": 3.4,
+   "log": "c03.40"
+  },
+  {
+   "t": 3.5,
+   "log": "c03.50"
+  },
+  {
+   "t": 3.6,
+   "log": "c03.60"
+  },
+  {
+   "t": 3.7,
+   "log": "c03.70"
+  },
+  {
+   "t": 3.8,
+   "log": "c03.80"
+  },
+  {
+   "t": 3.9,
+   "log": "c03.90"
+  },
+  {
+   "t": 4.0,
+   "log": "c04.00"
+  },
+  {
+   "t": 4.1,
+   "log": "c04.10"
+  },
+  {
+   "t": 4.2,
+   "log": "c04.20"
+  },
+  {
+   "t": 4.3,
+   "log": "c04.30"
+  },
+  {
+   "t": 4.4,
+   "log": "c04.40"
+  },
+  {
+   "t": 4.5,
+   "log": "c04.50"
+  },
+  {
+   "t": 4.5,
+   "screenshot": "b04_catch_held"
+  },
+  {
+   "t": 4.6,
+   "log": "c04.60"
+  },
+  {
+   "t": 4.7,
+   "log": "c04.70"
+  },
+  {
+   "t": 4.8,
+   "log": "c04.80"
+  },
+  {
+   "t": 4.9,
+   "log": "c04.90"
+  },
+  {
+   "t": 5.0,
+   "log": "c05.00"
+  },
+  {
+   "t": 5.0,
+   "trace": false
+  }
+ ]
+}

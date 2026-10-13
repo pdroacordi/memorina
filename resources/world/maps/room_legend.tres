@@ -91,7 +91,7 @@ reach_role = 5
 ground = 0
 water_layer = ExtResource("4_lake")
 takes_reach = false
-description = "Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides."
+description = "Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over air down to the room's bottom, never over ground or a ledge; run each row off a room side or end it against solid ground."
 
 [sub_resource type="Resource" id="freezable"]
 script = ExtResource("2_entry")

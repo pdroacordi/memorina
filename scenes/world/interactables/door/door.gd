@@ -20,8 +20,12 @@ const LOOKS: Dictionary[String, Texture2D] = {
 }
 ## Px of a look's art below the floor line. Must match the floor line in tools/art/prompts/door_stairwell.md.
 const SINKS: Dictionary[String, float] = {"stairwell": 67.0}
-## Px between the top of the art and the prompt's bottom edge.
+## Frames side by side in every look's art (open, sealed).
+const FRAMES := 2
+## Px between the art and the prompt.
 const PROMPT_GAP := 8.0
+## Highest the prompt's top sits above the floor line, in px. Must match the Prompt's offset_top in door.tscn.
+const PROMPT_TOP := -104.0
 
 ## Name of the doorway, shared by exactly two doors across the world.
 @export var link: StringName = &""
@@ -50,6 +54,21 @@ static func find(tree: SceneTree, room: Room, link_name: StringName) -> Door:
 		if door != null and door.link == link_name and room.is_ancestor_of(door):
 			return door
 	return null
+
+## The prompt's top-left in a `look` door's space: above the art, or beside it at its middle when above would leave
+## `bounds`, the room in the space `feet` is in (bugs/the-lake-well-hatch-prompt-is-cut-by-the-top-of-the-frame).
+static func prompt_position(look: String, prompt_size: Vector2, feet: Vector2, bounds: Rect2) -> Vector2:
+	var texture: Texture2D = LOOKS.get(look, LOOKS["door"])
+	var sink: float = SINKS.get(look, 0.0)
+	var art := Vector2(texture.get_width() / float(FRAMES), texture.get_height())
+	var above := Vector2(-prompt_size.x * 0.5, minf(PROMPT_TOP, sink - art.y - PROMPT_GAP - prompt_size.y))
+	if not bounds.has_area() or bounds.encloses(Rect2(feet + above, prompt_size)):
+		return above
+	var middle := sink - (art.y + prompt_size.y) * 0.5
+	var right := Vector2(art.x * 0.5 + PROMPT_GAP, middle)
+	if bounds.encloses(Rect2(feet + right, prompt_size)):
+		return right
+	return Vector2(-art.x * 0.5 - PROMPT_GAP - prompt_size.x, middle)
 
 func _init() -> void:
 	collision_layer = Seat.LAYER
@@ -108,7 +127,9 @@ func _dress() -> void:
 	_sprite.texture = texture
 	var sink: float = SINKS.get(look, 0.0)
 	_sprite.position.y = sink - texture.get_height() * 0.5
-	_prompt.position.y = minf(_prompt.position.y, sink - texture.get_height() - PROMPT_GAP - _prompt.size.y)
+	var room := Room.of(self)
+	var bounds := room.get_bounds() if room != null else Rect2()
+	_prompt.position = Door.prompt_position(look, _prompt.size, global_position, bounds)
 
 func _refresh() -> void:
 	var open := is_open()

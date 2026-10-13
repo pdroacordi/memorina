@@ -48,14 +48,14 @@ tileset = village       ; the biome whose sheets draw the ground (required)
 [grid]                  ; ground, ledges and entities
 ...............................................###...........
 ..............................B...................####.......
-############################################......###########
-#############################################################
+-------------------------------------------#......###########
+...........................................##################
 
 [water]                 ; optional: kinds of water, same size as [grid]
 .............................................................
 .............................................................
-wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwffffff...........
-.............................................................
+............................................ffffff...........
+wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..................
 
 [back]                  ; optional: walls drawn behind the room, same size as [grid]
 .............................................................
@@ -99,11 +99,17 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwffffff...........
   an error, and so is air above it below its surface unless that air is a
   sealed pocket. Water painted under the ground beside a pit fills a passage
   (`docs/knowledge/systems/water.md`).
-- **`[water]` is a second layer** because water can lie *over* ground (a lake
-  in front of the land) as well as fill a pit. It has exactly as many rows as
-  `[grid]`. Each 32 px water character becomes 2x2 of the water system's
-  16 px cells (`WaterLayer`), which works out the basins, surfaces and depths
-  itself (`WaterBasins`).
+- **`[water]` is a second layer** because water can fill a covered passage
+  under ground as well as a pit. It has exactly as many rows as `[grid]`.
+  Each 32 px water character becomes 2x2 of the water system's 16 px cells
+  (`WaterLayer`), which works out the basins, surfaces and depths itself
+  (`WaterBasins`).
+- **A lake (`w`) lies only over air**, in front of the land: never over ground
+  or a ledge, each of its rows runs off a room side (onto the next room's
+  solid ground) or ends against solid ground, each column runs to the room's
+  bottom or onto solid ground, and it never touches another kind of water
+  (WORLD-29). Ivo never falls into one: a lake lies under a deck with no
+  drop-through or a solid shore.
 - **`r` is a reach, not water**: painted above `~` or `f` in the same pit, the
   pool rests at the water painted under it and Chuva raises it to the top `r`
   row; painted alone, it is a dry basin. The parser joins each group of `r` to
@@ -169,7 +175,7 @@ else in the code knows what a character means.
 | `^` | `[grid]` | roof | wood | - | - | Roof: a one-way ledge with no tile art, drawn by the building's facade prop; it lies on the facade's roof line (facade_doors_test). |
 | `h` | `[back]` | back wall | - | wall | - | Built wall behind the room (plaster and timber, planks, sandstone): [back] grid only, no collision. |
 | `~` | `[water]` | water | - | - | - | Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand. |
-| `w` | `[water]` | water | - | - | hazard | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over the ground down to the room's bottom, and run it off the room's sides. |
+| `w` | `[water]` | water | - | - | hazard | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over air down to the room's bottom, never over ground or a ledge; run each row off a room side or end it against solid ground. |
 | `f` | `[water]` | water | - | - | ice | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
 | `B` | `[grid]` | entity | - | - | - | Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death. |
 | `W` | `[grid]` | entity | - | - | current | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
@@ -508,6 +514,10 @@ feet row). Rules:
 | `'~' at c,r stands against open air (...)` | pool water must be held by ground, water or a sealed pocket |
 | `'~' at c,r is water no surface reaches` | a covered passage must be one unbroken run per column |
 | `'r' at C,R is over 'w': a lake does not rise` | a reach only joins pool water (`~`, `f`) |
+| `'w' at C,R lies over ground` (or `a ledge`) | a lake draws in front of the land at z 50: paint it only over air |
+| `'w' at C,R ends in the air` | each row of a lake runs off a room side or ends against solid ground (not air or a ledge) |
+| `'w' at C,R stops in the air` | each column of a lake runs to the room's bottom or onto solid ground |
+| `'w' at C,R meets '~' water` | a lake and another kind of water need solid ground between them |
 | `'r' at C,R touches two kinds of water` | a reach joins one body: keep it over one kind |
 | `'r' at C,R is under water` | a reach is above the water it raises, never below it |
 | `no entity at column C, row R` | an `[entities]` line points at a cell that is not an entity (keys are grid coordinates) |

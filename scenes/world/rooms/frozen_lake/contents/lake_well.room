@@ -1,6 +1,7 @@
 ; lake_well.room - O Poco (design 04 section 3.5). Espacial 2 (design 02 section 8): Redoma at the bank's edge (col 15, floor row 6)
 ; dries the well (cols 16-18) and the flooded passage (cols 14-16, rows 9-10) under the sealed chamber; Ivo goes up its hole (col 14)
 ; into the chamber, whose trapped air keeps it dry (bugs/well-water-stands-in-the-air-at-a-passage-mouth).
+; The way in and out is the hatch (col 9) over the catch ledge (row 3), linked to the fishing village's stairwell (WORLD-29).
 ; Logico 1: a squall (x 64-480, y 96-288) sweeps chamber and bank; Redoma in the chamber shelters a Soltar that drops the curtain (col 2).
 
 [room]
@@ -8,9 +9,9 @@ origin = 0, 0
 tileset = legacy
 
 [grid]
-SSSSSSSS....SSSSSSSS
+SSSSSSSSSSSSSSSSSSSS
 S..................S
-S..................S
+S........E.........S
 S============......S
 S..................S
 S............SS....S
@@ -50,5 +51,6 @@ SSSSSSSSSSSSSSSSSSSS
 ....................
 
 [entities]
+9,2 = {"look": "hatch_up", "link": "lake_well_stairwell", "to_room": "lake_fishing_village", "arrive_facing": 1}
 2,8 = {"id": "well_reeds", "size": [32, 64]}
 8,8 = {"id": "well_squall", "size": [416, 192], "direction": [-1, 0], "speed": 420, "profile": "res://resources/world/wind/squall_wind.tres"}

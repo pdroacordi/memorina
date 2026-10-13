@@ -5,9 +5,9 @@ title: Falling into lake_fishing_village's well mouth traps Ivo on lake_well's o
 status: resolved
 severity: high
 tags: [rooms, softlock, frozen-lake, world-05, level-design]
-related: [playtests/2026-10-09-traversal-woods-lake, bugs/a-jump-across-a-horizontal-seam-loses-its-height-in-the-fade, playtests/2026-10-09-traversal-opening]
+related: [playtests/2026-10-09-traversal-woods-lake, bugs/a-jump-across-a-horizontal-seam-loses-its-height-in-the-fade, playtests/2026-10-09-traversal-opening, systems/world, architecture/water-two-projections]
 created: 2026-10-09
-updated: 2026-10-09
+updated: 2026-10-13
 source_files:
   - scenes/world/rooms/frozen_lake/contents/lake_fishing_village.room
   - scenes/world/rooms/frozen_lake/contents/lake_well.room
@@ -58,3 +58,10 @@ Fixed in `lake_fishing_village.room`: a two-cell notch in the mouth's west wall 
 Side effect (low): the mouth plus the notch is 192 px wide, so it can no longer be jumped over.
 `..._q_fishing_village_well_jump_to_shore.json` now lands in the notch (1484, -1568). Crossing the village
 always means dropping into the notch and jumping out.
+
+## Superseded (2026-10-13, WORLD-29)
+
+The well mouth, the notch and the curbs are gone: lake_well's row 0 is closed and the fishing village reaches it by the
+stairwell on its shore landing (col 3), a door pair with the hatch over the catch (col 9). No fall leads into the well.
+From the bank, the step and one jump west still put Ivo on the catch with the base kit (`systems/world`, Known limits).
+The timelines named above start from a layout that no longer exists.

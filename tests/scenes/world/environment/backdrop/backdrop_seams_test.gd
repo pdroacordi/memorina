@@ -17,7 +17,7 @@ const PAST_WALLS := "The seam continued straight out past both rooms' solid end 
 const REGION_SKY := "Over two wall tops at a region border, both rooms show their regions' open sets: the same art at two horizons, so a wall climb over the pillar shows a straight line in the sky. The user accepted this line until the region backdrops share one sky ('OK until skies match (Recommended)', 2026-10-13)."
 const RINGS_MEET := "The rooms are two rings apart: their rings meet on this line and no frame of either room reaches it."
 const TRIALS_APART := "The rooms are 256 px apart, so their rings overlap by 64 px and each draws its own ring there; they do not touch, so they are never resident together and a frame shows one room's ring only."
-const WELL := "The fishing village's well mouth: WORLD-29 (Plan B, 'Well as a door') closes lake_well's row 0 and moves the well onto the shore."
+const DOOR_PAIR := "Under the fishing village's deck and lake, on lake_well's ring limit: the two rooms join only by the stairwell and its hatch (WORLD-29), so no walk or glide crosses this seam; Ivo never goes below the deck, and a lake_well frame is the room's own width."
 ## `BackdropCut.key()` (room pair, kind and segment) -> why an open cut there is accepted. A new cut between two listed
 ## rooms is a new key and fails.
 const ALLOWED := {
@@ -35,9 +35,8 @@ const ALLOWED := {
 	"lake_waterfall_path|village_mill ring: y -160, x 2400..2560": RING_LIMIT,
 	"lake_waterfall_path|village_gate_east ring: y -160, x 3200..3360": RING_LIMIT,
 	"lake_fishing_village|lake_waterfall_path ring: x 2400, y -1536..-1376": UNDER_FLOOR,
-	"lake_fishing_village|lake_well rooms: y -1536, x 1536..1664": WELL,
-	"lake_fishing_village|lake_well ring: x 1120, y -1536..-1376": WELL,
-	"lake_fishing_village|lake_well ring: x 2080, y -1536..-1376": WELL,
+	"lake_fishing_village|lake_well ring: x 1120, y -1536..-1376": DOOR_PAIR,
+	"lake_fishing_village|lake_well ring: x 2080, y -1536..-1376": DOOR_PAIR,
 	"lake_high_wall|lake_shore ring: y -2080, x -1280..-1120": RING_LIMIT,
 	"lake_high_wall|lake_shore ring: x -1280, y -1536..-1376": BELOW_FLOORS,
 	"lake_chasm|orchard_well ring: y -1696, x -3360..-3200": RING_LIMIT,

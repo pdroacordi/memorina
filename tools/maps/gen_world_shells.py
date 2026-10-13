@@ -102,7 +102,6 @@ H_LINKS = [
 V_LINKS = [
     ("village_square", "caldera_cistern", 1, 8, 11),
     ("lake_waterfall_path", "village_mill", 4, 4, 15),
-    ("lake_fishing_village", "lake_well", 2, 8, 11),
     ("woods_canopy", "woods_deep", -5, 8, 15),
     ("orchard_terraces", "woods_canopy", -7, 4, 11),
     ("woods_deep", "woods_root_caves", -6, 8, 11),
@@ -159,6 +158,8 @@ DOORS = [
         {"row": 4, "requires": "res://resources/save_facts/all_guardians_restored.tres", "arrive_facing": -1}),
     ("woods_edge", 12, "woods_hut", 4, "woods_hut_door", {}, {"arrive_facing": 1}),
     ("lake_fishing_village", 40, "lake_fisher_hut", 4, "lake_fisher_hut_door", {}, {"arrive_facing": 1}),
+    ("lake_fishing_village", 3, "lake_well", 9, "lake_well_stairwell",
+        {"look": "stairwell", "arrive_facing": 1}, {"row": 2, "look": "hatch_up", "arrive_facing": 1}),
     ("orchard_mill_town", 30, "orchard_inn", 4, "orchard_inn_door", {}, {"arrive_facing": 1}),
     ("caldera_cistern", 9, "caldera_cistern_bottom", 49, "caldera_cistern_door",
         {"row": 10, "arrive_facing": 1}, {"row": 17}),

@@ -359,6 +359,7 @@ static func _read_water(map: RoomMap, rows: PackedStringArray, lines: Array[int]
 	_resolve_reach(map, reach, map.reach, lines, source, result)
 	_resolve_reach(map, shell_reach, map.shell_reach, lines, source, result)
 	_check_water_held(map, reach, shell_reach, lines, source, result)
+	_check_lakes(map, reach, shell_reach, lines, source, result)
 	for cell: Vector2i in shell_reach:
 		for step: Vector2i in WaterBasins.NEIGHBOURS:
 			if reach.has(cell + step):
@@ -366,7 +367,7 @@ static func _read_water(map: RoomMap, rows: PackedStringArray, lines: Array[int]
 				return
 
 ## Pool water must be held: open air beside or under it, or above it below its body's surface unless that air is sealed, is an
-## error (bugs/well-water-stands-in-the-air-at-a-passage-mouth). A lake lies in front of the land and is not checked.
+## error (bugs/well-water-stands-in-the-air-at-a-passage-mouth). A lake has its own rules (`_check_lakes`).
 static func _check_water_held(map: RoomMap, reach: Dictionary[Vector2i, String], shell_reach: Dictionary[Vector2i, String], lines: Array[int], source: String, result: Result) -> void:
 	var wet: Dictionary[Vector2i, bool] = {}
 	for symbol: String in map.water:
@@ -400,6 +401,57 @@ static func _check_water_held(map: RoomMap, reach: Dictionary[Vector2i, String],
 					continue
 				_cell_error(map, cell, symbol, "stands against open air (%s): nothing holds it there; flood the passage or close it" % ["above" if step == Vector2i.UP else "below" if step == Vector2i.DOWN else "beside"], lines, source, result)
 				break
+
+## A lake draws in front of the land, so it lies only over air; each of its rows ends at a room side or against solid ground,
+## and each of its columns at the room's bottom or on solid ground, never in the air, and it never touches another kind of
+## water (WORLD-29, systems/water). Each rule reports its first cell and how many more break it.
+static func _check_lakes(map: RoomMap, reach: Dictionary[Vector2i, String], shell_reach: Dictionary[Vector2i, String], lines: Array[int], source: String, result: Result) -> void:
+	var lake: Dictionary[Vector2i, String] = {}
+	var other: Dictionary[Vector2i, String] = {}
+	for symbol: String in map.water:
+		var into := other if map.legend.entry(symbol).takes_reach else lake
+		for point: Vector2 in map.water[symbol]:
+			into[Vector2i(point)] = symbol
+	other.merge(reach)
+	other.merge(shell_reach)
+	var over: Array[Vector2i] = []
+	var open_ends: Array[Vector2i] = []
+	var open_bottoms: Array[Vector2i] = []
+	var meets: Array[Vector2i] = []
+	for cell: Vector2i in lake:
+		if map.is_solid(cell) or map.is_platform(cell):
+			over.append(cell)
+		for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN]:
+			var next := cell + step
+			if lake.has(next) or not map.contains(next) or map.is_solid(next):
+				continue
+			if other.has(next):
+				meets.append(cell)
+			elif step == Vector2i.DOWN:
+				open_bottoms.append(cell)
+			else:
+				open_ends.append(cell)
+			break
+	if not over.is_empty():
+		var first := over[0]
+		_cell_error(map, first, lake[first], "lies over %s%s: a lake draws in front of the land, so paint it only over air" % ["a ledge" if map.is_platform(first) else "ground", _more(over)], lines, source, result)
+	if not open_ends.is_empty():
+		var first := open_ends[0]
+		_cell_error(map, first, lake[first], "ends in the air%s: run each row of a lake off a room side or against solid ground" % _more(open_ends), lines, source, result)
+	if not open_bottoms.is_empty():
+		var first := open_bottoms[0]
+		_cell_error(map, first, lake[first], "stops in the air%s: run each column of a lake to the room's bottom or onto solid ground" % _more(open_bottoms), lines, source, result)
+	if not meets.is_empty():
+		var first := meets[0]
+		var touched := ""
+		for step: Vector2i in [Vector2i.LEFT, Vector2i.RIGHT, Vector2i.DOWN]:
+			if other.has(first + step):
+				touched = other[first + step]
+				break
+		_cell_error(map, first, lake[first], "meets '%s' water%s: a lake and another kind of water need solid ground between them" % [touched, _more(meets)], lines, source, result)
+
+static func _more(cells: Array[Vector2i]) -> String:
+	return " (and %d more cells)" % (cells.size() - 1) if cells.size() > 1 else ""
 
 ## Whether the air from `start` is a sealed pocket (a diving bell): it reaches no edge of the map and no air over an open surface.
 ## `water` holds only standing water: a reach is air while its pool rests.

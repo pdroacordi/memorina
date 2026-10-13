@@ -468,6 +468,20 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - Before claiming a camera rule untested, scan the region scenes' room rects for the case. In this run no same-region
     corner-only pair could be crossed in play, so "corner cuts" could not be played at all.
 
+- **Learned 2026-10-13 (WORLD-29 lakes, run from a worktree)**:
+  - **Testing a worktree:** `--path <worktree>` works, but the worktree has its own `.godot/`. Run `--import` there first (~25 s)
+    and keep the log for `find -newer`. Put the wrapper's `APPDATA` probe and run commands in a script that takes `--path`
+    as a variable, and point a second copy at a `git archive HEAD` export for before/after.
+  - **A real-save md5 check can pass vacuously.** On this machine `%APPDATA%/Godot/app_userdata/Memorina/` holds only
+    `capture*` folders and `logs/`, with no `*.tres`, so md5 of `*.tres` is empty both times. Sibling smoke and GdUnit runs
+    also write `logs/godot*.log` there: a fresh log is not proof that your run escaped the redirect. Check your own
+    `appdata/<run>/.../logs` instead.
+  - **`look_down` does not peek in a room whose frame already sits on its bottom** (the fishing village: cam y -1716, frame
+    bottom = room bottom). To see under a deck, crop the bottom rows of a still.
+  - **A lake's waterline from pixels:** the waterline is the one bright row (r, g, b all > 190) under the deck. Read a post's
+    column top to bottom with Pillow: post, ripple row, 12 px foot, reflection, plank reflection. That separated the foot
+    from the reflection where eyeballing could not.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

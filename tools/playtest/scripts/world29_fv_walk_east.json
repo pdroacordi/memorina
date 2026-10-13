@@ -1,0 +1,472 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 13.0,
+ "locale": "en",
+ "player_position": [
+  700,
+  -1650
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "log": "l01.00"
+  },
+  {
+   "t": 1.2,
+   "screenshot": "w01.20"
+  },
+  {
+   "t": 1.25,
+   "log": "l01.25"
+  },
+  {
+   "t": 1.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.5,
+   "log": "l01.50"
+  },
+  {
+   "t": 1.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "log": "l01.75"
+  },
+  {
+   "t": 1.8,
+   "screenshot": "w01.80"
+  },
+  {
+   "t": 2.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "log": "l02.00"
+  },
+  {
+   "t": 2.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.25,
+   "log": "l02.25"
+  },
+  {
+   "t": 2.4,
+   "screenshot": "w02.40"
+  },
+  {
+   "t": 2.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "log": "l02.50"
+  },
+  {
+   "t": 2.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.75,
+   "log": "l02.75"
+  },
+  {
+   "t": 3.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "log": "l03.00"
+  },
+  {
+   "t": 3.0,
+   "screenshot": "w03.00"
+  },
+  {
+   "t": 3.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.25,
+   "log": "l03.25"
+  },
+  {
+   "t": 3.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.5,
+   "log": "l03.50"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "w03.60"
+  },
+  {
+   "t": 3.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.75,
+   "log": "l03.75"
+  },
+  {
+   "t": 4.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.0,
+   "log": "l04.00"
+  },
+  {
+   "t": 4.2,
+   "screenshot": "w04.20"
+  },
+  {
+   "t": 4.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "log": "l04.25"
+  },
+  {
+   "t": 4.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.5,
+   "log": "l04.50"
+  },
+  {
+   "t": 4.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.75,
+   "log": "l04.75"
+  },
+  {
+   "t": 4.8,
+   "screenshot": "w04.80"
+  },
+  {
+   "t": 5.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.0,
+   "log": "l05.00"
+  },
+  {
+   "t": 5.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.25,
+   "log": "l05.25"
+  },
+  {
+   "t": 5.4,
+   "screenshot": "w05.40"
+  },
+  {
+   "t": 5.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.5,
+   "log": "l05.50"
+  },
+  {
+   "t": 5.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.75,
+   "log": "l05.75"
+  },
+  {
+   "t": 6.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.0,
+   "log": "l06.00"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "w06.00"
+  },
+  {
+   "t": 6.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.25,
+   "log": "l06.25"
+  },
+  {
+   "t": 6.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.5,
+   "log": "l06.50"
+  },
+  {
+   "t": 6.6,
+   "screenshot": "w06.60"
+  },
+  {
+   "t": 6.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.75,
+   "log": "l06.75"
+  },
+  {
+   "t": 7.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.0,
+   "log": "l07.00"
+  },
+  {
+   "t": 7.2,
+   "screenshot": "w07.20"
+  },
+  {
+   "t": 7.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.25,
+   "log": "l07.25"
+  },
+  {
+   "t": 7.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.5,
+   "log": "l07.50"
+  },
+  {
+   "t": 7.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.75,
+   "log": "l07.75"
+  },
+  {
+   "t": 7.8,
+   "screenshot": "w07.80"
+  },
+  {
+   "t": 8.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.0,
+   "log": "l08.00"
+  },
+  {
+   "t": 8.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.25,
+   "log": "l08.25"
+  },
+  {
+   "t": 8.4,
+   "screenshot": "w08.40"
+  },
+  {
+   "t": 8.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.5,
+   "log": "l08.50"
+  },
+  {
+   "t": 8.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.75,
+   "log": "l08.75"
+  },
+  {
+   "t": 9.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.0,
+   "log": "l09.00"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "w09.00"
+  },
+  {
+   "t": 9.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.25,
+   "log": "l09.25"
+  },
+  {
+   "t": 9.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.5,
+   "log": "l09.50"
+  },
+  {
+   "t": 9.6,
+   "screenshot": "w09.60"
+  },
+  {
+   "t": 9.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.75,
+   "log": "l09.75"
+  },
+  {
+   "t": 10.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 10.0,
+   "log": "l10.00"
+  },
+  {
+   "t": 10.2,
+   "screenshot": "w10.20"
+  },
+  {
+   "t": 10.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 10.25,
+   "log": "l10.25"
+  },
+  {
+   "t": 10.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 10.5,
+   "log": "l10.50"
+  },
+  {
+   "t": 10.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 10.75,
+   "log": "l10.75"
+  },
+  {
+   "t": 10.8,
+   "screenshot": "w10.80"
+  },
+  {
+   "t": 11.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 11.0,
+   "log": "l11.00"
+  },
+  {
+   "t": 11.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 11.25,
+   "log": "l11.25"
+  },
+  {
+   "t": 11.4,
+   "screenshot": "w11.40"
+  },
+  {
+   "t": 11.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 11.5,
+   "log": "l11.50"
+  },
+  {
+   "t": 11.75,
+   "log": "l11.75"
+  },
+  {
+   "t": 12.0,
+   "log": "l12.00"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "w12.00"
+  }
+ ]
+}

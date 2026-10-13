@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/frozen_lake/pier_post.png" id="1_tex"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/frozen_lake/pier_post_foot.png" id="2_foot"]
+
+[node name="PierPost" type="Sprite2D"]
+texture = ExtResource("1_tex")
+centered = false
+offset = Vector2(-6, -26)
+
+[node name="InWater" type="Sprite2D" parent="."]
+z_as_relative = false
+z_index = 52
+texture = ExtResource("2_foot")
+centered = false
+offset = Vector2(-8, 0)
