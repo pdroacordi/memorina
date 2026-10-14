@@ -31,6 +31,11 @@ func _ready() -> void:
 	_inside.body_entered.connect(func(body: Node2D) -> void: if body is Character: _releasable.hold())
 	_inside.body_exited.connect(func(body: Node2D) -> void: if body is Character: _releasable.let_go())
 
+## Map cells the closed curtain fills, standing on `at` (map px), for the reachability audit's kit check. Reads only
+## authored values (`size`).
+func reach_wall_cells(_map: RoomMap, at: Vector2) -> Array[Vector2i]:
+	return MapCells.box_cells(Rect2(at.x - size.x * 0.5, at.y - size.y, size.x, size.y))
+
 func is_open() -> bool:
 	return _releasable.is_released()
 

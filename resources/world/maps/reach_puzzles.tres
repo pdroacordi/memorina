@@ -1,0 +1,85 @@
+[gd_resource type="Resource" script_class="ReachPuzzles" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/world/maps/reach_puzzles.gd" id="1_list"]
+[ext_resource type="Script" path="res://resources/world/maps/reach_puzzle.gd" id="2_entry"]
+
+[sub_resource type="Resource" id="woods_pond_log"]
+script = ExtResource("2_entry")
+room = &"woods_pond"
+id = &"log"
+songs = Array[int]([7])
+reason = "Chuva floats the log up the dry basin (design 02 section 8, Primavera Logico 2; woods_pond header)"
+
+[sub_resource type="Resource" id="lake_well_reeds"]
+script = ExtResource("2_entry")
+room = &"lake_well"
+id = &"well_reeds"
+songs = Array[int]([1, 4])
+reason = "Redoma in the chamber shelters a Soltar from the squall, which drops the curtain (design 02 section 8, Inverno Logico 1; lake_well header)"
+
+[sub_resource type="Resource" id="empty_house_door"]
+script = ExtResource("2_entry")
+room = &"village_empty_house"
+id = &"house_door"
+songs = Array[int]([3, 2, 4])
+reason = "Solsticio and Sombra on one plate, Soltar on the load for the other (design 02 section 8.4, Combinado 4; village_empty_house header)"
+
+[sub_resource type="Resource" id="corridor_door"]
+script = ExtResource("2_entry")
+room = &"caldera_long_corridor"
+id = &"corridor_door"
+songs = Array[int]([3, 2])
+reason = "Solsticio then Sombra on the plate 66 cells from the gate (design 02 section 8, Verao Logico 2; caldera_long_corridor header)"
+
+[sub_resource type="Resource" id="seesaw"]
+script = ExtResource("2_entry")
+room = &"caldera_seesaw"
+id = &"seesaw"
+songs = Array[int]([2])
+reason = "Sombra on the long arm raises Ivo on the short one (design 02 section 8, Verao Espacial 2; caldera_seesaw header)"
+
+[sub_resource type="Resource" id="temple_door"]
+script = ExtResource("2_entry")
+room = &"caldera_temple_gate"
+id = &"temple_door"
+songs = Array[int]([2])
+reason = "Sombra holds the plate six cells from the gate (design 02 section 8, Verao Espacial 1; caldera_temple_gate header)"
+
+[sub_resource type="Resource" id="lift"]
+script = ExtResource("2_entry")
+room = &"orchard_counterweights"
+id = &"lift"
+songs = Array[int]([4])
+reason = "Soltar drops the right load onto plate_lift (design 02 section 8, Outono Logico 1; orchard_counterweights header)"
+
+[sub_resource type="Resource" id="leaf_curtain"]
+script = ExtResource("2_entry")
+room = &"orchard_leaf_path"
+id = &"leaf_curtain"
+songs = Array[int]([4])
+reason = "Soltar drops the curtain (design 02 section 8, Outono Espacial 1; orchard_leaf_path header)"
+
+[sub_resource type="Resource" id="mill_bridge"]
+script = ExtResource("2_entry")
+room = &"orchard_mill_town"
+id = &"mill_bridge"
+songs = Array[int]([4])
+reason = "Soltar on the inn roof drops the drawbridge (design 04 section 3.6; orchard_mill_town header)"
+
+[sub_resource type="Resource" id="catch_platform"]
+script = ExtResource("2_entry")
+room = &"orchard_well"
+id = &"catch_platform"
+songs = Array[int]([4])
+reason = "Soltar lowers the platform; Enraizar only seizes it on the way down (design 02 section 8.4, Combinado 3; orchard_well header)"
+
+[sub_resource type="Resource" id="alcove_gate"]
+script = ExtResource("2_entry")
+room = &"orchard_windy_gap"
+id = &"alcove_gate"
+songs = Array[int]([4, 5])
+reason = "Soltar drops the cocoon, an eastward Vendaval blows it onto the plate (design 02 section 8, Outono Logico 2; orchard_windy_gap header)"
+
+[resource]
+script = ExtResource("1_list")
+entries = Array[ExtResource("2_entry")]([SubResource("woods_pond_log"), SubResource("lake_well_reeds"), SubResource("empty_house_door"), SubResource("corridor_door"), SubResource("seesaw"), SubResource("temple_door"), SubResource("lift"), SubResource("leaf_curtain"), SubResource("mill_bridge"), SubResource("catch_platform"), SubResource("alcove_gate")])

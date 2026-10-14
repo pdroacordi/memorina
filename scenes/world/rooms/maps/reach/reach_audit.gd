@@ -1,7 +1,7 @@
 class_name ReachAudit extends RefCounted
 
 ## Flags the platforms Ivo cannot reach and the places that lead nowhere, over a graph of surfaces joined by
-## ReachLattice landings and doors (architecture/room-reachability-audit).
+## ReachLattice landings and doors; run_kit flags one kit's traps (architecture/room-reachability-audit, TECH-08).
 
 const TIERS: Array[ReachLattice.Tier] = [ReachLattice.Tier.BASE, ReachLattice.Tier.DOUBLE_JUMP, ReachLattice.Tier.WALL_CLIMB]
 ## Rows under an anchor's cell searched for the surface it stands on.
@@ -16,6 +16,13 @@ enum _Node { SURFACE, TRANSIT, GRIP }
 var _grid: ReachGrid
 var _lattice: ReachLattice
 var _report := ReachReport.new()
+# A kit run's kit (run_kit), null for the union; it searches with the kit's movement and records only `_top`'s tier.
+var _kit: ReachKit
+var _top := ReachLattice.Tier.WALL_CLIMB
+var _double_jump := true
+var _wall_climb := true
+# A kit run: feet cells it may also return to (milestone rooms a later kit gets home from).
+var _exit_cells: Array[Vector2i] = []
 # Graph nodes: every surface first (ordered as the report's), then roots, currents and wall slides as they are met.
 var _kinds := PackedByteArray()
 var _cells: Array[Array] = []
@@ -32,6 +39,21 @@ var _roots_at: Dictionary[Vector2i, PackedInt32Array] = {}
 
 static func run(grid: ReachGrid, lattice: ReachLattice) -> ReachReport:
 	return ReachAudit.new(grid, lattice)._run()
+
+## KIT_TRAP pockets for `kit` on `grid`, its ReachGrid.for_kit view: what the kit reaches from the start with its own
+## movement and cannot return from to the start or to one of `exits` (feet cells), as ReachKitCheck runs it.
+static func run_kit(grid: ReachGrid, lattice: ReachLattice, kit: ReachKit, exits: Array[Vector2i] = []) -> ReachReport:
+	var audit := ReachAudit.new(grid, lattice)
+	audit._kit = kit
+	audit._double_jump = kit.has_skill(Enums.PlayerSkill.DOUBLE_JUMP)
+	audit._wall_climb = kit.has_skill(Enums.PlayerSkill.WALL_CLIMB)
+	if audit._wall_climb:
+		audit._top = ReachLattice.Tier.WALL_CLIMB
+	else:
+		audit._top = ReachLattice.Tier.DOUBLE_JUMP if audit._double_jump else ReachLattice.Tier.BASE
+	audit._exit_cells = exits
+	audit._report.kit = kit.id
+	return audit._run_kit()
 
 func _init(grid: ReachGrid, lattice: ReachLattice) -> void:
 	_grid = grid
@@ -62,6 +84,41 @@ func _run() -> ReachReport:
 	_flag_unreached(reach)
 	_flag_no_way_back(reach, back)
 	_flag_useless(forward, backward, reach, back)
+	return _report
+
+func _run_kit() -> ReachReport:
+	_lattice.bake(_grid)
+	_find_surfaces()
+	_classify_songs()
+	_start = _surface_under(_grid.start)
+	if _start < 0:
+		push_error("the start %s stands on no surface for kit %s" % [_grid.start, _kit.id])
+		return _report
+	_connect()
+	var forward := _adjacency(_top, false)
+	var backward := _adjacency(_top, true)
+	var reach := _walk(forward, PackedByteArray())
+	for node: int in _kinds.size():
+		if reach[node] == 0:
+			continue
+		for cell: Vector2i in _cells[node]:
+			var room := _grid.room_at(cell)
+			if room >= 0 and not _grid.room_id(room) in _report.rooms:
+				_report.rooms.append(_grid.room_id(room))
+	var seeds: Array[int] = [_start]
+	for cell: Vector2i in _exit_cells:
+		var node: int = _node_of.get(cell, -1)
+		if node < 0 or _kinds[node] != _Node.SURFACE or reach[node] == 0:
+			continue
+		if not node in seeds:
+			seeds.append(node)
+		var room := _grid.room_id(_grid.room_at(cell))
+		if not room in _report.exits:
+			_report.exits.append(room)
+	var home := _walk(backward, PackedByteArray(), seeds)
+	_report.reach = reach.slice(0, _report.surfaces.size())
+	_report.home = home.slice(0, _report.surfaces.size())
+	_flag_kit_traps(forward, backward, reach, home)
 	return _report
 
 func _find_surfaces() -> void:
@@ -153,6 +210,17 @@ func _opens_onto_a_wall(cell: Vector2i, out: Vector2i) -> bool:
 		return false
 	var beyond := cell + out
 	return _grid.room_at(beyond) < 0 and not _grid.in_band(beyond)
+
+# A kit run judges no ledge, so it only tells a song's surface (in water, or on nothing but a song's floor) from the rest.
+func _classify_songs() -> void:
+	for surface: ReachReport.Surface in _report.surfaces:
+		surface.support = ReachReport.Support.SONG
+		if _lattice.is_wet(surface.cells[0]):
+			continue
+		for under: Vector2i in _supports(surface):
+			if _grid.flags(under) & (ReachGrid.SOLID | ReachGrid.ONE_WAY) != 0:
+				surface.support = ReachReport.Support.GROUND
+				break
 
 func _classify() -> void:
 	_find_islands()
@@ -290,11 +358,15 @@ func _surface_under(cell: Vector2i) -> int:
 			return node
 	return -1
 
-# Each door pair of one region and each stair's two ends joined both ways, then one lattice search per node the start
+# Each stair's two ends joined both ways and each open door to its partner, then one lattice search per node the start
 # reaches: an unreached node's edges change no finding.
 func _connect() -> void:
 	var partners: Dictionary[int, Array] = {}
-	var pairs: Array[Array] = _grid.stairs.duplicate()
+	# Directed: from, to.
+	var ways: Array[Array] = []
+	for ends: Array in _grid.stairs:
+		ways.append([ends[0], ends[1]])
+		ways.append([ends[1], ends[0]])
 	var by_link: Dictionary[String, Array] = {}
 	for door: Dictionary in _grid.doors:
 		var key := "%s/%s" % [door.region, door.link]
@@ -304,20 +376,25 @@ func _connect() -> void:
 	for key: String in by_link:
 		var pair: Array = by_link[key]
 		if pair.size() != 2:
-			for door: Dictionary in pair:
-				_add_door_finding(door)
+			if _kit == null:
+				for door: Dictionary in pair:
+					_add_door_finding(door)
 			continue
-		pairs.append([pair[0].cell, pair[1].cell])
-	for pair: Array in pairs:
-		var ends: Array[int] = [_surface_under(pair[0]), _surface_under(pair[1])]
-		if ends.has(-1):
+		# A door gates only its own use (Player._try_door), so a pair sealed on one side is one way. A kit's grid marks
+		# each door open or sealed; the union's doors are all open.
+		for side: int in 2:
+			if pair[side].get("open", true):
+				ways.append([pair[side].cell, pair[1 - side].cell])
+	for way: Array in ways:
+		var from := _surface_under(way[0])
+		var to := _surface_under(way[1])
+		if from < 0 or to < 0:
 			continue
-		for end: int in 2:
-			if not partners.has(ends[end]):
-				partners[ends[end]] = []
-			partners[ends[end]].append(ends[1 - end])
-			for tier: int in TIERS.size():
-				_edges[tier][ends[end]][ends[1 - end]] = true
+		if not partners.has(from):
+			partners[from] = []
+		partners[from].append(to)
+		for tier: int in TIERS.size():
+			_edges[tier][from][to] = true
 	var queued: Dictionary[int, bool] = {_start: true}
 	var queue: Array[int] = [_start]
 	var next := 0
@@ -328,7 +405,7 @@ func _connect() -> void:
 			if not queued.has(other):
 				queued[other] = true
 				queue.append(other)
-		var found := _lattice.search(_grid, _seeds(node), true, true)
+		var found := _lattice.search(_grid, _seeds(node), _double_jump, _wall_climb)
 		for cell: Vector2i in found:
 			var target := _node_for(cell)
 			if target < 0 or target == node:
@@ -406,12 +483,15 @@ func _adjacency(tier: int, reverse: bool) -> Array[PackedInt32Array]:
 				lists[node].append(target)
 	return lists
 
-# Nodes reached from the start over `lists`, skipping nodes marked in `removed`.
-func _walk(lists: Array[PackedInt32Array], removed: PackedByteArray) -> PackedByteArray:
+# Nodes reached from `seeds` (default the start) over `lists`, skipping nodes marked in `removed`.
+func _walk(lists: Array[PackedInt32Array], removed: PackedByteArray, seeds: Array[int] = []) -> PackedByteArray:
 	var reached := PackedByteArray()
 	reached.resize(lists.size())
-	reached[_start] = 1
-	var queue := PackedInt32Array([_start])
+	var queue := PackedInt32Array(seeds)
+	if queue.is_empty():
+		queue.append(_start)
+	for first: int in queue:
+		reached[first] = 1
 	var next := 0
 	while next < queue.size():
 		var node := queue[next]
@@ -421,6 +501,68 @@ func _walk(lists: Array[PackedInt32Array], removed: PackedByteArray) -> PackedBy
 				reached[target] = 1
 				queue.append(target)
 	return reached
+
+# One KIT_TRAP per group of nodes the kit reaches and cannot return from, joined by its edges either way; a group whose
+# only surfaces are a song's (in water, on a mover's sweep) is never flagged, as NO_WAY_BACK.
+func _flag_kit_traps(forward: Array[PackedInt32Array], backward: Array[PackedInt32Array], reach: PackedByteArray, home: PackedByteArray) -> void:
+	var trapped := PackedByteArray()
+	trapped.resize(_kinds.size())
+	for node: int in _kinds.size():
+		trapped[node] = 1 if reach[node] == 1 and home[node] == 0 else 0
+	var benched: Dictionary[int, bool] = {}
+	for cell: Vector2i in _grid.benches:
+		var node := _surface_under(cell)
+		if node >= 0:
+			benched[node] = true
+	var grouped := PackedByteArray()
+	grouped.resize(_kinds.size())
+	for node: int in _kinds.size():
+		if trapped[node] == 0 or grouped[node] == 1:
+			continue
+		var group: Array[int] = [node]
+		grouped[node] = 1
+		var next := 0
+		while next < group.size():
+			var at := group[next]
+			next += 1
+			for lists: Array in [forward, backward]:
+				for other: int in lists[at]:
+					if trapped[other] == 1 and grouped[other] == 0:
+						grouped[other] = 1
+						group.append(other)
+		group.sort()
+		var judged: Array[int] = []
+		for member: int in group:
+			if member < _report.surfaces.size() and _report.surfaces[member].support != ReachReport.Support.SONG:
+				judged.append(member)
+		if judged.is_empty():
+			continue
+		_add_finding(ReachFinding.Kind.KIT_TRAP, true, judged)
+		var pocket := ReachReport.Pocket.new()
+		pocket.finding = _report.findings[-1]
+		pocket.finding.kit = _kit.id
+		for member: int in group:
+			for cell: Vector2i in _cells[member]:
+				var room := _grid.room_id(_room_of(cell))
+				if not room in pocket.rooms:
+					pocket.rooms.append(room)
+			pocket.bench = pocket.bench or benched.has(member)
+			for from: int in backward[member]:
+				var way := "%s -> %s" % [_describe(from), _describe(member)]
+				if reach[from] == 1 and home[from] == 1 and not way in pocket.entrances:
+					pocket.entrances.append(way)
+		_report.pockets.append(pocket)
+
+# "<room> <col>,<row>" of a node's first cell; a hold in a sky band is given in its nearest room.
+func _describe(node: int) -> String:
+	var cell: Vector2i = _cells[node][0]
+	var room := _room_of(cell)
+	var local := cell - _grid.room_rect(room).position
+	return "%s %d,%d" % [_grid.room_id(room), local.x, local.y]
+
+func _room_of(cell: Vector2i) -> int:
+	var room := _grid.room_at(cell)
+	return room if room >= 0 else _nearest_room(cell)
 
 func _flag_unreached(reach: Array[PackedByteArray]) -> void:
 	var full := reach[ReachLattice.Tier.WALL_CLIMB]

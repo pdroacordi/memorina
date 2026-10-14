@@ -4,7 +4,7 @@ type: architecture
 title: Room reachability audit - a JumpReach lattice over the stitched world, dominators for "leads nowhere"
 status: active
 tags: [rooms, room-map, reachability, level-design, audit, tests, jump-reach]
-related: [systems/rooms, systems/world, systems/roots-and-climbing, systems/water, architecture/rooms-are-text, gotchas/zigzag-ledges-two-rows-apart-seal-a-shaft, bugs/the-tavern-upper-floor-has-no-way-down, bugs/the-mill-loft-is-unreachable-from-the-lowered-drawbridge]
+related: [systems/rooms, systems/world, systems/roots-and-climbing, systems/water, architecture/rooms-are-text, gotchas/zigzag-ledges-two-rows-apart-seal-a-shaft, bugs/the-tavern-upper-floor-has-no-way-down, bugs/the-mill-loft-is-unreachable-from-the-lowered-drawbridge, bugs/the-woods-deep-pit-shaft-traps-a-kit-without-the-double-jump, bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera]
 created: 2026-10-10
 updated: 2026-10-14
 source_files:
@@ -15,6 +15,9 @@ source_files:
   - scenes/world/rooms/maps/jump_reach.gd
   - resources/world/maps/room_legend.tres
   - resources/world/maps/reach_allowlist.tres
+  - resources/world/maps/reach_kits.tres
+  - resources/world/maps/reach_puzzles.tres
+  - scenes/world/rooms/maps/reach/reach_kit_check.gd
   - tools/maps/reach_boards.gd
 ---
 
@@ -123,3 +126,31 @@ The WORLD-25 playtest found wall ledges left from a removed route that the audit
 - On the real world neither new kind fires, and the errors are unchanged: no required route rose more than 4 rows over an open top or crossed a first-row pillar. Warnings moved, and findings went from 60 to 63:
   - lighthouse_top 1,0: DEAD_END_POCKET became UNREACHABLE (its roof over the lantern is no longer reached through the sky).
   - Pockets the sky used to join split in three places: lake_high_wall 1,7 went from 13 cells to 2, with a new lake_chasm 30,17 (11 cells); village_lane_west 1,0 went from 21 to 6, with a new woods_edge 11,3 (15); threshold_fields 38,3 went from 72 to 63, with a new frost_shore 9,6 (9).
+
+## TECH-08 revision: the kit check (2026-10-14)
+
+User, 2026-10-14, on the WORLD-35 board: "Yes (Recommended)" to "Run the reach audit once per stage of the journey (base kit, +Memorina, +Woods, +Lake, +both, +Orchards, +Caldera) and fail when an entrance that kit can take has no way back for it, so new routes can't trap the player. Today the audit assumes every ability at once." The union's "Honesty" note above says why it was needed: NO_WAY_BACK never fires because of songs, and the Redoma-first Caldera trap (`bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera`) was found only by a traversal playtest.
+
+**What the tiers were.** `ReachLattice.Tier` (BASE, DOUBLE_JUMP, WALL_CLIMB) is movement only; one search per node with the full kit, and edges are sorted into tiers by the KEPT_AIR and GRIP bits. Songs, barriers and sealed doors are one union for every tier. A kit is a tier plus a grid, so the check is built on the tiers. It is not a parallel graph.
+
+**Options considered.**
+- *Run the union audit seven times on filtered grids* (about 5 s each, plus dominators and greedy cuts nobody reads): rejected, too slow.
+- *Every combination of songs*: rejected, combinatorial; the user chose the stages.
+- *Generate kits by exploring which milestone rooms each kit reaches*: deferred. The Memorina is not given in the world yet (STORY-03), and the stages are the user's.
+- *Chosen:* a kit mode in `ReachAudit` that searches with the kit's own skills (`search(grid, seeds, double_jump, wall_climb)`, records its tier only, and skips edge findings, ledge classes, anchors and dominators), on `ReachGrid.for_kit(kit)`.
+
+**Decision.**
+- **Data.** `ReachMilestone` (id, room, skills, songs, items, restored guardians, note) and `ReachKit` (id, milestones) in `resources/world/maps/`; `reach_kits.tres` holds eleven kits: the user's seven, and four orchestrator calls (2026-10-14) for the other orders design 04 section 2 allows. Those are woods_orchards and woods_orchards_caldera (the Orchards before the Lake) and lake_caldera and both_caldera (the Caldera before the Orchards). `ReachKit.opened_by` maps a gate's facts to its need, and no facts to `ReachKit.NEVER`, which no kit holds. `ReachKit.holds(need)` reads each packed fact (`kind << 8 | index`) with `SaveFact.check` on the kit's `PlayerData`, the same code a barrier runs in the game.
+- **Grid.** `ReachGrid` keeps `_base` (ungated flags) next to `_cells` (the union, unchanged), plus layers keyed by need: `_opens` (root spans, ice, mover sweeps; in the union) and `_closes` (a hazard over standing water until Redoma, a GATE entity's closed body until its need; never in the union). `for_kit` builds base + held opens + unheld closes, and marks each door "open" when the kit holds its own `requires`. `_connect` adds a directed way from each open door to its partner, because `Player._try_door` checks only the door Ivo stands at (`bugs/the-kit-check-drops-a-door-sealed-on-one-side-so-a-one-way-door-trap-is-never-flagged`). Ice at the top of the highest water follows that cell's kind: `f` Congelar, `r` Congelar + Chuva, `u` Congelar + Redoma. Under a reach, the resting water's top also freezes with Congelar alone. That layer is kit-only: in the union it merged lake_high_wall's ladder step into ice and hid it from LEADS_NOWHERE (`bugs/kit-check-ice-forms-only-on-the-highest-water-any-song-can-raise`). A root bridge wider than `RootGrower.max_bridge_cells` needs Chuva, as `RootGrower.reaches` does.
+- **Legend.** Two roles appended: GATE (`X`, `G`, `F`: an anchor whose root script answers `reach_wall_cells(map, at)`) and BENCH (`R`: an anchor `ReachGrid.benches` lists). `FactBarrier.reach_needs()` returns its `requires`. A mover's or song gate's need comes from `reach_puzzles.tres`, keyed by room and entity id, with a reason. A plate's weight is the puzzle's, not the gate's, so the entity cannot know it. Eleven placements today, one entry each: four gates, two curtains and five movers.
+- **Traps.** `ReachAudit.run_kit` walks forward from the start and backward from the start plus the exit cells. Trapped nodes are reached and not home. They are grouped over the kit's edges, either way, into `ReachReport.Pocket`s (KIT_TRAP finding, rooms, ways in as "room col,row -> room col,row", bench). A group of song surfaces only is skipped.
+- **Exits.** `ReachKitCheck.run` runs the kits latest first. For each milestone a kit lacks whose listed next kit (`ReachKits.next`, exactly one more milestone) was already run, the surfaces in that milestone's room that the next kit gets home from become exits, but only when the world gives the milestone today. `ReachKitCheck.given` requires a restored guardian that `ReachGrid.guardians` places in the milestone's room; the loader reads guardians from the rooms' contents (`bugs/the-kit-check-counts-a-guardian-arena-as-an-exit-before-the-guardian-exists`). Beating a guardian inside a pocket is a way out, and only that guardian's.
+- **Tests.** `reach_kit_check_test` (pure): a 6-row pit traps the base kit, and neither the double jump nor wall climb is trapped; a bench does not make a pocket safe; a barrier holds back the kit without its fact; woods_deep's shape (a pool under a 2-row tunnel) stops the base kit and lets a Redoma kit down the hole; root bridges by width; sealed doors; a milestone room as exit. `reach_kits_test`: the order and the gifts. `room_kit_test` (world): allowlist with kit and reason, no stale entry, every kit reaches what its earlier kits reach, the fences, the chimney barrier, the root wall keeping Redoma out of the root caves, the lake kit out of the Caldera.
+
+**Consequences.**
+- The union audit's errors are unchanged. After the woods_deep fixes it has 362 surfaces and 64 findings: woods_canopy's DEAD_END_POCKET split in two, because the root wall is an anchor.
+- The kit check takes about 17 s headless for eleven kits. `room_kit_test` loads the world again.
+- **First run.** One pocket, at woods_deep's pit, for +Memorina and +Lake (`bugs/the-woods-deep-pit-shaft-traps-a-kit-without-the-double-jump`); both fixed the same day. woods_deep col 44 opens at rows 28-29 (orchestrator call), and a root wall (FactBarrier on the new `knows_root.tres`) stands before the hole. User, 2026-10-14: "Root wall that opens with Enraizar (Recommended)". The kit check now finds 0 traps, and the allowlist holds no KIT_TRAP entry.
+- **The union cannot see a kit-only step.** A stone step at (43,30) also fixed +Memorina, but the union flagged it LEADS_NOWHERE, because the union holds every song. A future escape ledge for an early kit will need an allowlist entry, or a kit-aware LEADS_NOWHERE.
+- **Not modelled.** A mover's rest floor without its song: the base kit loses a hung lowering platform, so the check leans to false traps (visible errors), but a rest floor that leads into a trap would be missed. Vendaval's extra reach: a natural current carries every kit, and orchard_windy_gap's 20-cell chasm "clears" without the gale. Timing. Fragments found apart from their guardian: each fragment comes with its guardian's milestone.
+- **GRD-04** appends `Enums.Guardian` members for autumn and summer. Give those milestones `restored_guardians` then; `all_guardians_restored.tres` will stop holding at +both.

@@ -47,3 +47,6 @@ func test_the_shipped_facts_load() -> void:
 	assert_int(memorina.kind).is_equal(SaveFact.Kind.ITEM)
 	assert_int(memorina.index).is_equal(Enums.PlayerItem.MEMORINA)
 	assert_int(everyone.kind).is_equal(SaveFact.Kind.ALL_GUARDIANS_RESTORED)
+	var root := load("res://resources/save_facts/knows_root.tres") as SaveFact
+	assert_int(root.kind).is_equal(SaveFact.Kind.SONG)
+	assert_int(root.index).is_equal(Enums.Song.ROOT)

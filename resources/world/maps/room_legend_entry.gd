@@ -40,6 +40,11 @@ enum ReachRole {
 	ICE,
 	## ENTITY: a stair joining two feet cells both ways; its root script answers `reach_ends(cell)`.
 	STAIR,
+	## ENTITY: worth reaching, and a wall to a kit until what opens it holds; its root script answers
+	## `reach_wall_cells(map, at)`, and `reach_needs()` when a save fact opens it (else a ReachPuzzles entry).
+	GATE,
+	## ENTITY: a bench: worth reaching, and where a kit trap holding it respawns Ivo inside.
+	BENCH,
 }
 
 ## Where in its cell an ENTITY's origin goes.

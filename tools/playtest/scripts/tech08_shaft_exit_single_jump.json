@@ -1,0 +1,21 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 5,
+ "locale": "en",
+ "player_position": [-3088, 288],
+ "steps": [
+  {"t": 1.0, "log": "bank"},
+  {"t": 1.0, "screenshot": "01_shaft_bank"},
+  {"t": 1.2, "action": "jump", "pressed": true},
+  {"t": 1.4, "action": "move_right", "pressed": true},
+  {"t": 1.5, "log": "rising"},
+  {"t": 1.65, "action": "jump", "pressed": false},
+  {"t": 1.9, "action": "move_right", "pressed": false},
+  {"t": 2.2, "log": "landed"},
+  {"t": 2.2, "screenshot": "02_shaft_exit_block_top"},
+  {"t": 2.4, "action": "move_right", "pressed": true},
+  {"t": 3.0, "action": "move_right", "pressed": false},
+  {"t": 3.4, "log": "corridor"},
+  {"t": 3.4, "screenshot": "03_shaft_exit_corridor"}
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 4,
+ "locale": "en",
+ "known_songs": [6],
+ "player_position": [-3176, 288],
+ "steps": [
+  {"t": 1.0, "action": "move_left", "pressed": true},
+  {"t": 1.05, "action": "move_left", "pressed": false},
+  {"t": 1.6, "log": "east_bank"},
+  {"t": 1.6, "screenshot": "05_root_wall_open_with_enraizar"}
+ ]
+}

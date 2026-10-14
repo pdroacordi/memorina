@@ -1,0 +1,110 @@
+[gd_resource type="Resource" script_class="ReachKits" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://resources/world/maps/reach_kits.gd" id="1_kits"]
+[ext_resource type="Script" path="res://resources/world/maps/reach_kit.gd" id="2_kit"]
+[ext_resource type="Script" path="res://resources/world/maps/reach_milestone.gd" id="3_milestone"]
+
+[sub_resource type="Resource" id="sword"]
+script = ExtResource("3_milestone")
+id = &"sword"
+items = Array[int]([0])
+note = "Held from the start in the base kit (user, 2026-10-14: base = movement and sword); STORY-02 places it later. It opens no gate."
+
+[sub_resource type="Resource" id="memorina"]
+script = ExtResource("3_milestone")
+id = &"memorina"
+room = &"lighthouse_interior"
+items = Array[int]([1])
+note = "The mentor hands it over in the lighthouse (design 04 section 3.3); not yet given in the world (STORY-03). Opens the west fence and the river trail (owns_memorina.tres)."
+
+[sub_resource type="Resource" id="bloom"]
+script = ExtResource("3_milestone")
+id = &"bloom"
+room = &"bloom_hollow"
+skills = Array[int]([0])
+songs = Array[int]([6, 7])
+restored_guardians = Array[int]([1])
+note = "Bloom Guardian: Enraizar + double jump; the Chuva fragment (design 04 section 2), modelled as found with the guardian."
+
+[sub_resource type="Resource" id="frost"]
+script = ExtResource("3_milestone")
+id = &"frost"
+room = &"lake_frost_arena"
+skills = Array[int]([2])
+songs = Array[int]([0, 1])
+restored_guardians = Array[int]([0])
+note = "Frost Guardian: Congelar + roll; the Redoma fragment (design 04 section 2), modelled as found with the guardian. The roll gates nothing."
+
+[sub_resource type="Resource" id="autumn"]
+script = ExtResource("3_milestone")
+id = &"autumn"
+room = &"orchard_arena"
+skills = Array[int]([1])
+songs = Array[int]([4, 5])
+note = "Autumn guardian: Soltar + wall climb; the Vendaval fragment (design 04 sections 1 and 2). Not built (GRD-04): Enums.Guardian has no member for it, so no restored flag."
+
+[sub_resource type="Resource" id="summer"]
+script = ExtResource("3_milestone")
+id = &"summer"
+room = &"caldera_arena"
+songs = Array[int]([2, 3])
+note = "Summer guardian: Sombra; the Solsticio fragment (design 04 section 2). Not built (GRD-04): Enums.Guardian has no member for it, so no restored flag."
+
+[sub_resource type="Resource" id="kit_base"]
+script = ExtResource("2_kit")
+id = &"base"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword")])
+
+[sub_resource type="Resource" id="kit_memorina"]
+script = ExtResource("2_kit")
+id = &"memorina"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina")])
+
+[sub_resource type="Resource" id="kit_woods"]
+script = ExtResource("2_kit")
+id = &"woods"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom")])
+
+[sub_resource type="Resource" id="kit_lake"]
+script = ExtResource("2_kit")
+id = &"lake"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("frost")])
+
+[sub_resource type="Resource" id="kit_both"]
+script = ExtResource("2_kit")
+id = &"both"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("frost")])
+
+[sub_resource type="Resource" id="kit_woods_orchards"]
+script = ExtResource("2_kit")
+id = &"woods_orchards"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("autumn")])
+
+[sub_resource type="Resource" id="kit_woods_orchards_caldera"]
+script = ExtResource("2_kit")
+id = &"woods_orchards_caldera"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("autumn"), SubResource("summer")])
+
+[sub_resource type="Resource" id="kit_lake_caldera"]
+script = ExtResource("2_kit")
+id = &"lake_caldera"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("frost"), SubResource("summer")])
+
+[sub_resource type="Resource" id="kit_both_caldera"]
+script = ExtResource("2_kit")
+id = &"both_caldera"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("summer")])
+
+[sub_resource type="Resource" id="kit_orchards"]
+script = ExtResource("2_kit")
+id = &"orchards"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("autumn")])
+
+[sub_resource type="Resource" id="kit_caldera"]
+script = ExtResource("2_kit")
+id = &"caldera"
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("autumn"), SubResource("summer")])
+
+[resource]
+script = ExtResource("1_kits")
+kits = Array[ExtResource("2_kit")]([SubResource("kit_base"), SubResource("kit_memorina"), SubResource("kit_woods"), SubResource("kit_lake"), SubResource("kit_both"), SubResource("kit_woods_orchards"), SubResource("kit_woods_orchards_caldera"), SubResource("kit_lake_caldera"), SubResource("kit_both_caldera"), SubResource("kit_orchards"), SubResource("kit_caldera")])

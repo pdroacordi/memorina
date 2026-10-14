@@ -1,6 +1,11 @@
 ; woods_deep.room - the deep woods: giant trunks and branch ledges over a root mound (design 04 section 3.4).
 ; Gates: the canopy opening (cols 48-55) is 7 rows above the row-4 branch (double jump); the hole to the root
 ; caves sits in a pocket past a water pit under a low stone ceiling (Enraizar bridge, earth banks cols 32/40).
+; The shaft (cols 42-43) opens east at rows 28-29 onto the block top (cols 44-46, row 30), so a single jump climbs out
+; of the pit's east bank (TECH-08 kit check; bugs/the-woods-deep-pit-shaft-traps-a-kit-without-the-double-jump).
+; The root wall on the west bank (col 32, rows 30-32, in a notch of the slab) opens with Enraizar, so Redoma alone never
+; reaches the hole. User, 2026-10-14: "Root wall that opens with Enraizar (Recommended)": "A tangle of roots before the
+; hole that only opens once Ivo knows Enraizar, so he can't drop in without the song that brings him back."
 
 [room]
 origin = 0, 0
@@ -35,11 +40,11 @@ tileset = spring_woods
 #####...................................................####
 #####...................................................####
 #####.........############################..............####
-#.............##########SSSSSSSS##########..#...........####
-............############........##########..#...............
-............############........SSSSSSSSSS..###.............
+#.............##########SSSSSSSS##########..............####
+............############........##########..................
+............############.........SSSSSSSSS..###.............
 ..........##############....................###.............
-..........##############....................###.............
+..........##############........X...........###.............
 ############################....#.......####################
 ############################....#.......####################
 ############################....############################
@@ -119,3 +124,6 @@ tileset = spring_woods
 .......................######################...............
 ...........................##############...................
 ...........................##############...................
+
+[entities]
+32,32 = {"requires": "res://resources/save_facts/knows_root.tres", "art": "res://assets/sprites/world/props/spring_woods/root_wall.png"}

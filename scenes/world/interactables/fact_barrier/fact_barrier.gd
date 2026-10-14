@@ -20,6 +20,20 @@ func _ready() -> void:
 func is_open_for(data: PlayerData) -> bool:
 	return requires != null and requires.holds(data)
 
+## Map cells its closed body fills, placed at `at` (map px), for the reachability audit's kit check. Reads only
+## authored values.
+func reach_wall_cells(_map: RoomMap, at: Vector2) -> Array[Vector2i]:
+	var shape := get_node("CollisionShape2D") as CollisionShape2D
+	var box := (shape.shape as RectangleShape2D).size
+	return MapCells.box_cells(Rect2(at + shape.position - box * 0.5, box))
+
+## The facts that open it, for the kit check; none when `requires` is unset, which ReachKit.opened_by reads as never.
+func reach_needs() -> Array[SaveFact]:
+	var facts: Array[SaveFact] = []
+	if requires != null:
+		facts.append(requires)
+	return facts
+
 func _refresh() -> void:
 	var open := is_open_for(SaveSystem.player_data)
 	# Deferred: progress can change inside a physics callback.

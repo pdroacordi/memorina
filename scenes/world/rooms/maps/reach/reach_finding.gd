@@ -19,6 +19,8 @@ enum Kind {
 	OUTSIDE_ROOM,
 	## Side or bottom edge cells Ivo's body can fill that open onto an invisible wall.
 	OPEN_EDGE,
+	## Surfaces a milestone kit reaches from the start and cannot return from with that kit (ReachAudit.run_kit).
+	KIT_TRAP,
 }
 
 ## The board mark per kind, drawn on a surface's feet row. Never a legend symbol (reach_grid_test).
@@ -31,12 +33,15 @@ const MARKS := {
 	Kind.UNPAIRED_DOOR: "?",
 	Kind.OUTSIDE_ROOM: "x",
 	Kind.OPEN_EDGE: "|",
+	Kind.KIT_TRAP: ">",
 }
 
 var kind: Kind
 var error: bool
 ## The room holding `cell`, its scene file name.
 var room: StringName
+## The ReachKit id a KIT_TRAP was found for; empty for every other kind.
+var kit: StringName
 ## The feet cell at the surface's left end, world cells.
 var cell: Vector2i
 ## `cell` from the room's top-left: the column and row in its `.room` file.
@@ -56,4 +61,5 @@ func kind_name() -> String:
 	return Kind.keys()[kind]
 
 func _to_string() -> String:
-	return "%s %s at %s,%s (%s)" % [kind_name(), room, local.x, local.y, "error" if error else "warning"]
+	var by := "" if kit.is_empty() else " for kit %s" % kit
+	return "%s%s %s at %s,%s (%s)" % [kind_name(), by, room, local.x, local.y, "error" if error else "warning"]

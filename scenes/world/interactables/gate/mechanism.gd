@@ -66,6 +66,15 @@ func reach_cells(_map: RoomMap, at: Vector2) -> Array[Vector2i]:
 				cells.append(cell)
 	return cells
 
+## Map cells a gate's closed body fills, placed at `at` (map px), for the reachability audit's kit check; none for a
+## floor (wider than tall) or a gate that starts open. Reads only authored values.
+func reach_wall_cells(_map: RoomMap, at: Vector2) -> Array[Vector2i]:
+	var shape := get_node("CollisionShape2D") as CollisionShape2D
+	var box := (shape.shape as RectangleShape2D).size
+	if box.y < box.x or start_moved:
+		return []
+	return MapCells.box_cells(Rect2(at + shape.position - box * 0.5, box))
+
 func _physics_process(delta: float) -> void:
 	if is_equal_approx(_progress, _target):
 		return

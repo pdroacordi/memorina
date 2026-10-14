@@ -16,9 +16,20 @@ enum Support {
 }
 
 var surfaces: Array[Surface] = []
-## Per ReachLattice.Tier, 1 for each surface the start reaches.
+## Per ReachLattice.Tier, 1 for each surface the start reaches; empty for a kit run (`reach`).
 var reached: Array[PackedByteArray] = []
 var findings: Array[ReachFinding] = []
+## A kit run's ReachKit id; empty for the union run.
+var kit: StringName
+## A kit run: 1 for each surface the kit reaches, and for each it can return from (to the start or an exit).
+var reach := PackedByteArray()
+var home := PackedByteArray()
+## A kit run: each group of surfaces it reaches and cannot return from, with the ways in.
+var pockets: Array[Pocket] = []
+## A kit run: the rooms of the exits it reached (a later kit's milestone room that kit gets home from).
+var exits: Array[StringName] = []
+## A kit run: every room a surface or hold it reaches has a cell in, in first-reached node order.
+var rooms: Array[StringName] = []
 
 func count(kind: ReachFinding.Kind, error: bool) -> int:
 	var total := 0
@@ -33,6 +44,16 @@ func errors() -> Array[ReachFinding]:
 		if finding.error:
 			found.append(finding)
 	return found
+
+## Surfaces a kit reaches and cannot return from, joined by its jumps and falls, and its KIT_TRAP finding.
+class Pocket:
+	var finding: ReachFinding
+	## Every room a surface or hold of the pocket is in.
+	var rooms: Array[StringName] = []
+	## Each way in: "<room> <col>,<row> -> <room> <col>,<row>", from the side the kit returns from.
+	var entrances := PackedStringArray()
+	## Whether a bench stands in it, so a death respawns Ivo inside.
+	var bench := false
 
 ## A maximal run of feet cells Ivo stands on, in one row.
 class Surface:
