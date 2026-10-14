@@ -33,6 +33,16 @@ const GROUND_ATTACKS: Array[StringName] = [
 ]
 ## Measured on the head and torso (rows 40-69), above the air slash's trail and the pogo blade.
 const AIR_ATTACKS: Array[StringName] = [&"jump_attack", &"fall_attack", &"air_downwards_attack"]
+## Sword clips whose Hitbox reaches forward, and the pogo, whose Hitbox reaches below the feet.
+const FORWARD_SWINGS: Array[StringName] = [
+	&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in", &"run_attack_swing_out", &"jump_attack",
+	&"fall_attack",
+]
+const DOWNWARD_SWINGS: Array[StringName] = [&"air_downwards_attack"]
+## Game px: how far a keyed Hitbox edge may sit from the drawn steel's (the keys are rounded to 4 decimals).
+const BOX_TOLERANCE := 1.0
+## Game px: the frame's top-left corner in Ivo's space (Sprite2D centred at (0, -32)).
+const FRAME_ORIGIN := Vector2(-64, -96)
 ## Exempt from centring: they face the wall and put the front on the capsule edge instead.
 const WALL: Array[StringName] = [&"wall_landing", &"wall_slide"]
 ## The blade's colours, left out of an attack's body centroid.
@@ -126,6 +136,22 @@ func test_attack_bodies_hold_still_between_frames() -> void:
 				problems.append("%s frames %d-%d: body moves %.1f px" % [clip, frames[i - 1], frames[i], shift])
 	assert_array(Array(problems)).is_empty()
 
+## The Hitbox each sword clip keys is the box its hit-window frames' steel covers: a forward swing from the body centre
+## to the steel's front, as high as the steel in front of the centre; the pogo as wide as the steel, from the feet to
+## the blade's point (features/ivo-sword-attacks-from-key-poses, CORE-11).
+func test_every_swing_reaches_exactly_as_far_as_its_drawn_steel() -> void:
+	var problems := PackedStringArray()
+	for clip: StringName in FORWARD_SWINGS + DOWNWARD_SWINGS:
+		var forward := clip in FORWARD_SWINGS
+		var steel := _window_steel(clip, forward)
+		var expected := Rect2(0.0, steel.position.y, steel.end.x, steel.size.y) if forward \
+				else Rect2(steel.position.x, 0.0, steel.size.x, steel.end.y)
+		for box: Rect2 in _window_boxes(clip):
+			if not _same_rect(box, expected):
+				problems.append("%s: Hitbox %s, steel asks %s" % [clip, box, expected])
+				break
+	assert_array(Array(problems)).is_empty()
+
 func test_wall_clips_meet_the_wall_at_the_capsule_edge() -> void:
 	var problems := PackedStringArray()
 	for clip: StringName in WALL:
@@ -198,6 +224,69 @@ func _key_values(clip: StringName, path: NodePath) -> Array:
 	for key: int in animation.track_get_key_count(track):
 		values.append(animation.track_get_key_value(track, key))
 	return values
+
+## The value a clip's track (or RESET's, if the clip keys none) holds at `at` s, read as its last key at or before.
+func _keyed_at(clip: StringName, path: NodePath, at: float, fallback: Variant) -> Variant:
+	for animation: Animation in [_library.get_animation(clip), _library.get_animation(&"RESET")]:
+		var track := animation.find_track(path, Animation.TYPE_VALUE)
+		if track < 0:
+			continue
+		var value: Variant = animation.track_get_key_value(track, 0)
+		for key: int in animation.track_get_key_count(track):
+			if animation.track_get_key_time(track, key) <= at + 0.0005:
+				value = animation.track_get_key_value(track, key)
+		return value
+	return fallback
+
+## The times, in s, sampled each physics frame while the clip keeps the Hitbox monitoring.
+func _window_times(clip: StringName) -> Array[float]:
+	var animation := _library.get_animation(clip)
+	var times: Array[float] = []
+	var at := 0.001
+	while at < animation.length:
+		if _keyed_at(clip, ^"Hitbox:monitoring", at, false):
+			times.append(at)
+		at += 1.0 / 60.0
+	return times
+
+## The steel shown during the hit window, in Ivo's space; a forward swing counts only the steel in front of his centre.
+func _window_steel(clip: StringName, forward: bool) -> Rect2:
+	var steel := {}
+	for colour: Color in STEEL:
+		steel[colour.to_rgba32() | 0xff] = true
+	var frames := {}
+	for at: float in _window_times(clip):
+		frames[_keyed_at(clip, ^"Sprite2D:frame", at, 0)] = true
+	var found := Rect2()
+	var any := false
+	for frame: int in frames:
+		var data := _image(clip).get_region(Rect2i(frame * FRAME, 0, FRAME, FRAME)).get_data()
+		for i: int in range(0, data.size(), 4):
+			if data[i + 3] == 0 or not steel.has((data[i] << 24) | (data[i + 1] << 16) | (data[i + 2] << 8) | 0xff):
+				continue
+			var pixel := Rect2(FRAME_ORIGIN + Vector2((i >> 2) % FRAME, (i >> 2) / FRAME), Vector2.ONE)
+			if forward and pixel.position.x < 0.0:
+				continue
+			found = found.merge(pixel) if any else pixel
+			any = true
+	return found
+
+## The keyed Hitbox capsule's bounding box at each sampled moment of the hit window, in Ivo's space facing east.
+func _window_boxes(clip: StringName) -> Array[Rect2]:
+	var node := _ivo.get_node(^"Hitbox/CollisionShape2D") as CollisionShape2D
+	var capsule := node.shape as CapsuleShape2D
+	var boxes: Array[Rect2] = []
+	for at: float in _window_times(clip):
+		var radius: float = _keyed_at(clip, ^"Hitbox/CollisionShape2D:shape:radius", at, capsule.radius)
+		var scale: Vector2 = _keyed_at(clip, ^"Hitbox/CollisionShape2D:scale", at, node.scale)
+		var centre: Vector2 = _keyed_at(clip, ^"Hitbox/CollisionShape2D:position", at, node.position)
+		var half := Vector2(radius * scale.x, capsule.height * scale.y / 2.0)
+		boxes.append(Rect2(centre - half, half * 2.0))
+	return boxes
+
+func _same_rect(a: Rect2, b: Rect2) -> bool:
+	return absf(a.position.x - b.position.x) <= BOX_TOLERANCE and absf(a.position.y - b.position.y) <= BOX_TOLERANCE \
+			and absf(a.end.x - b.end.x) <= BOX_TOLERANCE and absf(a.end.y - b.end.y) <= BOX_TOLERANCE
 
 func _texture(clip: StringName) -> Texture2D:
 	return _key_values(clip, ^"Sprite2D:texture")[0]

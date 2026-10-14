@@ -18,8 +18,7 @@ const ESCAPE_MIN_TIME := 0.9
 const ESCAPE_RELEASE_TIME := 0.3
 ## Fraction of the tallest attack height used as the reach release threshold.
 const REACH_RELEASE := 0.8
-## Comfort-distance multipliers for entering give-ground and close modes.
-const COMFORT_NEAR := 0.7
+## Comfort-distance multiplier for entering close mode.
 const COMFORT_FAR := 1.3
 
 ## What it is doing about the spacing while a cooldown runs.
@@ -43,6 +42,7 @@ var active: bool = false
 var cooldown_scale: float = 1.0
 ## Spacing and pacing, pushed in from GuardianStats by the guardian.
 var comfort_distance: float = 140.0
+var give_ground_distance: float = 98.0
 var pace_time: float = 0.9
 var pace_speed: float = 0.5
 var step_out_speed: float = 1.7
@@ -267,7 +267,7 @@ func _update_spacing_mode(distance: float) -> void:
 			if distance <= comfort_distance:
 				_spacing = PACE
 		_:
-			if distance < comfort_distance * COMFORT_NEAR:
+			if distance < give_ground_distance:
 				_spacing = GIVE_GROUND
 			elif distance > comfort_distance * COMFORT_FAR:
 				_spacing = CLOSE

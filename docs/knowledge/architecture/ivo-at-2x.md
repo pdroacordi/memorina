@@ -6,7 +6,7 @@ status: active
 tags: [ivo, art, animation, pixellab, sprite, collision, jump-reach]
 related: [systems/animation, systems/art-pipeline, systems/props, gotchas/sprite-frame-out-of-bounds-on-clip-switch, gotchas/animationtree-reset-track-overwrites-script-writes, gotchas/zigzag-ledges-two-rows-apart-seal-a-shaft, bugs/off-centre-sprite-sheet-jumps-on-flip, architecture/room-reachability-audit]
 created: 2026-10-11
-updated: 2026-10-13
+updated: 2026-10-14
 source_files:
   - scenes/characters/ivo/ivo.tscn
   - tools/art/cut_inhabitant.py
@@ -136,3 +136,4 @@ What changed from the decision above, and why:
   - **Running attack.** `build_ivo_attacks.py` rebuilt `ivo_attack_run.png` on the new legs with the attack poses' own faces (`ivo_attack_ground`, `ivo_attack_air` and `ivo_attack_down` rebuild byte for byte). It keeps the run's flight frames (sheet frames 3, 4 and 7) so the stride does not hitch under the slash. Its upper body rides the run's bob, so the steel in the hit windows rose 4-8 px and the Hitbox keys moved with it (table above).
   - **Tests.** `ivo_sheet_test` keeps every check and adds `FLIGHT`: the run's frames 3, 4 and 7 and the running attack's frames 3, 4 and 7 must be 1-3 art px above the floor, every other grounded frame on it. The running attack is centred on its head and torso (rows 40-69), since its legs are the run's stride.
   - **Calls.** PixelLab: 5 `animate3` takes, each printing "usage: 0,0000 generations" (`balance` printed "0,00 usd" before; the user: "Codex and I'll approve as many pixel lab requests as you want", 2026-10-13). Codex: 1 image (the key-pose sheet).
+- **Seventh round: a longer reach** (CORE-11, user, 2026-10-14, verbatim): "can we make the attack range a bit bigger? Altering a bit the sprite"; then "About +25% (Recommended)": "The swing's smear and blade arc drawn about 12-14 px longer, and the hitbox follows the drawn steel. Enemy and guardian spacing retuned so fights stay fair (the earlier tuning matched Ivo's drawn reach)." Only the hit-window smears changed: each widens forward into an ellipse and ends 12 px further on (the pogo streak 6 px deeper), at the same height; poses, faces, bodies, frame size and clip lengths are unchanged. The boxes in the table above are superseded: slash 0..60, chop 0..52, both running swings 0..52, air slash 0..50, pogo 0..28 below the feet (`features/ivo-sword-attacks-from-key-poses`, which holds the full table; `playtests/2026-10-14-core11-sword-reach`).

@@ -31,19 +31,27 @@ LEAN = 1.7  # > 1 moves a smear's thickest point late in the swing (t ** LEAN pe
 # A smear: an arc of `thick` art px at most, from `start` to `end` degrees (0 forward, 90 down), `inner` art px from
 # `pivot` (art px in the frame, the shoulder of the pose it is drawn on); or a vertical streak from `pivot` down
 # `length` art px. Style "plain" erases the blade and paints over the pose; "lead" (thin and bright, the blade arriving)
-# and "trail" (the whole sweep fading behind the blade) keep the blade and paint only behind the body.
+# and "trail" (the whole sweep fading behind the blade) keep the blade and paint only behind the body. An arc never
+# passes below the floor row. `reach` widens an arc in front of its pivot into an ellipse; the Hitbox keys must follow
+# the drawn steel (ivo_sheet_test).
 SMEARS = {
-    "slash": {"kind": "arc", "pivot": (36, 29), "inner": 9, "thick": 11, "start": -150, "end": 12, "style": "plain"},
-    "chop": {"kind": "arc", "pivot": (35, 30), "inner": 8, "thick": 10, "start": -100, "end": 80, "style": "plain"},
-    "air": {"kind": "arc", "pivot": (35, 32), "inner": 8, "thick": 10, "start": -150, "end": 25, "style": "plain"},
-    "pogo": {"kind": "streak", "pivot": (33, 44), "length": 16, "thick": 5, "style": "plain"},
+    "slash": {"kind": "arc", "pivot": (36, 29), "inner": 9, "thick": 11, "start": -150, "end": 12, "style": "plain",
+              "reach": 1.5},
+    "chop": {"kind": "arc", "pivot": (35, 30), "inner": 8, "thick": 10, "start": -100, "end": 80, "style": "plain",
+             "reach": 1.36},
+    "air": {"kind": "arc", "pivot": (35, 32), "inner": 8, "thick": 10, "start": -150, "end": 25, "style": "plain",
+            "reach": 1.32},
+    "pogo": {"kind": "streak", "pivot": (33, 44), "length": 19, "thick": 5.2, "style": "plain"},
     "slash_rise": {"kind": "arc", "pivot": (36, 24), "inner": 8, "thick": 4, "start": -165, "end": -75,
                    "style": "lead", "erase": True},
-    "slash_lead": {"kind": "arc", "pivot": (36, 29), "inner": 13, "thick": 5, "start": -85, "end": -4, "style": "lead"},
+    "slash_lead": {"kind": "arc", "pivot": (36, 29), "inner": 13, "thick": 5, "start": -85, "end": -4, "style": "lead",
+                   "reach": 1.6},
     "slash_trail": {"kind": "arc", "pivot": (35, 32), "inner": 8, "thick": 10, "start": -150, "end": 40,
-                    "style": "trail"},
-    "chop_lead": {"kind": "arc", "pivot": (35, 30), "inner": 12, "thick": 5, "start": -110, "end": 38, "style": "lead"},
-    "chop_trail": {"kind": "arc", "pivot": (36, 35), "inner": 7, "thick": 9, "start": -150, "end": 72, "style": "trail"},
+                    "style": "trail", "reach": 1.33},
+    "chop_lead": {"kind": "arc", "pivot": (35, 30), "inner": 12, "thick": 5, "start": -110, "end": 38, "style": "lead",
+                  "reach": 1.36},
+    "chop_trail": {"kind": "arc", "pivot": (36, 35), "inner": 7, "thick": 9, "start": -150, "end": 72, "style": "trail",
+                   "reach": 1.39},
 }
 # One entry per frame: (pose, smear or None, run frame for the legs or None).
 SWING_1 = [("windup_slash", None), ("windup_slash", None), ("strike_slash", None), ("strike_slash", "slash"),
@@ -108,7 +116,13 @@ def paint_smear(art, smear):
                 if d <= width / 2:
                     art[y, x] = WHITE + (255,) if d <= width / 4 else LIGHT + (255,)
                 continue
+            if y > FLOOR:
+                continue
             dx, dy = x + 0.5 - px, y + 0.5 - py
+            if dx > 0:
+                # In front of the pivot the arc is an ellipse `reach` times as wide: the sweep reaches further forward
+                # without rising higher over his head.
+                dx /= smear.get("reach", 1.0)
             angle = math.degrees(math.atan2(dy, dx))
             t = (angle - smear["start"]) / (smear["end"] - smear["start"])
             if not 0 <= t <= 1:

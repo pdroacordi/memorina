@@ -63,6 +63,28 @@ func test_after_the_swing_it_faces_the_player_again() -> void:
 	assert_bool(_ai.is_swinging()).is_false()
 	assert_float(_ai.facing_intent()).is_equal(-1.0)
 
+## Spacing gives ground only under give_ground_distance, not at the comfort distance's fraction
+## (systems/guardians, "Comfort distances follow Ivo's reach").
+func test_it_gives_ground_only_under_its_give_ground_distance() -> void:
+	_attack.lunge_speed = 0.0
+	_attack.attack_range = 72.0
+	_attack.cooldown = 1.4
+	_ai.comfort_distance = 114.0
+	_ai.give_ground_distance = 70.0
+	_place_player(71.0)
+	_ai.tick(STEP)
+	_tick_until_swinging()
+	var elapsed := 0.0
+	while _ai.is_attacking() and elapsed < 2.0:
+		_ai.tick(STEP)
+		elapsed += STEP
+	_ai.tick(STEP)
+	assert_int(_ai._spacing).override_failure_message("backed off at 71 px after its own swing").is_not_equal(GuardianAI.GIVE_GROUND)
+	_place_player(65.0)
+	_ai.tick(STEP)
+	assert_int(_ai._spacing).is_equal(GuardianAI.GIVE_GROUND)
+	assert_float(_ai.direction).is_less(0.0)
+
 func _place_player(dx: float) -> void:
 	_player.global_position = _body.global_position + Vector2(dx, 0.0)
 

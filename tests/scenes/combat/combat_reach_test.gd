@@ -1,7 +1,7 @@
 class_name CombatReachTest extends GdUnitTestSuite
 
 ## Every attacker reaches what its data commits it to, measured on the boxes its clips key
-## (docs/knowledge/systems/guardians.md, "A move's attack_range"; architecture/ivo-at-2x, CORE-09).
+## (docs/knowledge/systems/guardians.md, "A move's attack_range"; architecture/ivo-at-2x, CORE-09, CORE-11).
 
 const IVO_SCENE := "res://scenes/characters/ivo/ivo.tscn"
 const BRUTE_SCENE := "res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn"
@@ -58,6 +58,35 @@ func test_the_standing_combo_lands_both_swings_on_a_parked_brute() -> void:
 	assert_float(_reach(chop, target)).override_failure_message(
 		"the chop reaches %.1f px; the brute is at %.1f after swing 1's shove" % [_reach(chop, target), stop + slide]).is_greater_equal(stop + slide)
 
+## A guardian's comfort point is outside Ivo's longest swing; it gives ground before Ivo touches its contact box, but
+## not from where its main move (its most likely move that neither lunges nor leaps) was just thrown
+## (systems/guardians, "Comfort distances follow Ivo's reach").
+func test_every_guardian_keeps_its_comfort_point_outside_ivos_reach_and_gives_ground_only_close_in() -> void:
+	var swings: Array[Dictionary] = []
+	for clip: StringName in [&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in",
+			&"run_attack_swing_out", &"jump_attack"]:
+		swings.append(_hit_box(_ivo, (_ivo.get_node(^"AnimationPlayer") as AnimationPlayer).get_animation(clip)))
+	for path: String in GUARDIAN_SCENES:
+		var guardian := auto_free(_instance(path)) as Guardian
+		var hurtbox := _area_box(guardian, ^"Hurtbox")
+		var contact := _area_box(guardian, ^"ContactHitbox")
+		var reach := 0.0
+		for swing: Dictionary in swings:
+			# Its hurtbox may sit off centre and does not turn, so the far side counts.
+			for xform: Transform2D in [hurtbox.xform, Transform2D.FLIP_X * hurtbox.xform]:
+				reach = maxf(reach, _farthest(swing, {"shape": hurtbox.shape, "xform": xform}))
+		var touch := maxf(_farthest(contact, _ivo_hurtbox),
+				_farthest({"shape": contact.shape, "xform": Transform2D.FLIP_X * contact.xform}, _ivo_hurtbox))
+		var comfort := guardian.stats.comfort_distance
+		var give_ground := guardian.stats.give_ground_distance
+		var main := _main_move(guardian.stats.attacks)
+		assert_float(comfort).override_failure_message("%s's comfort point %.0f is inside Ivo's %.1f px reach" % [
+			guardian.name, comfort, reach]).is_greater_equal(reach)
+		assert_float(give_ground).override_failure_message("%s gives ground at %.1f, inside its %.1f px contact" % [
+			guardian.name, give_ground, touch]).is_greater(touch)
+		assert_float(give_ground).override_failure_message("%s gives ground at %.1f, so it backs off after its %s from %.0f" % [
+			guardian.name, give_ground, main.resource_path.get_file(), main.attack_range]).is_less(main.attack_range)
+
 ## The brute swings only where its swing lands, and parks where touching it does not hurt.
 func test_the_brute_swings_from_inside_its_reach_and_parks_clear_of_its_body() -> void:
 	var brute := auto_free(_instance(BRUTE_SCENE)) as BruteShadow
@@ -74,6 +103,16 @@ func test_slide_is_the_integral_of_the_decayed_push() -> void:
 ## A scene's root, never added to the tree, so no _ready runs.
 func _instance(path: String) -> Node:
 	return (load(path) as PackedScene).instantiate()
+
+## The highest-weight move that neither lunges nor leaps.
+func _main_move(attacks: Array[GuardianAttack]) -> GuardianAttack:
+	var main: GuardianAttack = null
+	for attack: GuardianAttack in attacks:
+		if attack.lunge_speed > 0.0 or attack.leap_impulse > 0.0:
+			continue
+		if main == null or attack.weight > main.weight:
+			main = attack
+	return main
 
 func _brute_stats(brute: BruteShadow) -> BruteShadowAttackStats:
 	return (brute.get_node(^"AI") as BruteShadowAI).attack_stats

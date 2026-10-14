@@ -28,6 +28,8 @@ extends Resource
 @export_group("Movement")
 ## Desired spacing in world pixels during cooldown; 0 disables pacing.
 @export var comfort_distance: float = 140.0
+## World px under which it gives ground during cooldown; keep it under its main move's attack_range (combat_reach_test).
+@export var give_ground_distance: float = 98.0
 ## Seconds a pacing direction lasts before it changes.
 @export var pace_time: float = 0.9
 ## Fraction of walking speed used while pacing (0..1).
