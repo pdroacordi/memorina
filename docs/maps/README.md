@@ -405,6 +405,7 @@ Scene `res://scenes/world/interactables/fact_barrier/fact_barrier.tscn`, anchore
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `requires` | SaveFact | **required** |
+| `art` | Texture2D | `null` |
 
 #### `d` - Draft
 

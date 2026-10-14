@@ -25,4 +25,4 @@ SSS....................................#
 ########################################
 
 [entities]
-1,8 = {"requires": "res://resources/save_facts/has_wall_climb.tres"}
+1,8 = {"requires": "res://resources/save_facts/has_wall_climb.tres", "art": "res://assets/sprites/world/props/wind_orchards/bramble_barrier.png"}

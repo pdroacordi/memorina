@@ -8,9 +8,6 @@ extends SceneTree
 ##       Y axis to its velocity (the gale racing outward)
 ##   assets/sprites/world/wind/wind_leaf.png    three 5x5 leaf frames (flat,
 ##       turned, edge-on) - tumbling is picking a frame, not rotating pixels
-##   assets/sprites/world/props/leaf_wall/leaf_wall.png  a 32x32 tile of those
-##       same leaves over dark twigs, wrapping at its edges so it tiles - the
-##       curtain Soltar drops is made of the leaves that fall from it
 ##   assets/sprites/world/wind/wind_gust.png   eight 32x12 frames of a gust line
 ##       sweeping across its frame and curling up at its head (Vendaval)
 ##   assets/sprites/world/wind/wind_dash.png   a 9x1 dash in two steps of
@@ -57,38 +54,13 @@ func _init() -> void:
 				elif row[x] == "d":
 					leaves.set_pixel(i * 5 + x, y, LEAF_DARK)
 	leaves.save_png(ProjectSettings.globalize_path(DIR.path_join("wind_leaf.png")))
-	_draw_leaf_wall()
 	_draw_gust()
 	_save_frames(DIR.path_join("wind_dash.png"), [DASH])
 	_save_frames(RAIN_DIR.path_join("rain_splash.png"), SPLASH_FRAMES)
 	_save_frames(RAIN_DIR.path_join("rain_water_splash.png"), WATER_SPLASH_FRAMES)
 	_draw_life_note()
-	print("Wrote the wind, leaf, leaf wall, gust, dash, splash and life note sprites")
+	print("Wrote the wind, leaf, gust, dash, splash and life note sprites")
 	quit()
-
-const WALL := "res://assets/sprites/world/props/leaf_wall/leaf_wall.png"
-const WALL_SIZE := 32
-const TWIG := Color("#2b1f16")
-const LEAF_COLORS := [Color("#b3702d"), Color("#8f4f22"), Color("#c98a3a"), Color("#6e3f1c")]
-
-func _draw_leaf_wall() -> void:
-	var wall := Image.create(WALL_SIZE, WALL_SIZE, false, Image.FORMAT_RGBA8)
-	wall.fill(TWIG)
-	var rng := RandomNumberGenerator.new()
-	rng.seed = 7
-	for i: int in 70:
-		var frame: Array = LEAF_FRAMES[rng.randi_range(0, LEAF_FRAMES.size() - 1)]
-		var color: Color = LEAF_COLORS[rng.randi_range(0, LEAF_COLORS.size() - 1)]
-		var at := Vector2i(rng.randi_range(0, WALL_SIZE - 1), rng.randi_range(0, WALL_SIZE - 1))
-		for y: int in frame.size():
-			var row: String = frame[y]
-			for x: int in row.length():
-				if row[x] == ".":
-					continue
-				var pixel := color if row[x] == "#" else color.darkened(0.35)
-				wall.set_pixel(posmod(at.x + x, WALL_SIZE), posmod(at.y + y, WALL_SIZE), pixel)
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(WALL.get_base_dir()))
-	wall.save_png(ProjectSettings.globalize_path(WALL))
 
 const RAIN_DIR := "res://assets/sprites/world/rain"
 const BRIGHT := Color(1, 1, 1, 1)

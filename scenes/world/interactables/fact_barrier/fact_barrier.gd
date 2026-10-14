@@ -4,11 +4,16 @@ extends StaticBody2D
 
 ## The save fact that opens it.
 @export var requires: SaveFact
+## Replaces the village gate where another fence fits the place; null keeps the gate.
+@export var art: Texture2D
 
 @onready var _shape: CollisionShape2D = $CollisionShape2D
+@onready var _sprite: Sprite2D = $Sprite2D
 
 
 func _ready() -> void:
+	if art != null:
+		_sprite.texture = art
 	SaveSystem.progress_changed.connect(_refresh)
 	_refresh()
 

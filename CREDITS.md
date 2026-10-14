@@ -26,6 +26,7 @@ Third-party art used in Memorina, with the terms it was taken under.
 
 - **The village gate tower** (`assets/sprites/world/props/village/gate_tower.png`, WORLD-30) - one Codex image generation (our bell tower and tavern fronts and our approved village concept the only references), kept in `tools/art/sources/village/gate_tower_codex.png` and cut by `tools/art/cut_single_prop.py` in the colours of those two fronts.
 - **The lake border cairn** (`assets/sprites/world/props/frozen_lake/border_cairn.png`, WORLD-33) - one Codex image generation (our frozen_lake stone tiles, lake_cliff_rock wall and gate tower the only references), kept in `tools/art/sources/frozen_lake/border_cairn_codex.png` and cut by `tools/art/cut_single_prop.py` in the colours of the lake's stone tiles and the fisher hut.
+- **The village gate, the orchard bramble barrier and the leaf curtain** (`assets/sprites/world/props/fact_barrier/fact_barrier.png`, `assets/sprites/world/props/wind_orchards/bramble_barrier.png`, `assets/sprites/world/props/wind_orchards/leaf_curtain.png`, WORLD-36) - one Codex image generation each (our village fence and gate tower, our orchard tiles and backdrop and the wind leaf the only references), kept in `tools/art/sources/village/` and `tools/art/sources/wind_orchards/` and cut by `tools/art/cut_single_prop.py`.
 - **Region fronts and doorways** (`assets/sprites/world/props/{spring_woods,threshold,frozen_lake,wind_orchards,frost_edge}/`, `assets/sprites/world/props/door/door_{passage,stairwell,hatch_up,hatch_down}.png`) - Codex image generation with our approved village concept and our own village fronts and door as the only references; kept in `tools/art/sources/{region_facades,doorways,stairwell}_codex.png` and cut by `tools/art/cut_facades.py`.
 - **Villagers and animals** (`assets/sprites/world/inhabitants/`) - stills from one Codex sheet (our concept and our village fronts as the only references, `tools/art/sources/village_people_codex.png`), idle loops PixelLab-generated (`animate-with-text-v3`) from those stills, cut by `tools/art/cut_inhabitant.py`.
 
@@ -65,7 +66,7 @@ Third-party art used in Memorina, with the terms it was taken under.
   Codex CLI's image tool from the prompts in `tools/art/prompts/`, then keyed, snapped to
   the world palette and packed by `tools/art/process_image.gd`. No third-party art was
   given as a reference. The village concept painting `tools/art/references/village_concept.png` (the
-  approved look, `tools/art/prompts/style.md`) is Codex image generation too. `leaf_wall.png`, the foreground placeholders in `assets/sprites/world/foreground/demo/` (drawn by a script, 2026-10-09), the wind gust and dash, the rain splashes and the HUD's
+  approved look, `tools/art/prompts/style.md`) is Codex image generation too. The foreground placeholders in `assets/sprites/world/foreground/demo/` (drawn by a script, 2026-10-09), the wind gust and dash, the rain splashes and the HUD's
   life note (`assets/sprites/hud/life/life_note.png`) are drawn by `tools/art/draw_procedural_sprites.gd`.
 
 ## Ivo
