@@ -17,9 +17,10 @@ const PACK_LOAD_EXEMPT: Array[String] = ["res://tools/art/extract_palette.gd"]
 ## Game px from a band's top within which a layer with nothing above may not run opaque, and the longest run allowed.
 const FLAT_TOP_ROWS := 16
 const FLAT_TOP_RUN := 32
-## Layers meant to end in a straight top line, with the reason.
+## Layers that end in a straight top line, with the reason; the next layer of the set must cover that line
+## (test_a_straight_topped_layer_is_covered_by_the_next).
 const FLAT_TOP_ALLOWED := {
-	"res://assets/sprites/world/background/basalt_caves/far.png": "caldera_crater: the basalt under the crater landscape starts on a straight line across the near layer's floor (WORLD-30)",
+	"res://assets/sprites/world/background/basalt_caves/far.png": "caldera_crater: the basalt wall under the crater landscape, covered by the crater rim (WORLD-32)",
 }
 
 
@@ -84,6 +85,8 @@ func test_the_region_sets_share_the_sky_and_the_horizon() -> void:
 		assert_object(backdrop).override_failure_message("%s is missing" % id).is_not_null()
 		assert_str(backdrop.layers[0].texture.resource_path).override_failure_message("%s: its sky" % id).is_equal(SHARED_SKY)
 		assert_float(backdrop.horizon_screen_y).override_failure_message("%s: its eye level" % id).is_equal(191.0)
+		# One sky scroll everywhere, 0 on y: the sky stands at eye level on any horizon (WORLD-33).
+		assert_vector(backdrop.layers[0].scroll_scale).override_failure_message("%s: its sky scroll" % id).is_equal(Vector2(0.05, 0.0))
 		for layer: BackdropLayer in backdrop.layers:
 			assert_int(layer.horizon_row).override_failure_message("%s: a horizon row" % id).is_equal(229)
 
@@ -103,6 +106,40 @@ func test_no_layer_with_nothing_above_is_cut_flat_at_its_top() -> void:
 				var run := _longest_opaque_run(image, band * strip.y, FLAT_TOP_ROWS)
 				if run > FLAT_TOP_RUN:
 					problems.append("%s band %d: %d opaque px in a row within the top %d rows" % [path, band, run, FLAT_TOP_ROWS])
+	assert_array(Array(problems)).is_empty()
+
+## The layer after a straight-topped one rides with it and continues it upward: same scroll and width, and from the
+## row over the straight top down to its own bottom, which runs on over the wall, it is the wall's pixels, so neither
+## the line nor a gap between the two quads shows (WORLD-32).
+func test_a_straight_topped_layer_is_covered_by_the_next() -> void:
+	var problems := PackedStringArray()
+	for backdrop: BackdropSet in _sets():
+		for i: int in backdrop.layers.size():
+			var wall := backdrop.layers[i]
+			if not FLAT_TOP_ALLOWED.has(wall.texture.resource_path) or wall.fill_above != BackdropLayer.Fill.NONE:
+				continue
+			var label := "%s layer %d" % [backdrop.resource_path, i]
+			if i + 1 >= backdrop.layers.size():
+				problems.append("%s: nothing covers its top" % label)
+				continue
+			var rim := backdrop.layers[i + 1]
+			var rim_strip := rim.strip_size()
+			var wall_strip := wall.strip_size()
+			# Rim rows over the wall's top row.
+			var above := rim.horizon_row - wall.horizon_row
+			if rim.scroll_scale != wall.scroll_scale or rim.repeat_x != wall.repeat_x or rim_strip.x != wall_strip.x 					or rim.band_count != wall.band_count or rim.band_of_season != wall.band_of_season or rim.distance != wall.distance:
+				problems.append("%s: the cover does not ride with it" % label)
+			if above < 1 or rim_strip.y <= above or rim.fill_below != BackdropLayer.Fill.NONE:
+				problems.append("%s: the cover does not run on over its top" % label)
+				continue
+			var rim_image := rim.texture.get_image()
+			var wall_image := wall.texture.get_image()
+			for row: int in range(above - 1, rim_strip.y):
+				var wall_row := posmod(row - above, wall_strip.y)
+				for x: int in rim_strip.x:
+					if rim_image.get_pixel(x, row) != wall_image.get_pixel(x, wall_row):
+						problems.append("%s: the cover breaks the wall's texture at x %d, row %d" % [label, x, row])
+						break
 	assert_array(Array(problems)).is_empty()
 
 func test_no_room_places_its_own_parallax_layers() -> void:

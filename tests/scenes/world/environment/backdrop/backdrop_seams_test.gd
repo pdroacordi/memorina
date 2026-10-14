@@ -14,8 +14,7 @@ const RING_LIMIT := "On one room's ring limit, which none of its frames crosses;
 const BELOW_FLOORS := "The seam continued straight down under both rooms' solid floors: no frame yields below them."
 const UNDER_FLOOR := "Under one room's solid floor, on the ring limit of the deeper room beside it, whose wall goes on down there: no resting frame reaches it; a glide between the two rooms shows the strip for about 0.15 s (about 9 frames, measured by the WORLD-28 re-review)."
 const PAST_WALLS := "The seam continued straight out past both rooms' solid end walls, with no room beyond: no frame yields there."
-const REGION_SKY := "Over two wall tops at a region border whose sets stand on two horizons (-1685 and -1301): a wall climb over the pillar shows a straight line where the shared sky's bands step by about 12 px (0.03 x 384) and the lake's far peaks stop. The user accepted this line until the region backdrops share one sky ('OK until skies match (Recommended)', 2026-10-13); the sky colours now match, the horizons do not."
-const REGION_TOPS := "Over two wall tops at a region border on one horizon: even at the highest frame (a wall climb onto the seam pillar and a jump, the frame capped at the ring, 160 px over the tops), no layer of either set but the shared sky reaches above the tops at the seam, and the shared sky is one texture on one horizon in the current region's season, so the line shows nothing (test_a_region_tops_cut_shows_only_the_shared_sky)."
+const REGION_TOPS := "Over two wall tops at a region border: even at the highest frame (a wall climb onto the seam pillar and a jump, the frame capped at the ring, 160 px over the tops), no layer of either set but the shared sky shows above the tops at the seam, or above the cover prop standing on them, and the shared sky is one texture with no vertical scroll, so it stands at eye level on any horizon, in the current region's season, and the line shows nothing (test_a_region_tops_cut_shows_only_the_shared_sky; WORLD-33)."
 const GATE_TOWER := "Over the village's border gate pillar: the gate tower (gate_tower.tscn, a prop on the pillar; 'Cover with a tall gate tower (Recommended)', user, 2026-10-13) covers the seam column from 178 px over the tops down into the pillar, past the highest frame Ivo reaches there (a wall climb onto the pillar and a jump, the frame capped at the ring, 160 px over the tops) (test_a_gate_tower_covers_its_cut)."
 const TRIAL_TOPS := "Over the wall tops between two debug trials (DebugTrials, F10) in two regions: a double jump from the seam pillar raises the frame about 50 px over the tops, where the two borrowed sets' far layers may stop on one line; the trials are test beds, not the game."
 const UNDER_FLOOR_REGION := "Under one room's solid floor, on the ring limit of the deeper room beside it in another region, whose wall goes on down there: no frame of either room reaches it, and a region border cuts instead of gliding."
@@ -46,7 +45,7 @@ const ALLOWED := {
 	"lake_high_wall|lake_shore ring: x -1280, y -1536..-1376": BELOW_FLOORS,
 	"lake_chasm|orchard_well ring: y -1696, x -3360..-3200": RING_LIMIT,
 	"lake_chasm|orchard_well ring: x -2400, y -1536..-1376": RING_LIMIT,
-	"lake_chasm|orchard_chasm_bridge ring: x -3200, y -2464..-2304": REGION_SKY,
+	"lake_chasm|orchard_chasm_bridge ring: x -3200, y -2464..-2304": REGION_TOPS,
 	"lake_chasm|orchard_chasm_bridge ring: x -3360, y -1920..-1760": RING_LIMIT,
 	"orchard_terraces|woods_canopy ring: x -4640, y -1152..-992": RING_LIMIT,
 	"orchard_well|woods_canopy ring: y -1152, x -2560..-2400": PAST_WALLS,
@@ -94,9 +93,16 @@ const TOWERS := {
 	"village_lane_west|woods_edge ring: x -1280, y -160..0": ["res://scenes/world/rooms/home_village.tscn", "VillageLaneWest", "Props/GateTower"],
 	"threshold_fields|village_gate_east ring: x 4480, y -160..0": ["res://scenes/world/rooms/home_village.tscn", "VillageGateEast", "Props/GateTower"],
 }
-## REGION_TOPS cuts: key -> the two region scenes whose sets meet there.
+## REGION_TOPS cuts: key -> the two region scenes whose sets meet there, and the prop that covers the far layers, if
+## any reach over the tops ([region scene, room, node in its contents], as TOWERS).
 const TOPS := {
-	"frost_shore|threshold_wayshrine ring: x 8320, y -160..0": ["res://scenes/world/rooms/frost_edge.tscn", "res://scenes/world/rooms/threshold.tscn"],
+	"frost_shore|threshold_wayshrine ring: x 8320, y -160..0": {
+		"regions": ["res://scenes/world/rooms/frost_edge.tscn", "res://scenes/world/rooms/threshold.tscn"],
+	},
+	"lake_chasm|orchard_chasm_bridge ring: x -3200, y -2464..-2304": {
+		"regions": ["res://scenes/world/rooms/frozen_lake.tscn", "res://scenes/world/rooms/wind_orchards.tscn"],
+		"cover": ["res://scenes/world/rooms/frozen_lake.tscn", "LakeChasm", "Props/BorderCairn"],
+	},
 }
 
 var _seats: Array[BackdropSeamRoom] = []
@@ -197,28 +203,11 @@ func test_a_gate_tower_covers_its_cut() -> void:
 			assert_bool(TOWERS.has(key)).override_failure_message("%s: no tower listed" % key).is_true()
 	for key: String in TOWERS:
 		var cut := _parse_ring_key(key)
-		var spec: Array = TOWERS[key]
-		var region := (load(spec[0]) as PackedScene).instantiate() as Region
-		var room := region.get_node(spec[1]) as Room
-		var contents := room.contents_scene.instantiate()
-		var tower := contents.get_node(spec[2]) as Sprite2D
-		var image := tower.texture.get_image()
-		# The sprite's top-left in world px: region at (0, 0), contents at the room's origin.
-		var origin := room.position + (tower.get_parent() as Node2D).position + tower.position + tower.offset
-		var uncovered := PackedStringArray()
-		for y: int in range(int(cut.y), int(cut.z)):
-			var covered := false
-			for column: int in [int(cut.x) - 1, int(cut.x)]:
-				var local := Vector2i(column - int(origin.x), y - int(origin.y))
-				if Rect2i(Vector2i.ZERO, image.get_size()).has_point(local) and image.get_pixelv(local).a > 0.0:
-					covered = true
-			if not covered:
-				uncovered.append(str(y))
+		var uncovered := _uncovered(cut, int(cut.y), TOWERS[key])
 		assert_array(Array(uncovered)).override_failure_message("%s: the tower leaves y %s open" % [key, ",".join(uncovered)]).is_empty()
-		contents.free()
-		region.free()
 
-## At the highest frame over a REGION_TOPS cut no layer but the sky, in either set, draws above the rooms' tops at the seam.
+## At the highest frame over a REGION_TOPS cut no layer but the sky, in either set, draws above the rooms' tops at the
+## seam, or above the cut's cover prop.
 func test_a_region_tops_cut_shows_only_the_shared_sky() -> void:
 	for key: String in ALLOWED:
 		if ALLOWED[key] == REGION_TOPS:
@@ -227,18 +216,46 @@ func test_a_region_tops_cut_shows_only_the_shared_sky() -> void:
 		var cut := _parse_ring_key(key)
 		# The frame's top at the ring limit, over the tops.
 		var centre_y := cut.y + Backdrop.HALF_VIEW.y
-		for path: String in TOPS[key]:
+		var reach := cut.z
+		for path: String in TOPS[key]["regions"]:
 			var region := (load(path) as PackedScene).instantiate() as Region
 			assert_object(region.backdrop_set.layers[0].texture).is_equal(VALLEY.layers[0].texture)
+			# No vertical scroll: the sky stands at eye level whatever the region's horizon.
+			assert_float(region.backdrop_set.layers[0].scroll_scale.y).is_equal(0.0)
 			for camera_x: int in range(int(cut.x - Backdrop.HALF_VIEW.x), int(cut.x + Backdrop.HALF_VIEW.x) + 1):
 				for column: float in [cut.x - 0.5, cut.x + 0.5]:
-					var top := _art_top(region.backdrop_set, Vector2(cut.x, region.horizon_y), Vector2(camera_x, centre_y), column)
-					if top < cut.z:
-						assert_bool(false).override_failure_message("%s: %s draws art at y %.0f over the tops (camera x %d)" \
-							% [key, region.backdrop_set.resource_path, top, camera_x]).is_true()
-						region.free()
-						return
+					reach = minf(reach, _art_top(region.backdrop_set, Vector2(cut.x, region.horizon_y), Vector2(camera_x, centre_y), column))
 			region.free()
+		if not is_finite(reach):
+			assert_bool(false).override_failure_message("%s: a layer fills above its strip, so art reaches every row" % key).is_true()
+		elif TOPS[key].has("cover"):
+			var uncovered := _uncovered(cut, floori(reach), TOPS[key]["cover"])
+			assert_array(Array(uncovered)).override_failure_message("%s: the cover leaves y %s open" % [key, ",".join(uncovered)]).is_empty()
+		else:
+			assert_float(reach).override_failure_message("%s: art reaches y %.0f over the tops" % [key, reach]).is_greater_equal(cut.z)
+
+# The rows from `top` down to the cut's bottom where neither pixel column beside the seam is opaque in the prop
+# `spec` ([region scene, room, node in its contents]).
+func _uncovered(cut: Vector3, top: int, spec: Array) -> PackedStringArray:
+	var region := (load(spec[0]) as PackedScene).instantiate() as Region
+	var room := region.get_node(spec[1]) as Room
+	var contents := room.contents_scene.instantiate()
+	var prop := contents.get_node(spec[2]) as Sprite2D
+	var image := prop.texture.get_image()
+	# The sprite's top-left in world px: region at (0, 0), contents at the room's origin.
+	var origin := room.position + (prop.get_parent() as Node2D).position + prop.position + prop.offset
+	var uncovered := PackedStringArray()
+	for y: int in range(top, int(cut.z)):
+		var covered := false
+		for column: int in [int(cut.x) - 1, int(cut.x)]:
+			var local := Vector2i(column - int(origin.x), y - int(origin.y))
+			if Rect2i(Vector2i.ZERO, image.get_size()).has_point(local) and image.get_pixelv(local).a > 0.0:
+				covered = true
+		if not covered:
+			uncovered.append(str(y))
+	contents.free()
+	region.free()
+	return uncovered
 
 # A ring key's vertical line: (x, from, to).
 func _parse_ring_key(key: String) -> Vector3:

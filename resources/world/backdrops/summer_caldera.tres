@@ -10,7 +10,7 @@
 [sub_resource type="Resource" id="sky"]
 script = ExtResource("2_layer")
 texture = ExtResource("3_sky")
-scroll_scale = Vector2(0.05, 0.03)
+scroll_scale = Vector2(0.05, 0)
 horizon_row = 229
 fill_above = 1
 fill_below = 1

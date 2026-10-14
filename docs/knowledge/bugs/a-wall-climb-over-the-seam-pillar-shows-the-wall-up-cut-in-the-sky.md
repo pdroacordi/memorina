@@ -90,7 +90,8 @@ so a wall climb may reach it too.
   - orchard_chasm_bridge / lake_chasm (x -3200): remains, at a region border. Over the wall tops both show
     `village_valley`, but at the orchards' and the lake's horizons (-1301, -1685), so the sky bands step on a straight
     line. A climb over the bridge's east wall onto the chasm's roof shows it (`h2_*`, `crop_h2_sky.png`). Listed as
-    `REGION_SKY` with the user's "OK until skies match (Recommended)" (2026-10-13). It goes when the region backdrops
-    share one sky.
+    `REGION_SKY` with the user's "OK until skies match (Recommended)" (2026-10-13). Gone the same day (WORLD-33): every
+    surface set's sky has a vertical scroll of 0, so it stands at eye level on any horizon, and a border cairn covers
+    the lake's far peaks over the tops; the cut is now `REGION_TOPS` with a cover (`systems/backdrops`).
 - Cuts that the rule removed elsewhere: crater/seesaw y 1376, cistern bottom/crater y 992. New ring limits it made
   (all facing solid walls): chasm/high wall y -2464, chimney base/cliff chimney y 1376, cistern bottom/temple gate y 1376.

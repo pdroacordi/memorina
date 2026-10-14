@@ -7,11 +7,12 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/world/background/summer_caldera/mid.png" id="5_mid"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/background/summer_caldera/near.png" id="6_near"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/background/basalt_caves/far.png" id="7_wall"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/summer_caldera/crater_rim.png" id="8_rim"]
 
 [sub_resource type="Resource" id="sky"]
 script = ExtResource("2_layer")
 texture = ExtResource("3_sky")
-scroll_scale = Vector2(0.05, 0.03)
+scroll_scale = Vector2(0.05, 0)
 horizon_row = 229
 fill_above = 1
 fill_below = 1
@@ -48,7 +49,17 @@ horizon_row = -123
 fill_below = 2
 distance = 0.4
 
+[sub_resource type="Resource" id="rim"]
+script = ExtResource("2_layer")
+texture = ExtResource("8_rim")
+band_count = 1
+band_of_season = Vector4i(0, 0, 0, 0)
+scroll_scale = Vector2(0.55, 0.32)
+horizon_row = -59
+fill_below = 0
+distance = 0.4
+
 [resource]
 script = ExtResource("1_set")
-layers = Array[ExtResource("2_layer")]([SubResource("sky"), SubResource("far"), SubResource("mid"), SubResource("near"), SubResource("wall")])
+layers = Array[ExtResource("2_layer")]([SubResource("sky"), SubResource("far"), SubResource("mid"), SubResource("near"), SubResource("wall"), SubResource("rim")])
 horizon_screen_y = 191.0
