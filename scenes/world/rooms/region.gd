@@ -7,6 +7,10 @@ signal memory_changed(level: float)
 
 ## Translation key of the region's name; a rest saves it for the title.
 @export var name_key: String = ""
+## Translation key of the line under the name in the first-visit title (systems/region-title).
+@export var epithet_key: String = ""
+## Whether the first entry plays the region title; false on test beds.
+@export var shows_title: bool = true
 ## Native season (design 03 section 4.2).
 @export var season: Enums.Season = Enums.Season.SPRING
 ## Guardian that keeps this region; restoring it sets memory to 1.0.

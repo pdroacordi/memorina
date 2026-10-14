@@ -1,0 +1,27 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 14.0,
+ "clock": "real",
+ "locale": "pt_BR",
+ "player_position": [8200, 286],
+ "steps": [
+  {"t": 0.8, "log": "start_in_wayshrine"},
+  {"t": 1.0, "action": "move_right", "pressed": true},
+  {"t": 1.9, "action": "move_right", "pressed": false},
+  {"t": 1.9, "log": "cut_past"},
+  {"t": 3.5, "screenshot": "09_frost_edge_hold_pt_br"},
+  {"t": 3.5, "log": "hold"},
+  {"t": 4.0, "key": "Escape", "pressed": true},
+  {"t": 4.05, "key": "Escape", "pressed": false},
+  {"t": 4.3, "screenshot": "10_paused_over_title"},
+  {"t": 4.3, "log": "paused"},
+  {"t": 7.3, "screenshot": "11_paused_3s_later"},
+  {"t": 7.3, "log": "paused_3s_later"},
+  {"t": 7.5, "key": "Escape", "pressed": true},
+  {"t": 7.55, "key": "Escape", "pressed": false},
+  {"t": 7.8, "log": "resumed"},
+  {"t": 9.4, "screenshot": "12_resumed_fade_out"},
+  {"t": 9.4, "log": "resumed_later"},
+  {"t": 11.5, "log": "end"}
+ ]
+}

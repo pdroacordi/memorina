@@ -12,6 +12,7 @@
 [node name="FrostEdge" type="Node2D"]
 script = ExtResource("1_region")
 name_key = "REGION_FROST_EDGE"
+epithet_key = "REGION_FROST_EDGE_EPITHET"
 season = 0
 backdrop_set = ExtResource("bd_region_set")
 horizon_y = 235.0

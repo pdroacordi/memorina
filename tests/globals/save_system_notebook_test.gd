@@ -36,3 +36,11 @@ func test_a_restored_guardian_counts_as_met() -> void:
 	assert_bool(SaveSystem.is_guardian_met(Enums.Guardian.FROST)).is_false()
 	SaveSystem.restore_guardian(Enums.Guardian.FROST)
 	assert_bool(SaveSystem.is_guardian_met(Enums.Guardian.FROST)).is_true()
+
+## A region title shown is not a gain: the notebook must not react to it.
+func test_announcing_a_region_emits_nothing_and_is_kept_once() -> void:
+	SaveSystem.announce_region("uid://road")
+	SaveSystem.announce_region("uid://road")
+	assert_int(_changes).is_equal(0)
+	assert_bool(SaveSystem.is_region_announced("uid://road")).is_true()
+	assert_array(SaveSystem.player_data.announced_regions).has_size(1)

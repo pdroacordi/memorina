@@ -20,6 +20,8 @@
 [node name="HomeVillage" type="Node2D"]
 script = ExtResource("1_region")
 name_key = "REGION_HOME_VILLAGE"
+epithet_key = "REGION_HOME_VILLAGE_EPITHET"
+shows_title = false
 season = 3
 backdrop_set = ExtResource("bd_region_set")
 horizon_y = 235.0

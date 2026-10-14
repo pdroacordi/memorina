@@ -1,0 +1,30 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 13.0,
+ "locale": "en",
+ "player_position": [4380, 286],
+ "steps": [
+  {"t": 0.8, "log": "start_in_gate_east"},
+  {"t": 1.0, "action": "move_right", "pressed": true},
+  {"t": 1.9, "action": "move_right", "pressed": false},
+  {"t": 1.9, "log": "cut_past"},
+  {"t": 2.25, "screenshot": "01_fade_in"},
+  {"t": 2.25, "log": "fade_in"},
+  {"t": 3.25, "screenshot": "02_hold"},
+  {"t": 3.25, "log": "hold"},
+  {"t": 5.8, "screenshot": "03_fade_out"},
+  {"t": 5.8, "log": "fade_out"},
+  {"t": 6.6, "screenshot": "04_gone"},
+  {"t": 6.6, "log": "gone"},
+  {"t": 7.0, "action": "move_left", "pressed": true},
+  {"t": 8.1, "action": "move_left", "pressed": false},
+  {"t": 8.2, "log": "back_in_gate_east"},
+  {"t": 8.5, "action": "move_right", "pressed": true},
+  {"t": 9.6, "action": "move_right", "pressed": false},
+  {"t": 9.7, "log": "second_crossing"},
+  {"t": 10.3, "screenshot": "05_second_crossing_no_title"},
+  {"t": 10.3, "log": "second_crossing_after_lead_in"},
+  {"t": 11.5, "screenshot": "06_second_crossing_later"},
+  {"t": 11.5, "log": "second_crossing_later"}
+ ]
+}

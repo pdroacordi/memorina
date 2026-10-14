@@ -1,0 +1,64 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/region_title/region_title.gd" id="1_title"]
+[ext_resource type="Script" path="res://scenes/ui/region_title/region_title_ornament.gd" id="2_rule"]
+[ext_resource type="FontFile" uid="uid://dekvpc24v4eyc" path="res://assets/fonts/memorina_title_outline_font_size_20.ttf" id="3_title_font"]
+[ext_resource type="FontFile" uid="uid://dsutvchk6baqt" path="res://assets/fonts/memorina_text_font_size_8.ttf" id="4_text_font"]
+
+[node name="RegionTitle" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_title")
+
+[node name="Art" type="Control" parent="."]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+
+[node name="Card" type="Control" parent="Art"]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+mouse_filter = 2
+
+[node name="Name" type="Label" parent="Art/Card"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 26.0
+offset_right = 310.0
+offset_bottom = 48.0
+theme_override_colors/font_color = Color(0.96, 0.9, 0.72, 1)
+theme_override_colors/font_outline_color = Color(0.13, 0.08, 0.05, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("3_title_font")
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+
+[node name="Rule" type="Control" parent="Art/Card"]
+layout_mode = 0
+offset_left = 117.0
+offset_top = 48.0
+offset_right = 202.0
+offset_bottom = 54.0
+mouse_filter = 2
+script = ExtResource("2_rule")
+
+[node name="Epithet" type="Label" parent="Art/Card"]
+layout_mode = 0
+offset_left = 10.0
+offset_top = 56.0
+offset_right = 310.0
+offset_bottom = 68.0
+theme_override_colors/font_color = Color(0.96, 0.9, 0.72, 1)
+theme_override_colors/font_outline_color = Color(0.13, 0.08, 0.05, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("4_text_font")
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1

@@ -24,12 +24,11 @@ func commit(elapsed: float = 0.0) -> PlayerData:
 	return committed
 
 ## Restores committed data and clears transient defeated enemies. The play time `elapsed` since the last commit is kept,
-## and so are the notebook entries read since: what the player read is a fact about the player.
+## and so are the notebook entries read and the region titles shown since: facts about the player, not progress.
 func rewind(elapsed: float = 0.0) -> void:
 	committed.play_time += elapsed
-	for id: StringName in live.notebook_read:
-		if not committed.notebook_read.has(id):
-			committed.notebook_read.append(id)
+	_merge(live.notebook_read, committed.notebook_read)
+	_merge(live.announced_regions, committed.announced_regions)
 	live = copy(committed)
 	defeated.clear()
 
@@ -40,3 +39,8 @@ func record_death(region_key: String, point: Vector2, elapsed: float = 0.0) -> P
 	committed.deaths[region_key] = points
 	rewind(elapsed)
 	return committed
+
+func _merge(from: Array[StringName], into: Array[StringName]) -> void:
+	for id: StringName in from:
+		if not into.has(id):
+			into.append(id)

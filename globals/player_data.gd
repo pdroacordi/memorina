@@ -25,6 +25,8 @@ class_name PlayerData extends Resource
 @export var notebook_read: Array[StringName] = []
 ## Secret spaces opened, by `SecretWall.secret_id`; live data that a bench commits and a death forgets (architecture/secret-false-walls).
 @export var found_secrets: Array[StringName] = []
+## Regions whose title has played, by region `SceneKey`; a death keeps them (SaveLedger.rewind).
+@export var announced_regions: Array[StringName] = []
 
 func _init() -> void:
 	migrate()

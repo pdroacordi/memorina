@@ -243,6 +243,10 @@ func _room_state(player: Player) -> String:
 			"+prompt" if (door.get_node("Prompt") as CanvasItem).visible else "",
 			" shake=%.1f" % (door.get_node("Sprite2D") as Node2D).position.x])
 	line += " doors=[%s]" % ", ".join(doors)
+	var title := get_tree().root.find_child("RegionTitle", true, false) as RegionTitle
+	if title != null:
+		line += " title=%.2f '%s' announced=%d" % [title.alpha(), title.shown_name(),
+			SaveSystem.player_data.announced_regions.size()]
 	return line
 
 ## Which screen is open, the map's centre and zoom, and the seen cells per room key in the live save.

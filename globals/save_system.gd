@@ -200,6 +200,14 @@ func mark_notebook_read(id: StringName) -> void:
 	if not is_notebook_read(id):
 		player_data.notebook_read.append(id)
 
+func is_region_announced(region_key: String) -> bool:
+	return player_data.announced_regions.has(StringName(region_key))
+
+## Not a gain: emits nothing, and a death keeps it (SaveLedger.rewind).
+func announce_region(region_key: String) -> void:
+	if not is_region_announced(region_key):
+		player_data.announced_regions.append(StringName(region_key))
+
 func is_shortcut_resolved(shortcut_id: StringName) -> bool:
 	return shortcut_id in player_data.resolved_shortcuts
 

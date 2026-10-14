@@ -50,7 +50,8 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   `()` hidden), the scroll cues, tab marks, read ids, the HUD quill's alpha and the
   watcher's queue. It also prints the current room id and `interior`, the camera bounds and
   centre, the fade's alpha, `transitioning`, Ivo's facing and process mode, whether the region weather
-  is visible, and every loaded door (`link@x:open|sealed[+prompt] shake=<sprite x>`).
+  is visible, every loaded door (`link@x:open|sealed[+prompt] shake=<sprite x>`), and the region title's
+  alpha, text and the count of announced regions (`title=<alpha> '<name>' announced=<n>`).
 - **Per-frame trace.** `"trace": true` prints one `[playtest] trace` line every physics frame until a
   `"trace": false` step: Ivo's position, velocity, floor, helix ride and progress `u`, the camera's centre and hp.
 - **Foes.** `log` and `trace` lines end with `foes=[...]`: every enemy and guardian within 600 px of Ivo, its

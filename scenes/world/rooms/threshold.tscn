@@ -11,6 +11,7 @@
 [node name="Threshold" type="Node2D"]
 script = ExtResource("1_region")
 name_key = "REGION_THRESHOLD"
+epithet_key = "REGION_THRESHOLD_EPITHET"
 season = 0
 backdrop_set = ExtResource("bd_region_set")
 horizon_y = 235.0

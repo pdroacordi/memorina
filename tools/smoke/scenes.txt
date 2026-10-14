@@ -96,4 +96,5 @@ res://scenes/ui/title/title.tscn
 res://scenes/boot/boot.tscn
 res://scenes/ui/notebook/notebook.tscn
 res://scenes/ui/notebook_toast/notebook_toast.tscn
+res://scenes/ui/region_title/region_title.tscn
 res://scenes/world/interactables/fact_barrier/fact_barrier.tscn

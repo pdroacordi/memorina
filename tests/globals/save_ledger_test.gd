@@ -152,3 +152,27 @@ func test_a_found_secret_rewinds_like_a_shortcut() -> void:
 	ledger.commit()
 	ledger.record_death("region", Vector2.ZERO)
 	assert_array(ledger.live.found_secrets).contains_exactly([&"cistern@8,9"])
+
+## A region title shown is a fact about the player: a death keeps it, once (systems/region-title).
+func test_announced_regions_survive_a_death_once() -> void:
+	var ledger := _ledger()
+	ledger.live.announced_regions.append(&"uid://road")
+	var written := ledger.record_death("region", Vector2.ZERO)
+	assert_array(ledger.live.announced_regions).contains_exactly([&"uid://road"])
+	assert_array(written.announced_regions).contains_exactly([&"uid://road"])
+	ledger.rewind()
+	assert_array(ledger.live.announced_regions).contains_exactly([&"uid://road"])
+
+func test_a_rest_keeps_the_announced_regions() -> void:
+	var ledger := _ledger()
+	ledger.live.announced_regions.append(&"uid://village")
+	ledger.commit()
+	ledger.live.announced_regions.append(&"uid://road")
+	ledger.rewind()
+	assert_array(ledger.live.announced_regions).contains_exactly([&"uid://village", &"uid://road"])
+
+func test_live_and_committed_announced_regions_share_nothing() -> void:
+	var ledger := _ledger()
+	ledger.commit()
+	ledger.live.announced_regions.append(&"uid://road")
+	assert_array(ledger.committed.announced_regions).is_empty()

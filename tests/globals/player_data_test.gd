@@ -72,6 +72,7 @@ learned_songs = Array[bool]([true])
 	assert_bool(data.map_seen.is_empty()).is_true()
 	assert_int(data.met_guardians.size()).is_equal(Enums.Guardian.size())
 	assert_array(data.notebook_read).is_empty()
+	assert_array(data.announced_regions).is_empty()
 
 ## Bench and death data must round-trip through serialization.
 func test_the_bench_and_the_deaths_round_trip_through_the_file() -> void:
@@ -134,3 +135,12 @@ func test_the_notebook_round_trips_through_the_file() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	assert_bool(loaded.met_guardians[Enums.Guardian.BLOOM]).is_true()
 	assert_array(loaded.notebook_read).contains_exactly([&"song_root"])
+
+func test_the_announced_regions_round_trip_through_the_file() -> void:
+	var path := "user://test_round_trip_announced.tres"
+	var data := PlayerData.new()
+	data.announced_regions.append(&"uid://road")
+	assert_int(ResourceSaver.save(data, path)).is_equal(OK)
+	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	assert_array(loaded.announced_regions).contains_exactly([&"uid://road"])

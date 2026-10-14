@@ -1,0 +1,13 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 5.0,
+ "locale": "en",
+ "steps": [
+  {"t": 0.5, "log": "new_game"},
+  {"t": 1.2, "screenshot": "07_new_game_village_house"},
+  {"t": 1.2, "log": "new_game_after_lead_in"},
+  {"t": 3.0, "screenshot": "08_new_game_later"},
+  {"t": 3.0, "log": "new_game_later"},
+  {"t": 4.5, "log": "new_game_end"}
+ ]
+}

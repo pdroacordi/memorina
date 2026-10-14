@@ -17,6 +17,7 @@
 [node name="SummerCaldera" type="Node2D"]
 script = ExtResource("1_region")
 name_key = "REGION_SUMMER_CALDERA"
+epithet_key = "REGION_SUMMER_CALDERA_EPITHET"
 season = 1
 backdrop_set = ExtResource("bd_region_set")
 horizon_y = 1536.0

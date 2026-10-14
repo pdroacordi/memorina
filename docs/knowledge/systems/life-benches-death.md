@@ -6,7 +6,7 @@ status: active
 tags: [save, bench, death, life, respawn]
 related: [systems/map, systems/notebook, architecture/the-life-loop-rewinds-by-reloading, architecture/save-slots-and-the-boot-swap, systems/screens, bugs/a-teleported-ivo-enters-the-room-he-left, bugs/the-playtest-runner-adopts-the-legacy-save-before-going-memory-only, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step]
 created: 2026-10-02
-updated: 2026-10-06
+updated: 2026-10-14
 source_files:
   - globals/save_ledger.gd
   - globals/save_system.gd
@@ -70,8 +70,9 @@ Plan and options: `architecture/save-slots-and-the-boot-swap`.
 
 - `PlayerData.met_guardians` (indexed by `Enums.Guardian`, grown by `migrate()`) is set by `SaveSystem.meet_guardian` when a guardian's fight begins. It is live data like a learned song: a death before a bench forgets it.
 - `PlayerData.notebook_read` holds the ids of notebook entries read. `SaveLedger.rewind` merges the live ids into the committed save before it copies it back, so both kinds of death (`record_death` and `SaveSystem.rewind`) keep what was read.
+- `PlayerData.announced_regions` holds the `SceneKey`s of regions whose title has played (`systems/region-title`). It is death-proof the same way: `SaveLedger.rewind` merges it with `notebook_read` (orchestrator call, 2026-10-14, for the user's "saved per region, so it shows once"). `SaveSystem.announce_region` emits nothing.
 - `SaveSystem.progress_changed` is emitted by `learn_song`, `unlock_skill`, `set_item_owned`, `restore_guardian` and `meet_guardian`. `mark_notebook_read` emits nothing. The notebook derives its entries from these facts (`systems/notebook`).
-- Tests: `save_ledger_test` (read ids survive a death, once each; a met guardian is forgotten), `player_data_test` (old saves, round trip), `save_system_notebook_test`.
+- Tests: `save_ledger_test` (read ids and announced regions survive a death, once each; a met guardian is forgotten), `player_data_test` (old saves, round trip), `save_system_notebook_test`.
 
 ## Tests
 

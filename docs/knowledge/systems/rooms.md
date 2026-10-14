@@ -4,7 +4,7 @@ type: system
 title: Rooms: text maps, the importer and the legend
 status: active
 tags: [rooms, map, importer, legend, tilemap]
-related: [systems/map, architecture/room-reachability-audit, architecture/world-edges-from-the-room-list, architecture/rooms-are-text, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/import-plugin-output-is-stale-when-its-logic-changes]
+related: [systems/map, systems/region-title, architecture/room-reachability-audit, architecture/world-edges-from-the-room-list, architecture/rooms-are-text, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/import-plugin-output-is-stale-when-its-logic-changes]
 created: 2026-10-02
 updated: 2026-10-14
 source_files:
@@ -28,8 +28,9 @@ Moved verbatim from `CLAUDE.md` ("Project structure") on 2026-10-02. The file fo
 ## Regions, benches and room entry
 
 - `Region.name_key` is the translation key of the region's name (`REGION_HOME_VILLAGE`, `REGION_FROST_EDGE`, `REGION_TRIALS` on the five trials). A rest saves it so the title can name the slot. Every new region sets it.
+- `Region.epithet_key` (`REGION_<ID>_EPITHET`) and `Region.shows_title` (false on the village and the five trials) drive the first-visit region title (`systems/region-title`). Every new region sets an epithet key; `region_title_fit_test` fails on a titled region without one.
 - A bench's `bench_id` names it on the title through `"BENCH_" + bench_id` in capitals. `room_files_test` fails when a bench in any `.room` has no such key with every language filled.
-- **`Game.room_changed(room)`** fires once the camera frames the new current room: after `_enter_room` on a walk-in, after a hazard respawn that changes the room, and after `_arrive`'s seat and `snap()` (never from `_enter_room` itself, `bugs/a-debug-boot-reveals-map-cells-ivo-never-saw`). `MapRevealer` and `RegionWeather` listen to it.
+- **`Game.room_changed(room)`** fires once the camera frames the new current room: after `_enter_room` on a walk-in, after a hazard respawn that changes the room, and after `_arrive`'s seat and `snap()` (never from `_enter_room` itself, `bugs/a-debug-boot-reveals-map-cells-ivo-never-saw`). `MapRevealer`, `RegionWeather` and `RegionTitleWatcher` listen to it.
 
 ## Edges (WORLD-34, `architecture/world-edges-from-the-room-list`)
 

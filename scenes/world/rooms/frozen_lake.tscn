@@ -17,6 +17,7 @@
 [node name="FrozenLake" type="Node2D"]
 script = ExtResource("1_region")
 name_key = "REGION_FROZEN_LAKE"
+epithet_key = "REGION_FROZEN_LAKE_EPITHET"
 season = 0
 has_guardian = true
 guardian = 0
