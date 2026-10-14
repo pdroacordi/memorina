@@ -11,7 +11,7 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 S.............SSS.......................SSSS........SS..................S......S
 S.............SSS.......................SSSS........SS.........................S
 S...................................................SS.........................S
-S.......................................................................G......S
+S.......................................................................G...$..S
 ................................................................SSSSSSSSSSSSSSS.
 ................................................................................
 ................................................................................
@@ -23,3 +23,4 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 [entities]
 6,8 = {"id": "corridor_plate"}
 72,4 = {"id": "corridor_door", "trigger_path": "corridor_plate"}
+76,4 = {"slot_id": "caldera_long_corridor_alcove", "kind": 0}

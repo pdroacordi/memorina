@@ -1,0 +1,17 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 7.0,
+ "player_position": [-10176, 1820],
+ "_note": "bugs/the-caldera-chimney-base-false-floor-lies-on-the-only-route: walk east from col 1 to col 11 and back over cols 6-9; the floor holds (y 1824 throughout).",
+ "steps": [
+  {"t": 2.4, "action": "move_right", "pressed": true},
+  {"t": 3.3, "screenshot": "chimney_base_cross_east"},
+  {"t": 3.3, "log": "cross_east_mid"},
+  {"t": 3.9, "action": "move_right", "pressed": false},
+  {"t": 4.0, "log": "cross_east_end"},
+  {"t": 4.2, "action": "move_left", "pressed": true},
+  {"t": 5.7, "action": "move_left", "pressed": false},
+  {"t": 5.8, "screenshot": "chimney_base_cross_west"},
+  {"t": 5.9, "log": "cross_west_end"}
+ ]
+}

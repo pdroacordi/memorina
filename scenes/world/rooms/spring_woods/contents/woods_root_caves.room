@@ -2,8 +2,8 @@
 ; Drop in through the hole into the earth well (Espacial 2: roots climb rows 1-5 to the one-way at row 0, cols 28-29, and one
 ; jump from it reaches woods_deep; bugs/the-root-caves-roots-end-short-of-woods-deep-without-the-row-0-ledge). Logico 1: shaft D
 ; (stone|earth, cols 39-41) never roots, shaft A (earth|earth, cols 50-52) does. Espacial 1: from the bottom of D, west
-; through the corner (col 26) to the root bridge (row 17) and the alcove (cols 1-7, rows 9-16), the planned STORY-06
-; collectible slot (col 3, standing on row 17); return by the tunnel (rows 19-20) to A and up its roots.
+; through the corner (col 26) to the root bridge (row 17) and the alcove (cols 1-7, rows 9-16), the reward slot
+; (`$`, col 3, standing on row 17; WORLD-35); return by the tunnel (rows 19-20) to A and up its roots.
 
 [room]
 origin = 0, 0
@@ -26,7 +26,7 @@ tileset = spring_woods
 #.......SSSSSSSSSSSSSS....S...........S...########...#######
 #.......SSSSSSSSSSSSSS....S...........S...########...#######
 #.........................S...........S...########...#######
-#.........................S...........S...########...#######
+#..$......................S...........S...########...#######
 ##########..........####..............S...########...#######
 ##########..........####..................########...#######
 ##########..........######...........................#######
@@ -60,3 +60,6 @@ tileset = spring_woods
 ..........~~~~~~~.~~........................................
 ..........~~~~~~~.~~........................................
 ............................................................
+
+[entities]
+3,16 = {"slot_id": "woods_root_caves_alcove", "kind": 0}

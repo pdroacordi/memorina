@@ -1,6 +1,6 @@
 ; village_empty_house.room - A Casa Vazia, Combinado 4 (design 02 section 8.4), the trial empty_house folded onto two floors.
 ; The gate (col 4, upper floor) holds only while both plates (cols 1 and 12, lower floor) do: Solstice and Sombra on col 1, Soltar on the load, then the long way round.
-; The reward alcove (cols 1-3, upper floor) is left empty.
+; The reward alcove (cols 1-3, upper floor) holds a reward slot (`$`, WORLD-35).
 
 ; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
 
@@ -12,7 +12,7 @@ tileset = village
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %......................................%
 %......................................%
-%...G..................................%
+%.$.G..................................%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%....%
 %......................................%
 %......................................%
@@ -28,3 +28,4 @@ ________________________________________
 4,8 = {"link": "village_empty_house_door", "to_room": "village_lane_west", "arrive_facing": 1}
 12,7 = {"id": "house_load", "hang_height": 32.0, "rope_length": 32.0}
 12,8 = {"id": "plate_load"}
+2,3 = {"slot_id": "village_empty_house_reward", "kind": 0}

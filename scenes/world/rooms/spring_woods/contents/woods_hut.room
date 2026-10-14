@@ -1,5 +1,5 @@
 ; woods_hut.room - the woodcutter's cabin, interior (design 04 sections 3.4 and 4): hearth, a loft
-; reached by a stair ledge, where the collectible letter will lie. No gate.
+; reached by a stair ledge, where the reward slot (`$`, WORLD-35) holds the letter's place. No gate.
 ; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
 
 [room]
@@ -11,7 +11,7 @@ tileset = spring_woods
 %................%__
 %................%__
 %................%__
-%................%__
+%.........$......%__
 %.........-------%__
 %................%__
 %......--........%__
@@ -22,3 +22,4 @@ ____________________
 
 [entities]
 4,8 = {"link": "woods_hut_door", "to_room": "woods_edge", "arrive_facing": 1}
+10,4 = {"slot_id": "woods_hut_letter", "kind": 0}

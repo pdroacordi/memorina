@@ -9,7 +9,7 @@ tileset = summer_caldera
 [grid]
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 S........SSSS.....................S....S
-S........SSSS.....................S....S
+S........SSSS.................$...S....S
 S..........................SSSSSSSS....S
 S..........................SSSSSSSS....S
 ........................................
@@ -22,3 +22,4 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 [entities]
 22,8 = {"id": "seesaw", "length": 256.0, "pivot_at": 0.6875, "max_degrees": 30.0}
+30,2 = {"slot_id": "caldera_seesaw_ledge", "kind": 0}

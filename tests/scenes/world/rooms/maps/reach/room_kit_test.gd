@@ -3,6 +3,7 @@ class_name RoomKitTest extends GdUnitTestSuite
 ## Runs the kit check on the whole world: every KIT_TRAP must be in the allowlist with its kit and a reason, and no
 ## entry may be stale (systems/rooms, "Kit check"). Boards: res://tools/maps/reach_boards.tscn (kits/<kit>/).
 
+var _loaded: ReachWorldLoader.Loaded
 var _grid: ReachGrid
 var _kits: ReachKits
 var _reports: Array[ReachReport] = []
@@ -10,8 +11,8 @@ var _allowlist: ReachAllowlist
 
 func before() -> void:
 	var started := Time.get_ticks_msec()
-	var loaded := ReachWorldLoader.load_world()
-	_grid = loaded.grid
+	_loaded = ReachWorldLoader.load_world()
+	_grid = _loaded.grid
 	_kits = ReachKits.load_default()
 	_reports = ReachKitCheck.run(_grid, ReachFixture.ivo(), _kits)
 	_allowlist = ReachAllowlist.load_default()
@@ -109,3 +110,34 @@ func test_every_exit_is_a_placed_guardians_arena() -> void:
 	for report: ReachReport in _reports:
 		for room: StringName in report.exits:
 			assert_bool(room in placed).override_failure_message("kit %s exits through %s" % [report.kit, room]).is_true()
+
+## Every reward slot stands on a surface some kit reaches: a promised reward the journey can never get to is a map bug
+## (architecture/reward-slots-reserve-their-place-in-the-room-text).
+func test_every_reward_slot_is_reached_by_some_kit() -> void:
+	var unreached: Array[String] = []
+	var slots := 0
+	for i: int in _grid.room_count():
+		var map: RoomMap = _loaded.maps[_grid.room_id(i)]
+		for placed: Dictionary in map.entities:
+			if placed.symbol != "$":
+				continue
+			slots += 1
+			var world: Vector2i = _grid.room_rect(i).position - map.origin + placed.cell
+			var by := _reports.filter(func(report: ReachReport) -> bool: return _reaches(report, world))
+			if by.is_empty():
+				unreached.append("%s %s (%s)" % [_grid.room_id(i), placed.cell - map.origin, placed.params.get("slot_id", "?")])
+	assert_int(slots).is_greater(0)
+	assert_array(unreached).override_failure_message("Reward slots no kit reaches:\n%s" % "\n".join(unreached)).is_empty()
+
+# Whether `report`'s kit reaches the surface an anchor at `cell` stands on: the nearest within ReachAudit.ANCHOR_DROP
+# rows below, as the audit marks anchors.
+func _reaches(report: ReachReport, cell: Vector2i) -> bool:
+	var feet: Dictionary[Vector2i, int] = {}
+	for i: int in report.surfaces.size():
+		for at: Vector2i in report.surfaces[i].cells:
+			feet[at] = i
+	for dy: int in ReachAudit.ANCHOR_DROP + 1:
+		var i: int = feet.get(cell + Vector2i(0, dy), -1)
+		if i >= 0:
+			return report.reach[i] == 1
+	return false

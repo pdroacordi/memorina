@@ -17,7 +17,7 @@ S..................S
 S............SS....S
 SSSSSSSSSSSSSSSS...S
 S..............S...S
-S.F.....W......S...S
+S$F.....W......S...S
 SSSSSSSSSSSSSS...SSS
 SSSSSSSSSSSSSS...SSS
 SSSSSSSSSSSSSSSSSSSS
@@ -54,3 +54,4 @@ SSSSSSSSSSSSSSSSSSSS
 9,2 = {"look": "hatch_up", "link": "lake_well_stairwell", "to_room": "lake_fishing_village", "arrive_facing": 1}
 2,8 = {"id": "well_reeds", "size": [32, 64]}
 8,8 = {"id": "well_squall", "size": [416, 192], "direction": [-1, 0], "speed": 420, "profile": "res://resources/world/wind/squall_wind.tres"}
+1,8 = {"slot_id": "lake_well_reeds", "kind": 0}

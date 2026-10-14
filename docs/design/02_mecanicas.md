@@ -32,7 +32,7 @@
  
 **Vida:** o herói tem 3 unidades de vida, representadas por um ícone temático (não barra). **Decidido (2026-10-01): uma fileira de notas que perdem a cor** — cada unidade é uma pequena nota colorida; a unidade perdida fica cinza e parada, do mesmo jeito que o mundo esquece. Sempre visível.
 
-**Quarta nota (usuário, 2026-10-14, WORLD-35):** "A fourth note somewhere late" — uma quarta unidade de vida, recompensa escondida no fim da jornada (LIFE-05). As três notas continuam sendo a vida inicial.
+**Quarta nota (usuário, 2026-10-14, WORLD-35):** "A fourth note somewhere late" — uma quarta unidade de vida, recompensa escondida no fim da jornada (LIFE-05). As três notas continuam sendo a vida inicial. Onde fica (usuário, 2026-10-14): "Caldera temple sanctum" — no santuário do templo da Caldeira, atrás do portão que só Sombra abre (Verão Espacial 1; lugar de recompensa `caldera_temple_sanctum`, design 04).
  
 **Derrota:** não existe game over tradicional. Ao perder toda a vida, o jogador reaparece no último banco em que sentou. **Decidido (2026-10-01): a morte volta ao último banco** — tudo o que foi ganho depois dele (sequências, habilidades, itens, guardiões restaurados, atalhos) é perdido, e as criaturas derrotadas voltam, como voltam ao descansar. A consequência atmosférica permanece e não volta junto: um pequeno símbolo do cinzesquecimento aparece a mais na região da morte (uma fonte negativa no campo de memória, `03_mundo_e_ambiente.md`, seção 4.3). Mortes acumuladas numa mesma região se somam visualmente, de forma discreta.
  

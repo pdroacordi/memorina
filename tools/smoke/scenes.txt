@@ -98,3 +98,4 @@ res://scenes/ui/notebook/notebook.tscn
 res://scenes/ui/notebook_toast/notebook_toast.tscn
 res://scenes/ui/region_title/region_title.tscn
 res://scenes/world/interactables/fact_barrier/fact_barrier.tscn
+res://scenes/world/interactables/reward_slot/reward_slot.tscn

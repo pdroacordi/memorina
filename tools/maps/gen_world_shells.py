@@ -126,7 +126,7 @@ BENCHES = [
     ("threshold_wayshrine", 10, "threshold_wayshrine_bench"),
     ("frost_cliffs", 6, "frost_cliffs_bench"),
     ("woods_edge", 30, "woods_edge_bench"),
-    ("lake_waterfall_path", 10, "lake_waterfall_bench"),
+    ("lake_waterfall_path", 2, "lake_waterfall_bench"),
     ("orchard_terraces", 30, "orchard_terraces_bench"),
     ("caldera_open_crater", 20, "caldera_crater_bench"),
 ]
@@ -171,7 +171,7 @@ DOORS = [
     ("lake_fishing_village", 3, "lake_well", 9, "lake_well_stairwell",
         {"look": "stairwell", "arrive_facing": 1}, {"row": 2, "look": "hatch_up", "arrive_facing": 1}),
     ("orchard_mill_town", 30, "orchard_inn", 4, "orchard_inn_door", {}, {"arrive_facing": 1}),
-    ("caldera_cistern", 9, "caldera_cistern_bottom", 49, "caldera_cistern_door",
+    ("caldera_cistern", 8, "caldera_cistern_bottom", 49, "caldera_cistern_door",
         {"row": 10, "arrive_facing": 1}, {"row": 17}),
 ]
 

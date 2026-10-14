@@ -1,5 +1,5 @@
 ; village_tavern_cellar.room - the tavern cellar (design 04 section 3.1). Retorno secret: Enraizar (design 02 section 7.1).
-; A 6-cell flooded gap in a tunnel 2 cells tall, earth on both banks: no jump clears it under that ceiling; roots played at the near bank (col 9) bridge it to the alcove (cols 16-18), left empty.
+; A 6-cell flooded gap in a tunnel 2 cells tall, earth on both banks: no jump clears it under that ceiling; roots played at the near bank (col 9) bridge it to the alcove (cols 16-18) and its reward slot (`$`, WORLD-35).
 
 [room]
 origin = 0, 0
@@ -14,7 +14,7 @@ tileset = village
 #........#######...#
 #........#######...#
 #..................#
-#...E.##...........#
+#...E.##.........$.#
 ##########......####
 ##########......####
 ####################
@@ -35,3 +35,4 @@ tileset = village
 
 [entities]
 4,8 = {"link": "village_tavern_cellar_door", "to_room": "village_tavern", "arrive_facing": 1}
+17,8 = {"slot_id": "village_tavern_cellar", "kind": 0}

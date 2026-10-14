@@ -25,21 +25,49 @@ func test_every_room_file_is_valid() -> void:
 		problems.append_array(result.errors)
 	assert_array(Array(problems)).is_empty()
 
-## Save ids must be unique across maps so saved entities identify one location.
-func test_save_ids_and_bench_ids_are_unique_across_every_map() -> void:
+## Save, bench and reward slot ids must be unique across maps so each names one location.
+func test_save_ids_bench_ids_and_slot_ids_are_unique_across_every_map() -> void:
 	var legend := RoomLegend.load_default()
 	var seen := {}
 	var problems := PackedStringArray()
 	for path: String in _room_files(ROOMS_DIR):
 		var result := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
 		for placed: Dictionary in result.map.entities:
-			for key: String in ["bench_id", "save_id"]:
+			for key: String in ["bench_id", "save_id", "slot_id"]:
 				if not placed.params.has(key):
 					continue
 				var id := "%s=%s" % [key, placed.params[key]]
 				if seen.has(id):
 					problems.append("%s in %s and %s" % [id, seen[id], path])
 				seen[id] = path
+	assert_array(Array(problems)).is_empty()
+
+## A slot's kind is a member of RewardSlot.Kind (architecture/reward-slots-reserve-their-place-in-the-room-text).
+func test_every_reward_slot_has_a_known_kind() -> void:
+	var legend := RoomLegend.load_default()
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var result := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
+		for placed: Dictionary in result.map.entities:
+			if placed.symbol != "$":
+				continue
+			var kind: Variant = (placed.params as Dictionary).get("kind", RewardSlot.Kind.COLLECTIBLE)
+			if typeof(kind) not in [TYPE_INT, TYPE_FLOAT] or not int(kind) in RewardSlot.Kind.values() or float(kind) != int(kind):
+				problems.append("%s: slot %s has kind %s" % [path, placed.params.get("slot_id", "?"), kind])
+	assert_array(Array(problems)).is_empty()
+
+## A slot stands on ground or a one-way, so it never floats; room_kit_test's ANCHOR_DROP lookup would not notice one that did.
+func test_every_reward_slot_stands_on_a_floor() -> void:
+	var legend := RoomLegend.load_default()
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path).map
+		for placed: Dictionary in map.entities:
+			if placed.symbol != "$":
+				continue
+			var below: Vector2i = placed.cell + Vector2i.DOWN
+			if not (map.is_solid(below) or map.is_platform(below)):
+				problems.append("%s: slot %s at %s stands on nothing" % [path, placed.params.get("slot_id", "?"), placed.cell - map.origin])
 	assert_array(Array(problems)).is_empty()
 
 ## "Not impossible to find" (user, 2026-10-10): every secret shows a crack cell or has a draft within a cell of it;

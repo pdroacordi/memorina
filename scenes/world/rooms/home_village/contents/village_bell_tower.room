@@ -1,7 +1,7 @@
 ; village_bell_tower.room - the bell tower, an interior behind the square's door (design 04 section 3.1), 1x4 screens.
 ; A slim stone shell (inner faces x 192 and 448) in void; the helix stair (@, systems/helix-stair) turns around Ivo as he
 ; rides up its axis (x 320) from the bell floor (row 45) through the plank gallery (row 10). Retorno gate: the alcove
-; ledge (row 4, cols 12-13) is 6 cells above the gallery, a double jump; the alcove is left empty for the collectible.
+; ledge (row 4, cols 12-13) is 6 cells above the gallery, a double jump; the alcove holds a reward slot (`$`, WORLD-35).
 
 [room]
 origin = 0, 0
@@ -11,7 +11,7 @@ tileset = village
 _____SSSSSSSSSS_____
 _____S........S_____
 _____S........S_____
-_____S........S_____
+_____S......$.S_____
 _____S......SSS_____
 _____S........S_____
 _____S........S_____
@@ -60,3 +60,4 @@ ____________________
 [entities]
 6,44 = {"link": "village_bell_tower_door", "to_room": "village_square", "arrive_facing": 1}
 10,44 = {"shape": "res://resources/world/helix/bell_tower_helix.tres", "look": "res://resources/world/helix/bell_tower_look.tres", "hand": 1}
+12,3 = {"slot_id": "village_bell_tower_alcove", "kind": 0}

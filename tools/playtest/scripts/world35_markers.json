@@ -1,0 +1,18 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 9.0,
+ "player_position": [11856, -900],
+ "_note": "WORLD-35 step 1: the debug marker of lighthouse_base's lookout cache (37,5) on the east steps, then the climb to it.",
+ "steps": [
+  {"t": 2.4, "screenshot": "marker_lighthouse_lookout"},
+  {"t": 2.5, "log": "lighthouse"},
+  {"t": 2.6, "action": "move_right", "pressed": true},
+  {"t": 2.7, "action": "jump", "pressed": true},
+  {"t": 3.0, "action": "jump", "pressed": false},
+  {"t": 3.4, "action": "jump", "pressed": true},
+  {"t": 3.7, "action": "jump", "pressed": false},
+  {"t": 4.2, "action": "move_right", "pressed": false},
+  {"t": 4.8, "screenshot": "marker_lighthouse_lookout_reached"},
+  {"t": 4.9, "log": "lookout"}
+ ]
+}

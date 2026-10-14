@@ -11,14 +11,16 @@ source_files:
   - resources/world/maps/room_legend.tres
   - resources/world/maps/reach_allowlist.tres
   - scenes/world/rooms/maps/reach/reach_audit.gd
-  - tests/scenes/world/rooms/room_files_test.gd
+  - tests/scenes/world/rooms/maps/room_files_test.gd
+  - tests/scenes/world/rooms/maps/reach/room_kit_test.gd
+  - scenes/world/interactables/reward_slot/reward_slot.gd
 ---
 
 # Reward slots reserve their place in the room text
 
 ## Summary
 
-Accepted 2026-10-14: "Yes, invisible markers (Recommended)" (user, on the WORLD-35 board).
+Accepted 2026-10-14: "Yes, invisible markers (Recommended)" (user, on the WORLD-35 board). **Status: built for WORLD-35 step 1** (2026-10-14, "Built" below); the slots in new rooms come with steps 2-6.
 
 WORLD-35 assigns a reward to every exploration dead end, but the systems that give rewards (STORY-06 collectibles, LIFE-04 gold and shop) are not built and LIFE-04 is undecided. A reward slot is a legend entity (`$`) placed in the `.room` now, with params `slot_id` and `kind`. The reach audit anchors it (`reach_role` CONTENT). STORY-06 or LIFE-04 later fills it by changing the scene behind the legend entry and a catalog keyed by `slot_id`. The `.room` files do not change again.
 
@@ -51,6 +53,37 @@ WORLD-35 assigns a reward to every exploration dead end, but the systems that gi
 ## Consequences
 
 - When the slots land, every allowlist entry whose reason says "STORY-06 ... stale once it lands" goes stale, and `room_reach_test` fails until they are deleted. Delete them in the same change.
-- A slot alone gives nothing to the player. Until STORY-06 or LIFE-04 ships, the release build looks exactly as it does today. Only the audit, the board and debug markers change.
+- A slot alone gives nothing to the player. In release it draws nothing. The trade-off: the map edits that came with the slots do show.
+  - Five new false walls (WORLD-35 step 1) open onto empty niches in release until STORY-06 or LIFE-04 fills them.
+  - lake_waterfall_path's wall ledges are merged flush.
+  - The rest of the change is the audit, the board and the debug markers.
 - `kind` holds no reward data. Content belongs to the filling system's Resource, so no slot carries text and nothing here needs `tr()`.
 - Do not use a slot for a teaching creature (CORE-04) or a flashback trigger (STORY-05). Those systems have their own behaviour and get their own legend entries when designed.
+
+## Built (WORLD-35 step 1, 2026-10-14)
+
+- **As decided, with two additions.**
+  - `kind` is written as its number (0 COLLECTIBLE, 1 CACHE).
+  - `room_files_test` also rejects a `kind` outside the enum.
+  - `room_kit_test.test_every_reward_slot_is_reached_by_some_kit` fails when no kit reaches the surface under a slot. It mirrors the audit's anchor lookup (`ReachAudit.ANCHOR_DROP`) on each kit report.
+  - `room_files_test` also fails on a slot with no ground or one-way in the cell under it. room_kit_test's ANCHOR_DROP lookup would accept a floating slot.
+  - The debug marker is a 12 px diamond (gold for COLLECTIBLE, brown for CACHE) 22 px above the floor at z `RoomMapNode.SECRET_Z - 10`, drawn only when `OS.is_debug_build()`. That z keeps it under a closed secret's world copy (`playtests/2026-10-14-world35-step1`).
+- **21 slots in today's rooms:** plan section 2.6 slots 1-14 and 23-29. Slots 15-22 lie in rooms that steps 2-6 build. Nine cells differ from the board: five because the board's cell floated above the floor or missed the room's own words, and the four niches:
+  - woods_pond 11,5 (board 10,4).
+  - woods_root_caves 3,16, the header's "col 3, standing on row 17".
+  - village_empty_house 2,3: the header's reward alcove at cols 1-3, behind the gate. The board had 20,3.
+  - village_tavern_cellar 17,8 (board 17,6).
+  - woods_deep 25,32: the WORLD-31 pocket's floor. The board's 30,34 is in the hole to the root caves.
+  - The four secret niches, carved where a hollow fits: frost_cliffs 10,39, lake_ice_caves 27,8, orchard_terraces 18,17, caldera_chimney_base 9,2.
+- **caldera_chimney_base moved off the route** (orchestrator call, 2026-10-14; `bugs/the-caldera-chimney-base-false-floor-lies-on-the-only-route`). Step 1 first made a false floor on the only floor between the room's openings, so every player fell in. It is now a double-jump nook in the ceiling block, a shelf under a `[secret]` hollow with a stone back wall. Design 04 section 1's rule for secrets: "Not impossible to find, but with only subtle hints".
+- **lake_shore's secret is cols 11-13.** Cols 14-15 stay a visible landing for the Congelar return. The far bank still holds the secret (design 04 section 3.5).
+- **Allowlist.**
+  - Five entries went stale and were deleted: caldera_dry_moat 26,4; lake_high_wall 16,20 and 16,29; village_bell_tower 12,3; woods_hut 10,4.
+  - Four "STORY-06 ... stale once it lands" entries still match an error. Their reasons now give the real cause:
+    - lake_high_wall 15,17, 16,23 and 16,26: the double jump from the raised ice skips them on the way to the slot.
+    - woods_hut 7,6: a full jump also reaches the loft.
+  - So "stale once it lands" held for five of nine entries. The audit's union can skip a step a kit without the double jump needs on the way: the lake kit (Redoma) climbs every rung of lake_high_wall's ladder.
+- **LIFE-05: the fourth life note is in `caldera_temple_sanctum`.** The user chose "A fourth note somewhere late", then "Caldera temple sanctum" (user, 2026-10-14). The slot lies behind Verão Espacial 1's Sombra gate in caldera_temple_gate (cols 28-33).
+  - The slot keeps kind COLLECTIBLE, since no new kind is needed.
+  - LIFE-05 keys the note by the `slot_id` `caldera_temple_sanctum`, as STORY-06 keys its content. The catalog that fills `$` gives that id a life note instead of a letter.
+  - Whether that slot also holds a letter is STORY-06's call.

@@ -1,6 +1,7 @@
 ; caldera_temple_gate.room - the temple front before the Chamber of the Sun (design 04 section 3.7); the main path runs under the terrace.
 ; Verao Espacial 1 (design 02 section 8): plate (col 21) and gate (col 27) 6 cells apart on the terrace, as in summer_trial;
-; Sombra on the plate opens the optional sanctum (cols 28-33).
+; Sombra on the plate opens the optional sanctum (cols 28-33). Its reward slot (`$`, WORLD-35) holds LIFE-05's fourth life note:
+; "Caldera temple sanctum" (user, 2026-10-14).
 
 [room]
 origin = 0, 0
@@ -11,7 +12,7 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 S...SSSS...................S......S....S
 S...SSSS..........................S....S
 S.................................S....S
-S....................P.....G......S....S
+S....................P.....G...$..S....S
 ...................SSSSSSSSSSSSSSSS.....
 ........................................
 ...............SS.......................
@@ -23,3 +24,4 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 [entities]
 21,4 = {"id": "temple_plate"}
 27,4 = {"id": "temple_door", "trigger_path": "temple_plate"}
+31,4 = {"slot_id": "caldera_temple_sanctum", "kind": 0}

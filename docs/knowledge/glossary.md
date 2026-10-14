@@ -20,6 +20,7 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | porta (de construção) | `Door` (a puzzle's "porta" stays `Mechanism`/gate) |
 | segredo, parede falsa | `SecretWall`, `[secret]`, `found_secrets` |
 | rachadura (dica de segredo) | `crack` (`BiomeTileset.crack`, legend `k`) |
+| lugar de recompensa (coletável / esconderijo) | `RewardSlot` (legend `$`, `slot_id`, `Kind.COLLECTIBLE` / `Kind.CACHE`); not a save slot (`SaveSlots`) |
 | sopro de poeira | `Draft` (legend `d`) |
 | grama gerada, folha de grama | `GrassField`, blade (`grass_blades.gdshader`) |
 | interior (sala de uma construção) | `Room.interior` |

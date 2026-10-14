@@ -95,6 +95,18 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..................
   grouped 8-connected, each group named `<room file>@x,y` by its first cell. A
   secret never collides, so songs, roots and rain act on the real hollow. Keep
   a hint by every secret: a `k` cell or a `d` draft at its mouth.
+- **A reward slot `$`** marks a dead end the layout rewards
+  (`docs/knowledge/architecture/reward-slots-reserve-their-place-in-the-room-text.md`).
+  Put it on the floor cell of that dead end, the cell above the ground Ivo
+  stands on there, so the audit anchors the surface the player reaches. Give
+  it a `slot_id` no other map uses and a `kind`: 0 for a collectible (a song
+  puzzle's goal, a place the design promises), 1 for a cache (a climbing or
+  secret nook). It draws only in debug builds. A slot inside a `[secret]` stays
+  hidden until the secret opens. Put a secret behind a face the player walks
+  into on purpose, never in a floor or wall the route crosses: it has no
+  collision, so on the route it is a pit everyone falls into. A hollow carved for a secret under a wall top
+  must keep half or more of that top's cells solid beneath it, or the top
+  becomes a shelf that leads nowhere.
 - **Pool water must be held**: `~` or `f` with open air beside or under it is
   an error, and so is air above it below its surface unless that air is a
   sealed pocket. Water painted under the ground beside a pit fills a passage
@@ -197,6 +209,7 @@ else in the code knows what a character means.
 | `d` | `[grid]` | entity | - | - | - | A faint draft of dust at a secret's mouth (facing 1 right, -1 left, 0 up); it freezes in the grey. |
 | `@` | `[grid]` | entity | - | - | stair | A helix stair the tower turns around: Ivo rides straight up its axis while the view turns the stair, wall and slits by his progress. Place it on the bottom floor, its cell's bottom-left corner the axis. shape is a HelixStairShape .tres path, look a HelixLook; hand 1 climbs with right held, -1 with left. The head needs a plank gallery across the shell (one-way, so Ivo rises through it), the column up the axis must be clear of solid ground, and the shell's inner faces stand at the wall's silhouette (room_files_test). |
 | `_` | `[grid]` | void | stone | - | - | Void outside a room's shell: solid stone to gameplay, drawn black. Every one of its 8 neighbours is ground (not a ledge), void or off the map, so a drawn wall always stands between the room's air and the void; never under water, a reach or a secret, and only in interiors for now. |
+| `$` | `[grid]` | entity | - | - | content | A reward slot, standing on this cell: a place the layout promises a reward. Needs a slot_id unique across every map; kind 0 COLLECTIBLE (STORY-06) or 1 CACHE (LIFE-04, undecided). Invisible in release, a small diamond in debug builds; no gameplay until STORY-06 or LIFE-04 fills it. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -426,6 +439,16 @@ Scene `res://scenes/world/interactables/helix_stair/helix_stair.tscn`, anchored 
 | `shape` | HelixStairShape | **required** |
 | `look` | HelixLook | `Resource("res://resources/world/helix/bell_tower_look.tres")` |
 | `hand` | int | `1` |
+
+#### `$` - RewardSlot
+
+Scene `res://scenes/world/interactables/reward_slot/reward_slot.tscn`, anchored at its cell's bottom centre (standing on the cell below). A reward slot, standing on this cell: a place the layout promises a reward. Needs a slot_id unique across every map; kind 0 COLLECTIBLE (STORY-06) or 1 CACHE (LIFE-04, undecided). Invisible in release, a small diamond in debug builds; no gameplay until STORY-06 or LIFE-04 fills it.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `slot_id` | StringName | **required** |
+| `kind` | enum (Collectible:0,Cache:1) | `0` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

@@ -1,6 +1,7 @@
 ; lake_waterfall_path.room - Trilha da Cascata: a climb of single jumps (rises of 3, gaps of 4 or less) up a
 ; cliff beside the static waterfall (cols 6-13), from the Mill's river (bottom) to the lake (design 04 section 3.5).
 ; No gate: base kit. The bench stands on the west stub beside the river mouth.
+; The side walls stay flush between the steps: a wall ledge there leads nowhere (WORLD-35).
 ; Row 0 closed: a drawn rock ceiling over a room inside rock (WORLD-34, "Drawn rock ceiling, all five (Recommended)", user, 2026-10-14).
 
 [room]
@@ -21,9 +22,9 @@ SSSSSS........SSSSSS
 SSSSSS........SSSSSS
 S..................S
 S.......====.......S
-SS................SS
-SS................SS
-SS....SSSSSS......SS
+S..................S
+S..................S
+S.....SSSSSS.......S
 S..................S
 S..................S
 SSSS...............S
@@ -39,11 +40,11 @@ S......SSS.........S
 S..................S
 S..................S
 SSSSSS.............S
-SS................SS
-SS................SS
-SS......SSSS......SS
-SS................SS
-SS................SS
+SS.................S
+SS.................S
+SS......SSSS.......S
+SS.................S
+SS.................S
 S...........SSS....S
 S..................S
 S..................S
