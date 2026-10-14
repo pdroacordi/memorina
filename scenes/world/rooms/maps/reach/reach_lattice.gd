@@ -14,15 +14,13 @@ const GRIP := 4
 
 ## Sub-steps per cell an air jump or a fall keeps its height in: 16 px.
 const QUANTA := 2
-## Rows above a room's top a jump may rise through an open top.
-const ABOVE := 10
 
 const _CELL := RoomMap.CELL_PX
 const _QUANTUM := _CELL / QUANTA
 
 # Derived per feet cell (bake): footprint clear, standing, holding a root or in a current, against a wall, in water,
-# standing only on a song's floor (optional: a fall may pass it), holding a root, at a current's downwind edge. A cell far
-# from every room stays 0, a wall the body never passes.
+# standing only on a song's floor (optional: a fall may pass it), holding a root, at a current's downwind edge. A cell in
+# no room and no sky band stays 0: an invisible wall (RoomEdges), which the body never passes, stands on or slides on.
 const _OPEN := 1
 const _STAND := 2
 const _TRANSIT := 4
@@ -31,8 +29,8 @@ const _WET := 16
 const _SOFT := 32
 const _CLIMB := 64
 const _EXIT := 128
-# Raw cell bit: inside a room.
-const _IN_ROOM := 1024
+# Raw cell bit: in no room and no sky band.
+const _OUTSIDE := 1024
 
 enum _Profile { JUMP, FALL, AIR, TERMINAL }
 const _STEPS: Array[int] = [-1, 0, 1]
@@ -189,24 +187,37 @@ func search(grid: ReachGrid, from: Array[Vector2i], double_jump: bool, wall_clim
 	return world
 
 ## Builds the derived cells for `grid`; landings() calls it, the audit calls it before asking about cells.
+## The bands open whole cells only, so the audit's ceiling is up to a cell lower than RoomEdges.CEILING_RISE: never looser.
 func bake(grid: ReachGrid) -> void:
 	if grid == _grid:
 		return
 	_grid = grid
-	_box = grid.bounds().grow_individual(1, ABOVE + body.y, 1, 1)
+	var open: Array[Rect2i] = []
+	for i: int in grid.room_count():
+		open.append(grid.room_rect(i))
+	open.append_array(grid.bands)
+	_box = grid.bounds()
+	for rect: Rect2i in open:
+		_box = _box.merge(rect)
+	_box = _box.grow(1)
 	var raw := PackedInt32Array()
 	raw.resize(_box.size.x * _box.size.y)
+	raw.fill(_OUTSIDE)
+	# A band keeps its grid flags, so a mover's floor there stands Ivo in the sky (bugs/outside-room-misses-a-song-floor-above-a-rooms-first-row).
+	for band: Rect2i in grid.bands:
+		for y: int in range(band.position.y, band.end.y):
+			for x: int in range(band.position.x, band.end.x):
+				raw[_index(x - _box.position.x, y - _box.position.y)] = grid.flags(Vector2i(x, y))
 	for i: int in grid.room_count():
 		var rect := grid.room_rect(i)
 		for y: int in range(rect.position.y, rect.end.y):
 			for x: int in range(rect.position.x, rect.end.x):
-				raw[_index(x - _box.position.x, y - _box.position.y)] = grid.flags(Vector2i(x, y)) | _IN_ROOM
+				raw[_index(x - _box.position.x, y - _box.position.y)] = grid.flags(Vector2i(x, y))
 	_cells.resize(raw.size())
 	_cells.fill(0)
-	for i: int in grid.room_count():
-		var near := grid.room_rect(i).grow_individual(1, ABOVE + body.y - 1, 1, 0)
-		for y: int in range(near.position.y, near.end.y):
-			for x: int in range(near.position.x, near.end.x):
+	for rect: Rect2i in open:
+		for y: int in range(rect.position.y, rect.end.y):
+			for x: int in range(rect.position.x, rect.end.x):
 				var local := Vector2i(x, y) - _box.position
 				_cells[_index(local.x, local.y)] = _derive(raw, local.x, local.y)
 
@@ -243,7 +254,7 @@ func _derive(raw: PackedInt32Array, x: int, y: int) -> int:
 	for j: int in body.y:
 		for i: int in body.x:
 			var flags := _raw(raw, x + i, y - j)
-			if flags & (ReachGrid.SOLID | ReachGrid.HAZARD) != 0:
+			if flags & (ReachGrid.SOLID | ReachGrid.HAZARD | _OUTSIDE) != 0:
 				return 0
 			if flags & ReachGrid.CLIMB != 0:
 				bits |= _TRANSIT | _CLIMB
@@ -253,14 +264,14 @@ func _derive(raw: PackedInt32Array, x: int, y: int) -> int:
 				bits |= _EXIT
 			if flags & ReachGrid.WATER != 0:
 				bits |= _WET
-	if _raw(raw, x, y) & _IN_ROOM != 0:
-		var under := 0
-		for i: int in body.x:
-			under |= _raw(raw, x + i, y + 1)
-		if under & (ReachGrid.SOLID | ReachGrid.ONE_WAY) != 0:
-			bits |= _STAND
-		elif under & ReachGrid.SONG_FLOOR != 0:
-			bits |= _STAND | _SOFT
+	# An invisible wall is never stood on: its _OUTSIDE bit is neither solid nor one-way.
+	var under := 0
+	for i: int in body.x:
+		under |= _raw(raw, x + i, y + 1)
+	if under & (ReachGrid.SOLID | ReachGrid.ONE_WAY) != 0:
+		bits |= _STAND
+	elif under & ReachGrid.SONG_FLOOR != 0:
+		bits |= _STAND | _SOFT
 	for side: int in [-1, body.x]:
 		var wall := true
 		for j: int in body.y:
@@ -272,7 +283,7 @@ func _derive(raw: PackedInt32Array, x: int, y: int) -> int:
 	return bits
 
 func _raw(raw: PackedInt32Array, x: int, y: int) -> int:
-	return raw[_index(x, y)] if _has(x, y) else 0
+	return raw[_index(x, y)] if _has(x, y) else _OUTSIDE
 
 func _reach(found: Dictionary[Vector2i, int], x: int, y: int, bits: int) -> void:
 	var cell := Vector2i(x, y)

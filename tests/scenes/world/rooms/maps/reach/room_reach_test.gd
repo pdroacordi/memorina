@@ -31,6 +31,17 @@ func test_every_error_is_allowed() -> void:
 		.override_failure_message("Reachability errors not in %s (boards: res://tools/maps/reach_boards.tscn):\n%s" % [ReachAllowlist.DEFAULT_PATH, "\n".join(unexpected)]) \
 		.is_empty()
 
+## "A test fails if any surface outside a room can be reached" (user, 2026-10-14): never allowlisted.
+func test_nothing_outside_a_room_is_stood_on() -> void:
+	var outside: Array[String] = []
+	for finding: ReachFinding in _report.errors():
+		if finding.kind == ReachFinding.Kind.OUTSIDE_ROOM:
+			outside.append(str(finding))
+	for entry: ReachAllowlistEntry in _allowlist.entries:
+		if entry.kind == ReachFinding.Kind.OUTSIDE_ROOM:
+			outside.append("allowlisted: %s %s,%s" % [entry.room, entry.cell.x, entry.cell.y])
+	assert_array(outside).is_empty()
+
 func test_every_allowlist_entry_has_a_reason() -> void:
 	var bare: Array[String] = []
 	for entry: ReachAllowlistEntry in _allowlist.entries:

@@ -40,6 +40,7 @@
 [ext_resource type="Script" path="res://scenes/ui/notebook/notebook_watcher.gd" id="40_watcher"]
 [ext_resource type="Resource" path="res://resources/ui/notebook/notebook_catalog.tres" id="41_notecat"]
 [ext_resource type="PackedScene" path="res://scenes/ui/notebook_toast/notebook_toast.tscn" id="42_toast"]
+[ext_resource type="Script" path="res://scenes/world/rooms/world_edges.gd" id="43_edges"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -69,6 +70,10 @@ process_mode = 1
 [node name="WindOrchards" parent="World" instance=ExtResource("2_orchards")]
 
 [node name="SummerCaldera" parent="World" instance=ExtResource("2_caldera")]
+
+[node name="WorldEdges" type="StaticBody2D" parent="World"]
+unique_name_in_owner = true
+script = ExtResource("43_edges")
 
 [node name="DebugTrials" type="Node" parent="."]
 script = ExtResource("34_teleport")

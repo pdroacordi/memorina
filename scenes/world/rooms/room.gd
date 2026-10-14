@@ -10,6 +10,7 @@ const GROUP := "room"
 @export var interior: bool = false
 @onready var _shape_node: CollisionShape2D = $CollisionShape2D
 var _contents_node: Node2D
+var _map: RoomMap
 ## Rebuild the contents on the next activate() instead of waking them.
 var _expired: bool = false
 
@@ -27,6 +28,21 @@ static func at(tree: SceneTree, point: Vector2) -> Room:
 	for room: Room in tree.get_nodes_in_group(GROUP):
 		if room.get_bounds().has_point(point):
 			return room
+	return null
+
+## The index of the node in `contents` that sets a RoomMap `map`, or -1
+## (gotchas/scene-state-lists-only-the-properties-a-scene-file-sets: every contents scene sets it).
+static func map_node(contents: SceneState) -> int:
+	for i: int in contents.get_node_count():
+		if _map_set_by(contents, i) != null:
+			return i
+	return -1
+
+# The RoomMap node `node` of `contents` sets as `map`, or null.
+static func _map_set_by(contents: SceneState, node: int) -> RoomMap:
+	for j: int in contents.get_node_property_count(node):
+		if contents.get_node_property_name(node, j) == &"map":
+			return contents.get_node_property_value(node, j) as RoomMap
 	return null
 
 func _enter_tree() -> void:
@@ -70,6 +86,14 @@ func expire() -> void:
 ## Newly activated contents are added deferred; wait for `ready` before reading their children.
 func contents() -> Node2D:
 	return _contents_node
+
+## The room's map, read from its contents scene without instancing it; null when the contents set none.
+func map() -> RoomMap:
+	if _map == null and contents_scene != null:
+		var state := contents_scene.get_state()
+		var node := map_node(state)
+		_map = _map_set_by(state, node) if node >= 0 else null
+	return _map
 
 ## The room's id, its scene file name: what a door's `to_room` names.
 func id() -> StringName:

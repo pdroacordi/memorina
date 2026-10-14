@@ -1,13 +1,14 @@
 ; lake_chasm.room - Abismo da Montanha (design 04 section 3.5): a flooded earth cleft 7 cells wide under a stone roof
 ; two rows above its lips, so no jump or double jump crosses it (the roof stops the arc, the water stops a dip).
 ; Enraizar from the east lip (col 15) roots it to the west lip (col 7) and the orchard tunnel; the climb from the lake side is single jumps.
+; Row 0 closed: a drawn rock ceiling in stone, which never roots, over a room inside rock (WORLD-34, "Drawn rock ceiling, all five (Recommended)", user, 2026-10-14).
 
 [room]
 origin = 0, 0
 tileset = frozen_lake
 
 [grid]
-SSSSSSSSSSSSSSSSSSSSSSS................#
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS#
 SSSSSSSSSSSSSSSSSSSSSSS................#
 SSSSSSSSSSSSSSSSSSSSSSS................#
 SSSSSSSSSSSSSSSSSSSSSSS................#

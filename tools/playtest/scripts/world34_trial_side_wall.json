@@ -1,0 +1,21 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 4.5,
+ "locale": "en",
+ "player_position": [48, 5776],
+ "steps": [
+  {"t": 1.0, "log": "on_wall_top"},
+  {"t": 1.0, "screenshot": "side_1_wall_top"},
+  {"t": 1.2, "trace": true},
+  {"t": 1.2, "action": "move_left", "pressed": true},
+  {"t": 2.0, "screenshot": "side_2_walked_into_the_edge"},
+  {"t": 2.2, "log": "walked"},
+  {"t": 2.4, "action": "jump", "pressed": true},
+  {"t": 2.7, "action": "jump", "pressed": false},
+  {"t": 2.65, "screenshot": "side_3_jump_west"},
+  {"t": 3.3, "action": "move_left", "pressed": false},
+  {"t": 3.4, "trace": false},
+  {"t": 3.6, "screenshot": "side_4_after"},
+  {"t": 3.7, "log": "after"}
+ ]
+}

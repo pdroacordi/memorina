@@ -2,13 +2,14 @@
 ; Entered from the mill loft through the floor mouth. The lift (col 10) rises 14 rows to the block tops while plate_lift holds; the load over
 ; plate_jam locks it. Soltar from the east niche reaches only the right load (12 cells apart); from the lift it reaches both. From the top,
 ; the drop column (cols 17-18) leads to the terraces' upper ledge; it cannot be climbed back without wall climb.
+; Row 0 closed: a drawn rock ceiling over a room inside rock, 6 rows over the lift's top stop (WORLD-34, "Drawn rock ceiling, all five (Recommended)", user, 2026-10-14).
 
 [room]
 origin = 0, 0
 tileset = wind_orchards
 
 [grid]
-S..................S
+SSSSSSSSSSSSSSSSSSSS
 S..................S
 S..................S
 S..................S

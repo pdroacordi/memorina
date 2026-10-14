@@ -225,3 +225,25 @@ func test_only_wall_climb_slides_up_a_tall_pit() -> void:
 	var grid := ReachFixture.grid(rows, Vector2i(5, 11))
 	assert_bool(Vector2i(2, 0) in ReachFixture.closure(grid, Vector2i(5, 11), ReachLattice.Tier.DOUBLE_JUMP)).is_false()
 	assert_bool(Vector2i(2, 0) in ReachFixture.closure(grid, Vector2i(5, 11), ReachLattice.Tier.WALL_CLIMB)).is_true()
+
+# A short open-topped room: a floor at row 2, walls nowhere.
+func _open_top() -> ReachGrid:
+	return ReachFixture.grid(PackedStringArray(["................", "................", "################"]), Vector2i(8, 1))
+
+# The sky band opens floori(RoomEdges.CEILING_RISE / 32) rows: the feet reach row -3, the head row -4, never higher, and
+# nothing beside the room is open (the side poke is gone).
+func test_an_open_top_opens_its_sky_band_and_nothing_else_outside() -> void:
+	var lattice := ReachFixture.ivo()
+	lattice.bake(_open_top())
+	assert_int(floori(RoomEdges.CEILING_RISE / CELL)).is_equal(4)
+	assert_bool(lattice.is_open(Vector2i(8, -3))).is_true()
+	assert_bool(lattice.is_open(Vector2i(8, -4))).is_false()
+	assert_bool(lattice.is_open(Vector2i(-1, 1))).is_false()
+	assert_bool(lattice.is_open(Vector2i(16, 1))).is_false()
+	assert_bool(lattice.is_open(Vector2i(0, 1))).is_true()
+
+func test_a_closed_top_has_no_sky_band() -> void:
+	var grid := ReachFixture.grid(PackedStringArray(["SSSSSSSSSSSSSSSS", "................", "................", "################"]), Vector2i(8, 2))
+	assert_array(grid.bands).is_empty()
+	var reached := ReachFixture.ivo().search(grid, [Vector2i(8, 2)] as Array[Vector2i], true, false)
+	assert_bool(reached.keys().any(func(cell: Vector2i) -> bool: return cell.y < 2)).is_false()

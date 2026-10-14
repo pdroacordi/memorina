@@ -20,6 +20,7 @@ signal room_changed(room: Room)
 @onready var _memory_field : MemoryField = %MemoryField
 @onready var _screens : Screens = $ScreenLayer/Screens
 @onready var _notebook_watcher : NotebookWatcher = $World/NotebookWatcher
+@onready var _edges : WorldEdges = %WorldEdges
 var _current_room    : Room
 var _is_transitioning: bool      = false
 ## Identifies the latest hazard beat so an older overlapping beat can stop.
@@ -44,6 +45,10 @@ func _ready() -> void:
 	_player.door_entered.connect(_on_player_entered_door)
 	_screens.set_map_subject(_player)
 	_screens.set_notebook_watcher(_notebook_watcher)
+	# After DebugTrials._ready (a child readies before its parent), so the trials it mounted are walled too.
+	var rooms: Array[Room] = []
+	rooms.assign(get_tree().get_nodes_in_group(Room.GROUP))
+	_edges.build(rooms)
 	if SaveSystem.bench_id() != &"":
 		_arrive()
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
@@ -75,6 +80,7 @@ func _physics_process(_delta: float) -> void:
 		# Out of the world through a gap in its walls (bugs/wall-climb-leaves-the-world-over-the-cliff-chimneys-west-wall),
 		# not over an open top he falls back through (bugs/the-safety-net-fires-when-ivo-drops-across-a-seam-above-two-open-tops).
 		if RoomExit.is_lost(body, _bounds_of(near)):
+			push_warning("Ivo left every room at %s: an edge leak (systems/rooms \"Edges\")" % body.get_center())
 			_lost = true
 			_player.fall_out_of_world()
 		return

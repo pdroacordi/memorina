@@ -450,11 +450,15 @@ has a reachability test that checks both halves.
 The air jump carries further than the table's apex press when pressed later in
 the fall: about 15 cells across, not 13.
 
-**Under an open top** (no room above), the camera may rise 160 px over the room
-(`RoomRing.WIDTH`), enough for a full jump from a floor 2 rows below the top.
-Keep every required take-off at row 2 or lower; `room_ring_test.gd` fails on a
-floor in row 1 unless its `NEAR_TOP` says why no route jumps from it
-(`docs/knowledge/systems/rooms.md`, "Room ring").
+**Edges** (WORLD-34, `docs/knowledge/systems/rooms.md`, "Edges"). Ivo never
+stands outside a room. Every edge with no room beyond is an invisible wall.
+Over an open top (first-row cell air, water or secret, no room above) an
+invisible ceiling sits 152 px up: a full jump from row 2 clears it, but a
+double jump or a single jump from row 1 is cut off. Never make a first-row seam
+pillar a crossing: the sky cannot pass over it, so cross a seam through its
+opening (rows 5-8) or lower the pillar a row. A room inside rock gets a drawn
+row-0 ceiling, not sky. Do not draw an opening onto the void: the audit flags
+it as `OPEN_EDGE`.
 
 **The reachability audit** (`room_reach_test.gd`) steps Ivo's arc over every
 world room stitched together, every song assumed at once, and fails on a

@@ -7,7 +7,7 @@ severity: medium
 tags: [playtest, timelines, world-25, regression-coverage, spring-woods, wind-orchards]
 related: [playtests/2026-10-11-world25-rework, bugs/the-out-of-room-safety-net-fires-on-a-double-jump-above-an-open-room-top, bugs/the-safety-net-fires-when-ivo-drops-across-a-seam-above-two-open-tops, bugs/the-camera-reach-is-a-bounding-box-and-shows-the-void-over-an-open-top, playtests/2026-10-09-traversal-woods-lake]
 created: 2026-10-11
-updated: 2026-10-11
+updated: 2026-10-14
 source_files:
   - tools/playtest/scripts/traverse_woods_lake_c2_pond_shelf_to_bloom.json
   - tools/playtest/scripts/traverse_woods_lake_rv4_s1_pond_double_jump_into_bloom_hollow.json
@@ -70,3 +70,5 @@ it. If a bug or playtest cites it, the scenario (height above a seam, ledge unde
 - **rv4_s1** is now `traverse_woods_lake_rv4_s1_pond_double_jump_into_bloom_hollow.json`: a running double jump west from woods_pond's west step (feet 160) over the col-0 wall into bloom_hollow, crossing the seam (x -5760) at feet about -110, above both open tops. orchard_leaf_path has no floor near its col-0 seam within reach. Re-run: peak -109.6, `fade` 0.00, lands in bloom_hollow at (-5954.2, 288).
 - **c3/c4/c5** are deleted.
 - The two safety-net bug files note the new timelines.
+
+**WORLD-34 (2026-10-14):** rv4_s1 no longer crosses into bloom_hollow: the col-0 pillar cannot be crossed through the sky any more (`bugs/the-safety-net-fires-when-ivo-drops-across-a-seam-above-two-open-tops`). Its timeline is retired (deleted).

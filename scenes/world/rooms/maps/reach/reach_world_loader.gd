@@ -29,7 +29,21 @@ static func load_world() -> Loaded:
 			if child is Room:
 				_add_room(loaded, child as Room, region, legend, roots)
 		region.free()
+	var maps: Array[RoomMap] = []
+	for i: int in loaded.grid.room_count():
+		maps.append(loaded.maps[loaded.grid.room_id(i)])
+	add_sky(loaded.grid, maps)
 	return loaded
+
+## Adds the sky bands over `grid`'s open tops; `maps[i]` is room i's map, in the order the rooms were added.
+static func add_sky(grid: ReachGrid, maps: Array[RoomMap]) -> void:
+	var rects: Array[Rect2] = []
+	var closed: Array[PackedByteArray] = []
+	for i: int in grid.room_count():
+		var cells := grid.room_rect(i)
+		rects.append(Rect2(cells.position * RoomMap.CELL_PX, cells.size * RoomMap.CELL_PX))
+		closed.append(RoomEdges.closed_top(maps[i]))
+	grid.add_bands(RoomEdges.band_cells(RoomEdges.bands(rects, closed)))
 
 ## Ivo's lattice: his jump from his real tuning, his footprint from his capsule.
 static func ivo_lattice() -> ReachLattice:
@@ -41,29 +55,28 @@ static func _add_room(loaded: Loaded, room: Room, region: Region, legend: RoomLe
 	var size := (shape_node.shape as RectangleShape2D).size
 	var bounds := Rect2(offset + room.position + shape_node.position - size * 0.5, size)
 	var contents := room.contents_scene.get_state()
-	for i: int in contents.get_node_count():
-		var map_resource: Variant = _property(contents, i, &"map", null)
-		if not map_resource is RoomMap:
-			continue
-		var path := (map_resource as RoomMap).resource_path
-		var parsed := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
-		var map := parsed.map
-		for error: String in parsed.errors:
-			loaded.problems.append(error)
-		var corner := offset + room.position + (_property(contents, i, &"position", Vector2.ZERO) as Vector2) + Vector2(map.origin * RoomMap.CELL_PX)
-		if Rect2(corner, Vector2(map.size * RoomMap.CELL_PX)) != bounds:
-			loaded.problems.append("%s: its map covers %s, its room %s" % [room.id(), Rect2(corner, Vector2(map.size * RoomMap.CELL_PX)), bounds])
-			return
-		var cell_origin := Vector2i(corner / RoomMap.CELL_PX)
-		loaded.grid.add_room(room.id(), map, cell_origin, StringName(region.scene_file_path.get_file().get_basename()))
-		loaded.maps[room.id()] = map
-		loaded.grid.add_roots(RootSpanFinder.find(map, roots.bridge, roots.shaft_width, roots.shaft_rows, roots.pillar), map, cell_origin)
-		_add_movers(loaded.grid, map, cell_origin)
+	var i := Room.map_node(contents)
+	if i < 0:
+		loaded.problems.append("%s: its contents have no RoomMap" % room.id())
 		return
-	loaded.problems.append("%s: its contents have no RoomMap" % room.id())
+	var path := (_property(contents, i, &"map", null) as RoomMap).resource_path
+	var parsed := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
+	var map := parsed.map
+	for error: String in parsed.errors:
+		loaded.problems.append(error)
+	var corner := offset + room.position + (_property(contents, i, &"position", Vector2.ZERO) as Vector2) + Vector2(map.origin * RoomMap.CELL_PX)
+	if Rect2(corner, Vector2(map.size * RoomMap.CELL_PX)) != bounds:
+		loaded.problems.append("%s: its map covers %s, its room %s" % [room.id(), Rect2(corner, Vector2(map.size * RoomMap.CELL_PX)), bounds])
+		return
+	var cell_origin := Vector2i(corner / RoomMap.CELL_PX)
+	loaded.grid.add_room(room.id(), map, cell_origin, StringName(region.scene_file_path.get_file().get_basename()))
+	loaded.maps[room.id()] = map
+	loaded.grid.add_roots(RootSpanFinder.find(map, roots.bridge, roots.shaft_width, roots.shaft_rows, roots.pillar), map, cell_origin)
+	add_movers(loaded.grid, map, cell_origin)
 
-# Floors that movers sweep, currents' boxes and downwind edges, and stairs' ends, from each entity's own authored values.
-static func _add_movers(grid: ReachGrid, map: RoomMap, cell_origin: Vector2i) -> void:
+## Adds the floors `map`'s movers sweep, its currents' boxes and downwind edges and its stairs' ends, from each entity's
+## own authored values; `map.origin` sits at world cell `cell_origin`.
+static func add_movers(grid: ReachGrid, map: RoomMap, cell_origin: Vector2i) -> void:
 	for placed: Dictionary in map.entities:
 		var entry := map.legend.entry(placed.symbol)
 		if not entry.reach_role in [RoomLegendEntry.ReachRole.MOVER, RoomLegendEntry.ReachRole.CURRENT, RoomLegendEntry.ReachRole.STAIR]:

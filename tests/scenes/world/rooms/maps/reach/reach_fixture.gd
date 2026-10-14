@@ -21,10 +21,22 @@ static func map(rows: PackedStringArray, water: PackedStringArray = PackedString
 	assert(parsed.ok(), "\n".join(parsed.errors))
 	return parsed.map
 
-## A one-room grid from `rows`, with Ivo starting with his feet in `start`.
+## A one-room grid from `rows` with its sky bands, Ivo starting with his feet in `start`.
 static func grid(rows: PackedStringArray, start: Vector2i, water: PackedStringArray = PackedStringArray(), entities: PackedStringArray = PackedStringArray()) -> ReachGrid:
 	var built := ReachGrid.new()
-	built.add_room(&"fixture", map(rows, water, entities), Vector2i.ZERO)
+	var room_map := map(rows, water, entities)
+	built.add_room(&"fixture", room_map, Vector2i.ZERO)
+	ReachWorldLoader.add_sky(built, [room_map] as Array[RoomMap])
+	built.set_start(start)
+	return built
+
+## grid() with the floors, boxes and stair ends of the movers, currents and stairs in `entities` (ReachWorldLoader.add_movers).
+static func moving_grid(rows: PackedStringArray, start: Vector2i, entities: PackedStringArray) -> ReachGrid:
+	var built := ReachGrid.new()
+	var room_map := map(rows, PackedStringArray(), entities)
+	built.add_room(&"fixture", room_map, Vector2i.ZERO)
+	ReachWorldLoader.add_movers(built, room_map, Vector2i.ZERO)
+	ReachWorldLoader.add_sky(built, [room_map] as Array[RoomMap])
 	built.set_start(start)
 	return built
 
@@ -34,6 +46,7 @@ static func rooted_grid(rows: PackedStringArray, start: Vector2i, entities: Pack
 	var room_map := map(rows, PackedStringArray(), entities)
 	built.add_room(&"fixture", room_map, Vector2i.ZERO)
 	built.add_roots(RootSpanFinder.find(room_map, 14, 4, 2, 8), room_map, Vector2i.ZERO)
+	ReachWorldLoader.add_sky(built, [room_map] as Array[RoomMap])
 	built.set_start(start)
 	return built
 

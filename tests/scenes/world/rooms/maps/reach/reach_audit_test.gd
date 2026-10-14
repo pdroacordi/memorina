@@ -14,8 +14,27 @@ func _room(extra: Dictionary) -> PackedStringArray:
 	rows.append("######################")
 	return rows
 
+# Every finding but OPEN_EDGE: most fixtures leave a room's sides open; _edge_kinds() checks those.
 func _kinds(report: ReachReport) -> Array:
-	return report.findings.map(func(finding: ReachFinding) -> String: return "%s %d,%d %s" % [finding.kind_name(), finding.local.x, finding.local.y, "error" if finding.error else "warning"])
+	return _named(report.findings.filter(func(finding: ReachFinding) -> bool: return finding.kind != ReachFinding.Kind.OPEN_EDGE))
+
+func _edge_kinds(report: ReachReport) -> Array:
+	return _named(report.findings.filter(func(finding: ReachFinding) -> bool: return finding.kind == ReachFinding.Kind.OPEN_EDGE))
+
+# Sky bands over every room of a hand-built grid, as if each first row were open.
+func _add_sky(grid: ReachGrid) -> void:
+	var maps: Array[RoomMap] = []
+	for i: int in grid.room_count():
+		var rect := grid.room_rect(i)
+		var map := RoomMap.new()
+		map.size = rect.size
+		map.ground.resize(rect.size.x * rect.size.y)
+		map.platform.resize(rect.size.x * rect.size.y)
+		maps.append(map)
+	ReachWorldLoader.add_sky(grid, maps)
+
+func _named(findings: Array) -> Array:
+	return findings.map(func(finding: ReachFinding) -> String: return "%s %d,%d %s" % [finding.kind_name(), finding.local.x, finding.local.y, "error" if finding.error else "warning"])
 
 func test_a_flat_floor_has_no_findings() -> void:
 	assert_array(_kinds(_audit(ReachFixture.grid(_room({}), Vector2i(2, 10))))).is_empty()
@@ -84,6 +103,7 @@ func test_a_platform_next_to_a_secret_is_fine() -> void:
 	var parsed := RoomMapParser.parse(text, RoomLegend.load_default(), "fixture.room")
 	var grid := ReachGrid.new()
 	grid.add_room(&"fixture", parsed.map, Vector2i.ZERO)
+	_add_sky(grid)
 	grid.set_start(Vector2i(2, 10))
 	assert_array(_kinds(_audit(grid))).is_empty()
 
@@ -99,6 +119,7 @@ func test_a_door_without_a_partner_in_its_region_is_an_error() -> void:
 		PackedStringArray(["4,0 = {\"link\": \"fixture_door\", \"to_room\": \"inside\"}"])), Vector2i.ZERO, &"village")
 	grid.add_room(&"inside", ReachFixture.map(PackedStringArray(["..E.....", "########"]), PackedStringArray(),
 		PackedStringArray(["2,0 = {\"link\": \"fixture_door\", \"to_room\": \"outside\"}"])), Vector2i(100, 100), &"woods")
+	_add_sky(grid)
 	grid.set_start(Vector2i(1, 0))
 	assert_array(_kinds(_audit(grid))).contains(["UNPAIRED_DOOR 4,0 error", "UNPAIRED_DOOR 2,0 error"])
 
@@ -136,9 +157,11 @@ func test_doors_join_their_rooms_both_ways() -> void:
 		PackedStringArray(["4,0 = {\"link\": \"fixture_door\", \"to_room\": \"inside\"}"])), Vector2i.ZERO)
 	grid.add_room(&"inside", ReachFixture.map(PackedStringArray(["..E.....", "########"]), PackedStringArray(),
 		PackedStringArray(["2,0 = {\"link\": \"fixture_door\", \"to_room\": \"outside\"}"])), Vector2i(100, 100))
+	_add_sky(grid)
 	grid.set_start(Vector2i(1, 0))
 	var report := _audit(grid)
 	assert_array(_kinds(report)).is_empty()
+	assert_int(report.reached.size()).is_equal(ReachAudit.TIERS.size())
 	for tier: PackedByteArray in report.reached:
 		assert_array(Array(tier)).contains_exactly([1, 1])
 
@@ -244,3 +267,63 @@ func test_a_cell_beside_a_shelf_outside_every_room_is_no_drop() -> void:
 func test_outside_every_room_under_a_slab_counts_as_solid() -> void:
 	var report := _audit(ReachFixture.grid(PackedStringArray(["S.......", "S.......", "SSSS...."]), Vector2i(1, 1)))
 	assert_int(_support_at(report, Vector2i(1, 1))).is_equal(ReachReport.Support.GROUND)
+
+# A floor a song makes in an open first row stands Ivo in the sky band over it, outside every room: reached or not.
+func test_a_floor_in_the_first_row_under_the_sky_stands_outside_the_room() -> void:
+	var grid := ReachFixture.grid(_room({}), Vector2i(2, 10))
+	grid.add_cells([Vector2i(10, 0), Vector2i(11, 0)] as Array[Vector2i], ReachGrid.SONG_FLOOR)
+	assert_array(_kinds(_audit(grid))).contains(["OUTSIDE_ROOM 10,-1 error"])
+
+# bugs/outside-room-misses-a-song-floor-above-a-rooms-first-row: a band cell keeps its grid flags.
+func test_a_song_floor_rounded_into_the_sky_band_stands_outside_the_room() -> void:
+	var grid := ReachFixture.grid(_room({}), Vector2i(2, 10))
+	grid.add_cells([Vector2i(10, -2)] as Array[Vector2i], ReachGrid.SONG_FLOOR)
+	assert_array(_kinds(_audit(grid))).contains(["OUTSIDE_ROOM 10,-3 error"])
+
+# A long seesaw in row 1 under an open top: its raised end's floor rounds into row -1, a sky-band cell.
+func test_a_seesaw_raised_over_an_open_top_stands_outside_the_room() -> void:
+	var grid := ReachFixture.moving_grid(_room({1: "..........T..........."}), Vector2i(2, 10),
+		PackedStringArray(["10,1 = {\"length\": 320.0}"]))
+	var outside := _kinds(_audit(grid)).filter(func(kind: String) -> bool: return kind.begins_with("OUTSIDE_ROOM") and kind.contains(",-2 "))
+	assert_array(outside).is_not_empty()
+
+# A flag in no room and no band is a mover or current authored past its room.
+func test_a_flag_beside_a_room_is_outside_it() -> void:
+	var grid := ReachFixture.grid(_room({}), Vector2i(2, 10))
+	grid.add_cells([Vector2i(-3, 5)] as Array[Vector2i], ReachGrid.SONG_FLOOR)
+	assert_array(_kinds(_audit(grid))).contains(["OUTSIDE_ROOM -3,5 error"])
+
+func test_a_closed_first_row_has_no_sky_to_stand_in() -> void:
+	var grid := ReachFixture.grid(_room({0: "SSSSSSSSSSSSSSSSSSSSSS"}), Vector2i(2, 10))
+	grid.add_cells([Vector2i(10, 1)] as Array[Vector2i], ReachGrid.SONG_FLOOR)
+	assert_array(_kinds(_audit(grid)).filter(func(kind: String) -> bool: return kind.begins_with("OUTSIDE_ROOM"))).is_empty()
+
+# A walled room with a gap in its east wall at rows 9-10, over a floor whose lake runs off the bottom at cols 0-5.
+func _gapped() -> PackedStringArray:
+	var rows := PackedStringArray()
+	for y: int in 11:
+		rows.append("S....................S" if y < 9 else "S.....................")
+	rows.append_array(["SSSSSSSSSSSSSSSSSSSSSS", "......SSSSSSSSSSSSSSSS"])
+	return rows
+
+func _gapped_lake() -> PackedStringArray:
+	var water := PackedStringArray()
+	for y: int in 13:
+		water.append("wwwwww................" if y == 12 else "......................")
+	return water
+
+# The lake on the bottom edge is no opening: Ivo sinks in it before he meets the wall.
+func test_an_opening_onto_the_void_is_an_open_edge() -> void:
+	var report := _audit(ReachFixture.grid(_gapped(), Vector2i(2, 10), _gapped_lake()))
+	assert_array(_edge_kinds(report)).contains_exactly(["OPEN_EDGE 21,9 error"])
+
+func test_an_opening_onto_a_neighbour_is_a_seam() -> void:
+	var grid := ReachGrid.new()
+	var near := ReachFixture.map(_gapped(), _gapped_lake())
+	var beside := ReachFixture.map(PackedStringArray(["S...", "S...", "S...", "S...", "S...", "S...", "S...", "S...", "S...", "....", "....", "SSSS", "SSSS"]))
+	grid.add_room(&"near", near, Vector2i.ZERO)
+	grid.add_room(&"beside", beside, Vector2i(22, 0))
+	ReachWorldLoader.add_sky(grid, [near, beside] as Array[RoomMap])
+	grid.set_start(Vector2i(2, 10))
+	var seam := _edge_kinds(_audit(grid)).filter(func(kind: String) -> bool: return kind.contains(" 21,"))
+	assert_array(seam).is_empty()

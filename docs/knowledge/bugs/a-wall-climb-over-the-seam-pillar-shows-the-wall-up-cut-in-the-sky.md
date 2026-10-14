@@ -6,7 +6,7 @@ status: resolved
 tags: [backdrop, room-ring, seam, hard-cut, world-28, allowlist, wall-climb]
 related: [bugs/a-ring-corner-diagonal-shows-a-rock-wall-in-the-mills-sky-on-a-jump, architecture/backdrop-seams, systems/backdrops, systems/rooms]
 created: 2026-10-13
-updated: 2026-10-13
+updated: 2026-10-14
 source_files:
   - scenes/world/environment/backdrop/backdrop.gd
   - scenes/world/environment/backdrop/backdrop_seams.gd
@@ -95,3 +95,5 @@ so a wall climb may reach it too.
     the lake's far peaks over the tops; the cut is now `REGION_TOPS` with a cover (`systems/backdrops`).
 - Cuts that the rule removed elsewhere: crater/seesaw y 1376, cistern bottom/crater y 992. New ring limits it made
   (all facing solid walls): chasm/high wall y -2464, chimney base/cliff chimney y 1376, cistern bottom/temple gate y 1376.
+
+**WORLD-34 (2026-10-14):** Ivo can no longer get over a first-row seam pillar through the sky (the band's side is an ungrippable edge wall, the pillar's top a flush slab), so this view no longer arises in play (by construction, `architecture/world-edges-from-the-room-list`; not re-shot).

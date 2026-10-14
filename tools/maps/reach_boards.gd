@@ -8,8 +8,10 @@ const DEFAULT_OUT := "user://reach_boards"
 ## Image px per cell.
 const PX := 8
 ## Which mark wins on a cell two findings share, first wins.
-const MARK_ORDER := ["?", "!", "&", "*", "+", ":"]
+const MARK_ORDER := ["x", "|", "?", "!", "&", "*", "+", ":"]
 const MARK_COLOURS := {
+	"x": Color(1.0, 0.0, 0.0),
+	"|": Color(0.0, 0.9, 0.9),
 	"?": Color(1.0, 1.0, 1.0),
 	"!": Color(0.9, 0.15, 0.15),
 	"&": Color(0.85, 0.2, 0.75),
@@ -62,7 +64,7 @@ func _out_dir() -> String:
 	return args[at + 1] if at >= 0 and at + 1 < args.size() else DEFAULT_OUT
 
 func _write_text(path: String, map: RoomMap, rect: Rect2i, findings: Array, marks: Dictionary[Vector2i, String]) -> void:
-	var lines := PackedStringArray(["; %s: ! unreachable, * leads nowhere, + redundant route, : dead-end pocket, & no way back, ? unpaired door" % path.get_file().get_basename()])
+	var lines := PackedStringArray(["; %s: ! unreachable, * leads nowhere, + redundant route, : dead-end pocket, & no way back, ? unpaired door, | open edge; x outside a room (feet in the sky band, listed below)" % path.get_file().get_basename()])
 	for finding: ReachFinding in findings:
 		lines.append("; %s at %d,%d (%s, %d cells)" % [finding.kind_name(), finding.local.x, finding.local.y, "error" if finding.error else "warning", finding.cells.size()])
 	for y: int in map.size.y:

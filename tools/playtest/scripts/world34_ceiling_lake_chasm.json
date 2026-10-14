@@ -1,0 +1,21 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 3.5,
+ "locale": "en",
+ "player_position": [-2224, -1920],
+ "skills": [0],
+ "steps": [
+  {"t": 1.0, "screenshot": "ceiling_lake_chasm_stand"},
+  {"t": 1.1, "action": "look_up", "pressed": true},
+  {"t": 2.0, "screenshot": "ceiling_lake_chasm_look_up"},
+  {"t": 2.05, "action": "jump", "pressed": true},
+  {"t": 2.3, "action": "jump", "pressed": false},
+  {"t": 2.4, "action": "jump", "pressed": true},
+  {"t": 2.65, "action": "jump", "pressed": false},
+  {"t": 2.6, "screenshot": "ceiling_lake_chasm_jump_a"},
+  {"t": 2.7, "screenshot": "ceiling_lake_chasm_jump_b"},
+  {"t": 2.8, "screenshot": "ceiling_lake_chasm_jump_c"},
+  {"t": 2.85, "log": "apex"},
+  {"t": 3.0, "action": "look_up", "pressed": false}
+ ]
+}

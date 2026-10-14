@@ -1,13 +1,14 @@
 ; lake_high_wall.room - A Parede Alta (design 04 section 3.5): the floor passage (rows 29-32) needs nothing; the alcove
 ; on the wall (top row 8) is 10 rows above the bank, beyond a double jump from flat ice. Inverno Logico 2: Redoma at the
 ; lip (col 15) raises the lake into `u`, Congelar fixes it. Combinado 2: Vendaval west, Congelar fixes the crest.
+; Row 0 closed: a drawn rock ceiling over a room inside rock (WORLD-34, "Drawn rock ceiling, all five (Recommended)", user, 2026-10-14).
 
 [room]
 origin = 0, 0
 tileset = frozen_lake
 
 [grid]
-S..............SSSSS
+SSSSSSSSSSSSSSSSSSSS
 S..............SSSSS
 S..................S
 S..................S

@@ -2,6 +2,9 @@ class_name WallMobilityComponent
 extends Node
 ## Wall slide and wall-jump mobility.
 
+## Least |normal.x| of a slide collision that counts as a wall.
+const WALL_NORMAL_X := 0.7
+
 ## Set by the owner from the saved skill gate.
 @export var enabled: bool = true
 ## Base-gravity multiplier during a wall slide (0 sticks; 1 is normal gravity).
@@ -19,8 +22,9 @@ var double_jump: DoubleJumpComponent
 
 
 func update(delta: float, axis: float) -> bool:
+	var wall := _grip_normal()
 	if is_sliding:
-		if not _body.is_on_wall() or sign(_body.get_wall_normal().x) == sign(axis):
+		if wall == Vector2.ZERO or sign(wall.x) == sign(axis):
 			is_sliding = false
 		else:
 			_body.velocity.y += _body.base_gravity() * delta * wall_gravity_mult
@@ -28,9 +32,9 @@ func update(delta: float, axis: float) -> bool:
 			double_jump.refresh()
 	elif (
 		enabled
-		and _body.is_on_wall()
+		and wall != Vector2.ZERO
 		and _body.velocity.y >= 0
-		and _is_pushing_into_wall(axis)
+		and sign(axis * -1) == sign(wall.x)
 	):
 		is_sliding = true
 		jump.refresh_coyote()
@@ -43,5 +47,15 @@ func update(delta: float, axis: float) -> bool:
 func stop() -> void:
 	is_sliding = false
 
-func _is_pushing_into_wall(axis: float) -> bool:
-	return sign(axis * -1) == sign(_body.get_wall_normal().x)
+# The normal of a wall this step's slide touched that is not an invisible world edge (WorldEdges), else ZERO: an edge is
+# never slid on, wall-jumped from or a refresh of the air jump.
+func _grip_normal() -> Vector2:
+	if not _body.is_on_wall():
+		return Vector2.ZERO
+	for i: int in _body.get_slide_collision_count():
+		var hit := _body.get_slide_collision(i)
+		if absf(hit.get_normal().x) <= WALL_NORMAL_X:
+			continue
+		if PhysicsServer2D.body_get_collision_layer(hit.get_collider_rid()) & WorldEdges.LAYER == 0:
+			return hit.get_normal()
+	return Vector2.ZERO

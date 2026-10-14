@@ -32,8 +32,12 @@ var doors: Array[Dictionary] = []
 var stairs: Array[Array] = []
 ## Each root span added, so a removed ledge also removes the roots it grows.
 var roots: Array[Root] = []
+## The sky over open tops, world cells (RoomEdges.band_cells): the only space outside the rooms Ivo enters.
+var bands: Array[Rect2i] = []
 
 var _cells: Dictionary[Vector2i, int] = {}
+# Cells flagged before any room covered them, so possibly in no room.
+var _loose: Dictionary[Vector2i, bool] = {}
 var _room_ids: Array[StringName] = []
 var _room_rects: Array[Rect2i] = []
 var _bounds := Rect2i()
@@ -56,7 +60,8 @@ func add_room(id: StringName, map: RoomMap, cell_origin: Vector2i, region: Strin
 				flags |= (ROOF | ONE_WAY) if entry != null and entry.kind == RoomLegendEntry.Kind.ROOF else ONE_WAY
 			if map.secret_at(cell) > 0:
 				flags |= SECRET
-			_cells[offset + cell] = flags
+			# A mover of a room added earlier may already have flagged this cell.
+			_cells[offset + cell] = _cells.get(offset + cell, 0) | flags
 	_add_water(map, offset)
 	for placed: Dictionary in map.entities:
 		var entry := map.legend.entry(placed.symbol)
@@ -96,6 +101,10 @@ func add_roots(spans: Array[RootSpanFinder.Span], map: RoomMap, cell_origin: Vec
 func add_cells(cells: Array[Vector2i], flag: int) -> void:
 	_flag_all(cells, flag)
 
+## The sky bands over the rooms' open tops, from RoomEdges.bands.
+func add_bands(cells: Array[Rect2i]) -> void:
+	bands.append_array(cells)
+
 ## A stair (role STAIR) from world feet cell `foot` to `head`, ridden both ways.
 func add_stair(foot: Vector2i, head: Vector2i) -> void:
 	stairs.append([foot, head])
@@ -118,6 +127,21 @@ func room_id(index: int) -> StringName:
 
 func room_rect(index: int) -> Rect2i:
 	return _room_rects[index]
+
+## Whether `cell` lies in a sky band.
+func in_band(cell: Vector2i) -> bool:
+	for band: Rect2i in bands:
+		if band.has_point(cell):
+			return true
+	return false
+
+## Flagged cells in no room and no sky band: a mover, current or root span authored past its room.
+func stray_cells() -> Array[Vector2i]:
+	var stray: Array[Vector2i] = []
+	for cell: Vector2i in _loose:
+		if _cells.get(cell, 0) != 0 and room_at(cell) < 0 and not in_band(cell):
+			stray.append(cell)
+	return stray
 
 ## The index of the room holding `cell`, -1 outside every room.
 func room_at(cell: Vector2i) -> int:
@@ -149,6 +173,8 @@ func _add_water(map: RoomMap, offset: Vector2i) -> void:
 				_flag(offset + cell, SONG_FLOOR)
 
 func _flag(cell: Vector2i, flag: int) -> void:
+	if not _cells.has(cell):
+		_loose[cell] = true
 	_cells[cell] = _cells.get(cell, 0) | flag
 
 func _flag_all(cells: Array[Vector2i], flag: int) -> void:

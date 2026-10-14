@@ -6,7 +6,7 @@ status: active
 tags: [rooms, room-map, reachability, level-design, audit, tests, jump-reach]
 related: [systems/rooms, systems/world, systems/roots-and-climbing, systems/water, architecture/rooms-are-text, gotchas/zigzag-ledges-two-rows-apart-seal-a-shaft, bugs/the-tavern-upper-floor-has-no-way-down, bugs/the-mill-loft-is-unreachable-from-the-lowered-drawbridge]
 created: 2026-10-10
-updated: 2026-10-11
+updated: 2026-10-14
 source_files:
   - scenes/world/rooms/maps/reach/reach_grid.gd
   - scenes/world/rooms/maps/reach/reach_lattice.gd
@@ -112,3 +112,14 @@ The WORLD-25 playtest found wall ledges left from a removed route that the audit
 - **Roots go with their ledge.** `ReachGrid.add_roots` keeps each span as a `ReachGrid.Root` (its earth ends; a shaft's walls on every row; and its cells). A platform's or shelf's solid is its island, or the slab under its feet down to `SHELF_DEPTH`; it grows a transit node only when every root crossing that node's cells has an end in it and no current runs through it, because `_node_for` floods transit cells across spans into one node and a node another span also makes stays when the ledge goes (`bugs/a-ledge-is-credited-with-a-whole-merged-root-node-and-its-dead-end-goes-unreported`). A ledge growing a useful node is useful, which is sound only with that rule, and the greedy check removes a ledge with the nodes it grows (restored together on a cut). Before, removing an island kept its pillar, so a stepping stone parallel to the pillar was LEADS_NOWHERE too. A ledge whose roots share a node with other spans is credited with nothing, which leans to LEADS_NOWHERE: a visible error, never a silent skip.
 - **World effect**: LEADS_NOWHERE 20 to 29 (ten new shelves; woods_deep 50,14 became the REDUNDANT_ROUTE of the ressalto climb once its pillars went with it), DEAD_END_POCKET 33 to 32. Five new errors are allowlisted with a reason; the other five wall shelves were merged into their walls on the user's decision (`systems/rooms`, Reachability audit), leaving LEADS_NOWHERE at 24. Time unchanged (about 5-6 s).
 - **Known blind spot, not fixed**: a root bridge's feet join the banks' tops into one surface, so a ledge level with ground within a bridge's reach merges into that ground's surface and is never judged as a platform.
+
+## WORLD-34 revision (2026-10-14)
+
+`architecture/world-edges-from-the-room-list`. The world now walls every room and caps each open top with a 152 px sky band, so the lattice models the same space:
+
+- `ReachWorldLoader.add_sky` adds `RoomEdges.bands` to `ReachGrid.bands` as whole cells (4 rows). The fixtures add them the same way.
+- `ReachLattice.bake` opens cells outside the rooms only inside bands. Every other outside cell is `_OUTSIDE`: never open, never stood on, never a wall to slide on. `ABOVE` (10 rows of sky) and the one-column side poke are gone.
+- `ReachAudit` adds OUTSIDE_ROOM (a standing footprint in a band, reached or not, or any grid flag in no room and no band; never allowlisted; band cells keep their grid flags, `bugs/outside-room-misses-a-song-floor-above-a-rooms-first-row`) and OPEN_EDGE (side or bottom edge cells Ivo's body can fill that open onto no room and no band; hazards excluded). Board marks `x` and `|` (`$` is reserved for the WORLD-35 reward slot).
+- On the real world neither new kind fires, and the errors are unchanged: no required route rose more than 4 rows over an open top or crossed a first-row pillar. Warnings moved, and findings went from 60 to 63:
+  - lighthouse_top 1,0: DEAD_END_POCKET became UNREACHABLE (its roof over the lantern is no longer reached through the sky).
+  - Pockets the sky used to join split in three places: lake_high_wall 1,7 went from 13 cells to 2, with a new lake_chasm 30,17 (11 cells); village_lane_west 1,0 went from 21 to 6, with a new woods_edge 11,3 (15); threshold_fields 38,3 went from 72 to 63, with a new frost_shore 9,6 (9).

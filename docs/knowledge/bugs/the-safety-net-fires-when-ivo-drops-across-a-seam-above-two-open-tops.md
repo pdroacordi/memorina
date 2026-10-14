@@ -7,7 +7,7 @@ severity: medium
 tags: [world-05, rooms, room-exit, safety-net, hazard, fade, seam, regression]
 related: [bugs/the-out-of-room-safety-net-fires-on-a-double-jump-above-an-open-room-top, bugs/wall-climb-leaves-the-world-over-the-cliff-chimneys-west-wall, systems/rooms]
 created: 2026-10-10
-updated: 2026-10-10
+updated: 2026-10-14
 source_files:
   - scenes/world/game.gd
   - scenes/world/rooms/room_exit.gd
@@ -73,3 +73,5 @@ the top line and the centre above it; void beside the world edge (must be lost).
 ## Regression timeline re-pointed (2026-10-11, WORLD-25)
 
 WORLD-25 removed orchard_leaf_path's row-3 one-way, and no floor near its col-0 seam is within a double jump's reach of the top any more. The seam check is now `traverse_woods_lake_rv4_s1_pond_double_jump_into_bloom_hollow.json`: a running double jump west from woods_pond's west step (-5520, 160) over its col-0 wall. Ivo crosses the seam (x -5760) at feet about -110, above both open tops (y 0); peak -109.6, `fade` 0.00, lands in bloom_hollow at (-5954.2, 288). The orchard_well run is now `traverse_woods_lake_rv_n2_pond_shelf_double_jump.json` (`bugs/world-25-re-pointed-timelines-no-longer-test-their-scenario`).
+
+**WORLD-34 (2026-10-14):** a first-row seam pillar can no longer be crossed through the sky (`architecture/world-edges-from-the-room-list`). `traverse_woods_lake_rv4_s1_pond_double_jump_into_bloom_hollow` now stops at woods_pond's col-0 pillar under the 152 px ceiling (peak feet -98) and falls back into woods_pond with no fade (`playtests/2026-10-14-world34-edges`). The pillar crossing can no longer happen, so that timeline is retired (deleted). The `is_lost` open-top exception stays.

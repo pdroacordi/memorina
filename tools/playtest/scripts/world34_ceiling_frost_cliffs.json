@@ -1,0 +1,13 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 3.0,
+ "locale": "en",
+ "player_position": [10400, -864],
+ "steps": [
+  {"t": 1.0, "screenshot": "ceiling_frost_cliffs_stand"},
+  {"t": 1.1, "action": "look_up", "pressed": true},
+  {"t": 2.2, "screenshot": "ceiling_frost_cliffs_look_up"},
+  {"t": 2.3, "log": "look_up"},
+  {"t": 2.5, "action": "look_up", "pressed": false}
+ ]
+}

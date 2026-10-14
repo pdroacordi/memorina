@@ -1,0 +1,21 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 4.0,
+ "locale": "en",
+ "player_position": [-5264, 64],
+ "skills": [0],
+ "steps": [
+  {"t": 1.0, "log": "on_shelf"},
+  {"t": 1.0, "screenshot": "bonk_1_shelf"},
+  {"t": 1.2, "trace": true},
+  {"t": 1.2, "action": "jump", "pressed": true},
+  {"t": 1.45, "action": "jump", "pressed": false},
+  {"t": 1.55, "action": "jump", "pressed": true},
+  {"t": 1.8, "action": "jump", "pressed": false},
+  {"t": 1.72, "screenshot": "bonk_2_at_the_ceiling"},
+  {"t": 1.95, "screenshot": "bonk_3_falling_back"},
+  {"t": 2.8, "trace": false},
+  {"t": 3.0, "screenshot": "bonk_4_landed"},
+  {"t": 3.1, "log": "landed"}
+ ]
+}

@@ -44,7 +44,6 @@ In the air the camera leads below Ivo's feet, so the landing is in view before h
 ## Gotchas / pitfalls
 
 - `void_owner`, `pixel_centre`, `rect_distance` and the rest of the seam mapping exist in `BackdropMath` and `backdrop_layer.gdshader`: change both (`systems/backdrops`, Never break).
-- A floor in row 1 under a column with no room above must not be a required take-off; `room_ring_test` fails on any such floor missing from `NEAR_TOP`.
-- A double jump over an open top still leaves the frame: the feet pass the ring.
+- Over an open top the sky band's ceiling (`RoomEdges.CEILING_RISE`, 152 px = the ring less `subject_margin`) stops every jump, so the yield never has to pass the ring and Ivo is always in frame (WORLD-34, `architecture/world-edges-from-the-room-list`). The `NEAR_TOP` list is retired.
 - The song trials sit closer than two rings apart (32 px and 256 px gaps); they are exempt only from that premise, not from the ownership sweeps.
 - Open: `bugs/the-frame-jumps-up-when-the-fall-reach-closes-under-a-yielded-frame` (sideways drift).

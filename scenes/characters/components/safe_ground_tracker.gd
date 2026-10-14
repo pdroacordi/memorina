@@ -42,8 +42,9 @@ func last_safe_position() -> Vector2:
 
 func _floor_under(offset_x: float) -> Object:
 	var from := _body.global_position + Vector2(offset_x, -PROBE_LIFT)
+	# An invisible wall is never firm ground.
 	var query := PhysicsRayQueryParameters2D.create(
-		from, from + Vector2(0.0, probe_depth + PROBE_LIFT), _body.collision_mask, [_body.get_rid()])
+		from, from + Vector2(0.0, probe_depth + PROBE_LIFT), _body.collision_mask & ~WorldEdges.LAYER, [_body.get_rid()])
 	var hit := _body.get_world_2d().direct_space_state.intersect_ray(query)
 	return hit.get("collider") as Object
 

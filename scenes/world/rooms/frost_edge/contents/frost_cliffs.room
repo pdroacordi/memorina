@@ -1,13 +1,14 @@
 ; frost_cliffs.room - Penhascos: the bench in a cave under the west crag (cols 1-12, rows 41-44), then a climb
 ; by single jumps between the crag and the east cliff (3-row steps, 2-cell gaps) to the cliff top
 ; (row 9) and the lighthouse (design 04 section 3.3). No gate: base kit, no earth.
+; Row 0 closed: a drawn rock ceiling over a room inside rock (WORLD-34, "Drawn rock ceiling, all five (Recommended)", user, 2026-10-14).
 
 [room]
 origin = 0, 0
 tileset = frost_edge
 
 [grid]
-S......................................S
+SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 S......................................S
 S......................................S
 S......................................S

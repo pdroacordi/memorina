@@ -208,7 +208,8 @@ class Room:
         for row in range(self.h):
             g[row][0] = wall
             g[row][self.w - 1] = wall
-        if not self.surface:
+        # A room inside rock gets a drawn ceiling, not sky (WORLD-34, systems/rooms "Edges").
+        if not self.surface or self.id in ROCK_SETS:
             for col in range(self.w):
                 g[0][col] = wall
         for row in range(self.floor_row(), self.h):

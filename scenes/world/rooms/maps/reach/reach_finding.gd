@@ -15,6 +15,10 @@ enum Kind {
 	NO_WAY_BACK,
 	## A door whose link no other door of its region shares, or that two others share.
 	UNPAIRED_DOOR,
+	## A footprint that stands with its feet outside every room, in a sky band; never allowlisted.
+	OUTSIDE_ROOM,
+	## Side or bottom edge cells Ivo's body can fill that open onto an invisible wall.
+	OPEN_EDGE,
 }
 
 ## The board mark per kind, drawn on a surface's feet row. Never a legend symbol (reach_grid_test).
@@ -25,6 +29,8 @@ const MARKS := {
 	Kind.DEAD_END_POCKET: ":",
 	Kind.NO_WAY_BACK: "&",
 	Kind.UNPAIRED_DOOR: "?",
+	Kind.OUTSIDE_ROOM: "x",
+	Kind.OPEN_EDGE: "|",
 }
 
 var kind: Kind

@@ -39,6 +39,8 @@ func _init(grid: ReachGrid, lattice: ReachLattice) -> void:
 
 func _run() -> ReachReport:
 	_lattice.bake(_grid)
+	_flag_outside_rooms()
+	_flag_open_edges()
 	_find_surfaces()
 	_classify()
 	_start = _surface_under(_grid.start)
@@ -74,10 +76,10 @@ func _find_surfaces() -> void:
 					continue
 				# A run in water stands apart: it needs Redoma, so it is a song's surface.
 				var wet := _lattice.is_wet(cell)
-				while _lattice.is_standing(cell + Vector2i.LEFT) and _lattice.is_wet(cell + Vector2i.LEFT) == wet:
+				while _stands_in_room(cell + Vector2i.LEFT) and _lattice.is_wet(cell + Vector2i.LEFT) == wet:
 					cell += Vector2i.LEFT
 				var run: Array[Vector2i] = []
-				while _lattice.is_standing(cell) and _lattice.is_wet(cell) == wet:
+				while _stands_in_room(cell) and _lattice.is_wet(cell) == wet:
 					claimed[cell] = true
 					run.append(cell)
 					cell += Vector2i.RIGHT
@@ -89,6 +91,68 @@ func _find_surfaces() -> void:
 		surface.room = _grid.room_id(_grid.room_at(run[0]))
 		_report.surfaces.append(surface)
 		_add_node(_Node.SURFACE, surface.cells)
+
+# A standing footprint in a sky band never surfaces: it is OUTSIDE_ROOM.
+func _stands_in_room(cell: Vector2i) -> bool:
+	return _lattice.is_standing(cell) and _grid.room_at(cell) >= 0
+
+# Every footprint that stands with its feet in a sky band, reached or not, and every grid flag in no room and no band:
+# Ivo would land outside every room (systems/rooms "Edges"). Never allowlisted.
+func _flag_outside_rooms() -> void:
+	for cell: Vector2i in _grid.stray_cells():
+		_add_edge_finding(ReachFinding.Kind.OUTSIDE_ROOM, [cell] as Array[Vector2i], _nearest_room(cell))
+	for band: Rect2i in _grid.bands:
+		for y: int in range(band.position.y, band.end.y):
+			var run: Array[Vector2i] = []
+			for x: int in range(band.position.x, band.end.x + 1):
+				var cell := Vector2i(x, y)
+				if x < band.end.x and _lattice.is_standing(cell):
+					run.append(cell)
+				elif not run.is_empty():
+					_add_edge_finding(ReachFinding.Kind.OUTSIDE_ROOM, run, _grid.room_at(Vector2i(run[0].x, band.end.y)))
+					run = []
+
+func _nearest_room(cell: Vector2i) -> int:
+	var best := 0
+	var best_gap := INF
+	for i: int in _grid.room_count():
+		var rect := _grid.room_rect(i)
+		var gap := Vector2(cell).distance_to(Vector2(cell.clamp(rect.position, rect.end - Vector2i.ONE)))
+		if gap < best_gap:
+			best_gap = gap
+			best = i
+	return best
+
+# Runs of side and bottom edge cells Ivo's body can fill (not solid, not a hazard) whose outside neighbour is in no room
+# and no band: an opening drawn onto an invisible wall.
+func _flag_open_edges() -> void:
+	for i: int in _grid.room_count():
+		var rect := _grid.room_rect(i)
+		var west: Array[Vector2i] = []
+		var east: Array[Vector2i] = []
+		for y: int in range(rect.position.y, rect.end.y):
+			west.append(Vector2i(rect.position.x, y))
+			east.append(Vector2i(rect.end.x - 1, y))
+		var south: Array[Vector2i] = []
+		for x: int in range(rect.position.x, rect.end.x):
+			south.append(Vector2i(x, rect.end.y - 1))
+		var edges: Array[Array] = [[west, Vector2i.LEFT], [east, Vector2i.RIGHT], [south, Vector2i.DOWN]]
+		for pair: Array in edges:
+			var edge: Array[Vector2i] = pair[0]
+			var out: Vector2i = pair[1]
+			var run: Array[Vector2i] = []
+			for k: int in edge.size() + 1:
+				if k < edge.size() and _opens_onto_a_wall(edge[k], out):
+					run.append(edge[k])
+				elif not run.is_empty():
+					_add_edge_finding(ReachFinding.Kind.OPEN_EDGE, run, i)
+					run = []
+
+func _opens_onto_a_wall(cell: Vector2i, out: Vector2i) -> bool:
+	if _grid.flags(cell) & (ReachGrid.SOLID | ReachGrid.HAZARD) != 0:
+		return false
+	var beyond := cell + out
+	return _grid.room_at(beyond) < 0 and not _grid.in_band(beyond)
 
 func _classify() -> void:
 	_find_islands()
@@ -583,6 +647,10 @@ func _add_door_finding(door: Dictionary) -> void:
 	var cell: Vector2i = door.cell
 	var room := _grid.room_at(cell)
 	_report.findings.append(ReachFinding.new(ReachFinding.Kind.UNPAIRED_DOOR, true, _grid.room_id(room), cell, cell - _grid.room_rect(room).position, [cell] as Array[Vector2i]))
+
+# `cells` belong to room `room`; local is measured from its top-left, so a band's row is negative.
+func _add_edge_finding(kind: ReachFinding.Kind, cells: Array[Vector2i], room: int) -> void:
+	_report.findings.append(ReachFinding.new(kind, true, _grid.room_id(room), cells[0], cells[0] - _grid.room_rect(room).position, cells.duplicate()))
 
 func _add_finding(kind: ReachFinding.Kind, error: bool, nodes: Array[int]) -> void:
 	var cells: Array[Vector2i] = []

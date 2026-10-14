@@ -7,11 +7,6 @@ const IVO := "res://scenes/characters/ivo/ivo.tscn"
 const GAME := "res://scenes/world/game.tscn"
 const REGION_SCRIPT := preload("res://scenes/world/rooms/region.gd")
 const DEBUG_TRIALS := preload("res://scenes/world/debug/debug_trials.gd")
-## "<room> <column>,<row>" of a run's left feet cell in its `.room` file -> why a full jump from it may leave the frame.
-const NEAR_TOP := {
-	"village_lane_west 1,1": "The gatehouse roof: a double jump's optional perch over the west fence.",
-	"lighthouse_top 1,1": "The lantern's roof over the arena: unreachable, the room's floor is 20 rows below it.",
-}
 ## The 640x360 view at zoom 1.
 const VIEW := Vector2(640, 360)
 ## Ivo's 22x54 body grown by the camera's 8 px margin.
@@ -21,7 +16,6 @@ const STEP := 2.0
 ## Px between owner samples in a frame.
 const SAMPLE := 32.0
 
-var _loaded: ReachWorldLoader.Loaded
 var _bounds: Array[Rect2] = []
 var _regions: Array[String] = []
 ## Whether each room is a song trial's, mounted by DebugTrials.
@@ -29,10 +23,10 @@ var _trials: Array[bool] = []
 
 
 func before() -> void:
-	_loaded = ReachWorldLoader.load_world()
 	_load_rooms()
 
-## A full jump from FLOOR_ROWS under an open top keeps Ivo's body and the camera's margin inside the ring.
+## A full jump from FLOOR_ROWS under an open top keeps Ivo's body and the camera's margin inside the ring. The sky band's
+## ceiling (RoomEdges) holds every higher jump inside it; room_edges_test pins that.
 func test_the_ring_holds_a_full_jump_from_floor_rows_down() -> void:
 	var ivo := (load(IVO) as PackedScene).instantiate()
 	var height := ((ivo.get_node("CollisionShape2D") as CollisionShape2D).shape as CapsuleShape2D).height
@@ -59,25 +53,6 @@ func test_rooms_that_do_not_touch_are_two_rings_apart() -> void:
 			if not a.grow(1.0).intersects(b) and a.grow(RoomRing.WIDTH * 2.0).intersects(b):
 				close.append("%s and %s" % [a, b])
 	assert_array(close).is_empty()
-
-func test_every_floor_nearer_an_open_top_is_listed() -> void:
-	var found := _near_top_floors()
-	var unlisted: Array[String] = []
-	for key: String in found:
-		if not NEAR_TOP.has(key):
-			unlisted.append(key)
-	assert_array(unlisted) \
-		.override_failure_message("Floors fewer than %d rows under an open top; lower them or list why no route jumps from them:\n%s" \
-			% [RoomRing.FLOOR_ROWS, "\n".join(unlisted)]) \
-		.is_empty()
-
-func test_no_listed_floor_is_stale() -> void:
-	var found := _near_top_floors()
-	var stale: Array[String] = []
-	for key: String in NEAR_TOP:
-		if not key in found:
-			stale.append(key)
-	assert_array(stale).is_empty()
 
 ## Every room as the current one, the body swept STEP px at a time along lines across its edges and over its top: the frame
 ## moves no more than the body did, holds the body wherever it is inside the ring, and stays inside the ring; sampled
@@ -271,31 +246,3 @@ func _property(state: SceneState, node: int, property: StringName, fallback: Var
 		if state.get_node_property_name(node, j) == property:
 			return state.get_node_property_value(node, j)
 	return fallback
-
-# "<room> <column>,<row>" per run of standable cells in rows 1..FLOOR_ROWS-1 under columns no room lies above. Row 0 is a
-# wall's top, reached only from above the room.
-func _near_top_floors() -> Array[String]:
-	var grid := _loaded.grid
-	var keys: Array[String] = []
-	for i: int in grid.room_count():
-		var cells := grid.room_rect(i)
-		for row: int in range(1, RoomRing.FLOOR_ROWS):
-			var run := -1
-			for column: int in cells.size.x + 1:
-				var cell := cells.position + Vector2i(column, row)
-				var standable := column < cells.size.x and grid.room_at(Vector2i(cell.x, cells.position.y - 1)) < 0 \
-					and _open_floor(grid, cell, cells.position.y)
-				if standable and run < 0:
-					run = column
-				elif not standable and run >= 0:
-					keys.append("%s %d,%d" % [grid.room_id(i), run, row])
-					run = -1
-	return keys
-
-func _open_floor(grid: ReachGrid, cell: Vector2i, top: int) -> bool:
-	if (grid.flags(cell) & (ReachGrid.SOLID | ReachGrid.ONE_WAY)) == 0:
-		return false
-	for y: int in range(top, cell.y):
-		if grid.flags(Vector2i(cell.x, y)) & ReachGrid.SOLID:
-			return false
-	return true

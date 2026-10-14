@@ -7,7 +7,7 @@ severity: low
 tags: [backdrop, room-ring, seam, hard-cut, world-30, allowlist, wall-climb, region-border]
 related: [bugs/a-wall-climb-over-the-seam-pillar-shows-the-wall-up-cut-in-the-sky, systems/backdrops, architecture/backdrop-seams]
 created: 2026-10-13
-updated: 2026-10-13
+updated: 2026-10-14
 source_files:
   - tests/scenes/world/environment/backdrop/backdrop_seams_test.gd
   - scenes/world/rooms/home_village/contents/village_gate_east.room
@@ -66,3 +66,5 @@ traversal ability the player can have there. A seam pillar with a free face is a
 ## Fix (2026-10-13)
 
 User: "Cover with a tall gate tower (Recommended)" ("Draw each border gatehouse a little taller (a tower or roof peak above the seam) so the cut stays hidden behind it, the same way other seams hide behind stone."). A village gate tower prop (`gate_tower.tscn`, 80x198 px, Codex from our bell tower and tavern fronts, cut by `tools/art/cut_single_prop.py`) stands on each village border pillar: village_lane_west (local x 0) and village_gate_east (local x 1280), its bottom 16 px behind the pillar's top tiles. Its shaft is the pillar's 64 px, and its roof point sits on the seam column up to 178 px over the tops. Played with `[DOUBLE_JUMP, WALL_CLIMB]`: climbing the west face of both pillars, standing on the top and double jumping from it (and from the lane's gatehouse roof) caps the frame at the ring (camera centre y 20, frame top -160). Ivo leaves the frame top, and the tower stands at the frame's edge over the seam (stills `scratchpad/wire/towers/`, `c_towers.png`). `backdrop_seams_test` lists both keys as `GATE_TOWER`, and `test_a_gate_tower_covers_its_cut` checks that the tower's pixels cover one side of the seam at every height of the cut. frost_shore/threshold_wayshrine keeps `REGION_TOPS`, now checked by arithmetic at the ring limit (`test_a_region_tops_cut_shows_only_the_shared_sky`; with the gate_east pair added it fails at y -10, the value worked out above).
+
+**WORLD-34 (2026-10-14):** the pillar's top is outside every room, so a slab sits flush on it. The sky band's side over the pillar is an edge wall, and an edge wall is never gripped. A wall climb therefore ends at the pillar's top and cannot get over it (by construction, `architecture/world-edges-from-the-room-list`; not re-shot).
