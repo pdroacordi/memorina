@@ -1,21 +1,22 @@
 ; woods_hut.room - the woodcutter's cabin, interior (design 04 sections 3.4 and 4): hearth, a loft
 ; reached by a stair ledge, where the collectible letter will lie. No gate.
+; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
 
 [room]
 origin = 0, 0
-tileset = legacy
+tileset = spring_woods
 
 [grid]
-##################__
-#................#__
-#................#__
-#................#__
-#................#__
-#.........=======#__
-#................#__
-#......==........#__
-#...E............#__
-##################__
+%%%%%%%%%%%%%%%%%%__
+%................%__
+%................%__
+%................%__
+%................%__
+%.........-------%__
+%................%__
+%......--........%__
+%...E............%__
+%%%%%%%%%%%%%%%%%%__
 ____________________
 ____________________
 

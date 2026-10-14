@@ -8,7 +8,7 @@
 [ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="3_regmem"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/door_trial.tscn" id="7_door"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/trials_solstice/door_trial_inside.tscn" id="8_inside"]
-[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/threshold.tres" id="bd_region_set"]
 
 [node name="TrialsSolstice" type="Node2D"]
 script = ExtResource("2_region")

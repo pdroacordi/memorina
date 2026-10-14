@@ -1,6 +1,6 @@
 shader_type canvas_item;
 
-// The title's woods are forgotten: every pixel in the print, none remembered.
+// The title's valley is forgotten: every pixel in the print, none remembered.
 
 #include "res://scenes/world/memory/greyhush_print.gdshaderinc"
 

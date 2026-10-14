@@ -140,6 +140,25 @@ func test_an_interior_grows_no_grass() -> void:
 		add_child(auto_free(room))
 		assert_bool(node.has_node("Grass")).is_equal(not interior)
 
+## Indoors every season draws band 0, so no snow or leaf lip lies on a floor under a roof (systems/seasonal-art).
+func test_an_interior_draws_one_season() -> void:
+	var result := RoomMapParser.parse("[room]\ntileset = village\n[grid]\n.--...\n......\n%%%%%%\n", RoomLegend.load_default())
+	assert_bool(result.ok()).is_true()
+	for interior: bool in [false, true]:
+		var room := Room.new()
+		room.interior = interior
+		var shape := CollisionShape2D.new()
+		shape.name = "CollisionShape2D"
+		room.add_child(shape)
+		var node := RoomMapNode.new()
+		node.map = result.map
+		room.add_child(node)
+		add_child(auto_free(room))
+		var outdoor_bands := Vector4i(2, 0, 1, 0)
+		for layer_name: String in ["Ground_Wood", "Ledges"]:
+			var material := (node.get_node(layer_name) as TileMapLayer).material as ShaderMaterial
+			assert_that(material.get_shader_parameter(&"band_of_season")).is_equal(Vector4i.ZERO if interior else outdoor_bands)
+
 func test_setting_the_map_twice_leaves_one_set_of_children() -> void:
 	var result := RoomMapParser.parse("[room]\ntileset = legacy\n[grid]\n.B.\n###\n", RoomLegend.load_default())
 	var room := auto_free(RoomMapNode.new()) as RoomMapNode

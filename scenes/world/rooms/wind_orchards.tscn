@@ -12,7 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_arena.tscn" id="r7"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_cliff_chimney.tscn" id="r8"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_inn.tscn" id="r9"]
-[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/wind_orchards.tres" id="bd_region_set"]
 
 [node name="WindOrchards" type="Node2D"]
 script = ExtResource("1_region")

@@ -314,10 +314,7 @@ func _swap_to_title() -> void:
 	SceneSwap.replace(self, load(title_scene) as PackedScene)
 
 func _room_at(point: Vector2) -> Room:
-	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
-		if room.get_bounds().has_point(point):
-			return room
-	return null
+	return Room.at(get_tree(), point)
 
 ## Updates the displayed region's memory immediately when it changes.
 func _on_region_memory_changed(level: float, region: Region) -> void:

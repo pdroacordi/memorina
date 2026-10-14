@@ -1,21 +1,22 @@
 ; threshold_farmhouse.room - the farmhouse interior (design 04 section 3.2): the laid table on the flat floor
 ; (cols 6-12, the sword mark of STORY-02) and the hearth (cols 17-18). No gate or puzzle.
+; Indoors: wood planks, so no earth turf lip shows; the hearth stays stone; no interior grows grass (systems/grass).
 
 [room]
 origin = 0, 0
-tileset = legacy
+tileset = threshold
 
 [grid]
-####################
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#..................#
-#................SS#
-#...E............S__
-##################__
+%%%%%%%%%%%%%%%%%%%%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%................SS%
+%...E............S__
+%%%%%%%%%%%%%%%%%%__
 ____________________
 ____________________
 

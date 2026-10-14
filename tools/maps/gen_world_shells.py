@@ -27,6 +27,16 @@ REGIONS = {
     "summer_caldera": ("REGION_SUMMER_CALDERA", 1, 0.15, None, "S"),
 }
 REGION_ORDER = list(REGIONS)
+# Each region's biome tileset (resources/world/tiles/biomes/<id>.tres): a new room draws its region's tiles (systems/rooms).
+REGION_TILESETS = {
+    "home_village": "village", "threshold": "threshold", "frost_edge": "frost_edge", "spring_woods": "spring_woods",
+    "frozen_lake": "frozen_lake", "wind_orchards": "wind_orchards", "summer_caldera": "summer_caldera",
+}
+# Rooms that draw another biome than their region's; the reasons are in systems/rooms.
+ROOM_TILESETS = {
+    "lighthouse_base": "lighthouse", "lighthouse_top": "lighthouse", "lighthouse_interior": "lighthouse",
+    "caldera_cistern": "village", "caldera_dry_moat": "summer_caldera_ash", "caldera_open_crater": "summer_caldera_ash",
+}
 
 # region, id, c0, c1, r0, r1, surface (open sky above)
 ROOM_LIST = [
@@ -184,7 +194,8 @@ class Room:
         self.w = (c1 - c0 + 1) * SW
         self.h = (r1 - r0 + 1) * SH
         self.origin = origin if origin is not None else (c0 * PX_W, r0 * PX_H)
-        self.wall = REGIONS[region][4]
+        # Interiors are built of planks like the village houses, so no earth turf lip shows indoors (systems/grass).
+        self.wall = "%" if interior else REGIONS[region][4]
         self.grid = [["." for _ in range(self.w)] for _ in range(self.h)]
         self.entities = []
         self._shell()
@@ -247,7 +258,7 @@ class Room:
             "",
             "[room]",
             "origin = 0, 0",
-            "tileset = legacy",
+            "tileset = %s" % ROOM_TILESETS.get(self.id, REGION_TILESETS[self.region]),
             "",
             "[grid]",
         ]
@@ -334,15 +345,15 @@ shape = SubResource("RectangleShape2D_room")
 
 # Each region's backdrop set and its one horizon, px below the region node: every open room shows it (systems/backdrops).
 REGION_BACKDROPS = {
-    "home_village": ("village_valley", 235), "threshold": ("village_valley", 235), "frost_edge": ("village_valley", 235),
-    "spring_woods": ("village_valley", 235), "frozen_lake": ("village_valley", -1685),
-    "wind_orchards": ("village_valley", -1301), "summer_caldera": ("caldera_crater", 768),
+    "home_village": ("village_valley", 235), "threshold": ("threshold", 235), "frost_edge": ("frost_edge", 235),
+    "spring_woods": ("spring_woods", 235), "frozen_lake": ("frozen_lake", -1685),
+    "wind_orchards": ("wind_orchards", -1301), "summer_caldera": ("caldera_crater", 1536),
 }
 # Open rooms inside rock override their region's set with a rock wall (WORLD-28).
 ROCK_SETS = {
-    "lighthouse_top": "interior_stone", "frost_cliffs": "ice_caves", "lake_waterfall_path": "ice_caves",
-    "lake_high_wall": "ice_caves", "lake_chasm": "ice_caves", "orchard_counterweights": "earth_caves",
-    "orchard_cliff_chimney": "basalt_caves",
+    "lighthouse_top": "interior_stone", "frost_cliffs": "sea_cliff_rock", "lake_waterfall_path": "lake_cliff_rock",
+    "lake_high_wall": "lake_cliff_rock", "lake_chasm": "lake_cliff_rock", "orchard_counterweights": "orchard_limestone",
+    "orchard_cliff_chimney": "orchard_limestone",
 }
 # The backdrop set an underground room of each region shows (architecture/backdrop-seams).
 UNDERGROUND_SETS = {

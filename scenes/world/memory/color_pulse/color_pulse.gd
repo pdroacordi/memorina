@@ -43,7 +43,8 @@ func start(song: Song, stats: PulseStats = null, with_effect: bool = true) -> vo
 	# remembered, not played) reaches no receiver either - the Frost Guardian's
 	# lesson must not freeze its own arena's water.
 	_area.monitorable = with_effect
-	if song.palette.pulse_particles:
+	# No season indoors: a pulse played in an interior lets no petals or snow fall (systems/seasonal-art).
+	if song.palette.pulse_particles and not _indoors():
 		_particles = song.palette.pulse_particles.instantiate() as CPUParticles2D
 		assert(_particles != null, "SeasonPalette.pulse_particles must be a CPUParticles2D scene.")
 		add_child(_particles)
@@ -114,3 +115,7 @@ func _apply_radius() -> void:
 	_source.feather = reach * MemoryFieldMath.DEFAULT_FEATHER_RATIO
 	var circle: CircleShape2D = _shape.shape
 	circle.radius = maxf(reach, 0.01)
+
+func _indoors() -> bool:
+	var room := Room.at(get_tree(), global_position)
+	return room != null and room.interior

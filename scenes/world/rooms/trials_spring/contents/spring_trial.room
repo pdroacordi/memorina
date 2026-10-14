@@ -32,7 +32,7 @@
 
 [room]
 origin = 0, -16
-tileset = legacy
+tileset = spring_woods
 
 [grid]
 ...................SS.#...##...............................................

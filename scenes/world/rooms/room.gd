@@ -22,6 +22,13 @@ static func of(node: Node) -> Room:
 		at = at.get_parent()
 	return null
 
+## The room in `tree` whose bounds hold the world `point`, or null.
+static func at(tree: SceneTree, point: Vector2) -> Room:
+	for room: Room in tree.get_nodes_in_group(GROUP):
+		if room.get_bounds().has_point(point):
+			return room
+	return null
+
 func _enter_tree() -> void:
 	add_to_group(GROUP)
 

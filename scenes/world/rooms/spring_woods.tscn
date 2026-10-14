@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/woods_pond.tscn" id="r4"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/bloom_hollow.tscn" id="r5"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/woods_hut.tscn" id="r6"]
-[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/spring_woods.tres" id="bd_region_set"]
 
 [node name="SpringWoods" type="Node2D"]
 script = ExtResource("1_region")

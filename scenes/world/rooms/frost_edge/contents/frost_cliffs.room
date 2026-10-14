@@ -4,7 +4,7 @@
 
 [room]
 origin = 0, 0
-tileset = legacy
+tileset = frost_edge
 
 [grid]
 S......................................S

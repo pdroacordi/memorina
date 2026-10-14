@@ -12,7 +12,7 @@
 
 [room]
 origin = 0, -16
-tileset = legacy
+tileset = frozen_lake
 
 [grid]
 SSSSSSSSSSSSSSSSSSSSSS

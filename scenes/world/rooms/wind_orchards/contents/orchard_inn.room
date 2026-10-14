@@ -1,21 +1,22 @@
 ; orchard_inn.room - Estalagem: the mill town's inn, interior (design 04 sections 3.6 and 4).
-; Built floor (stone, so Enraizar grows no pillars indoors), one storey: a hearth (cols 9-12) and the bar counter (cols 35-38).
+; Plank floor (wood, so Enraizar grows no pillars indoors), one storey: a stone hearth (cols 9-12) and the bar counter (cols 35-38).
+; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
 
 [room]
 origin = 0, 0
-tileset = legacy
+tileset = wind_orchards
 
 [grid]
-SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S......................................S
-S...E....SSSS......................SSSSS
-SSSSSSSSSS__SSSSSSSSSSSSSSSSSSSSSSSS____
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%......................................%
+%......................................%
+%......................................%
+%......................................%
+%......................................%
+%......................................%
+%......................................%
+%...E....SSSS......................%%%%%
+%%%%%%%%%%__%%%%%%%%%%%%%%%%%%%%%%%%____
 ________________________________________
 ________________________________________
 

@@ -270,7 +270,7 @@ The characters are proposals; renaming one before it lands is free. `RoomLegend.
    - each one's `.uid`.
 6. When the village sheets land, `trials_solstice` (`solstice_trial`, `empty_house`, `water_trial`, `the_catch`, `door_trial`) moves to `village`. `door_trial_inside` moves to `interior` and gains a `[back]` demo: an `h` wall, a `%` floor and a `-` shelf.
 7. The other trials follow when their biomes have art: spring → `spring_woods`, summer → `summer_caldera`, autumn → `wind_orchards`, winter → `frozen_lake`.
-8. `legacy` is deleted when no room uses it. The old `home_village` and `frost_edge` rooms leave in WORLD-05.
+8. `legacy` is deleted when no room uses it (2026-10-13: no room uses it; it stays only for the parser and `RoomMapNode` test fixtures, `systems/rooms`). The old `home_village` and `frost_edge` rooms leave in WORLD-05.
 
 ## Tests (gdUnit4, `--ignoreHeadlessMode`)
 

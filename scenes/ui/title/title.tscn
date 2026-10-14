@@ -3,11 +3,10 @@
 [ext_resource type="Script" path="res://scenes/ui/title/title.gd" id="1_title"]
 [ext_resource type="Script" path="res://scenes/ui/menu/menu_input.gd" id="2_input"]
 [ext_resource type="Material" path="res://scenes/ui/title/title_grey_material.tres" id="3_grey"]
-[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_5.png" id="4_sky"]
-[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_4.png" id="5_mountains"]
-[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_3.png" id="6_deeper"]
-[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_2.png" id="7_deep"]
-[ext_resource type="Texture2D" path="res://assets/sprites/world/background/seasonal/background_layer_1.png" id="8_front"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/village_valley/sky.png" id="4_sky"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/village_valley/mountains.png" id="5_mountains"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/village_valley/hills.png" id="6_hills"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/background/village_valley/trees.png" id="7_trees"]
 [ext_resource type="Theme" path="res://scenes/ui/menu/menu_theme.tres" id="9_theme"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/title/memorina_logo.png" id="10_logo"]
 [ext_resource type="PackedScene" path="res://scenes/ui/title/slot_screen.tscn" id="11_screen"]
@@ -40,60 +39,49 @@ script = ExtResource("2_input")
 repeat_size = Vector2(1024, 0)
 autoscroll = Vector2(-1, 0)
 
-[node name="Layer5" type="Sprite2D" parent="Background/Sky"]
+[node name="Art" type="Sprite2D" parent="Background/Sky"]
 material = ExtResource("3_grey")
+position = Vector2(0, -24)
 texture = ExtResource("4_sky")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 1024, 346)
+region_rect = Rect2(0, 0, 1024, 384)
 
 [node name="Mountains" type="Parallax2D" parent="Background"]
 repeat_size = Vector2(1024, 0)
 autoscroll = Vector2(-2, 0)
 
-[node name="Layer4" type="Sprite2D" parent="Background/Mountains"]
+[node name="Art" type="Sprite2D" parent="Background/Mountains"]
 material = ExtResource("3_grey")
-position = Vector2(0, 14)
+position = Vector2(0, -24)
 texture = ExtResource("5_mountains")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 1024, 346)
+region_rect = Rect2(0, 0, 1024, 384)
 
-[node name="DeeperTrees" type="Parallax2D" parent="Background"]
+[node name="Hills" type="Parallax2D" parent="Background"]
 repeat_size = Vector2(1024, 0)
 autoscroll = Vector2(-4, 0)
 
-[node name="Layer3" type="Sprite2D" parent="Background/DeeperTrees"]
+[node name="Art" type="Sprite2D" parent="Background/Hills"]
 material = ExtResource("3_grey")
-position = Vector2(0, 14)
-texture = ExtResource("6_deeper")
+position = Vector2(0, -24)
+texture = ExtResource("6_hills")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 1024, 346)
+region_rect = Rect2(0, 0, 1024, 384)
 
-[node name="DeepTrees" type="Parallax2D" parent="Background"]
-repeat_size = Vector2(1024, 0)
-autoscroll = Vector2(-6, 0)
-
-[node name="Layer2" type="Sprite2D" parent="Background/DeepTrees"]
-material = ExtResource("3_grey")
-position = Vector2(0, 14)
-texture = ExtResource("7_deep")
-centered = false
-region_enabled = true
-region_rect = Rect2(0, 0, 1024, 346)
-
-[node name="FrontTrees" type="Parallax2D" parent="Background"]
+[node name="Trees" type="Parallax2D" parent="Background"]
 repeat_size = Vector2(1024, 0)
 autoscroll = Vector2(-8, 0)
 
-[node name="Layer1" type="Sprite2D" parent="Background/FrontTrees"]
+[node name="Art" type="Sprite2D" parent="Background/Trees"]
 material = ExtResource("3_grey")
-position = Vector2(0, 14)
-texture = ExtResource("8_front")
+position = Vector2(0, -24)
+texture = ExtResource("7_trees")
 centered = false
 region_enabled = true
-region_rect = Rect2(0, 0, 1024, 346)
+region_rect = Rect2(0, 0, 1024, 384)
 
 [node name="Art" type="Control" parent="."]
 layout_mode = 0

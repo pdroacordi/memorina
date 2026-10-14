@@ -14,7 +14,12 @@ const RING_LIMIT := "On one room's ring limit, which none of its frames crosses;
 const BELOW_FLOORS := "The seam continued straight down under both rooms' solid floors: no frame yields below them."
 const UNDER_FLOOR := "Under one room's solid floor, on the ring limit of the deeper room beside it, whose wall goes on down there: no resting frame reaches it; a glide between the two rooms shows the strip for about 0.15 s (about 9 frames, measured by the WORLD-28 re-review)."
 const PAST_WALLS := "The seam continued straight out past both rooms' solid end walls, with no room beyond: no frame yields there."
-const REGION_SKY := "Over two wall tops at a region border, both rooms show their regions' open sets: the same art at two horizons, so a wall climb over the pillar shows a straight line in the sky. The user accepted this line until the region backdrops share one sky ('OK until skies match (Recommended)', 2026-10-13)."
+const REGION_SKY := "Over two wall tops at a region border whose sets stand on two horizons (-1685 and -1301): a wall climb over the pillar shows a straight line where the shared sky's bands step by about 12 px (0.03 x 384) and the lake's far peaks stop. The user accepted this line until the region backdrops share one sky ('OK until skies match (Recommended)', 2026-10-13); the sky colours now match, the horizons do not."
+const REGION_TOPS := "Over two wall tops at a region border on one horizon: even at the highest frame (a wall climb onto the seam pillar and a jump, the frame capped at the ring, 160 px over the tops), no layer of either set but the shared sky reaches above the tops at the seam, and the shared sky is one texture on one horizon in the current region's season, so the line shows nothing (test_a_region_tops_cut_shows_only_the_shared_sky)."
+const GATE_TOWER := "Over the village's border gate pillar: the gate tower (gate_tower.tscn, a prop on the pillar; 'Cover with a tall gate tower (Recommended)', user, 2026-10-13) covers the seam column from 178 px over the tops down into the pillar, past the highest frame Ivo reaches there (a wall climb onto the pillar and a jump, the frame capped at the ring, 160 px over the tops) (test_a_gate_tower_covers_its_cut)."
+const TRIAL_TOPS := "Over the wall tops between two debug trials (DebugTrials, F10) in two regions: a double jump from the seam pillar raises the frame about 50 px over the tops, where the two borrowed sets' far layers may stop on one line; the trials are test beds, not the game."
+const UNDER_FLOOR_REGION := "Under one room's solid floor, on the ring limit of the deeper room beside it in another region, whose wall goes on down there: no frame of either room reaches it, and a region border cuts instead of gliding."
+const TRIALS_CLOSE := "The rooms are 32 px apart, so one room's ring reaches 128 px into the other; they do not touch, so they are never resident together and a frame shows one room's drawing only."
 const RINGS_MEET := "The rooms are two rings apart: their rings meet on this line and no frame of either room reaches it."
 const TRIALS_APART := "The rooms are 256 px apart, so their rings overlap by 64 px and each draws its own ring there; they do not touch, so they are never resident together and a frame shows one room's ring only."
 const DOOR_PAIR := "Under the fishing village's deck and lake, on lake_well's ring limit: the two rooms join only by the stairwell and its hatch (WORLD-29), so no walk or glide crosses this seam; Ivo never goes below the deck, and a lake_well frame is the room's own width."
@@ -56,10 +61,42 @@ const ALLOWED := {
 	"the_catch|water_trial ring: y 6256, x 17472..17632": UNDER_FLOOR,
 	"the_catch|water_trial ring: x 17472, y 6256..6288": BELOW_FLOORS,
 	"the_catch|water_trial ring: y 6288, x 17472..17632": RING_LIMIT,
-	"door_trial|the_catch ring: x 18336, y 5520..6224": TRIALS_APART,
+	"door_trial|the_catch ring: x 18336, y 5520..5680": TRIALS_APART,
 	"lake_chasm|lake_high_wall ring: y -2464, x -2080..-1920": RING_LIMIT,
 	"caldera_chimney_base|orchard_cliff_chimney ring: y 1376, x -10240..-10080": RING_LIMIT,
 	"caldera_cistern_bottom|caldera_temple_gate ring: y 1376, x 1280..1440": RING_LIMIT,
+	# Region borders since each region shows its own set (WORLD-30); the passages are hidden by [back] walls.
+	"village_lane_west|woods_edge ring: x -1280, y -160..0": GATE_TOWER,
+	"village_lane_west|woods_edge ring: x -1280, y 384..544": BELOW_FLOORS,
+	"threshold_fields|village_gate_east ring: x 4480, y -160..0": GATE_TOWER,
+	"threshold_fields|village_gate_east ring: x 4480, y 384..544": BELOW_FLOORS,
+	"frost_shore|threshold_wayshrine ring: x 8320, y -160..0": REGION_TOPS,
+	"frost_shore|threshold_wayshrine ring: x 8320, y 384..544": BELOW_FLOORS,
+	"lake_ice_caves|lake_waterfall_path ring: x 3360, y -1536..-1376": UNDER_FLOOR,
+	"caldera_chimney_base|orchard_cliff_chimney ring: x -10240, y 1920..2080": BELOW_FLOORS,
+	"summer_trial|winter_trial ring: x 2400, y 5328..5488": TRIAL_TOPS,
+	"summer_trial|winter_trial ring: x 2400, y 6256..6288": BELOW_FLOORS,
+	"summer_trial|winter_trial ring: x 2560, y 6128..6256": UNDER_FLOOR_REGION,
+	"summer_trial|winter_trial ring: y 6256, x 2400..2560": UNDER_FLOOR_REGION,
+	"summer_trial|winter_trial ring: y 6288, x 2400..2560": RING_LIMIT,
+	"solstice_trial|spring_trial ring: x 9600, y 5328..5488": TRIAL_TOPS,
+	"solstice_trial|spring_trial ring: x 9600, y 6256..6288": BELOW_FLOORS,
+	"solstice_trial|spring_trial ring: x 9760, y 6128..6256": UNDER_FLOOR_REGION,
+	"solstice_trial|spring_trial ring: y 6256, x 9600..9760": UNDER_FLOOR_REGION,
+	"solstice_trial|spring_trial ring: y 6288, x 9600..9760": RING_LIMIT,
+	"autumn_trial|spring_trial ring: x 7328, y 5328..6000": TRIALS_CLOSE,
+	"autumn_trial|spring_trial ring: x 7328, y 6256..6288": TRIALS_CLOSE,
+	"autumn_trial|spring_trial ring: y 6288, x 7040..7328": TRIALS_CLOSE,
+}
+
+## Ring cuts over the tops a gate tower covers: key -> the region scene, the room and the tower node in its contents.
+const TOWERS := {
+	"village_lane_west|woods_edge ring: x -1280, y -160..0": ["res://scenes/world/rooms/home_village.tscn", "VillageLaneWest", "Props/GateTower"],
+	"threshold_fields|village_gate_east ring: x 4480, y -160..0": ["res://scenes/world/rooms/home_village.tscn", "VillageGateEast", "Props/GateTower"],
+}
+## REGION_TOPS cuts: key -> the two region scenes whose sets meet there.
+const TOPS := {
+	"frost_shore|threshold_wayshrine ring: x 8320, y -160..0": ["res://scenes/world/rooms/frost_edge.tscn", "res://scenes/world/rooms/threshold.tscn"],
 }
 
 var _seats: Array[BackdropSeamRoom] = []
@@ -152,6 +189,82 @@ func test_every_open_cut_between_two_backdrops_is_listed() -> void:
 		if not keys.has(key):
 			stale.append(key)
 	assert_array(stale).is_empty()
+
+## Every GATE_TOWER cut is a key in TOWERS, and its tower is opaque on one side of the seam at every height of the cut.
+func test_a_gate_tower_covers_its_cut() -> void:
+	for key: String in ALLOWED:
+		if ALLOWED[key] == GATE_TOWER:
+			assert_bool(TOWERS.has(key)).override_failure_message("%s: no tower listed" % key).is_true()
+	for key: String in TOWERS:
+		var cut := _parse_ring_key(key)
+		var spec: Array = TOWERS[key]
+		var region := (load(spec[0]) as PackedScene).instantiate() as Region
+		var room := region.get_node(spec[1]) as Room
+		var contents := room.contents_scene.instantiate()
+		var tower := contents.get_node(spec[2]) as Sprite2D
+		var image := tower.texture.get_image()
+		# The sprite's top-left in world px: region at (0, 0), contents at the room's origin.
+		var origin := room.position + (tower.get_parent() as Node2D).position + tower.position + tower.offset
+		var uncovered := PackedStringArray()
+		for y: int in range(int(cut.y), int(cut.z)):
+			var covered := false
+			for column: int in [int(cut.x) - 1, int(cut.x)]:
+				var local := Vector2i(column - int(origin.x), y - int(origin.y))
+				if Rect2i(Vector2i.ZERO, image.get_size()).has_point(local) and image.get_pixelv(local).a > 0.0:
+					covered = true
+			if not covered:
+				uncovered.append(str(y))
+		assert_array(Array(uncovered)).override_failure_message("%s: the tower leaves y %s open" % [key, ",".join(uncovered)]).is_empty()
+		contents.free()
+		region.free()
+
+## At the highest frame over a REGION_TOPS cut no layer but the sky, in either set, draws above the rooms' tops at the seam.
+func test_a_region_tops_cut_shows_only_the_shared_sky() -> void:
+	for key: String in ALLOWED:
+		if ALLOWED[key] == REGION_TOPS:
+			assert_bool(TOPS.has(key)).override_failure_message("%s: no region pair listed" % key).is_true()
+	for key: String in TOPS:
+		var cut := _parse_ring_key(key)
+		# The frame's top at the ring limit, over the tops.
+		var centre_y := cut.y + Backdrop.HALF_VIEW.y
+		for path: String in TOPS[key]:
+			var region := (load(path) as PackedScene).instantiate() as Region
+			assert_object(region.backdrop_set.layers[0].texture).is_equal(VALLEY.layers[0].texture)
+			for camera_x: int in range(int(cut.x - Backdrop.HALF_VIEW.x), int(cut.x + Backdrop.HALF_VIEW.x) + 1):
+				for column: float in [cut.x - 0.5, cut.x + 0.5]:
+					var top := _art_top(region.backdrop_set, Vector2(cut.x, region.horizon_y), Vector2(camera_x, centre_y), column)
+					if top < cut.z:
+						assert_bool(false).override_failure_message("%s: %s draws art at y %.0f over the tops (camera x %d)" \
+							% [key, region.backdrop_set.resource_path, top, camera_x]).is_true()
+						region.free()
+						return
+			region.free()
+
+# A ring key's vertical line: (x, from, to).
+func _parse_ring_key(key: String) -> Vector3:
+	var found := RegEx.create_from_string("x (-?\\d+), y (-?\\d+)\\.\\.(-?\\d+)").search(key)
+	return Vector3(float(found.get_string(1)), float(found.get_string(2)), float(found.get_string(3)))
+
+# The highest world y at which any layer after the sky draws art in world column `x`, for a camera centred at `centre`.
+func _art_top(drawn: BackdropSet, anchor: Vector2, centre: Vector2, x: float) -> float:
+	var top := INF
+	for i: int in range(1, drawn.layers.size()):
+		var layer := drawn.layers[i]
+		if layer.fill_above != BackdropLayer.Fill.NONE:
+			return -INF
+		var at := BackdropMath.layer_anchor(anchor, layer.repeat_x, layer.repeats_y())
+		var ref := BackdropMath.reference_centre(at, drawn.horizon_screen_y, Backdrop.HALF_VIEW)
+		var placed := BackdropMath.anchor_position(at, ref, centre, layer.scroll_scale)
+		var strip := layer.strip_size()
+		var column := BackdropMath.art_col(floori(x - placed.x), strip.x, layer.repeat_x)
+		if column < 0:
+			continue
+		var image := layer.texture.get_image()
+		for row: int in strip.y:
+			if image.get_pixel(column, row).a > 0.0:
+				top = minf(top, placed.y + row - layer.horizon_row)
+				break
+	return top
 
 func _in_rooms(found: Array[BackdropCut]) -> Array[BackdropCut]:
 	var rooms: Array[BackdropCut] = []

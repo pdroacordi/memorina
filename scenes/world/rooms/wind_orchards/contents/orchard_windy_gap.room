@@ -6,7 +6,7 @@
 
 [room]
 origin = 0, 0
-tileset = legacy
+tileset = wind_orchards
 
 [grid]
 #......................................#

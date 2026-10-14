@@ -148,7 +148,7 @@ material in its `ground` custom data, and the map answers
 |---|---|---|
 | `frost_edge` | stone, wood, wall | Frost Edge: dark sea-cliff rock (the shared rock body, dark palette), the village oak planks, white masonry back walls; no earth ("No earth there", user, 2026-10-08). |
 | `frozen_lake` | earth, stone, wood | Frozen Lake: bluish lake stone (the shared rock body, blue palette), cold dark chasm earth, grey stilt planks (design 04 section 6; tools/art/tiles/frozen_lake_*.json). |
-| `legacy` | earth, stone, wood, wall | The pack's earth and stone converted to the corner-Wang contract; placeholder wood and wall. Every room until its biome's art lands. |
+| `legacy` | earth, stone, wood, wall | The pack's earth and stone converted to the corner-Wang contract; placeholder wood and wall. Test fixtures only: no room uses it (WORLD-07, 2026-10-13). |
 | `lighthouse` | stone, wood, wall | The lighthouse rooms: white masonry ground and back walls, the village oak planks ("Lighthouse masonry tiles", user, 2026-10-13); no earth. |
 | `spring_woods` | earth, stone, wood | Spring Woods: forest earth under a moss and blossom turf, mossy cave rock, the village oak planks (design 04 section 6; tools/art/tiles/spring_woods_*.json). |
 | `summer_caldera` | stone, wood, wall | Summer Caldera: porous basalt, temple sandstone back walls, the village oak planks; no earth ("No earth there", user, 2026-10-08). |

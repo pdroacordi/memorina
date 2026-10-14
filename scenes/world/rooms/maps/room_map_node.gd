@@ -193,7 +193,7 @@ func _crack_layer(layer_name: String, cells: Array[Vector2i], z: int) -> TileMap
 	var layer := TileMapLayer.new()
 	layer.name = layer_name
 	layer.tile_set = map.biome.tile_set()
-	layer.material = GROUND_MATERIAL
+	layer.material = _seasoned_ground()
 	layer.z_index = z
 	for cell: Vector2i in cells:
 		var variant := GroundAutotile.drawn_variant(maxi(GroundAutotile.edge_variant(cell), 1), BiomeTileset.CRACK_VARIANTS)
@@ -205,7 +205,7 @@ func _ledge_layer() -> TileMapLayer:
 	var layer := TileMapLayer.new()
 	layer.name = "Ledges"
 	layer.tile_set = map.biome.tile_set()
-	layer.material = GROUND_MATERIAL
+	layer.material = _seasoned_ground()
 	for look: int in map.ledge_layers:
 		var cells: PackedByteArray = map.ledge_layers[look]
 		for y: int in map.size.y:
@@ -235,7 +235,14 @@ func _clipped(base: ShaderMaterial) -> ShaderMaterial:
 	var top_left := to_global(Vector2(map.origin * RoomMap.CELL_PX))
 	var size := Vector2(map.size * RoomMap.CELL_PX) * global_scale
 	clipped.set_shader_parameter(&"clip_rect", Vector4(top_left.x, top_left.y, size.x, size.y))
+	# No season indoors, as indoor backdrops have one band: snow or leaves never lie on a floor under a roof (systems/seasonal-art).
+	if _indoors():
+		clipped.set_shader_parameter(&"band_of_season", Vector4i.ZERO)
 	return clipped
+
+## The shared ground material outdoors; indoors a clipped copy that always draws band 0.
+func _seasoned_ground() -> ShaderMaterial:
+	return _clipped(GROUND_MATERIAL) if _indoors() else GROUND_MATERIAL
 
 func _sorted(layers: Dictionary) -> Array[int]:
 	var looks: Array[int] = []

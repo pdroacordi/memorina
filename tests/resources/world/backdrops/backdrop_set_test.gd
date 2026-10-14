@@ -8,12 +8,18 @@ const ROOMS_DIR := "res://scenes/world/rooms"
 ## The surface sets that share one sky and one horizon, so a seam between regions mixes sky with sky.
 const SHARED_SKY_SETS: Array[String] = ["village_valley", "threshold", "frost_edge", "spring_woods", "frozen_lake", "wind_orchards", "summer_caldera"]
 const SHARED_SKY := "res://assets/sprites/world/background/village_valley/sky.png"
+## The GandalfHardcore pack's background folders (CREDITS.md); unused since WORLD-30.
+const PACK_BACKGROUNDS: Array[String] = [
+	"background/seasonal/", "background/spring/", "background/autumn/", "background/winter/", "backdrops/pine_woods.tres",
+]
+## Scripts that may still load the pack sheets: the local palette sampler (CREDITS.md).
+const PACK_LOAD_EXEMPT: Array[String] = ["res://tools/art/extract_palette.gd"]
 ## Game px from a band's top within which a layer with nothing above may not run opaque, and the longest run allowed.
 const FLAT_TOP_ROWS := 16
 const FLAT_TOP_RUN := 32
 ## Layers meant to end in a straight top line, with the reason.
 const FLAT_TOP_ALLOWED := {
-	"res://assets/sprites/world/background/basalt_caves/far.png": "caldera_crater: the crater's wall stops at a straight rim under the sky (WORLD-28)",
+	"res://assets/sprites/world/background/basalt_caves/far.png": "caldera_crater: the basalt under the crater landscape starts on a straight line across the near layer's floor (WORLD-30)",
 }
 
 
@@ -199,6 +205,41 @@ func test_no_room_or_region_shows_the_pack_forest() -> void:
 		if FileAccess.get_file_as_string(path).contains("backdrops/pine_woods.tres"):
 			offenders.append(path)
 	assert_array(Array(offenders)).is_empty()
+
+## No scene draws the pack's backgrounds, the title included, and no set but the retired pine_woods holds them
+## (WORLD-30: no pack art on screen; CREDITS.md).
+func test_no_scene_or_other_set_draws_the_pack_backgrounds() -> void:
+	var offenders := PackedStringArray()
+	for path: String in _files_under("res://scenes", "tscn") + _files_under(SETS_DIR, "tres"):
+		if path == SETS_DIR.path_join("pine_woods.tres"):
+			continue
+		var text := FileAccess.get_file_as_string(path)
+		for folder: String in PACK_BACKGROUNDS:
+			if text.contains(folder):
+				offenders.append("%s: %s" % [path, folder])
+	assert_array(Array(offenders)).is_empty()
+
+## No script names a pack background sheet or the retired set; the palette sampler only reads them for colours.
+func test_no_script_loads_the_pack_backgrounds() -> void:
+	# Any string naming a pack sheet or the retired set, so a path held in a const and loaded later is caught too.
+	var loads := RegEx.create_from_string("\"res://(assets/sprites/world/background/(seasonal|spring|autumn|winter)/[^\"]*|resources/world/backdrops/pine_woods\\.tres)\"")
+	var offenders := PackedStringArray()
+	for dir: String in ["res://scenes", "res://globals", "res://resources", "res://tools", "res://tests"]:
+		for path: String in _files_under(dir, "gd"):
+			if path in PACK_LOAD_EXEMPT:
+				continue
+			if loads.search(FileAccess.get_file_as_string(path)) != null:
+				offenders.append(path)
+	assert_array(Array(offenders)).is_empty()
+
+func _files_under(dir: String, extension: String) -> PackedStringArray:
+	var found := PackedStringArray()
+	for sub: String in DirAccess.get_directories_at(dir):
+		found.append_array(_files_under(dir.path_join(sub), extension))
+	for file: String in DirAccess.get_files_at(dir):
+		if file.get_extension() == extension:
+			found.append(dir.path_join(file))
+	return found
 
 # Contents scene path -> its region's set, for every room a region scene places.
 func _region_sets() -> Dictionary:

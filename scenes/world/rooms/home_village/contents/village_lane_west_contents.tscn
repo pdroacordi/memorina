@@ -17,6 +17,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/lantern_post.tscn" id="w11_lantern_post"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/fence_wood_b.tscn" id="w11_fence_wood_b"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bush.tscn" id="w11_bush"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/gate_tower.tscn" id="pr_gate_tower"]
 
 [node name="Contents" type="Node2D"]
 
@@ -25,6 +26,9 @@ script = ExtResource("bd_script")
 
 [node name="Props" type="Node2D" parent="."]
 z_index = -10
+
+[node name="GateTower" parent="Props" instance=ExtResource("pr_gate_tower")]
+position = Vector2(0, 16)
 
 [node name="BakeryFacade" parent="Props" instance=ExtResource("pr_bakery")]
 position = Vector2(400, 288)

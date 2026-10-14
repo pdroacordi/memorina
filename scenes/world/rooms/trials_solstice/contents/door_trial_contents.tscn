@@ -1,7 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
-[ext_resource type="Resource" path="res://resources/world/backdrops/interior_stone.tres" id="bd_set"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/lake_cliff_rock.tres" id="bd_set"]
 [ext_resource type="Script" path="res://scenes/world/environment/props/ambient_motion.gd" id="pr_motion"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/props/demo/flag.png" id="pr_flag"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]

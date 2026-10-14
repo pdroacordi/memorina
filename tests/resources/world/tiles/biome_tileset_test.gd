@@ -4,6 +4,23 @@ class_name BiomeTilesetTest extends GdUnitTestSuite
 
 ## Art px every fill variant must differ from the plain fill and from each other by (the village soil's pebble is 3).
 const MIN_DISTINCT_ART_PX := 3
+## Each region's biome; the trials borrow theirs (board_world, 2026-10-13).
+const REGION_TILESETS := {
+	"home_village": "village", "threshold": "threshold", "frost_edge": "frost_edge", "spring_woods": "spring_woods",
+	"frozen_lake": "frozen_lake", "wind_orchards": "wind_orchards", "summer_caldera": "summer_caldera",
+	"trials_winter": "frozen_lake", "trials_spring": "spring_woods", "trials_autumn": "wind_orchards",
+	"trials_solstice": "threshold",
+	# The summer trial's floor is earth, which the caldera biomes lack.
+	"trials_summer": "threshold",
+}
+## Rooms that draw another biome than their region's (systems/rooms).
+const ROOM_TILESETS := {
+	"lighthouse_base": "lighthouse", "lighthouse_top": "lighthouse", "lighthouse_interior": "lighthouse",
+	"caldera_cistern": "village", "caldera_dry_moat": "summer_caldera_ash", "caldera_open_crater": "summer_caldera_ash",
+	"the_catch": "frozen_lake", "door_trial": "frozen_lake", "door_trial_inside": "frozen_lake",
+}
+## The trial rooms of ROOM_TILESETS: debug only, so the world generator does not know them.
+const TRIAL_ROOMS := ["the_catch", "door_trial", "door_trial_inside"]
 
 
 func _biomes() -> Array[BiomeTileset]:
@@ -13,8 +30,60 @@ func _biomes() -> Array[BiomeTileset]:
 			found.append(load(BiomeTileset.DIRECTORY + file) as BiomeTileset)
 	return found
 
+## The parser fixtures still name the pack sheets; no game room does.
 func test_there_is_at_least_the_legacy_biome() -> void:
 	assert_object(BiomeTileset.find("legacy")).is_not_null()
+
+## "We should only our set of tiles from now on and not mix em." (user, 2026-10-13): no room, trial, scene or room
+## generator default draws the pack's tiles.
+func test_no_room_scene_or_generator_draws_the_pack_tiles() -> void:
+	var offenders := PackedStringArray()
+	for path: String in _files_under("res://scenes", ["room", "tscn", "tres"]) + _files_under("res://resources", ["tres"]):
+		var text := FileAccess.get_file_as_string(path)
+		if path.ends_with(".room") and text.contains("tileset = legacy"):
+			offenders.append(path)
+		elif text.contains("tiles/biomes/legacy.tres") or text.contains("tilesets/legacy/"):
+			if path != BiomeTileset.DIRECTORY + "legacy.tres":
+				offenders.append(path)
+	if FileAccess.get_file_as_string("res://tools/maps/gen_world_shells.py").contains("tileset = legacy"):
+		offenders.append("res://tools/maps/gen_world_shells.py")
+	assert_array(Array(offenders)).is_empty()
+
+## Every room names its region's biome, read the way the parser reads it, so a spelling like `tileset=legacy` cannot slip
+## past (systems/rooms, Tilesets per region). The tables mirror gen_world_shells.py's REGION_TILESETS and ROOM_TILESETS.
+func test_every_room_draws_its_regions_tileset() -> void:
+	var legend := RoomLegend.load_default()
+	var wrong := PackedStringArray()
+	for path: String in _files_under("res://scenes", ["room"]):
+		var region := path.get_base_dir().get_base_dir().get_file()
+		var room := path.get_file().get_basename()
+		var want: String = ROOM_TILESETS.get(room, REGION_TILESETS.get(region, ""))
+		var parsed := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
+		var drawn := parsed.map.biome.id() if parsed.map != null and parsed.map.biome != null else "<none>"
+		if drawn != want:
+			wrong.append("%s: %s, want %s" % [path, drawn, want])
+	assert_array(Array(wrong)).is_empty()
+
+## The generator writes new rooms from the same tables.
+func test_the_generator_tables_match() -> void:
+	var source := FileAccess.get_file_as_string("res://tools/maps/gen_world_shells.py")
+	var missing := PackedStringArray()
+	for region: String in REGION_TILESETS:
+		if not region.begins_with("trials_") and not source.contains('"%s": "%s"' % [region, REGION_TILESETS[region]]):
+			missing.append(region)
+	for room: String in ROOM_TILESETS:
+		if not TRIAL_ROOMS.has(room) and not source.contains('"%s": "%s"' % [room, ROOM_TILESETS[room]]):
+			missing.append(room)
+	assert_array(Array(missing)).is_empty()
+
+func _files_under(dir: String, extensions: Array) -> PackedStringArray:
+	var found := PackedStringArray()
+	for sub: String in DirAccess.get_directories_at(dir):
+		found.append_array(_files_under(dir.path_join(sub), extensions))
+	for file: String in DirAccess.get_files_at(dir):
+		if file.get_extension() in extensions:
+			found.append(dir.path_join(file))
+	return found
 
 ## "No earth there" (user, 2026-10-08): roots must find nothing to join in these biomes; the ash scree is stone.
 func test_the_biomes_without_earth_draw_none() -> void:

@@ -13,13 +13,18 @@ Third-party art used in Memorina, with the terms it was taken under.
   stone derived from the earth) rearranged into corner-Wang quarters by
   `tools/art/assemble_tile_sheet.gd --from-blob` (WORLD-07). Pack art is never uploaded to an
   image generator as a reference (the AI-training clause). `legacy/wood.png` and `wall.png`
-  are flat placeholders drawn by the same tool. Since WORLD-28 (2026-10-13) the pack's forest
+  are flat placeholders drawn by the same tool. **Unused in the game since 2026-10-13** (WORLD-07,
+  WORLD-30): no room, trial, region or the title draws the pack's ground tiles or its forest
   backgrounds (`background/seasonal/`, `spring/`, `autumn/`, `winter/`, and their set
-  `resources/world/backdrops/pine_woods.tres`) are no room's or trial's backdrop; the files stay,
-  and the title screen still draws `background/seasonal/`.
+  `resources/world/backdrops/pine_woods.tres`); `biome_tileset_test` and `backdrop_set_test` fail if
+  one does. The files stay on disk. What still reads them: the parser and `RoomMapNode` test
+  fixtures (`tileset = legacy`, through `resources/world/tiles/biomes/legacy.tres`), and the dev
+  tools `tools/art/extract_palette.gd` (local palette sampling), `tools/stack_seasonal_sheets.gd`
+  (rebuilds `background/seasonal/`) and `assemble_tile_sheet.gd --from-blob`.
 
 - **Village fronts, the door and the village backdrop** (`assets/sprites/world/props/village/` but the bell tower's front, `assets/sprites/world/props/door/door.png`, `assets/sprites/world/background/village_valley/`) - Codex image generation from the prompts in `tools/art/prompts/`, with our approved concept and our own village tiles as the only references; the raw pictures are kept in `tools/art/sources/` and cut by `tools/art/cut_facades.py` and `tools/art/cut_backdrop.py` (the sky is drawn by the latter).
 
+- **The village gate tower** (`assets/sprites/world/props/village/gate_tower.png`, WORLD-30) - one Codex image generation (our bell tower and tavern fronts and our approved village concept the only references), kept in `tools/art/sources/village/gate_tower_codex.png` and cut by `tools/art/cut_single_prop.py` in the colours of those two fronts.
 - **Region fronts and doorways** (`assets/sprites/world/props/{spring_woods,threshold,frozen_lake,wind_orchards,frost_edge}/`, `assets/sprites/world/props/door/door_{passage,stairwell,hatch_up,hatch_down}.png`) - Codex image generation with our approved village concept and our own village fronts and door as the only references; kept in `tools/art/sources/{region_facades,doorways,stairwell}_codex.png` and cut by `tools/art/cut_facades.py`.
 - **Villagers and animals** (`assets/sprites/world/inhabitants/`) - stills from one Codex sheet (our concept and our village fronts as the only references, `tools/art/sources/village_people_codex.png`), idle loops PixelLab-generated (`animate-with-text-v3`) from those stills, cut by `tools/art/cut_inhabitant.py`.
 
@@ -29,7 +34,7 @@ Third-party art used in Memorina, with the terms it was taken under.
 - **Pier posts** (WORLD-29, 2026-10-13; `assets/sprites/world/props/frozen_lake/pier_post.png`, `pier_post_foot.png`) - procedural, `tools/art/draw_post.py` (the village timber; the foot `--foot`).
 - **Village plank tiles** (`tools/art/tiles/sources/village_planks_*.png`) - painted by `tools/art/tiles/paint_planks.py` in the colours of the PixelLab tiles-pro plank body they replace (2026-10-11).
 
-- **Cave, strata and interior backdrops** (`assets/sprites/world/background/{village_strata,earth_caves,ice_caves,basalt_caves,interior_timber,interior_stone}/`) - Codex image generation (no reference image), kept in `tools/art/sources/backdrop_*_codex.png` and cut by `tools/art/cut_wall.py`. The interim crater set (`resources/world/backdrops/caldera_crater.tres`, WORLD-28) reuses the village valley's sky over the basalt wall: no new art.
+- **Cave, strata and interior backdrops** (`assets/sprites/world/background/{village_strata,earth_caves,ice_caves,basalt_caves,interior_timber,interior_stone}/`) - Codex image generation (no reference image), kept in `tools/art/sources/backdrop_*_codex.png` and cut by `tools/art/cut_wall.py`. The crater set (`resources/world/backdrops/caldera_crater.tres`, WORLD-30) stacks the Summer Caldera region layers over the basalt wall: no new art.
 
 - **Village ground** (`assets/sprites/world/tilesets/village/`) - the soil and cobble textures are Codex
   image generation reduced to 16 px, the planks and plaster-and-timber are PixelLab-generated

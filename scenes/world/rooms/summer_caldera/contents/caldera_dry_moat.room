@@ -4,7 +4,7 @@
 
 [room]
 origin = 0, 0
-tileset = legacy
+tileset = summer_caldera_ash
 
 [grid]
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

@@ -5,7 +5,7 @@
 
 [room]
 origin = 0, 0
-tileset = village
+tileset = frozen_lake
 
 [grid]
 S..........................................................S

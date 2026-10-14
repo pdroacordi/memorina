@@ -1,21 +1,22 @@
 ; lake_fisher_hut.room - Cabana do Pescador (interior, design 04 sections 3.5 and 4): one room, two crates
 ; (cols 8-9) and barrels by the back wall. No gate.
+; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
 
 [room]
 origin = 0, 0
-tileset = legacy
+tileset = frozen_lake
 
 [grid]
-SSSSSSSSSSSSSSSSSSSS
-S..................S
-S..................S
-S..................S
-S..................S
-S..................S
-S..................S
-S........S.........S
-S...E...SS......SSSS
-SSSSSSSSSSSSSSSSS___
+%%%%%%%%%%%%%%%%%%%%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%........%.........%
+%...E...%%......%%%%
+%%%%%%%%%%%%%%%%%___
 ____________________
 ____________________
 

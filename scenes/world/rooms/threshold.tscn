@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_bridge.tscn" id="r1"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_wayshrine.tscn" id="r2"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_farmhouse.tscn" id="r3"]
-[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/threshold.tres" id="bd_region_set"]
 
 [node name="Threshold" type="Node2D"]
 script = ExtResource("1_region")

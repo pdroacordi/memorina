@@ -19,7 +19,7 @@ script = ExtResource("1_region")
 name_key = "REGION_SUMMER_CALDERA"
 season = 1
 backdrop_set = ExtResource("bd_region_set")
-horizon_y = 768.0
+horizon_y = 1536.0
 
 [node name="Memory" type="Node2D" parent="."]
 script = ExtResource("2_regmem")

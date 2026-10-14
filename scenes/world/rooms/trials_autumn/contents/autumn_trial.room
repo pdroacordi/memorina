@@ -30,7 +30,7 @@
 
 [room]
 origin = 0, -16
-tileset = legacy
+tileset = wind_orchards
 
 [grid]
 .........SSSS............................................S............S...

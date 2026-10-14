@@ -132,7 +132,7 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 
 `scenes/ui/title/title.tscn` is a composition root, PAUSABLE so it never inherits ALWAYS from the playtest runner. Boot or Quit to title swaps it in; `SceneSwap` swaps it out when a slot is played. It reuses `MenuInput`, `MenuEntry`, `ConfirmPanel`, `menu_theme.tres` and `Fade`, under one 320x180 `Art` root at scale 2.
 
-- **Background:** the woods' five background layers on band 0 (region 1024x346, the spring band), each a `Parallax2D` with `repeat_size` 1024 and `autoscroll` -1, -2, -4, -6, -8 px/s from sky to front. All wear `title_grey_material`, the forgotten print (`systems/greyhush`). Sky at y 0, trees at y 14.
+- **Background:** the village valley's four layers (`assets/sprites/world/background/village_valley/`: sky, mountains, hills, trees) on band 0 (region 1024x384, the spring band), each a `Parallax2D` with `repeat_size` 1024 and `autoscroll` -1, -2, -4, -8 px/s from sky to front, at y -24 so the horizon row 229 sits at screen y 205 and the band covers the 360 px view. All wear `title_grey_material`, the forgotten print (`systems/greyhush`). Replaced the pack's forest on 2026-10-13 (WORLD-30: no pack art on screen).
 - **Logo:** `assets/sprites/hud/title/memorina_logo.png`, 160x48 at (80, 6).
 - **Flute pulse:** behind the logo, `FlutePulse` (96x36 at (110, 24), under the pipes at logo x 38..117, y 24..47) breathes the four season colours, winter to summer left to right.
   - It is a dithered ellipse in pack pixels. Its reach and its alpha (peak 0.45, the user's "Stronger (~0.45)", 2026-10-06) follow a 4 s real-time breath set from script; the shader reads neither `TIME` nor `FRAGCOORD`.
