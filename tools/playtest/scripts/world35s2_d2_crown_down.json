@@ -1,0 +1,51 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 4.8,
+ "locale": "en",
+ "player_position": [
+  -2384,
+  -120
+ ],
+ "skills": [
+  0
+ ],
+ "restored_guardians": [
+  1
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "d2_00_crown_floor"
+  },
+  {
+   "t": 1.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.4,
+   "screenshot": "d2_01_hole"
+  },
+  {
+   "t": 3.0,
+   "screenshot": "d2_02_roof"
+  },
+  {
+   "t": 3.7,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "screenshot": "d2_03_edge"
+  },
+  {
+   "t": 4.4,
+   "trace": false
+  }
+ ]
+}

@@ -1,0 +1,82 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 10.2,
+ "locale": "en",
+ "player_position": [
+  -6768,
+  264
+ ],
+ "skills": [
+  0
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "log": "e_start"
+  },
+  {
+   "t": 3.0,
+   "screenshot": "e00_fight"
+  },
+  {
+   "t": 3.0,
+   "log": "e_fight"
+  },
+  {
+   "t": 3.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.0,
+   "screenshot": "e01_mouth"
+  },
+  {
+   "t": 5.0,
+   "log": "e_mouth"
+  },
+  {
+   "t": 6.1,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 6.3,
+   "screenshot": "e02_inside"
+  },
+  {
+   "t": 6.3,
+   "log": "e_inside"
+  },
+  {
+   "t": 8.0,
+   "log": "e_after"
+  },
+  {
+   "t": 8.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 9.6,
+   "screenshot": "e03_mouth_from_tree"
+  },
+  {
+   "t": 9.6,
+   "log": "e_back"
+  },
+  {
+   "t": 9.8,
+   "trace": false
+  }
+ ]
+}

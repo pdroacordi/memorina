@@ -1,0 +1,269 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 17.5,
+ "locale": "en",
+ "player_position": [
+  -7440,
+  264
+ ],
+ "skills": [
+  0
+ ],
+ "restored_guardians": [
+  1
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.2,
+   "screenshot": "a00_foot"
+  },
+  {
+   "t": 1.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 1.85,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.1,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.75,
+   "screenshot": "a01_knot"
+  },
+  {
+   "t": 3.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 3.35,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.25,
+   "screenshot": "a02_knot"
+  },
+  {
+   "t": 4.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 4.75,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.85,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.1,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.75,
+   "screenshot": "a03_knot"
+  },
+  {
+   "t": 6.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 6.35,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.25,
+   "screenshot": "a04_knot"
+  },
+  {
+   "t": 7.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 7.75,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.85,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 8.1,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.75,
+   "screenshot": "a05_knot"
+  },
+  {
+   "t": 9.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 9.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 9.35,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 9.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 10.25,
+   "screenshot": "a06_knot"
+  },
+  {
+   "t": 10.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 10.75,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 10.85,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 11.1,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 11.75,
+   "screenshot": "a07_knot"
+  },
+  {
+   "t": 12.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 12.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 12.35,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 12.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 13.25,
+   "screenshot": "a08_knot"
+  },
+  {
+   "t": 13.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 13.55,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 13.8,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 14.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 14.5,
+   "screenshot": "a09_street"
+  },
+  {
+   "t": 14.9,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 15.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 15.2,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 16.1,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 16.5,
+   "screenshot": "a10_town"
+  },
+  {
+   "t": 16.6,
+   "trace": false
+  }
+ ]
+}

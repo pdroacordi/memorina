@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://kv6k8n4ta7m0"]
+
+[ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/heartwood.tres" id="bd_set"]
+[ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
+[ext_resource type="Resource" path="res://scenes/world/rooms/spring_woods/contents/woods_hollow_tree.room" id="room_map"]
+
+[node name="Contents" type="Node2D"]
+
+[node name="Backdrop" type="Node2D" parent="."]
+script = ExtResource("bd_script")
+backdrop_set = ExtResource("bd_set")
+
+[node name="RoomMap" type="Node2D" parent="."]
+script = ExtResource("room_map_node")
+map = ExtResource("room_map")

@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://b0p7gilov4efr"
+path="res://.godot/imported/woods_hollow_tree.room-484397c641ed7b233e673580701c38c2.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/spring_woods/contents/woods_hollow_tree.room"
+dest_files=["res://.godot/imported/woods_hollow_tree.room-484397c641ed7b233e673580701c38c2.res"]
+
+[params]
+

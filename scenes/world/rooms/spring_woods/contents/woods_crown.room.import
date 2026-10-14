@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://dvghpmi4sot8m"
+path="res://.godot/imported/woods_crown.room-ddb6537d88d7e2e30d9b1377b1a91f02.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/spring_woods/contents/woods_crown.room"
+dest_files=["res://.godot/imported/woods_crown.room-ddb6537d88d7e2e30d9b1377b1a91f02.res"]
+
+[params]
+

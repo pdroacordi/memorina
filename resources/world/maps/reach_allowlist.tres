@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ReachAllowlist" load_steps=25 format=3]
+[gd_resource type="Resource" script_class="ReachAllowlist" load_steps=32 format=3]
 
 [ext_resource type="Script" path="res://resources/world/maps/reach_allowlist.gd" id="1_list"]
 [ext_resource type="Script" path="res://resources/world/maps/reach_allowlist_entry.gd" id="2_entry"]
@@ -51,13 +51,6 @@ room = &"lake_high_wall"
 cell = Vector2i(16, 26)
 kind = 1
 reason = "WORLD-35: a rung of the ladder from the floor passage to the lip (playtests/2026-10-11-world25-rework, path 4); the lake kit (Redoma, no double jump) climbs every rung to the lip it plays from; the double jump skips this one on the way to the reward slot lake_high_wall_exit"
-
-[sub_resource type="Resource" id="entry_11"]
-script = ExtResource("2_entry")
-room = &"lake_shore"
-cell = Vector2i(6, 5)
-kind = 1
-reason = "TECH-06: the base-kit step from lake_high_wall's floor passage back up onto the causeway (lake_shore header: the causeway is the way west with no song); only the audit's song union opens a way round"
 
 [sub_resource type="Resource" id="entry_12"]
 script = ExtResource("2_entry")
@@ -157,6 +150,62 @@ cell = Vector2i(7, 6)
 kind = 1
 reason = "WORLD-35: the stair ledge up to the loft and its reward slot woods_hut_letter (woods_hut header); a full jump from the floor also reaches the loft (a rise of 4 rows, inside the base jump's 4.5 rows, 143 px, JumpReach), so the audit sees no need"
 
+[sub_resource type="Resource" id="entry_28"]
+script = ExtResource("2_entry")
+room = &"lake_chasm"
+cell = Vector2i(29, 11)
+kind = 1
+reason = "WORLD-35: the lower stone step of the climb from lake_high_wall's floor up to the root-bridge lip (lake_chasm header, 'the climb from the lake side is single jumps'), Loop A's leg from the lake into the Orchards; the song union has a second base-tier way into the Wind Orchards since WORLD-35, Enraizar's pillars up woods_hollow_tree, so it needs neither; Loop A (WORLD-35 plan section 2.7) is a designed parallel way, and the kit check (room_kit_test) holds every kit's way back"
+
+[sub_resource type="Resource" id="entry_29"]
+script = ExtResource("2_entry")
+room = &"lake_chasm"
+cell = Vector2i(34, 14)
+kind = 1
+reason = "WORLD-35: the first stone step of the climb from lake_high_wall's floor up to the root-bridge lip (lake_chasm header, 'the climb from the lake side is single jumps'), Loop A's leg from the lake into the Orchards; the song union has a second base-tier way into the Wind Orchards since WORLD-35, Enraizar's pillars up woods_hollow_tree, so it needs neither; Loop A (WORLD-35 plan section 2.7) is a designed parallel way, and the kit check (room_kit_test) holds every kit's way back"
+
+[sub_resource type="Resource" id="entry_30"]
+script = ExtResource("2_entry")
+room = &"orchard_terraces"
+cell = Vector2i(43, 3)
+kind = 1
+reason = "WORLD-35: the crown that catches the drop from orchard_chasm_bridge (orchard_terraces header) and the climb back up to it, Loop A's leg between the Orchards and the lake; the song union has a second base-tier way into the Wind Orchards since WORLD-35, Enraizar's pillars up woods_hollow_tree, so it needs neither; Loop A (WORLD-35 plan section 2.7) is a designed parallel way, and the kit check (room_kit_test) holds every kit's way back"
+
+[sub_resource type="Resource" id="entry_31"]
+script = ExtResource("2_entry")
+room = &"orchard_terraces"
+cell = Vector2i(26, 5)
+kind = 1
+reason = "WORLD-35: a step of the climb up to the crown under orchard_chasm_bridge (orchard_terraces header), Loop A's leg between the Orchards and the lake; the song union has a second base-tier way into the Wind Orchards since WORLD-35, Enraizar's pillars up woods_hollow_tree, so it needs neither; Loop A (WORLD-35 plan section 2.7) is a designed parallel way, and the kit check (room_kit_test) holds every kit's way back"
+
+[sub_resource type="Resource" id="entry_32"]
+script = ExtResource("2_entry")
+room = &"orchard_terraces"
+cell = Vector2i(35, 6)
+kind = 1
+reason = "WORLD-35: a step of the climb up to the crown under orchard_chasm_bridge (orchard_terraces header), Loop A's leg between the Orchards and the lake; the song union has a second base-tier way into the Wind Orchards since WORLD-35, Enraizar's pillars up woods_hollow_tree, so it needs neither; Loop A (WORLD-35 plan section 2.7) is a designed parallel way, and the kit check (room_kit_test) holds every kit's way back"
+
+[sub_resource type="Resource" id="entry_33"]
+script = ExtResource("2_entry")
+room = &"lake_shore"
+cell = Vector2i(37, 5)
+kind = 1
+reason = "WORLD-35: the step from the east bank up onto the causeway, the way west with no song (lake_shore header) on Loop A's leg to lake_chasm and the Orchards; the song union has a second base-tier way into the Wind Orchards since WORLD-35, Enraizar's pillars up woods_hollow_tree, so it needs neither; Loop A (WORLD-35 plan section 2.7) is a designed parallel way, and the kit check (room_kit_test) holds every kit's way back"
+
+[sub_resource type="Resource" id="entry_34"]
+script = ExtResource("2_entry")
+room = &"woods_hollow_tree"
+cell = Vector2i(4, 38)
+kind = 1
+reason = "WORLD-35: the hollow tree's first knot, 6 rows over the floor (woods_hollow_tree header): the double jump lands on it and Enraizar's pillar from the floor grows to it, the only way up from bloom_hollow; the cache above is also reached by the drop from orchard_mill_town's well and the Orchards by the canopy, so the audit sees no need for the climb"
+
+[sub_resource type="Resource" id="entry_35"]
+script = ExtResource("2_entry")
+room = &"orchard_mill_town"
+cell = Vector2i(6, 11)
+kind = 1
+reason = "WORLD-35: woods_hollow_tree's top landing (tree row 0, cols 6-7; its feet stand in orchard_mill_town's well), where the double jump and Enraizar's top hop land before the jump to the street (woods_hollow_tree header); the drop from the street passes beside it (cols 5 and 8), and the climb is a parallel way into the Orchards beside the canopy and lake_chasm, so the audit sees no need"
+
 [resource]
 script = ExtResource("1_list")
-entries = Array[ExtResource("2_entry")]([SubResource("entry_1"), SubResource("entry_2"), SubResource("entry_3"), SubResource("entry_5"), SubResource("entry_6"), SubResource("entry_8"), SubResource("entry_9"), SubResource("entry_11"), SubResource("entry_12"), SubResource("entry_13"), SubResource("entry_14"), SubResource("entry_15"), SubResource("entry_17"), SubResource("entry_18"), SubResource("entry_19"), SubResource("entry_20"), SubResource("entry_21"), SubResource("entry_22"), SubResource("entry_23"), SubResource("entry_24"), SubResource("entry_25"), SubResource("entry_27")])
+entries = Array[ExtResource("2_entry")]([SubResource("entry_1"), SubResource("entry_2"), SubResource("entry_3"), SubResource("entry_5"), SubResource("entry_6"), SubResource("entry_8"), SubResource("entry_9"), SubResource("entry_12"), SubResource("entry_13"), SubResource("entry_14"), SubResource("entry_15"), SubResource("entry_17"), SubResource("entry_18"), SubResource("entry_19"), SubResource("entry_20"), SubResource("entry_21"), SubResource("entry_22"), SubResource("entry_23"), SubResource("entry_24"), SubResource("entry_25"), SubResource("entry_27"), SubResource("entry_28"), SubResource("entry_29"), SubResource("entry_30"), SubResource("entry_31"), SubResource("entry_32"), SubResource("entry_33"), SubResource("entry_34"), SubResource("entry_35")])

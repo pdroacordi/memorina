@@ -57,6 +57,9 @@ ROOM_LIST = [
     ("spring_woods", "woods_root_caves", -7, -5, 1, 2, False),
     ("spring_woods", "woods_pond", -9, -8, 0, 0, True),
     ("spring_woods", "bloom_hollow", -11, -10, 0, 0, True),
+    # Inside a giant tree, so not open to the sky: it shows the heartwood wall (ROOM_SETS).
+    ("spring_woods", "woods_hollow_tree", -12, -12, -3, 0, False),
+    ("spring_woods", "woods_crown", -4, -4, -2, -1, True),
     ("frozen_lake", "lake_waterfall_path", 4, 4, -5, -1, True),
     ("frozen_lake", "lake_fishing_village", 1, 3, -5, -5, True),
     ("frozen_lake", "lake_well", 2, 2, -4, -4, False),
@@ -106,6 +109,7 @@ H_LINKS = [
     ("caldera_dry_moat", "caldera_seesaw", 4), ("caldera_seesaw", "caldera_open_crater", 4),
     ("caldera_open_crater", "caldera_cistern_bottom", 4), ("caldera_cistern_bottom", "caldera_temple_gate", 4),
     ("caldera_temple_gate", "caldera_arena", 4),
+    ("woods_hollow_tree", "bloom_hollow", 0), ("woods_deep", "woods_crown", -1),
 ]
 
 # Vertical openings: (upper room, lower room, global macro col, first cell col, last cell col inside that macro col).
@@ -118,6 +122,8 @@ V_LINKS = [
     ("orchard_chasm_bridge", "orchard_terraces", -7, 4, 11),
     ("orchard_counterweights", "orchard_mill_town", -10, 6, 13),
     ("orchard_windy_gap", "orchard_mill_town", -11, 4, 15),
+    ("orchard_mill_town", "woods_hollow_tree", -12, 5, 8),
+    ("woods_crown", "woods_edge", -4, 11, 14),
 ]
 
 # room, cell col, bench id (on the room's bottom floor)
@@ -356,6 +362,8 @@ ROCK_SETS = {
     "lake_high_wall": "lake_cliff_rock", "lake_chasm": "lake_cliff_rock", "orchard_counterweights": "orchard_limestone",
     "orchard_cliff_chimney": "orchard_limestone",
 }
+# Enclosed rooms whose walls are neither rock nor their region's caves: the inside of the giant tree.
+ROOM_SETS = {"woods_hollow_tree": "heartwood"}
 # The backdrop set an underground room of each region shows (architecture/backdrop-seams).
 UNDERGROUND_SETS = {
     "home_village": "village_strata", "threshold": "earth_caves", "frost_edge": "ice_caves",
@@ -366,10 +374,12 @@ UNDERGROUND_SETS = {
 
 def contents(room):
     """Every room has a backdrop: its region's set outdoors (no override), a rock wall inside rock, its region's caves
-    underground, a wall indoors."""
+    underground (or its own wall, ROOM_SETS), a wall indoors."""
     rel = "res://scenes/world/rooms/%s/contents/%s.room" % (room.region, room.id)
     if room.interior:
         backdrop = "interior_timber"
+    elif room.id in ROOM_SETS:
+        backdrop = ROOM_SETS[room.id]
     elif room.id in ROCK_SETS:
         backdrop = ROCK_SETS[room.id]
     elif room.surface:

@@ -1,0 +1,161 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 14.8,
+ "locale": "en",
+ "player_position": [
+  -2192,
+  104
+ ],
+ "skills": [
+  0
+ ],
+ "restored_guardians": [
+  1
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "d00_roof"
+  },
+  {
+   "t": 1.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.95,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.8,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "screenshot": "d01_through_hole"
+  },
+  {
+   "t": 4.3,
+   "screenshot": "d02_floor_east"
+  },
+  {
+   "t": 4.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 4.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.4,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 6.0,
+   "screenshot": "d03_trunk"
+  },
+  {
+   "t": 6.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.7,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 6.7,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.9,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 7.2,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.3,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 7.9,
+   "screenshot": "d04_branch_cache"
+  },
+  {
+   "t": 8.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.6,
+   "screenshot": "d05_crown_west"
+  },
+  {
+   "t": 11.8,
+   "screenshot": "d06_crown_mouth"
+  },
+  {
+   "t": 12.6,
+   "screenshot": "d07_deep_tunnel"
+  },
+  {
+   "t": 13.5,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 14.2,
+   "screenshot": "d08_deep"
+  },
+  {
+   "t": 14.4,
+   "trace": false
+  }
+ ]
+}

@@ -87,3 +87,10 @@ WORLD-35 assigns a reward to every exploration dead end, but the systems that gi
   - The slot keeps kind COLLECTIBLE, since no new kind is needed.
   - LIFE-05 keys the note by the `slot_id` `caldera_temple_sanctum`, as STORY-06 keys its content. The catalog that fills `$` gives that id a life note instead of a letter.
   - Whether that slot also holds a letter is STORY-06's call.
+
+## Built (WORLD-35 step 2, 2026-10-14)
+
+- **Two slots in the woods' new rooms**, both CACHE: `woods_hollow_tree_cache` (plan slot 19, woods_hollow_tree 14,22, in the side hollow off the row-23 knot; the double jump or Enraizar) and `woods_crown_cache` (the optional woods_crown's slot, 12,8, on the branch over the hole; the double jump).
+- **Total: 23 slots, 14 COLLECTIBLE and 9 CACHE.** Every one is reached by some kit (`room_kit_test`).
+- **Still to come with their rooms:** plan slots 16 and 22 (step 3: lake_glacier, threshold_ravine_cave), 15, 20 and 21 (step 4: orchard_ridge, orchard_crag, orchard_summit), 17 (step 5: caldera_sun_stair) and 18 (step 6: frost_wreck_hold); the optional `lake_falls_head_letter` waits for MEM-10.
+

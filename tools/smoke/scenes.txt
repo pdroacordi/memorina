@@ -20,6 +20,8 @@ res://scenes/world/rooms/spring_woods/contents/woods_canopy_contents.tscn
 res://scenes/world/rooms/spring_woods/contents/woods_root_caves_contents.tscn
 res://scenes/world/rooms/spring_woods/contents/woods_pond_contents.tscn
 res://scenes/world/rooms/spring_woods/contents/bloom_hollow_contents.tscn
+res://scenes/world/rooms/spring_woods/contents/woods_hollow_tree_contents.tscn
+res://scenes/world/rooms/spring_woods/contents/woods_crown_contents.tscn
 res://scenes/world/rooms/frozen_lake/contents/lake_waterfall_path_contents.tscn
 res://scenes/world/rooms/frozen_lake/contents/lake_fishing_village_contents.tscn
 res://scenes/world/rooms/frozen_lake/contents/lake_well_contents.tscn

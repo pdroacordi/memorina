@@ -73,6 +73,11 @@ const ALLOWED := {
 	"frost_shore|threshold_wayshrine ring: x 8320, y 384..544": BELOW_FLOORS,
 	"lake_ice_caves|lake_waterfall_path ring: x 3360, y -1536..-1376": UNDER_FLOOR,
 	"caldera_chimney_base|orchard_cliff_chimney ring: x -10240, y 1920..2080": BELOW_FLOORS,
+	# woods_hollow_tree's ring beside its closed walls (WORLD-35); its mouth and the mill town's well have [back] walls.
+	"orchard_mill_town|woods_hollow_tree ring: x -6880, y -1152..-992": UNDER_FLOOR_REGION,
+	"orchard_leaf_path|woods_hollow_tree ring: x -7840, y -1152..-992": UNDER_FLOOR_REGION,
+	"bloom_hollow|woods_hollow_tree ring: y -160, x -7040..-6880": RING_LIMIT,
+	"bloom_hollow|woods_hollow_tree ring: x -7040, y 384..544": BELOW_FLOORS,
 	"summer_trial|winter_trial ring: x 2400, y 5328..5488": TRIAL_TOPS,
 	"summer_trial|winter_trial ring: x 2400, y 6256..6288": BELOW_FLOORS,
 	"summer_trial|winter_trial ring: x 2560, y 6128..6256": UNDER_FLOOR_REGION,

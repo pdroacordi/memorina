@@ -1,0 +1,176 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 20.499999999999996,
+ "locale": "en",
+ "player_position": [
+  -7248,
+  -1272
+ ],
+ "skills": [
+  0
+ ],
+ "known_songs": [
+  6
+ ],
+ "restored_guardians": [
+  1
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "c00_well_from_street"
+  },
+  {
+   "t": 1.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.4,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "screenshot": "c01_in_well"
+  },
+  {
+   "t": 3.4,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 4.1,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "screenshot": "c02_down"
+  },
+  {
+   "t": 5.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.8,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 6.3,
+   "screenshot": "c03_down"
+  },
+  {
+   "t": 6.8,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.5,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "screenshot": "c04_down"
+  },
+  {
+   "t": 8.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.2,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 9.7,
+   "screenshot": "c05_down"
+  },
+  {
+   "t": 10.2,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 10.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 11.4,
+   "screenshot": "c06_down"
+  },
+  {
+   "t": 11.9,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 12.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 13.1,
+   "screenshot": "c07_down"
+  },
+  {
+   "t": 13.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 14.3,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 14.8,
+   "screenshot": "c08_down"
+  },
+  {
+   "t": 15.3,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 16.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 16.5,
+   "screenshot": "c09_down"
+  },
+  {
+   "t": 17.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 18.5,
+   "screenshot": "c10_tunnel"
+  },
+  {
+   "t": 19.8,
+   "screenshot": "c11_bloom"
+  },
+  {
+   "t": 20.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 20.2,
+   "trace": false
+  }
+ ]
+}

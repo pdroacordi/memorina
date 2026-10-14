@@ -1,0 +1,41 @@
+; woods_crown.room - Copa da Orla (design 04 section 3.4; WORLD-35 step 2): the crown of a tree over woods_edge. From
+; the hut roof (woods_edge row 4) a double jump rises 7 rows up through the hole (cols 11-14) onto the crown floor
+; beside it (the guide's 8.5 rows with both jumps held); the base jump (4.5 rows) falls short. The hole drops back past
+; the roof to the bench's floor. West, rows 17-20 join woods_deep's east trunk beside its row-19 branch: the double jump
+; climbs from the bench to the canopy route, and a walk from the deep woods' branches drops back to the bench. East of
+; the hole, the trunk top (cols 17-18, row 15) is 6 rows over the floor and the branch over the hole (cols 10-15, row 9)
+; 6 over the trunk: the cache needs the double jump. User, 2026-10-14: "Woods crown later, falls head with MEM-10
+; (Recommended)".
+
+[room]
+origin = 0, 0
+tileset = spring_woods
+
+[grid]
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+#...........$......#
+#.........======...#
+#..................#
+#..................#
+#..................#
+#..................#
+#..................#
+#................###
+#................###
+.................###
+.................###
+.................###
+.................###
+###########....#####
+###########....#####
+###########....#####
+
+[entities]
+12,8 = {"slot_id": "woods_crown_cache", "kind": 1}
