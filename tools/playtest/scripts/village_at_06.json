@@ -30,6 +30,26 @@
  ],
  "steps": [
   {
+   "t": 0.5,
+   "screenshot": "g_standing_0"
+  },
+  {
+   "t": 0.667,
+   "screenshot": "g_standing_1"
+  },
+  {
+   "t": 0.833,
+   "screenshot": "g_standing_2"
+  },
+  {
+   "t": 1.0,
+   "screenshot": "g_standing_3"
+  },
+  {
+   "t": 1.167,
+   "screenshot": "g_standing_4"
+  },
+  {
    "t": 1.4,
    "screenshot": "00_three_houses"
   },

@@ -36,6 +36,7 @@
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/story/guitar_e.wav" id="st_guitar_e"]
 [ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/ambient_motion.gd" id="st_motion"]
 
 [sub_resource type="Resource" id="stage_1"]
 script = ExtResource("st_fact")
@@ -235,10 +236,15 @@ offset = Vector2(-17, -22)
 position = Vector2(72, 288)
 
 [node name="Girl" type="Sprite2D" parent="Props/Daughter/HoldingOut"]
-position = Vector2(112, 288)
+position = Vector2(104, 288)
 texture = ExtResource("st_guitar_out")
 centered = false
-offset = Vector2(-18, -44)
+offset = Vector2(-26, -62)
+hframes = 6
+
+[node name="AmbientMotion" type="Node" parent="Props/Daughter/HoldingOut/Girl"]
+script = ExtResource("st_motion")
+frames_per_second = 6.0
 
 [node name="Standing" type="Node2D" parent="Props/Daughter"]
 
@@ -249,8 +255,13 @@ position = Vector2(72, 288)
 position = Vector2(44, 288)
 texture = ExtResource("st_standing")
 centered = false
-offset = Vector2(-7, -44)
-flip_h = true
+offset = Vector2(-32, -62)
+hframes = 8
+
+[node name="AmbientMotion" type="Node" parent="Props/Daughter/Standing/Girl"]
+script = ExtResource("st_motion")
+frames_per_second = 6.0
+sequence = PackedInt32Array(0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1)
 
 [node name="AtGuitar" type="Node2D" parent="Props/Daughter"]
 

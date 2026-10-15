@@ -356,6 +356,7 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 
 ## Playtests
 
+- [2026-10-15-story12-daughter](playtests/2026-10-15-story12-daughter.md) — STORY-12: the daughter's Standing and HoldingOut poses as 64x64 idle loops on the memory clock, facing Ivo, feet on the floor, in opening_errand, village_return and village_at_06.
 - [2026-10-15-story11-memorina](playtests/2026-10-15-story11-memorina.md) — STORY-11: Ivo raises the pan flute (draw), plays it through the notes and the performance, and lowers it after the sheathe; the mentor raises and plays his flute during his phrase, then holds it again.
 - [2026-10-15-story10-guitar](playtests/2026-10-15-story10-guitar.md) — STORY-10: Ivo's guitar as a six-frame loop: the hold moves at 6 fps, the strum plays once at 12 fps and restarts on each note; bursts of frames in opening_errand and opening_lower.
 - [2026-10-15-story03-opening](playtests/2026-10-15-story03-opening.md) — STORY-03: the errand (bed, bakery), the guitar by Try again and by Lower, the elder's story and the children moving to the square, the mentor's phrase, gift, flicker and stasis, the return by Try again, the visits at 0.6; door prompts hidden during talks.

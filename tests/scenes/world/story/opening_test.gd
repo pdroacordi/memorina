@@ -77,6 +77,28 @@ func test_a_late_held_return_finds_her_at_the_guitar() -> void:
 	assert_str(_shown(house, "Props/Daughter")).is_equal("Standing")
 	assert_str(_shown(house, "Props/WallGuitar")).is_equal("OnWall")
 
+## STORY-12: standing and holding the guitar out, she breathes on the memory clock like the villagers, faces east as
+## drawn, and every frame's feet (row 61) stand on the floor (y 288).
+func test_the_daughter_moves_as_a_strip_with_her_feet_on_the_floor() -> void:
+	var house := _mount(HOUSE)
+	for path: String in ["Props/Daughter/Standing/Girl", "Props/Daughter/HoldingOut/Girl"]:
+		var girl := house.get_node(path) as Sprite2D
+		var frames := {"Props/Daughter/Standing/Girl": 8, "Props/Daughter/HoldingOut/Girl": 6}[path] as int
+		assert_int(girl.hframes).override_failure_message(path).is_equal(frames)
+		assert_int(girl.texture.get_width()).is_equal(frames * 64)
+		assert_int(girl.texture.get_height()).is_equal(64)
+		assert_object(girl.get_node_or_null("AmbientMotion") as AmbientMotion).override_failure_message(path).is_not_null()
+		assert_bool(girl.flip_h).is_false()
+		assert_float(girl.position.y + girl.offset.y + 62.0).is_equal(288.0)
+		var image := girl.texture.get_image()
+		for frame: int in frames:
+			var feet := false
+			var below := false
+			for x: int in range(frame * 64, frame * 64 + 64):
+				feet = feet or image.get_pixel(x, 61).a > 0.0
+				below = below or image.get_pixel(x, 62).a > 0.0 or image.get_pixel(x, 63).a > 0.0
+			assert_bool(feet and not below).override_failure_message("%s frame %d" % [path, frame]).is_true()
+
 ## Lowered, she hums at home after the gift instead of playing; the guitar stays on the wall.
 func test_the_lowered_guitar_leaves_her_humming() -> void:
 	SaveSystem.mark_dialogue_heard(&"baker_errand")

@@ -114,6 +114,11 @@ Script: `docs/design/05_roteiro.md`, Acts 1, 3 and 4, its wording kept in both l
 - **Poses:** `held_pose()` and `just_strummed()` are read by `PlayerAnimationResolver`: GUITAR loops `guitar_hold`, and plays `guitar_strum` once on each note (a note mid-strum restarts it), then the hold again; MEMORINA plays `memorina_draw` then `memorina_idle` without drawing the instrument (the component stays sheathed). The pose drops at `end_talk`, and he lowers the flute (`memorina_lower`).
 - **Clips (STORY-10):** both run the six frames of `assets/sprites/characters/ivo/ivo_guitar.png` (128x128, a strumming loop: PixelLab frames 0,1,2,3,2,1; contract `tools/art/prompts/ivo_guitar.md`). `guitar_hold` loops them at 6 fps (1 s) so he is never still holding the guitar; `guitar_strum` plays them once at 12 fps (0.5 s). The user: "the sprite for playing the guitar is very wrong. Not the style of Ivo character. Better redo it. Also, transform it into animation, not static. Simple animation" (2026-10-15). `ivo_sheet_test` holds them to the floor line and lets the sheet use the guitar prop's own colours (`HELD_PROPS`); `player_beat_test` checks the loop moves, a note strums and a second note restarts it (`playtests/2026-10-15-story10-guitar`).
 - **The Memorina in the story (STORY-11):** Ivo's Memorina clips are the ones every performance uses (`systems/animation`). The mentor raises and plays his own flute during `mentor_phrase` (`StagedStrip` Playing, above): "Should have an animation for when playing memorina too." (user, 2026-10-15). The strips face west like his stills, 128x128 with his feet on row 125; frame (24, 6) is the stills' (0, 0), so the strip sits at offset (-61, -126) from the stills' position, flipped east.
+- **The daughter's poses (STORY-12):** "The child in the second shown frame is too static (and too different from the one in the first shwon frame)" (user, 2026-10-15).
+  - Standing (`daughter/standing.png`, 8 frames, ping-pong) and HoldingOut (`daughter/guitar_out.png`, 6 frames, ping-pong baked in) are 64x64 strips of the same girl as her guitar pose. They breathe through `AmbientMotion` at 6 fps on the memory clock, like the villagers (`systems/props`, Inhabitants), and FactStaging stays the only writer of their visibility.
+  - Both face east as drawn, with no flip. Standing sits at x 44 by the drawings, HoldingOut at x 104 by her bed; Ivo is east of her in every scene that shows them.
+  - Feet are on row 61, so the offset is (-32 or -26, -62) and the feet stand on the floor (y 288) in every frame (`opening_test.test_the_daughter_moves_as_a_strip_with_her_feet_on_the_floor`).
+  - The bed stills and the seated guitar pose stay stills.
 
 ## The box and the notebook
 
@@ -156,7 +161,7 @@ Defaults taken from the plan's recommendations (default, 2026-10-15; not asked):
 - pulse colours winter (his phrase) and spring (the flicker);
 - the mentor's short entry in Memories;
 - "[Play it again]" uses a new flat-note sound;
-- the daughter after the return and at 0.6 is the standing still by the drawings.
+- the daughter after the return and at 0.6 is the standing pose by the drawings (an idle loop since STORY-12).
 
 ## Tests
 
