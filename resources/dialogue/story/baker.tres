@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/baker.tres" id="s_baker"]
+[ext_resource type="Resource" path="res://resources/save_facts/village_at_six_tenths.tres" id="f_at06"]
 
 [sub_resource type="Resource" id="line_1"]
 script = ExtResource("f_line")
@@ -31,6 +32,57 @@ id = &"baker_errand"
 once = true
 lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_2"), SubResource("line_3")])
 
+[sub_resource type="Resource" id="v_1"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_baker")
+text_key = "DLG_BAKER_06"
+
+[sub_resource type="Resource" id="v_2"]
+script = ExtResource("f_dialogue")
+id = &"baker_06"
+when = Array[ExtResource("f_fact")]([ExtResource("f_at06")])
+lines = Array[ExtResource("f_line")]([SubResource("v_1")])
+
+[sub_resource type="Resource" id="v_3"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_baker")
+text_key = "DLG_BAKER_ERRAND_01"
+
+[sub_resource type="Resource" id="v_4"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_baker")
+text_key = "DLG_BAKER_COUGH"
+
+[sub_resource type="Resource" id="v_5"]
+script = ExtResource("f_fact")
+kind = 7
+id = &"baker_errand"
+
+[sub_resource type="Resource" id="v_6"]
+script = ExtResource("f_dialogue")
+id = &"baker_cough"
+once = true
+when = Array[ExtResource("f_fact")]([SubResource("v_5")])
+unless = Array[ExtResource("f_fact")]([ExtResource("f_at06")])
+lines = Array[ExtResource("f_line")]([SubResource("v_3"), SubResource("v_4")])
+
+[sub_resource type="Resource" id="v_7"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_baker")
+text_key = "DLG_BAKER_ERRAND_01"
+
+[sub_resource type="Resource" id="v_8"]
+script = ExtResource("f_fact")
+kind = 7
+id = &"baker_errand"
+
+[sub_resource type="Resource" id="v_9"]
+script = ExtResource("f_dialogue")
+id = &"baker_again"
+when = Array[ExtResource("f_fact")]([SubResource("v_8")])
+unless = Array[ExtResource("f_fact")]([ExtResource("f_at06")])
+lines = Array[ExtResource("f_line")]([SubResource("v_7")])
+
 [resource]
 script = ExtResource("f_set")
-dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_4")])
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_4"), SubResource("v_2"), SubResource("v_6"), SubResource("v_9")])

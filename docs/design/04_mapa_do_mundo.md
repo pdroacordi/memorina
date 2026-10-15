@@ -11,7 +11,7 @@
 - **Mapa:** "Approve as proposed" — sete áreas, cerca de 45 salas, com a ordem, os portões e os valores de memória das seções 2 e 3.
 - **Habilidades dos guardiões novos (GRD-04):** "Autumn: wall climb; summer: none". O guardião de outono devolve a escalada de parede (`WALL_CLIMB`); o de verão ensina só canções.
 - **Interiores:** "All doors". Toda construção tem uma porta (apertar para cima) que leva, com um fade, a uma sala interior própria.
-- **Habitantes:** "Idle villagers, no dialogue". Aldeões parados em seus afazeres, com um ciclo curto de idle, mais animais e sinais de vida. Tudo isso congela no cinza. Diálogo fica para um item de história.
+- **Habitantes:** "Idle villagers, no dialogue". Aldeões parados em seus afazeres, com um ciclo curto de idle, mais animais e sinais de vida. Tudo isso congela no cinza. Diálogo fica para um item de história. **Revisto em 2026-10-15:** "Story cast + some villagers (Recommended)": alguns aldeões ganham uma fala opcional por etapa de memória (STORY-09, `05_roteiro.md`, "Village voices").
 - **Terra na Caldeira e na Borda Gelada:** "No earth there" — só pedra (basalto, arenito, rocha escura, gelo); Enraizar não serve nesses dois biomas, e o material diz isso ao jogador.
 - **Chão construído (calçamento, tábuas):** "Seasonal top" — um pulso deita neve ou folhas na borda de cima do calçamento, como na terra. Isso muda a seção 6 só para o chão: construções e interiores continuam com uma versão.
 - **Estilo e paleta:** "Rewrite to the concept, palette per biome" — o texto de estilo compartilhado (`tools/art/prompts/style.md`) passa a descrever o conceito aprovado ("Yes, aim for this", a pintura da rua da vila), e cada bioma tem a própria paleta, tirada do seu quadro de estilo aprovado.
@@ -194,7 +194,7 @@ Curta e atmosférica, antes de qualquer canção (`01_lore_e_narrativa.md`, seç
 
 ## 5. Habitantes
 
-- **Aldeões** parados em seus afazeres: taverneiro, fregueses, padeira, ancião, crianças, lavradores, pescador, estalajadeiro. Um ciclo curto de idle (PixelLab). Sem diálogo e sem colisão de combate.
+- **Aldeões** parados em seus afazeres: taverneiro, fregueses, padeira, ancião, crianças, lavradores, pescador, estalajadeiro. Um ciclo curto de idle (PixelLab). Sem colisão de combate; alguns têm uma fala opcional por etapa de memória (STORY-09, 2026-10-15).
 - **Animais:** gatos, galinhas, pássaros nos telhados, um cachorro dormindo, peixes secando. Parados ou com um idle curto.
 - **Sinais de vida:** fumaça de chaminé, roupa no varal, janelas acesas, bandeiras, moinhos girando.
 - **Tudo congela no cinza** (`03_mundo_e_ambiente.md`, seção 2): idle, fumaça, varal e moinho correm no relógio da memória do ponto onde estão. Um aldeão numa área esquecida fica parado no meio do gesto e retoma quando um pulso passa.

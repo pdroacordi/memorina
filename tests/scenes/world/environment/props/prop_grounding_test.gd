@@ -50,8 +50,8 @@ const HUNG := {
 	"interiors/notes_house/wall_shelf": "its brackets, on the wall",
 	"interiors/notes_house/window": "set in the wall",
 }
-## Placed hung props whose support is another sprite: [contents scene, hung node, support node] under `Props`. Their
-## opaque pixels must overlap or touch (bugs/the-square-bunting-hangs-in-the-air-short-of-the-bell-tower).
+## Placed props hung from, or standing on, another sprite: [contents scene, held node, support node] under `Props`.
+## Their opaque pixels must overlap or touch (bugs/the-square-bunting-hangs-in-the-air-short-of-the-bell-tower).
 const SUPPORTED := [
 	["res://scenes/world/rooms/home_village/contents/village_square_contents.tscn", "Bunting", "BellTowerFacade"],
 	["res://scenes/world/rooms/home_village/contents/village_square_contents.tscn", "Bunting", "BuntingPole"],
@@ -61,6 +61,8 @@ const SUPPORTED := [
 	["res://scenes/world/rooms/home_village/contents/village_mill_contents.tscn", "WaterWheel", "MillHouseFacade"],
 	["res://scenes/world/rooms/home_village/contents/village_mill_house_contents.tscn", "Lantern", "HookRope"],
 	["res://scenes/world/rooms/home_village/contents/village_mill_house_contents.tscn", "Gear", "Axle"],
+	["res://scenes/world/rooms/home_village/contents/village_tavern_contents.tscn", "Mugs/AtSix/MugCounter", "BarCounter13"],
+	["res://scenes/world/rooms/home_village/contents/village_tavern_contents.tscn", "Mugs/AtSix/MugTable", "TavernTableA5"],
 ]
 ## Props stretched to the ceiling after their cut (tools/art/stretch_prop.py): only their width keeps the table's size.
 const STRETCHED := ["interiors/mill_house/hook_rope"]

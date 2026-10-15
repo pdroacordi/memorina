@@ -1,5 +1,5 @@
 ; village_bakery.room - the bakery (design 04 section 3.1): the oven and chimney, flour sacks, a shelf. No gate or puzzle.
-; The errand (STORY-03, systems/story): a talk beside the baker (col 6, legend t, Up), her two loaves then one under Beats.
+; The errand (STORY-03, systems/story): a talk beside the baker (col 6, legend t, Up, one cell: 32 px of air from the door at col 4), her two loaves then one under Beats.
 
 ; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
 
@@ -23,4 +23,4 @@ ____________________
 
 [entities]
 4,8 = {"link": "village_bakery_door", "to_room": "village_lane_west", "arrive_facing": 1}
-6,8 = {"talk": "res://resources/dialogue/story/baker.tres", "speaker_offset": 32.0}
+6,8 = {"talk": "res://resources/dialogue/story/baker.tres", "speaker_offset": 32.0, "width_cells": 1}

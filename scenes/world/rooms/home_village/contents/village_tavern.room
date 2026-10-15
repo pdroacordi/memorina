@@ -1,5 +1,6 @@
 ; village_tavern.room - the tavern, two floors (design 04 section 3.1): bar counter below, rooms above, 4-cell ledges between.
 ; The cellar door (col 34) leads to village_tavern_cellar. No gate or puzzle.
+; Village voices (STORY-09, systems/story): a talk beside the taverner (col 16, row 20).
 
 ; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
 
@@ -28,7 +29,7 @@ ________________________________________
 %..................----................%
 %......................................%
 %......................................%
-%...E.............................E....%
+%...E...........t.................E....%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ________________________________________
 ________________________________________
@@ -36,3 +37,4 @@ ________________________________________
 [entities]
 4,20 = {"link": "village_tavern_door", "to_room": "village_square", "arrive_facing": 1}
 34,20 = {"link": "village_tavern_cellar_door", "to_room": "village_tavern_cellar"}
+16,20 = {"talk": "res://resources/dialogue/village/taverner.tres", "speaker_offset": -52.0}

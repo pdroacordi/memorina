@@ -42,7 +42,7 @@ STORY-08. Plan, options and the reasons: `architecture/dialogue-is-data-and-choi
 
 ## Data (`resources/dialogue/`, one `class_name` per file)
 
-- `Speaker`: `id`, `name_key` (`SPEAKER_<ID>`; empty shows no plate), `portrait` (null leaves the slot empty). `speakers/` holds the elder, the daughter and the mentor, plate names `SPEAKER_ELDER`, `SPEAKER_DAUGHTER`, `SPEAKER_MENTOR`.
+- `Speaker`: `id`, `name_key` (`SPEAKER_<ID>`; empty shows no plate), `portrait` (null leaves the slot empty). `speakers/` holds the elder, `elder_model`, the daughter, the mentor, `mentor_stasis`, the baker, the taverner, the water carrier, the seller and the boy; plate names `SPEAKER_<ROLE>` (the villagers have no portrait).
 - `Dialogue`: `id` (unique, the heard key), `once` (closed once heard), `when` / `unless`, `lines`.
 - `DialogueLine`: `speaker`, `text_key` (empty for a cue-only line), `when` / `unless`, `variants` (the first `LineVariant` that holds replaces the text), `ask_id` + `choices` (2..3), `cue`, `grants` (an ITEM `SaveFact`).
 - `DialogueChoice`: `id` (unique across the catalog), `text_key`, `tone` (`Tone { NONE, HOLD_ON, LET_GO }`, append only), `reply` (lines with no choices; the talk then rejoins).

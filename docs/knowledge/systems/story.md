@@ -28,6 +28,8 @@ source_files:
   - scenes/characters/ivo/player.gd
   - scenes/characters/ivo/player_animation_resolver.gd
   - globals/boot_policy.gd
+  - resources/dialogue/village/
+  - resources/save_facts/village_at_six_tenths.tres
   - tools/audio/synth_story_placeholders.py
 ---
 
@@ -120,6 +122,32 @@ Script: `docs/design/05_roteiro.md`, Acts 1, 3 and 4, its wording kept in both l
   - Feet are on row 61, so the offset is (-32 or -26, -62) and the feet stand on the floor (y 288) in every frame (`opening_test.test_the_daughter_moves_as_a_strip_with_her_feet_on_the_floor`).
   - The bed stills and the seated guitar pose stay stills.
 
+## Village voices (STORY-09)
+
+"Story cast + some villagers (Recommended)" (user, 2026-10-15); the lines are design 05's "Village voices (STORY-09)" table ("Approve draft 2 (Recommended)"), word for word, en and pt_BR. One optional line per villager, Up to talk, by memory step; forgetting shows in behaviour and nobody comments on it. The 1.0 Return is STORY-07.
+
+- **The step:** `resources/save_facts/village_at_six_tenths.tres` (GUARDIANS_RESTORED_AT_LEAST 2) is the 0.6 condition of every voice. `village_voices_test` ties it, and every GUARDIANS_RESTORED_AT_LEAST in the village's contents scenes, to the key `home_village.tscn`'s `Memory.steps` gives 0.6 at, so a retuned step fails the test instead of leaving the voices behind. The voices know 0.8 and 0.6 only, and the 0.6 fact has no upper bound: the same test fails on any `Memory.steps` key above 2. **STORY-07** (the Return, 1.0) must give every voice an `unless` for its step before adding it.
+- **Talkables** (legend `t`, beside the villager, `speaker_offset` to it; `systems/props`):
+  - square col 17 by the boy, one cell wide, west of him (`speaker_offset` 40): 32 px from the house of notes' door at col 15 and 64 px from the bell tower's at col 20 (bugs/the-boys-talk-prompt-shows-over-the-bell-tower-door-and-up-enters-the-tower);
+  - square col 34 by the water carrier, east of the well's lip (the shaft is west of her, so Ivo speaks to her back);
+  - lane west col 18 by the seller, `presence` 0.7 so it leaves with him;
+  - tavern col 16, row 20, by the taverner;
+  - the baker's errand talk (bakery col 6) is now one cell wide, 32 px from the door at col 4.
+  - **Rule:** a talk zone keeps more than Ivo's body width (22 px) from every door zone on its row, or both prompts show and Up takes the door (`village_voices_test.test_no_village_voice_stands_within_a_body_of_a_door`).
+- **Sets** (`resources/dialogue/village/`, speakers with a name plate and no portrait):
+
+| Who | 0.8 | 0.6 |
+|---|---|---|
+| Baker (`story/baker.tres`) | `baker_errand` while due; then `baker_cough` once (the greeting `DLG_BAKER_ERRAND_01` again, then the cough line); then `baker_again` (the greeting alone, every time) | `baker_06` (the errand still wins while due) |
+| Taverner | `taverner_quiet` | none: no prompt |
+| Water carrier | `water_carrier_water` | `water_carrier_06` ("…") |
+| Seller | `seller_apples` | gone with him (Talkable `presence` 0.7) |
+| Boy | `boy_statues`, once the children are in the square (`elder_story`) | `boy_alone` (the girl leaves at 0.6) |
+
+- **The cough says the greeting first** so it is said "in passing" (01 §9) and never comes out of nowhere; it is `once` and needs `baker_errand` heard. The baker's FactStaging is untouched: no new line has a cue.
+- **The taverner's two mugs** (design 05: "He sets two mugs on the counter, one in front of the patron's empty seat, and waits."): a `Mugs` FactStaging in village_tavern shows `AtSix` (two `tavern/mug.tscn`) on `village_at_six_tenths.tres`, so their presence is derived like every stage. One stands on the bar counter's top by the taverner (448, 636). The patron's seat is the bench at x 604 by table A, east of the counter's end (x 482), so the other stands on table A's west end in front of that bench (636, 652). `prop_grounding_test` holds both to their support (`SUPPORTED`). Up on him at 0.6 gives nothing: the gesture is the line.
+- **Not built (behaviour, art needed):** the water carrier holding the full bucket at the well at 0.6 (she keeps her idle loop), and the baker going back to the dough after the cough line (she keeps her idle). Neither is staged; each needs a pose strip.
+
 ## The box and the notebook
 
 - **Silent ask** (a gesture): an asking line with no text, no speaker and no variants is valid (`DialogueCatalog.validate`). The box opens on `show_choices` with no plate, portrait or text, its choices focused at once.
@@ -168,4 +196,5 @@ Defaults taken from the plan's recommendations (default, 2026-10-15; not asked):
 - **Pure rules:** `tests/scenes/world/environment/props/fact_staging_test.gd`, `tests/resources/story/melody_test.gd`, `tests/scenes/world/story/guitar_phrase_test.gd`, `tests/globals/boot_policy_test.gd`, `tests/scenes/ui/dialogue_box/stutter_text_test.gd`.
 - **Beats:** `tests/scenes/world/story/guitar_beat_test.gd`, `staged_beat_test.gd`, `story_beats_test.gd`; `tests/scenes/ui/phrase_sheet/phrase_sheet_test.gd`.
 - **Ivo:** `tests/scenes/characters/ivo/player_beat_test.gd` (`Input.parse_input_event`).
+- **Village voices:** `tests/resources/dialogue/village/village_voices_test.gd` (the step tie, the baker's order and once line, each villager by step, catalog and plates).
 - **Additions to existing suites:** `dialogue_director_test` (a cue-only grant, the silent ask, hold, pose, face, notes and phrase relays), `dialogue_catalog_test`, `dialogue_box_test` (the silent open, the stutter), `notebook_catalog_test`.

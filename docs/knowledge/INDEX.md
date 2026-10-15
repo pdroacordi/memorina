@@ -101,6 +101,7 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 
 ## Bugs
 
+- [the-boys-talk-prompt-shows-over-the-bell-tower-door-and-up-enters-the-tower](bugs/the-boys-talk-prompt-shows-over-the-bell-tower-door-and-up-enters-the-tower.md) — FIXED 2026-10-15 (the talk at col 17, one cell; a door-gap test). Was: OPEN, low (STORY-09 review): the boy's one-cell Talkable (square col 19) touches the bell tower door (col 20). Prompts follow Ivo's 22 px body, reach his 12 px sensor, so from x 629 to 651 both Up prompts show, and from 634 Up enters the tower.
 - [the-memorina-before-the-song-hides-the-guitar-and-keeps-the-elders-audience](bugs/the-memorina-before-the-song-hides-the-guitar-and-keeps-the-elders-audience.md) — FIXED 2026-10-15. Was: OPEN, medium (STORY-03 phase B review): `daughter_song` is `unless MEMORINA`, and the lighthouse is reachable with the base kit. With the errand heard and the Memorina taken first, WallGuitar's `baker_errand` stage hides the guitar for good. With no `elder_story`, the children stay on the elder's bench through `elder_empty` at 0.6. A plain debug new game shows the same.
 - [a-late-held-return-shows-the-daughter-away-from-the-guitar-she-plays](bugs/a-late-held-return-shows-the-daughter-away-from-the-guitar-she-plays.md) — FIXED 2026-10-15. Was: OPEN, medium (STORY-03 phase B review): the Daughter's ≥2-guardians Standing stage outranks AtGuitar, so a Try-again `daughter_return` heard at 0.6 plays her notes at an empty spot while the guitar is hidden.
 - [look-at-the-painting-turns-ivo-the-way-he-already-faces](bugs/look-at-the-painting-turns-ivo-the-way-he-already-faces.md) — FIXED 2026-10-15. Was: OPEN, low (STORY-03 phase B review): `elder_painting`'s only action is `face`, but the painting (x 410) is on the elder's side of the whole talk zone (x 128 to 224), so the LET gesture shows nothing.
@@ -356,6 +357,7 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 
 ## Playtests
 
+- [2026-10-15-story09-village-voices](playtests/2026-10-15-story09-village-voices.md) — STORY-09: the boy, the water carrier, the seller, the taverner and the baker at 0.8 and 0.6: every line, plate and absence as design 05's table has it, and the taverner's two mugs at 0.6.
 - [2026-10-15-story12-daughter](playtests/2026-10-15-story12-daughter.md) — STORY-12: the daughter's Standing and HoldingOut poses as 64x64 idle loops on the memory clock, facing Ivo, feet on the floor, in opening_errand, village_return and village_at_06.
 - [2026-10-15-story11-memorina](playtests/2026-10-15-story11-memorina.md) — STORY-11: Ivo raises the pan flute (draw), plays it through the notes and the performance, and lowers it after the sheathe; the mentor raises and plays his flute during his phrase, then holds it again.
 - [2026-10-15-story10-guitar](playtests/2026-10-15-story10-guitar.md) — STORY-10: Ivo's guitar as a six-frame loop: the hold moves at 6 fps, the strum plays once at 12 fps and restarts on each note; bursts of frames in opening_errand and opening_lower.

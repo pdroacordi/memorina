@@ -1,5 +1,6 @@
 ; village_square.room - the village plaza and hub (design 04 section 3.1): Ivo's house, bell tower, tavern and elder's doors, the bench.
 ; One street at ground level (design 04 section 1, "Vila plana"). The house of notes' door is col 15 (WORLD-11), between Ivo's house and the tower. The well (cols 28-31) drops into caldera_cistern; the bell tower is behind the door at col 20.
+; Village voices (STORY-09, systems/story): talks beside the boy (col 17, one cell, west of him: 32 px of air from the house of notes' door at col 15 and 64 from the bell tower's at col 20, more than Ivo's 22 px body) and the water carrier (col 34, east of the well's lip: the shaft is west of her).
 
 [room]
 origin = 0, 0
@@ -14,7 +15,7 @@ tileset = village
 ............................................................
 ............................................................
 ............................................................
-........E...R..E....E.....S......S....E...........E.........
+........E...R..E.t..E.....S......St...E...........E.........
 SSSSSSSSSSSSSSSSSSSSSSSSSS#S....S#SSSSSSSSSSSSSSSSSSSSSSSSSS
 ###########################S....S###########################
 ###########################S....S###########################
@@ -40,3 +41,5 @@ SSSSSSSSSSSSSSSSSSSSSSSSSS#S....S#SSSSSSSSSSSSSSSSSSSSSSSSSS
 20,8 = {"link": "village_bell_tower_door", "to_room": "village_bell_tower"}
 38,8 = {"link": "village_tavern_door", "to_room": "village_tavern"}
 50,8 = {"link": "village_elder_door", "to_room": "village_elder"}
+17,8 = {"talk": "res://resources/dialogue/village/boy.tres", "speaker_offset": 40.0, "width_cells": 1}
+34,8 = {"talk": "res://resources/dialogue/village/water_carrier.tres", "speaker_offset": -54.0}

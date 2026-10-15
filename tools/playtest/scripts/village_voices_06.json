@@ -1,0 +1,236 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 18.1,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_song",
+  "elder_story"
+ ],
+ "responses": {
+  "morning_song": "guitar_try_again",
+  "elder_story": "elder_painting"
+ },
+ "player_position": [
+  560,
+  286
+ ],
+ "steps": [
+  {
+   "t": 0.5,
+   "teleport": [
+    560,
+    286
+   ]
+  },
+  {
+   "t": 1.5,
+   "screenshot": "a_boy_0_beside"
+  },
+  {
+   "t": 1.6,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 1.68,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "screenshot": "a_boy_1_line"
+  },
+  {
+   "t": 2.7,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 2.78,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 3.3,
+   "screenshot": "a_boy_9_after"
+  },
+  {
+   "t": 3.35,
+   "log": "a_boy"
+  },
+  {
+   "t": 3.6,
+   "teleport": [
+    1104,
+    286
+   ]
+  },
+  {
+   "t": 4.6,
+   "screenshot": "b_water_0_beside"
+  },
+  {
+   "t": 4.7,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 4.78,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 5.5,
+   "screenshot": "b_water_1_line"
+  },
+  {
+   "t": 5.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 5.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 6.2,
+   "screenshot": "b_water_9_after"
+  },
+  {
+   "t": 6.25,
+   "log": "b_water"
+  },
+  {
+   "t": 6.5,
+   "teleport": [
+    -688,
+    286
+   ]
+  },
+  {
+   "t": 7.5,
+   "screenshot": "c_seller_0_beside"
+  },
+  {
+   "t": 7.55,
+   "log": "c_seller"
+  },
+  {
+   "t": 8.1,
+   "teleport": [
+    2128,
+    12670
+   ]
+  },
+  {
+   "t": 9.1,
+   "screenshot": "d_taverner_0_beside"
+  },
+  {
+   "t": 9.15,
+   "log": "d_taverner"
+  },
+  {
+   "t": 9.7,
+   "teleport": [
+    6608,
+    12286
+   ]
+  },
+  {
+   "t": 10.7,
+   "screenshot": "e_baker_0_beside"
+  },
+  {
+   "t": 10.8,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 10.88,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 12.6,
+   "screenshot": "e_baker_1_line"
+  },
+  {
+   "t": 12.7,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 12.78,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 13.3,
+   "screenshot": "e_baker_9_after"
+  },
+  {
+   "t": 13.35,
+   "log": "e_baker"
+  },
+  {
+   "t": 14.1,
+   "teleport": [
+    616,
+    286
+   ]
+  },
+  {
+   "t": 15.1,
+   "screenshot": "g_band_616"
+  },
+  {
+   "t": 15.15,
+   "log": "g_band_616"
+  },
+  {
+   "t": 15.2,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 15.28,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 15.9,
+   "screenshot": "g_band_616_after_up"
+  },
+  {
+   "t": 15.95,
+   "log": "g_band_616_after_up"
+  },
+  {
+   "t": 16.1,
+   "teleport": [
+    580,
+    286
+   ]
+  },
+  {
+   "t": 17.1,
+   "screenshot": "g_talk_580"
+  },
+  {
+   "t": 17.15,
+   "log": "g_talk_580"
+  }
+ ],
+ "restored_guardians": [
+  0,
+  1
+ ]
+}

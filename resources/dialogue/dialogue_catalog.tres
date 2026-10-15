@@ -10,7 +10,11 @@
 [ext_resource type="Resource" path="res://resources/dialogue/story/elder.tres" id="s4_elder"]
 [ext_resource type="Resource" path="res://resources/dialogue/story/mentor.tres" id="s5_mentor"]
 [ext_resource type="Resource" path="res://resources/dialogue/story/mentor_stasis.tres" id="s6_mentor_stasis"]
+[ext_resource type="Resource" path="res://resources/dialogue/village/taverner.tres" id="v_taverner"]
+[ext_resource type="Resource" path="res://resources/dialogue/village/water_carrier.tres" id="v_water_carrier"]
+[ext_resource type="Resource" path="res://resources/dialogue/village/seller.tres" id="v_seller"]
+[ext_resource type="Resource" path="res://resources/dialogue/village/boy.tres" id="v_boy"]
 
 [resource]
 script = ExtResource("1_catalog")
-sets = Array[ExtResource("2_set")]([ExtResource("s0_daughter_bed"), ExtResource("s1_daughter_near"), ExtResource("s2_daughter_guitar"), ExtResource("s3_baker"), ExtResource("s4_elder"), ExtResource("s5_mentor"), ExtResource("s6_mentor_stasis"), ExtResource("3_trial")])
+sets = Array[ExtResource("2_set")]([ExtResource("s0_daughter_bed"), ExtResource("s1_daughter_near"), ExtResource("s2_daughter_guitar"), ExtResource("s3_baker"), ExtResource("s4_elder"), ExtResource("s5_mentor"), ExtResource("s6_mentor_stasis"), ExtResource("v_taverner"), ExtResource("v_water_carrier"), ExtResource("v_seller"), ExtResource("v_boy"), ExtResource("3_trial")])

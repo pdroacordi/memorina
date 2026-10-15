@@ -24,6 +24,22 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/chair.tscn" id="pi_ivo_house_chair"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/table.tscn" id="pi_ivo_house_table"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/chest.tscn" id="pi_elder_house_chest"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/tavern/mug.tscn" id="pi_tavern_mug"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="st_staging"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
+[ext_resource type="Resource" path="res://resources/save_facts/village_at_six_tenths.tres" id="st_at06"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+
+[sub_resource type="Resource" id="stage_mugs"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([ExtResource("st_at06")])
+show = &"AtSix"
+fade_seconds = 0.5
+
+[sub_resource type="Resource" id="stage_none"]
+script = ExtResource("st_stage")
+show = &""
+fade_seconds = 0.5
 
 [node name="Contents" type="Node2D"]
 
@@ -98,6 +114,18 @@ position = Vector2(592, 672)
 
 [node name="BarCounter13" parent="Props" instance=ExtResource("pi_tavern_bar_counter")]
 position = Vector2(384, 672)
+
+[node name="Mugs" type="Node2D" parent="Props"]
+script = ExtResource("st_staging")
+stages = Array[ExtResource("st_stage")]([SubResource("stage_mugs"), SubResource("stage_none")])
+
+[node name="AtSix" type="Node2D" parent="Props/Mugs"]
+
+[node name="MugCounter" parent="Props/Mugs/AtSix" instance=ExtResource("pi_tavern_mug")]
+position = Vector2(448, 636)
+
+[node name="MugTable" parent="Props/Mugs/AtSix" instance=ExtResource("pi_tavern_mug")]
+position = Vector2(636, 652)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

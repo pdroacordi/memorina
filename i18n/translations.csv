@@ -123,6 +123,18 @@ DLG_DAUGHTER_ERRAND_01,Bread. The round one.,Pão. O redondo.
 DLG_BAKER_ERRAND_01,"Morning, Ivo. Round one?","Bom dia, Ivo. O redondo?"
 DLG_BAKER_ERRAND_02,And the long one for—,E o comprido pra—
 DLG_BAKER_ERRAND_03,Just the round one.,Só o redondo.
+SPEAKER_TAVERNER,Taverner,Taverneiro
+SPEAKER_WATER_CARRIER,Water carrier,Aguadeira
+SPEAKER_SELLER,Seller,Vendedor
+SPEAKER_BOY,Boy,Menino
+DLG_BAKER_06,Morning! …Ivo. Ivo. Sorry. Round one?,Bom dia! …Ivo. Ivo. Desculpa. O redondo?
+DLG_BAKER_COUGH,"She used to come in coughing, at the end. That thing she had. Never did have a name, did it.","No fim ela vinha tossindo. Aquilo que ela tinha. Nunca teve nome, né."
+DLG_TAVERNER_QUIET,Quiet one tonight.,Noite calma.
+DLG_WATER_CARRIER_WATER,Up's heavy. Down's light. Same water.,Pra cima pesa. Pra baixo é leve. Mesma água.
+DLG_WATER_CARRIER_06,…,…
+DLG_SELLER_APPLES,"Apples. West orchards. Last ones, till someone goes out there.","Maçãs. Pomares do oeste. As últimas, até alguém ir lá."
+DLG_BOY_STATUES,Don't move. You moved.,Não mexe. Mexeu.
+DLG_BOY_ALONE,Don't move.,Não mexe.
 DLG_DAUGHTER_SONG_01,The morning one.,A da manhã.
 DLG_CHOICE_GUITAR_TRY_AGAIN,[Try again],[Tentar de novo]
 DLG_CHOICE_GUITAR_LOWER,[Lower the guitar],[Baixar o violão]

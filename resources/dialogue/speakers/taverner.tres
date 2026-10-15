@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="Speaker" format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue/speaker.gd" id="1_speaker"]
+
+[resource]
+script = ExtResource("1_speaker")
+id = &"taverner"
+name_key = "SPEAKER_TAVERNER"
