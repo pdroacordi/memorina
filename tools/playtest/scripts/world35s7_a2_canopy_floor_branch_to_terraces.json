@@ -1,0 +1,121 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -3840,
+  -864
+ ],
+ "skills": [
+  0
+ ],
+ "known_songs": [
+  6,
+  7
+ ],
+ "restored_guardians": [
+  1
+ ],
+ "max_duration": 6.6,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "a20_canopy_floor"
+  },
+  {
+   "t": 1.0,
+   "log": "a20_canopy_floor"
+  },
+  {
+   "t": 1.2,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.25,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.15,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 3.3,
+   "screenshot": "a21_on_the_branch"
+  },
+  {
+   "t": 3.3,
+   "log": "a21_on_the_branch"
+  },
+  {
+   "t": 3.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.8,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 3.9,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 4.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.4,
+   "screenshot": "a22_up_the_terraces_hole"
+  },
+  {
+   "t": 4.4,
+   "log": "a22_up_the_terraces_hole"
+  },
+  {
+   "t": 4.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 5.7,
+   "screenshot": "a23_terraces_floor"
+  },
+  {
+   "t": 5.7,
+   "log": "a23_terraces_floor"
+  },
+  {
+   "t": 6.1,
+   "trace": false
+  }
+ ]
+}

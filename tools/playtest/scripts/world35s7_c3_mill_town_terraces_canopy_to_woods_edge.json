@@ -1,0 +1,281 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -6896,
+  -1248
+ ],
+ "skills": [
+  0
+ ],
+ "known_songs": [
+  6,
+  7
+ ],
+ "restored_guardians": [
+  1
+ ],
+ "max_duration": 36.0,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "c30_mill_town_bench"
+  },
+  {
+   "t": 1.0,
+   "log": "c30_mill_town_bench"
+  },
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 6.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.45,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.4,
+   "screenshot": "c31_terraces_west"
+  },
+  {
+   "t": 7.4,
+   "log": "c31_terraces_west"
+  },
+  {
+   "t": 8.8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 9.15,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 9.85,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 10.2,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 10.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 10.95,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 11.3,
+   "screenshot": "c32_terraces_crest"
+  },
+  {
+   "t": 11.3,
+   "log": "c32_terraces_crest"
+  },
+  {
+   "t": 12.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 12.8,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 13.0,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 13.9,
+   "screenshot": "c33_terraces_bench"
+  },
+  {
+   "t": 13.9,
+   "log": "c33_terraces_bench"
+  },
+  {
+   "t": 14.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 15.05,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 15.4,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 17.1,
+   "screenshot": "c34_into_the_canopy_hole"
+  },
+  {
+   "t": 17.1,
+   "log": "c34_into_the_canopy_hole"
+  },
+  {
+   "t": 19.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 19.5,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 19.8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 20.2,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 20.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 20.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 21.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 21.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 21.9,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 22.3,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 22.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 23.0,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 23.3,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 23.7,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 24.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 24.4,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 25.5,
+   "screenshot": "c35_down_into_woods_deep"
+  },
+  {
+   "t": 25.5,
+   "log": "c35_down_into_woods_deep"
+  },
+  {
+   "t": 28.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 28.7,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 29.8,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 30.3,
+   "screenshot": "c36_woods_deep_floor"
+  },
+  {
+   "t": 30.3,
+   "log": "c36_woods_deep_floor"
+  },
+  {
+   "t": 30.7,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 33.3,
+   "screenshot": "c37_woods_deep_east_exit"
+  },
+  {
+   "t": 33.3,
+   "log": "c37_woods_deep_east_exit"
+  },
+  {
+   "t": 34.7,
+   "screenshot": "c38_woods_edge"
+  },
+  {
+   "t": 34.7,
+   "log": "c38_woods_edge"
+  },
+  {
+   "t": 35.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 35.5,
+   "trace": false
+  }
+ ]
+}

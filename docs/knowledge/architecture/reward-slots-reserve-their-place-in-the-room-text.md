@@ -117,3 +117,72 @@ WORLD-35 assigns a reward to every exploration dead end, but the systems that gi
 - **One slot in the wreck's hold**: `frost_wreck_letter` (plan slot 18, COLLECTIBLE, frost_wreck_hold 17,3, on the bow plank; the base kit, two jumps up the listing planks or one from the bow floor). The kit check reaches it with every kit, base included.
 - **Total: 30 slots, 18 COLLECTIBLE and 12 CACHE.** Every slot of plan section 2.6 is placed, plus the optional `woods_crown_cache`. Every one is reached by some kit (`room_kit_test`).
 - **Still to come:** only the optional `lake_falls_head_letter`, with MEM-10.
+
+## Final audit (WORLD-35 step 7, 2026-10-15)
+
+`reach_boards.tscn` on the built world (54 rooms, 15 interiors):
+- **Union audit:** 424 surfaces and 90 findings.
+  - Errors: 32 LEADS_NOWHERE and 3 NO_WAY_BACK. All 35 are allowlisted with a reason, and the allowlist holds exactly 35 entries (32 LEADS_NOWHERE, 3 NO_WAY_BACK).
+  - Warnings: 42 DEAD_END_POCKET, 12 REDUNDANT_ROUTE and 1 UNREACHABLE (lighthouse_top 1,0, the lantern roof, which no player reaches since WORLD-34's ceiling).
+- **Kit check:** 11 kits, 0 kit traps. Rooms reached per kit:
+  - base 24 (no exits);
+  - memorina 40 (exits bloom_hollow and lake_frost_arena);
+  - woods 53;
+  - lake 52 (the Caldera through the cistern);
+  - both 65;
+  - woods_orchards 68;
+  - woods_orchards_caldera 68;
+  - lake_caldera 52;
+  - both_caldera 65;
+  - orchards 68;
+  - caldera 69 (lighthouse_top only with all four guardians).
+- **Every slot is reached by some kit.** 30 slots: 18 COLLECTIBLE and 12 CACHE.
+
+**The 42 DEAD_END_POCKET warnings, classified.** A pocket is ground that holds no anchor and dominates none (`architecture/room-reachability-audit`), so no pocket holds a slot itself.
+
+Loop or route steps (13). Each is a floor the routes cross. The union reaches it from both sides of a loop, or skips it with a song, so it dominates nothing:
+- caldera_bait 4,7, caldera_dry_moat 4,7 and caldera_seesaw 17,8: loop B's floors. The union opens the sun stair's grate, so the Caldera is reached from both ends.
+- caldera_temple_gate 15,6: the lower floor on the way to caldera_arena (loop G's start).
+- caldera_sun_stair 7,2: loop G's top shelf under the vault.
+- orchard_summit 22,13: the hill loop F crosses from the lift's landing to orchard_chasm_bridge, under the tor's cache.
+- lake_ice_caves 9,6: the raised shelf and dip before the Frost arena (loop D's start).
+- lake_chasm 30,17: loop A's chasm climb.
+- orchard_cliff_chimney 6,10: loop B's wall-climb ledge.
+- threshold_bridge 34,5: loop D's east steps from the deck down to the wayshrine side.
+- threshold_bridge 23,10: the ravine floor before the secret's tunnel.
+- woods_root_caves 28,9: the earth well's floor (Espacial 2).
+- lake_well 13,4: Logico 1's floor under the catch, which Soltar from the catch skips (`systems/world`).
+
+The way to a slot (3). The slot itself is anchored; this is the walk to it or back:
+- threshold_ravine_cave 8,4: the mound between the cache's hollow and the ledge.
+- frost_wreck_hold 13,6: the hold's lower floors, which the planks skip.
+- lighthouse_base 32,6: the east steps up to `lighthouse_base_lookout`.
+
+Dressing (26):
+- Roofs: village_lane_west 1,0 (gatehouse), threshold_fields 38,3 (farmhouse), lake_fishing_village 38,2.
+- The well's rim posts: village_square 26,7.
+- Mounds, plinths and steps:
+  - caldera_chimney_base 31,6, caldera_cistern_bottom 5,19, caldera_open_crater 31,31;
+  - frost_shore 4,6 (rock spur) and 31,6 (breaker back);
+  - frost_cliffs 21,44 (the bench cave's block), lake_shore 20,2;
+  - lighthouse_base 6,7, lighthouse_top 1,19 and 37,19;
+  - orchard_crag 24,14 (the shaft's west lip and its boulder) and 1,16 (the spire's foot);
+  - woods_root_caves 1,7 (the top of the alcove's block, a double jump) and 17,20 (a post in the bridge's pit);
+  - lake_waterfall_path 16,56: the river mouth's east jamb, the mirror of the bench's west stub. It is not one of the merged wall ledges.
+- Interior furniture and floors: village_tavern 1,12 (the upper rooms), village_tavern_cellar 6,7, village_empty_house 8,7 and 17,7, threshold_farmhouse 17,6, lake_fisher_hut 9,6, orchard_inn 9,7.
+
+**The dead ends the user asked about** ("speaking of dead ends, there is quite a few that i don't fully understand", 2026-10-14). Plan section 1.4 lists them. Every one now holds a slot or is gone:
+- **The three dead-end arenas** (A) each lead on.
+- **The eight empty song-puzzle goals** (B) hold slots: woods_pond, lake_well, lake_shore (now a secret), caldera_temple_gate, caldera_seesaw, caldera_dry_moat and village_empty_house. The eighth, orchard_windy_gap's one-cell alcove, is now the passage into orchard_ridge, whose letter is the reward.
+- **The seven promised collectibles** (C) hold slots: bell tower, woods_hut, woods_root_caves, lake_high_wall, orchard_well, caldera_long_corridor and village_tavern_cellar.
+- **The route pockets** (D):
+  - woods_canopy holds `woods_canopy_nest`.
+  - orchard_counterweights' upper chamber is now the way into orchard_summit.
+  - woods_deep's root-mound hollow holds `woods_deep_root_hollow`.
+  - The cliff chimney stays the wall-climb route.
+- **Removed:**
+  - lake_waterfall_path's wall ledges at rows 12 and 30 (step 1).
+  - The lantern roof, now unreachable.
+- **Dressing** (E) stays dressing.
+
+What remains as DEAD_END_POCKET is dressing, a loop floor or the walk to a slot, as classified above.

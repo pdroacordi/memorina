@@ -1,0 +1,175 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -6500,
+  1824
+ ],
+ "skills": [
+  0,
+  1
+ ],
+ "known_songs": [
+  4,
+  5,
+  6,
+  7
+ ],
+ "restored_guardians": [
+  1,
+  2
+ ],
+ "max_duration": 13.5,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "b20_corridor_east"
+  },
+  {
+   "t": 1.0,
+   "log": "b20_corridor_east"
+  },
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.65,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.95,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "screenshot": "b21_bait_west"
+  },
+  {
+   "t": 3.0,
+   "log": "b21_bait_west"
+  },
+  {
+   "t": 5.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.3,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.5,
+   "screenshot": "b22_over_the_brute"
+  },
+  {
+   "t": 5.5,
+   "log": "b22_over_the_brute"
+  },
+  {
+   "t": 5.75,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 8.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 8.95,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 9.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 9.55,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 9.8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 10.15,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 10.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 10.75,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 11.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 11.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 11.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 11.95,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 12.0,
+   "screenshot": "b23_dry_moat_west"
+  },
+  {
+   "t": 12.0,
+   "log": "b23_dry_moat_west"
+  },
+  {
+   "t": 12.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 13.0,
+   "trace": false
+  }
+ ]
+}

@@ -1,0 +1,277 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -9168,
+  -1248
+ ],
+ "skills": [
+  0,
+  1
+ ],
+ "known_songs": [
+  4,
+  5,
+  6,
+  7
+ ],
+ "restored_guardians": [
+  1,
+  2
+ ],
+ "max_duration": 24.9,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "e10_arena_under_the_crag"
+  },
+  {
+   "t": 1.0,
+   "log": "e10_arena_under_the_crag"
+  },
+  {
+   "t": 1.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.87,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.17,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.37,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.67,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.87,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.17,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 3.37,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.5,
+   "screenshot": "e11_climbing_into_the_crag"
+  },
+  {
+   "t": 3.5,
+   "log": "e11_climbing_into_the_crag"
+  },
+  {
+   "t": 3.67,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 3.87,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 4.17,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.55,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 5.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 6.8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 7.0,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.2,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.2,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 7.22,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 7.7,
+   "screenshot": "e12_ridge_letter"
+  },
+  {
+   "t": 7.7,
+   "log": "e12_ridge_letter"
+  },
+  {
+   "t": 8.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.75,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 10.9,
+   "screenshot": "e13_leaf_pile_landing"
+  },
+  {
+   "t": 10.9,
+   "log": "e13_leaf_pile_landing"
+  },
+  {
+   "t": 11.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.2,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 11.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 11.85,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 12.2,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 12.75,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 13.1,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 14.1,
+   "screenshot": "e14_leaf_path_hill"
+  },
+  {
+   "t": 14.1,
+   "log": "e14_leaf_path_hill"
+  },
+  {
+   "t": 18.45,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 18.8,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 18.85,
+   "screenshot": "e15_over_the_well"
+  },
+  {
+   "t": 18.85,
+   "log": "e15_over_the_well"
+  },
+  {
+   "t": 20.05,
+   "screenshot": "e16_mill_town_street"
+  },
+  {
+   "t": 20.05,
+   "log": "e16_mill_town_street"
+  },
+  {
+   "t": 20.3,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 20.65,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 22.2,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 22.6,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 22.8,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 24.0,
+   "screenshot": "e17_mill_town_bench"
+  },
+  {
+   "t": 24.0,
+   "log": "e17_mill_town_bench"
+  },
+  {
+   "t": 24.4,
+   "trace": false
+  }
+ ]
+}

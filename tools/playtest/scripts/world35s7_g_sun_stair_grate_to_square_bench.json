@@ -1,0 +1,712 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  3700,
+  1824
+ ],
+ "skills": [
+  2
+ ],
+ "known_songs": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "restored_guardians": [
+  0,
+  3
+ ],
+ "max_duration": 75.9,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "g00_arena_east_doorway"
+  },
+  {
+   "t": 1.0,
+   "log": "g00_arena_east_doorway"
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 1.2
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 2.846
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 3.146
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 3.166
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 3.516
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 4.046
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 4.346
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 4.796
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 4.946
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 5.333
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 5.683
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 6.233
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 6.533
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 8.733
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 8.883
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 9.554
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 9.654
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 9.674
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 10.024
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 10.454
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 10.754
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 11.204
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 11.354
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 11.742
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 12.092
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 12.642
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 12.942
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 15.142
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 15.292
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 15.962
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 16.062
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 16.082
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 16.432
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 16.862
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 17.162
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 17.612
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 17.762
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 18.15
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 18.5
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 19.05
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 19.35
+  },
+  {
+   "t": 19.35,
+   "screenshot": "g01_mid_stair"
+  },
+  {
+   "t": 19.35,
+   "log": "g01_mid_stair"
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 21.55
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 21.7
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 22.371
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 22.471
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 22.491
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 22.841
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 23.271
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 23.571
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 24.021
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 24.171
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 24.558
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 24.908
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 25.458
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 25.758
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 27.958
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 28.108
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 28.779
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 28.879
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 28.899
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 29.249
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 29.679
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 29.979
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 30.429
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 30.579
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 30.967
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 31.317
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 31.867
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 32.167
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 34.367
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 34.517
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 35.188
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 35.288
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 35.308
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 35.658
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 36.088
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 36.388
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 36.838
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 36.988
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 37.375
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 37.725
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 38.275
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 38.575
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 40.775
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 40.925
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 41.596
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 41.696
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 41.716
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 42.066
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 42.496
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 42.796
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 43.246
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 43.396
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 43.783
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 44.133
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 44.683
+  },
+  {
+   "t": 44.98,
+   "screenshot": "g02_top_shelf"
+  },
+  {
+   "t": 44.98,
+   "log": "g02_top_shelf"
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 44.983
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 47.183
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 47.333
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 48.188
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 48.388
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 48.738
+  },
+  {
+   "t": 49.29,
+   "screenshot": "g03_plank_under_the_open_grate"
+  },
+  {
+   "t": 49.29,
+   "log": "g03_plank_under_the_open_grate"
+  },
+  {
+   "t": 49.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 49.9,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 50.3,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 51.5,
+   "screenshot": "g04_up_in_the_street"
+  },
+  {
+   "t": 51.5,
+   "log": "g04_up_in_the_street"
+  },
+  {
+   "t": 55.0,
+   "screenshot": "g05_gate_east_west_end"
+  },
+  {
+   "t": 55.0,
+   "log": "g05_gate_east_west_end"
+  },
+  {
+   "t": 60.0,
+   "screenshot": "g06_crossing_the_mill"
+  },
+  {
+   "t": 60.0,
+   "log": "g06_crossing_the_mill"
+  },
+  {
+   "t": 65.6,
+   "screenshot": "g07_square_well_east"
+  },
+  {
+   "t": 65.6,
+   "log": "g07_square_well_east"
+  },
+  {
+   "t": 67.4,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 67.7,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 67.7,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 67.85,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 67.85,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 69.3,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 69.3,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 69.6,
+   "screenshot": "g08_over_the_well"
+  },
+  {
+   "t": 69.6,
+   "log": "g08_over_the_well"
+  },
+  {
+   "t": 69.8,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 70.6,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 70.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 70.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 71.0,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 72.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 73.4,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 73.6,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 74.9,
+   "screenshot": "g09_square_bench"
+  },
+  {
+   "t": 74.9,
+   "log": "g09_square_bench"
+  },
+  {
+   "t": 75.4,
+   "trace": false
+  }
+ ]
+}

@@ -33,27 +33,44 @@
 ## 2. Visão geral
 
 ```
-                        [OUTONO · Pomar dos Ventos]      alto, noroeste
-                          ▲ pulo duplo (copas)   ▲ Enraizar (abismo da montanha)
+          ▲ árvore oca, da arena do Guardião Florido (pulo duplo | Enraizar)
+          │               [OUTONO · Pomar dos Ventos]      alto, noroeste
+          │                 ▲ pulo duplo (copas)   ▲ Enraizar (abismo da montanha)
 [PRIMAVERA · Bosque Florido] ◄── [VILA · hub] ──► [Estrada do Limiar] ──► [BORDA GELADA · Farol]
-       oeste                      │       │                leste             extremo leste
-                                  │       └─ rio, para cima ──► [INVERNO · Lago Gelado]   norte
+       oeste                      │   │   │             ▲ leste              extremo leste
+                                  │   │   │             └─ Queda Gelada, de mão única, da arena do Guardião de Gelo (Congelar)
+                                  │   │   └─ rio, para cima ──► [INVERNO · Lago Gelado]   norte
+                                  │   └─ grade do Sol no Portão Leste ◄── Escada do Sol, da arena de verão (abre com o guardião de verão restaurado)
                                   └─ poço da Praça, para baixo: cisterna alagada (Redoma) ──► [VERÃO · Caldeira]   subterrâneo
                                                                    ▲ escalada (chaminé do penhasco do outono)
 ```
 
-| Área | Estação nativa | Memória inicial | Guardião → o que dá | Portão de entrada |
-|---|---|---|---|---|
-| Vila (hub) | primavera | 0.8; 0.6 a partir do 2º guardião restaurado; 1.0 no Retorno | nenhum | — |
-| Estrada do Limiar | inverno | 0.3 | nenhum | aberta |
-| Borda Gelada: o farol | inverno | 0.05 | o mentor: entrega a Memorina e entra em estase; batalha final | aberta (a jornada de abertura) |
-| Bosque Florido | primavera | 0.4 | Guardião Florido → Enraizar + pulo duplo; fragmento: Chuva | ter a Memorina |
-| Lago Gelado | inverno | 0.3 | Guardião de Gelo → Congelar + rolamento; fragmento: Redoma | ter a Memorina |
-| Pomar dos Ventos | outono | 0.25 | guardião de outono → Soltar + escalada de parede; fragmento: Vendaval | pulo duplo **ou** Enraizar |
-| Caldeira de Verão | verão | 0.15 | guardião de verão → Sombra; fragmento: Solstício | Redoma (cisterna) **ou** escalada (chaminé) |
-| Topo do farol | — | — | batalha final (GRD-06) | os quatro guardiões restaurados |
+| Área | Estação nativa | Memória inicial | Guardião → o que dá | Portão de entrada | Além da arena (WORLD-35) |
+|---|---|---|---|---|---|
+| Vila (hub) | primavera | 0.8; 0.6 a partir do 2º guardião restaurado; 1.0 no Retorno | nenhum | — | — |
+| Estrada do Limiar | inverno | 0.3 | nenhum | aberta | — |
+| Borda Gelada: o farol | inverno | 0.05 | o mentor: entrega a Memorina e entra em estase; batalha final | aberta (a jornada de abertura) | — (o fim do jogo) |
+| Bosque Florido | primavera | 0.4 | Guardião Florido → Enraizar + pulo duplo; fragmento: Chuva | ter a Memorina | o Oco da Árvore Velha sobe ao poço da Vila dos Moinhos: a terceira entrada do Pomar |
+| Lago Gelado | inverno | 0.3 | Guardião de Gelo → Congelar + rolamento; fragmento: Redoma | ter a Memorina | a Geleira (só Congelar a atravessa; uma carta) e a Queda Gelada, de mão única, até a ravina da Ponte Velha, a uma sala do banco da Capela |
+| Pomar dos Ventos | outono | 0.25 | guardião de outono → Soltar + escalada de parede; fragmento: Vendaval | pulo duplo **ou** Enraizar (três entradas: copas, abismo, árvore oca) | a chaminé até a Caldeira (escalada), e o Penhasco (escalada) até a Crista do Vento e uma queda de volta à Trilha sob a Folhagem |
+| Caldeira de Verão | verão | 0.15 | guardião de verão → Sombra; fragmento: Solstício | Redoma (cisterna) **ou** escalada (chaminé) | a Escada do Sol (kit básico) até a grade do Portão Leste, que abre com o guardião de verão restaurado |
+| Topo do farol | — | — | batalha final (GRD-06) | os quatro guardiões restaurados | — |
 
-**Ordem resultante:** abertura linear Vila → Limiar → Farol. Depois, Bosque e Lago em qualquer ordem. O Pomar exige o Bosque (as duas entradas pedem o que o Guardião Florido devolve). A Caldeira exige o Lago (Redoma) ou o Pomar (escalada). O final exige as quatro.
+**Ordem resultante:** abertura linear Vila → Limiar → Farol. Depois, Bosque e Lago em qualquer ordem. O Pomar exige o Bosque (as três entradas pedem o que o Guardião Florido devolve). A Caldeira exige o Lago (Redoma) ou o Pomar (escalada). O final exige as quatro. WORLD-35 não mudou nenhum portão de entrada: cada arena agora guarda um caminho adiante.
+
+**Voltas e atalhos (WORLD-35):** cada volta termina num banco ou na Vila.
+
+| Volta | Caminho | Abre com | Termina em |
+|---|---|---|---|
+| A | Vila → Bosque → Copas → Terraços → Ponte do Abismo → Abismo da Montanha → Parede Alta → Margem → Vila dos Pescadores → Trilha da Cascata → Moinho do Rio | pulo duplo + Enraizar | Vila; bancos da Orla, dos Terraços e da Cascata no caminho |
+| B | Colina do Guardião (outono) → Chaminé → Caldeira → Cratera → Cisterna → Praça | escalada de parede | banco da Praça |
+| C | Bosque → Clareira Florida → Oco da Árvore Velha → Vila dos Moinhos → Terraços → Copas → Bosque Fundo | pulo duplo **ou** Enraizar | bancos da Vila dos Moinhos, dos Terraços e da Orla |
+| D | Lago → Gruta do Guardião → Geleira → Queda Gelada → ravina da Ponte Velha → Capela → Vila | Congelar | banco da Capela, Vila |
+| E | Colina do Guardião (outono) → Penhasco → Crista do Vento → Trilha sob a Folhagem → Vila dos Moinhos | escalada de parede (ou Soltar + Vendaval pelo Vão do Vento) | banco da Vila dos Moinhos |
+| F | Terraços → Vila dos Moinhos → elevador dos Contrapesos → Colina do Moinho Grande → Ponte do Abismo ou queda aos Terraços | Soltar | banco dos Terraços |
+| G | Câmara do Sol → Escada do Sol → grade do Portão Leste | guardião de verão restaurado | banco da Praça, a duas salas |
+
+**Recompensas:** cada beco sem saída guarda uma recompensa marcada no texto da sala (`$`): 18 coletáveis de lore (STORY-06) e 12 esconderijos (LIFE-04, ainda por decidir), 30 ao todo. Quedas longas terminam num monte de neve ou de folhas que amortece a aterrissagem.
 
 **O Guardião de Gelo não é o mentor** (usuário, 2026-10-02, STORY-03). Ele sai do farol e passa a guardar o Lago Gelado. O farol é do mentor.
 

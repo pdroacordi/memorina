@@ -1,0 +1,307 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -6900,
+  288
+ ],
+ "skills": [
+  0
+ ],
+ "known_songs": [
+  6,
+  7
+ ],
+ "restored_guardians": [
+  1
+ ],
+ "max_duration": 26.45,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "c20_bloom_hollow_west"
+  },
+  {
+   "t": 1.0,
+   "log": "c20_bloom_hollow_west"
+  },
+  {
+   "t": 1.2,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.2,
+   "screenshot": "c21_tree_mouth"
+  },
+  {
+   "t": 3.2,
+   "log": "c21_tree_mouth"
+  },
+  {
+   "t": 4.6,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 4.8,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.27,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 5.8,
+   "screenshot": "c22_tree_foot"
+  },
+  {
+   "t": 5.8,
+   "log": "c22_tree_foot"
+  },
+  {
+   "t": 6.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.3,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 6.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.85,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.7,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 8.0,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 8.55,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 9.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 9.7,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 9.9,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 10.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 11.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 11.4,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 11.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 11.95,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 12.8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 12.8,
+   "screenshot": "c23_mid_tree"
+  },
+  {
+   "t": 12.8,
+   "log": "c23_mid_tree"
+  },
+  {
+   "t": 13.1,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 13.3,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 13.65,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 14.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 14.8,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 15.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 15.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 16.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 16.5,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 16.7,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 17.05,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 17.9,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 18.2,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 18.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 18.75,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 19.8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 19.85,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 20.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 20.75,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 21.2,
+   "screenshot": "c24_mill_town_street"
+  },
+  {
+   "t": 21.2,
+   "log": "c24_mill_town_street"
+  },
+  {
+   "t": 21.4,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 22.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 22.4,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 23.75,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 24.15,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 24.35,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 25.55,
+   "screenshot": "c25_mill_town_bench"
+  },
+  {
+   "t": 25.55,
+   "log": "c25_mill_town_bench"
+  },
+  {
+   "t": 25.95,
+   "trace": false
+  }
+ ]
+}
