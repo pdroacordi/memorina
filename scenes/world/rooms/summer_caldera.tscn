@@ -12,6 +12,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_temple_gate.tscn" id="r7"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_arena.tscn" id="r8"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_cistern.tscn" id="r9"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera/caldera_sun_stair.tscn" id="r10"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/caldera_crater.tres" id="bd_region_set"]
 
 [node name="SummerCaldera" type="Node2D"]
@@ -55,3 +56,6 @@ position = Vector2(1280, 1536)
 
 [node name="CalderaArena" parent="." instance=ExtResource("r8")]
 position = Vector2(2560, 1536)
+
+[node name="CalderaSunStair" parent="." instance=ExtResource("r10")]
+position = Vector2(3840, 384)

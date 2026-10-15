@@ -1,4 +1,5 @@
 ; village_gate_east.room - the village's east gate (design 04 section 3.1), out to threshold_fields. Flat; no gate or puzzle. The cobbles end at col 16: a dirt road with a grass verge leaves the village.
+; The sun stair's grate (WORLD-35): a FactGrate in the road (cols 29-32) over a vault (rows 10-11, cols 29-36) down into caldera_sun_stair, solid road until the summer guardian is restored (guardian_restored_summer.tres). Stone [back] lines the vault.
 
 [room]
 origin = 0, 0
@@ -14,9 +15,9 @@ tileset = village
 ........................................
 ........................................
 ........................................
-SSSSSSSSSSSSSSSS#######################S
-########################################
-########################################
+SSSSSSSSSSSSSSSS#############g...######S
+#############################........###
+#############################........###
 
 [back]
 ........................................
@@ -28,6 +29,9 @@ SSSSSSSSSSSSSSSS#######################S
 .......................................#
 .......................................#
 .......................................#
-.......................................#
-........................................
-........................................
+.............................SSSSSSSS..#
+.............................SSSSSSSS...
+.............................SSSSSSSS...
+
+[entities]
+29,9 = {"requires": "res://resources/save_facts/guardian_restored_summer.tres"}

@@ -11,6 +11,16 @@ static func find(map: RoomMap, max_bridge: int, max_shaft_width: int, min_shaft_
 	spans.append_array(_pillars(map, max_pillar))
 	return spans
 
+## `spans` without those that cross a cell of `blocked`: a closed barrier is solid to roots, though air in the grid.
+static func clear_of(spans: Array[Span], blocked: Dictionary[Vector2i, bool]) -> Array[Span]:
+	if blocked.is_empty():
+		return spans
+	var kept: Array[Span] = []
+	for span: Span in spans:
+		if not span.cells().any(func(cell: Vector2i) -> bool: return blocked.has(cell)):
+			kept.append(span)
+	return kept
+
 static func _earth(map: RoomMap, cell: Vector2i) -> bool:
 	return map.contains(cell) and map.ground_at(cell) == Enums.Ground.EARTH
 
@@ -103,3 +113,19 @@ class Span:
 	## Cells of air the roots cross.
 	func gap() -> int:
 		return (a.y - b.y - 1) if kind == Kind.PILLAR else (b.x - a.x - 1)
+
+	## The air cells the roots grow through.
+	func cells() -> Array[Vector2i]:
+		var found: Array[Vector2i] = []
+		match kind:
+			Kind.BRIDGE:
+				for x: int in range(a.x + 1, b.x):
+					found.append(Vector2i(x, a.y))
+			Kind.SHAFT:
+				for y: int in range(rows.x, rows.y + 1):
+					for x: int in range(a.x + 1, b.x):
+						found.append(Vector2i(x, y))
+			Kind.PILLAR:
+				for y: int in range(b.y + 1, a.y):
+					found.append(Vector2i(a.x, y))
+		return found

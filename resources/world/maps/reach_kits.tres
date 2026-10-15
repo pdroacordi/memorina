@@ -41,14 +41,16 @@ id = &"autumn"
 room = &"orchard_arena"
 skills = Array[int]([1])
 songs = Array[int]([4, 5])
-note = "Autumn guardian: Soltar + wall climb; the Vendaval fragment (design 04 sections 1 and 2). Not built (GRD-04): Enums.Guardian has no member for it, so no restored flag."
+restored_guardians = Array[int]([2])
+note = "Autumn guardian: Soltar + wall climb; the Vendaval fragment (design 04 sections 1 and 2). Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given)."
 
 [sub_resource type="Resource" id="summer"]
 script = ExtResource("3_milestone")
 id = &"summer"
 room = &"caldera_arena"
 songs = Array[int]([2, 3])
-note = "Summer guardian: Sombra; the Solsticio fragment (design 04 section 2). Not built (GRD-04): Enums.Guardian has no member for it, so no restored flag."
+restored_guardians = Array[int]([3])
+note = "Summer guardian: Sombra; the Solsticio fragment (design 04 section 2). Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given). Its flag opens the sun stair grate (guardian_restored_summer.tres)."
 
 [sub_resource type="Resource" id="kit_base"]
 script = ExtResource("2_kit")

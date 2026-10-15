@@ -1,5 +1,6 @@
 ; caldera_arena.room - the Chamber of the Sun, summer guardian arena, empty until GRD-04 (design 04 section 3.7).
 ; Flat floor (top row 9) 38 cells wide, 8 rows of air, no pits; the guardian stands at col 25.
+; The east doorway (rows 5-8, WORLD-35) leads up caldera_sun_stair; GRD-04 must hold the fight in (GRD-05, arena doors), as the west one.
 
 [room]
 origin = 0, 0
@@ -11,10 +12,10 @@ S......................................S
 S......................................S
 S......................................S
 S......................................S
-.......................................S
-.......................................S
-.......................................S
-.......................................S
+........................................
+........................................
+........................................
+........................................
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

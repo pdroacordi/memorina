@@ -22,6 +22,9 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | rachadura (dica de segredo) | `crack` (`BiomeTileset.crack`, legend `k`) |
 | lugar de recompensa (coletável / esconderijo) | `RewardSlot` (legend `$`, `slot_id`, `Kind.COLLECTIBLE` / `Kind.CACHE`); not a save slot (`SaveSlots`) |
 | neve funda, aterrissagem macia | `SoftLanding` (legend `n`), `LandingRule.is_hard`, `LandingComponent.enter_soft_zone`; the art is the `snow_drift` prop |
+| grade (da rua), alçapão de grade | `FactGrate` (legend `g`, `fact_grate.tscn`, the `FactBarrier` script under a floor shape); the vertical fence is `FactBarrier` (legend `X`) |
+| Escada do Sol | `caldera_sun_stair` |
+| guardião de outono / de verão | `Enums.Guardian.AUTUMN` / `SUMMER` (not built until GRD-04) |
 | sopro de poeira | `Draft` (legend `d`) |
 | grama gerada, folha de grama | `GrassField`, blade (`grass_blades.gdshader`) |
 | interior (sala de uma construção) | `Room.interior` |

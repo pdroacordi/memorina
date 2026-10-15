@@ -105,3 +105,9 @@ WORLD-35 assigns a reward to every exploration dead end, but the systems that gi
 - **Three slots in the orchards' new rooms**: `orchard_ridge_letter` (plan slot 15, COLLECTIBLE, orchard_ridge 12,3, on the knoll; Soltar + Vendaval through orchard_windy_gap's gate, or wall climb up the crag), `orchard_crag_cache` (plan slot 20, CACHE, orchard_crag 7,6, on the spire's top; wall climb) and `orchard_summit_cache` (plan slot 21, CACHE, orchard_summit 26,11, on the tor by the crest; the lift, or the walk from orchard_chasm_bridge with the double jump). The kit check reaches the ridge and the crag with the four autumn kits only, and the summit from the woods kit on.
 - **Total: 28 slots, 16 COLLECTIBLE and 12 CACHE.** Every one is reached by some kit (`room_kit_test`).
 - **Still to come with their rooms:** plan slots 17 (step 5) and 18 (step 6); the optional `lake_falls_head_letter` waits for MEM-10.
+
+## Built (WORLD-35 step 5, 2026-10-15)
+
+- **One slot in the sun stair**: `caldera_sun_stair_shrine` (plan slot 17, COLLECTIBLE, caldera_sun_stair 17,44, in the shrine alcove on the stair's floor; Sombra on the plate six cells from the gate, design 02 Verao Espacial 1). The kit check reaches it with the four summer kits only.
+- **Total: 29 slots, 17 COLLECTIBLE and 12 CACHE.** Every one is reached by some kit (`room_kit_test`).
+- **Still to come with its room:** plan slot 18 (step 6); the optional `lake_falls_head_letter` waits for MEM-10.

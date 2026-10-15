@@ -1,0 +1,145 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  4144.0,
+  1824
+ ],
+ "known_songs": [
+  2
+ ],
+ "skills": [
+  2
+ ],
+ "max_duration": 18.0,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "screenshot": "b00_on_the_plate",
+   "t": 1.0
+  },
+  {
+   "log": "b00_on_the_plate",
+   "t": 1.0
+  },
+  {
+   "action": "draw_memorina",
+   "pressed": true,
+   "t": 1.5
+  },
+  {
+   "action": "draw_memorina",
+   "pressed": false,
+   "t": 1.55
+  },
+  {
+   "action": "note_down",
+   "pressed": true,
+   "t": 2.1
+  },
+  {
+   "action": "note_down",
+   "pressed": false,
+   "t": 2.15
+  },
+  {
+   "action": "note_left",
+   "pressed": true,
+   "t": 2.5
+  },
+  {
+   "action": "note_left",
+   "pressed": false,
+   "t": 2.55
+  },
+  {
+   "action": "note_right",
+   "pressed": true,
+   "t": 2.9
+  },
+  {
+   "action": "note_right",
+   "pressed": false,
+   "t": 2.95
+  },
+  {
+   "action": "note_up",
+   "pressed": true,
+   "t": 3.3
+  },
+  {
+   "action": "note_up",
+   "pressed": false,
+   "t": 3.35
+  },
+  {
+   "action": "note_up",
+   "pressed": true,
+   "t": 3.7
+  },
+  {
+   "action": "note_up",
+   "pressed": false,
+   "t": 3.75
+  },
+  {
+   "action": "note_up",
+   "pressed": true,
+   "t": 4.1
+  },
+  {
+   "action": "note_up",
+   "pressed": false,
+   "t": 4.15
+  },
+  {
+   "screenshot": "b01_playing_sombra",
+   "t": 4.4
+  },
+  {
+   "log": "b01_playing_sombra",
+   "t": 4.4
+  },
+  {
+   "screenshot": "b02_shadow_on_the_plate",
+   "t": 11.0
+  },
+  {
+   "log": "b02_shadow_on_the_plate",
+   "t": 11.0
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 12.0
+  },
+  {
+   "screenshot": "b03_through_the_gate",
+   "t": 13.0
+  },
+  {
+   "log": "b03_through_the_gate",
+   "t": 13.0
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 13.9
+  },
+  {
+   "screenshot": "b04_shrine_slot",
+   "t": 14.6
+  },
+  {
+   "log": "b04_shrine_slot",
+   "t": 14.6
+  },
+  {
+   "t": 17.8,
+   "trace": false
+  }
+ ]
+}

@@ -68,7 +68,6 @@ const ALLOWED := {
 	"village_lane_west|woods_edge ring: x -1280, y -160..0": GATE_TOWER,
 	"village_lane_west|woods_edge ring: x -1280, y 384..544": BELOW_FLOORS,
 	"threshold_fields|village_gate_east ring: x 4480, y -160..0": GATE_TOWER,
-	"threshold_fields|village_gate_east ring: x 4480, y 384..544": BELOW_FLOORS,
 	"frost_shore|threshold_wayshrine ring: x 8320, y -160..0": REGION_TOPS,
 	"frost_shore|threshold_wayshrine ring: x 8320, y 384..544": BELOW_FLOORS,
 	"lake_ice_caves|lake_waterfall_path ring: x 3360, y -1536..-1376": UNDER_FLOOR,
@@ -86,6 +85,10 @@ const ALLOWED := {
 	"threshold_bridge|threshold_icefall_foot rooms: y 0, x 7072..7136": SHAFT_MOUTH,
 	"threshold_fields|threshold_ravine_cave ring: x 6240, y 384..544": RING_LIMIT,
 	"threshold_bridge|threshold_ravine_cave ring: x 7200, y 384..544": RING_LIMIT,
+	# caldera_sun_stair beside its closed walls (WORLD-35); the vault under the road has a [back] wall. Its west wall holds Ivo 460 px east of the x 3680 line, so a frame facing west from the plank stops 43 px short of it (playtests/2026-10-15-world35-step5).
+	"caldera_sun_stair|village_gate_east ring: x 3680, y 384..544": UNDER_FLOOR_REGION,
+	"caldera_sun_stair|threshold_fields ring: x 4640, y 384..544": RING_LIMIT,
+	"caldera_arena|caldera_sun_stair ring: y 1376, x 3680..3840": RING_LIMIT,
 	"summer_trial|winter_trial ring: x 2400, y 5328..5488": TRIAL_TOPS,
 	"summer_trial|winter_trial ring: x 2400, y 6256..6288": BELOW_FLOORS,
 	"summer_trial|winter_trial ring: x 2560, y 6128..6256": UNDER_FLOOR_REGION,

@@ -1,0 +1,96 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  4208.0,
+  480
+ ],
+ "skills": [
+  2
+ ],
+ "known_songs": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "restored_guardians": [
+  0,
+  3
+ ],
+ "max_duration": 7.0,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "screenshot": "d00_on_the_top_shelf",
+   "t": 1.0
+  },
+  {
+   "log": "d00_on_the_top_shelf",
+   "t": 1.0
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 1.2
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 1.55
+  },
+  {
+   "screenshot": "d01_on_the_plank_grate_open",
+   "t": 2.1
+  },
+  {
+   "log": "d01_on_the_plank_grate_open",
+   "t": 2.1
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 2.3
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 2.6
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 2.75
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 2.8
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 3.2
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 3.7
+  },
+  {
+   "screenshot": "d02_up_into_the_street",
+   "t": 4.3
+  },
+  {
+   "log": "d02_up_into_the_street",
+   "t": 4.3
+  },
+  {
+   "t": 6.8,
+   "trace": false
+  }
+ ]
+}

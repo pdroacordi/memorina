@@ -6,7 +6,7 @@ status: active
 tags: [doors, interiors, rooms, room-map, legend, transition, fade, teleport, save-fact, lock, map, weather, plan, world-09]
 related: [systems/rooms, systems/life-benches-death, systems/map, systems/input, systems/notebook, architecture/rooms-are-text, architecture/the-life-loop-rewinds-by-reloading, architecture/notebook-entries-are-derived-from-the-save, architecture/map-reveal-seen-cells-per-room, architecture/character-controller-input-split, architecture/hazard-respawn-on-safe-ground, bugs/a-teleported-ivo-enters-the-room-he-left, bugs/a-debug-boot-reveals-map-cells-ivo-never-saw, bugs/presses-made-while-sinking-fire-on-respawn, bugs/player-input-edge-state-goes-stale-across-a-pause-menu, bugs/sitting-is-not-gated-on-a-guardian-fight, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/a-stick-is-pressed-on-every-motion-event, gotchas/a-killed-tween-never-emits-finished, gotchas/a-freed-object-in-a-deferred-call-fails-its-typed-argument, gotchas/monitorable-false-hides-an-area-from-every-monitor, gotchas/queue-free-deferred-add-still-enters-the-tree]
 created: 2026-10-08
-updated: 2026-10-08
+updated: 2026-10-15
 source_files:
   - scenes/world/interactables/door/door.gd
   - scenes/world/interactables/door/door.tscn
@@ -209,7 +209,7 @@ BUILT (2026-10-08, WORLD-09; design 04 §4; user: "All doors"). Differences from
 
 - Room ids (file basenames) become load-bearing strings in `.room` files. A rename from the FileSystem dock does not rewrite them, but `room_files_test` names the broken pair.
 - `SaveFact.Kind` is append-only and shared with the notebook.
-- `ALL_GUARDIANS_RESTORED` reads every `Enums.Guardian`. Today that is two guardians; GRD-04 makes it four. If the mentor ever joins that enum, this kind must exclude him.
+- `ALL_GUARDIANS_RESTORED` reads every `Enums.Guardian`. Today that is two guardians; GRD-04 makes it four. If the mentor ever joins that enum, this kind must exclude him. Revision, 2026-10-15 (WORLD-35 step 5): AUTUMN and SUMMER were appended for the sun stair's grate, so it reads four now and the lighthouse hatch stays sealed until GRD-04 builds the two fights (orchestrator call (2026-10-15), following design 04 section 2, which names four guardians; the final arena is empty).
 - The village west fence and the river trail (04 §2, "ter a Memorina") are walked through, not doors: they belong to WORLD-05 as a barrier that composes `owns_memorina.tres`. GRD-05's arena barriers must not be named `Door`.
 - Ivo has no "enter" clip. He holds his pose under the fade, as on a walk-in. An over-the-shoulder clip and hatch art (overhead, not a wall leaf) are WORLD-11 / WORLD-13 dressing.
 - Not refusing a press while a direction is held follows design 04 §4 ("Ivo para diante dela e aperta para cima") as the result of the press, not a precondition. The playtest confirms it.

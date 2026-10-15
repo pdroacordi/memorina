@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://xkciwq2l1dkw"
+path="res://.godot/imported/caldera_sun_stair.room-babfa347153c3002034b0b7ba27841f6.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/summer_caldera/contents/caldera_sun_stair.room"
+dest_files=["res://.godot/imported/caldera_sun_stair.room-babfa347153c3002034b0b7ba27841f6.res"]
+
+[params]
+

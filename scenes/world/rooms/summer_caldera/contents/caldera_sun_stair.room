@@ -1,0 +1,67 @@
+; caldera_sun_stair.room - the Sun Stair, the summer guardian's way home (WORLD-35, design 04 section 3.7): from caldera_arena's
+; east doorway (rows 41-44) up to a vault under village_gate_east's road, whose grate opens once the summer guardian is restored.
+; Base kit both ways, stone only: a spiral of shelves 3 rows apart - a wall step (L' cols 1-3, R' cols 16-18), then a wide shelf
+; across (R cols 7-18, L cols 1-12). No shelf overhangs another's take-off edge within 6 rows, and every fall is 6 rows or less
+; (bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera; gotchas/zigzag-ledges-two-rows-apart-seal-a-shaft).
+; Row 0: the vault's one-way plank (cols 9-14) 3 rows under the street hole (gate cols 29-32), one jump from the road; open over
+; cols 1-8 under the gate's ground, so the hop onto the row-3 shelf has headroom. Verao Espacial 1 on the floor: Sombra holds the
+; plate (col 9) six cells from the gate (col 15) of the shrine alcove (cols 16-18) and its reward slot.
+
+[room]
+origin = 0, 0
+tileset = summer_caldera
+
+[grid]
+S........------..SSS
+S..................S
+S..................S
+S......SSSSSSSSSSSSS
+S..................S
+S..................S
+SSSS...............S
+S..................S
+S..................S
+SSSSSSSSSSSSS......S
+S..................S
+S..................S
+S...............SSSS
+S..................S
+S..................S
+S......SSSSSSSSSSSSS
+S..................S
+S..................S
+SSSS...............S
+S..................S
+S..................S
+SSSSSSSSSSSSS......S
+S..................S
+S..................S
+S...............SSSS
+S..................S
+S..................S
+S......SSSSSSSSSSSSS
+S..................S
+S..................S
+SSSS...............S
+S..................S
+S..................S
+SSSSSSSSSSSSS......S
+S..................S
+S..................S
+S...............SSSS
+S..................S
+S..................S
+S......SSSSSSSSSSSSS
+S..............SSSSS
+...............SSSSS
+.SSS...............S
+...................S
+.........P.....G.$.S
+SSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSS
+SSSSSSSSSSSSSSSSSSSS
+
+[entities]
+9,44 = {"id": "sun_stair_plate"}
+15,44 = {"id": "sun_stair_door", "trigger_path": "sun_stair_plate"}
+17,44 = {"slot_id": "caldera_sun_stair_shrine", "kind": 0}

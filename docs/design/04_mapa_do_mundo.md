@@ -70,7 +70,7 @@ Convenções: o id é o nome do arquivo (`scenes/world/rooms/<área>/<id>.tscn`)
 | `village_square` | Praça | Hub. O poço desce para a cisterna da Caldeira; portas da taverna, da casa de Ivo, da casa do ancião e da Torre do Sino. Aldeões. | — | sim |
 | `village_lane_west` | Rua do Mercado | Bancas, padaria (porta). Leva ao Bosque. | cerca do oeste: ter a Memorina | — |
 | `village_mill` | Moinho do Rio | Roda d'água, rio. Leva ao Lago (para cima). | trilha do rio: ter a Memorina | — |
-| `village_gate_east` | Portão Leste | Saída para o Limiar. | — | — |
+| `village_gate_east` | Portão Leste | Saída para o Limiar. A grade do Sol na estrada (WORLD-35, "Grate in the village road (Recommended)": "The stair ends under a grate in village_gate_east's street: a hatch in the flat street, so the village stays one street (your 'village is not for exploring' rule)."; "When the guardian is restored (Recommended)": "The grate opens once the summer guardian is restored; it reuses the existing fence logic, no new code." (usuário, 2026-10-14)): uma grade de ferro rente à rua, sobre um porão de pedra onde termina a Escada do Sol; fechada é chão, e abre quando o guardião de verão é restaurado. Quem cai no buraco aberto pousa numa tábua três linhas abaixo e volta com um pulo. A rua continua plana. | guardião de verão restaurado (para descer) | — |
 | `village_house` | Casa de Ivo (interior) | Início do jogo. Violão, cama da filha. | — | — |
 | `village_tavern` | Taverna (interior, dois andares) | Balcão, mesas, lareira, barris, quartos em cima. Taverneiro e fregueses. | — | — |
 | `village_tavern_cellar` | Adega (interior) | Segredo sob a taverna. | Enraizar (retorno) | — |
@@ -156,14 +156,15 @@ Curta e atmosférica, antes de qualquer canção (`01_lore_e_narrativa.md`, seç
 |---|---|---|---|---|
 | `caldera_cistern` | Cisterna | Poço vertical alagado sob o poço da Praça; a entrada da Caldeira pela Vila. | Redoma ("O fundo do poço", Inverno Espacial 2) | — |
 | `caldera_cistern_bottom` | Fundo da Cisterna | Chega da Cisterna. | — | — |
-| `caldera_chimney_base` | Base da Chaminé | Chega do Pomar. | — | — |
+| `caldera_chimney_base` | Base da Chaminé | Chega do Pomar. Banco onde se chega pela chaminé, que ficava a 11 telas do banco da cratera (WORLD-35, "Mill town + chimney base (Recommended)": "One by the orchards' inn in the mill town, one at the foot of the cliff chimney in the Caldera (today 11 screens from the crater bench)." (usuário, 2026-10-14)). | — | sim |
 | `caldera_open_crater` | Cratera Aberta | A caldeira se abre para o céu (sala vertical alta). | — | sim |
 | `caldera_temple_gate` | Porta do Templo | "A porta que precisa de alguém" (Verão Espacial 1). | Sombra | — |
 | `caldera_seesaw` | A Gangorra | Verão Espacial 2. | Sombra | — |
 | `caldera_bait` | A Isca | Verão Lógico 1. | Sombra (ou combate) | — |
 | `caldera_dry_moat` | O Fosso Seco | "O lago que não havia" (Combinado 1). | Chuva + Congelar | — |
 | `caldera_long_corridor` | O Corredor Longo | Verão Lógico 2. Coletável. | Solstício + Sombra | — |
-| `caldera_arena` | Câmara do Sol | Arena do guardião de verão (vazia até GRD-04). | — | — |
+| `caldera_arena` | Câmara do Sol | Arena do guardião de verão (vazia até GRD-04). A leste, a passagem para a Escada do Sol (WORLD-35). | — | — |
+| `caldera_sun_stair` | Escada do Sol | WORLD-35, o caminho de casa depois do guardião de verão ("Grate in the village road (Recommended)", "When the guardian is restored (Recommended)", usuário, 2026-10-14): uma espiral de prateleiras de basalto, três linhas entre uma e outra, que o kit básico sobe e desce (quem entra na Caldeira só com a Redoma também sai); nenhuma queda passa de seis linhas (decisão do orquestrador, 2026-10-15: só pedra, sem tábuas no basalto). No alto, o porão sob a grade do Portão Leste. No chão, junto à passagem da arena, Verão Espacial 1 de novo: Sombra na placa segura o portão de um nicho do santuário com uma carta (`caldera_sun_stair_shrine`). | — (Sombra para o nicho; guardião de verão restaurado para a grade) | — |
 
 ## 4. Interiores (por portas)
 

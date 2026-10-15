@@ -80,6 +80,13 @@ id = &"alcove_gate"
 songs = Array[int]([4, 5])
 reason = "Soltar drops the cocoon, an eastward Vendaval blows it onto the plate (design 02 section 8, Outono Logico 2; orchard_windy_gap header)"
 
+[sub_resource type="Resource" id="sun_stair_door"]
+script = ExtResource("2_entry")
+room = &"caldera_sun_stair"
+id = &"sun_stair_door"
+songs = Array[int]([2])
+reason = "Sombra holds the plate six cells from the shrine gate (design 02 section 8, Verao Espacial 1; caldera_sun_stair header)"
+
 [resource]
 script = ExtResource("1_list")
-entries = Array[ExtResource("2_entry")]([SubResource("woods_pond_log"), SubResource("lake_well_reeds"), SubResource("empty_house_door"), SubResource("corridor_door"), SubResource("seesaw"), SubResource("temple_door"), SubResource("lift"), SubResource("leaf_curtain"), SubResource("mill_bridge"), SubResource("catch_platform"), SubResource("alcove_gate")])
+entries = Array[ExtResource("2_entry")]([SubResource("woods_pond_log"), SubResource("lake_well_reeds"), SubResource("empty_house_door"), SubResource("corridor_door"), SubResource("seesaw"), SubResource("temple_door"), SubResource("lift"), SubResource("leaf_curtain"), SubResource("mill_bridge"), SubResource("catch_platform"), SubResource("alcove_gate"), SubResource("sun_stair_door")])

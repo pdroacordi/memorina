@@ -38,6 +38,7 @@ func _ready() -> void:
 		return
 	_field = MemoryField.find_in(self)
 	var spans := RootSpanFinder.find(_room.map, wet_bridge_cells, max_shaft_width, min_shaft_rows, max_pillar_cells)
+	spans = RootSpanFinder.clear_of(spans, _closed_barrier_cells())
 	var pillar := _nearest_pillar(spans)
 	for span: RootSpanFinder.Span in spans:
 		if span.kind != RootSpanFinder.Kind.PILLAR or span == pillar:
@@ -101,6 +102,25 @@ func _within(span: RootSpanFinder.Span, reach: float) -> bool:
 		a.y = y
 		b.y = y
 	return a.distance_to(origin) <= reach and b.distance_to(origin) <= reach
+
+## Map cells this room's closed fact barriers fill, read when the pulse opens (bugs/enraizar-grows-a-root-bridge-over-the-closed-street-grate).
+func _closed_barrier_cells() -> Dictionary[Vector2i, bool]:
+	var cells: Dictionary[Vector2i, bool] = {}
+	var entities := _room.get_node_or_null(NodePath(RoomMapNode.ENTITIES))
+	if entities == null:
+		return cells
+	for child: Node in entities.get_children():
+		var barrier := child as FactBarrier
+		if barrier == null or not barrier.is_closed():
+			continue
+		# Inset 1 px: a body ending on a cell line does not reach into the next cell.
+		var rect := barrier.body_rect().grow(-1.0)
+		var first := _room.cell_at(rect.position)
+		var last := _room.cell_at(rect.end)
+		for x: int in range(first.x, last.x + 1):
+			for y: int in range(first.y, last.y + 1):
+				cells[Vector2i(x, y)] = true
+	return cells
 
 ## The one pillar that grows: from the floor Ivo played on, nearest him.
 func _nearest_pillar(spans: Array[RootSpanFinder.Span]) -> RootSpanFinder.Span:

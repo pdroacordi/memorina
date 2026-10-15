@@ -6,7 +6,7 @@ status: active
 tags: [guardian, boss, lucidity, recall, qte, ai]
 related: [systems/notebook, architecture/guardian-fight-phase-machine, features/lucidity-leap, features/encounter-sheet-slot, features/recall-in-more-than-one-press, architecture/the-region-owns-its-forgetting]
 created: 2026-10-02
-updated: 2026-10-14
+updated: 2026-10-15
 source_files:
   - scenes/characters/guardians/guardian.gd
   - scenes/world/world_freeze.gd
@@ -45,7 +45,7 @@ A guardian encounter is `docs/design/02_mecanicas.md` sections 3 and 4: pressure
 - **Restoration is persistent, and the region hears it from the SAVE** (`Enums.Guardian`, `PlayerData.restored_guardians`, `SaveSystem.restore_guardian`). `SaveSystem.guardian_restored` is the channel rather than `Guardian.restored`, because it works whatever order the world loaded in and whether or not the arena's room is still resident; `Region` listens, and `Guardian._restore()` does nothing to the world but record the fact. `Region.memory_changed` re-emits `RegionMemory.changed`, and **`Game` is the ONE writer of `MemoryField.baseline`** - it follows the region it is showing, because a restoration happens while the player is standing in it and not only at the next doorway. A restored guardian starts in `RESTORED` on every later visit and never fights again.
 - **A region's memory can also step with the others' restorations** (MEM-13, WORLD-11, 2026-10-13; design 04 section 2: the village falls to 0.6 from the second restored guardian). `RegionMemory.steps` (`Dictionary[int, float]`) maps a restored-guardian count to a baseline; `RegionMemory.level_for(authored, steps, restored)` (static, pure) is the value of the highest key at or below the count, else `authored`. `Region._ready` applies it from `SaveSystem.restored_guardian_count()` after mounting the marks, then the own-guardian check; `Region` listens to `guardian_restored` when its own guardian is unrestored or it has steps, and the handler always re-derives the step after its own-guardian branch. `follow_restorations` sets the level at once, with no tween (the player is in another region when it happens) and emits `changed` only when the level differs, so `RegionPresence` hides the leavers through the existing `memory_changed`. The region's own restoration always wins: `restore()` sets `_whole` before its tween, so a step neither pulls a running lift down nor lowers a whole region. Data: `home_village.tscn` `steps = {2: 0.6}` (architect plan, 2026-10-13). Tests: `region_memory_test`, `region_test`.
 - **Three moves each, and one of them is a leap.** `GuardianAttack.leap_impulse` with `lunge_speed` is a jump at the player that lands past them, which is how a light guardian changes sides; a heavy one leaves it at 0 - not every boss should jump. Bloom: lash (close), burst (the launcher carrying the recall), pounce (a leap, 48px up and 192px across). Frost: swipe (close), charge (the lunge carrying the recall), slam (a tall keyed hitbox and `attack_height` 150, so the golem swats a player bouncing just above it instead of leaving). The asymmetry is the point: Bloom has no answer overhead and escapes, Frost has one and uses it. **A swing keeps the side it started on**: `GuardianAI.facing_intent()` answers 0 while swinging, so a pounce or a charge carries past a player who rolls under it instead of turning in the air to follow him (`bugs/a-guardian-lunge-turned-to-follow-a-player-who-rolled-under-it`). The telegraph still tracks him.
-- Arenas: `home_village/bloom_hollow` (Bloom Guardian, ROOT + DOUBLE_JUMP) and the `frost_edge` region's `lighthouse` (Frost Guardian, FREEZE + ROLL). Sprite credits in `CREDITS.md`.
+- Arenas (WORLD-05 moved them): `spring_woods/bloom_hollow` (Bloom Guardian, ROOT + DOUBLE_JUMP) and `frozen_lake/lake_frost_arena` (Frost Guardian, FREEZE + ROLL); `wind_orchards/orchard_arena` and `summer_caldera/caldera_arena` are empty until GRD-04 (`systems/world`). Sprite credits in `CREDITS.md`.
 - Guardian sheets: frames side by side, body **centred in the frame** (`flip_h` mirrors about the frame centre; an off-centre body jumps on every turn), authored facing left. Missing clips (`lucid`, `restored` are idle frames today) can be generated with the `pixellab` skill (`tools/pixellab/pixellab.ps1`, key only ever in `PIXELLAB_API_KEY`).
 
 ## Reach against Ivo's sword (CORE-09, 2026-10-11; CORE-11, 2026-10-14)
@@ -67,6 +67,19 @@ Ivo's swings were shrunk to the 2x art ("Shrink to the art", user, 2026-10-11; `
   - The user's decision (2026-10-14), on the two points left to judge (the +12 px reach with spacing retuned by the same ratio; one box per hit window, which can lead the bare blade on a strike frame): "keep +12 px and the hitbox as is".
 - **Swing 1 barely shoves.** `ivo_attack_stats_idle` swing 1 `knockback_strength` 200 -> 60 px/s: the brute (damping 6, `knockback_time` 1.0) slides 8.6 px in the 0.333 s between the slash's and the chop's first hit frames, so a brute parked at 48 is still inside the chop at 56.6 (57 -> 65.6 inside 70.5 since CORE-11). At 200 it slid 28.8 px and the chop whiffed. Swing 2 keeps its 300.
 
+## The autumn and summer guardians before GRD-04 (WORLD-35 step 5, 2026-10-15)
+
+- **The members exist without a fight.** `Enums.Guardian` has AUTUMN (2) and SUMMER (3), appended for the sun stair's street grate. No scene, `GuardianStats` or fight restores them yet (GRD-04), so their flags stay false in play. A playtest timeline can set them (`"restored_guardians": [3]`).
+- **Their restored flags already gate the world.**
+  - `guardian_restored_summer.tres` opens the `FactGrate` in village_gate_east's road (`systems/rooms` "Fact grate").
+  - `all_guardians_restored.tres` now needs all four, so the lighthouse hatch stays sealed until GRD-04. This is an orchestrator call (2026-10-15), following design 04 section 2, which names four guardians. The final arena is empty until GRD-06.
+  - The kit check's autumn and summer milestones set the flags (`reach_kits.tres`).
+- **The notebook holds placeholders.** `guardian_autumn` and `guardian_summer` have a name, a one-line placeholder body and no portrait. Nothing meets them, so their rows stay "???", by the notebook's rule (orchestrator call, 2026-10-15). `notebook_catalog_test.test_every_guardian_has_a_portrait` skips the two.
+- **GRD-04 must:**
+  - draw their portraits (`NotebookEntry.art`) and remove that skip;
+  - write their real names and notebook bodies (`GUARDIAN_AUTUMN` / `GUARDIAN_SUMMER`, `NOTEBOOK_GUARDIAN_*_BODY`);
+  - add their `GuardianStats`;
+  - place each guardian in its arena (orchard_arena, caldera_arena), so `ReachKitCheck.given` counts those arenas as exits. Until then the kit check treats them as no way out (`architecture/room-reachability-audit`).
 ## Current limits (from the old "Known gaps", 2026-10-02)
 
 - Dying mid-fight returns Ivo to the last bench with the guardian corrupted again.

@@ -1,0 +1,59 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -10120,
+  1824
+ ],
+ "skills": [
+  0,
+  1
+ ],
+ "max_duration": 4.0,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "screenshot": "e00_chimney_base",
+   "t": 1.0
+  },
+  {
+   "log": "e00_chimney_base",
+   "t": 1.0
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 1.2
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 1.65
+  },
+  {
+   "action": "look_down",
+   "pressed": true,
+   "t": 2.1
+  },
+  {
+   "action": "look_down",
+   "pressed": false,
+   "t": 2.3
+  },
+  {
+   "screenshot": "e01_chimney_base_bench",
+   "t": 3.2
+  },
+  {
+   "log": "e01_chimney_base_bench",
+   "t": 3.2
+  },
+  {
+   "t": 3.8,
+   "trace": false
+  }
+ ]
+}

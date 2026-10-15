@@ -96,6 +96,7 @@ ROOM_LIST = [
     ("summer_caldera", "caldera_cistern_bottom", -1, 1, 3, 4, False),
     ("summer_caldera", "caldera_temple_gate", 2, 3, 4, 4, False),
     ("summer_caldera", "caldera_arena", 4, 5, 4, 4, False),
+    ("summer_caldera", "caldera_sun_stair", 6, 6, 1, 4, False),
 ]
 
 # Horizontal openings: (west room, east room, global macro row). Air rows 5..8, floor row 9 of that macro row.
@@ -124,6 +125,7 @@ H_LINKS = [
     # 5-8; the windy gap's passage and the arena's east doorway are rows 6-8 (the maps are the truth, systems/world).
     ("orchard_crag", "orchard_ridge", -5), ("orchard_ridge", "orchard_windy_gap", -5),
     ("orchard_counterweights", "orchard_summit", -6), ("orchard_summit", "orchard_chasm_bridge", -6),
+    ("caldera_arena", "caldera_sun_stair", 4),
 ]
 
 # Vertical openings: (upper room, lower room, global macro col, first cell col, last cell col inside that macro col).
@@ -144,6 +146,8 @@ V_LINKS = [
     ("orchard_crag", "orchard_arena", -15, 11, 18),
     ("orchard_ridge", "orchard_leaf_path", -14, 2, 4),
     ("orchard_summit", "orchard_terraces", -9, 9, 13),
+    # The stair's row 0 is open at cols 1-16; the gate's vault (rows 10-11) only over cols 9-16, its street at cols 9-12 (GRATES).
+    ("village_gate_east", "caldera_sun_stair", 6, 1, 16),
 ]
 
 # room, cell col, bench id (on the room's bottom floor)
@@ -156,6 +160,7 @@ BENCHES = [
     ("orchard_terraces", 30, "orchard_terraces_bench"),
     ("orchard_mill_town", 24, "orchard_mill_town_bench"),
     ("caldera_open_crater", 20, "caldera_crater_bench"),
+    ("caldera_chimney_base", 6, "caldera_chimney_base_bench"),
 ]
 
 # region, interior id, width screens, height screens
@@ -206,6 +211,11 @@ DOORS = [
 BARRIERS = [
     ("village_lane_west", 3),
     ("village_mill", 30),
+]
+
+# room, cell col of a fact grate's west end in the bottom floor, the SaveFact that opens it
+GRATES = [
+    ("village_gate_east", 29, "res://resources/save_facts/guardian_restored_summer.tres"),
 ]
 
 
@@ -488,6 +498,9 @@ def main():
     for rid, col in BARRIERS:
         room = rooms[rid]
         room.place(col, room.floor_row() - 1, "X", {"requires": "res://resources/save_facts/owns_memorina.tres"})
+    for rid, col, fact in GRATES:
+        room = rooms[rid]
+        room.place(col, room.floor_row(), "g", {"requires": fact})
 
     smoke = []
     written = 0

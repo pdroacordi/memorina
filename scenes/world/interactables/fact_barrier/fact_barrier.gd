@@ -1,10 +1,10 @@
 class_name FactBarrier
 extends StaticBody2D
-## A fence that bars the way until the save holds `requires` (design 04 section 2, "ter a Memorina").
+## A barrier (a fence, a street grate) that bars the way until the save holds `requires` (design 04 section 2; systems/rooms "Fact grate").
 
 ## The save fact that opens it.
 @export var requires: SaveFact
-## Replaces the village gate where another fence fits the place; null keeps the gate.
+## Replaces the scene's own sprite (the gate for FactBarrier, the grate for FactGrate); null keeps it.
 @export var art: Texture2D
 
 @onready var _shape: CollisionShape2D = $CollisionShape2D
@@ -19,6 +19,16 @@ func _ready() -> void:
 
 func is_open_for(data: PlayerData) -> bool:
 	return requires != null and requires.holds(data)
+
+## Whether its body bars the way for the current save.
+func is_closed() -> bool:
+	return not is_open_for(SaveSystem.player_data)
+
+## Its body in global coordinates.
+func body_rect() -> Rect2:
+	var shape := get_node("CollisionShape2D") as CollisionShape2D
+	var box := (shape.shape as RectangleShape2D).size * shape.global_scale
+	return Rect2(shape.global_position - box * 0.5, box)
 
 ## Map cells its closed body fills, placed at `at` (map px), for the reachability audit's kit check. Reads only
 ## authored values.

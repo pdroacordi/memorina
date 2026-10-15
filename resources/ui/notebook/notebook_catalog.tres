@@ -149,6 +149,24 @@ title_key = "GUARDIAN_BLOOM"
 body_key = "NOTEBOOK_GUARDIAN_BLOOM_BODY"
 art = SubResource("portrait_bloom")
 
+[sub_resource type="Resource" id="guardian_autumn"]
+script = ExtResource("2_entry")
+id = &"guardian_autumn"
+section = 3
+requirement = 3
+index = 2
+title_key = "GUARDIAN_AUTUMN"
+body_key = "NOTEBOOK_GUARDIAN_AUTUMN_BODY"
+
+[sub_resource type="Resource" id="guardian_summer"]
+script = ExtResource("2_entry")
+id = &"guardian_summer"
+section = 3
+requirement = 3
+index = 3
+title_key = "GUARDIAN_SUMMER"
+body_key = "NOTEBOOK_GUARDIAN_SUMMER_BODY"
+
 [resource]
 script = ExtResource("1_catalog")
-entries = Array[ExtResource("2_entry")]([SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom")])
+entries = Array[ExtResource("2_entry")]([SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer")])

@@ -211,6 +211,7 @@ else in the code knows what a character means.
 | `_` | `[grid]` | void | stone | - | - | Void outside a room's shell: solid stone to gameplay, drawn black. Every one of its 8 neighbours is ground (not a ledge), void or off the map, so a drawn wall always stands between the room's air and the void; never under water, a reach or a secret, and only in interiors for now. |
 | `$` | `[grid]` | entity | - | - | content | A reward slot, standing on this cell: a place the layout promises a reward. Needs a slot_id unique across every map; kind 0 COLLECTIBLE (STORY-06) or 1 CACHE (LIFE-04, undecided). Invisible in release, a small diamond in debug builds; no gameplay until STORY-06 or LIFE-04 fills it. |
 | `n` | `[grid]` | entity | - | - | - | Deep snow that breaks a fall: a zone standing on this cell, width_cells wide (centred) and height_cells tall, where a landing is never a hard landing. Keep it 2 cells or more over the highest floor under it, and put the drift prop over it: the zone draws nothing. |
+| `g` | `[grid]` | entity | - | - | gate | A floor grate in this cell and the three east of it, one cell deep and flush with the floor: solid until the save holds requires (a SaveFact .tres path), then gone, leaving the hole. Keep the four cells air in the grid; the hatch in village_gate_east's road over caldera_sun_stair (WORLD-35). |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -460,6 +461,16 @@ Scene `res://scenes/world/environment/soft_landing/soft_landing.tscn`, anchored 
 | `id` | String | none - names the node so other entities can link to it |
 | `width_cells` | int | `4` |
 | `height_cells` | int | `3` |
+
+#### `g` - FactGrate
+
+Scene `res://scenes/world/interactables/fact_barrier/fact_grate.tscn`, anchored at its cell's bottom centre (standing on the cell below). A floor grate in this cell and the three east of it, one cell deep and flush with the floor: solid until the save holds requires (a SaveFact .tres path), then gone, leaving the hole. Keep the four cells air in the grid; the hatch in village_gate_east's road over caldera_sun_stair (WORLD-35).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `requires` | SaveFact | **required** |
+| `art` | Texture2D | `null` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

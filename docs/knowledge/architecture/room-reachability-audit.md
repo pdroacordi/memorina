@@ -6,7 +6,7 @@ status: active
 tags: [rooms, room-map, reachability, level-design, audit, tests, jump-reach]
 related: [systems/rooms, systems/world, systems/roots-and-climbing, systems/water, architecture/rooms-are-text, gotchas/zigzag-ledges-two-rows-apart-seal-a-shaft, bugs/the-tavern-upper-floor-has-no-way-down, bugs/the-mill-loft-is-unreachable-from-the-lowered-drawbridge, bugs/the-woods-deep-pit-shaft-traps-a-kit-without-the-double-jump, bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera]
 created: 2026-10-10
-updated: 2026-10-14
+updated: 2026-10-15
 source_files:
   - scenes/world/rooms/maps/reach/reach_grid.gd
   - scenes/world/rooms/maps/reach/reach_lattice.gd
@@ -154,3 +154,4 @@ User, 2026-10-14, on the WORLD-35 board: "Yes (Recommended)" to "Run the reach a
 - **The union cannot see a kit-only step.** A stone step at (43,30) also fixed +Memorina, but the union flagged it LEADS_NOWHERE, because the union holds every song. A future escape ledge for an early kit will need an allowlist entry, or a kit-aware LEADS_NOWHERE.
 - **Not modelled.** A mover's rest floor without its song: the base kit loses a hung lowering platform, so the check leans to false traps (visible errors), but a rest floor that leads into a trap would be missed. Vendaval's extra reach: a natural current carries every kit, and orchard_windy_gap's 20-cell chasm "clears" without the gale. Timing. Fragments found apart from their guardian: each fragment comes with its guardian's milestone.
 - **GRD-04** appends `Enums.Guardian` members for autumn and summer. Give those milestones `restored_guardians` then; `all_guardians_restored.tres` will stop holding at +both.
+  - Revision, 2026-10-15 (WORLD-35 step 5): the members came early, for the sun stair's grate (`guardian_restored_summer.tres`). The autumn and summer milestones now set them, so `all_guardians_restored.tres` holds only for the caldera kit, and lighthouse_top is new only for it. `ReachKitCheck.given` still finds no placed guardian in orchard_arena or caldera_arena, so neither is an exit until GRD-04. Four guardians for the hatch is an orchestrator call (2026-10-15), following design 04 section 2, which names four guardians.

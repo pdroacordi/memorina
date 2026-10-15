@@ -23,6 +23,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/helix_stair/helix_stair.tscn" id="i24_helix"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/reward_slot/reward_slot.tscn" id="i25_slot"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/soft_landing/soft_landing.tscn" id="i26_soft"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/fact_barrier/fact_grate.tscn" id="i27_grate"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -324,6 +325,17 @@ scene = ExtResource("i26_soft")
 anchor = 0
 description = "Deep snow that breaks a fall: a zone standing on this cell, width_cells wide (centred) and height_cells tall, where a landing is never a hard landing. Keep it 2 cells or more over the highest floor under it, and put the drift prop over it: the zone draws nothing."
 
+[sub_resource type="Resource" id="grate"]
+script = ExtResource("2_entry")
+symbol = "g"
+kind = 3
+reach_role = 8
+ground = 0
+scene = ExtResource("i27_grate")
+anchor = 0
+required_params = PackedStringArray("requires")
+description = "A floor grate in this cell and the three east of it, one cell deep and flush with the floor: solid until the save holds requires (a SaveFact .tres path), then gone, leaving the hole. Keep the four cells air in the grid; the hatch in village_gate_east's road over caldera_sun_stair (WORLD-35)."
+
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing"), SubResource("grate")])

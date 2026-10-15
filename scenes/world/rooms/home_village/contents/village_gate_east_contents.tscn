@@ -54,7 +54,7 @@ position = Vector2(810, 288)
 position = Vector2(868, 288)
 
 [node name="Bush" parent="Props" instance=ExtResource("w11_bush")]
-position = Vector2(950, 288)
+position = Vector2(880, 288)
 
 [node name="VillageTree2" parent="Props" instance=ExtResource("w11_village_tree")]
 position = Vector2(1100, 288)

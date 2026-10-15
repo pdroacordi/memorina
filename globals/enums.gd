@@ -52,7 +52,11 @@ enum Song {
 ## PlayerData.restored_guardians is indexed by this enum; append members only.
 enum Guardian {
 	FROST,
-	BLOOM
+	BLOOM,
+	## Not built yet (GRD-04): no fight restores it, so its flag stays false.
+	AUTUMN,
+	## Not built yet (GRD-04): no fight restores it, so its flag stays false.
+	SUMMER,
 }
 
 ## Ground materials used by songs and room maps; see docs/design/02_mecanicas.md section 7.1.

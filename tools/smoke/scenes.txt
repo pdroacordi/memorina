@@ -56,6 +56,7 @@ res://scenes/world/rooms/summer_caldera/contents/caldera_open_crater_contents.ts
 res://scenes/world/rooms/summer_caldera/contents/caldera_cistern_bottom_contents.tscn
 res://scenes/world/rooms/summer_caldera/contents/caldera_temple_gate_contents.tscn
 res://scenes/world/rooms/summer_caldera/contents/caldera_arena_contents.tscn
+res://scenes/world/rooms/summer_caldera/contents/caldera_sun_stair_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_house_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_tavern_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_tavern_cellar_contents.tscn
@@ -108,4 +109,5 @@ res://scenes/ui/notebook/notebook.tscn
 res://scenes/ui/notebook_toast/notebook_toast.tscn
 res://scenes/ui/region_title/region_title.tscn
 res://scenes/world/interactables/fact_barrier/fact_barrier.tscn
+res://scenes/world/interactables/fact_barrier/fact_grate.tscn
 res://scenes/world/interactables/reward_slot/reward_slot.tscn

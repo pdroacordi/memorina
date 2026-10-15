@@ -1,0 +1,66 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  4240.0,
+  384
+ ],
+ "skills": [
+  2
+ ],
+ "max_duration": 5.0,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 1.2
+  },
+  {
+   "screenshot": "f00_vault_facing_west",
+   "t": 1.5
+  },
+  {
+   "log": "f00_vault_facing_west",
+   "t": 1.5
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 1.6
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 1.8
+  },
+  {
+   "screenshot": "f01_off_the_plank_west",
+   "t": 2.3
+  },
+  {
+   "log": "f01_off_the_plank_west",
+   "t": 2.3
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 2.6
+  },
+  {
+   "screenshot": "f02_on_the_top_shelf",
+   "t": 3.4
+  },
+  {
+   "log": "f02_on_the_top_shelf",
+   "t": 3.4
+  },
+  {
+   "t": 4.8,
+   "trace": false
+  }
+ ]
+}
