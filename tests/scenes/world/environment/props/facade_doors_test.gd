@@ -1,13 +1,15 @@
 class_name FacadeDoorsTest extends GdUnitTestSuite
 
-## A facade stands on a door, every outdoor door stands in a facade or is a passage or hatch, and every roof cell lies
-## on a facade's roof line (systems/props, Facades; systems/rooms, Doors).
+## A facade stands on a door, every door whose look needs one stands in a facade, and every roof cell lies on a
+## facade's roof line (systems/props, Facades; systems/rooms, Doors).
 
 const ROOMS_DIR := "res://scenes/world/rooms"
 ## Debug-only test beds (CLAUDE.md, Song trials): their doors test the door, not the world.
 const TRIALS_PREFIX := "trials_"
 ## Doorways that make sense without a building around them.
 const ALONE_LOOKS := ["passage", "stairwell", "hatch_up", "hatch_down"]
+## Doorways that belong inside a facade outdoors: a building's door, or a breach whose hole the facade draws.
+const FACADE_LOOKS := ["door", "breach"]
 ## Px a roof cell's top may sit off the facade's top edge above it.
 const ROOF_TOLERANCE := 8
 
@@ -83,8 +85,8 @@ func test_every_facade_stands_on_a_door() -> void:
 		contents.free()
 	assert_array(Array(problems)).is_empty()
 
-## An outdoor door never stands alone: its building's front surrounds it, unless it is a passage or a hatch.
-func test_every_outdoor_door_stands_in_a_facade() -> void:
+## An outdoor door never stands alone: its building's front surrounds it, unless it is a passage, a stairwell or a hatch.
+func test_every_outdoor_facade_look_stands_in_a_facade() -> void:
 	var problems := PackedStringArray()
 	var outdoor := 0
 	for path: String in _contents_scenes(ROOMS_DIR):
@@ -94,11 +96,35 @@ func test_every_outdoor_door_stands_in_a_facade() -> void:
 		var facades := _feet(_facades(contents))
 		for door: Dictionary in _doors(contents):
 			outdoor += 1
-			if not door.look in ALONE_LOOKS and not door.feet in facades:
+			if door.look in FACADE_LOOKS and not door.feet in facades:
 				problems.append("%s: the %s at %s stands in no facade" % [path, door.look, door.feet])
 		contents.free()
 	assert_int(outdoor).is_greater(0)
 	assert_array(Array(problems)).is_empty()
+
+## A breach's art is clear, so the hole is the facade's: in every room, interiors and trials included, a breach stands
+## in a facade.
+func test_every_breach_stands_in_a_facade_everywhere() -> void:
+	var problems := PackedStringArray()
+	var breaches := 0
+	for path: String in _contents_scenes(ROOMS_DIR):
+		var contents := (load(path) as PackedScene).instantiate()
+		var facades := _feet(_facades(contents))
+		for door: Dictionary in _doors(contents):
+			if door.look != "breach":
+				continue
+			breaches += 1
+			if not door.feet in facades:
+				problems.append("%s: the breach at %s stands in no facade" % [path, door.feet])
+		contents.free()
+	assert_int(breaches).is_greater(0)
+	assert_array(Array(problems)).is_empty()
+
+## Each look either stands alone or needs a facade outdoors, so a new look must say which.
+func test_every_look_is_alone_or_in_a_facade() -> void:
+	for look: String in Door.LOOKS:
+		assert_bool((look in ALONE_LOOKS) != (look in FACADE_LOOKS)) \
+			.override_failure_message("look '%s' is in neither or both of ALONE_LOOKS and FACADE_LOOKS" % look).is_true()
 
 func test_every_door_look_is_known() -> void:
 	var problems := PackedStringArray()

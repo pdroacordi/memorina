@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frost_edge/lighthouse_base.tscn" id="r2"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frost_edge/lighthouse_top.tscn" id="r3"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frost_edge/lighthouse_interior.tscn" id="r4"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frost_edge/frost_wreck_hold.tscn" id="r5"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/frost_edge.tres" id="bd_region_set"]
 
 [node name="FrostEdge" type="Node2D"]
@@ -35,3 +36,6 @@ position = Vector2(10880, -1920)
 
 [node name="LighthouseInterior" parent="." instance=ExtResource("r4")]
 position = Vector2(24000, 12000)
+
+[node name="FrostWreckHold" parent="." instance=ExtResource("r5")]
+position = Vector2(25600, 12000)

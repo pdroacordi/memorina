@@ -410,7 +410,7 @@ Scene `res://scenes/world/interactables/door/door.tscn`, anchored at its cell's 
 | `to_room` | StringName | **required** |
 | `requires` | SaveFact | `null` |
 | `arrive_facing` | int | `0` |
-| `look` | enum (door,passage,stairwell,hatch_up,hatch_down) | `"door"` |
+| `look` | enum (door,passage,stairwell,hatch_up,hatch_down,breach) | `"door"` |
 
 #### `X` - FactBarrier
 

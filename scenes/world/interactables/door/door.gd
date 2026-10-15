@@ -17,6 +17,7 @@ const LOOKS: Dictionary[String, Texture2D] = {
 	"stairwell": preload("res://assets/sprites/world/props/door/door_stairwell.png"),
 	"hatch_up": preload("res://assets/sprites/world/props/door/door_hatch_up.png"),
 	"hatch_down": preload("res://assets/sprites/world/props/door/door_hatch_down.png"),
+	"breach": preload("res://assets/sprites/world/props/door/door_breach.png"),
 }
 ## Px of a look's art below the floor line. Must match the floor line in tools/art/prompts/door_stairwell.md.
 const SINKS: Dictionary[String, float] = {"stairwell": 67.0}
@@ -35,8 +36,9 @@ const PROMPT_TOP := -104.0
 @export var requires: SaveFact
 ## Facing on arrival through the partner: 0 keeps Ivo's, 1 right, -1 left.
 @export_range(-1, 1) var arrive_facing: int = 0
-## A building door, a passage cut in stone, a stairwell down through a stone floor, or a ladder hatch up or down.
-@export_enum("door", "passage", "stairwell", "hatch_up", "hatch_down") var look: String = "door"
+## A building door, a passage cut in stone, a stairwell down through a stone floor, a ladder hatch up or down, or a
+## breach in a facade that draws its own hole.
+@export_enum("door", "passage", "stairwell", "hatch_up", "hatch_down", "breach") var look: String = "door"
 
 var _bodies: int = 0
 var _knock: Tween

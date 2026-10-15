@@ -1,6 +1,8 @@
 ; frost_shore.room - Praia Gelada: a stone beach (row 9) behind a dead lake (w, rows 10-11, off the path, running off both sides),
-; a rock spur (cols 8-12), the wreck's flat run (cols 13-25) and a frozen breaker (cols 26-34) climbed by its
+; a rock spur (cols 3-7), the wreck's flat run (cols 8-28) and a frozen breaker (cols 29-37) climbed by its
 ; back and left off its curl (design 04 section 3.3, 03 section 6.2). No gate: base kit, no earth.
+; The wreck (the wreck_hull facade, x 285-909, never walked on) lies on the flat run; its breach holds the door (col 18)
+; into frost_wreck_hold (WORLD-35 step 6).
 
 [room]
 origin = 0, 0
@@ -13,9 +15,9 @@ S......................................S
 S......................................S
 S......................................S
 ........................................
-..............................SSSSS.....
-.........SSS................SSSS........
-........SSSSS.............SSSSSS........
+.................................SSSSS..
+....SSS........................SSSS.....
+...SSSSS..........E..........SSSSSS.....
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ........................................
 ........................................
@@ -33,3 +35,6 @@ SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ........................................
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
 wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+
+[entities]
+18,8 = {"look": "breach", "link": "frost_wreck_hold_door", "to_room": "frost_wreck_hold", "arrive_facing": 1}

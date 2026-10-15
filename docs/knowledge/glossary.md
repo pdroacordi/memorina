@@ -24,6 +24,7 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | neve funda, aterrissagem macia | `SoftLanding` (legend `n`), `LandingRule.is_hard`, `LandingComponent.enter_soft_zone`; the art is the `snow_drift` prop |
 | grade (da rua), alçapão de grade | `FactGrate` (legend `g`, `fact_grate.tscn`, the `FactBarrier` script under a floor shape); the vertical fence is `FactBarrier` (legend `X`) |
 | Escada do Sol | `caldera_sun_stair` |
+| Porão do Naufrágio, naufrágio | `frost_wreck_hold`; the wreck on frost_shore is `wreck_hull_facade`, its rombo the door look `breach` |
 | guardião de outono / de verão | `Enums.Guardian.AUTUMN` / `SUMMER` (not built until GRD-04) |
 | sopro de poeira | `Draft` (legend `d`) |
 | grama gerada, folha de grama | `GrassField`, blade (`grass_blades.gdshader`) |

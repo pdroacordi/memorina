@@ -176,6 +176,7 @@ INTERIORS = [
     ("home_village", "village_notes_house", 1, 1),
     ("threshold", "threshold_farmhouse", 1, 1),
     ("frost_edge", "lighthouse_interior", 1, 4),
+    ("frost_edge", "frost_wreck_hold", 1, 1),
     ("spring_woods", "woods_hut", 1, 1),
     ("frozen_lake", "lake_fisher_hut", 1, 1),
     ("wind_orchards", "orchard_inn", 2, 1),
@@ -198,6 +199,8 @@ DOORS = [
     ("lighthouse_top", 20, "lighthouse_interior", 12, "lighthouse_hatch",
         {"arrive_facing": -1},
         {"row": 4, "requires": "res://resources/save_facts/all_guardians_restored.tres", "arrive_facing": -1}),
+    ("frost_shore", 18, "frost_wreck_hold", 3, "frost_wreck_hold_door",
+        {"look": "breach", "arrive_facing": 1}, {"arrive_facing": 1}),
     ("woods_edge", 12, "woods_hut", 4, "woods_hut_door", {}, {"arrive_facing": 1}),
     ("lake_fishing_village", 40, "lake_fisher_hut", 4, "lake_fisher_hut_door", {}, {"arrive_facing": 1}),
     ("lake_fishing_village", 3, "lake_well", 9, "lake_well_stairwell",
@@ -396,6 +399,8 @@ ROCK_SETS = {
 }
 # Enclosed rooms whose walls are neither rock nor their region's caves: the inside of the giant tree.
 ROOM_SETS = {"woods_hollow_tree": "heartwood"}
+# Interiors whose wall is not interior_timber: the wrecked ship's hold.
+INTERIOR_SETS = {"frost_wreck_hold": "ship_hold"}
 # The backdrop set an underground room of each region shows (architecture/backdrop-seams).
 UNDERGROUND_SETS = {
     "home_village": "village_strata", "threshold": "earth_caves", "frost_edge": "ice_caves",
@@ -409,7 +414,7 @@ def contents(room):
     underground (or its own wall, ROOM_SETS), a wall indoors."""
     rel = "res://scenes/world/rooms/%s/contents/%s.room" % (room.region, room.id)
     if room.interior:
-        backdrop = "interior_timber"
+        backdrop = INTERIOR_SETS.get(room.id, "interior_timber")
     elif room.id in ROOM_SETS:
         backdrop = ROOM_SETS[room.id]
     elif room.id in ROCK_SETS:

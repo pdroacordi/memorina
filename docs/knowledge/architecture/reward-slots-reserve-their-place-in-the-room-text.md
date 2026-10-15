@@ -111,3 +111,9 @@ WORLD-35 assigns a reward to every exploration dead end, but the systems that gi
 - **One slot in the sun stair**: `caldera_sun_stair_shrine` (plan slot 17, COLLECTIBLE, caldera_sun_stair 17,44, in the shrine alcove on the stair's floor; Sombra on the plate six cells from the gate, design 02 Verao Espacial 1). The kit check reaches it with the four summer kits only.
 - **Total: 29 slots, 17 COLLECTIBLE and 12 CACHE.** Every one is reached by some kit (`room_kit_test`).
 - **Still to come with its room:** plan slot 18 (step 6); the optional `lake_falls_head_letter` waits for MEM-10.
+
+## Built (WORLD-35 step 6, 2026-10-15)
+
+- **One slot in the wreck's hold**: `frost_wreck_letter` (plan slot 18, COLLECTIBLE, frost_wreck_hold 17,3, on the bow plank; the base kit, two jumps up the listing planks or one from the bow floor). The kit check reaches it with every kit, base included.
+- **Total: 30 slots, 18 COLLECTIBLE and 12 CACHE.** Every slot of plan section 2.6 is placed, plus the optional `woods_crown_cache`. Every one is reached by some kit (`room_kit_test`).
+- **Still to come:** only the optional `lake_falls_head_letter`, with MEM-10.

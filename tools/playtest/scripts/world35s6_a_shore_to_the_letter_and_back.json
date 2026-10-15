@@ -1,0 +1,157 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  8912,
+  288
+ ],
+ "max_duration": 14.0,
+ "steps": [
+  {
+   "trace": true,
+   "t": 0.8
+  },
+  {
+   "screenshot": "a00_shore_breach",
+   "t": 1.0
+  },
+  {
+   "log": "a00_shore_breach",
+   "t": 1.0
+  },
+  {
+   "key": "Up",
+   "pressed": true,
+   "t": 1.3
+  },
+  {
+   "key": "Up",
+   "pressed": false,
+   "t": 1.4
+  },
+  {
+   "screenshot": "a01_hold_arrival",
+   "t": 2.9
+  },
+  {
+   "log": "a01_hold_arrival",
+   "t": 2.9
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 3.0
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 3.35
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 3.65
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 4.62
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 4.92
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 4.5
+  },
+  {
+   "screenshot": "a02_on_the_middle_plank",
+   "t": 5.6
+  },
+  {
+   "log": "a02_on_the_middle_plank",
+   "t": 5.6
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 5.75
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 5.8
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 6.1
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 6.5
+  },
+  {
+   "screenshot": "a03_bow_letter",
+   "t": 7.0
+  },
+  {
+   "log": "a03_bow_letter",
+   "t": 7.0
+  },
+  {
+   "action": "move_left",
+   "pressed": true,
+   "t": 7.2
+  },
+  {
+   "action": "move_left",
+   "pressed": false,
+   "t": 10.3
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 10.3
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 10.66
+  },
+  {
+   "screenshot": "a04_back_at_the_door",
+   "t": 10.9
+  },
+  {
+   "log": "a04_back_at_the_door",
+   "t": 10.9
+  },
+  {
+   "key": "Up",
+   "pressed": true,
+   "t": 11.1
+  },
+  {
+   "key": "Up",
+   "pressed": false,
+   "t": 11.2
+  },
+  {
+   "screenshot": "a05_back_on_the_shore",
+   "t": 12.7
+  },
+  {
+   "log": "a05_back_on_the_shore",
+   "t": 12.7
+  },
+  {
+   "trace": false,
+   "t": 12.9
+  }
+ ]
+}

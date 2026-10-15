@@ -67,6 +67,7 @@ res://scenes/world/rooms/home_village/contents/village_mill_house_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_notes_house_contents.tscn
 res://scenes/world/rooms/threshold/contents/threshold_farmhouse_contents.tscn
 res://scenes/world/rooms/frost_edge/contents/lighthouse_interior_contents.tscn
+res://scenes/world/rooms/frost_edge/contents/frost_wreck_hold_contents.tscn
 res://scenes/world/rooms/spring_woods/contents/woods_hut_contents.tscn
 res://scenes/world/rooms/frozen_lake/contents/lake_fisher_hut_contents.tscn
 res://scenes/world/rooms/wind_orchards/contents/orchard_inn_contents.tscn

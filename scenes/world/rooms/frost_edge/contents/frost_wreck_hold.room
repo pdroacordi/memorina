@@ -1,0 +1,28 @@
+; frost_wreck_hold.room - Porao do Naufragio (interior, design 04 sections 3.3 and 4; WORLD-35 step 6): the hold of the
+; ship wrecked on frost_shore, listing up to its bow in the east. Three runs of floor (stand rows 8, 7, 6) under a deck
+; that lists with them (6 rows of air each, 192 px: a full jump, 143 px rise plus the 54 px capsule, meets the beams by 5 px); two loose deck planks (rows 5 and 4) climb
+; to the bow, where the reward slot (`$`) holds the letter's place. The deck rises at col 11, over the middle plank's
+; east end, so the hop to the bow plank clears it by 42 px (under the row-1 deck it clears it by 10). No gate: base kit.
+; Indoors: the frost edge's wreck planks (`%`, `-`) with void (`_`) outside the hull; no season (systems/seasonal-art).
+
+[room]
+origin = 0, 0
+tileset = frost_edge
+
+[grid]
+__________%%%%%%%%%%
+______%%%%%........%
+%%%%%%%............%
+%................$.%
+%.............-----%
+%........----......%
+%..................%
+%............%%%%%%%
+%..E...%%%%%%%______
+%%%%%%%%____________
+____________________
+____________________
+
+[entities]
+3,8 = {"link": "frost_wreck_hold_door", "to_room": "frost_shore", "arrive_facing": 1}
+17,3 = {"slot_id": "frost_wreck_letter", "kind": 0}

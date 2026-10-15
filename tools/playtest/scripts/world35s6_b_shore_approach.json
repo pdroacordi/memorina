@@ -1,0 +1,71 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  8600,
+  288
+ ],
+ "max_duration": 6.5,
+ "steps": [
+  {
+   "trace": true,
+   "t": 0.8
+  },
+  {
+   "screenshot": "b00_shore_from_the_west",
+   "t": 1.0
+  },
+  {
+   "log": "b00_shore_from_the_west",
+   "t": 1.0
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 1.2
+  },
+  {
+   "screenshot": "b01_walking_to_the_wreck",
+   "t": 2.0
+  },
+  {
+   "log": "b01_walking_to_the_wreck",
+   "t": 2.0
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 2.83
+  },
+  {
+   "screenshot": "b02_at_the_breach",
+   "t": 3.6
+  },
+  {
+   "log": "b02_at_the_breach",
+   "t": 3.6
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 3.8
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 5.4
+  },
+  {
+   "screenshot": "b03_past_the_wreck",
+   "t": 5.8
+  },
+  {
+   "log": "b03_past_the_wreck",
+   "t": 5.8
+  },
+  {
+   "trace": false,
+   "t": 6.0
+  }
+ ]
+}

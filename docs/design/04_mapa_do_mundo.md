@@ -96,11 +96,12 @@ Curta e atmosférica, antes de qualquer canção (`01_lore_e_narrativa.md`, seç
 
 | Id | Nome | Função | Portões e puzzles | Banco |
 |---|---|---|---|---|
-| `frost_shore` | Praia Gelada | Arrebentação parada (crista congelada, `03`, seção 6.2), barco naufragado. | — | — |
+| `frost_shore` | Praia Gelada | Arrebentação parada (crista congelada, `03`, seção 6.2), barco naufragado. WORLD-35: o casco do naufrágio jaz no trecho plano da praia (o esporão de rocha recuou para oeste e a arrebentação três células para leste para lhe dar lugar), e o rombo no casco é a porta do Porão do Naufrágio. Não se anda sobre o casco. | — | — |
 | `frost_cliffs` | Penhascos | Subida vertical até o farol. Banco numa gruta abrigada. | — | sim |
 | `lighthouse_base` | Base do Farol | Porta da torre. | — | — |
 | `lighthouse_interior` | Torre do Farol (interior, vertical) | Escada em espiral. Sala do mentor no meio (marca de STORY-03). Alçapão do topo selado. | alçapão: os quatro guardiões | — |
 | `lighthouse_top` | Lanterna do Farol | Arena da batalha final (GRD-06). | — | — |
+| `frost_wreck_hold` | Porão do Naufrágio (interior) | WORLD-35: o porão do barco naufragado na praia, adernado para a proa, a leste. Três trechos de chão sobem com o casco, sob um convés que aderna junto, diante das cavernas e tábuas do próprio casco; duas tábuas soltas levam à proa, onde está uma carta (`frost_wreck_letter`). | — (kit básico) | — |
 
 ### 3.4 Bosque Florido (`spring_woods`) — primavera, 0.4
 
@@ -172,6 +173,7 @@ Curta e atmosférica, antes de qualquer canção (`01_lore_e_narrativa.md`, seç
 - Um interior é uma sala comum, da mesma região da construção (mesma estação, mesma memória, mesmas marcas de morte), posicionada fora da área jogável da região. **Interiores não aparecem no mapa**: a fachada já está nele.
 - Um interior pode ser maior por dentro que por fora (a taverna tem dois andares, a torre do farol é vertical).
 - Portas que só abrem com uma condição (o alçapão do farol) usam o mesmo componente, travado por um fato do save.
+- Onde não há construção, a porta é uma abertura do lugar: uma passagem em arco, uma escada que desce, um alçapão. O Porão do Naufrágio (WORLD-35) se entra pelo rombo no casco do barco encalhado em `frost_shore`: o casco é a fachada, e o rombo, a porta.
 
 ## 5. Habitantes
 

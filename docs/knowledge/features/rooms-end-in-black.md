@@ -6,7 +6,7 @@ status: active
 tags: [void, rooms, interiors, room-map, legend, importer, bell-tower, lighthouse]
 related: [systems/rooms, architecture/room-void-outside-the-shell, architecture/walkable-helix-stair, features/rotating-spiral-stair, features/doorways-fit-their-place, gotchas/import-plugin-output-is-stale-when-its-logic-changes, gotchas/an-editor-open-across-an-importer-bump-rewrites-imports-to-the-old-version]
 created: 2026-10-13
-updated: 2026-10-13
+updated: 2026-10-15
 source_files:
   - resources/world/maps/room_legend.tres
   - resources/world/maps/room_legend_entry.gd
@@ -29,7 +29,7 @@ A building interior shows black outside its walls instead of filling the screen 
 - **Parsing.** The parser marks `RoomMap.void_cells` (`room_map.gd:53`; `is_void`, `:82`) at `room_map_parser.gd:166`. `_check_void` (`room_map_parser.gd:292`) makes it an error for any of a void cell's 8 neighbours to be air or a ledge, so a drawn wall always stands between the room's air and the void; void may not lie under water, a reach or a secret.
 - **Drawing the wall's edge.** `RoomTileResolver.void_filled` (`room_tile_resolver.gd:18`) gives each void cell its nearest wall's look, so the wall's tiles toward the void are fill; `_clear_void_tiles` (`:44`) clears every display tile whose four corners are void.
 - **The black.** `RoomMapNode` adds a `Void` node (`room_map_node.gd:102`), a `RoomVoid` (`room_void.gd`) that draws one black rect per merged run of void cells (`runs`) at `Z` 60, over every root-canvas room layer. That cuts the wall on the cell line. It is world art, so the greyhush greys it.
-- **Rooms that use it.** The nine building interiors (`village_house`, `village_tavern`, `village_elder`, `village_bakery`, `village_empty_house`, `threshold_farmhouse`, `woods_hut`, `lake_fisher_hut`, `orchard_inn`), `village_bell_tower` and `lighthouse_interior`. Both towers keep 8 interior columns between stone at cols 5 and 14, void at cols 0-4 and 15-19 (`features/rotating-spiral-stair`). `village_tavern_cellar` does not use it: it is dug ground, not a building.
+- **Rooms that use it.** The nine building interiors (`village_house`, `village_tavern`, `village_elder`, `village_bakery`, `village_empty_house`, `threshold_farmhouse`, `woods_hut`, `lake_fisher_hut`, `orchard_inn`), `village_bell_tower`, `lighthouse_interior` and `frost_wreck_hold` (WORLD-35, a listing ship's hold). Both towers keep 8 interior columns between stone at cols 5 and 14, void at cols 0-4 and 15-19 (`features/rotating-spiral-stair`). `village_tavern_cellar` does not use it: it is dug ground, not a building.
 - **New rooms.** `gen_world_shells.py` writes a new interior's shell as one cell of wall with `_` beyond (`voided`, `gen_world_shells.py:223`).
 - **Importer.** Room format 10 (`FORMAT_VERSION`, `room_map_importer.gd:27`).
 - **Tests.** `room_files_test`: void only in interiors (`room_files_test.gd:92`), every door's art clear of void (`:110`); `room_void_test`; parser, resolver and node suites under `tests/scenes/world/rooms/maps/`.

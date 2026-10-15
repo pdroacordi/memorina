@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://dqarvlsh8h06j"
+path="res://.godot/imported/frost_wreck_hold.room-dbcc87fb8a929241d00182786d911d31.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/frost_edge/contents/frost_wreck_hold.room"
+dest_files=["res://.godot/imported/frost_wreck_hold.room-dbcc87fb8a929241d00182786d911d31.res"]
+
+[params]
+

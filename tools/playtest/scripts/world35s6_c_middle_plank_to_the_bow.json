@@ -1,0 +1,55 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  25960,
+  12160
+ ],
+ "max_duration": 3.0,
+ "steps": [
+  {
+   "trace": true,
+   "t": 0.8
+  },
+  {
+   "screenshot": "c00_on_the_middle_plank",
+   "t": 1.0
+  },
+  {
+   "log": "c00_on_the_middle_plank",
+   "t": 1.0
+  },
+  {
+   "action": "move_right",
+   "pressed": true,
+   "t": 1.2
+  },
+  {
+   "action": "jump",
+   "pressed": true,
+   "t": 1.25
+  },
+  {
+   "action": "jump",
+   "pressed": false,
+   "t": 1.55
+  },
+  {
+   "action": "move_right",
+   "pressed": false,
+   "t": 1.95
+  },
+  {
+   "screenshot": "c01_hop_to_the_bow_plank",
+   "t": 2.4
+  },
+  {
+   "log": "c01_hop_to_the_bow_plank",
+   "t": 2.4
+  },
+  {
+   "trace": false,
+   "t": 2.6
+  }
+ ]
+}
