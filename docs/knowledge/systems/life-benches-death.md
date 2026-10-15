@@ -4,9 +4,9 @@ type: system
 title: Life, benches, saving and death
 status: active
 tags: [save, bench, death, life, respawn]
-related: [systems/map, systems/notebook, architecture/the-life-loop-rewinds-by-reloading, architecture/save-slots-and-the-boot-swap, systems/screens, bugs/a-teleported-ivo-enters-the-room-he-left, bugs/the-playtest-runner-adopts-the-legacy-save-before-going-memory-only, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step]
+related: [systems/dialogue, systems/map, systems/notebook, architecture/the-life-loop-rewinds-by-reloading, architecture/save-slots-and-the-boot-swap, systems/screens, bugs/a-teleported-ivo-enters-the-room-he-left, bugs/the-playtest-runner-adopts-the-legacy-save-before-going-memory-only, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step]
 created: 2026-10-02
-updated: 2026-10-14
+updated: 2026-10-15
 source_files:
   - globals/save_ledger.gd
   - globals/save_system.gd
@@ -73,6 +73,12 @@ Plan and options: `architecture/save-slots-and-the-boot-swap`.
 - `PlayerData.announced_regions` holds the `SceneKey`s of regions whose title has played (`systems/region-title`). It is death-proof the same way: `SaveLedger.rewind` merges it with `notebook_read` (orchestrator call, 2026-10-14, for the user's "saved per region, so it shows once"). `SaveSystem.announce_region` emits nothing.
 - `SaveSystem.progress_changed` is emitted by `learn_song`, `unlock_skill`, `set_item_owned`, `restore_guardian` and `meet_guardian`. `mark_notebook_read` emits nothing. The notebook derives its entries from these facts (`systems/notebook`).
 - Tests: `save_ledger_test` (read ids and announced regions survive a death, once each; a met guardian is forgotten), `player_data_test` (old saves, round trip), `save_system_notebook_test`.
+
+## Dialogue facts (STORY-08, built 2026-10-15)
+
+- `PlayerData.dialogues_heard` (dialogue ids heard to their end) and `PlayerData.responses` (ask id to choice id) are live data like a learned song: a bench commits them, a death before one forgets them. `SaveLedger` needed no change. A grant a talk gave rewinds with them, so the giver gives it again (`systems/dialogue`).
+- `SaveSystem.mark_dialogue_heard` and `record_response` emit `progress_changed`. A save written before them loads both empty.
+- Tests: `save_ledger_test` (forgotten by a death, kept by a rest, live and committed share nothing), `player_data_test` (round trip, old save), `save_system_dialogue_test`.
 
 ## Tests
 

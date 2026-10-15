@@ -61,6 +61,10 @@ signal death_shown
 signal sat_down(seat: Seat)
 ## Ivo took an open door; the composition root carries the travel out.
 signal door_entered(door: Door)
+## Up at a Talkable, or its auto start; the dialogue director runs the talk.
+signal talk_started(talkable: Talkable)
+## A talk handed to a beat may go on: Ivo is free on the floor again (request_talk_resume).
+signal talk_resumed
 
 const GROUP := "player"
 
@@ -77,8 +81,8 @@ const AIR_ATTACK_CONTEXTS: Array[StringName] = [CTX_JUMP, CTX_FALL, CTX_POGO]
 const STILL_SPEED_EPSILON := 1.0
 ## Seconds after recall when a directionless dodge moves away from its source.
 const RECALL_ESCAPE_TIME := 0.6
-## Seconds an Up press waits for a door to come in reach ("Buffer it ~0.1 s", user, 2026-10-08).
-const DOOR_BUFFER := 0.1
+## Seconds an Up press waits for a door or a Talkable to come in reach ("Buffer it ~0.1 s", user, 2026-10-08).
+const UP_BUFFER := 0.1
 
 enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 
@@ -94,6 +98,7 @@ enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 @onready var _rider           : HelixRiderComponent = $HelixRider
 @onready var _sit             : SitComponent = $Sit
 @onready var _doors           : DoorComponent = $Doors
+@onready var _talks           : TalkComponent = $Talks
 @onready var _attack          : AttackComponent = $Attack
 @onready var _pogo            : PogoComponent = $Pogo
 @onready var _memorina        : MemorinaComponent = $Memorina
@@ -185,8 +190,14 @@ var _death_shown: bool = false
 var _sit_requested: bool = false
 ## Pending press to stand without triggering its action.
 var _stand_requested: bool = false
-## Seconds left for a pending up press to find a door; 0 is none.
-var _door_buffer: float = 0.0
+## Seconds left for a pending up press to find a door or a Talkable; 0 is none.
+var _up_buffer: float = 0.0
+## From `begin_talk` to `end_talk`, a beat included: the map stays refused and no other talk starts.
+var _in_talk: bool = false
+## The box is open and Ivo hears no input; false during a beat.
+var _listening: bool = false
+## A beat ended; the talk goes on once the start gates hold.
+var _resume_wanted: bool = false
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -220,7 +231,7 @@ func _ready() -> void:
 	_input.attack_pressed.connect(_as_move.bind(_attack.buffer_attack))
 	_input.draw_memorina_pressed.connect(_unless_seated.bind(_memorina.buffer_toggle))
 	_input.look_down_pressed.connect(func() -> void: _sit_requested = true)
-	_input.look_up_pressed.connect(_as_move.bind(func() -> void: _door_buffer = DOOR_BUFFER))
+	_input.look_up_pressed.connect(_as_move.bind(func() -> void: _up_buffer = UP_BUFFER))
 	_input.note_pressed.connect(_on_note_pressed)
 	_input.debug_learn_song_pressed.connect(_on_debug_learn_song_pressed)
 	_memorina.drawn.connect(_on_memorina_drawn)
@@ -284,7 +295,7 @@ func _process_motion(delta: float) -> void:
 		# A down press under water must not sit him on whatever bench the
 		# respawn puts him beside.
 		_sit_requested = false
-		_door_buffer = 0.0
+		_up_buffer = 0.0
 		_sink_motion(delta)
 		return
 	# On a helix stair jump, roll, attack, doors, benches and the Memorina are refused (architecture/walkable-helix-stair).
@@ -319,8 +330,10 @@ func _process_motion(delta: float) -> void:
 	if on_floor:
 		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
-	if not _try_door(on_floor, delta) and not _try_board(on_floor):
+	if not _try_door(on_floor) and not _try_talk(on_floor) and not _try_board(on_floor):
 		_try_climb()
+	# Every frame, whichever branch ran: a press spent above is already 0.
+	_up_buffer = maxf(_up_buffer - delta, 0.0)
 
 	_states.transition_to(_select_motion_state(on_floor))
 	_states.update(delta)
@@ -566,25 +579,16 @@ func _try_sit(on_floor: bool) -> void:
 
 # Up pressed takes a door in reach, under the same gates as a bench except a
 # held direction: walking up to a door and pressing Up is the gesture. A press
-# made just short of the door waits DOOR_BUFFER for it; a refused press is
-# spent. A door taken (or knocked) does not also grab a climbable.
-func _try_door(on_floor: bool, delta: float) -> bool:
-	if _door_buffer <= 0.0:
+# made just short of the door waits UP_BUFFER for it; a
+# refused press is spent. A door taken (or knocked) does not also grab a climbable.
+func _try_door(on_floor: bool) -> bool:
+	if _up_buffer <= 0.0:
 		return false
 	var door := _doors.reachable()
 	if door == null:
-		_door_buffer = maxf(_door_buffer - delta, 0.0)
 		return false
-	_door_buffer = 0.0
-	if not on_floor or is_rolling() or is_attacking() or is_in_knockback():
-		return false
-	if is_climbing() or is_wall_sliding() or is_memorina_drawn():
-		return false
-	if _staged_caller != null or _memorina.call_song != null:
-		return false
-	if _recall.is_armed() or _pending_recall != null:
-		return false
-	if Guardian.fight_at(get_tree(), global_position):
+	_up_buffer = 0.0
+	if not _free_for_up(on_floor):
 		return false
 	if door.is_open():
 		# Nothing else pressed this frame may act on the way out.
@@ -593,6 +597,47 @@ func _try_door(on_floor: bool, delta: float) -> bool:
 	else:
 		door.knock()
 	return true
+
+# With no door in reach, Up talks to a Talkable in reach, under the door's gates; a
+# Talkable's due auto start talks without a press. A refused auto start stays due,
+# so it fires once the gates allow; a refused press is spent. A talk waiting to
+# resume after its beat goes on under the same gates.
+func _try_talk(on_floor: bool) -> bool:
+	if _resume_wanted:
+		if _input.blocked or not _free_for_up(on_floor):
+			return false
+		_resume_wanted = false
+		_drop_buffers()
+		talk_resumed.emit()
+		return true
+	var talkable := _talks.auto_ready()
+	var by_press := talkable == null and _up_buffer > 0.0
+	if by_press:
+		talkable = _talks.reachable()
+	if talkable == null:
+		return false
+	if by_press:
+		_up_buffer = 0.0
+	# Blocked is the map's: a talk must not start, then unblock, under it.
+	if _in_talk or _input.blocked or not _free_for_up(on_floor):
+		return false
+	if not by_press:
+		talkable.take_auto()
+	_drop_buffers()
+	talk_started.emit(talkable)
+	return true
+
+# One gate list for doors and talks, so a moment refused for one is refused for the other.
+func _free_for_up(on_floor: bool) -> bool:
+	if not on_floor or is_rolling() or is_attacking() or is_in_knockback():
+		return false
+	if is_climbing() or is_wall_sliding() or is_memorina_drawn() or is_riding_stair():
+		return false
+	if _staged_caller != null or _memorina.call_song != null:
+		return false
+	if _recall.is_armed() or _pending_recall != null:
+		return false
+	return not Guardian.fight_at(get_tree(), global_position)
 
 # Movement, up, or any action press stands Ivo up.
 func _wants_to_stand() -> bool:
@@ -1072,12 +1117,12 @@ func teleport(point: Vector2) -> void:
 	_rider.release()
 	super(point)
 
-## On the floor, alive, not sinking, not climbing, with the Memorina sheathed.
+## On the floor, alive, not sinking, not climbing, not talking, with the Memorina sheathed.
 func can_open_map() -> bool:
 	return (is_on_floor() and not is_dead() and not _sinking and not is_climbing() and not is_riding_stair()
-			and not is_wall_sliding() and not is_memorina_drawn())
+			and not is_wall_sliding() and not is_memorina_drawn() and not _in_talk)
 
-## The map is open: Ivo stays in the world, hittable, but hears no input.
+## The map is open or a talk runs: Ivo stays in the world, hittable, but hears no input.
 func block_input() -> void:
 	_input.blocked = true
 	# A press buffered just before the open would otherwise act under the map.
@@ -1085,6 +1130,33 @@ func block_input() -> void:
 
 func unblock_input() -> void:
 	_input.blocked = false
+
+## A talk began or resumed: he listens, facing the speaker at `at`. The map is refused until `end_talk`, so the block is
+## the talk's.
+func begin_talk(at: Vector2) -> void:
+	_in_talk = true
+	_listening = true
+	block_input()
+	face_towards(signf(at.x - global_position.x))
+
+## A beat has the talk: he is free, and still in the talk.
+func pause_talk() -> void:
+	if _listening:
+		_listening = false
+		unblock_input()
+
+## The beat is over; `talk_resumed` follows once he is free on the floor.
+func request_talk_resume() -> void:
+	_resume_wanted = true
+
+func end_talk() -> void:
+	pause_talk()
+	_in_talk = false
+	_resume_wanted = false
+
+## From the talk's start to its end, a beat included.
+func is_talking() -> bool:
+	return _in_talk
 
 ## Puts him at `door` after a trip through its partner, facing its
 ## `arrive_facing`, with no press of the trip still pending.
@@ -1106,7 +1178,7 @@ func _drop_buffers() -> void:
 	_memorina.clear_buffer()
 	_sit_requested = false
 	_stand_requested = false
-	_door_buffer = 0.0
+	_up_buffer = 0.0
 
 ## Puts him on `seat`, sitting, without the rest that sitting down himself
 ## asks for: arrival at the bench after a death or a load.
@@ -1155,7 +1227,7 @@ func fall_out_of_world() -> void:
 func respawn() -> void:
 	assert(not is_dead(), "A corpse is not respawned")
 	_sit_requested = false
-	_door_buffer = 0.0
+	_up_buffer = 0.0
 	teleport(_safe_ground.last_safe_position())
 	velocity = Vector2.ZERO
 	_sinking = false

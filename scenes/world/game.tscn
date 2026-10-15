@@ -43,6 +43,9 @@
 [ext_resource type="Script" path="res://scenes/world/rooms/world_edges.gd" id="43_edges"]
 [ext_resource type="Script" path="res://scenes/ui/region_title/region_title_watcher.gd" id="44_titlewatch"]
 [ext_resource type="PackedScene" path="res://scenes/ui/region_title/region_title.tscn" id="45_title"]
+[ext_resource type="Script" path="res://scenes/world/dialogue/dialogue_director.gd" id="46_director"]
+[ext_resource type="Resource" path="res://resources/dialogue/dialogue_catalog.tres" id="47_dialogues"]
+[ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box/dialogue_box.tscn" id="48_box"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -112,6 +115,11 @@ subject = NodePath("../Player")
 
 [node name="RegionTitleWatcher" type="Node" parent="World"]
 script = ExtResource("44_titlewatch")
+
+[node name="DialogueDirector" type="Node" parent="World" node_paths=PackedStringArray("listener")]
+script = ExtResource("46_director")
+catalog = ExtResource("47_dialogues")
+listener = NodePath("../Player")
 
 [node name="Spawner" type="Node2D" parent="World" unique_id=1572119967]
 script = ExtResource("2_hqfqh")
@@ -203,6 +211,8 @@ texture = SubResource("ViewportTexture_foreground")
 
 [node name="GuardianCallHud" parent="CanvasLayer" unique_id=978754071 instance=ExtResource("17_callhud")]
 
+[node name="DialogueBox" parent="CanvasLayer" instance=ExtResource("48_box")]
+
 [node name="Fade" type="ColorRect" parent="CanvasLayer" unique_id=1302556381]
 unique_name_in_owner = true
 visible = false
@@ -286,3 +296,17 @@ layer = 2
 [connection signal="room_changed" from="." to="World/RegionWeather" method="on_room_changed"]
 [connection signal="room_changed" from="." to="World/RegionTitleWatcher" method="on_room_changed"]
 [connection signal="announced" from="World/RegionTitleWatcher" to="CanvasLayer/RegionTitle" method="show_title"]
+[connection signal="talk_started" from="World/Player" to="World/DialogueDirector" method="start"]
+[connection signal="hurt" from="World/Player" to="World/DialogueDirector" method="interrupt"]
+[connection signal="fell_into_hazard" from="World/Player" to="World/DialogueDirector" method="interrupt"]
+[connection signal="talk_began" from="World/DialogueDirector" to="World/Player" method="begin_talk"]
+[connection signal="talk_ended" from="World/DialogueDirector" to="World/Player" method="end_talk"]
+[connection signal="talk_paused" from="World/DialogueDirector" to="World/Player" method="pause_talk"]
+[connection signal="resume_wanted" from="World/DialogueDirector" to="World/Player" method="request_talk_resume"]
+[connection signal="talk_resumed" from="World/Player" to="World/DialogueDirector" method="resume"]
+[connection signal="box_placed" from="World/DialogueDirector" to="CanvasLayer/DialogueBox" method="place"]
+[connection signal="line_shown" from="World/DialogueDirector" to="CanvasLayer/DialogueBox" method="show_line"]
+[connection signal="choices_shown" from="World/DialogueDirector" to="CanvasLayer/DialogueBox" method="show_choices"]
+[connection signal="box_closed" from="World/DialogueDirector" to="CanvasLayer/DialogueBox" method="close"]
+[connection signal="advanced" from="CanvasLayer/DialogueBox" to="World/DialogueDirector" method="advance"]
+[connection signal="chosen" from="CanvasLayer/DialogueBox" to="World/DialogueDirector" method="choose"]

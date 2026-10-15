@@ -73,6 +73,8 @@ learned_songs = Array[bool]([true])
 	assert_int(data.met_guardians.size()).is_equal(Enums.Guardian.size())
 	assert_array(data.notebook_read).is_empty()
 	assert_array(data.announced_regions).is_empty()
+	assert_array(data.dialogues_heard).is_empty()
+	assert_bool(data.responses.is_empty()).is_true()
 
 ## Bench and death data must round-trip through serialization.
 func test_the_bench_and_the_deaths_round_trip_through_the_file() -> void:
@@ -144,3 +146,14 @@ func test_the_announced_regions_round_trip_through_the_file() -> void:
 	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	assert_array(loaded.announced_regions).contains_exactly([&"uid://road"])
+
+func test_the_dialogue_facts_round_trip_through_the_file() -> void:
+	var path := "user://test_round_trip_dialogue.tres"
+	var data := PlayerData.new()
+	data.dialogues_heard.append(&"trial_first")
+	data.responses[&"trial_keep"] = &"trial_keep_hold"
+	assert_int(ResourceSaver.save(data, path)).is_equal(OK)
+	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	assert_array(loaded.dialogues_heard).contains_exactly([&"trial_first"])
+	assert_dict(loaded.responses).is_equal({&"trial_keep": &"trial_keep_hold"})

@@ -224,6 +224,22 @@ func test_every_bench_has_a_name_in_the_translations() -> void:
 				problems.append("%s (%s) has no translated name" % [key, path])
 	assert_array(Array(problems)).is_empty()
 
+## A Talkable's set is in the dialogue catalog, so the catalog's validation covers every talk a room can start (systems/dialogue).
+func test_every_talkable_set_is_in_the_dialogue_catalog() -> void:
+	var legend := RoomLegend.load_default()
+	var catalog := load("res://resources/dialogue/dialogue_catalog.tres") as DialogueCatalog
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var result := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
+		for placed: Dictionary in result.map.entities:
+			if placed.symbol != "t":
+				continue
+			var talk: String = placed.params.get("talk", "")
+			var dialogue_set := load(talk) as DialogueSet if ResourceLoader.exists(talk) else null
+			if not catalog.has_set(dialogue_set):
+				problems.append("%s: talk %s is not in the dialogue catalog" % [path, talk])
+	assert_array(Array(problems)).is_empty()
+
 func test_a_placement_missing_a_required_param_is_refused() -> void:
 	var text := "[room]\norigin = 0, 0\ntileset = legacy\n\n[grid]\n..R..\n#####\n"
 	var result := RoomMapValidator.validate(text, RoomLegend.load_default(), "inline.room")

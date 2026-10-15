@@ -27,6 +27,10 @@ class_name PlayerData extends Resource
 @export var found_secrets: Array[StringName] = []
 ## Regions whose title has played, by region `SceneKey`; a death keeps them (SaveLedger.rewind).
 @export var announced_regions: Array[StringName] = []
+## Dialogue ids heard to their end; live data that a bench commits and a death forgets (systems/dialogue).
+@export var dialogues_heard: Array[StringName] = []
+## The choice id answered to each question, by ask id; asked again, the new answer replaces it. Live data like heard.
+@export var responses: Dictionary[StringName, StringName] = {}
 
 func _init() -> void:
 	migrate()

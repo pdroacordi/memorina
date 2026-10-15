@@ -176,3 +176,30 @@ func test_live_and_committed_announced_regions_share_nothing() -> void:
 	ledger.commit()
 	ledger.live.announced_regions.append(&"uid://road")
 	assert_array(ledger.committed.announced_regions).is_empty()
+
+## Heard and answered are live data: a death before a bench forgets them, a rest keeps them (systems/dialogue).
+func test_a_talk_since_the_bench_is_forgotten_by_a_death() -> void:
+	var ledger := _ledger()
+	ledger.live.dialogues_heard.append(&"trial_first")
+	ledger.live.responses[&"trial_keep"] = &"trial_keep_hold"
+	ledger.record_death("region", Vector2.ZERO)
+	assert_array(ledger.live.dialogues_heard).is_empty()
+	assert_bool(ledger.live.responses.is_empty()).is_true()
+
+func test_a_talk_a_bench_commits_survives_a_death() -> void:
+	var ledger := _ledger()
+	ledger.live.dialogues_heard.append(&"trial_first")
+	ledger.live.responses[&"trial_keep"] = &"trial_keep_let_go"
+	ledger.commit()
+	ledger.live.responses[&"trial_keep"] = &"trial_keep_hold"
+	ledger.record_death("region", Vector2.ZERO)
+	assert_array(ledger.live.dialogues_heard).contains_exactly([&"trial_first"])
+	assert_dict(ledger.live.responses).is_equal({&"trial_keep": &"trial_keep_let_go"})
+
+func test_live_and_committed_answers_share_nothing() -> void:
+	var ledger := _ledger()
+	ledger.commit()
+	ledger.live.dialogues_heard.append(&"trial_first")
+	ledger.live.responses[&"trial_keep"] = &"trial_keep_hold"
+	assert_array(ledger.committed.dialogues_heard).is_empty()
+	assert_bool(ledger.committed.responses.is_empty()).is_true()

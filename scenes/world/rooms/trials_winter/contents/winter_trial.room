@@ -15,6 +15,9 @@
 ;    the calm ground before it. Redoma played at the edge of the squall opens
 ;    a shelter; inside it Ivo walks in and plays Soltar, and the bridge falls
 ;    across the chasm. The other way round, the wind breaks Soltar.
+;
+; A talk (col 8, legend t): the dialogue fixture (systems/dialogue), a question with two
+;    answers and a second conversation whose line follows the answer.
 
 [room]
 origin = 0, -16
@@ -36,7 +39,7 @@ SS.......................................................................SS
 SS.......................................................................SS
 SS.......................................................................SS
 SS.......................................................................SS
-SS............................................W....D.....................SS
+SS......t.....................................W....D.....................SS
 ####################.........#######################..........#############
 ###############...##.........#######################..........#############
 ###############...##.........#######################..........#############
@@ -101,3 +104,4 @@ SS............................................W....D.....................SS
 [entities]
 46,15 = {"size": [352, 192], "direction": [-1, 0], "speed": 420, "profile": "res://resources/world/wind/squall_wind.tres"}
 51,15 = {"id": "wind_bridge", "length_cells": 11, "side": 1}
+8,15 = {"talk": "res://resources/dialogue/trials/trial_talk.tres"}

@@ -104,3 +104,17 @@ ITEM_SWORD,Sword,Espada
 ITEM_MEMORINA,Memorina,Memorina
 NOTEBOOK_ITEM_SWORD,"A plain sword. I wasn't made for it, but it serves.","Uma espada simples. Não fui feito para ela, mas ela serve."
 NOTEBOOK_ITEM_MEMORINA,"A pan flute patched by many hands. Each pipe is a different material, a different season.","Uma flauta remendada por muitas mãos. Cada tubo é de um material, de uma estação."
+SPEAKER_ELDER,Elder,Ancião
+SPEAKER_DAUGHTER,Daughter,Filha
+SPEAKER_MENTOR,Mentor,Mentor
+DIALOGUE_TRIAL_FIRST_01,"You found the trials. Few come this far.","Você achou as provações. Poucos chegam até aqui."
+DIALOGUE_TRIAL_FIRST_02,"Somewhere, the wind turns a page.","Em algum lugar, o vento vira uma página."
+DIALOGUE_TRIAL_FIRST_03,"If a memory hurts, do you keep it?","Se uma lembrança dói, você a guarda?"
+DIALOGUE_TRIAL_CHOICE_HOLD,I hold on to it.,Eu a seguro.
+DIALOGUE_TRIAL_CHOICE_LET_GO,I let it go.,Eu a deixo ir.
+DIALOGUE_TRIAL_REPLY_HOLD,Then hold it gently.,Então segure com cuidado.
+DIALOGUE_TRIAL_REPLY_LET_GO,Then let the wind carry it.,Então deixe o vento levá-la.
+DIALOGUE_TRIAL_FIRST_04,"Talk to me again, and see if I remember.",Fale comigo de novo e veja se eu lembro.
+DIALOGUE_TRIAL_AFTER_01,Back again? I have nothing new to say.,De volta? Não tenho nada novo a dizer.
+DIALOGUE_TRIAL_AFTER_01_V1,You held on to it. I remember.,Você a segurou. Eu lembro.
+DIALOGUE_TRIAL_AFTER_01_V2,You let it go. I remember.,Você a deixou ir. Eu lembro.

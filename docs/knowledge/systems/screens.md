@@ -4,9 +4,9 @@ type: system
 title: Screens: the menu system (pause, the notebook, the map and the title)
 status: active
 tags: [menu, pause, screens, ui, focus, theme, hold, i18n]
-related: [systems/map, systems/notebook, systems/region-title, architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/notebook-entries-are-derived-from-the-save, architecture/map-reveal-seen-cells-per-room, systems/input, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/time-scale-zero-stops-delta-particles-and-time, playtests/2026-10-02-pause-menu, playtests/2026-10-02-title-and-slots, bugs/a-click-during-a-leave-fade-still-reaches-the-menu-buttons, bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight]
+related: [systems/dialogue, systems/map, systems/notebook, systems/region-title, architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/notebook-entries-are-derived-from-the-save, architecture/map-reveal-seen-cells-per-room, systems/input, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/time-scale-zero-stops-delta-particles-and-time, playtests/2026-10-02-pause-menu, playtests/2026-10-02-title-and-slots, bugs/a-click-during-a-leave-fade-still-reaches-the-menu-buttons, bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight]
 created: 2026-10-02
-updated: 2026-10-14
+updated: 2026-10-15
 source_files:
   - scenes/ui/screens/screens.gd
   - scenes/ui/screens/screen_router.gd
@@ -48,6 +48,12 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
   - `World/Player.hurt` → `Screens.close_map`: any hit closes the map
 - `Game._ready` calls `Screens.set_map_subject(player)`. The map centres on Ivo and asks `Player.can_open_map()` before it opens.
 - `Game._ready` also calls `Screens.set_notebook_watcher(World/NotebookWatcher)`: the notebook opens on the newest unread entry the watcher announced.
+
+## Over a talk (`systems/dialogue`)
+
+- A talk is not a router screen: `DialogueBox` lives under `CanvasLayer`, INHERIT, and blocks Ivo through `Player.begin_talk` (`PlayerInput.blocked`, as the map does). The tree keeps running, so the pause and the notebook open over a talk; their hold stops the box and its typing.
+- The map is refused while talking (`Player.can_open_map()` is false), so the block has one owner at a time.
+- Opening the pause or the notebook takes GUI focus from the box; closing releases it, and the box grabs it back on `NOTIFICATION_UNPAUSED`.
 
 ## Deciding and applying
 

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="DialogueCatalog" format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="2_set"]
+[ext_resource type="Resource" path="res://resources/dialogue/trials/trial_talk.tres" id="3_trial"]
+
+[resource]
+script = ExtResource("1_catalog")
+sets = Array[ExtResource("2_set")]([ExtResource("3_trial")])

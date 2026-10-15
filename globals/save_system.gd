@@ -4,7 +4,7 @@ extends Node
 signal guardian_restored(guardian: Enums.Guardian)
 ## Emitted when a rest commit succeeds, including in-memory playtest saves.
 signal saved
-## A song, skill, item or guardian fact changed; the notebook recomputes its entries from the save.
+## A song, skill, item, guardian or dialogue fact changed; the notebook recomputes its entries from the save.
 signal progress_changed
 
 const PATH: String = "user://"
@@ -207,6 +207,26 @@ func is_region_announced(region_key: String) -> bool:
 func announce_region(region_key: String) -> void:
 	if not is_region_announced(region_key):
 		player_data.announced_regions.append(StringName(region_key))
+
+func is_dialogue_heard(dialogue_id: StringName) -> bool:
+	return player_data.dialogues_heard.has(dialogue_id)
+
+## Live only, like every gain: a bench commits it and a death forgets it (systems/dialogue).
+func mark_dialogue_heard(dialogue_id: StringName) -> void:
+	assert(dialogue_id != &"", "A dialogue needs an id")
+	if not is_dialogue_heard(dialogue_id):
+		player_data.dialogues_heard.append(dialogue_id)
+		progress_changed.emit()
+
+## The choice id answered to `ask_id`; empty when it was never asked.
+func response_to(ask_id: StringName) -> StringName:
+	return player_data.responses.get(ask_id, &"")
+
+## Live only, like heard; an answer to a question asked again replaces the old one.
+func record_response(ask_id: StringName, choice_id: StringName) -> void:
+	assert(ask_id != &"" and choice_id != &"", "A response needs an ask id and a choice id")
+	player_data.responses[ask_id] = choice_id
+	progress_changed.emit()
 
 func is_shortcut_resolved(shortcut_id: StringName) -> bool:
 	return shortcut_id in player_data.resolved_shortcuts

@@ -4,9 +4,9 @@ type: system
 title: Input: actions, gamepad layout, the three event readers and device glyphs
 status: active
 tags: [input, gamepad, glyphs, keybindings, menu, pause]
-related: [systems/map, systems/notebook, architecture/character-controller-input-split, architecture/pause-menu-worldfreeze-reuse, systems/screens, gotchas/a-stick-is-pressed-on-every-motion-event, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-menu-press-reaches-the-last-node-first, bugs/player-input-edge-state-goes-stale-across-a-pause-menu]
+related: [systems/dialogue, systems/map, systems/notebook, architecture/character-controller-input-split, architecture/pause-menu-worldfreeze-reuse, systems/screens, gotchas/a-stick-is-pressed-on-every-motion-event, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-menu-press-reaches-the-last-node-first, bugs/player-input-edge-state-goes-stale-across-a-pause-menu]
 created: 2026-10-02
-updated: 2026-10-06
+updated: 2026-10-15
 source_files:
   - scenes/characters/ivo/player_input.gd
   - scenes/ui/menu/menu_input.gd
@@ -48,8 +48,8 @@ Only these three nodes read `InputEvent`s; the `verify-gates` input scan exclude
 1. **`PlayerInput`** (pausable, a `CharacterController`): gameplay presses as signals, axes as properties.
    - `look_down_pressed` is an edge (`_down_held`): a stick reports pressed on every motion past its deadzone (`gotchas/a-stick-is-pressed-on-every-motion-event`).
    - `_jump_held` tracks the jump for the cut.
-   - **Resync.** On `NOTIFICATION_UNPAUSED` and `NOTIFICATION_ENABLED`, `resync(jump_held, down_held, up_held)` re-reads all three from `Input`: a jump released while it received no events emits `jump_canceled`, and down or up held through a menu or a door's fade is not a new press (`bugs/player-input-edge-state-goes-stale-across-a-pause-menu`). `look_up_pressed` is the up edge a door hears, read like `look_down_pressed` (`architecture/doors-and-interiors`).
-   - **`blocked`** (set by `Player.block_input` / `unblock_input` while the map is open): the node is DISABLED, so `_input` does not run, and `direction` and `look_direction` read 0. Clearing it re-enables the node, which resyncs. `Player.block_input` also drops the jump, roll, attack (including a combo press) and draw buffers and any pending sit or stand, so a press made just before the open never acts under the map.
+   - **Resync.** On `NOTIFICATION_UNPAUSED` and `NOTIFICATION_ENABLED`, `resync(jump_held, down_held, up_held)` re-reads all three from `Input`: a jump released while it received no events emits `jump_canceled`, and down or up held through a menu or a door's fade is not a new press (`bugs/player-input-edge-state-goes-stale-across-a-pause-menu`). `look_up_pressed` is the up edge a door or a Talkable hears, read like `look_down_pressed` (`architecture/doors-and-interiors`, `systems/dialogue`).
+   - **`blocked`** (set by `Player.block_input` / `unblock_input` while the map is open or a talk runs, `Player.begin_talk` / `end_talk`; the map is refused while talking, so one owner at a time): the node is DISABLED, so `_input` does not run, and `direction` and `look_direction` read 0. Clearing it re-enables the node, which resyncs. `Player.block_input` also drops the jump, roll, attack (including a combo press) and draw buffers and any pending sit or stand, so a press made just before the open never acts under the map.
 2. **`MenuInput`** (`scenes/ui/menu/menu_input.gd`, under the ALWAYS `Screens` root):
    - Emits at most one signal per event, in precedence `pause_pressed` > `notebook_pressed` > `map_pressed` > `zoom_pressed(direction)` > `back_pressed` (`ui_cancel`) > `page_pressed(direction)`. Esc is both `pause` and `ui_cancel`, so Esc is only `pause_pressed`.
    - `page_pressed` is the edge of `ui_left` / `ui_right` (`_left_held` / `_right_held`); the notebook turns its pages on it. `pan: Vector2` is polled from `Input.get_vector` over `ui_*`.
@@ -63,6 +63,8 @@ Only these three nodes read `InputEvent`s; the `verify-gates` input scan exclude
 The title has its own `MenuInput` (`scenes/ui/title/title.tscn`). Esc arrives as `pause_pressed` and pad B as `back_pressed`; the title treats both as back: they close a confirmation, then leave the slot screen. Nothing opens or quits on them.
 
 ## Focus navigation
+
+- **The dialogue box adds no reader** (`systems/dialogue`): a text-less `ContinueArea` Button and one Button per choice take focus, and a Button acts on the `ui_accept` release after a press. Z and pad A are `ui_accept`, so they type, advance and choose; a release with no press (Z held into an auto start) does nothing, and the press that closes a talk never reaches the disabled `PlayerInput` (`player_talk_test`, through `Input.parse_input_event`).
 
 - The engine's `ui_*` focus navigation moves once per stick tilt through `Input.parse_input_event` (measured in 4.7.2, `gotchas/gui-focus-moves-once-per-stick-tilt`), so menus keep the stick on `ui_up` / `ui_down`.
 - `_input` reaches the last node in the tree first. `ScreenLayer` stays after `World` in `game.tscn`, so `MenuInput` sees a press before `PlayerInput` (`gotchas/a-menu-press-reaches-the-last-node-first`).

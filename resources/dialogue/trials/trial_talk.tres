@@ -1,0 +1,107 @@
+[gd_resource type="Resource" script_class="DialogueSet" format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="1_set"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="2_dialogue"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="3_line"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_choice.gd" id="4_choice"]
+[ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="5_variant"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="6_fact"]
+[ext_resource type="Script" path="res://resources/dialogue/speaker.gd" id="7_speaker"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/elder.tres" id="8_elder"]
+
+[sub_resource type="Resource" id="stranger"]
+script = ExtResource("7_speaker")
+id = &"trial_stranger"
+
+[sub_resource type="Resource" id="heard_first"]
+script = ExtResource("6_fact")
+kind = 7
+id = &"trial_first"
+
+[sub_resource type="Resource" id="chose_hold"]
+script = ExtResource("6_fact")
+kind = 8
+id = &"trial_keep_hold"
+
+[sub_resource type="Resource" id="chose_let_go"]
+script = ExtResource("6_fact")
+kind = 8
+id = &"trial_keep_let_go"
+
+[sub_resource type="Resource" id="variant_hold"]
+script = ExtResource("5_variant")
+when = Array[ExtResource("6_fact")]([SubResource("chose_hold")])
+text_key = "DIALOGUE_TRIAL_AFTER_01_V1"
+
+[sub_resource type="Resource" id="variant_let_go"]
+script = ExtResource("5_variant")
+when = Array[ExtResource("6_fact")]([SubResource("chose_let_go")])
+text_key = "DIALOGUE_TRIAL_AFTER_01_V2"
+
+[sub_resource type="Resource" id="reply_hold"]
+script = ExtResource("3_line")
+speaker = ExtResource("8_elder")
+text_key = "DIALOGUE_TRIAL_REPLY_HOLD"
+
+[sub_resource type="Resource" id="reply_let_go"]
+script = ExtResource("3_line")
+speaker = ExtResource("8_elder")
+text_key = "DIALOGUE_TRIAL_REPLY_LET_GO"
+
+[sub_resource type="Resource" id="choice_hold"]
+script = ExtResource("4_choice")
+id = &"trial_keep_hold"
+text_key = "DIALOGUE_TRIAL_CHOICE_HOLD"
+tone = 1
+reply = Array[ExtResource("3_line")]([SubResource("reply_hold")])
+
+[sub_resource type="Resource" id="choice_let_go"]
+script = ExtResource("4_choice")
+id = &"trial_keep_let_go"
+text_key = "DIALOGUE_TRIAL_CHOICE_LET_GO"
+tone = 2
+reply = Array[ExtResource("3_line")]([SubResource("reply_let_go")])
+
+[sub_resource type="Resource" id="first_01"]
+script = ExtResource("3_line")
+speaker = ExtResource("8_elder")
+text_key = "DIALOGUE_TRIAL_FIRST_01"
+
+[sub_resource type="Resource" id="first_02"]
+script = ExtResource("3_line")
+speaker = SubResource("stranger")
+text_key = "DIALOGUE_TRIAL_FIRST_02"
+
+[sub_resource type="Resource" id="first_03"]
+script = ExtResource("3_line")
+speaker = ExtResource("8_elder")
+text_key = "DIALOGUE_TRIAL_FIRST_03"
+ask_id = &"trial_keep"
+choices = Array[ExtResource("4_choice")]([SubResource("choice_hold"), SubResource("choice_let_go")])
+
+[sub_resource type="Resource" id="first_04"]
+script = ExtResource("3_line")
+speaker = ExtResource("8_elder")
+text_key = "DIALOGUE_TRIAL_FIRST_04"
+
+[sub_resource type="Resource" id="after_01"]
+script = ExtResource("3_line")
+speaker = ExtResource("8_elder")
+text_key = "DIALOGUE_TRIAL_AFTER_01"
+variants = Array[ExtResource("5_variant")]([SubResource("variant_hold"), SubResource("variant_let_go")])
+
+[sub_resource type="Resource" id="trial_first"]
+script = ExtResource("2_dialogue")
+id = &"trial_first"
+once = true
+lines = Array[ExtResource("3_line")]([SubResource("first_01"), SubResource("first_02"), SubResource("first_03"), SubResource("first_04")])
+
+[sub_resource type="Resource" id="trial_after"]
+script = ExtResource("2_dialogue")
+id = &"trial_after"
+when = Array[ExtResource("6_fact")]([SubResource("heard_first")])
+lines = Array[ExtResource("3_line")]([SubResource("after_01")])
+
+[resource]
+script = ExtResource("1_set")
+dialogues = Array[ExtResource("2_dialogue")]([SubResource("trial_first"), SubResource("trial_after")])

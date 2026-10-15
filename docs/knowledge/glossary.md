@@ -6,7 +6,7 @@ status: active
 tags: [glossary, i18n, naming]
 related: []
 created: 2026-10-02
-updated: 2026-10-06
+updated: 2026-10-15
 source_files: []
 ---
 
@@ -119,6 +119,14 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | parte da sala vista (célula do mapa) | `MapGrid` (64 px cells), `PlayerData.map_seen`, revealed by `MapRevealer` |
 | contorno do mapa (área vista, contornada) | `MapOutline` (`fill_runs`, `edges`, `notches`, `ink`) |
 | Ivo bloqueado (mapa aberto, o mundo segue) | `Screens.BLOCKING`, `Player.block_input` / `unblock_input`, `PlayerInput.blocked` |
+| diálogo, conversa | `Dialogue` (one conversation), `DialogueSet` (one talker's), `DialogueCatalog`, `DialogueRunner`, `DialogueDirector`, `DialogueBox` (`systems/dialogue`) |
+| fala (linha de diálogo), variação | `DialogueLine`, `LineVariant` |
+| quem fala; ancião, filha, mentor | `Speaker`; `SPEAKER_ELDER`, `SPEAKER_DAUGHTER`, `SPEAKER_MENTOR` (role names; the mentor stays unnamed) |
+| resposta, escolha (pergunta) | `DialogueChoice` (`id`, `tone`), `DialogueLine.ask_id`, `PlayerData.responses` |
+| segurar / soltar (o tom de uma resposta) | `DialogueChoice.Tone.HOLD_ON` / `LET_GO` |
+| acumulado silencioso (01 §9) | `DialogueTally.count` (derived, never stored) |
+| ouvido (diálogo já dito) | `PlayerData.dialogues_heard`, `SaveFact.Kind.DIALOGUE_HEARD` |
+| quem conversa (lugar de conversa) | `Talkable` (legend `t`), `TalkComponent`; a scripted beat after a line is a `DialogueBeat` (`cue`) |
 | parar tudo atrás do menu (menu hold) | `WorldFreeze.hold()` / `release()` / `is_held()` (scale 0); a performance uses `freeze()` / `thaw()` (scale 1) |
 
 | espaço de salvamento (slot) | `SaveSlots` (`save_N.tres` / `save_debug_N.tres`), `SaveSystem.begin_slot`, `read_slots` |
@@ -163,3 +171,4 @@ someone's memory of the project is exactly what causes an accidental regression 
 | `PauseInput` / `PauseMenu.opened` → `WorldFreeze.freeze` (the first pause-menu plan, never built) | replaced 2026-10-02 by one `MenuInput`, the `ScreenRouter` and `Screens.hold_requested` → `WorldFreeze.hold` |
 | `MemorinaVoice.note_finished` starting the performance | removed 2026-10-02: a performance starts from `Player._tick_pending_performance` on the pausable clock |
 | `user://save.tres` / `save_debug.tres` (one save) | replaced 2026-10-06 by three slots; `SaveSlots.adopt_legacy` moves the old file into slot 1 once |
+| `Player.DOOR_BUFFER`, `_door_buffer` (the Up press waiting for a door) | renamed 2026-10-15 (STORY-08) to `UP_BUFFER`, `_up_buffer`: the same press waits for a door or a Talkable |

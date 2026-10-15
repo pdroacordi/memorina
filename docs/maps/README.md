@@ -212,6 +212,7 @@ else in the code knows what a character means.
 | `$` | `[grid]` | entity | - | - | content | A reward slot, standing on this cell: a place the layout promises a reward. Needs a slot_id unique across every map; kind 0 COLLECTIBLE (STORY-06) or 1 CACHE (LIFE-04, undecided). Invisible in release, a small diamond in debug builds; no gameplay until STORY-06 or LIFE-04 fills it. |
 | `n` | `[grid]` | entity | - | - | - | Deep snow that breaks a fall: a zone standing on this cell, width_cells wide (centred) and height_cells tall, where a landing is never a hard landing. Keep it 2 cells or more over the highest floor under it, and put the drift prop over it: the zone draws nothing. |
 | `g` | `[grid]` | entity | - | - | gate | A floor grate in this cell and the three east of it, one cell deep and flush with the floor: solid until the save holds requires (a SaveFact .tres path), then gone, leaving the hole. Keep the four cells air in the grid; the hatch in village_gate_east's road over caldera_sun_stair (WORLD-35). |
+| `t` | `[grid]` | entity | - | - | content | A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Zone width_cells wide (default 2, centred) and height_cells tall (default 2); presence (0..1) hides it below that region baseline, like its villager. Put it beside the villager prop, never on it: a prop carries no gameplay; speaker_offset (px along x from this cell's centre to the villager) is where Ivo turns to face. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -471,6 +472,21 @@ Scene `res://scenes/world/interactables/fact_barrier/fact_grate.tscn`, anchored 
 | `id` | String | none - names the node so other entities can link to it |
 | `requires` | SaveFact | **required** |
 | `art` | Texture2D | `null` |
+
+#### `t` - Talkable
+
+Scene `res://scenes/world/interactables/talkable/talkable.tscn`, anchored at its cell's bottom centre (standing on the cell below). A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Zone width_cells wide (default 2, centred) and height_cells tall (default 2); presence (0..1) hides it below that region baseline, like its villager. Put it beside the villager prop, never on it: a prop carries no gameplay; speaker_offset (px along x from this cell's centre to the villager) is where Ivo turns to face.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `talk` | DialogueSet | **required** |
+| `auto_start` | bool | `false` |
+| `presence` | float | `0.0` |
+| `width_cells` | int | `2` |
+| `height_cells` | int | `2` |
+| `auto_delay` | float | `0.4` |
+| `speaker_offset` | float | `0.0` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach
