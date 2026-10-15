@@ -87,6 +87,10 @@ Six timelines in `tools/playtest/scripts/` (locale en, keyboard: Up, Z, arrows).
 - `bugs/a-late-held-return-shows-the-daughter-away-from-the-guitar-she-plays`: AtGuitar (gift, Try again, return unheard) ranks first (`opening_test`).
 - `bugs/look-at-the-painting-turns-ivo-the-way-he-already-faces`: the talk zone moved between the elder and the painting (`c_03`, `c_05`, `c_06`).
 
+## Rerun for STORY-10 (2026-10-15)
+
+The `a_` and `b_` screenshots were retaken with the redrawn, animated guitar (`playtests/2026-10-15-story10-guitar`). Nothing else in either run changed.
+
 ## What screenshots cannot show
 
 - Sound: the guitar strings, the muted thump, the hums and the flat note are synthesized placeholders. The mix and timing want an ear.

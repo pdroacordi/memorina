@@ -31,14 +31,42 @@
    "screenshot": "01_guitar"
   },
   {
+   "t": 2.25,
+   "screenshot": "m_hold_0"
+  },
+  {
    "t": 2.4,
    "key": "Right",
    "pressed": true
   },
   {
+   "t": 2.42,
+   "screenshot": "m_strum_0"
+  },
+  {
+   "t": 2.462,
+   "screenshot": "m_strum_1"
+  },
+  {
    "t": 2.48,
    "key": "Right",
    "pressed": false
+  },
+  {
+   "t": 2.503,
+   "screenshot": "m_strum_2"
+  },
+  {
+   "t": 2.545,
+   "screenshot": "m_strum_3"
+  },
+  {
+   "t": 2.587,
+   "screenshot": "m_strum_4"
+  },
+  {
+   "t": 2.628,
+   "screenshot": "m_strum_5"
   },
   {
    "t": 2.8,

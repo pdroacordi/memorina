@@ -6,7 +6,7 @@ status: active
 tags: [animation, animation-tree, resolver, driver]
 related: [architecture/animation-driver-resolver-pattern, gotchas/animationtree-reset-track-overwrites-script-writes, architecture/ivo-at-2x]
 created: 2026-10-02
-updated: 2026-10-14
+updated: 2026-10-15
 source_files:
   - scenes/characters/animation_resolver.gd
   - scenes/characters/character.gd
@@ -37,6 +37,7 @@ Ivo is drawn at the world's 2x density, 29 art px (58 px) tall, by Codex and Pix
 - **The body is unchanged:** capsule radius 11, height 54, now centred at x 0 (was -1). Hair is not body, so every authored jump clears the same gaps (`ivo_sheet_test` pins `MapGuide.ivo_reach()`).
 - **Attacks are key poses, smears and holds** (`tools/art/build_ivo_attacks.py`), not generated in-betweens; the running attack is its upper body over the run cycle's legs.
 - **The Hitbox matches the swing the art shows.** Each attack clip keys the capsule's position and scale to the box its active frames cover; reaches are in `architecture/ivo-at-2x`; enemies and guardians were retuned to them in CORE-09 and again for the longer reach in CORE-11 (`systems/guardians`, "Reach against Ivo's sword"), and `tests/scenes/combat/combat_reach_test.gd` measures the keyed boxes.
+- **Held-prop clips** (STORY-10): `guitar_hold` and `guitar_strum` share one six-frame sheet, `ivo_guitar.png`. The hold loops it at 6 fps; the strum is a one-shot at 12 fps, held by `AnimationDriver.holding()` and restarted by `request_replay()` on each note. The pose comes from the story beat (`systems/story`, "Poses"). A sheet replaced on disk needs `--import` before a run (`gotchas/a-replaced-sheet-plays-the-old-import-until-reimported`).
 - `tests/scenes/characters/ivo/ivo_sheet_test.gd` holds the contract: sheet width = hframes x 128, frame keys below hframes, texture and hframes keyed before frame, clip lengths, feet on row 95 in every grounded frame but the flight frames listed in `FLIGHT` (run 3, 4 and 7, the running attack 3, 4 and 7, 1-3 art px up), every clip's body within 2 art px of the flip axis (attacks measured on the feet or torso without the steel; the running attack on the torso, its legs being the run's), an attack's body moving at most 2 art px between frames, wall clips at the capsule edge instead, no frame touching its border, every colour from `tools/art/sources/ivo/ivo_palette.png`, and every sword clip's keyed Hitbox equal (within 1 px) to the box its hit-window frames' steel covers (`test_every_swing_reaches_exactly_as_far_as_its_drawn_steel`: a forward swing from x 0 to the steel's front, as high as the steel in front of x 0; the pogo as wide as its steel, from the feet to the point).
 
 The user's decisions, in their words:

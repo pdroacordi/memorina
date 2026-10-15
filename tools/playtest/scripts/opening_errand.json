@@ -250,9 +250,33 @@
    "pressed": true
   },
   {
+   "t": 16.52,
+   "screenshot": "m_strum_0"
+  },
+  {
+   "t": 16.562,
+   "screenshot": "m_strum_1"
+  },
+  {
    "t": 16.58,
    "key": "Right",
    "pressed": false
+  },
+  {
+   "t": 16.603,
+   "screenshot": "m_strum_2"
+  },
+  {
+   "t": 16.645,
+   "screenshot": "m_strum_3"
+  },
+  {
+   "t": 16.687,
+   "screenshot": "m_strum_4"
+  },
+  {
+   "t": 16.728,
+   "screenshot": "m_strum_5"
   },
   {
    "t": 16.9,
@@ -287,6 +311,30 @@
   {
    "t": 18.0,
    "screenshot": "10_one_note_earlier"
+  },
+  {
+   "t": 18.4,
+   "screenshot": "m_hold_0"
+  },
+  {
+   "t": 18.567,
+   "screenshot": "m_hold_1"
+  },
+  {
+   "t": 18.733,
+   "screenshot": "m_hold_2"
+  },
+  {
+   "t": 18.9,
+   "screenshot": "m_hold_3"
+  },
+  {
+   "t": 19.067,
+   "screenshot": "m_hold_4"
+  },
+  {
+   "t": 19.233,
+   "screenshot": "m_hold_5"
   },
   {
    "t": 20.4,

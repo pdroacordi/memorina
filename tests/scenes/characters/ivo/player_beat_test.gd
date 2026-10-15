@@ -83,16 +83,43 @@ func test_notes_reach_the_beat_and_nothing_else_moves_him() -> void:
 	assert_bool(_ivo.is_jumping()).is_false()
 	assert_float(absf(_ivo.velocity.x)).is_less(1.0)
 
+## The hold loops, so he is never still with the guitar (STORY-10); a note strums once, a second note restarts it.
 func test_the_guitar_pose_holds_and_strums_on_a_note() -> void:
 	await _guitar()
 	await _frames(2)
 	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.GUITAR_HOLD))
+	var sprite := _ivo.get_node("Sprite2D") as Sprite2D
+	var seen := {}
+	for i: int in 40:
+		await _frames(1)
+		seen[sprite.frame] = true
+	assert_int(seen.size()).is_greater(2)
 	_action(&"note_up", true)
 	await _frames(2)
 	_action(&"note_up", false)
 	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.GUITAR_STRUM))
-	await _frames(30)
+	await _frames(18)
+	assert_int(sprite.frame).is_greater(1)
+	_action(&"note_up", true)
+	await _frames(2)
+	_action(&"note_up", false)
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.GUITAR_STRUM))
+	assert_int(sprite.frame).is_less_equal(1)
+	await _frames(40)
 	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.GUITAR_HOLD))
+
+## The hold is the strum's loop at half its speed (STORY-10, user 2026-10-15: "transform it into animation, not static").
+func test_the_guitar_clips_share_the_six_frame_loop() -> void:
+	var player := _ivo.get_node("AnimationPlayer") as AnimationPlayer
+	var hold := player.get_animation(PlayerAnimationResolver.GUITAR_HOLD)
+	var strum := player.get_animation(PlayerAnimationResolver.GUITAR_STRUM)
+	assert_int(hold.loop_mode).is_equal(Animation.LOOP_LINEAR)
+	assert_int(strum.loop_mode).is_equal(Animation.LOOP_NONE)
+	assert_float(hold.length).is_equal_approx(1.0, 0.001)
+	assert_float(strum.length).is_equal_approx(0.5, 0.001)
+	for clip: Animation in [hold, strum]:
+		var frames := clip.find_track(^"Sprite2D:frame", Animation.TYPE_VALUE)
+		assert_int(clip.track_get_key_count(frames)).is_equal(6)
 
 func test_the_memorina_pose_shows_without_drawing_it() -> void:
 	await _land()
