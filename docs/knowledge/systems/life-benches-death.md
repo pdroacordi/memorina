@@ -74,6 +74,10 @@ Plan and options: `architecture/save-slots-and-the-boot-swap`.
 - `SaveSystem.progress_changed` is emitted by `learn_song`, `unlock_skill`, `set_item_owned`, `restore_guardian` and `meet_guardian`. `mark_notebook_read` emits nothing. The notebook derives its entries from these facts (`systems/notebook`).
 - Tests: `save_ledger_test` (read ids and announced regions survive a death, once each; a met guardian is forgotten), `player_data_test` (old saves, round trip), `save_system_notebook_test`.
 
+## Items lying in the world (STORY-02, built 2026-10-15)
+
+- An `ItemPickup` (the sword on the farmhouse table) shows only while `owned_items` lacks its item. Taking it is `SaveSystem.set_item_owned(item, true)`, a live gain: a death before a bench forgets it, and the rebuilt world shows the item where it was left (`systems/pickups`).
+
 ## Dialogue facts (STORY-08, built 2026-10-15)
 
 - `PlayerData.dialogues_heard` (dialogue ids heard to their end) and `PlayerData.responses` (ask id to choice id) are live data like a learned song: a bench commits them, a death before one forgets them. `SaveLedger` needed no change. A grant a talk gave rewinds with them, so the giver gives it again (`systems/dialogue`).

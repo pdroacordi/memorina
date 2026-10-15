@@ -25,6 +25,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/soft_landing/soft_landing.tscn" id="i26_soft"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/fact_barrier/fact_grate.tscn" id="i27_grate"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/talkable/talkable.tscn" id="i28_talk"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/item_pickup/item_pickup.tscn" id="i29_pickup"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -348,6 +349,17 @@ anchor = 0
 required_params = PackedStringArray("talk")
 description = "A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Zone width_cells wide (default 2, centred) and height_cells tall (default 2); presence (0..1) hides it below that region baseline, like its villager. Put it beside the villager prop, never on it: a prop carries no gameplay; speaker_offset (px along x from this cell's centre to the villager) is where Ivo turns to face."
 
+[sub_resource type="Resource" id="item_pickup"]
+script = ExtResource("2_entry")
+symbol = "i"
+kind = 3
+reach_role = 1
+ground = 0
+scene = ExtResource("i29_pickup")
+anchor = 0
+required_params = PackedStringArray("item", "texture")
+description = "An item lying where it was left, standing on this cell: up in reach takes it into the save (item, an Enums.PlayerItem: 0 the sword). It shows only while the save does not own the item, so a death before a bench puts it back. texture is the item lying down (a .png path); rest_offset ([x, y] px from this cell's bottom centre to the item's bottom centre) lays it on a table top; the reach is width_cells wide (default 2, centred) and height_cells tall (default 2)."
+
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing"), SubResource("grate"), SubResource("talkable")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing"), SubResource("grate"), SubResource("talkable"), SubResource("item_pickup")])

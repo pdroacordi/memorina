@@ -66,6 +66,11 @@ func _ready() -> void:
 		SaveSystem.restore_guardian(int(guardian_id) as Enums.Guardian)
 	for entry_id: Variant in timeline.get("notebook_read", []):
 		SaveSystem.mark_notebook_read(StringName(entry_id))
+	# Exactly these items: a debug new game owns the sword and the Memorina, so this is how a run starts without them.
+	if timeline.has("owned_items"):
+		var owned: Array = timeline["owned_items"]
+		for item: int in Enums.PlayerItem.values():
+			SaveSystem.set_item_owned(item as Enums.PlayerItem, owned.has(item) or owned.has(float(item)))
 	SaveSystem.commit()
 
 	var scene_path: String = timeline.get("scene", "res://scenes/world/game.tscn")

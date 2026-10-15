@@ -81,7 +81,7 @@ const AIR_ATTACK_CONTEXTS: Array[StringName] = [CTX_JUMP, CTX_FALL, CTX_POGO]
 const STILL_SPEED_EPSILON := 1.0
 ## Seconds after recall when a directionless dodge moves away from its source.
 const RECALL_ESCAPE_TIME := 0.6
-## Seconds an Up press waits for a door or a Talkable to come in reach ("Buffer it ~0.1 s", user, 2026-10-08).
+## Seconds an Up press waits for a door, a Talkable or an item to come in reach ("Buffer it ~0.1 s", user, 2026-10-08).
 const UP_BUFFER := 0.1
 
 enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
@@ -99,6 +99,7 @@ enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 @onready var _sit             : SitComponent = $Sit
 @onready var _doors           : DoorComponent = $Doors
 @onready var _talks           : TalkComponent = $Talks
+@onready var _pickups         : PickupComponent = $Pickups
 @onready var _attack          : AttackComponent = $Attack
 @onready var _pogo            : PogoComponent = $Pogo
 @onready var _memorina        : MemorinaComponent = $Memorina
@@ -190,7 +191,7 @@ var _death_shown: bool = false
 var _sit_requested: bool = false
 ## Pending press to stand without triggering its action.
 var _stand_requested: bool = false
-## Seconds left for a pending up press to find a door or a Talkable; 0 is none.
+## Seconds left for a pending up press to find a door, a Talkable or an item; 0 is none.
 var _up_buffer: float = 0.0
 ## From `begin_talk` to `end_talk`, a beat included: the map stays refused and no other talk starts.
 var _in_talk: bool = false
@@ -330,7 +331,7 @@ func _process_motion(delta: float) -> void:
 	if on_floor:
 		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
-	if not _try_door(on_floor) and not _try_talk(on_floor) and not _try_board(on_floor):
+	if not _try_door(on_floor) and not _try_talk(on_floor) and not _try_pickup(on_floor) and not _try_board(on_floor):
 		_try_climb()
 	# Every frame, whichever branch ran: a press spent above is already 0.
 	_up_buffer = maxf(_up_buffer - delta, 0.0)
@@ -627,7 +628,22 @@ func _try_talk(on_floor: bool) -> bool:
 	talk_started.emit(talkable)
 	return true
 
-# One gate list for doors and talks, so a moment refused for one is refused for the other.
+# With no door or talk in reach, Up takes an item lying in reach (systems/pickups), under
+# the same gates; a refused press is spent.
+func _try_pickup(on_floor: bool) -> bool:
+	if _up_buffer <= 0.0:
+		return false
+	var pickup := _pickups.reachable()
+	if pickup == null:
+		return false
+	_up_buffer = 0.0
+	if not _free_for_up(on_floor):
+		return false
+	_drop_buffers()
+	pickup.take()
+	return true
+
+# One gate list for doors, talks and pickups, so a moment refused for one is refused for all.
 func _free_for_up(on_floor: bool) -> bool:
 	if not on_floor or is_rolling() or is_attacking() or is_in_knockback():
 		return false

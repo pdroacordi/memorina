@@ -114,3 +114,4 @@ res://scenes/world/interactables/fact_barrier/fact_grate.tscn
 res://scenes/world/interactables/reward_slot/reward_slot.tscn
 res://scenes/world/interactables/talkable/talkable.tscn
 res://scenes/ui/dialogue_box/dialogue_box.tscn
+res://scenes/world/interactables/item_pickup/item_pickup.tscn

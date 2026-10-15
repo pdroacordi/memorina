@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/interactables/item_pickup/item_pickup.gd" id="1_pickup"]
+[ext_resource type="PackedScene" uid="uid://ckeyglyph001" path="res://scenes/ui/key_glyph/key_glyph.tscn" id="2_glyph"]
+
+[node name="ItemPickup" type="Area2D"]
+script = ExtResource("1_pickup")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+
+[node name="Prompt" parent="." instance=ExtResource("2_glyph")]
+visible = false
+offset_left = -16.0
+offset_top = -104.0
+offset_right = 16.0
+offset_bottom = -72.0

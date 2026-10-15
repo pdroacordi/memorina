@@ -7,5 +7,6 @@
 	"tavern_cellar": "barrel_stack:h26,wine_shelf:h28,ham_rail:w24,sack_pile:h11,crate:h9,lantern:h9,vent:w14,wall_roots:w50",
 	"empty_house": "dusty_bookshelf:h31,cold_fireplace:w30,empty_frame:h13,sheeted_armchair:h17,sheeted_stool:h9,boarded_window:h18,set_table:h15,chair_old_a:h17,fallen_chair:h10,toy_horse:h8,sheeted_cabinet:h20",
 	"notes_house": "fireplace:w30,cupboard_notes:h32,table:h14,chair_a:h17,chair_b:h17,firewood:h7,wall_shelf:w30,window:h17,dog_bowl:w7,bed:w32,coat_stand:h30,broom:h22,chest:h10,peg_rail:w20,blankets:h10,yarn_basket:h7,plant:h12,mirror:h10,rug:w26",
-	"mill_house": "millstones:h32,gear:h30,axle:w30,hook_rope:h20,flour_sack_a:h15,flour_sack_b:h14,grain_sack:h10,flour_bin:h9,wheat_sheaf:h14,lantern:h14,shelf:h32,workbench:h15,peg_rail:w34,spare_millstone:h22,wheelbarrow:h16,empty_sacks:h8,scale:h14,broom:h22,bucket:h9"
+	"mill_house": "millstones:h32,gear:h30,axle:w30,hook_rope:h20,flour_sack_a:h15,flour_sack_b:h14,grain_sack:h10,flour_bin:h9,wheat_sheaf:h14,lantern:h14,shelf:h32,workbench:h15,peg_rail:w34,spare_millstone:h22,wheelbarrow:h16,empty_sacks:h8,scale:h14,broom:h22,bucket:h9",
+	"farmhouse": "meal_table:w52,chair_pushed:h17,stool:h9,wall_shelf:w30,window:h17,broom:h22,turnip_basket:h9,bucket:h10"
 }

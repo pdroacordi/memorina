@@ -66,6 +66,7 @@
 [ext_resource type="Script" path="res://scenes/characters/components/sit_component.gd" id="71_sitco"]
 [ext_resource type="Script" path="res://scenes/characters/components/door_component.gd" id="72_doorco"]
 [ext_resource type="Script" path="res://scenes/characters/components/talk_component.gd" id="74_talkco"]
+[ext_resource type="Script" path="res://scenes/characters/components/pickup_component.gd" id="75_pickco"]
 [ext_resource type="Script" path="res://scenes/characters/components/helix_rider_component.gd" id="73_helixrider"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_climbsensor"]
@@ -2240,6 +2241,9 @@ script = ExtResource("72_doorco")
 
 [node name="Talks" type="Node" parent="."]
 script = ExtResource("74_talkco")
+
+[node name="Pickups" type="Node" parent="."]
+script = ExtResource("75_pickco")
 
 [node name="DoorSensor" type="Area2D" parent="."]
 collision_layer = 0

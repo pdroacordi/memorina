@@ -119,7 +119,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | ID | Item | Design | Status | Needs | Updated | Notes |
 |---|---|---|:-:|---|---|---|
 | STORY-01 | Lesson cinematic | 02 §7.2 | `[x]` | | 2026-10-02 | |
-| STORY-02 | Pickups: the world grants the sword and the Memorina | 01 §5 | `[ ]` | | 2026-10-02 | Debug builds start owning both. |
+| STORY-02 | Pickups: the world grants the sword and the Memorina | 01 §5 | `[x]` | | 2026-10-15 | Debug builds start owning both (a playtest timeline sets `"owned_items"`). The sword lies on the farmhouse table, "where someone set it down to eat" (script draft 2, "Approve draft 2 (Recommended)", user, 2026-10-15); Up takes it (`ItemPickup`, legend `i`). The Memorina is no pickup: the mentor's talk grants it (STORY-03). The farmhouse dressed from one Codex sheet. `systems/pickups`, `playtests/2026-10-15-story02-sword-pickup`. |
 | STORY-03 | Mentor and the opening | 01 §4, §8 | `[?]` | | 2026-10-06 | Mentor's name is open (01 §10). Notebook: two mentor entries, a short one after the Memorina is given and a real one at his restoration (the user, 2026-10-02); the Frost Guardian is not the mentor. |
 | STORY-04 | Bearer fragments, one per tube | 01 §6 | `[ ]` | UI-03 | 2026-10-02 | |
 | STORY-05 | Five playable flashbacks | 01 §9.3 | `[ ]` | | 2026-10-02 | |

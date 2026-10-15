@@ -1,0 +1,27 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 8.0,
+ "locale": "en",
+ "owned_items": [],
+ "player_position": [12080, 12286],
+ "steps": [
+  {"t": 1.5, "screenshot": "00_farmhouse_no_sword"},
+  {"t": 1.6, "action": "attack", "pressed": true},
+  {"t": 1.7, "action": "attack", "pressed": false},
+  {"t": 1.9, "screenshot": "01_attack_does_nothing"},
+  {"t": 1.95, "log": "no_sword"},
+  {"t": 2.0, "action": "move_right", "pressed": true},
+  {"t": 3.15, "action": "move_right", "pressed": false},
+  {"t": 3.5, "screenshot": "02_at_the_table"},
+  {"t": 3.55, "log": "at_the_table"},
+  {"t": 3.6, "key": "Up", "pressed": true},
+  {"t": 3.7, "key": "Up", "pressed": false},
+  {"t": 4.0, "screenshot": "03_taken"},
+  {"t": 4.05, "log": "taken"},
+  {"t": 4.3, "action": "attack", "pressed": true},
+  {"t": 4.4, "action": "attack", "pressed": false},
+  {"t": 4.5, "screenshot": "04_swing"},
+  {"t": 4.55, "log": "swing"},
+  {"t": 5.5, "screenshot": "05_after"}
+ ]
+}

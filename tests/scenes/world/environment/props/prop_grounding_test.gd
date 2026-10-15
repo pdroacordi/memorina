@@ -29,6 +29,8 @@ const HUNG := {
 	"interiors/empty_house/cobweb_a": "a wall corner",
 	"interiors/tavern_cellar/lantern": "the cellar wall",
 	"interiors/tavern_cellar/wall_roots": "the cellar wall",
+	"interiors/farmhouse/wall_shelf": "its legs, on the farmhouse wall",
+	"interiors/farmhouse/window": "set in the wall",
 	"interiors/mill_house/axle": "the east wall, the wheel's shaft through it",
 	"interiors/mill_house/gear": "its hub, on the axle",
 	"interiors/mill_house/hook_rope": "the ceiling",

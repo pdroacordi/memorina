@@ -240,6 +240,34 @@ func test_every_talkable_set_is_in_the_dialogue_catalog() -> void:
 				problems.append("%s: talk %s is not in the dialogue catalog" % [path, talk])
 	assert_array(Array(problems)).is_empty()
 
+## An item pickup names a real `Enums.PlayerItem` and a texture that exists (systems/pickups).
+func test_every_item_pickup_names_a_known_item_and_its_art() -> void:
+	var legend := RoomLegend.load_default()
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var result := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
+		for placed: Dictionary in result.map.entities:
+			if placed.symbol != "i":
+				continue
+			var item: Variant = (placed.params as Dictionary).get("item", -1)
+			if typeof(item) not in [TYPE_INT, TYPE_FLOAT] or float(item) != int(item) or not int(item) in Enums.PlayerItem.values():
+				problems.append("%s: pickup at %s has item %s" % [path, placed.cell, item])
+			var texture := str((placed.params as Dictionary).get("texture", ""))
+			if not ResourceLoader.exists(texture):
+				problems.append("%s: pickup at %s has no texture %s" % [path, placed.cell, texture])
+	assert_array(Array(problems)).is_empty()
+
+## STORY-02: the sword lies once in the world, on the farmhouse table.
+func test_the_sword_lies_on_the_farmhouse_table() -> void:
+	var legend := RoomLegend.load_default()
+	var found := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var result := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
+		for placed: Dictionary in result.map.entities:
+			if placed.symbol == "i" and int((placed.params as Dictionary).get("item", -1)) == Enums.PlayerItem.SWORD:
+				found.append(path.get_file())
+	assert_array(Array(found)).is_equal(["threshold_farmhouse.room"])
+
 func test_a_placement_missing_a_required_param_is_refused() -> void:
 	var text := "[room]\norigin = 0, 0\ntileset = legacy\n\n[grid]\n..R..\n#####\n"
 	var result := RoomMapValidator.validate(text, RoomLegend.load_default(), "inline.room")

@@ -44,7 +44,9 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   to stdout. A timeline's
   `"skills": [ids]` unlocks `Enums.PlayerSkill`s (roll is 2) the way `known_songs` teaches
   songs. `"met_guardians"` / `"restored_guardians": [ids]` (`Enums.Guardian`) and
-  `"notebook_read": ["<entry id>"]` seed the save the same way, and `"locale": "en"` sets
+  `"notebook_read": ["<entry id>"]` seed the save the same way; `"owned_items": [ids]` (`Enums.PlayerItem`: 0 the
+  sword, 1 the Memorina) sets the owned items to exactly that list, so a run can start without the items a debug new
+  game owns (`[]` owns nothing), and `"locale": "en"` sets
   the locale before the scene loads (the default is the OS locale). `log` also prints the
   notebook: phase, section, the entry on the right page, its rows (`>` focused, `*` unread,
   `()` hidden), the scroll cues, tab marks, read ids, the HUD quill's alpha and the

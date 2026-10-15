@@ -49,3 +49,25 @@ func test_every_prop_is_a_still_sprite_that_never_collides() -> void:
 							problems.append("%s: sequence frame %d is outside the %d frames" % [path, frame, driven.hframes])
 			root.free()
 	assert_array(Array(problems)).is_empty()
+
+## Every room contents' `Props` node draws at z -10, behind the ground and the entities (systems/props, Placement;
+## bugs/the-farmhouse-props-node-has-no-z-index). Read from the scene file: a missing z_index line is 0.
+func test_every_rooms_props_node_draws_at_minus_ten() -> void:
+	var checked := 0
+	var problems := PackedStringArray()
+	for path: String in _scenes("res://scenes/world/rooms"):
+		if not path.ends_with("_contents.tscn"):
+			continue
+		var state := (load(path) as PackedScene).get_state()
+		for node: int in state.get_node_count():
+			if state.get_node_name(node) != &"Props":
+				continue
+			checked += 1
+			var z := 0
+			for i: int in state.get_node_property_count(node):
+				if state.get_node_property_name(node, i) == &"z_index":
+					z = int(state.get_node_property_value(node, i))
+			if z != -10:
+				problems.append("%s: Props is at z %d" % [path, z])
+	assert_int(checked).is_greater(0)
+	assert_array(Array(problems)).is_empty()

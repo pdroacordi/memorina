@@ -126,6 +126,7 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | segurar / soltar (o tom de uma resposta) | `DialogueChoice.Tone.HOLD_ON` / `LET_GO` |
 | acumulado silencioso (01 §9) | `DialogueTally.count` (derived, never stored) |
 | ouvido (diálogo já dito) | `PlayerData.dialogues_heard`, `SaveFact.Kind.DIALOGUE_HEARD` |
+| pegar um item, marca da espada (04 §3.2) | `ItemPickup` (legend `i`), `PickupComponent`, `Player._try_pickup`; the sword on the farmhouse table (`systems/pickups`) |
 | quem conversa (lugar de conversa) | `Talkable` (legend `t`), `TalkComponent`; a scripted beat after a line is a `DialogueBeat` (`cue`) |
 | parar tudo atrás do menu (menu hold) | `WorldFreeze.hold()` / `release()` / `is_held()` (scale 0); a performance uses `freeze()` / `thaw()` (scale 1) |
 

@@ -82,6 +82,12 @@ User, 2026-10-14: "there are some places that should have invisible walls or som
 - **Today:** one, the dialogue fixture in `trials_winter/winter_trial` (col 8, row 15).
 - Adding the legend entry needed no `FORMAT_VERSION` bump: the parser did not change.
 
+## Item pickups (STORY-02, `systems/pickups`)
+
+- **`i`** (kind ENTITY, reach role CONTENT, required params `item` and `texture`): `ItemPickup` (`scenes/world/interactables/item_pickup/`), taken with Up after a door and a talk. `rest_offset` lays it on a table top; `width_cells` / `height_cells` size its reach.
+- `room_files_test` fails on an unknown item or missing art, and holds the sword to exactly one placement, in threshold_farmhouse.
+- **Today:** the sword on the farmhouse's meal table (cell 9,8).
+
 ## Soft landing (WORLD-35)
 
 User, 2026-10-15, on the icefall: "Straight drop into deep snow (Recommended)": "One long drop down the shaft that lands in a drift of deep snow at the bottom, which breaks the fall: no stun, about 2 s. Needs a small 'soft landing' rule (a snow/water cell that cancels the hard landing)."

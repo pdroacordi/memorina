@@ -1,5 +1,7 @@
 ; threshold_farmhouse.room - the farmhouse interior (design 04 section 3.2): the laid table on the flat floor
 ; (cols 6-12, the sword mark of STORY-02) and the hearth (cols 17-18). No gate or puzzle.
+; The sword (col 9, legend i) lies on the meal table's planks (bottom centre at 300, 269) until Ivo takes it; Up reaches it
+; from the floor in front of or beside the table, x 240 to 368 (STORY-02, systems/pickups).
 ; Indoors: wood planks, so no earth turf lip shows; the hearth stays stone; no interior grows grass (systems/grass).
 
 [room]
@@ -15,10 +17,11 @@ tileset = threshold
 %..................%
 %..................%
 %................SS%
-%...E............S__
+%...E....i.......S__
 %%%%%%%%%%%%%%%%%%__
 ____________________
 ____________________
 
 [entities]
 4,8 = {"link": "threshold_farmhouse_door", "to_room": "threshold_fields", "arrive_facing": 1}
+9,8 = {"item": 0, "texture": "res://assets/sprites/world/pickups/sword.png", "rest_offset": [-4, -19], "width_cells": 4}
