@@ -1,0 +1,111 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  7088,
+  256
+ ],
+ "skills": [
+  2
+ ],
+ "known_songs": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0
+ ],
+ "max_duration": 9.4,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "b00_snow_on_the_span"
+  },
+  {
+   "t": 1.0,
+   "log": "b00_snow_on_the_span"
+  },
+  {
+   "t": 1.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.45,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.8,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "screenshot": "b01_deck_under_the_icefall"
+  },
+  {
+   "t": 2.6,
+   "log": "b01_deck_under_the_icefall"
+  },
+  {
+   "t": 4.4,
+   "screenshot": "b02_east_slope"
+  },
+  {
+   "t": 4.4,
+   "log": "b02_east_slope"
+  },
+  {
+   "t": 5.95,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.3,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 6.55,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.15,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 7.5,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.7,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 8.6,
+   "screenshot": "b03_bench"
+  },
+  {
+   "t": 8.6,
+   "log": "b03_bench"
+  },
+  {
+   "t": 8.9,
+   "trace": false
+  }
+ ]
+}

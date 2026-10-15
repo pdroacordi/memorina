@@ -21,6 +21,7 @@ const UNDER_FLOOR_REGION := "Under one room's solid floor, on the ring limit of 
 const TRIALS_CLOSE := "The rooms are 32 px apart, so one room's ring reaches 128 px into the other; they do not touch, so they are never resident together and a frame shows one room's drawing only."
 const RINGS_MEET := "The rooms are two rings apart: their rings meet on this line and no frame of either room reaches it."
 const TRIALS_APART := "The rooms are 256 px apart, so their rings overlap by 64 px and each draws its own ring there; they do not touch, so they are never resident together and a frame shows one room's ring only."
+const SHAFT_MOUTH := "The mouth of lake_icefall's 2-cell shaft over threshold_bridge (WORLD-35): at the cut line (y 0) the cells beside the mouth are open air over [back] stone, and the rock's solid underside is at y -96. The bridge's frames stop at its top edge, y 0, so only a glide between the bridge and threshold_icefall_foot shows the line."
 const DOOR_PAIR := "Under the fishing village's deck and lake, on lake_well's ring limit: the two rooms join only by the stairwell and its hatch (WORLD-29), so no walk or glide crosses this seam; Ivo never goes below the deck, and a lake_well frame is the room's own width."
 ## `BackdropCut.key()` (room pair, kind and segment) -> why an open cut there is accepted. A new cut between two listed
 ## rooms is a new key and fails.
@@ -78,6 +79,14 @@ const ALLOWED := {
 	"orchard_leaf_path|woods_hollow_tree ring: x -7840, y -1152..-992": UNDER_FLOOR_REGION,
 	"bloom_hollow|woods_hollow_tree ring: y -160, x -7040..-6880": RING_LIMIT,
 	"bloom_hollow|woods_hollow_tree ring: x -7040, y 384..544": BELOW_FLOORS,
+	# lake_glacier, lake_icefall, threshold_icefall_foot and threshold_ravine_cave beside their closed walls (WORLD-35);
+	# the icefall's west mouth, the foot's open rows and the cave's tunnel have [back] walls.
+	"lake_glacier|lake_icefall ring: x 6880, y -1536..-1376": UNDER_FLOOR,
+	"threshold_bridge|threshold_icefall_foot ring: y -160, x 6880..7040": RING_LIMIT,
+	"threshold_icefall_foot|threshold_wayshrine ring: y -160, x 7680..7840": RING_LIMIT,
+	"threshold_bridge|threshold_icefall_foot rooms: y 0, x 7072..7136": SHAFT_MOUTH,
+	"threshold_fields|threshold_ravine_cave ring: x 6240, y 384..544": RING_LIMIT,
+	"threshold_bridge|threshold_ravine_cave ring: x 7200, y 384..544": RING_LIMIT,
 	"summer_trial|winter_trial ring: x 2400, y 5328..5488": TRIAL_TOPS,
 	"summer_trial|winter_trial ring: x 2400, y 6256..6288": BELOW_FLOORS,
 	"summer_trial|winter_trial ring: x 2560, y 6128..6256": UNDER_FLOOR_REGION,

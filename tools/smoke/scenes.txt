@@ -10,6 +10,9 @@ res://scenes/world/rooms/home_village/contents/village_gate_east_contents.tscn
 res://scenes/world/rooms/threshold/contents/threshold_fields_contents.tscn
 res://scenes/world/rooms/threshold/contents/threshold_bridge_contents.tscn
 res://scenes/world/rooms/threshold/contents/threshold_wayshrine_contents.tscn
+res://scenes/world/rooms/threshold/contents/threshold_ravine_cave_contents.tscn
+res://scenes/world/rooms/threshold/contents/threshold_icefall_foot_contents.tscn
+res://scenes/world/environment/soft_landing/soft_landing.tscn
 res://scenes/world/rooms/frost_edge/contents/frost_shore_contents.tscn
 res://scenes/world/rooms/frost_edge/contents/frost_cliffs_contents.tscn
 res://scenes/world/rooms/frost_edge/contents/lighthouse_base_contents.tscn
@@ -30,6 +33,8 @@ res://scenes/world/rooms/frozen_lake/contents/lake_high_wall_contents.tscn
 res://scenes/world/rooms/frozen_lake/contents/lake_ice_caves_contents.tscn
 res://scenes/world/rooms/frozen_lake/contents/lake_frost_arena_contents.tscn
 res://scenes/world/rooms/frozen_lake/contents/lake_chasm_contents.tscn
+res://scenes/world/rooms/frozen_lake/contents/lake_glacier_contents.tscn
+res://scenes/world/rooms/frozen_lake/contents/lake_icefall_contents.tscn
 res://scenes/world/rooms/wind_orchards/contents/orchard_chasm_bridge_contents.tscn
 res://scenes/world/rooms/wind_orchards/contents/orchard_terraces_contents.tscn
 res://scenes/world/rooms/wind_orchards/contents/orchard_well_contents.tscn

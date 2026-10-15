@@ -17,6 +17,7 @@ const REGION_TILESETS := {
 const ROOM_TILESETS := {
 	"lighthouse_base": "lighthouse", "lighthouse_top": "lighthouse", "lighthouse_interior": "lighthouse",
 	"caldera_cistern": "village", "caldera_dry_moat": "summer_caldera_ash", "caldera_open_crater": "summer_caldera_ash",
+	"threshold_icefall_foot": "frozen_lake",
 	"the_catch": "frozen_lake", "door_trial": "frozen_lake", "door_trial_inside": "frozen_lake",
 }
 ## The trial rooms of ROOM_TILESETS: debug only, so the world generator does not know them.

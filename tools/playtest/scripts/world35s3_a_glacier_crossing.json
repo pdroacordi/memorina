@@ -1,0 +1,257 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  5824,
+  -1632
+ ],
+ "skills": [
+  2
+ ],
+ "known_songs": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0
+ ],
+ "max_duration": 19.95,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "a00_west_lip"
+  },
+  {
+   "t": 1.0,
+   "log": "a00_west_lip"
+  },
+  {
+   "t": 1.5,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 1.55,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.1,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 2.15,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 2.55,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.95,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.3,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.35,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.7,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.75,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.1,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.15,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 5.7,
+   "screenshot": "a01_ice_forming"
+  },
+  {
+   "t": 5.7,
+   "log": "a01_ice_forming"
+  },
+  {
+   "t": 7.05,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.65,
+   "screenshot": "a02_on_the_ice"
+  },
+  {
+   "t": 8.65,
+   "log": "a02_on_the_ice"
+  },
+  {
+   "t": 10.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 10.15,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 10.55,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 10.95,
+   "screenshot": "a03_letter_ledge"
+  },
+  {
+   "t": 10.95,
+   "log": "a03_letter_ledge"
+  },
+  {
+   "t": 11.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 12.45,
+   "screenshot": "a04_ice_east"
+  },
+  {
+   "t": 12.45,
+   "log": "a04_ice_east"
+  },
+  {
+   "t": 13.95,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 14.3,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 14.45,
+   "screenshot": "a05_east_lip"
+  },
+  {
+   "t": 14.45,
+   "log": "a05_east_lip"
+  },
+  {
+   "t": 14.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 14.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 15.2,
+   "screenshot": "a06_icefall_mouth"
+  },
+  {
+   "t": 15.2,
+   "log": "a06_icefall_mouth"
+  },
+  {
+   "t": 15.45,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 16.35,
+   "screenshot": "a07_shaft"
+  },
+  {
+   "t": 16.35,
+   "log": "a07_shaft"
+  },
+  {
+   "t": 17.45,
+   "screenshot": "a08_shaft_foot"
+  },
+  {
+   "t": 17.45,
+   "log": "a08_shaft_foot"
+  },
+  {
+   "t": 18.05,
+   "screenshot": "a09_snow_landing"
+  },
+  {
+   "t": 18.05,
+   "log": "a09_snow_landing"
+  },
+  {
+   "t": 18.15,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 18.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 18.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 18.85,
+   "screenshot": "a10_no_stun_onto_the_deck"
+  },
+  {
+   "t": 18.85,
+   "log": "a10_no_stun_onto_the_deck"
+  },
+  {
+   "t": 19.05,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 19.45,
+   "trace": false
+  }
+ ]
+}

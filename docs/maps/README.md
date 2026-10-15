@@ -210,6 +210,7 @@ else in the code knows what a character means.
 | `@` | `[grid]` | entity | - | - | stair | A helix stair the tower turns around: Ivo rides straight up its axis while the view turns the stair, wall and slits by his progress. Place it on the bottom floor, its cell's bottom-left corner the axis. shape is a HelixStairShape .tres path, look a HelixLook; hand 1 climbs with right held, -1 with left. The head needs a plank gallery across the shell (one-way, so Ivo rises through it), the column up the axis must be clear of solid ground, and the shell's inner faces stand at the wall's silhouette (room_files_test). |
 | `_` | `[grid]` | void | stone | - | - | Void outside a room's shell: solid stone to gameplay, drawn black. Every one of its 8 neighbours is ground (not a ledge), void or off the map, so a drawn wall always stands between the room's air and the void; never under water, a reach or a secret, and only in interiors for now. |
 | `$` | `[grid]` | entity | - | - | content | A reward slot, standing on this cell: a place the layout promises a reward. Needs a slot_id unique across every map; kind 0 COLLECTIBLE (STORY-06) or 1 CACHE (LIFE-04, undecided). Invisible in release, a small diamond in debug builds; no gameplay until STORY-06 or LIFE-04 fills it. |
+| `n` | `[grid]` | entity | - | - | - | Deep snow that breaks a fall: a zone standing on this cell, width_cells wide (centred) and height_cells tall, where a landing is never a hard landing. Keep it 2 cells or more over the highest floor under it, and put the drift prop over it: the zone draws nothing. |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -449,6 +450,16 @@ Scene `res://scenes/world/interactables/reward_slot/reward_slot.tscn`, anchored 
 | `id` | String | none - names the node so other entities can link to it |
 | `slot_id` | StringName | **required** |
 | `kind` | enum (Collectible:0,Cache:1) | `0` |
+
+#### `n` - SoftLanding
+
+Scene `res://scenes/world/environment/soft_landing/soft_landing.tscn`, anchored at its cell's bottom centre (standing on the cell below). Deep snow that breaks a fall: a zone standing on this cell, width_cells wide (centred) and height_cells tall, where a landing is never a hard landing. Keep it 2 cells or more over the highest floor under it, and put the drift prop over it: the zone draws nothing.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `width_cells` | int | `4` |
+| `height_cells` | int | `3` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

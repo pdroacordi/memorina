@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://v2mwgf8qruvy"
+path="res://.godot/imported/threshold_icefall_foot.room-8dd0bbe8598a428227d24ee6acc91e66.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/threshold/contents/threshold_icefall_foot.room"
+dest_files=["res://.godot/imported/threshold_icefall_foot.room-8dd0bbe8598a428227d24ee6acc91e66.res"]
+
+[params]
+

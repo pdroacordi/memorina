@@ -1,0 +1,40 @@
+; threshold_icefall_foot.room - Pe da Queda Gelada: the last screen of the icefall's shaft (WORLD-35), a threshold room
+; so that no jump from threshold_bridge enters the Frozen Lake region (bugs/a-double-jump-on-threshold-bridge-enters-lake-
+; icefall-and-spends-the-frozen-lake-title). The shaft (cols 1-2) drops onto threshold_bridge's fallen span. Rows 9-11
+; are open over the bridge's east deck: a base jump there (head y -38) meets nothing, and a double jump stops at the
+; rock's underside (y -96) with its feet at y -42, short of the 64 px that would swap rooms. Col 0 is open in rows
+; 10-11 (over the bridge's sky band), so the base running jump over the gap meets no ceiling. Nothing in it is
+; standable. Drawn with frozen_lake tiles and lake_cliff_rock like the shaft above (ROOM_TILESETS, ROCK_SETS); [back]
+; stone lines the open rows, its top under the rock; the shaft's mouth at y 0 is a listed cut (backdrop_seams_test).
+
+[room]
+origin = 0, 0
+tileset = frozen_lake
+
+[grid]
+S..SSSSSSSSSSSSSSSSS
+S..SSSSSSSSSSSSSSSSS
+S..SSSSSSSSSSSSSSSSS
+S..SSSSSSSSSSSSSSSSS
+S..SSSSSSSSSSSSSSSSS
+S..SSSSSSSSSSSSSSSSS
+S..SSSSSSSSSSSSSSSSS
+S..SSSSSSSSSSSSSSSSS
+S..SSSSSSSSSSSSSSSSS
+S..................S
+...................S
+...................S
+
+[back]
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+S..SSSSSSSSSSSSSSSS.
+S..SSSSSSSSSSSSSSSS.
+S..SSSSSSSSSSSSSSSS.

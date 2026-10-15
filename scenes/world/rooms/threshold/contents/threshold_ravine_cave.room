@@ -1,0 +1,41 @@
+; threshold_ravine_cave.room - Gruta da Ravina: a small earth cave under threshold_bridge's ravine (WORLD-35, design 04
+; section 3.2), the world's first secret, found with the base kit before any song. The ravine's west wall is a [secret]
+; (bridge cols 10-12, rows 8-11) that drops through the tunnel (cols 10-12) onto a one-way ledge (cols 10-12, row 2)
+; 3 rows under the bridge's floor: a jump from it clears the ravine floor by 42 px. Below it a mound (top row 5), one
+; jump down, and a hollow (cols 2-7, floor row 8) holding a cache (`$`). Cols 9-13 are open in row 0 so Ivo can walk
+; off the ledge; [back] earth in the tunnel hides the cut against the bridge's backdrop.
+
+[room]
+origin = 0, 0
+tileset = threshold
+
+[grid]
+#########.....######
+####..........######
+##........===...####
+##..............####
+##..............####
+##......############
+##......############
+##.$....############
+####################
+####################
+####################
+####################
+
+[back]
+..........###.......
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+....................
+
+[entities]
+3,7 = {"slot_id": "threshold_ravine_cache", "kind": 1}

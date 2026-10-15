@@ -1,5 +1,7 @@
 ; lake_frost_arena.room - Gruta do Guardiao: the Frost Guardian's arena (design 04 section 3.5, GRD-03). Flat floor
 ; (top row 9) from col 1 to col 38 with eight open rows over cols 4-36; the guardian stands at col 25.
+; Open at rows 5-8 both ways: west to lake_ice_caves, east to lake_glacier (WORLD-35). The golem (176 px) is taller than
+; an opening (128 px), so it cannot follow Ivo out, and it stops while he is outside its Arena (systems/guardians).
 
 [room]
 origin = 0, 0
@@ -11,10 +13,10 @@ SSSS.................................SSS
 SSSS.................................SSS
 S......................................S
 S......................................S
-.......................................S
-.......................................S
-.......................................S
-.......................................S
+........................................
+........................................
+........................................
+........................................
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS

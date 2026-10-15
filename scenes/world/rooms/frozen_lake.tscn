@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_frost_arena.tscn" id="r6"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_chasm.tscn" id="r7"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_fisher_hut.tscn" id="r8"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_glacier.tscn" id="r9"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_icefall.tscn" id="r10"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/frozen_lake.tres" id="bd_region_set"]
 
 [node name="FrozenLake" type="Node2D"]
@@ -58,6 +60,12 @@ position = Vector2(4480, -1920)
 
 [node name="LakeChasm" parent="." instance=ExtResource("r7")]
 position = Vector2(-3200, -2304)
+
+[node name="LakeGlacier" parent="." instance=ExtResource("r9")]
+position = Vector2(5760, -1920)
+
+[node name="LakeIcefall" parent="." instance=ExtResource("r10")]
+position = Vector2(7040, -1920)
 
 [node name="LakeFisherHut" parent="." instance=ExtResource("r8")]
 position = Vector2(48000, 12000)

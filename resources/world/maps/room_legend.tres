@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="RoomLegend" load_steps=17 format=3]
+[gd_resource type="Resource" script_class="RoomLegend" load_steps=18 format=3]
 
 [ext_resource type="Script" path="res://resources/world/maps/room_legend.gd" id="1_legend"]
 [ext_resource type="Script" path="res://resources/world/maps/room_legend_entry.gd" id="2_entry"]
@@ -22,6 +22,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/draft/draft.tscn" id="i23_draft"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/helix_stair/helix_stair.tscn" id="i24_helix"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/reward_slot/reward_slot.tscn" id="i25_slot"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/soft_landing/soft_landing.tscn" id="i26_soft"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -314,6 +315,15 @@ anchor = 0
 required_params = PackedStringArray("slot_id")
 description = "A reward slot, standing on this cell: a place the layout promises a reward. Needs a slot_id unique across every map; kind 0 COLLECTIBLE (STORY-06) or 1 CACHE (LIFE-04, undecided). Invisible in release, a small diamond in debug builds; no gameplay until STORY-06 or LIFE-04 fills it."
 
+[sub_resource type="Resource" id="soft_landing"]
+script = ExtResource("2_entry")
+symbol = "n"
+kind = 3
+ground = 0
+scene = ExtResource("i26_soft")
+anchor = 0
+description = "Deep snow that breaks a fall: a zone standing on this cell, width_cells wide (centred) and height_cells tall, where a landing is never a hard landing. Keep it 2 cells or more over the highest floor under it, and put the drift prop over it: the zone draws nothing."
+
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing")])

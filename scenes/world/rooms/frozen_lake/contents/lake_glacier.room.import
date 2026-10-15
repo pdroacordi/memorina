@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://4idccybovvaf"
+path="res://.godot/imported/lake_glacier.room-3fd9e2bcaba6057d75a7748de7b8208b.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/frozen_lake/contents/lake_glacier.room"
+dest_files=["res://.godot/imported/lake_glacier.room-3fd9e2bcaba6057d75a7748de7b8208b.res"]
+
+[params]
+

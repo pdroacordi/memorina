@@ -36,6 +36,7 @@ REGION_TILESETS = {
 ROOM_TILESETS = {
     "lighthouse_base": "lighthouse", "lighthouse_top": "lighthouse", "lighthouse_interior": "lighthouse",
     "caldera_cistern": "village", "caldera_dry_moat": "summer_caldera_ash", "caldera_open_crater": "summer_caldera_ash",
+    "threshold_icefall_foot": "frozen_lake",
 }
 
 # region, id, c0, c1, r0, r1, surface (open sky above)
@@ -47,6 +48,9 @@ ROOM_LIST = [
     ("threshold", "threshold_fields", 7, 9, 0, 0, True),
     ("threshold", "threshold_bridge", 10, 11, 0, 0, True),
     ("threshold", "threshold_wayshrine", 12, 12, 0, 0, True),
+    ("threshold", "threshold_ravine_cave", 10, 10, 1, 1, False),
+    # The icefall's last screen: a threshold room, so no jump from threshold_bridge enters the Frozen Lake region.
+    ("threshold", "threshold_icefall_foot", 11, 11, -1, -1, True),
     ("frost_edge", "frost_shore", 13, 14, 0, 0, True),
     ("frost_edge", "frost_cliffs", 15, 16, -3, 0, True),
     ("frost_edge", "lighthouse_base", 17, 18, -3, -3, True),
@@ -68,6 +72,8 @@ ROOM_LIST = [
     ("frozen_lake", "lake_ice_caves", 5, 6, -5, -5, False),
     ("frozen_lake", "lake_frost_arena", 7, 8, -5, -5, False),
     ("frozen_lake", "lake_chasm", -5, -4, -6, -5, True),
+    ("frozen_lake", "lake_glacier", 9, 10, -5, -5, False),
+    ("frozen_lake", "lake_icefall", 11, 11, -5, -2, True),
     ("wind_orchards", "orchard_chasm_bridge", -7, -6, -6, -6, True),
     ("wind_orchards", "orchard_terraces", -9, -7, -5, -4, True),
     ("wind_orchards", "orchard_well", -6, -5, -4, -4, True),
@@ -110,6 +116,7 @@ H_LINKS = [
     ("caldera_open_crater", "caldera_cistern_bottom", 4), ("caldera_cistern_bottom", "caldera_temple_gate", 4),
     ("caldera_temple_gate", "caldera_arena", 4),
     ("woods_hollow_tree", "bloom_hollow", 0), ("woods_deep", "woods_crown", -1),
+    ("lake_frost_arena", "lake_glacier", -5), ("lake_glacier", "lake_icefall", -5),
 ]
 
 # Vertical openings: (upper room, lower room, global macro col, first cell col, last cell col inside that macro col).
@@ -124,6 +131,9 @@ V_LINKS = [
     ("orchard_windy_gap", "orchard_mill_town", -11, 4, 15),
     ("orchard_mill_town", "woods_hollow_tree", -12, 5, 8),
     ("woods_crown", "woods_edge", -4, 11, 14),
+    ("lake_icefall", "threshold_icefall_foot", 11, 1, 2),
+    ("threshold_icefall_foot", "threshold_bridge", 11, 1, 2),
+    ("threshold_bridge", "threshold_ravine_cave", 10, 10, 12),
 ]
 
 # room, cell col, bench id (on the room's bottom floor)
@@ -360,7 +370,8 @@ REGION_BACKDROPS = {
 ROCK_SETS = {
     "lighthouse_top": "interior_stone", "frost_cliffs": "sea_cliff_rock", "lake_waterfall_path": "lake_cliff_rock",
     "lake_high_wall": "lake_cliff_rock", "lake_chasm": "lake_cliff_rock", "orchard_counterweights": "orchard_limestone",
-    "orchard_cliff_chimney": "orchard_limestone",
+    "orchard_cliff_chimney": "orchard_limestone", "lake_icefall": "lake_cliff_rock",
+    "threshold_icefall_foot": "lake_cliff_rock",
 }
 # Enclosed rooms whose walls are neither rock nor their region's caves: the inside of the giant tree.
 ROOM_SETS = {"woods_hollow_tree": "heartwood"}

@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://bjya66j5lbyho"
+path="res://.godot/imported/lake_icefall.room-ef20fc7500ad619a78151dafac513741.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/frozen_lake/contents/lake_icefall.room"
+dest_files=["res://.godot/imported/lake_icefall.room-ef20fc7500ad619a78151dafac513741.res"]
+
+[params]
+

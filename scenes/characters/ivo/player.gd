@@ -1120,6 +1120,14 @@ func sit(seat: Seat) -> void:
 func rest() -> void:
 	health.reset()
 
+## Called by a SoftLanding zone as the body enters it: a landing inside one is never hard (systems/rooms).
+func enter_soft_landing() -> void:
+	_landing.enter_soft_zone()
+
+## Called by a SoftLanding zone as the body leaves it.
+func exit_soft_landing() -> void:
+	_landing.exit_soft_zone()
+
 func receive_hazard(hazard: HazardZone) -> void:
 	if is_dead() or _sinking:
 		return

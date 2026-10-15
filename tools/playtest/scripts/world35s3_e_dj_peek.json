@@ -1,0 +1,84 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  7312,
+  160
+ ],
+ "skills": [
+  0
+ ],
+ "max_duration": 5.9,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "e00_east_deck"
+  },
+  {
+   "t": 1.0,
+   "log": "e00_east_deck"
+  },
+  {
+   "t": 1.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 2.15,
+   "screenshot": "e01_base_jump_apex"
+  },
+  {
+   "t": 2.15,
+   "log": "e01_base_jump_apex"
+  },
+  {
+   "t": 2.2,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.55,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "screenshot": "e02_double_jump_under_the_rock"
+  },
+  {
+   "t": 4.0,
+   "log": "e02_double_jump_under_the_rock"
+  },
+  {
+   "t": 4.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.0,
+   "screenshot": "e03_back_on_the_deck"
+  },
+  {
+   "t": 5.0,
+   "log": "e03_back_on_the_deck"
+  },
+  {
+   "t": 5.4,
+   "trace": false
+  }
+ ]
+}

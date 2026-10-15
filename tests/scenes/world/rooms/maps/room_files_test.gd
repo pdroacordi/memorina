@@ -70,6 +70,38 @@ func test_every_reward_slot_stands_on_a_floor() -> void:
 				problems.append("%s: slot %s at %s stands on nothing" % [path, placed.params.get("slot_id", "?"), placed.cell - map.origin])
 	assert_array(Array(problems)).is_empty()
 
+## A soft-landing zone's top stands 2 cells or more over the first floor in every column of its span, so a fall enters
+## it frames before it lands, while the count is still being raised in the physics flush (systems/rooms "Soft landing").
+func test_every_soft_landing_rises_two_cells_over_its_floors() -> void:
+	var legend := RoomLegend.load_default()
+	var defaults := SoftLanding.new()
+	var problems := PackedStringArray()
+	var zones := 0
+	for path: String in _room_files(ROOMS_DIR):
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path).map
+		for placed: Dictionary in map.entities:
+			if placed.symbol != "n":
+				continue
+			zones += 1
+			var width := int((placed.params as Dictionary).get("width_cells", defaults.width_cells))
+			var height := int((placed.params as Dictionary).get("height_cells", defaults.height_cells))
+			var cell: Vector2i = placed.cell
+			var top := cell.y + 1 - height
+			var left := cell.x + 0.5 - width * 0.5
+			var right := cell.x + 0.5 + width * 0.5
+			for x: int in range(floori(left), ceili(right)):
+				if x + 0.5 <= left or x + 0.5 >= right:
+					continue
+				for y: int in range(top, cell.y + 2):
+					var under := Vector2i(x, y)
+					if map.is_solid(under) or map.is_platform(under):
+						if y - top < 2:
+							problems.append("%s: zone at %s is %d cell(s) over the floor in column %d" % [path, cell - map.origin, y - top, x - map.origin.x])
+						break
+	defaults.free()
+	assert_int(zones).is_greater(0)
+	assert_array(Array(problems)).is_empty()
+
 ## "Not impossible to find" (user, 2026-10-10): every secret shows a crack cell or has a draft within a cell of it;
 ## and a secret's id is unique across every map, because the save remembers it (architecture/secret-false-walls).
 func test_every_secret_has_a_hint_and_a_unique_id() -> void:

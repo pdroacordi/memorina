@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://fwvewvphctj1"
+path="res://.godot/imported/threshold_ravine_cave.room-3cf66cdc7e7ef6a2c958e7dd1d2ec746.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/threshold/contents/threshold_ravine_cave.room"
+dest_files=["res://.godot/imported/threshold_ravine_cave.room-3cf66cdc7e7ef6a2c958e7dd1d2ec746.res"]
+
+[params]
+

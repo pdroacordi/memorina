@@ -6,6 +6,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_bridge.tscn" id="r1"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_wayshrine.tscn" id="r2"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_farmhouse.tscn" id="r3"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_ravine_cave.tscn" id="r4"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_icefall_foot.tscn" id="r5"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/threshold.tres" id="bd_region_set"]
 
 [node name="Threshold" type="Node2D"]
@@ -28,6 +30,12 @@ position = Vector2(6400, 0)
 
 [node name="ThresholdWayshrine" parent="." instance=ExtResource("r2")]
 position = Vector2(7680, 0)
+
+[node name="ThresholdRavineCave" parent="." instance=ExtResource("r4")]
+position = Vector2(6400, 384)
+
+[node name="ThresholdIcefallFoot" parent="." instance=ExtResource("r5")]
+position = Vector2(7040, -384)
 
 [node name="ThresholdFarmhouse" parent="." instance=ExtResource("r3")]
 position = Vector2(12000, 12000)
