@@ -1,0 +1,210 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -5904,
+  -2080
+ ],
+ "skills": [
+  0
+ ],
+ "max_duration": 12.6,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "c00_upper_chamber_lift_top"
+  },
+  {
+   "t": 1.0,
+   "log": "c00_upper_chamber_lift_top"
+  },
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.65,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.0,
+   "screenshot": "c01_summit_from_the_mouth"
+  },
+  {
+   "t": 2.0,
+   "log": "c01_summit_from_the_mouth"
+  },
+  {
+   "t": 3.25,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.55,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 4.2,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.35,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 4.55,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.7,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 4.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.05,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.75,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.95,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 6.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.3,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 6.65,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 7.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 7.3,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.4,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "screenshot": "c02_summit_tor_cache"
+  },
+  {
+   "t": 8.0,
+   "log": "c02_summit_tor_cache"
+  },
+  {
+   "t": 8.3,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 9.5,
+   "screenshot": "c03_summit_west_slope"
+  },
+  {
+   "t": 9.5,
+   "log": "c03_summit_west_slope"
+  },
+  {
+   "t": 10.75,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 11.7,
+   "screenshot": "c04_terraces_leaf_pile_landing"
+  },
+  {
+   "t": 11.7,
+   "log": "c04_terraces_leaf_pile_landing"
+  },
+  {
+   "t": 11.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 12.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 12.15,
+   "screenshot": "c05_terraces_after"
+  },
+  {
+   "t": 12.15,
+   "log": "c05_terraces_after"
+  },
+  {
+   "t": 12.3,
+   "trace": false
+  }
+ ]
+}

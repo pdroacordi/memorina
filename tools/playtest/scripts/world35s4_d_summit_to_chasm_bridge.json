@@ -1,0 +1,74 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -4848,
+  -2208
+ ],
+ "skills": [
+  0
+ ],
+ "max_duration": 6.4,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "d00_summit_east_of_the_tor"
+  },
+  {
+   "t": 1.0,
+   "log": "d00_summit_east_of_the_tor"
+  },
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.6,
+   "screenshot": "d01_summit_east_slope"
+  },
+  {
+   "t": 2.6,
+   "log": "d01_summit_east_slope"
+  },
+  {
+   "t": 2.95,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 3.6,
+   "screenshot": "d02_chasm_bridge"
+  },
+  {
+   "t": 3.6,
+   "log": "d02_chasm_bridge"
+  },
+  {
+   "t": 3.9,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 5.6,
+   "screenshot": "d03_terraces_crown"
+  },
+  {
+   "t": 5.6,
+   "log": "d03_terraces_crown"
+  },
+  {
+   "t": 6.0,
+   "trace": false
+  }
+ ]
+}

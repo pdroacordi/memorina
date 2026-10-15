@@ -83,6 +83,9 @@ ROOM_LIST = [
     ("wind_orchards", "orchard_leaf_path", -14, -13, -4, -4, True),
     ("wind_orchards", "orchard_arena", -16, -15, -4, -4, True),
     ("wind_orchards", "orchard_cliff_chimney", -17, -17, -4, 4, True),
+    ("wind_orchards", "orchard_crag", -16, -15, -6, -5, True),
+    ("wind_orchards", "orchard_ridge", -14, -13, -5, -5, True),
+    ("wind_orchards", "orchard_summit", -9, -8, -7, -6, True),
     ("summer_caldera", "caldera_chimney_base", -16, -15, 4, 4, False),
     ("summer_caldera", "caldera_long_corridor", -14, -11, 4, 4, False),
     ("summer_caldera", "caldera_bait", -10, -9, 4, 4, False),
@@ -117,6 +120,10 @@ H_LINKS = [
     ("caldera_temple_gate", "caldera_arena", 4),
     ("woods_hollow_tree", "bloom_hollow", 0), ("woods_deep", "woods_crown", -1),
     ("lake_frost_arena", "lake_glacier", -5), ("lake_glacier", "lake_icefall", -5),
+    # The crag and the ridge meet at rows 1-4 of r -5 and the counterweights' mouth into the summit is at its rows 3-6, not
+    # 5-8; the windy gap's passage and the arena's east doorway are rows 6-8 (the maps are the truth, systems/world).
+    ("orchard_crag", "orchard_ridge", -5), ("orchard_ridge", "orchard_windy_gap", -5),
+    ("orchard_counterweights", "orchard_summit", -6), ("orchard_summit", "orchard_chasm_bridge", -6),
 ]
 
 # Vertical openings: (upper room, lower room, global macro col, first cell col, last cell col inside that macro col).
@@ -134,6 +141,9 @@ V_LINKS = [
     ("lake_icefall", "threshold_icefall_foot", 11, 1, 2),
     ("threshold_icefall_foot", "threshold_bridge", 11, 1, 2),
     ("threshold_bridge", "threshold_ravine_cave", 10, 10, 12),
+    ("orchard_crag", "orchard_arena", -15, 11, 18),
+    ("orchard_ridge", "orchard_leaf_path", -14, 2, 4),
+    ("orchard_summit", "orchard_terraces", -9, 9, 13),
 ]
 
 # room, cell col, bench id (on the room's bottom floor)
@@ -144,6 +154,7 @@ BENCHES = [
     ("woods_edge", 30, "woods_edge_bench"),
     ("lake_waterfall_path", 2, "lake_waterfall_bench"),
     ("orchard_terraces", 30, "orchard_terraces_bench"),
+    ("orchard_mill_town", 24, "orchard_mill_town_bench"),
     ("caldera_open_crater", 20, "caldera_crater_bench"),
 ]
 

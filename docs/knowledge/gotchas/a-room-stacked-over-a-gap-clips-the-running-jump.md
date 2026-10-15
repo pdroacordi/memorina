@@ -35,3 +35,10 @@ air only where the room below has a sky band beside it, or the audit reports `OP
   its feet rise the 64 px that swaps rooms (`RoomExit`): rock at y -96 holds the feet at y -42.
 - A double jump's head reaches 152 px over the top (the band's ceiling caps it), so a double jump across such a
   gap may still meet higher cells. The single jump is the gate.
+- **Measured again (WORLD-35 step 4).** orchard_ridge over orchard_leaf_path first kept its solid down to its bottom
+  row. A base jump on the leaf path's hill (feet y -1408) then stopped at 74 px, with Ivo's head at the leaf path's frame
+  edge (y -1536), where no ceiling shows. The crest now ends at row 8 (y -1632), with an earth `[back]` wall in rows
+  9-11. The base jump peaks at -1535, and a double jump stops at -1578. orchard_crag over orchard_arena keeps its
+  overhang's bottom between y -1632 and -1568: a full double jump's head (y -1572) touches the row-22 cells, harmless. Where the upper room's
+  underside must stay low (a one-way drop's cap), give it a `[back]` wall or an uneven underside, so the frame shows
+  rock and not a straight slab over the lower room's sky.

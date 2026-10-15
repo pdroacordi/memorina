@@ -1,6 +1,7 @@
 ; orchard_leaf_path.room - Trilha sob a Folhagem (design 04 section 3.6): the main path climbs over a stone hill.
 ; Outono Espacial 1 (design 02 section 8): a leaf curtain at col 14 closes the hill's only side tunnel; Soltar drops
 ; it and the tunnel leads to the collectible alcove at cols 18-21. The main path never needs the song.
+; orchard_ridge's drop shaft (WORLD-35) lands at cols 2-4 from 512 px up. Orchestrator call (2026-10-15), following the user's icefall decision "Straight drop into deep snow (Recommended)": the drop back lands in a deep leaf pile, a SoftLanding (`n`) under the leaf_pile prop.
 
 [room]
 origin = 0, 0
@@ -12,13 +13,14 @@ tileset = wind_orchards
 #......................................#
 #......................................#
 #.............##############...=====...#
-..............SSSSSSSSSSSSSS............
+#.............SSSSSSSSSSSSSS............
 ...........##.........SSSSSS............
 .........####.........SSSSSS##..........
-.......#######F.......SSSSSS##..........
+...n...#######F.......SSSSSS##..........
 ########################################
 ########################################
 ########################################
 
 [entities]
+3,8 = {"width_cells": 4, "height_cells": 3}
 14,8 = {"id": "leaf_curtain", "size": [32, 96]}

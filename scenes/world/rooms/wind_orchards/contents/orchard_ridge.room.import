@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://o3uv404og8r3"
+path="res://.godot/imported/orchard_ridge.room-9ee3122b465ac742b428d5c979ce0217.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/wind_orchards/contents/orchard_ridge.room"
+dest_files=["res://.godot/imported/orchard_ridge.room-9ee3122b465ac742b428d5c979ce0217.res"]
+
+[params]
+

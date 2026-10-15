@@ -1,0 +1,42 @@
+; orchard_crag.room - Penhasco (WORLD-35; design 04 section 3.6), over orchard_arena.
+; Wall climb is the only way up: the arena's east wall (arena col 39, rows 0-5) and col 39 here (rows 17-23) lead to
+; the ridge mouth (rows 13-16, floor row 17 = orchard_ridge row 5). The shaft (cols 31-38) opens onto the arena; its
+; lips (row 17) stand 512 px over the arena floor, past a Redoma shell plus a double jump (462;
+; gotchas/a-redoma-shell-is-standable-ground-up-to-192-px-over-its-origin). Its east wall is stone: no root shaft.
+; West of the shaft the overhang ends at rows 20-22 (y -1632 to -1568); a full double jump's head (y -1572) touches
+; the row-22 cells, harmless (gotchas/a-room-stacked-over-a-gap-clips-the-running-jump). Over the lintel (cols 1-4)
+; it reaches the bottom, so the lintel stays no step. The stone spire (cols 6-8, top row 7) is 320 px over the block,
+; past a double jump: its cache is a wall climb.
+
+[room]
+origin = 0, 0
+tileset = wind_orchards
+
+[grid]
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S......$...............................S
+S.....SSS..............................S
+S.....SSS..............................S
+S.....SSS..............................S
+S.....SSS..............................S
+S.....SSS..............................S
+S.....SSS..............................S
+S.....SSS...............................
+S.....SSS...............................
+S.....SSS...............SSSS............
+S.....SSS...............SSSS............
+S##############################........S
+S##############################........S
+S##############################........S
+S##############################........S
+S######################................S
+S########....###..##...................S
+S####..................................S
+
+[entities]
+7,6 = {"slot_id": "orchard_crag_cache", "kind": 1}

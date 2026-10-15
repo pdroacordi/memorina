@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://p3clur1tq3e7"
+path="res://.godot/imported/orchard_crag.room-b5e916949ccd66f9921f8960c7cc0f89.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/wind_orchards/contents/orchard_crag.room"
+dest_files=["res://.godot/imported/orchard_crag.room-b5e916949ccd66f9921f8960c7cc0f89.res"]
+
+[params]
+

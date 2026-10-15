@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://cws1ru3ptv0rp"
+path="res://.godot/imported/orchard_summit.room-9110c01944acd18cd76d765d344b8bdc.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/wind_orchards/contents/orchard_summit.room"
+dest_files=["res://.godot/imported/orchard_summit.room-9110c01944acd18cd76d765d344b8bdc.res"]
+
+[params]
+

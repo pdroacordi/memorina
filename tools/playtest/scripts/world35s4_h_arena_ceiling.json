@@ -1,0 +1,88 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -9744,
+  -1248
+ ],
+ "skills": [
+  0
+ ],
+ "max_duration": 7.4,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.55,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 1.55,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.8,
+   "screenshot": "h00_arena_double_jump_under_the_block"
+  },
+  {
+   "t": 1.8,
+   "log": "h00_arena_double_jump_under_the_block"
+  },
+  {
+   "t": 1.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 5.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.45,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.45,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.7,
+   "screenshot": "h01_arena_double_jump_into_the_shaft"
+  },
+  {
+   "t": 5.7,
+   "log": "h01_arena_double_jump_into_the_shaft"
+  },
+  {
+   "t": 5.8,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.0,
+   "trace": false
+  }
+ ]
+}

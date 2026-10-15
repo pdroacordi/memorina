@@ -1,0 +1,522 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 30.0,
+ "locale": "en",
+ "player_position": [
+  -7520,
+  -1762
+ ],
+ "skills": [
+  0,
+  2
+ ],
+ "known_songs": [
+  0,
+  1,
+  4,
+  5,
+  6,
+  7
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 1.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 1.6,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 1.65,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 2.0,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 2.4,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.45,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 2.8,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 2.85,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.25,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.6,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.65,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 6.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.55,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 6.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 7.3,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.55,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 7.9,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 7.95,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 8.5,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 8.55,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 8.9,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 8.95,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 9.3,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 9.35,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 9.7,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 9.75,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 10.1,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 10.15,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 10.5,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 10.55,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 11.9,
+   "screenshot": "rvw5_b_0"
+  },
+  {
+   "t": 12.5,
+   "screenshot": "rvw5_b_1"
+  },
+  {
+   "t": 13.1,
+   "screenshot": "rvw5_b_2"
+  },
+  {
+   "t": 13.7,
+   "screenshot": "rvw5_b_3"
+  },
+  {
+   "t": 14.3,
+   "screenshot": "rvw5_b_4"
+  },
+  {
+   "t": 15.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 15.35,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 15.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 15.85,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 16.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 16.35,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 16.402,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 16.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 16.752,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 16.852,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 17.402,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 17.652,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 17.902,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 18.152,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 18.402,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 18.652,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 18.902,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 19.152,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 19.402,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 19.652,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 19.902,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 20.152,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 20.402,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 20.652,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 20.902,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 21.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 22.0,
+   "screenshot": "f01_through_the_alcove"
+  },
+  {
+   "t": 22.0,
+   "log": "f01_through_the_alcove"
+  },
+  {
+   "t": 22.6,
+   "screenshot": "f02_ridge_east_end"
+  },
+  {
+   "t": 22.6,
+   "log": "f02_ridge_east_end"
+  },
+  {
+   "t": 23.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 23.2,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 23.45,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 23.65,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 23.9,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 24.1,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 24.35,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 24.55,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 24.8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 25.0,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 25.25,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 25.45,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 25.7,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 25.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 26.15,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 26.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 26.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 26.8,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 27.05,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 27.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 27.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 27.7,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 27.95,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 28.15,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 28.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 28.6,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 28.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 29.5,
+   "screenshot": "f03_ridge_letter"
+  },
+  {
+   "t": 29.5,
+   "log": "f03_ridge_letter"
+  }
+ ]
+}

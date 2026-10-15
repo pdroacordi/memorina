@@ -6,7 +6,7 @@ status: active
 tags: [rooms, room-map, legend, rewards, collectibles, reachability, level-design, story-06, life-04, world-35]
 related: [architecture/rooms-are-text, architecture/room-reachability-audit, architecture/secret-false-walls, systems/rooms, systems/world, systems/notebook]
 created: 2026-10-14
-updated: 2026-10-14
+updated: 2026-10-15
 source_files:
   - resources/world/maps/room_legend.tres
   - resources/world/maps/reach_allowlist.tres
@@ -99,3 +99,9 @@ WORLD-35 assigns a reward to every exploration dead end, but the systems that gi
 - **Two slots in the lake and threshold's new rooms**: `lake_glacier_alcove` (plan slot 16, COLLECTIBLE, lake_glacier 19,5, on a one-way ledge over the pool's middle, one jump from the ice and 16 cells from either lip; only kits with Congelar reach it, by the kit check. First placed on a shelf over the east lip, which wall climbers without Congelar reached up the icefall: review, 2026-10-14) and `threshold_ravine_cache` (plan slot 22, CACHE, threshold_ravine_cave 3,7, in the hollow under the ledge; the base kit, through the bridge's ravine secret).
 - **Total: 25 slots, 15 COLLECTIBLE and 10 CACHE.** Every one is reached by some kit (`room_kit_test`).
 - **Still to come with their rooms:** plan slots 15, 20 and 21 (step 4), 17 (step 5) and 18 (step 6); the optional `lake_falls_head_letter` waits for MEM-10.
+
+## Built (WORLD-35 step 4, 2026-10-15)
+
+- **Three slots in the orchards' new rooms**: `orchard_ridge_letter` (plan slot 15, COLLECTIBLE, orchard_ridge 12,3, on the knoll; Soltar + Vendaval through orchard_windy_gap's gate, or wall climb up the crag), `orchard_crag_cache` (plan slot 20, CACHE, orchard_crag 7,6, on the spire's top; wall climb) and `orchard_summit_cache` (plan slot 21, CACHE, orchard_summit 26,11, on the tor by the crest; the lift, or the walk from orchard_chasm_bridge with the double jump). The kit check reaches the ridge and the crag with the four autumn kits only, and the summit from the woods kit on.
+- **Total: 28 slots, 16 COLLECTIBLE and 12 CACHE.** Every one is reached by some kit (`room_kit_test`).
+- **Still to come with their rooms:** plan slots 17 (step 5) and 18 (step 6); the optional `lake_falls_head_letter` waits for MEM-10.

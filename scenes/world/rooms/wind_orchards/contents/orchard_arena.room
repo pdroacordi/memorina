@@ -5,6 +5,8 @@
 ; barrier holds its mouth until the save holds it (design 04 section 3.6; no softlock while GRD-04 is open).
 ; The stone lintel (cols 0-2, rows 0-4) leaves 32 px over the barrier, so it is no step, and its top is 288 px
 ; over the floor (double jump 270); the overhang at (3,0) stops a wall climb there (bugs/the-orchard-arena-barrier-is-jumped-over-into-the-cliff-chimney).
+; WORLD-35: the east wall (col 39) is the wall climb up into orchard_crag. Its lintel reaches down to row 5, so the doorway is
+; rows 6-8 and the face starts 96 px over the floor: a jump beside the doorway meets it (orchestrator call, 2026-10-15).
 
 [room]
 origin = 0, 0
@@ -16,7 +18,7 @@ SSS....................................#
 SSS....................................#
 SSS....................................#
 SSS....................................#
-........................................
+.......................................#
 ........................................
 ........................................
 .X......................................

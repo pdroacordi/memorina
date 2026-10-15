@@ -5,6 +5,7 @@
 ; The dovecote ledge (row 3) is the double-jump launch onto orchard_windy_gap's east ledge (cols 36-38, six rows up).
 ; The well (cols 5-8, a running jump on the street) drops into woods_hollow_tree; its earth [back] lining hides the
 ; cut to the tree's heartwood set (backdrop_seams_test). WORLD-35: "Hollow tree to the orchards (Recommended)".
+; The bench (col 24) stands by the inn, two rooms from the arena (WORLD-35: "Mill town + chimney base (Recommended)").
 
 [room]
 origin = 0, 0
@@ -19,7 +20,7 @@ tileset = wind_orchards
 ......................................D.....................
 ..........................^^^^^^^^^^SSS.....................
 ...............SSSS.........................................
-...............SSSS...........E.............................
+...............SSSS.....R.....E.............................
 #####....############################.....................##
 #####....############################.....................##
 #####....###################################################
@@ -39,5 +40,6 @@ tileset = wind_orchards
 .....####...................................................
 
 [entities]
+24,8 = {"bench_id": "orchard_mill_town_bench"}
 30,8 = {"link": "orchard_inn_door", "to_room": "orchard_inn"}
 38,5 = {"id": "mill_bridge", "length_cells": 6, "side": 1}

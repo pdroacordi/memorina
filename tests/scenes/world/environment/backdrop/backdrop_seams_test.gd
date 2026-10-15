@@ -51,7 +51,6 @@ const ALLOWED := {
 	"orchard_terraces|woods_canopy ring: x -4640, y -1152..-992": RING_LIMIT,
 	"orchard_well|woods_canopy ring: y -1152, x -2560..-2400": PAST_WALLS,
 	"orchard_counterweights|orchard_windy_gap ring: y -2080, x -6560..-6400": RING_LIMIT,
-	"orchard_counterweights|orchard_terraces ring: y -2080, x -5760..-5600": RING_LIMIT,
 	"orchard_arena|orchard_cliff_chimney ring: x -10080, y -1152..-992": UNDER_FLOOR,
 	"caldera_open_crater|caldera_seesaw ring: x -2080, y 1920..2080": UNDER_FLOOR,
 	"caldera_cistern_bottom|caldera_open_crater ring: x -480, y 1920..2080": UNDER_FLOOR,

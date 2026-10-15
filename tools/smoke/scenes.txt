@@ -44,6 +44,9 @@ res://scenes/world/rooms/wind_orchards/contents/orchard_windy_gap_contents.tscn
 res://scenes/world/rooms/wind_orchards/contents/orchard_leaf_path_contents.tscn
 res://scenes/world/rooms/wind_orchards/contents/orchard_arena_contents.tscn
 res://scenes/world/rooms/wind_orchards/contents/orchard_cliff_chimney_contents.tscn
+res://scenes/world/rooms/wind_orchards/contents/orchard_crag_contents.tscn
+res://scenes/world/rooms/wind_orchards/contents/orchard_ridge_contents.tscn
+res://scenes/world/rooms/wind_orchards/contents/orchard_summit_contents.tscn
 res://scenes/world/rooms/summer_caldera/contents/caldera_chimney_base_contents.tscn
 res://scenes/world/rooms/summer_caldera/contents/caldera_long_corridor_contents.tscn
 res://scenes/world/rooms/summer_caldera/contents/caldera_bait_contents.tscn

@@ -1,0 +1,41 @@
+; orchard_summit.room - Colina do Moinho Grande (WORLD-35; design 04 section 3.6), over orchard_terraces: where
+; Outono Logico 1's lift leads (the plan approved with the board, 2026-10-14). West, the counterweights' upper chamber
+; (its col 19, rows 3-6, here rows 15-18 over the landing at row 19); east, orchard_chasm_bridge (rows 17-20, floor 21).
+; The drop shaft (cols 9-13) lands in the terraces' soft landing on the row-10 terrace (cols 8-15). Its west lip (row
+; 19) is 480 px over that terrace and 448 px over the terraces' west hill (row 9, cols 0-7), under a Redoma shell plus
+; a double jump (462): a Redoma kit may climb in. Accepted (orchestrator call, 2026-10-15): no trap, and the woods kit
+; already walks in from orchard_chasm_bridge. The cache is on the tor (cols 25-27), beside the windmill's place (cols
+; 22-24, WORLD-37).
+
+[room]
+origin = 0, 0
+tileset = wind_orchards
+
+[grid]
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S......................................S
+S.........................$............S
+S........................SSS...........S
+S........................SSS...........S
+S.....................######...........S
+....................#########..........S
+..................####SSSSSS###........S
+................####SSSSSSSSS####.......
+..............S###SSSSSSSSSSSSS####.....
+S#######S.....S#SSSSSSSSSSSSSSSSS###....
+S#######S.....SSSSSSSSSSSSSSSSSSSSS##...
+SSSSSSSSS.....SSSSSSSSSSSSSSSSSSSSSS###S
+SSSSSSSSS.....SSSSSSSSSSSSSSSSSSSSSSS##S
+SSSSSSSSS.....SSSSSSSSSSSSSSSSSSSSSSSSSS
+
+[entities]
+26,11 = {"slot_id": "orchard_summit_cache", "kind": 1}

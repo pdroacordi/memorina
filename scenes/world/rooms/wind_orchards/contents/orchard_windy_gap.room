@@ -2,7 +2,8 @@
 ; Outono Espacial 2 (design 02 section 8): a 20-cell chasm with a westward current. Best-timed double jump: 15.8 cells, with the grey current
 ; 17.6; the gale played on the ledge into the current clears it (playtest 2026-10-10: 22 cells with a late press). Logico 2: Soltar drops the
 ; cocoon (col 6) on the shelf, an eastward gale from the shelf's west end or the floor blows it onto the plate at col 10, eight cells from
-; the gate (col 2) of the one-cell alcove.
+; the gate (col 2); behind it, the alcove (col 1) opens west at rows 6-8 under the shelf into orchard_ridge, the puzzle's reward (WORLD-35).
+; From the ridge the gate stays shut once the cocoon goes back to its rope; the ridge's drop and the crag lead down.
 
 [room]
 origin = 0, 0
@@ -15,9 +16,9 @@ tileset = wind_orchards
 #......................................#
 #.....H...PS...........................#
 #SSSSSSSSSSS...........................#
-#......................................#
-#......................................#
-#.G.......................W............#
+.......................................#
+.......................................#
+..G.......................W............#
 ################....................####
 ################....................####
 ################....................####

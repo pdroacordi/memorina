@@ -4,6 +4,7 @@
 ; (row 9), where the counterweights shortcut lands.
 ; A [secret] niche behind the west block's upper face (cols 17-18, rows 16-17, cracked at col 17), entered from the step at
 ; row 18, holds a reward slot (`$`, WORLD-35); a stone [back] wall behind it, as an enclosed hollow shows rock (WORLD-31).
+; orchard_summit's drop shaft (WORLD-35) lands on the row-10 terrace at cols 9-13 from 480 px up. Orchestrator call (2026-10-15), following the user's icefall decision "Straight drop into deep snow (Recommended)": the drop back lands in a deep leaf pile, a SoftLanding (`n`) under the leaf_pile prop.
 
 [room]
 origin = 0, 0
@@ -19,7 +20,7 @@ tileset = wind_orchards
 ..........................======...........................#
 ...................................=====...................#
 ...........................................................#
-########..........................................##########
+########...n......................................##########
 SSSSSSSS########...........................................#
 SSSSSSSS...................................................#
 SSSSSSSS..............####.................................#
@@ -88,5 +89,6 @@ SSSSSSSS...........SSSSSSS...........................SSSSSS#
 ............................................................
 
 [entities]
+11,9 = {"width_cells": 5, "height_cells": 3}
 30,20 = {"bench_id": "orchard_terraces_bench"}
 18,17 = {"slot_id": "orchard_terraces_niche", "kind": 1}

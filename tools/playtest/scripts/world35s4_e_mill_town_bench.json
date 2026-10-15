@@ -1,0 +1,58 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -7024,
+  -1248
+ ],
+ "skills": [
+  0
+ ],
+ "max_duration": 4.0,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "e00_mill_town_street"
+  },
+  {
+   "t": 1.0,
+   "log": "e00_mill_town_street"
+  },
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.85,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 2.3,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "screenshot": "e01_mill_town_bench"
+  },
+  {
+   "t": 3.4,
+   "log": "e01_mill_town_bench"
+  },
+  {
+   "t": 3.6,
+   "trace": false
+  }
+ ]
+}
