@@ -20,6 +20,8 @@ const POP_TIME := 0.18
 
 ## Glyph scale in multiples of 16px art; controls note legibility.
 @export_range(1.0, 2.0, 0.25) var icon_scale: float = 1.5
+## Columns on the staff: a song's six, or a longer phrase (the morning song's eight, systems/story).
+@export var slot_count: int = Song.NOTE_COUNT
 
 var _slots: Array[TextureRect] = []
 ## What each filled slot shows, so light() can fetch the lit texture.
@@ -28,7 +30,7 @@ var _glyphs: Array[NoteGlyphSet] = []
 var _flash_tween: Tween
 
 func _ready() -> void:
-	for i: int in Song.NOTE_COUNT:
+	for i: int in slot_count:
 		var slot := TextureRect.new()
 		slot.stretch_mode = TextureRect.STRETCH_SCALE
 		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -115,7 +117,7 @@ func _layout() -> void:
 		_slots[i].position.y = _slot_y(_notes[i])
 
 func _slot_x(index: int) -> float:
-	var column_width := (STAFF_RIGHT - STAFF_LEFT) / Song.NOTE_COUNT
+	var column_width := (STAFF_RIGHT - STAFF_LEFT) / slot_count
 	return roundf(_to_frame(STAFF_LEFT + (index + 0.5) * column_width) - ICON_SIZE * icon_scale / 2.0)
 
 func _slot_y(note: Enums.Note) -> float:

@@ -10,6 +10,8 @@ enum Section { LORE, SONGS, ITEMS, GUARDIANS }
 @export var requirement: SaveFact.Kind = SaveFact.Kind.SKILL
 ## Index into the PlayerData flag array the requirement names (an Enums.PlayerSkill, Song, PlayerItem or Guardian).
 @export var index: int = 0
+## The dialogue (DIALOGUE_HEARD) or choice (RESPONSE_CHOSEN) id the requirement reads; empty for the other kinds.
+@export var fact_id: StringName = &""
 @export var title_key: String = ""
 ## Translation key of the line under the title (a song's season and material); empty for none.
 @export var detail_key: String = ""
@@ -19,7 +21,7 @@ enum Section { LORE, SONGS, ITEMS, GUARDIANS }
 
 
 func is_present(data: PlayerData) -> bool:
-	return SaveFact.check(requirement, index, data)
+	return SaveFact.check(requirement, index, data, fact_id)
 
 ## Every translation key the entry names.
 func keys() -> PackedStringArray:

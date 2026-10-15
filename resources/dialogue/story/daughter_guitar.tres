@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="DialogueSet" format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
+[ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/daughter.tres" id="s_daughter"]
+
+[sub_resource type="Resource" id="line_1"]
+script = ExtResource("f_line")
+cue = &"daughter_guitar"
+
+[sub_resource type="Resource" id="line_2"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_daughter")
+text_key = "DLG_DAUGHTER_RETURN_01"
+
+[sub_resource type="Resource" id="fact_3"]
+script = ExtResource("f_fact")
+kind = 7
+id = &"mentor_gift"
+
+[sub_resource type="Resource" id="fact_4"]
+script = ExtResource("f_fact")
+kind = 8
+id = &"guitar_try_again"
+
+[sub_resource type="Resource" id="dialogue_5"]
+script = ExtResource("f_dialogue")
+id = &"daughter_return"
+once = true
+when = Array[ExtResource("f_fact")]([SubResource("fact_3"), SubResource("fact_4")])
+lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_2")])
+
+[resource]
+script = ExtResource("f_set")
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_5")])

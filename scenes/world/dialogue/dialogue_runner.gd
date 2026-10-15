@@ -61,9 +61,17 @@ func speaker() -> Speaker:
 func text_key() -> String:
 	return _line.text_for(_view) if _line != null else ""
 
-## The ITEM fact the LINE grants; null for none.
+## The ITEM fact granted now: on a LINE, or on the CUE of a cue-only line (as its beat starts); null for none.
 func grant() -> SaveFact:
-	return _line.grants if _step == Step.LINE else null
+	if _line == null:
+		return null
+	if _step == Step.LINE or (_step == Step.CUE and _line.text_key.is_empty()):
+		return _line.grants
+	return null
+
+## Whether the current line is a gesture: it asks with no question.
+func silent() -> bool:
+	return _line != null and _line.asks() and _line.text_key.is_empty()
 
 ## Whether the current line goes on to CHOICES.
 func asks() -> bool:

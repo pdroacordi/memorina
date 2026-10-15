@@ -117,3 +117,40 @@ func _stick_y(value: float) -> InputEventJoypadMotion:
 	motion.axis = JOY_AXIS_LEFT_Y
 	motion.axis_value = value
 	return motion
+
+func _act(action: StringName, pressed: bool) -> void:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = pressed
+	Input.parse_input_event(event)
+
+## A jump held into a NOTES beat and let go during it is cut once the beat frees him (systems/story).
+func test_a_jump_released_through_a_notes_beat_is_cut_on_clearing() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	add_child(input)
+	var cuts: Array[int] = [0]
+	input.jump_canceled.connect(func() -> void: cuts[0] += 1)
+	_act(&"jump", true)
+	await await_idle_frame()
+	input.notes_only = true
+	_act(&"jump", false)
+	await await_idle_frame()
+	assert_int(cuts[0]).is_equal(0)
+	input.notes_only = false
+	assert_int(cuts[0]).is_equal(1)
+
+## Up held through a NOTES beat is not a new press once it ends.
+func test_up_held_through_a_notes_beat_is_not_a_new_press() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	add_child(input)
+	var ups: Array[int] = [0]
+	input.look_up_pressed.connect(func() -> void: ups[0] += 1)
+	input.notes_only = true
+	_act(&"look_up", true)
+	await await_idle_frame()
+	input.notes_only = false
+	_act(&"look_up", true)
+	await await_idle_frame()
+	_act(&"look_up", false)
+	await await_idle_frame()
+	assert_int(ups[0]).is_equal(0)

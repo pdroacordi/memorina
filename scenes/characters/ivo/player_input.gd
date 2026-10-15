@@ -40,6 +40,15 @@ var blocked: bool = false:
 		blocked = value
 		process_mode = Node.PROCESS_MODE_DISABLED if value else Node.PROCESS_MODE_INHERIT
 
+## While true, only `note_pressed` is emitted and every axis reads 0: a beat holds Ivo to the four notes (the guitar,
+## systems/story). Clearing it resyncs the held state the events missed.
+var notes_only: bool = false:
+	set(value):
+		var was := notes_only
+		notes_only = value
+		if was and not value:
+			resync(Input.is_action_pressed("jump"), Input.is_action_pressed("look_down"), Input.is_action_pressed("look_up"))
+
 ## Whether down was held as of the last event about it - any motion on its
 ## axis says, either way, so the opposite direction lets go of it too.
 var _down_held: bool = false
@@ -51,7 +60,7 @@ var _jump_held: bool = false
 # Camera-peek intent, deliberately player-only: enemies have no camera, so
 # this stays an inline getter on PlayerInput rather than moving to the base.
 var look_direction: float:
-	get: return 0.0 if blocked else Input.get_axis("look_up", "look_down")
+	get: return 0.0 if blocked or notes_only else Input.get_axis("look_up", "look_down")
 
 ## Which icons `event` should be drawn with. Pure so it can be tested with a
 ## constructed event and a made-up joypad name; `_input` supplies the real
@@ -80,6 +89,9 @@ func _notification(what: int) -> void:
 		resync(Input.is_action_pressed("jump"), Input.is_action_pressed("look_down"), Input.is_action_pressed("look_up"))
 
 func _input(event: InputEvent) -> void:
+	if notes_only:
+		_emit_notes(event)
+		return
 	if event.is_action_pressed("jump"):
 		_jump_held = true
 		jump_pressed.emit()
@@ -106,9 +118,7 @@ func _input(event: InputEvent) -> void:
 	if OS.is_debug_build() and event.is_action_pressed("debug_learn_song"):
 		debug_learn_song_pressed.emit()
 	# MemorinaComponent decides whether notes are accepted while the instrument is sheathed.
-	for action: StringName in NOTE_ACTIONS:
-		if event.is_action_pressed(action):
-			note_pressed.emit(NOTE_ACTIONS[action], glyph_set_for(event, Input.get_joy_name(event.device)))
+	_emit_notes(event)
 
 ## Adopts the held state the events missed: a jump released meanwhile is cut, and down or up is not a new edge.
 func resync(jump_held: bool, down_held: bool, up_held: bool = false) -> void:
@@ -118,5 +128,10 @@ func resync(jump_held: bool, down_held: bool, up_held: bool = false) -> void:
 	_down_held = down_held
 	_up_held = up_held
 
+func _emit_notes(event: InputEvent) -> void:
+	for action: StringName in NOTE_ACTIONS:
+		if event.is_action_pressed(action):
+			note_pressed.emit(NOTE_ACTIONS[action], glyph_set_for(event, Input.get_joy_name(event.device)))
+
 func _get_direction() -> float:
-	return 0.0 if blocked else Input.get_axis("move_left", "move_right")
+	return 0.0 if blocked or notes_only else Input.get_axis("move_left", "move_right")

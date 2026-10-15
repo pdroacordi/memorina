@@ -1,0 +1,72 @@
+[gd_resource type="Resource" script_class="DialogueSet" format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
+[ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/mentor.tres" id="s_mentor"]
+
+[sub_resource type="Resource" id="line_1"]
+script = ExtResource("f_line")
+cue = &"memorina_flat"
+
+[sub_resource type="Resource" id="line_2"]
+script = ExtResource("f_line")
+cue = &"memorina_lowered"
+
+[sub_resource type="Resource" id="line_3"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_mentor")
+text_key = "DLG_MENTOR_GIFT_01"
+cue = &"mentor_phrase"
+
+[sub_resource type="Resource" id="line_4"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_mentor")
+text_key = "DLG_MENTOR_GIFT_02"
+
+[sub_resource type="Resource" id="fact_5"]
+script = ExtResource("f_fact")
+kind = 2
+index = 1
+
+[sub_resource type="Resource" id="line_6"]
+script = ExtResource("f_line")
+cue = &"mentor_gift"
+grants = SubResource("fact_5")
+
+[sub_resource type="Resource" id="choice_7"]
+script = ExtResource("f_choice")
+id = &"memorina_again"
+text_key = "DLG_CHOICE_MEMORINA_AGAIN"
+tone = 1
+reply = Array[ExtResource("f_line")]([SubResource("line_1")])
+
+[sub_resource type="Resource" id="choice_8"]
+script = ExtResource("f_choice")
+id = &"memorina_lower"
+text_key = "DLG_CHOICE_MEMORINA_LOWER"
+tone = 2
+reply = Array[ExtResource("f_line")]([SubResource("line_2")])
+
+[sub_resource type="Resource" id="line_9"]
+script = ExtResource("f_line")
+ask_id = &"mentor_flicker"
+choices = Array[ExtResource("f_choice")]([SubResource("choice_7"), SubResource("choice_8")])
+
+[sub_resource type="Resource" id="line_10"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_mentor")
+text_key = "DLG_MENTOR_GIFT_03"
+
+[sub_resource type="Resource" id="dialogue_11"]
+script = ExtResource("f_dialogue")
+id = &"mentor_gift"
+once = true
+lines = Array[ExtResource("f_line")]([SubResource("line_3"), SubResource("line_4"), SubResource("line_6"), SubResource("line_9"), SubResource("line_10")])
+
+[resource]
+script = ExtResource("f_set")
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_11")])

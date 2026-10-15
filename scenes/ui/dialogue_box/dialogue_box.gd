@@ -26,12 +26,18 @@ const PLATE_Y_TOP := 165.0
 
 ## Characters typed per real second.
 @export var chars_per_second: float = 40.0
+## Real seconds a stuttered word's first letter hangs before the word starts again (StutterText).
+@export var stutter_hold: float = 0.22
+## Real seconds between the letter vanishing and the word typing.
+@export var stutter_gap: float = 0.08
 
 var _typing: Tween
 ## Choice text keys waiting for the question to finish typing; empty for none.
 var _pending_choices: PackedStringArray = PackedStringArray()
 var _choosing: bool = false
 var _choice_focus: int = 0
+## Where the shown line's marked words start (StutterText).
+var _stutters: PackedInt32Array = PackedInt32Array()
 
 @onready var _box: Control = %Box
 @onready var _plate: NinePatchRect = %Plate
@@ -69,15 +75,28 @@ func show_line(speaker: Speaker, text_key: String) -> void:
 	_end_choices()
 	_pending_choices = PackedStringArray()
 	_show_speaker(speaker)
-	_text.text = tr(text_key)
+	var parsed := StutterText.parse(tr(text_key))
+	_text.text = parsed["text"]
+	_stutters = parsed["starts"]
 	_next.hide()
 	_continue.show()
 	_type()
 	_focus_current()
 
-## The question's choices, shown once it is typed.
-func show_choices(keys: PackedStringArray) -> void:
+## A question's choices, shown once it is typed. A `silent` ask (a gesture) clears the plate, portrait and text, open or
+## not, and shows its choices at once.
+func show_choices(keys: PackedStringArray, silent: bool = false) -> void:
 	assert(keys.size() <= MAX_CHOICES, "A question offers at most %d choices" % MAX_CHOICES)
+	if silent or not visible:
+		show()
+		if _typing != null:
+			_typing.kill()
+			_typing = null
+		_end_choices()
+		_show_speaker(null)
+		_text.text = ""
+		_stutters = PackedInt32Array()
+		_next.hide()
 	_pending_choices = keys
 	if not is_typing():
 		_reveal_choices()
@@ -125,17 +144,30 @@ func _show_speaker(speaker: Speaker) -> void:
 func _type() -> void:
 	if _typing != null:
 		_typing.kill()
-	_text.visible_ratio = 0.0
-	var seconds := _text.text.length() / chars_per_second if chars_per_second > 0.0 else 0.0
+	_text.visible_characters = 0
+	var total := _text.text.length()
 	# Real time under the recall's slow motion; bound to the box, so a pause or hold stops it.
 	_typing = create_tween().set_ignore_time_scale(true)
-	_typing.tween_property(_text, "visible_ratio", 1.0, seconds)
+	var at := 0
+	for start: int in _stutters:
+		if start >= total:
+			continue
+		_type_to(at, start + 1)
+		_typing.tween_interval(stutter_hold)
+		_typing.tween_callback(_text.set.bind(&"visible_characters", start))
+		_typing.tween_interval(stutter_gap)
+		at = start
+	_type_to(at, total)
 	_typing.finished.connect(_on_typed)
+
+func _type_to(from: int, to: int) -> void:
+	var seconds := (to - from) / chars_per_second if chars_per_second > 0.0 else 0.0
+	_typing.tween_property(_text, "visible_characters", to, seconds)
 
 func _complete_typing() -> void:
 	# A killed tween never emits finished (gotchas/a-killed-tween-never-emits-finished).
 	_typing.kill()
-	_text.visible_ratio = 1.0
+	_text.visible_characters = -1
 	_on_typed()
 
 func _on_typed() -> void:

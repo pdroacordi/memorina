@@ -65,6 +65,8 @@ signal door_entered(door: Door)
 signal talk_started(talkable: Talkable)
 ## A talk handed to a beat may go on: Ivo is free on the floor again (request_talk_resume).
 signal talk_resumed
+## A note input while a beat holds him to the notes (the guitar); the dialogue director hands it to the beat.
+signal beat_note_pressed(note: Enums.Note, glyph_set: Enums.GlyphSet)
 
 const GROUP := "player"
 
@@ -195,8 +197,15 @@ var _stand_requested: bool = false
 var _up_buffer: float = 0.0
 ## From `begin_talk` to `end_talk`, a beat included: the map stays refused and no other talk starts.
 var _in_talk: bool = false
-## The box is open and Ivo hears no input; false during a beat.
+## The talk itself blocks his input: the box is open, or a STILL beat holds him.
 var _listening: bool = false
+## How the running beat holds him (DialogueBeat.Hold); -1 while no beat runs.
+var _beat_hold: int = -1
+## What he holds from a beat's start until the next beat or the talk's end (DialogueBeat.Pose).
+var _pose: int = DialogueBeat.Pose.NONE
+## A note reached the guitar since the last physics step; the resolver restarts the strum on it.
+var _strum_pending: bool = false
+var _just_strummed: bool = false
 ## A beat ended; the talk goes on once the start gates hold.
 var _resume_wanted: bool = false
 
@@ -278,6 +287,10 @@ func _ready() -> void:
 
 func _process_motion(delta: float) -> void:
 	_just_double_jumped = false
+	_just_strummed = _strum_pending
+	_strum_pending = false
+	if _just_strummed:
+		_animation_driver.request_replay()
 	if is_dead():
 		# A corpse stays on its helix tread; anywhere else it still falls and stops sliding.
 		if _rider.is_riding():
@@ -589,7 +602,8 @@ func _try_door(on_floor: bool) -> bool:
 	if door == null:
 		return false
 	_up_buffer = 0.0
-	if not _free_for_up(on_floor):
+	# A FREE beat lets him walk, but a talk never leaves its room (bugs/up-takes-a-door-during-a-free-beat-and-strands-the-talk).
+	if _in_talk or not _free_for_up(on_floor):
 		return false
 	if door.is_open():
 		# Nothing else pressed this frame may act on the way out.
@@ -605,7 +619,9 @@ func _try_door(on_floor: bool) -> bool:
 # resume after its beat goes on under the same gates.
 func _try_talk(on_floor: bool) -> bool:
 	if _resume_wanted:
-		if _input.blocked or not _free_for_up(on_floor):
+		# A block the beat itself holds (STILL) is the talk's own, not a refusal.
+		var blocked_elsewhere := _input.blocked and not (_beat_hold == DialogueBeat.Hold.STILL and _listening)
+		if blocked_elsewhere or not _free_for_up(on_floor):
 			return false
 		_resume_wanted = false
 		_drop_buffers()
@@ -637,7 +653,7 @@ func _try_pickup(on_floor: bool) -> bool:
 	if pickup == null:
 		return false
 	_up_buffer = 0.0
-	if not _free_for_up(on_floor):
+	if _in_talk or not _free_for_up(on_floor):
 		return false
 	_drop_buffers()
 	pickup.take()
@@ -715,6 +731,12 @@ func _try_memorina() -> void:
 ## is_still() gates the draw. The glyph is remembered so the relayed
 ## note_played can carry it.
 func _on_note_pressed(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
+	if _beat_hold == DialogueBeat.Hold.NOTES:
+		_last_glyph_set = glyph_set
+		if _pose == DialogueBeat.Pose.GUITAR:
+			_strum_pending = true
+		beat_note_pressed.emit(note, glyph_set)
+		return
 	if not _voice.can_play_note():
 		return
 	_last_glyph_set = glyph_set
@@ -1151,15 +1173,28 @@ func unblock_input() -> void:
 ## the talk's.
 func begin_talk(at: Vector2) -> void:
 	_in_talk = true
-	_listening = true
-	block_input()
+	_beat_hold = -1
+	_input.notes_only = false
+	if not _listening:
+		_listening = true
+		block_input()
 	face_towards(signf(at.x - global_position.x))
 
-## A beat has the talk: he is free, and still in the talk.
-func pause_talk() -> void:
-	if _listening:
+## A beat has the talk (systems/story): STILL keeps him blocked, NOTES lets only the four notes through, FREE frees him;
+## he holds `pose` and faces `at`, and stays in the talk.
+func pause_talk(hold: int = DialogueBeat.Hold.FREE, pose: int = DialogueBeat.Pose.NONE, at: Vector2 = Vector2.INF) -> void:
+	_beat_hold = hold
+	_pose = pose
+	var still := hold == DialogueBeat.Hold.STILL
+	if _listening and not still:
 		_listening = false
 		unblock_input()
+	elif still and not _listening:
+		_listening = true
+		block_input()
+	_input.notes_only = hold == DialogueBeat.Hold.NOTES
+	if at != Vector2.INF:
+		face_towards(signf(at.x - global_position.x))
 
 ## The beat is over; `talk_resumed` follows once he is free on the floor.
 func request_talk_resume() -> void:
@@ -1167,8 +1202,18 @@ func request_talk_resume() -> void:
 
 func end_talk() -> void:
 	pause_talk()
+	_beat_hold = -1
+	_pose = DialogueBeat.Pose.NONE
 	_in_talk = false
 	_resume_wanted = false
+
+## What a beat has him hold (DialogueBeat.Pose); NONE outside a talk. Read by the resolver.
+func held_pose() -> int:
+	return _pose
+
+## A note reached the guitar this step. Read by the resolver.
+func just_strummed() -> bool:
+	return _just_strummed
 
 ## From the talk's start to its end, a beat included.
 func is_talking() -> bool:

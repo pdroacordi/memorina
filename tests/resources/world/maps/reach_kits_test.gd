@@ -38,6 +38,27 @@ func test_the_base_kit_is_movement_and_the_sword() -> void:
 	assert_bool(data.unlocked_player_skills.has(true)).is_false()
 	assert_bool(data.learned_songs.has(true)).is_false()
 
+## The opening's talks are part of the starting kit, so the east gate (heard_elder_story.tres) is open to every kit
+## ("East gate shut until the elder points east (Recommended)", user, 2026-10-15).
+func test_the_base_kit_has_heard_the_opening_and_passes_the_east_gate() -> void:
+	var gate := ReachKit.of(load("res://resources/save_facts/heard_elder_story.tres") as SaveFact)
+	for kit: ReachKit in _kits.kits:
+		assert_bool(kit.holds(PackedInt32Array([gate]))).override_failure_message(String(kit.id)).is_true()
+	var unheard := ReachKit.new()
+	assert_bool(unheard.holds(PackedInt32Array([gate]))).is_false()
+
+## A need on a talk packs its id, so two talks are two needs.
+func test_a_dialogue_need_packs_its_id() -> void:
+	var heard := SaveFact.new()
+	heard.kind = SaveFact.Kind.DIALOGUE_HEARD
+	heard.id = &"daughter_song"
+	var other := SaveFact.new()
+	other.kind = SaveFact.Kind.DIALOGUE_HEARD
+	other.id = &"mentor_gift"
+	assert_int(ReachKit.of(heard)).is_not_equal(ReachKit.of(other))
+	assert_bool(_kit(&"base").holds(PackedInt32Array([ReachKit.of(heard)]))).is_true()
+	assert_bool(_kit(&"base").holds(PackedInt32Array([ReachKit.of(other)]))).is_false()
+
 func test_the_memorina_opens_the_village_fences() -> void:
 	var fence := ReachKit.of(load("res://resources/save_facts/owns_memorina.tres") as SaveFact)
 	assert_bool(_kit(&"base").holds(PackedInt32Array([fence]))).is_false()
@@ -58,7 +79,8 @@ func test_each_guardian_gives_its_design_gifts() -> void:
 	assert_bool(_kit(&"caldera").holds(PackedInt32Array([ReachKit.song(Enums.Song.SHADOW), ReachKit.song(Enums.Song.SOLSTICE)]))).is_true()
 	assert_bool(_kit(&"orchards").holds(PackedInt32Array([ReachKit.song(Enums.Song.SHADOW)]))).is_false()
 
-func test_every_milestone_but_the_sword_is_earned_in_a_room() -> void:
+## The sword and the opening's talks are the starting kit; every other milestone is earned in a room.
+func test_every_milestone_but_the_starting_ones_is_earned_in_a_room() -> void:
 	for milestone: ReachMilestone in _kits.milestones():
-		if milestone.id != &"sword":
+		if milestone.id not in [&"sword", &"opening"]:
 			assert_str(String(milestone.room)).override_failure_message("%s has no room" % milestone.id).is_not_empty()

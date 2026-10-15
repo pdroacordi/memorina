@@ -126,6 +126,11 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | segurar / soltar (o tom de uma resposta) | `DialogueChoice.Tone.HOLD_ON` / `LET_GO` |
 | acumulado silencioso (01 §9) | `DialogueTally.count` (derived, never stored) |
 | ouvido (diálogo já dito) | `PlayerData.dialogues_heard`, `SaveFact.Kind.DIALOGUE_HEARD` |
+| encenação por fatos (pose de uma cena) | `FactStaging`, `FactStage`, `stand_in` (`systems/story`) |
+| batida (cena roteirizada após uma fala) | `DialogueBeat` (`hold`, `pose`, `face`), `GuitarBeat`, `StagedBeat` |
+| gesto (escolha sem fala) | a silent ask: an asking `DialogueLine` with no text and no speaker |
+| melodia da manhã | `Melody`, `morning_song.tres`; the guitar's tries `GuitarAttempt` (`guitar_first`, `guitar_again`), rules `GuitarPhrase` |
+| gaguejar (`~palavra~`) | `StutterText` |
 | pegar um item, marca da espada (04 §3.2) | `ItemPickup` (legend `i`), `PickupComponent`, `Player._try_pickup`; the sword on the farmhouse table (`systems/pickups`) |
 | quem conversa (lugar de conversa) | `Talkable` (legend `t`), `TalkComponent`; a scripted beat after a line is a `DialogueBeat` (`cue`) |
 | parar tudo atrás do menu (menu hold) | `WorldFreeze.hold()` / `release()` / `is_held()` (scale 0); a performance uses `freeze()` / `thaw()` (scale 1) |

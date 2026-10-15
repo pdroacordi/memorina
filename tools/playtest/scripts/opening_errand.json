@@ -1,0 +1,352 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 25.0,
+ "locale": "en",
+ "owned_items": [],
+ "player_position": [
+  320,
+  12286
+ ],
+ "steps": [
+  {
+   "t": 1.5,
+   "screenshot": "00_waking"
+  },
+  {
+   "t": 1.6,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.85,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 3.28,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "screenshot": "01_bread"
+  },
+  {
+   "t": 4.05,
+   "log": "bread"
+  },
+  {
+   "t": 4.1,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 4.18,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "teleport": [
+    6600,
+    12286
+   ]
+  },
+  {
+   "t": 5.4,
+   "screenshot": "02_bakery"
+  },
+  {
+   "t": 5.5,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 5.58,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 6.4,
+   "screenshot": "03_round_one"
+  },
+  {
+   "t": 6.5,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 6.58,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 7.9,
+   "screenshot": "04_two_loaves"
+  },
+  {
+   "t": 8.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 8.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 9.9,
+   "screenshot": "05_one_loaf"
+  },
+  {
+   "t": 10.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 10.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 10.3,
+   "log": "errand_done"
+  },
+  {
+   "t": 10.5,
+   "teleport": [
+    150,
+    12286
+   ]
+  },
+  {
+   "t": 11.7,
+   "screenshot": "06_morning_one"
+  },
+  {
+   "t": 11.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 11.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 12.3,
+   "screenshot": "07_guitar_sheet"
+  },
+  {
+   "t": 12.5,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 12.58,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 12.9,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 12.98,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 13.3,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 13.38,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 13.7,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 13.78,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 14.1,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 14.18,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 14.3,
+   "screenshot": "08_five_played"
+  },
+  {
+   "t": 14.6,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 14.68,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 15.0,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 15.08,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 15.3,
+   "log": "gap"
+  },
+  {
+   "t": 15.4,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 15.48,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 15.9,
+   "screenshot": "09_try_again_or_lower"
+  },
+  {
+   "t": 16.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 16.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 16.5,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 16.58,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 16.9,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 16.98,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 17.3,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 17.38,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 17.7,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 17.78,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 18.0,
+   "screenshot": "10_one_note_earlier"
+  },
+  {
+   "t": 20.4,
+   "screenshot": "11_silence"
+  },
+  {
+   "t": 20.45,
+   "log": "silence"
+  },
+  {
+   "t": 20.5,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 20.58,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 21.3,
+   "screenshot": "12_turned_to_the_wall"
+  },
+  {
+   "t": 21.4,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 21.75,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 22.0,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 22.08,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 22.4,
+   "screenshot": "13_up_on_her"
+  },
+  {
+   "t": 22.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 22.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 23.0,
+   "log": "end"
+  }
+ ]
+}

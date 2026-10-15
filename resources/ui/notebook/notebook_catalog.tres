@@ -13,6 +13,15 @@ region = Rect2(56, 18, 79, 60)
 atlas = ExtResource("4_bloom")
 region = Rect2(36, 52, 58, 44)
 
+[sub_resource type="Resource" id="lore_mentor"]
+script = ExtResource("2_entry")
+id = &"lore_mentor"
+section = 0
+requirement = 7
+fact_id = &"mentor_gift"
+title_key = "NOTEBOOK_LORE_MENTOR_TITLE"
+body_key = "NOTEBOOK_LORE_MENTOR"
+
 [sub_resource type="Resource" id="lore_roll"]
 script = ExtResource("2_entry")
 id = &"lore_roll"
@@ -169,4 +178,4 @@ body_key = "NOTEBOOK_GUARDIAN_SUMMER_BODY"
 
 [resource]
 script = ExtResource("1_catalog")
-entries = Array[ExtResource("2_entry")]([SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer")])
+entries = Array[ExtResource("2_entry")]([SubResource("lore_mentor"), SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer")])

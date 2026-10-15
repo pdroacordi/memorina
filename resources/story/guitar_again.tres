@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="GuitarAttempt" format=3]
+
+[ext_resource type="Script" path="res://resources/story/guitar_attempt.gd" id="1_attempt"]
+[ext_resource type="Resource" path="res://resources/story/morning_song.tres" id="2_melody"]
+
+[resource]
+script = ExtResource("1_attempt")
+melody = ExtResource("2_melody")
+gap_index = 4

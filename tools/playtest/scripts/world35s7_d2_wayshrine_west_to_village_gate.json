@@ -1,5 +1,6 @@
 {
  "scene": "res://scenes/world/game.tscn",
+ "dialogues_heard": ["elder_story"],
  "locale": "en",
  "player_position": [
   8016,

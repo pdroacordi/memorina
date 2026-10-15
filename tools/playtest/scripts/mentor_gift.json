@@ -1,0 +1,140 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 18.0,
+ "locale": "en",
+ "owned_items": [
+  0
+ ],
+ "player_position": [
+  24290,
+  12798
+ ],
+ "steps": [
+  {
+   "t": 1.5,
+   "screenshot": "00_mentor_holding"
+  },
+  {
+   "t": 2.6,
+   "screenshot": "01_long_way"
+  },
+  {
+   "t": 2.7,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 2.78,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "screenshot": "02_phrase_pulse"
+  },
+  {
+   "t": 6.8,
+   "screenshot": "03_many_hands"
+  },
+  {
+   "t": 6.9,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 6.98,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 7.4,
+   "screenshot": "04_flicker"
+  },
+  {
+   "t": 8.4,
+   "screenshot": "05_flicker_late"
+  },
+  {
+   "t": 9.8,
+   "screenshot": "06_play_again_or_lower"
+  },
+  {
+   "t": 9.9,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 9.98,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 10.4,
+   "screenshot": "07_flat_note"
+  },
+  {
+   "t": 13.0,
+   "screenshot": "08_yours_too"
+  },
+  {
+   "t": 13.1,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 13.18,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 13.6,
+   "screenshot": "09_stasis_fading"
+  },
+  {
+   "t": 15.0,
+   "screenshot": "10_stasis"
+  },
+  {
+   "t": 15.05,
+   "log": "gift"
+  },
+  {
+   "t": 15.1,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 15.25,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 15.5,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 15.58,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 16.0,
+   "screenshot": "11_up_on_him"
+  },
+  {
+   "t": 16.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 16.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 16.6,
+   "log": "end"
+  }
+ ]
+}

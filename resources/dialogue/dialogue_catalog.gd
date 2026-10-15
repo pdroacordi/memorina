@@ -95,7 +95,7 @@ func _lines_problems(from: Array[DialogueLine], where: StringName, in_reply: boo
 		if line == null:
 			problems.append("%s is empty" % at)
 			continue
-		if line.text_key.is_empty() and line.cue == &"":
+		if line.text_key.is_empty() and line.cue == &"" and not line.asks():
 			problems.append("%s has no text and no cue" % at)
 		if not line.text_key.is_empty() and line.speaker == null:
 			problems.append("%s has text and no speaker" % at)
@@ -112,15 +112,16 @@ func _lines_problems(from: Array[DialogueLine], where: StringName, in_reply: boo
 		if line.grants != null:
 			if line.grants.kind != SaveFact.Kind.ITEM:
 				problems.append("%s grants a fact that is not an ITEM" % at)
-			if line.text_key.is_empty():
-				problems.append("%s grants on a cue-only line" % at)
+			if line.text_key.is_empty() and line.cue == &"":
+				problems.append("%s grants with no text and no cue" % at)
 		if line.asks():
 			if in_reply:
 				problems.append("%s asks inside a reply" % at)
 			if line.choices.size() < MIN_CHOICES or line.choices.size() > MAX_CHOICES:
 				problems.append("%s offers %d choices, not %d..%d" % [at, line.choices.size(), MIN_CHOICES, MAX_CHOICES])
-			if line.text_key.is_empty():
-				problems.append("%s asks with no question" % at)
+			# A silent ask (a gesture) has no question, no speaker and no variants.
+			if line.text_key.is_empty() and line.speaker != null:
+				problems.append("%s asks silently but names a speaker" % at)
 			if line.cue != &"":
 				problems.append("%s both asks and cues" % at)
 			for answer: DialogueChoice in line.choices:

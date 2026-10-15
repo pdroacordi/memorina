@@ -38,6 +38,9 @@ func validate() -> PackedStringArray:
 		ids[entry.id] = true
 		if SECTION_REQUIREMENT.has(entry.section) and SECTION_REQUIREMENT[entry.section] != entry.requirement:
 			problems.append("%s: section %d needs requirement %d" % [entry.id, entry.section, SECTION_REQUIREMENT[entry.section]])
+		var reads_an_id := entry.requirement in [SaveFact.Kind.DIALOGUE_HEARD, SaveFact.Kind.RESPONSE_CHOSEN]
+		if reads_an_id and entry.fact_id == &"":
+			problems.append("%s reads a dialogue fact with no fact_id" % entry.id)
 		if entry.title_key.is_empty() or entry.body_key.is_empty():
 			problems.append("%s has no title or body key" % entry.id)
 	problems.append_array(_one_per(NotebookEntry.Section.SONGS, Enums.Song.size()))

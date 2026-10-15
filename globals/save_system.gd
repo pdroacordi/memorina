@@ -121,10 +121,11 @@ func map_seen(room_key: String) -> PackedByteArray:
 func set_map_seen(room_key: String, bytes: PackedByteArray) -> void:
 	player_data.map_seen[room_key] = bytes
 
-## Debug fresh saves grant the sword and instrument for guardian encounters.
+## Debug fresh saves grant the sword and instrument for guardian encounters, unless `-- --new-game --opening` asks
+## for the opening as a release plays it (BootPolicy.new_game_owns_items).
 func _new_game() -> PlayerData:
 	var data := PlayerData.new()
-	if OS.is_debug_build():
+	if BootPolicy.new_game_owns_items(OS.is_debug_build(), OS.get_cmdline_user_args()):
 		data.owned_items[Enums.PlayerItem.SWORD] = true
 		data.owned_items[Enums.PlayerItem.MEMORINA] = true
 	return data

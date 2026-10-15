@@ -3,6 +3,8 @@
 ; (x 320): from the floor (row 45) to the mentor's floor (row 25, an iron gallery; the mentor's room is its left half,
 ; design 04 section 3.3, STORY-03), then on to the attic gallery (row 5) under the sealed hatch (col 12, row 4; its
 ; ceiling 64 px over the landing). Hatch gate: all_guardians_restored.
+; The mentor (STORY-03, systems/story) stands on the gallery's left half at x 240 (a FactStaging under Props): his
+; talk starts as Ivo comes near (col 8, legend t, auto); in stasis, Up on him says "..." (col 7, legend t).
 
 [room]
 origin = 0, 0
@@ -33,7 +35,7 @@ _____S........S_____
 _____S........S_____
 _____S........S_____
 _____S........S_____
-_____S....@...S_____
+_____S.tt.@...S_____
 _____S--------S_____
 _____S........S_____
 _____S........S_____
@@ -63,3 +65,5 @@ ____________________
 10,44 = {"shape": "res://resources/world/helix/lighthouse_helix.tres", "look": "res://resources/world/helix/lighthouse_look.tres", "hand": 1}
 10,24 = {"shape": "res://resources/world/helix/lighthouse_helix.tres", "look": "res://resources/world/helix/lighthouse_look.tres", "hand": 1}
 12,4 = {"look": "hatch_up", "link": "lighthouse_hatch", "to_room": "lighthouse_top", "requires": "res://resources/save_facts/all_guardians_restored.tres", "arrive_facing": -1}
+8,24 = {"talk": "res://resources/dialogue/story/mentor.tres", "auto_start": true, "speaker_offset": -32.0}
+7,24 = {"talk": "res://resources/dialogue/story/mentor_stasis.tres"}

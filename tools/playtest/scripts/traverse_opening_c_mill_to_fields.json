@@ -1,5 +1,6 @@
 {
  "scene": "res://scenes/world/game.tscn",
+ "dialogues_heard": ["elder_story"],
  "max_duration": 40,
  "locale": "en",
  "player_position": [

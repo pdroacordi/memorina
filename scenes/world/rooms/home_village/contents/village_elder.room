@@ -1,4 +1,7 @@
 ; village_elder.room - the elder's house (design 04 section 3.1): one flat floor; the furniture is props (systems/props, Interiors). No gate or puzzle.
+; The opening (STORY-03, systems/story): his talks start as Ivo walks past him, between him and the painting (col 10,
+; legend t, auto), so "[Look at the painting]" turns Ivo away from him: the story, the model's base after the Memorina,
+; the empty bench at 0.6. Two children on the bench by the door until his story or 0.6 (a FactStaging).
 
 ; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
 
@@ -15,10 +18,11 @@ tileset = village
 %..................%
 %..................%
 %..................%
-%...E..............%
+%...E.....t........%
 %%%%%%%%%%%%%%%%%%%%
 ____________________
 ____________________
 
 [entities]
 4,8 = {"link": "village_elder_door", "to_room": "village_square", "arrive_facing": 1}
+10,8 = {"talk": "res://resources/dialogue/story/elder.tres", "auto_start": true, "speaker_offset": -64.0}

@@ -63,9 +63,9 @@ STORY-08. Plan, options and the reasons: `architecture/dialogue-is-data-and-choi
 
 ## The director (`World/DialogueDirector`, pausable)
 
-- `start(talkable)` runs `talkable.current(data)`: `box_placed(side)`, `talk_began(at)` with `at` the speaker's point (`Talkable.speaker_position()`), then each step. On LINE it applies `grants` (`SaveSystem.set_item_owned`) and emits `line_shown`; an asking line goes straight on to CHOICES (`choices_shown`), which the box shows once the question is typed.
+- `start(talkable)` runs `talkable.current(data)`: `box_placed(side)`, `talk_began(at)` with `at` the speaker's point (`Talkable.speaker_position()`), then each step. On LINE it applies `grants` (`SaveSystem.set_item_owned`) and emits `line_shown`; an asking line goes straight on to CHOICES (`choices_shown(keys, silent)`), which the box shows once the question is typed. A silent ask (a gesture) clears the box's plate, portrait and text, open or not, and shows its choices at once.
 - `advance()` (the box's press on a typed line) and `choose(i)` (records the answer) step on. END marks the dialogue heard, then `box_closed` and `talk_ended`.
-- A CUE closes the box and emits `talk_paused` (Ivo is free, still in the talk), then starts `DialogueBeat.find(tree, cue)`. A cue with no beat pushes an error and goes on. When the beat emits `finished` or leaves the tree:
+- A CUE applies a cue-only line's grant, closes the box and emits `talk_paused(hold, pose, at)`: the beat's `hold` (STILL by default; FREE frees Ivo, NOTES lets only the notes through), its `pose` and the point it faces (`systems/story`). Ivo stays in the talk. It then starts `DialogueBeat.find(tree, cue)`. A cue with no beat pushes an error and goes on. When the beat emits `finished` or leaves the tree:
   - if the director is out of the tree, the world is being swapped out (a death after its rewind, a quit): the talk is dropped unheard and writes nothing (`gotchas/a-removed-subtree-emits-tree-exiting-later-siblings-first`);
   - otherwise it emits `resume_wanted` and waits; Ivo answers `talk_resumed` under the start gates, and `resume()` places the box again, emits `talk_began` and steps on.
 - `interrupt()` (`Player.hurt`, `fell_into_hazard`) closes and frees Ivo, and the dialogue stays unheard. During a beat it does nothing: the talk is in the beat's hands. While the talk waits to resume, it ends it unheard.
@@ -79,7 +79,7 @@ STORY-08. Plan, options and the reasons: `architecture/dialogue-is-data-and-choi
 - An auto start arms when Ivo enters, is due after `auto_delay` while a dialogue is pending, fires once, and arms again only after he leaves.
 - `TalkComponent` (`Ivo/Talks`) reads the `DoorSensor` overlaps: `reachable()` (a shown Talkable with a current dialogue) and `auto_ready()`.
 - `Player`: the Up buffer is `_up_buffer` (`UP_BUFFER`, 0.1 s), ticked every frame in `_process_motion` whichever branch ran. `_try_door` first, then `_try_talk`, both under `_free_for_up` (on the floor; no roll, swing, knockback, climb, wall slide, Memorina, stair, call, recall or fight). A door in reach wins, and a talk wins over an item pickup (`systems/pickups`). A refused Up is spent; a refused auto start stays due, and none fires while `PlayerInput.blocked` (the map's) or a talk runs. Emits `talk_started(talkable)`.
-- `begin_talk(at)` blocks input and faces `at`; `pause_talk()` (a beat) unblocks and keeps him in the talk; `request_talk_resume()` makes `_try_talk` emit `talk_resumed` once the start gates hold; `end_talk()` unblocks and ends it. `is_talking()` is true from `begin_talk` to `end_talk`, a beat included, and `can_open_map()` is false for all of it, so `PlayerInput.blocked` has one owner at a time.
+- `begin_talk(at)` blocks input and faces `at`; `pause_talk(hold, pose, at)` (a beat) keeps the block for STILL, sets `notes_only` for NOTES, frees him for FREE, and keeps him in the talk; doors and item pickups are refused while he is in a talk (`bugs/up-takes-a-door-during-a-free-beat-and-strands-the-talk`); `request_talk_resume()` makes `_try_talk` emit `talk_resumed` once the start gates hold; `end_talk()` unblocks and ends it. `is_talking()` is true from `begin_talk` to `end_talk`, a beat included, and `can_open_map()` is false for all of it, so `PlayerInput.blocked` has one owner at a time.
 - `NotebookWatcher.is_holding()` includes `is_talking()`, so a granted item's quill waits for the talk to end.
 
 ## The box (`CanvasLayer/DialogueBox`)
@@ -130,9 +130,17 @@ No story text is approved yet (STORY-03 drafts the opening), so the only talk is
 
 2026-10-15, after the first playtest showed the bottom box over Ivo's feet: box placement "Opposite the speakers (Recommended)": the box opens in the screen half the speakers aren't in. In most rooms (floor low on screen) that's the top; it goes to the bottom only when they stand high. Same box and portraits.
 
+## Story beats (STORY-03, `systems/story`)
+
+- A silent ask (no text, no speaker, no variants) is valid: a gesture; the box opens on its choices alone.
+- A grant on a cue-only line is valid and lands as its CUE starts (also with no beat).
+- `talk_paused(hold, pose, at)`: the beat's `Hold` (FREE, STILL, NOTES), `Pose` (NONE, GUITAR, MEMORINA) and the point it faces. `Player.pause_talk` applies them; a STILL beat's own block does not refuse the resume.
+- `DialogueDirector.hear_note` passes Ivo's notes to a NOTES beat. `phrase_shown` / `phrase_lit` / `phrase_closed` are relayed to `CanvasLayer/PhraseSheet`.
+- `~word~` in a text is a brief stutter (`StutterText`); the box shows the text without the marks.
+
 ## Limits
 
-- **The reach audit cannot read a talk.** `ReachKit.of()` packs a fact as kind and index only, and no kit milestone holds a heard dialogue or an answer. A door or barrier gated on `DIALOGUE_HEARD` or `RESPONSE_CHOSEN` therefore reads as never open for every kit. Do not gate a way through the world on a talk until the kits model talks. `GUARDIANS_RESTORED_AT_LEAST` packs whole (its count is the index) and reads correctly.
+- **The reach audit reads talks the kits hold.** `ReachKit.of()` packs a `DIALOGUE_HEARD` or `RESPONSE_CHOSEN` fact as its kind and the id's place in `ReachKit._ids`. A `ReachMilestone.dialogues` list sets what a kit has heard: every kit holds the `opening` milestone (the errand, the song, the elder's story), so the east gate on `heard_elder_story.tres` is open to them all (`systems/story`). A way gated on any other talk reads as closed to every kit until a milestone holds it. `GUARDIANS_RESTORED_AT_LEAST` packs whole (its count is the index).
 - `DialogueBoxSide.opposite` returns `int` (`gotchas/a-static-func-returning-its-own-enum-fails-once-another-script-types-it`).
 
 ## Tests

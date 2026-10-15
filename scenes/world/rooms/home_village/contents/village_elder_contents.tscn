@@ -17,6 +17,40 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/chest.tscn" id="pi_elder_house_chest"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/book_pile.tscn" id="pi_elder_house_book_pile"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/bookshelf_lighthouse.tscn" id="pi_elder_house_bookshelf_lighthouse"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="st_staging"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/bench.tscn" id="pi_elder_house_bench"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/child_a.tscn" id="in_child_a"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/child_b.tscn" id="in_child_b"]
+[ext_resource type="PackedScene" path="res://scenes/world/story/staged_beat.tscn" id="st_staged_beat"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+
+[sub_resource type="Resource" id="stage_1"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"elder_story"
+
+[sub_resource type="Resource" id="stage_2"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("stage_1")])
+show = &""
+fade_seconds = 1.0
+
+[sub_resource type="Resource" id="stage_3"]
+script = ExtResource("st_fact")
+kind = 6
+index = 2
+
+[sub_resource type="Resource" id="stage_4"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("stage_3")])
+show = &""
+fade_seconds = 1.0
+
+[sub_resource type="Resource" id="stage_5"]
+script = ExtResource("st_stage")
+show = &"Listening"
+fade_seconds = 0.5
 
 [node name="Contents" type="Node2D"]
 
@@ -65,6 +99,30 @@ position = Vector2(584, 288)
 
 [node name="Elder" parent="Props" instance=ExtResource("in_elder")]
 position = Vector2(272, 288)
+
+[node name="Bench" parent="Props" instance=ExtResource("pi_elder_house_bench")]
+position = Vector2(196, 288)
+
+[node name="Audience" type="Node2D" parent="Props"]
+script = ExtResource("st_staging")
+stages = Array[ExtResource("st_stage")]([SubResource("stage_2"), SubResource("stage_4"), SubResource("stage_5")])
+
+[node name="Listening" type="Node2D" parent="Props/Audience"]
+
+[node name="ChildA" parent="Props/Audience/Listening" instance=ExtResource("in_child_a")]
+position = Vector2(184, 288)
+flip_h = true
+
+[node name="ChildB" parent="Props/Audience/Listening" instance=ExtResource("in_child_b")]
+position = Vector2(210, 288)
+flip_h = true
+
+[node name="Beats" type="Node2D" parent="."]
+
+[node name="ElderPainting" parent="Beats" instance=ExtResource("st_staged_beat")]
+cue = &"elder_painting"
+face = NodePath("../../Props/LighthousePainting6")
+duration = 1.5
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

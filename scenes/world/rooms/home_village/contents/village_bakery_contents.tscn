@@ -15,6 +15,28 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/bakery/firewood_stack.tscn" id="pi_bakery_firewood_stack"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/bakery/bread_oven.tscn" id="pi_bakery_bread_oven"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/bakery/bread_peel.tscn" id="pi_bakery_bread_peel"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="st_staging"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/baker/two_loaves.png" id="st_two_loaves"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/baker/one_loaf.png" id="st_one_loaf"]
+[ext_resource type="PackedScene" path="res://scenes/world/story/staged_beat.tscn" id="st_staged_beat"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+
+[sub_resource type="Resource" id="story_1"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"baker_errand"
+
+[sub_resource type="Resource" id="story_2"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("story_1")])
+show = &"Idle"
+fade_seconds = 0.5
+
+[sub_resource type="Resource" id="story_3"]
+script = ExtResource("st_stage")
+show = &"Idle"
+fade_seconds = 0.5
 
 [node name="Contents" type="Node2D"]
 
@@ -55,9 +77,39 @@ position = Vector2(540, 288)
 [node name="BreadPeel9" parent="Props" instance=ExtResource("pi_bakery_bread_peel")]
 position = Vector2(592, 288)
 
-[node name="Baker" parent="Props" instance=ExtResource("in_baker")]
+[node name="Baker" type="Node2D" parent="Props"]
+script = ExtResource("st_staging")
+stages = Array[ExtResource("st_stage")]([SubResource("story_2"), SubResource("story_3")])
+
+[node name="Idle" parent="Props/Baker" instance=ExtResource("in_baker")]
 position = Vector2(240, 288)
 flip_h = true
+
+[node name="TwoLoaves" type="Sprite2D" parent="Props/Baker"]
+position = Vector2(240, 288)
+texture = ExtResource("st_two_loaves")
+centered = false
+offset = Vector2(-17, -52)
+flip_h = true
+
+[node name="OneLoaf" type="Sprite2D" parent="Props/Baker"]
+position = Vector2(240, 288)
+texture = ExtResource("st_one_loaf")
+centered = false
+offset = Vector2(-15, -52)
+flip_h = true
+
+[node name="Beats" type="Node2D" parent="."]
+
+[node name="TwoLoaves" parent="Beats" instance=ExtResource("st_staged_beat")]
+cue = &"baker_two_loaves"
+stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Baker"): &"TwoLoaves"})
+duration = 0.6
+
+[node name="OneLoaf" parent="Beats" instance=ExtResource("st_staged_beat")]
+cue = &"baker_loaves"
+stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Baker"): &"OneLoaf"})
+duration = 1.2
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

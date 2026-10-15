@@ -117,3 +117,33 @@ func test_a_guardian_is_met_once_fought_or_restored() -> void:
 	data = PlayerData.new()
 	data.met_guardians[Enums.Guardian.BLOOM] = true
 	assert_bool(met.is_present(data)).is_true()
+
+## A Memories entry may follow a talk: DIALOGUE_HEARD with the dialogue's id (systems/story).
+func test_a_dialogue_entry_reads_its_fact_id() -> void:
+	var entry := _entry(&"lore_talk", NotebookEntry.Section.LORE, SaveFact.Kind.DIALOGUE_HEARD, 0)
+	entry.fact_id = &"mentor_gift"
+	var data := PlayerData.new()
+	assert_bool(entry.is_present(data)).is_false()
+	data.dialogues_heard.append(&"mentor_gift")
+	assert_bool(entry.is_present(data)).is_true()
+
+func test_a_dialogue_entry_without_a_fact_id_is_reported() -> void:
+	var catalog := NotebookCatalog.new()
+	catalog.entries = _catalog().entries.duplicate()
+	catalog.entries.append(_entry(&"lore_unnamed", NotebookEntry.Section.LORE, SaveFact.Kind.DIALOGUE_HEARD, 0))
+	assert_str(", ".join(catalog.validate())).contains("lore_unnamed")
+
+## An entry that follows a talk names a dialogue the dialogue catalog holds; one that follows an answer names a choice.
+func test_every_dialogue_entry_names_a_catalog_dialogue_or_choice() -> void:
+	var dialogues := load("res://resources/dialogue/dialogue_catalog.tres") as DialogueCatalog
+	var heard: Array[StringName] = []
+	for dialogue: Dialogue in dialogues.dialogues():
+		heard.append(dialogue.id)
+	var chosen: Array[StringName] = []
+	for answer: DialogueChoice in dialogues.choices():
+		chosen.append(answer.id)
+	for entry: NotebookEntry in _catalog().entries:
+		if entry.requirement == SaveFact.Kind.DIALOGUE_HEARD:
+			assert_bool(heard.has(entry.fact_id)).override_failure_message("%s reads heard '%s'" % [entry.id, entry.fact_id]).is_true()
+		elif entry.requirement == SaveFact.Kind.RESPONSE_CHOSEN:
+			assert_bool(chosen.has(entry.fact_id)).override_failure_message("%s reads choice '%s'" % [entry.id, entry.fact_id]).is_true()

@@ -46,6 +46,7 @@
 [ext_resource type="Script" path="res://scenes/world/dialogue/dialogue_director.gd" id="46_director"]
 [ext_resource type="Resource" path="res://resources/dialogue/dialogue_catalog.tres" id="47_dialogues"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box/dialogue_box.tscn" id="48_box"]
+[ext_resource type="PackedScene" path="res://scenes/ui/phrase_sheet/phrase_sheet.tscn" id="49_phrase"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -211,6 +212,8 @@ texture = SubResource("ViewportTexture_foreground")
 
 [node name="GuardianCallHud" parent="CanvasLayer" unique_id=978754071 instance=ExtResource("17_callhud")]
 
+[node name="PhraseSheet" parent="CanvasLayer" instance=ExtResource("49_phrase")]
+
 [node name="DialogueBox" parent="CanvasLayer" instance=ExtResource("48_box")]
 
 [node name="Fade" type="ColorRect" parent="CanvasLayer" unique_id=1302556381]
@@ -310,3 +313,7 @@ layer = 2
 [connection signal="box_closed" from="World/DialogueDirector" to="CanvasLayer/DialogueBox" method="close"]
 [connection signal="advanced" from="CanvasLayer/DialogueBox" to="World/DialogueDirector" method="advance"]
 [connection signal="chosen" from="CanvasLayer/DialogueBox" to="World/DialogueDirector" method="choose"]
+[connection signal="beat_note_pressed" from="World/Player" to="World/DialogueDirector" method="hear_note"]
+[connection signal="phrase_shown" from="World/DialogueDirector" to="CanvasLayer/PhraseSheet" method="show_phrase"]
+[connection signal="phrase_lit" from="World/DialogueDirector" to="CanvasLayer/PhraseSheet" method="light"]
+[connection signal="phrase_closed" from="World/DialogueDirector" to="CanvasLayer/PhraseSheet" method="close"]

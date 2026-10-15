@@ -1,0 +1,42 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 5.0,
+ "locale": "en",
+ "owned_items": [
+  0
+ ],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_song",
+  "elder_story"
+ ],
+ "player_position": [
+  4100,
+  286
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "screenshot": "00_gate_open"
+  },
+  {
+   "t": 1.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "screenshot": "01_through"
+  },
+  {
+   "t": 3.25,
+   "log": "through"
+  }
+ ]
+}

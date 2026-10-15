@@ -22,6 +22,8 @@ const ATTACK_FALL := &"attack_fall"
 const ATTACK_POGO := &"attack_pogo"
 const MEMORINA_DRAW := &"memorina_draw"
 const MEMORINA_IDLE := &"memorina_idle"
+const GUITAR_HOLD := &"guitar_hold"
+const GUITAR_STRUM := &"guitar_strum"
 const CLIMB := &"climb"
 const CLIMB_HOLD := &"climb_hold"
 const CLIMB_BACK := &"climb_back"
@@ -76,6 +78,15 @@ func resolve() -> StringName:
 		if _player.is_jumping():
 			return driver.sequence(JUMP_START, JUMP_IDLE, skip_intro or driver.current in FALL_CLIPS)
 		return driver.sequence(FALL_START, FALL_IDLE, skip_intro)
+
+	# A story beat's pose (systems/story): the guitar, or the Memorina held without being drawn.
+	match _player.held_pose():
+		DialogueBeat.Pose.GUITAR:
+			if _player.just_strummed() or driver.holding(GUITAR_STRUM):
+				return GUITAR_STRUM
+			return GUITAR_HOLD
+		DialogueBeat.Pose.MEMORINA:
+			return MEMORINA_IDLE
 
 	# Drawn implies grounded; instrument holding outranks idle, while hurt and death take priority.
 	if _player.is_memorina_drawn():

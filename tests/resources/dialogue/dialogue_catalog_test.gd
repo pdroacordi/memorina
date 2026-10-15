@@ -76,13 +76,27 @@ func test_a_question_inside_a_reply_is_refused() -> void:
 	]
 	assert_str(_problems([F.ask("ASK", &"outer", offered)])).contains("asks inside a reply")
 
-func test_a_grant_must_be_an_item_on_a_text_line() -> void:
+func test_a_grant_must_be_an_item_on_a_text_or_cue_line() -> void:
 	var song := F.line("A")
 	song.grants = F.fact(SaveFact.Kind.SONG, &"", Enums.Song.ROOT)
 	assert_str(_problems([song])).contains("not an ITEM")
-	var silent := F.cue_line(&"guitar")
-	silent.grants = F.fact(SaveFact.Kind.ITEM, &"", Enums.PlayerItem.MEMORINA)
-	assert_str(_problems([silent])).contains("grants on a cue-only line")
+	var gift := F.cue_line(&"mentor_gift")
+	gift.grants = F.fact(SaveFact.Kind.ITEM, &"", Enums.PlayerItem.MEMORINA)
+	assert_str(_problems([gift])).is_empty()
+
+## A gesture is a silent ask: no question, no speaker, no variants; its choices only (systems/story).
+func test_a_silent_ask_is_valid_and_a_named_one_is_not() -> void:
+	var gesture := F.ask("", &"morning_song", [
+		F.choice(&"try_again", "TRY", DialogueChoice.Tone.HOLD_ON),
+		F.choice(&"lower", "LOWER", DialogueChoice.Tone.LET_GO),
+	])
+	gesture.speaker = null
+	assert_str(_problems([gesture])).is_empty()
+	var named := F.ask("", &"named", [
+		F.choice(&"a", "A", DialogueChoice.Tone.NONE),
+		F.choice(&"b", "B", DialogueChoice.Tone.NONE),
+	])
+	assert_str(_problems([named])).contains("asks silently but names a speaker")
 
 func test_facts_must_name_known_dialogues_and_choices() -> void:
 	var gated := F.line("A")

@@ -38,3 +38,11 @@ func test_a_release_build_begins_nothing() -> void:
 	assert_int(BootPolicy.decide(false, false, _no_args, _no_args)).is_equal(BootPolicy.Session.NONE)
 	var fresh := PackedStringArray([BootPolicy.NEW_GAME_ARG])
 	assert_int(BootPolicy.decide(false, false, _no_args, fresh)).is_equal(BootPolicy.Session.NONE)
+
+## `-- --new-game --opening` starts a debug build as a release starts: with no items (systems/story).
+func test_the_opening_starts_with_no_items_in_debug() -> void:
+	assert_bool(BootPolicy.new_game_owns_items(true, PackedStringArray())).is_true()
+	assert_bool(BootPolicy.new_game_owns_items(true, PackedStringArray(["--new-game"]))).is_true()
+	assert_bool(BootPolicy.new_game_owns_items(true, PackedStringArray(["--new-game", "--opening"]))).is_false()
+	assert_bool(BootPolicy.new_game_owns_items(true, PackedStringArray(["--opening"]))).is_true()
+	assert_bool(BootPolicy.new_game_owns_items(false, PackedStringArray())).is_false()

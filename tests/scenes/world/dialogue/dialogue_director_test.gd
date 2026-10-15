@@ -21,9 +21,10 @@ func before_test() -> void:
 	_director.talk_began.connect(func(_at: Vector2) -> void: _log.append("began"))
 	_director.talk_ended.connect(func() -> void: _log.append("ended"))
 	_director.line_shown.connect(func(_who: Speaker, key: String) -> void: _log.append("line:" + key))
-	_director.choices_shown.connect(func(keys: PackedStringArray) -> void: _log.append("choices:" + ",".join(keys)))
+	_director.choices_shown.connect(func(keys: PackedStringArray, silent: bool) -> void:
+		_log.append(("gesture:" if silent else "choices:") + ",".join(keys)))
 	_director.box_closed.connect(func() -> void: _log.append("closed"))
-	_director.talk_paused.connect(func() -> void: _log.append("paused"))
+	_director.talk_paused.connect(func(_hold: int, _pose: int, _at: Vector2) -> void: _log.append("paused"))
 	_director.resume_wanted.connect(func() -> void: _log.append("wanted"))
 	_talkable = auto_free(TALKABLE.instantiate()) as Talkable
 	add_child(_talkable)
@@ -185,3 +186,103 @@ func test_a_talk_already_running_is_not_restarted() -> void:
 	_talk([F.line("A"), F.line("B")])
 	_director.start(_talkable)
 	assert_array(Array(_log)).is_equal(["began", "line:A"])
+
+## A cue-only line's grant lands as its beat starts, before the beat runs.
+func test_a_cue_only_grant_lands_as_its_beat_starts() -> void:
+	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, false)
+	var beat := auto_free(DialogueBeat.new()) as DialogueBeat
+	beat.cue = &"mentor_gift"
+	add_child(beat)
+	var owned_at_start: Array[bool] = []
+	beat.started.connect(func() -> void: owned_at_start.append(SaveSystem.has_item(Enums.PlayerItem.MEMORINA)))
+	var gift := F.cue_line(&"mentor_gift")
+	gift.grants = F.fact(SaveFact.Kind.ITEM, &"", Enums.PlayerItem.MEMORINA)
+	_talk([F.line("A"), gift, F.line("B")])
+	_director.advance()
+	assert_array(owned_at_start).is_equal([true])
+
+## A cue-only grant with no beat in the world still lands; the talk goes on.
+func test_a_cue_only_grant_lands_with_no_beat() -> void:
+	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, false)
+	var gift := F.cue_line(&"nowhere")
+	gift.grants = F.fact(SaveFact.Kind.ITEM, &"", Enums.PlayerItem.MEMORINA)
+	var dialogues: Array[Dialogue] = [F.dialogue(&"talk", [gift, F.line("B")])]
+	_talkable.talk = F.dialogue_set(dialogues)
+	_director.start(_talkable)
+	assert_bool(SaveSystem.has_item(Enums.PlayerItem.MEMORINA)).is_true()
+	assert_str(_log[_log.size() - 1]).is_equal("line:B")
+
+## A gesture after a beat: the talk resumes straight into its choices, with no line.
+func test_a_silent_ask_shows_only_its_choices() -> void:
+	var gesture := F.ask("", &"morning_song", [
+		F.choice(&"try_again", "TRY", DialogueChoice.Tone.HOLD_ON),
+		F.choice(&"lower", "LOWER", DialogueChoice.Tone.LET_GO),
+	])
+	gesture.speaker = null
+	_talk([gesture, F.line("Z")])
+	assert_array(Array(_log)).is_equal(["began", "gesture:TRY,LOWER"])
+	_director.choose(0)
+	assert_str(String(SaveSystem.response_to(&"morning_song"))).is_equal("try_again")
+
+## The beat's hold, pose and face reach talk_paused; notes reach a NOTES beat only; its phrase is relayed.
+func test_a_beat_passes_its_hold_pose_face_and_notes() -> void:
+	var paused: Array = []
+	_director.talk_paused.connect(func(hold: int, pose: int, at: Vector2) -> void: paused.append([hold, pose, at]))
+	var relayed: Array[String] = []
+	_director.phrase_shown.connect(func(_notes: Array[Enums.Note], count: int, _glyphs: Enums.GlyphSet) -> void: relayed.append("shown:%d" % count))
+	_director.phrase_lit.connect(func(index: int) -> void: relayed.append("lit:%d" % index))
+	_director.phrase_closed.connect(func() -> void: relayed.append("closed"))
+	var target := auto_free(Node2D.new()) as Node2D
+	target.position = Vector2(-300, 0)
+	add_child(target)
+	var beat := auto_free(DialogueBeat.new()) as DialogueBeat
+	beat.cue = &"guitar"
+	beat.hold = DialogueBeat.Hold.NOTES
+	beat.pose = DialogueBeat.Pose.GUITAR
+	add_child(beat)
+	beat.face = beat.get_path_to(target)
+	var heard: Array[int] = []
+	beat.note_received.connect(func(note: Enums.Note, _glyphs: Enums.GlyphSet) -> void: heard.append(note))
+	_talk([F.cue_line(&"guitar"), F.line("B")])
+	assert_array(paused).is_equal([[DialogueBeat.Hold.NOTES, DialogueBeat.Pose.GUITAR, Vector2(-300, 0)]])
+	var notes: Array[Enums.Note] = [Enums.Note.RIGHT, Enums.Note.UP]
+	beat.phrase_shown.emit(notes, 2, Enums.GlyphSet.KEYBOARD_ARROWS)
+	_director.hear_note(Enums.Note.UP, Enums.GlyphSet.KEYBOARD_ARROWS)
+	beat.phrase_lit.emit(0)
+	beat.finish()
+	_director.hear_note(Enums.Note.DOWN, Enums.GlyphSet.KEYBOARD_ARROWS)
+	assert_array(heard).is_equal([Enums.Note.UP])
+	assert_array(relayed).is_equal(["shown:2", "lit:0", "closed"])
+
+## The grant of a cue-only line lands once, as its beat starts; the resume after the beat does not grant it again.
+func test_a_cue_only_grant_is_not_applied_again_on_resume() -> void:
+	var beat := auto_free(DialogueBeat.new()) as DialogueBeat
+	beat.cue = &"mentor_gift"
+	add_child(beat)
+	var gift := F.cue_line(&"mentor_gift")
+	gift.grants = F.fact(SaveFact.Kind.ITEM, &"", Enums.PlayerItem.MEMORINA)
+	_talk([gift, F.line("B")])
+	assert_bool(SaveSystem.has_item(Enums.PlayerItem.MEMORINA)).is_true()
+	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, false)
+	beat.finish()
+	_director.resume()
+	assert_str(_log[_log.size() - 1]).is_equal("line:B")
+	assert_bool(SaveSystem.has_item(Enums.PlayerItem.MEMORINA)).is_false()
+
+## A beat that turns Ivo keeps him turned for the rest of the talk: the elder speaks behind him.
+func test_a_beat_face_holds_until_the_talk_ends() -> void:
+	var faced: Array[Vector2] = []
+	_director.talk_began.connect(func(at: Vector2) -> void: faced.append(at))
+	var painting := auto_free(Node2D.new()) as Node2D
+	painting.position = Vector2(400, 0)
+	add_child(painting)
+	var beat := auto_free(DialogueBeat.new()) as DialogueBeat
+	beat.cue = &"elder_painting"
+	add_child(beat)
+	beat.face = beat.get_path_to(painting)
+	_talkable.position = Vector2(-50, 0)
+	_talk([F.cue_line(&"elder_painting"), F.line("EAST")])
+	beat.finish()
+	_director.resume()
+	assert_array(faced).is_equal([Vector2(-50, 0), Vector2(400, 0)])
+

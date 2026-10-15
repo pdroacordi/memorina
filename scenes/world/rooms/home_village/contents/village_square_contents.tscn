@@ -29,6 +29,36 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/chopping_block.tscn" id="w11_chopping_block"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/crate.tscn" id="w11_crate"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bush.tscn" id="w11_bush"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="st_staging"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+
+[sub_resource type="Resource" id="stage_1"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"elder_story"
+
+[sub_resource type="Resource" id="stage_2"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("stage_1")])
+show = &"Playing"
+fade_seconds = 0.0
+
+[sub_resource type="Resource" id="stage_3"]
+script = ExtResource("st_fact")
+kind = 6
+index = 2
+
+[sub_resource type="Resource" id="stage_4"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("stage_3")])
+show = &"Playing"
+fade_seconds = 0.0
+
+[sub_resource type="Resource" id="stage_5"]
+script = ExtResource("st_stage")
+show = &""
+fade_seconds = 0.5
 
 [node name="Contents" type="Node2D"]
 
@@ -110,15 +140,21 @@ position = Vector2(1890, 288)
 [node name="Cat" parent="Props" instance=ExtResource("in_cat")]
 position = Vector2(318, 288)
 
-[node name="ChildA" parent="Props" instance=ExtResource("in_child_a")]
+[node name="WaterCarrier" parent="Props" instance=ExtResource("in_water_carrier")]
+position = Vector2(1050, 288)
+
+[node name="Children" type="Node2D" parent="Props"]
+script = ExtResource("st_staging")
+stages = Array[ExtResource("st_stage")]([SubResource("stage_2"), SubResource("stage_4"), SubResource("stage_5")])
+
+[node name="Playing" type="Node2D" parent="Props/Children"]
+
+[node name="ChildA" parent="Props/Children/Playing" instance=ExtResource("in_child_a")]
 position = Vector2(600, 288)
 flip_h = true
 
-[node name="ChildB" parent="Props" instance=ExtResource("in_child_b")]
+[node name="ChildB" parent="Props/Children/Playing" instance=ExtResource("in_child_b")]
 position = Vector2(566, 288)
-
-[node name="WaterCarrier" parent="Props" instance=ExtResource("in_water_carrier")]
-position = Vector2(1050, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

@@ -265,3 +265,19 @@ func test_a_talk_low_on_screen_opens_the_box_at_the_top() -> void:
 	var expected := DialogueBoxSide.Side.BOTTOM if feet < height * 0.5 else DialogueBoxSide.Side.TOP
 	var shift := (box.get_node("Art/Box") as Control).position.y
 	assert_float(shift).is_equal(DialogueBox.TOP_SHIFT if expected == DialogueBoxSide.Side.TOP else 0.0)
+
+## A door's Up prompt hides while a talk runs: the door is refused until the talk ends.
+func test_a_door_prompt_hides_while_he_talks() -> void:
+	var door := DOOR.instantiate() as Door
+	door.position = Vector2(0, FLOOR_Y)
+	_holder.add_child(door)
+	var prompt := door.get_node("Prompt") as Control
+	await _land()
+	await _frames(2)
+	assert_bool(prompt.visible).is_true()
+	_ivo.begin_talk(Vector2(100, FLOOR_Y))
+	await _frames(2)
+	assert_bool(prompt.visible).is_false()
+	_ivo.end_talk()
+	await _frames(2)
+	assert_bool(prompt.visible).is_true()

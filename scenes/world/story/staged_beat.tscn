@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/story/staged_beat.gd" id="1_beat"]
+[ext_resource type="Script" path="res://scenes/world/memory/color_pulse/pulse_emitter.gd" id="2_emitter"]
+[ext_resource type="PackedScene" path="res://scenes/world/memory/color_pulse/color_pulse.tscn" id="3_pulse"]
+
+[node name="StagedBeat" type="Node"]
+script = ExtResource("1_beat")
+
+[node name="PulseEmitter" type="Node" parent="."]
+script = ExtResource("2_emitter")
+pulse_scene = ExtResource("3_pulse")
+song_acts = false

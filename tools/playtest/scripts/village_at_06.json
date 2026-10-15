@@ -1,0 +1,104 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 10.0,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1
+ ],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_song",
+  "elder_story",
+  "mentor_gift",
+  "daughter_return_hum",
+  "elder_return"
+ ],
+ "responses": {
+  "morning_song": "guitar_lower",
+  "elder_story": "elder_wait",
+  "mentor_flicker": "memorina_lower"
+ },
+ "player_position": [
+  100,
+  12286
+ ],
+ "steps": [
+  {
+   "t": 1.4,
+   "screenshot": "00_three_houses"
+  },
+  {
+   "t": 1.5,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 1.58,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "screenshot": "01_her_eyes"
+  },
+  {
+   "t": 3.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 3.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 3.8,
+   "log": "eyes"
+  },
+  {
+   "t": 4.0,
+   "teleport": [
+    4960,
+    12286
+   ]
+  },
+  {
+   "t": 4.9,
+   "screenshot": "02_empty_bench"
+  },
+  {
+   "t": 5.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.85,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 7.6,
+   "screenshot": "03_and_the_keeper"
+  },
+  {
+   "t": 7.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 7.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "log": "end"
+  }
+ ]
+}

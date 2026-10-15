@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/story/guitar_beat.gd" id="1_beat"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/guitar_g.wav" id="2_g"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/guitar_c.wav" id="3_c"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/guitar_d.wav" id="4_d"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/guitar_e.wav" id="5_e"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/guitar_muted.wav" id="6_muted"]
+
+[node name="GuitarBeat" type="Node"]
+script = ExtResource("1_beat")
+hold = 2
+pose = 1
+strings = Array[AudioStream]([ExtResource("2_g"), ExtResource("3_c"), ExtResource("4_d"), ExtResource("5_e")])
+muted = ExtResource("6_muted")

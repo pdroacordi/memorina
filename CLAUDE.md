@@ -4,7 +4,7 @@ Godot 4.7 (GDScript, Forward+), a 2D metroidvania. Four documents answer differe
 
 | Question | Where |
 |---|---|
-| What is the game? (lore, mechanics, world; Portuguese) | [`docs/design/`](docs/design/) `01_lore_e_narrativa.md`, `02_mecanicas.md`, `03_mundo_e_ambiente.md`, `04_mapa_do_mundo.md` |
+| What is the game? (lore, mechanics, world; Portuguese) | [`docs/design/`](docs/design/) `01_lore_e_narrativa.md`, `02_mecanicas.md`, `03_mundo_e_ambiente.md`, `04_mapa_do_mundo.md`, `05_roteiro.md` (the opening's script) |
 | What is built, what is next? | [`docs/roadmap.md`](docs/roadmap.md) |
 | How does system X work, and what must not break? | [`docs/knowledge/systems/`](docs/knowledge/systems/) (table below) |
 | Why was it built this way; what broke before? | [`docs/knowledge/`](docs/knowledge/README.md) `architecture/`, `bugs/`, `gotchas/`, `playtests/` |
@@ -98,6 +98,7 @@ Read the entry before touching the system. The rule beside each is the one most 
 | Screens (menus) | [`systems/screens`](docs/knowledge/systems/screens.md) | Screens only asks `WorldFreeze` to hold and releases only what it held. The Screens root Control is ALWAYS, never its CanvasLayer. Every tween under Screens ignores the time scale. |
 | Notebook | [`systems/notebook`](docs/knowledge/systems/notebook.md) | An entry's presence is derived from save facts, never recorded. Every notebook text and note glyph stays inside its page in every language (`notebook_text_fit_test`). The book animates only with real-time tweens. |
 | Dialogue | [`systems/dialogue`](docs/knowledge/systems/dialogue.md) | A talk blocks Ivo like the map: no new `WorldFreeze` writer, no input reader, no router screen, and the map is refused from its start to its end, a beat included; a talk resumes after a beat only under the start gates. Conditions are `SaveFact`s; heard and answers are live data and the tally is derived, never stored. Every dialogue text fits the box in every language (`dialogue_text_fit_test`). |
+| Story | [`systems/story`](docs/knowledge/systems/story.md) | A scene's pose is derived from save facts: a `FactStaging` is the only writer of its children's visibility; a beat only asks for a stand-in. Beats run on the pausable, scaled clock, never `WorldFreeze` or `TIME`. The guitar can never finish the morning song. |
 | Pickups | [`systems/pickups`](docs/knowledge/systems/pickups.md) | An item's presence in the world is derived from the save, never recorded: an `ItemPickup` shows only while the item is not owned. Up takes it after a door and a talk, under the same gates and buffer. |
 | Region title | [`systems/region-title`](docs/knowledge/systems/region-title.md) | The first room of a world build is recorded silently, never titled; a title plays once and reaches the save at the next bench or death; a death keeps it shown. The name and epithet are keys on the `Region`; both fit their box in every language (`region_title_fit_test`). The tween is pausable and scaled. |
 | Map | [`systems/map`](docs/knowledge/systems/map.md) | Only cells whose centre was on screen are seen, per room `SceneKey`. `MapGrid.CELL_PX` (64) is part of the save. Reassign `map_seen` bytes, never edit them in place. The revealer stays pausable, after `Camera2D`, and is armed only by `Game.room_changed`. The canvas is a Node2D. |

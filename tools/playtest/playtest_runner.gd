@@ -66,6 +66,11 @@ func _ready() -> void:
 		SaveSystem.restore_guardian(int(guardian_id) as Enums.Guardian)
 	for entry_id: Variant in timeline.get("notebook_read", []):
 		SaveSystem.mark_notebook_read(StringName(entry_id))
+	for dialogue_id: Variant in timeline.get("dialogues_heard", []):
+		SaveSystem.mark_dialogue_heard(StringName(str(dialogue_id)))
+	var responses: Dictionary = timeline.get("responses", {})
+	for ask_id: Variant in responses:
+		SaveSystem.record_response(StringName(str(ask_id)), StringName(str(responses[ask_id])))
 	# Exactly these items: a debug new game owns the sword and the Memorina, so this is how a run starts without them.
 	if timeline.has("owned_items"):
 		var owned: Array = timeline["owned_items"]
@@ -134,6 +139,8 @@ func _run_step(step: Dictionary) -> void:
 		motion.axis = int(step["joy_axis"][0]) as JoyAxis
 		motion.axis_value = float(step["joy_axis"][1])
 		Input.parse_input_event(motion)
+	if step.has("teleport"):
+		_place_player(step["teleport"])
 	if step.has("log"):
 		_log_state(String(step["log"]))
 	if step.has("trace"):

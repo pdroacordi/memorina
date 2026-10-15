@@ -239,7 +239,7 @@ O princípio central da cena: nenhum julgamento dela sobre ele. Ela não avalia,
 - **Por quem ou o quê especificamente o guardião da rachadura tentou reter a segunda estação (motivação por amor já fechada; o alvo do amor está em aberto).**
 - **O herói sabe, antes da Batalha Final, que o mentor é o guardião da rachadura — ou descobre só durante a revelação, junto com o jogador?**
 - Nomes da esposa, filha, ancião e demais guardiões. (Nome do herói fechado: Ivo — ver seção 4.1.)
-- Cena de abertura: o que o jogador vê e vive nos primeiros minutos, do cinzesquecimento chegando na vila até a decisão de partir.
+- ~~Cena de abertura: o que o jogador vê e vive nos primeiros minutos, do cinzesquecimento chegando na vila até a decisão de partir.~~ **Resolvida em 2026-10-15:** `05_roteiro.md`.
 - Onde a frase-tema original ("tudo que morre fica vivo na lembrança...") pode ecoar em outro ponto do jogo, já que não fecha mais a cena final.
 - Mecânica precisa do acumulado silencioso: quais escolhas de diálogo contam ao longo da jornada, como se somam, e como se manifestam na textura do final único.
 - Relação entre a filha e o ancião ao longo da jornada, e o que as interações opcionais na vila revisitável mostram dela crescendo.

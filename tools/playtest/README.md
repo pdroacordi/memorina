@@ -46,7 +46,8 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   songs. `"met_guardians"` / `"restored_guardians": [ids]` (`Enums.Guardian`) and
   `"notebook_read": ["<entry id>"]` seed the save the same way; `"owned_items": [ids]` (`Enums.PlayerItem`: 0 the
   sword, 1 the Memorina) sets the owned items to exactly that list, so a run can start without the items a debug new
-  game owns (`[]` owns nothing), and `"locale": "en"` sets
+  game owns (`[]` owns nothing); `"dialogues_heard": ["<dialogue id>"]` marks talks heard and
+  `"responses": {"<ask id>": "<choice id>"}` records answers, so a run can start mid-story (`systems/story`), and `"locale": "en"` sets
   the locale before the scene loads (the default is the OS locale). `log` also prints the
   notebook: phase, section, the entry on the right page, its rows (`>` focused, `*` unread,
   `()` hidden), the scroll cues, tab marks, read ids, the HUD quill's alpha and the
@@ -54,6 +55,9 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   centre, the fade's alpha, `transitioning`, Ivo's facing and process mode, whether the region weather
   is visible, every loaded door (`link@x:open|sealed[+prompt] shake=<sprite x>`), and the region title's
   alpha, text and the count of announced regions (`title=<alpha> '<name>' announced=<n>`).
+- **Teleport.** `"teleport": [x, y]` moves Ivo mid-run with `Character.teleport`, as `player_position` does at the
+  start, so one timeline can visit several rooms (the opening's errand, `systems/story`). The game enters the room under
+  him with a cut.
 - **Per-frame trace.** `"trace": true` prints one `[playtest] trace` line every physics frame until a
   `"trace": false` step: Ivo's position, velocity, floor, helix ride and progress `u`, the camera's centre and hp.
 - **Foes.** `log` and `trace` lines end with `foes=[...]`: every enemy and guardian within 600 px of Ivo, its

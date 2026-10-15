@@ -183,3 +183,45 @@ func test_the_box_opens_at_either_side_and_stays_on_screen() -> void:
 			assert_float(plate_y).is_less(panel_y)
 	_box.place(DialogueBoxSide.Side.TOP)
 	assert_float((_box.get_node("Art/Box") as Control).position.y + panel.position.y).is_equal(20.0)
+
+## A gesture: the box opens with no plate, portrait or text, its choices focused at once.
+func test_a_silent_ask_opens_the_box_on_its_choices() -> void:
+	_box.show_choices(PackedStringArray(["DIALOGUE_TRIAL_CHOICE_HOLD", "DIALOGUE_TRIAL_CHOICE_LET_GO"]))
+	await await_idle_frame()
+	assert_bool(_box.visible).is_true()
+	assert_bool(_box.is_choosing()).is_true()
+	assert_bool((_box.get_node("Art/Box/Plate") as Control).visible).is_false()
+	assert_object((_box.get_node("Art/Box/Portrait") as TextureRect).texture).is_null()
+	assert_str(_box.text_label().text).is_empty()
+	assert_object(_focused()).is_same(_box.choice_button(0))
+
+## `~word~` shows without its marks; the word's first letter hangs, vanishes, and the word types again.
+func test_a_stuttered_word_hesitates() -> void:
+	_box.chars_per_second = 200.0
+	_box.stutter_hold = 0.4
+	_box.show_line(ELDER, "AB ~CD~ E")
+	assert_str(_box.text_label().text).is_equal("AB CD E")
+	await await_millis(150)
+	assert_int(_box.text_label().visible_characters).is_equal(4)
+	assert_bool(_box.is_typing()).is_true()
+	await await_millis(500)
+	assert_bool(_box.is_typing()).is_false()
+	assert_float(_box.text_label().visible_ratio).is_equal(1.0)
+
+func test_the_first_press_completes_a_stuttered_line() -> void:
+	_box.show_line(ELDER, "Yours ~too~. Maybe.")
+	await await_idle_frame()
+	await _accept()
+	assert_bool(_box.is_typing()).is_false()
+	assert_float(_box.text_label().visible_ratio).is_equal(1.0)
+
+## A gesture after a line clears the line's plate, portrait and text even though the box is open.
+func test_a_silent_ask_clears_an_open_box() -> void:
+	_box.show_line(ELDER, LINE_KEY)
+	_box.show_choices(PackedStringArray(["DIALOGUE_TRIAL_CHOICE_HOLD", "DIALOGUE_TRIAL_CHOICE_LET_GO"]), true)
+	await await_idle_frame()
+	assert_bool((_box.get_node("Art/Box/Plate") as Control).visible).is_false()
+	assert_str(_box.text_label().text).is_empty()
+	assert_bool(_box.is_typing()).is_false()
+	assert_bool(_box.is_choosing()).is_true()
+	assert_object(_focused()).is_same(_box.choice_button(0))

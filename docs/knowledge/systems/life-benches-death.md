@@ -74,6 +74,11 @@ Plan and options: `architecture/save-slots-and-the-boot-swap`.
 - `SaveSystem.progress_changed` is emitted by `learn_song`, `unlock_skill`, `set_item_owned`, `restore_guardian` and `meet_guardian`. `mark_notebook_read` emits nothing. The notebook derives its entries from these facts (`systems/notebook`).
 - Tests: `save_ledger_test` (read ids and announced regions survive a death, once each; a met guardian is forgotten), `player_data_test` (old saves, round trip), `save_system_notebook_test`.
 
+## The opening's new game (STORY-03, 2026-10-15)
+
+- A release new game owns nothing. A debug new game owns the sword and the Memorina, unless `-- --new-game --opening` starts it as a release does (`BootPolicy.new_game_owns_items`, `systems/story`).
+- What the opening's rooms show (`FactStaging`) is read from the save on ready, so a death rebuild shows the bench's stage with no fade and no stand-in.
+
 ## Items lying in the world (STORY-02, built 2026-10-15)
 
 - An `ItemPickup` (the sword on the farmhouse table) shows only while `owned_items` lacks its item. Taking it is `SaveSystem.set_item_owned(item, true)`, a live gain: a death before a bench forgets it, and the rebuilt world shows the item where it was left (`systems/pickups`).

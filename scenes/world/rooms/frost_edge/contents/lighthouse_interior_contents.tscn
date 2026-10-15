@@ -4,12 +4,123 @@
 [ext_resource type="Resource" path="res://resources/world/backdrops/interior_stone.tres" id="bd_set"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/frost_edge/contents/lighthouse_interior.room" id="room_map"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="st_staging"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/empty_hand.png" id="st_empty_hand"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/memorina_in_hand.png" id="st_memorina_in_hand"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/stasis.png" id="st_stasis"]
+[ext_resource type="PackedScene" path="res://scenes/world/story/staged_beat.tscn" id="st_staged_beat"]
+[ext_resource type="Resource" path="res://resources/story/mentor_phrase.tres" id="st_phrase"]
+[ext_resource type="Resource" path="res://resources/story/story_pulse_stats.tres" id="st_pulse_stats"]
+[ext_resource type="Resource" path="res://resources/songs/freeze.tres" id="st_winter"]
+[ext_resource type="Resource" path="res://resources/songs/root.tres" id="st_spring"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/wife_hum_opening.wav" id="st_hum"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/memorina_flat.wav" id="st_flat"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_up_g4.mp3" id="st_note_up"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_down_c4.mp3" id="st_note_down"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_low_mid_d4.mp3" id="st_note_left"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="st_note_right"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+
+[sub_resource type="Resource" id="stage_1"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"mentor_gift"
+
+[sub_resource type="Resource" id="stage_2"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("stage_1")])
+show = &"Stasis"
+fade_seconds = 1.5
+
+[sub_resource type="Resource" id="stage_3"]
+script = ExtResource("st_stage")
+show = &"Holding"
+fade_seconds = 0.5
 
 [node name="Contents" type="Node2D"]
 
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
 backdrop_set = ExtResource("bd_set")
+
+[node name="Props" type="Node2D" parent="."]
+z_index = -10
+
+[node name="Mentor" type="Node2D" parent="Props"]
+script = ExtResource("st_staging")
+stages = Array[ExtResource("st_stage")]([SubResource("stage_2"), SubResource("stage_3")])
+
+[node name="Holding" type="Node2D" parent="Props/Mentor"]
+
+[node name="Body" type="Sprite2D" parent="Props/Mentor/Holding"]
+position = Vector2(240, 800)
+texture = ExtResource("st_empty_hand")
+centered = false
+offset = Vector2(-43, -120)
+flip_h = true
+
+[node name="Memorina" type="Sprite2D" parent="Props/Mentor/Holding"]
+position = Vector2(277, 702)
+texture = ExtResource("st_memorina_in_hand")
+centered = false
+offset = Vector2(-7, -8)
+flip_h = true
+
+[node name="EmptyHand" type="Node2D" parent="Props/Mentor"]
+
+[node name="Body" type="Sprite2D" parent="Props/Mentor/EmptyHand"]
+position = Vector2(240, 800)
+texture = ExtResource("st_empty_hand")
+centered = false
+offset = Vector2(-43, -120)
+flip_h = true
+
+[node name="Stasis" type="Node2D" parent="Props/Mentor"]
+
+[node name="Body" type="Sprite2D" parent="Props/Mentor/Stasis"]
+position = Vector2(240, 800)
+texture = ExtResource("st_stasis")
+centered = false
+offset = Vector2(-43, -120)
+flip_h = true
+
+[node name="Beats" type="Node2D" parent="."]
+
+[node name="Pair" type="Marker2D" parent="Beats"]
+position = Vector2(272, 770)
+
+[node name="MentorPhrase" parent="Beats" instance=ExtResource("st_staged_beat")]
+cue = &"mentor_phrase"
+face = NodePath("../../Props/Mentor/Holding/Body")
+melody = ExtResource("st_phrase")
+voices = Array[AudioStream]([ExtResource("st_note_up"), ExtResource("st_note_down"), ExtResource("st_note_left"), ExtResource("st_note_right")])
+pulse_song = ExtResource("st_winter")
+pulse_stats = ExtResource("st_pulse_stats")
+pulse_at = NodePath("../Pair")
+duration = 2.6
+
+[node name="MentorGift" parent="Beats" instance=ExtResource("st_staged_beat")]
+cue = &"mentor_gift"
+pose = 2
+stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Mentor"): &"EmptyHand"})
+face = NodePath("../../Props/Mentor/EmptyHand/Body")
+stream = ExtResource("st_hum")
+pulse_song = ExtResource("st_spring")
+pulse_stats = ExtResource("st_pulse_stats")
+pulse_at = NodePath("../Pair")
+duration = 2.4
+
+[node name="MemorinaFlat" parent="Beats" instance=ExtResource("st_staged_beat")]
+cue = &"memorina_flat"
+pose = 2
+stream = ExtResource("st_flat")
+duration = 1.6
+
+[node name="MemorinaLowered" parent="Beats" instance=ExtResource("st_staged_beat")]
+cue = &"memorina_lowered"
+face = NodePath("../../Props/Mentor/EmptyHand/Body")
+duration = 1.0
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

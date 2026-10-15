@@ -118,3 +118,34 @@ DIALOGUE_TRIAL_FIRST_04,"Talk to me again, and see if I remember.",Fale comigo d
 DIALOGUE_TRIAL_AFTER_01,Back again? I have nothing new to say.,De volta? Não tenho nada novo a dizer.
 DIALOGUE_TRIAL_AFTER_01_V1,You held on to it. I remember.,Você a segurou. Eu lembro.
 DIALOGUE_TRIAL_AFTER_01_V2,You let it go. I remember.,Você a deixou ir. Eu lembro.
+SPEAKER_BAKER,Baker,Padeira
+DLG_DAUGHTER_ERRAND_01,Bread. The round one.,Pão. O redondo.
+DLG_BAKER_ERRAND_01,"Morning, Ivo. Round one?","Bom dia, Ivo. O redondo?"
+DLG_BAKER_ERRAND_02,And the long one for—,E o comprido pra—
+DLG_BAKER_ERRAND_03,Just the round one.,Só o redondo.
+DLG_DAUGHTER_SONG_01,The morning one.,A da manhã.
+DLG_CHOICE_GUITAR_TRY_AGAIN,[Try again],[Tentar de novo]
+DLG_CHOICE_GUITAR_LOWER,[Lower the guitar],[Baixar o violão]
+DLG_DAUGHTER_SONG_02,…,…
+DLG_DAUGHTER_TURNED_01,…,…
+DLG_ELDER_STORY_01,"…and the keeper climbed the stairs every night, and lit the lamp, and the ships came home, until one winter he—","…e o guardião subia a escada toda noite, acendia a lâmpada, e os barcos voltavam, até que um inverno ele—"
+DLG_ELDER_STORY_02,He…,Ele…
+DLG_ELDER_STORY_03,It had an end. It had a good end.,Tinha um fim. Tinha um fim bom.
+DLG_CHOICE_ELDER_WAIT,[Wait for him],[Esperar por ele]
+DLG_ELDER_WAIT_01,…until one winter— until one—,…até que um inverno— até que um—
+DLG_ELDER_WAIT_02,East. It's still there.,Leste. Ainda está lá.
+DLG_CHOICE_ELDER_PAINTING,[Look at the painting],[Olhar o quadro]
+DLG_ELDER_PAINTING_01,East. Past the fields. Nobody's been in years.,Leste. Depois dos campos. Faz anos que ninguém vai.
+DLG_MENTOR_GIFT_01,…You came the ~long~ way.,…Você veio pelo caminho ~longo~.
+DLG_MENTOR_GIFT_02,Many hands. None of them ~kept~ it.,Muitas mãos. Nenhuma ~guardou~.
+DLG_CHOICE_MEMORINA_AGAIN,[Play it again],[Tocar de novo]
+DLG_CHOICE_MEMORINA_LOWER,[Lower it],[Baixá-la]
+DLG_MENTOR_GIFT_03,Yours ~too~. Maybe. If you—,Seu ~também~. Talvez. Se você—
+DLG_MENTOR_STASIS_01,…,…
+DLG_ELDER_RETURN_01,…My father carved that. I never knew what it was.,…Meu pai entalhou isso. Nunca soube o que era.
+DLG_DAUGHTER_RETURN_01,That's a strange one.,Que estranha.
+DLG_DAUGHTER_EYES_01,Papa. What colour were her eyes? …Don't guess.,Pai. De que cor eram os olhos dela? …Não chuta.
+DLG_DAUGHTER_EYES_01_V1,Papa. What colour were her eyes? …It's okay. I'll draw them grey for now.,Pai. De que cor eram os olhos dela? …Tudo bem. Vou pintar de cinza por enquanto.
+DLG_ELDER_EMPTY_01,"…and the keeper climbed the stairs every night, and—","…e o guardião subia a escada toda noite, e—"
+NOTEBOOK_LORE_MENTOR_TITLE,The keeper of the lighthouse,O guardião do farol
+NOTEBOOK_LORE_MENTOR,The keeper of the lighthouse. He gave me the Memorina and didn't finish his sentence.,O guardião do farol. Me deu a Memorina e não terminou a frase.

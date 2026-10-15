@@ -41,6 +41,8 @@ const PROMPT_TOP := -104.0
 @export_enum("door", "passage", "stairwell", "hatch_up", "hatch_down", "breach") var look: String = "door"
 
 var _bodies: int = 0
+## Ivo while he is in reach; a talk hides the prompt, since a door is refused until it ends (systems/dialogue).
+var _body: Player
 var _knock: Tween
 ## The closed secret the doorway stands in, if any.
 var _hidden_by: SecretWall
@@ -90,6 +92,11 @@ func _ready() -> void:
 	_hide_in_secret()
 	_refresh()
 
+# While Ivo is in reach: a talk starts and ends without a signal here.
+func _physics_process(_delta: float) -> void:
+	if _body != null:
+		_refresh()
+
 func is_open_for(data: PlayerData) -> bool:
 	return requires == null or requires.holds(data)
 
@@ -136,12 +143,15 @@ func _dress() -> void:
 func _refresh() -> void:
 	var open := is_open()
 	_sprite.frame = 0 if open else 1
-	_prompt.visible = open and has_body_in_reach()
+	_prompt.visible = open and has_body_in_reach() and not (_body != null and _body.is_talking())
 
-func _on_body_entered(_body: Node2D) -> void:
+func _on_body_entered(body: Node2D) -> void:
 	_bodies += 1
+	_body = body as Player
 	_refresh()
 
-func _on_body_exited(_body: Node2D) -> void:
+func _on_body_exited(_body_left: Node2D) -> void:
 	_bodies = maxi(_bodies - 1, 0)
+	if _bodies == 0:
+		_body = null
 	_refresh()

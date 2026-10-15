@@ -10,12 +10,18 @@ id = &"sword"
 items = Array[int]([0])
 note = "Held from the start in the base kit (user, 2026-10-14: base = movement and sword). STORY-02 lays it on the farmhouse table (legend i, threshold_farmhouse); the kits keep it in the base kit, since it opens no gate and the audit does not model combat, nor the pogo bounce off a struck enemy that the sword gates."
 
+[sub_resource type="Resource" id="opening"]
+script = ExtResource("3_milestone")
+id = &"opening"
+dialogues = Array[StringName]([&"daughter_errand", &"baker_errand", &"daughter_song", &"elder_story"])
+note = "The opening's talks, heard in the village before anything else (STORY-03): the errand, the song and the elder's story. The east gate opens on the elder's story (heard_elder_story.tres; \"East gate shut until the elder points east (Recommended)\": \"The village's east gate stays closed (the existing gate barrier) until the elder's story has been heard; his \"East. It's still there.\" is when it opens. The opening always plays in order. The reach audit learns that the opening's talks are part of the starting kit.\", user, 2026-10-15), so every kit starts with them."
+
 [sub_resource type="Resource" id="memorina"]
 script = ExtResource("3_milestone")
 id = &"memorina"
 room = &"lighthouse_interior"
 items = Array[int]([1])
-note = "The mentor hands it over in the lighthouse (design 04 section 3.3); not yet given in the world (STORY-03). Opens the west fence and the river trail (owns_memorina.tres)."
+note = "The mentor hands it over in the lighthouse (design 04 section 3.3): the cue-only grant of his mentor_gift talk (STORY-03). Opens the west fence and the river trail (owns_memorina.tres)."
 
 [sub_resource type="Resource" id="bloom"]
 script = ExtResource("3_milestone")
@@ -55,57 +61,57 @@ note = "Summer guardian: Sombra; the Solsticio fragment (design 04 section 2). N
 [sub_resource type="Resource" id="kit_base"]
 script = ExtResource("2_kit")
 id = &"base"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening")])
 
 [sub_resource type="Resource" id="kit_memorina"]
 script = ExtResource("2_kit")
 id = &"memorina"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina")])
 
 [sub_resource type="Resource" id="kit_woods"]
 script = ExtResource("2_kit")
 id = &"woods"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom")])
 
 [sub_resource type="Resource" id="kit_lake"]
 script = ExtResource("2_kit")
 id = &"lake"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("frost")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("frost")])
 
 [sub_resource type="Resource" id="kit_both"]
 script = ExtResource("2_kit")
 id = &"both"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("frost")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("frost")])
 
 [sub_resource type="Resource" id="kit_woods_orchards"]
 script = ExtResource("2_kit")
 id = &"woods_orchards"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("autumn")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("autumn")])
 
 [sub_resource type="Resource" id="kit_woods_orchards_caldera"]
 script = ExtResource("2_kit")
 id = &"woods_orchards_caldera"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("autumn"), SubResource("summer")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("autumn"), SubResource("summer")])
 
 [sub_resource type="Resource" id="kit_lake_caldera"]
 script = ExtResource("2_kit")
 id = &"lake_caldera"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("frost"), SubResource("summer")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("frost"), SubResource("summer")])
 
 [sub_resource type="Resource" id="kit_both_caldera"]
 script = ExtResource("2_kit")
 id = &"both_caldera"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("summer")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("summer")])
 
 [sub_resource type="Resource" id="kit_orchards"]
 script = ExtResource("2_kit")
 id = &"orchards"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("autumn")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("autumn")])
 
 [sub_resource type="Resource" id="kit_caldera"]
 script = ExtResource("2_kit")
 id = &"caldera"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("autumn"), SubResource("summer")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("autumn"), SubResource("summer")])
 
 [resource]
 script = ExtResource("1_kits")

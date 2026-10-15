@@ -1,0 +1,131 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 15.0,
+ "locale": "en",
+ "owned_items": [],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_song"
+ ],
+ "responses": {
+  "morning_song": "guitar_try_again"
+ },
+ "player_position": [
+  4960,
+  12286
+ ],
+ "steps": [
+  {
+   "t": 0.9,
+   "screenshot": "00_children_on_the_bench"
+  },
+  {
+   "t": 1.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.85,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 5.2,
+   "screenshot": "01_until_one_winter"
+  },
+  {
+   "t": 5.3,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 5.38,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 6.0,
+   "screenshot": "02_he"
+  },
+  {
+   "t": 6.1,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 6.18,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 7.2,
+   "screenshot": "03_a_good_end"
+  },
+  {
+   "t": 7.3,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 7.38,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 7.5,
+   "screenshot": "04_painting_focused"
+  },
+  {
+   "t": 7.7,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 7.78,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 8.2,
+   "screenshot": "05_turned_to_the_painting"
+  },
+  {
+   "t": 10.7,
+   "screenshot": "06_east_behind_him"
+  },
+  {
+   "t": 10.75,
+   "log": "east"
+  },
+  {
+   "t": 10.9,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 10.98,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 12.2,
+   "screenshot": "07_children_gone"
+  },
+  {
+   "t": 12.3,
+   "log": "story_heard"
+  },
+  {
+   "t": 12.5,
+   "teleport": [
+    520,
+    286
+   ]
+  },
+  {
+   "t": 13.6,
+   "screenshot": "08_children_in_the_square"
+  }
+ ]
+}

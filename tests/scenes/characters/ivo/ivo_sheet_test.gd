@@ -4,6 +4,8 @@ class_name IvoSheetTest extends GdUnitTestSuite
 
 const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const PALETTE := "res://tools/art/sources/ivo/ivo_palette.png"
+## A sheet where Ivo holds a prop may also use that prop's own colours (its contract snaps to both).
+const HELD_PROPS := {"ivo_guitar.png": "res://assets/sprites/world/props/interiors/ivo_house/guitar.png"}
 const FRAME := 128
 ## Game px: the feet end on the row above the floor line (row 96).
 const FEET_ROW := 95
@@ -18,6 +20,7 @@ const STEADY_TOLERANCE := 4.0
 const GROUNDED: Array[StringName] = [
 	&"idle", &"run", &"brace", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle",
 	&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in", &"run_attack_swing_out",
+	&"guitar_hold", &"guitar_strum",
 ]
 ## Sheet frames in flight, both boots off the floor 1-3 art px; the running attack keeps the run's legs.
 const FLIGHT := {&"run": [3, 4, 7], &"run_attack_swing_in": [3, 4], &"run_attack_swing_out": [7]}
@@ -182,12 +185,23 @@ func test_every_colour_is_from_the_palette() -> void:
 		if seen.has(image):
 			continue
 		seen[image] = true
+		var allowed := palette.duplicate()
+		var file := _texture(clip).resource_path.get_file()
+		if HELD_PROPS.has(file):
+			var prop := (load(HELD_PROPS[file]) as Texture2D).get_image()
+			prop.convert(Image.FORMAT_RGBA8)
+			for y: int in prop.get_height():
+				for x: int in prop.get_width():
+					var colour := prop.get_pixel(x, y)
+					if colour.a8 == 0:
+						continue
+					allowed[colour.to_rgba32() | 0xff] = true
 		var data := image.get_data()
 		for i: int in range(0, data.size(), 4):
 			if data[i + 3] == 0:
 				continue
 			var rgba := (data[i] << 24) | (data[i + 1] << 16) | (data[i + 2] << 8) | 0xff
-			if not palette.has(rgba):
+			if not allowed.has(rgba):
 				strays["%s %x" % [_texture(clip).resource_path.get_file(), rgba]] = true
 	assert_array(strays.keys()).is_empty()
 

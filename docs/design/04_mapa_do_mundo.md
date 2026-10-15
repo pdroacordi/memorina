@@ -48,7 +48,7 @@
 | Área | Estação nativa | Memória inicial | Guardião → o que dá | Portão de entrada | Além da arena (WORLD-35) |
 |---|---|---|---|---|---|
 | Vila (hub) | primavera | 0.8; 0.6 a partir do 2º guardião restaurado; 1.0 no Retorno | nenhum | — | — |
-| Estrada do Limiar | inverno | 0.3 | nenhum | aberta | — |
+| Estrada do Limiar | inverno | 0.3 | nenhum | aberta depois da história do ancião (`05_roteiro.md`, "East gate shut until the elder points east (Recommended)", 2026-10-15) | — |
 | Borda Gelada: o farol | inverno | 0.05 | o mentor: entrega a Memorina e entra em estase; batalha final | aberta (a jornada de abertura) | — (o fim do jogo) |
 | Bosque Florido | primavera | 0.4 | Guardião Florido → Enraizar + pulo duplo; fragmento: Chuva | ter a Memorina | o Oco da Árvore Velha sobe ao poço da Vila dos Moinhos: a terceira entrada do Pomar |
 | Lago Gelado | inverno | 0.3 | Guardião de Gelo → Congelar + rolamento; fragmento: Redoma | ter a Memorina | a Geleira (só Congelar a atravessa; uma carta) e a Queda Gelada, de mão única, até a ravina da Ponte Velha, a uma sala do banco da Capela |

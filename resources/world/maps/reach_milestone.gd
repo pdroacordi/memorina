@@ -9,5 +9,7 @@ class_name ReachMilestone extends Resource
 @export var songs: Array[Enums.Song] = []
 @export var items: Array[Enums.PlayerItem] = []
 @export var restored_guardians: Array[Enums.Guardian] = []
+## Talks heard here: the opening's, which open the east gate (systems/story).
+@export var dialogues: Array[StringName] = []
 ## What the design gives here that the code cannot hold yet (GRD-04, STORY-03), or empty.
 @export_multiline var note := ""
