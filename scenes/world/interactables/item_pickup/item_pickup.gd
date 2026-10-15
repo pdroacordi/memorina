@@ -56,7 +56,7 @@ func _ready() -> void:
 
 # Every frame, as Talkable does: a talk starts and ends without a signal here.
 func _physics_process(_delta: float) -> void:
-	_prompt.visible = _sprite.visible and _body != null and not _body.is_talking()
+	_prompt.visible = _sprite.visible and _body != null and not _body.is_talking() and _body.reaches(self)
 
 ## Shown and not owned: Up may take it. Read at the press, never cached.
 func is_available() -> bool:

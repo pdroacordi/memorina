@@ -1,6 +1,6 @@
 ; village_lane_west.room - the market lane (design 04 section 3.1): stalls, the bakery and the empty house doors.
 ; One street at ground level (design 04 section 1, "Vila plana"). The west fence (col 3) opens with owns_memorina (design 04 section 2); the gatehouse ceiling is 4 cells above its floor, so it cannot be jumped.
-; Village voices (STORY-09, systems/story): a talk beside the seller (col 18), gone with him at 0.6 (presence 0.7).
+; Village voices (STORY-09, systems/story): a talk centred on the seller (col 17), gone with him at 0.6 (presence 0.7).
 
 [room]
 origin = 0, 0
@@ -15,7 +15,7 @@ SSSSSSS................................#
 ........................................
 ........................................
 ........................................
-...X........E.....t...........E.........
+...X........E....t............E.........
 #########SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 ########################################
 ########################################
@@ -38,4 +38,4 @@ SSSSSSS.................................
 3,8 = {"requires": "res://resources/save_facts/owns_memorina.tres"}
 12,8 = {"link": "village_bakery_door", "to_room": "village_bakery"}
 30,8 = {"link": "village_empty_house_door", "to_room": "village_empty_house"}
-18,8 = {"talk": "res://resources/dialogue/village/seller.tres", "speaker_offset": -32.0, "presence": 0.7}
+17,8 = {"talk": "res://resources/dialogue/village/seller.tres", "speaker_offset": 0.0, "presence": 0.7}

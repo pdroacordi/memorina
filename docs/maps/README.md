@@ -212,7 +212,7 @@ else in the code knows what a character means.
 | `$` | `[grid]` | entity | - | - | content | A reward slot, standing on this cell: a place the layout promises a reward. Needs a slot_id unique across every map; kind 0 COLLECTIBLE (STORY-06) or 1 CACHE (LIFE-04, undecided). Invisible in release, a small diamond in debug builds; no gameplay until STORY-06 or LIFE-04 fills it. |
 | `n` | `[grid]` | entity | - | - | - | Deep snow that breaks a fall: a zone standing on this cell, width_cells wide (centred) and height_cells tall, where a landing is never a hard landing. Keep it 2 cells or more over the highest floor under it, and put the drift prop over it: the zone draws nothing. |
 | `g` | `[grid]` | entity | - | - | gate | A floor grate in this cell and the three east of it, one cell deep and flush with the floor: solid until the save holds requires (a SaveFact .tres path), then gone, leaving the hole. Keep the four cells air in the grid; the hatch in village_gate_east's road over caldera_sun_stair (WORLD-35). |
-| `t` | `[grid]` | entity | - | - | content | A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Zone width_cells wide (default 2, centred) and height_cells tall (default 2); presence (0..1) hides it below that region baseline, like its villager. Put it beside the villager prop, never on it: a prop carries no gameplay; speaker_offset (px along x from this cell's centre to the villager) is where Ivo turns to face. |
+| `t` | `[grid]` | entity | - | - | content | A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Put it on the speaker's cell; speaker_offset (px along x from this cell's centre to the speaker, a villager prop that carries no gameplay itself) is the zone's centre, the prompt's column and what Ivo faces. The zone reaches reach_west and reach_east px each side of the speaker (default 48, about a cell and a half) and is height_cells tall (default 2); trim the side that faces a door so the zones keep more than 22 px apart and the door wins. presence (0..1) hides it below that region baseline, like its villager. |
 | `i` | `[grid]` | entity | - | - | content | An item lying where it was left, standing on this cell: up in reach takes it into the save (item, an Enums.PlayerItem: 0 the sword). It shows only while the save does not own the item, so a death before a bench puts it back. texture is the item lying down (a .png path); rest_offset ([x, y] px from this cell's bottom centre to the item's bottom centre) lays it on a table top; the reach is width_cells wide (default 2, centred) and height_cells tall (default 2). |
 <!-- /generated:legend -->
 
@@ -476,7 +476,7 @@ Scene `res://scenes/world/interactables/fact_barrier/fact_grate.tscn`, anchored 
 
 #### `t` - Talkable
 
-Scene `res://scenes/world/interactables/talkable/talkable.tscn`, anchored at its cell's bottom centre (standing on the cell below). A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Zone width_cells wide (default 2, centred) and height_cells tall (default 2); presence (0..1) hides it below that region baseline, like its villager. Put it beside the villager prop, never on it: a prop carries no gameplay; speaker_offset (px along x from this cell's centre to the villager) is where Ivo turns to face.
+Scene `res://scenes/world/interactables/talkable/talkable.tscn`, anchored at its cell's bottom centre (standing on the cell below). A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Put it on the speaker's cell; speaker_offset (px along x from this cell's centre to the speaker, a villager prop that carries no gameplay itself) is the zone's centre, the prompt's column and what Ivo faces. The zone reaches reach_west and reach_east px each side of the speaker (default 48, about a cell and a half) and is height_cells tall (default 2); trim the side that faces a door so the zones keep more than 22 px apart and the door wins. presence (0..1) hides it below that region baseline, like its villager.
 
 | Param | Type | Default |
 |---|---|---|
@@ -484,7 +484,8 @@ Scene `res://scenes/world/interactables/talkable/talkable.tscn`, anchored at its
 | `talk` | DialogueSet | **required** |
 | `auto_start` | bool | `false` |
 | `presence` | float | `0.0` |
-| `width_cells` | int | `2` |
+| `reach_west` | float | `48.0` |
+| `reach_east` | float | `48.0` |
 | `height_cells` | int | `2` |
 | `auto_delay` | float | `0.4` |
 | `speaker_offset` | float | `0.0` |

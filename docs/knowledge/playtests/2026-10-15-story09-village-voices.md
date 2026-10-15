@@ -64,6 +64,7 @@ Every plate shows the role name and no portrait, like the baker's errand. Every 
 The boy's talk moved to col 17 (bugs/the-boys-talk-prompt-shows-over-the-bell-tower-door-and-up-enters-the-tower), and both timelines were rerun.
 - The boy is visited from x 560.
 - Both timelines then place Ivo at x 616, between the talk and the bell tower door: no prompt shows, and Up leaves him in the square (`08_g_band_616`, `08_g_band_616_after_up`).
+- STORY-14 then centred every talk on its speaker. The band check moved to x 620, where only the talk prompt shows (`08_g_talk_620`); the `g_band_616` files are from the pass before.
 - At x 580 the talk prompt shows (`08_g_talk_580`).
 - `opening_errand` reran green with the baker's narrower talk.
 

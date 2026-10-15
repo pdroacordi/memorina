@@ -20,6 +20,8 @@ signal memory_changed(level: float)
 @export var backdrop_set: BackdropSet
 ## The region's one horizon, px below this node: where each backdrop layer's horizon row stands at the reference camera.
 @export var horizon_y: float = 0.0
+## Ivo cannot swing the sword in this region's interiors (STORY-14: the village's houses).
+@export var calm_interiors: bool = false
 
 @onready var _memory: RegionMemory = $Memory
 

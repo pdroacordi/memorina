@@ -1,11 +1,13 @@
 class_name Talkable
 extends Area2D
-## A place Ivo talks: Up in reach, or an auto start on arrival, runs its set's current dialogue (systems/dialogue). It
-## stands beside a villager prop, never on it: a prop carries no gameplay (systems/props).
+## A place Ivo talks: Up in reach, or an auto start on arrival, runs its set's current dialogue (systems/dialogue). Its
+## zone is centred on the speaker (a villager prop, which carries no gameplay itself; systems/props).
 
 const GROUP := &"talkables"
 ## Px between the zone's top and the prompt.
 const PROMPT_GAP := 8.0
+## Px the zone reaches each side of the speaker by default, about a cell and a half (STORY-14).
+const REACH := 48.0
 
 ## The talker's dialogues; must be in the DialogueCatalog (room_files_test).
 @export var talk: DialogueSet
@@ -13,13 +15,16 @@ const PROMPT_GAP := 8.0
 @export var auto_start: bool = false
 ## Region baseline (0..1) at and above which it is present, like its villager's RegionPresence; 0 is always.
 @export_range(0.0, 1.0) var presence: float = 0.0
-## Zone width, in cells, centred on its cell.
-@export var width_cells: int = 2
+## Px the zone reaches west of the speaker; less beside a door, so the door's zone stays a body width away.
+@export var reach_west: float = REACH
+## Px the zone reaches east of the speaker; less beside a door, as `reach_west`.
+@export var reach_east: float = REACH
 ## Zone height, in cells, rising from its cell's floor.
 @export var height_cells: int = 2
 ## Seconds in reach before an auto start is due: past an arrival's fade.
 @export var auto_delay: float = 0.4
-## Px along x from its origin to where the speaker (the villager prop beside it) stands; Ivo faces that point.
+## Px along x from its origin to where the speaker (the villager prop) stands: the zone's centre, the prompt's
+## column and what Ivo faces.
 @export var speaker_offset: float = 0.0
 
 ## Ivo while he is in reach.
@@ -43,11 +48,13 @@ func _enter_tree() -> void:
 	add_to_group(GROUP)
 
 func _ready() -> void:
+	assert(reach_west >= 0.0 and reach_east >= 0.0 and reach_west + reach_east > 0.0,
+		"%s: reach_west (%s) and reach_east (%s) must be non-negative with a positive sum" % [get_path(), reach_west, reach_east])
 	var box := RectangleShape2D.new()
 	box.size = size()
 	_shape.shape = box
-	_shape.position = Vector2(0.0, -box.size.y * 0.5)
-	_prompt.position = Vector2(-_prompt.size.x * 0.5, -box.size.y - PROMPT_GAP - _prompt.size.y)
+	_shape.position = Vector2(speaker_offset + (reach_east - reach_west) * 0.5, -box.size.y * 0.5)
+	_prompt.position = Vector2(speaker_offset - _prompt.size.x * 0.5, -box.size.y - PROMPT_GAP - _prompt.size.y)
 	_prompt.show_action(&"look_up")
 	_prompt.hide()
 	if presence > 0.0:
@@ -60,11 +67,11 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if _armed:
 		_armed_for += delta
-	_prompt.visible = _body != null and not _body.is_talking() and has_talk()
+	_prompt.visible = _body != null and not _body.is_talking() and has_talk() and _body.reaches(self)
 
 ## The zone's size in px.
 func size() -> Vector2:
-	return Vector2(width_cells, height_cells) * RoomMap.CELL_PX
+	return Vector2(reach_west + reach_east, height_cells * RoomMap.CELL_PX)
 
 ## Where the speaker stands, in world px.
 func speaker_position() -> Vector2:

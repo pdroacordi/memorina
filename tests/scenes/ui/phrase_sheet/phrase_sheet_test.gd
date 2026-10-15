@@ -36,3 +36,20 @@ func test_it_shows_the_notes_up_to_the_gap_and_lights_them() -> void:
 	_sheet.close()
 	assert_bool(_sheet.visible).is_false()
 	assert_int(_shown_slots()).is_equal(0)
+
+## STORY-14 ("os botoes do hud do violão estão muito pequenos, diferente do hud da memorina", user, 2026-10-15): the
+## guitar's glyphs and columns are the Memorina sheet's, on a staff widened for eight.
+func test_its_glyphs_and_columns_match_the_memorina_sheet() -> void:
+	var hud := auto_free((load("res://scenes/ui/memorina_hud/memorina_hud.tscn") as PackedScene).instantiate()) as Control
+	add_child(hud)
+	await get_tree().process_frame
+	var memorina := hud.get_node("Frame/NoteSheet") as NoteSheet
+	var guitar := _sheet.sheet()
+	var a := memorina.get_child(0) as TextureRect
+	var b := guitar.get_child(0) as TextureRect
+	assert_vector(b.size).is_equal(a.size)
+	var memorina_step := (memorina.get_child(1) as Control).position.x - a.position.x
+	var guitar_step := (guitar.get_child(1) as Control).position.x - b.position.x
+	assert_float(guitar_step).is_equal(memorina_step)
+	var last := guitar.get_child(7) as Control
+	assert_float(last.position.x + last.size.x).is_less_equal(guitar.size.x)

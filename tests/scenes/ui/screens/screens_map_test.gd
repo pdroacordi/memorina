@@ -111,6 +111,7 @@ func test_reopening_resets_the_zoom() -> void:
 
 ## User decision 2026-10-06, "Refuse": no map with the Memorina drawn.
 func test_the_map_is_refused_with_the_memorina_drawn() -> void:
+	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 	await _land()
 	_player_input().draw_memorina_pressed.emit()
 	for i: int in 30:

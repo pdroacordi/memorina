@@ -36,6 +36,7 @@ The Memorina is not a pickup: the mentor's talk grants it in STORY-03 through a 
   - `rest_offset` ([x, y] px from its cell's bottom centre to the item's bottom centre; the item lies on a table top);
   - `width_cells` / `height_cells` (the reach, 2x2 by default, centred, rising from its floor).
 - The look is a `Sprite2D` drawn standing on its bottom row at `rest_offset`. The `look_up` `KeyGlyph` prompt stands 8 px over the item or the reach, whichever is higher, while Ivo is in reach, not talking (checked every physics frame, as `Talkable` does), and the item lies there.
+- Its prompt shows only where Up would take the item: `Player.reaches`, the door sensor (STORY-14; `systems/dialogue`).
 - It is a room-map entity, so it draws at z 0, in front of the contents' `Props` (z -10).
 - `ItemPickup.lies(item, data)` is the one rule (static, pure): not owned. `is_available()` adds `is_visible_in_tree()`. `take()` calls `SaveSystem.set_item_owned(item, true)` and emits `taken(item)`; the sprite hides through `progress_changed`.
 
@@ -58,7 +59,7 @@ One pickup: the sword in `threshold_farmhouse` (cell 9,8; `rest_offset` (-4, -19
 
 ## Debug and playtests
 
-- A debug new game owns the sword and the Memorina (`SaveSystem._new_game`), so the sword never shows in a debug run unless the save drops it.
+- A new game owns nothing in any build (STORY-14), so the sword lies on the farmhouse table in a debug run too; a playtest timeline without `owned_items` gets the runner's kit (the sword and the Memorina), so the sword shows there only with `owned_items` that leave it out.
 - The playtest runner's `"owned_items": [ids]` sets the owned items to exactly that list before the scene loads (`tools/playtest/README.md`).
 - `tools/playtest/scripts/sword_pickup.json` starts in the farmhouse without the sword, attacks (nothing), walks to the table, takes it with Up and swings (`playtests/2026-10-15-story02-sword-pickup`).
 

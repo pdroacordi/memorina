@@ -128,8 +128,7 @@ func test_an_interrupt_while_waiting_to_resume_drops_the_talk() -> void:
 ## A death swaps the world out under a beat after the save is rewound: the director leaves the tree before the beat
 ## (later siblings first, gotchas/a-removed-subtree-emits-tree-exiting-later-siblings-first) and writes nothing.
 func test_a_world_swapped_out_under_a_beat_writes_nothing() -> void:
-	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, false)
-	# The bench the death rewinds to: a debug new game owns the Memorina.
+	# The bench the death rewinds to, without the Memorina.
 	SaveSystem.commit()
 	var world := Node.new()
 	add_child(world)

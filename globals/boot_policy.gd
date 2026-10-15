@@ -7,8 +7,6 @@ enum Session { MEMORY, SLOT_1, SLOT_1_FRESH, NONE }
 
 const NEW_GAME_ARG := "--new-game"
 const TITLE_ARG := "--title"
-## With `--new-game`, a debug build starts the opening as a release does: with no items (systems/story).
-const OPENING_ARG := "--opening"
 ## Tool runner scenes, as Godot is launched with them: the playtest runner and the GdUnit runner the editor
 ## starts windowed (docs/knowledge/gotchas/gdunit-runs-from-the-editor-are-not-headless.md).
 const RUNNER_SCENE_FILES: Array[String] = ["playtest_runner.tscn", "GdUnitTestRunner.tscn"]
@@ -21,10 +19,6 @@ static func decide(headless: bool, debug: bool, args: PackedStringArray, user_ar
 	if not debug or TITLE_ARG in user_args:
 		return Session.NONE
 	return Session.SLOT_1_FRESH if NEW_GAME_ARG in user_args else Session.SLOT_1
-
-## Whether a new game owns the sword and the Memorina: debug builds do, for testing, unless the opening is asked for.
-static func new_game_owns_items(debug: bool, user_args: PackedStringArray) -> bool:
-	return debug and not (NEW_GAME_ARG in user_args and OPENING_ARG in user_args)
 
 static func _runs_a_tool_runner(args: PackedStringArray) -> bool:
 	for arg: String in args:

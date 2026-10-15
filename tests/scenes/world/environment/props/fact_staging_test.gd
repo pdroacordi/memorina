@@ -10,8 +10,7 @@ var _staging: FactStaging
 
 func before_test() -> void:
 	SaveSystem.begin("", true)
-	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, false)
-	# The bench a rewind returns to: a debug new game owns the Memorina.
+	# The bench a rewind returns to, without the Memorina.
 	SaveSystem.commit()
 	_staging = _make()
 

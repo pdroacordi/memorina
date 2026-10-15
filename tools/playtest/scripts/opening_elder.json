@@ -26,7 +26,15 @@
    "pressed": true
   },
   {
-   "t": 1.85,
+   "t": 1.7,
+   "screenshot": "00b_running_in"
+  },
+  {
+   "t": 1.75,
+   "log": "running_in"
+  },
+  {
+   "t": 2.6,
    "action": "move_right",
    "pressed": false
   },

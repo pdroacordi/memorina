@@ -8,6 +8,10 @@ const CONTENTS := "res://scenes/world/rooms/home_village/contents/"
 const AT_06 := "res://resources/save_facts/village_at_six_tenths.tres"
 const VILLAGE := "res://resources/dialogue/village/"
 const BAKER := "res://resources/dialogue/story/baker.tres"
+const VOICE_ROOMS: Array[String] = [
+	CONTENTS + "village_square.room", CONTENTS + "village_lane_west.room", CONTENTS + "village_tavern.room",
+	CONTENTS + "village_bakery.room",
+]
 
 
 ## The 0.6 fact and every staging's GUARDIANS_RESTORED_AT_LEAST in the village read the step RegionMemory.steps gives
@@ -86,40 +90,42 @@ func test_every_village_set_is_in_the_catalog_with_a_plate_and_no_portrait() -> 
 				assert_str(line.speaker.name_key).is_equal("SPEAKER_" + who.to_upper())
 				assert_object(line.speaker.portrait).is_null()
 
-## A talk zone keeps more than Ivo's body width (22 px) from every door zone, so one Up prompt shows at a time
-## (bugs/the-boys-talk-prompt-shows-over-the-bell-tower-door-and-up-enters-the-tower).
-func test_no_village_voice_stands_within_a_body_of_a_door() -> void:
-	for room: String in ["village_square", "village_lane_west", "village_tavern", "village_bakery"]:
-		var path := CONTENTS + room + ".room"
+## STORY-14 ("Eu preciso chegar por trás da aguadeira pra conseguir disparar o dialogo com ela. E bem longe", user,
+## 2026-10-15): every talk's zone is centred on its speaker, reaching a cell and a half each way unless a door trims it.
+func test_each_villager_talk_is_centred_on_the_villager() -> void:
+	var speakers := {"boy.tres": 600.0, "water_carrier.tres": 1050.0, "seller.tres": 560.0, "taverner.tres": 476.0, "baker.tres": 240.0}
+	for path: String in VOICE_ROOMS:
 		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), RoomLegend.load_default(), path).map
-		var doors: Array[Vector2i] = []
-		var talks: Array[Dictionary] = []
 		for placed: Dictionary in map.entities:
-			if placed.symbol == "E":
-				doors.append(placed.cell)
-			elif placed.symbol == "t":
-				talks.append(placed)
-		for talk: Dictionary in talks:
-			var cell := talk.cell as Vector2i
-			var half := int(talk.params.get("width_cells", 2)) * RoomMap.CELL_PX * 0.5
-			var centre := (cell.x + 0.5) * RoomMap.CELL_PX
-			for door: Vector2i in doors:
-				if door.y != cell.y:
-					continue
-				var door_left := door.x * RoomMap.CELL_PX
-				var gap := maxf(door_left - (centre + half), (centre - half) - (door_left + RoomMap.CELL_PX))
-				assert_float(gap).override_failure_message("%s: talk at %s, door at %s" % [room, cell, door]).is_greater(22.0)
+			var file := str(placed.params.get("talk", "")).get_file()
+			if placed.symbol != "t" or not speakers.has(file):
+				continue
+			var cell := placed.cell as Vector2i
+			var speaker := (cell.x + 0.5) * RoomMap.CELL_PX + float(placed.params.get("speaker_offset", 0.0))
+			assert_float(speaker).override_failure_message(file).is_equal(float(speakers[file]))
+			assert_float(absf(speaker - (cell.x + 0.5) * RoomMap.CELL_PX)).is_less_equal(16.0)
+			speakers.erase(file)
+	assert_dict(speakers).is_empty()
 
-## The boy's talk points at the boy (square x 600), from west of him.
-func test_the_boys_talk_faces_him() -> void:
+## The water carrier faces east, away from the well's shaft, so Ivo reaches her from in front, close: her talk
+## reaches a cell and a half east of her, over the well's lip.
+func test_the_water_carrier_is_reached_from_in_front() -> void:
+	var state := (load(CONTENTS + "village_square_contents.tscn") as PackedScene).get_state()
+	var flipped := false
+	for node: int in state.get_node_count():
+		if state.get_node_name(node) != &"WaterCarrier":
+			continue
+		for i: int in state.get_node_property_count(node):
+			if state.get_node_property_name(node, i) == &"flip_h":
+				flipped = bool(state.get_node_property_value(node, i))
+	assert_bool(flipped).override_failure_message("her art faces west; flipped, she faces east").is_true()
 	var path := CONTENTS + "village_square.room"
 	var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), RoomLegend.load_default(), path).map
 	for placed: Dictionary in map.entities:
-		if placed.symbol == "t" and str(placed.params.talk).ends_with("boy.tres"):
-			var origin := ((placed.cell as Vector2i).x + 0.5) * RoomMap.CELL_PX
-			assert_float(origin + float(placed.params.speaker_offset)).is_equal(600.0)
+		if placed.symbol == "t" and str(placed.params.talk).ends_with("water_carrier.tres"):
+			assert_float(TalkableRoomsTest.zone_of(placed).y).is_equal(1050.0 + Talkable.REACH)
 			return
-	fail("no talk for the boy")
+	fail("no talk for the water carrier")
 
 func _region_memory() -> Dictionary:
 	var state := (load(REGION) as PackedScene).get_state()

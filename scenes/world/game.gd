@@ -125,6 +125,7 @@ func _enter_room(room: Room, glide: bool = false) -> void:
 	else:
 		_glide_keep.clear()
 	_current_room = room
+	_player.calm = room.is_calm()
 	_residency.settle(room, rooms, _glide_keep)
 	# The greyhush is a regional property, so it follows the room the player is
 	# standing in rather than being set once at startup.

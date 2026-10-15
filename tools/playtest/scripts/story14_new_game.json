@@ -1,0 +1,56 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 3.5,
+ "locale": "en",
+ "owned_items": [],
+ "player_position": [
+  320,
+  12286
+ ],
+ "steps": [
+  {
+   "t": 1.2,
+   "screenshot": "a_00_new_game_in_the_house"
+  },
+  {
+   "t": 1.25,
+   "log": "new_game"
+  },
+  {
+   "t": 1.4,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 1.48,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 1.55,
+   "screenshot": "a_01_attack_press"
+  },
+  {
+   "t": 1.56,
+   "log": "attack_no_sword"
+  },
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.08,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.3,
+   "screenshot": "a_02_draw_press"
+  },
+  {
+   "t": 2.31,
+   "log": "draw_no_memorina"
+  }
+ ]
+}

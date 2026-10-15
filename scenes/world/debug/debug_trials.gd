@@ -1,6 +1,7 @@
 class_name DebugTrials extends Node
 
-## Mounts song trial regions in debug builds; F10 (`debug_trials`) moves Ivo between them.
+## Mounts song trial regions in debug builds; F10 (`debug_trials`) moves Ivo between them and gives the trials' kit,
+## the sword and the Memorina, since a new game owns nothing.
 
 const SPAWN_GROUP := &"trial_spawn"
 
@@ -32,6 +33,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	# Do not move a dead or sinking player.
 	if spawns.is_empty() or player == null or player.is_dead() or player.is_sinking():
 		return
+	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, true)
+	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 	var spawn := spawns[_next % spawns.size()] as Node2D
 	_next += 1
 	player.teleport(spawn.global_position)

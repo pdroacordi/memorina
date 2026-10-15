@@ -120,13 +120,31 @@
   {
    "t": 10.5,
    "teleport": [
-    150,
+    144,
     12286
    ]
   },
   {
+   "t": 10.55,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 10.85,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 10.9,
+   "screenshot": "05b_walked_in"
+  },
+  {
    "t": 10.9,
    "screenshot": "g_holding_out_0"
+  },
+  {
+   "t": 10.92,
+   "log": "walked_in"
   },
   {
    "t": 11.067,

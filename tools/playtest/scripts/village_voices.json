@@ -67,7 +67,7 @@
   {
    "t": 3.8,
    "teleport": [
-    1104,
+    1082,
     286
    ]
   },
@@ -153,7 +153,7 @@
   {
    "t": 11.4,
    "teleport": [
-    2128,
+    2100,
     12670
    ]
   },
@@ -296,17 +296,17 @@
   {
    "t": 24.6,
    "teleport": [
-    616,
+    620,
     286
    ]
   },
   {
    "t": 25.6,
-   "screenshot": "g_band_616"
+   "screenshot": "g_talk_620"
   },
   {
    "t": 25.65,
-   "log": "g_band_616"
+   "log": "g_talk_620"
   },
   {
    "t": 25.7,
@@ -320,11 +320,11 @@
   },
   {
    "t": 26.4,
-   "screenshot": "g_band_616_after_up"
+   "screenshot": "g_talk_620_after_up"
   },
   {
    "t": 26.45,
-   "log": "g_band_616_after_up"
+   "log": "g_talk_620_after_up"
   },
   {
    "t": 26.6,

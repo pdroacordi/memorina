@@ -4,7 +4,10 @@ class_name NoteSheet extends Control
 
 const ICON_SIZE := 16.0
 
+## Source px of the frame art: the sheet's px per source px is its height over SOURCE_HEIGHT, and a sheet wider than
+## SOURCE_WIDTH at that scale has a staff as much longer (a widened frame; STORY-14).
 const SOURCE_WIDTH := 128.0
+const SOURCE_HEIGHT := 64.0
 const STAFF_LEFT := 48.0
 const STAFF_RIGHT := 114.0
 const LINE_Y: Dictionary[Enums.Note, float] = {
@@ -93,7 +96,7 @@ func _show(index: int, lit: bool) -> void:
 
 ## The frame-pixel x coordinate at the staff's center.
 func staff_center() -> float:
-	return _to_frame((STAFF_LEFT + STAFF_RIGHT) / 2.0)
+	return _to_frame((STAFF_LEFT + _staff_right()) / 2.0)
 
 const CENTRE_CLEARANCE := 140.0
 const SIDE_MARGIN := 24.0
@@ -117,11 +120,17 @@ func _layout() -> void:
 		_slots[i].position.y = _slot_y(_notes[i])
 
 func _slot_x(index: int) -> float:
-	var column_width := (STAFF_RIGHT - STAFF_LEFT) / slot_count
+	var column_width := (_staff_right() - STAFF_LEFT) / slot_count
 	return roundf(_to_frame(STAFF_LEFT + (index + 0.5) * column_width) - ICON_SIZE * icon_scale / 2.0)
 
 func _slot_y(note: Enums.Note) -> float:
 	return roundf(_to_frame(LINE_Y[note]) - ICON_SIZE * icon_scale / 2.0)
 
+## The staff's right end in source px: the art's, plus whatever the sheet is wider than the art at its scale.
+func _staff_right() -> float:
+	if size.y <= 0.0:
+		return STAFF_RIGHT
+	return STAFF_RIGHT + maxf(0.0, size.x * SOURCE_HEIGHT / size.y - SOURCE_WIDTH)
+
 func _to_frame(source_px: float) -> float:
-	return roundf(source_px * size.x / SOURCE_WIDTH)
+	return roundf(source_px * size.y / SOURCE_HEIGHT)

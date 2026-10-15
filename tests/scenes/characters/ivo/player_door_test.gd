@@ -69,6 +69,7 @@ func test_up_in_the_air_does_nothing() -> void:
 	assert_array(_entered).is_empty()
 
 func test_up_with_the_memorina_drawn_is_a_note_not_a_door() -> void:
+	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 	await _land()
 	_player_input().draw_memorina_pressed.emit()
 	for i: int in 30:
@@ -127,3 +128,17 @@ func _land() -> void:
 		if _ivo.is_on_floor() and _ivo.is_still():
 			return
 	fail("Ivo never landed on the test floor")
+
+## STORY-14: the prompt shows exactly where Up would take the door, across its edge (both read the door sensor).
+func test_the_prompt_and_the_reach_agree_at_the_door_edge() -> void:
+	await _land()
+	var prompt := _door.get_node("Prompt") as CanvasItem
+	var doors := _ivo.get_node("Doors") as DoorComponent
+	var shown := 0
+	for x: int in range(4, 40, 2):
+		_ivo.teleport(Vector2(x, FLOOR_Y))
+		await _frames(3)
+		var reached := doors.reachable() == _door
+		assert_bool(prompt.visible).override_failure_message("x %d: prompt %s, reach %s" % [x, prompt.visible, reached]).is_equal(reached)
+		shown += 1 if reached else 0
+	assert_int(shown).is_between(1, 17)

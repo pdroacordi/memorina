@@ -52,3 +52,5 @@ The code option (a prompt only where the press would take it) is not done; the c
 ## Prevention
 
 Every Talkable that stands within a body width (22 px) of a door or an item pickup is ambiguous. A `room_files_test` case could flag a `t` zone within 22 px of an `E` zone in the same row. Playtest a talk beside a door from both sides, not only from the clean spot.
+
+**Revised by STORY-14 (2026-10-15).** Talk zones are now centred on the speaker. The boy's talk is at col 18, centred on him at x 600, and reaches only 16 px east of him (to x 616). That leaves 24 px to the bell tower door at x 640, so the door still wins on its own side. The door-gap test is now `test_no_talk_stands_within_a_body_of_a_door`, and it covers every room with a talk. The timelines now check x 620, which shows the talk's prompt alone (`g_talk_620`).

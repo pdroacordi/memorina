@@ -102,6 +102,7 @@ enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 @onready var _doors           : DoorComponent = $Doors
 @onready var _talks           : TalkComponent = $Talks
 @onready var _pickups         : PickupComponent = $Pickups
+@onready var _up_sensor       : Area2D = $DoorSensor
 @onready var _attack          : AttackComponent = $Attack
 @onready var _pogo            : PogoComponent = $Pogo
 @onready var _memorina        : MemorinaComponent = $Memorina
@@ -146,8 +147,8 @@ enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 var _states: CharacterStateMachine
 ## Attack context selected at sequence start; empty while not attacking.
 var _attack_context: StringName = &""
-## Active combat-disabled zones; overlapping zones increment this counter.
-var _combat_disable_count: int = 0
+## In a calm room the sword does not swing; Game sets it on each room change (Room.is_calm).
+var calm: bool = false
 ## A double jump has no lasting gameplay state of its own — afterwards Ivo is
 ## simply rising — so the event is exposed as a one-frame pulse. It fires
 ## inside `_process_motion`, so it is cleared at the top of the next one.
@@ -1215,6 +1216,11 @@ func held_pose() -> int:
 func just_strummed() -> bool:
 	return _just_strummed
 
+## Whether Up acts on `area` from here: the door sensor that doors, talks and pickups read overlaps it. Their prompts
+## read this too, so a prompt shows exactly where a press works.
+func reaches(area: Area2D) -> bool:
+	return _up_sensor.overlaps_area(area)
+
 ## From the talk's start to its end, a beat included.
 func is_talking() -> bool:
 	return _in_talk
@@ -1344,19 +1350,9 @@ func _attack_stats_for(context: StringName) -> AttackStats:
 		_:
 			return attack_stats_idle
 
-## Item possession alone is not enough - sword use is also off wherever combat
-## is disabled (safe rooms, NPC vicinity), tracked via _combat_disable_count.
+## The sword swings only when owned and outside a calm room (STORY-14).
 func _can_use_sword() -> bool:
-	return _has_item(Enums.PlayerItem.SWORD) and _combat_disable_count <= 0
-
-## Wired per-scene from any CombatDisabledZone placed in a safe room or an
-## NPC's own scene - see combat_disabled_zone.gd. A counter, not a bool,
-## because overlapping zones must combine additively.
-func _on_combat_zone_entered() -> void:
-	_combat_disable_count += 1
-
-func _on_combat_zone_exited() -> void:
-	_combat_disable_count -= 1
+	return _has_item(Enums.PlayerItem.SWORD) and not calm
 
 #############################################
 ##  A B I L I T I E S                      ##

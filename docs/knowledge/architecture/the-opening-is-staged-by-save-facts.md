@@ -72,7 +72,7 @@ The opening changes the same rooms many times as story facts accrue: the daughte
 
 **Notebook:** `NotebookEntry.fact_id` passed to `SaveFact.check`; `mentor_short` in Memories (LORE takes any requirement), DIALOGUE_HEARD `mentor_gift`; `notebook_catalog_test` checks a DIALOGUE_HEARD entry names a catalog dialogue.
 
-**New game:** release spawns in village_house with nothing (`_new_game`). Debug keeps the sword and Memorina, and `-- --new-game --opening` (pure rule in `BootPolicy`) gives none. The runner gains `"dialogues_heard"` and `"responses"`.
+**New game:** release spawns in village_house with nothing (`_new_game`). Debug kept the sword and Memorina, and `-- --new-game --opening` (pure rule in `BootPolicy`) gave none; STORY-14 retired both, so every build starts with nothing (`systems/life-benches-death`). The runner gains `"dialogues_heard"` and `"responses"`.
 
 ## User answers (2026-10-15)
 
@@ -95,7 +95,7 @@ Defaults taken from this plan's recommendations, not asked (default, 2026-10-15)
 ## Built in phase A (2026-10-15)
 
 - **GuitarPhrase**'s timing lives in `GuitarBeat`: `min_gap`, the silence and the dead presses. The pure rule is the press alone.
-- **PhraseSheet** composes `NoteSheet` with a new `slot_count` (8 for the morning song) at `icon_scale` 1. It closes when its beat ends.
+- **PhraseSheet** composes `NoteSheet` with a new `slot_count` (8 for the morning song); since STORY-14 at the Memorina's `icon_scale` on a widened frame (`systems/story`). It closes when its beat ends.
 - **A beat's pose** reads in the resolver as `Player.held_pose()`. The guitar strums on `Player.just_strummed()`, a pulse taken at the top of `_process_motion`, with `request_replay`.
 - **`ivo_sheet_test`** lets `ivo_guitar.png` use the guitar prop's colours (`HELD_PROPS`).
 - **`story_beats_test`** reads every contents scene's `cue` properties against the catalog's cues: one beat per cue, and none unnamed.

@@ -127,6 +127,7 @@ func test_up_in_the_air_does_not_talk() -> void:
 	assert_array(_started).is_empty()
 
 func test_up_with_the_memorina_drawn_is_a_note_not_a_talk() -> void:
+	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 	await _land()
 	_player_input().draw_memorina_pressed.emit()
 	for i: int in 30:
@@ -281,3 +282,41 @@ func test_a_door_prompt_hides_while_he_talks() -> void:
 	_ivo.end_talk()
 	await _frames(2)
 	assert_bool(prompt.visible).is_true()
+
+## An auto talk at the narrowest width rooms may use (TalkableRoomsTest.MIN_AUTO_WIDTH) starts while Ivo runs through
+## it at full speed (bugs/the-daughters-song-talk-needs-ivo-inside-her-and-a-run-past-never-starts-it).
+func test_running_through_an_auto_talk_starts_it() -> void:
+	var narrow := TALKABLE.instantiate() as Talkable
+	narrow.position = Vector2(400, FLOOR_Y)
+	narrow.auto_start = true
+	narrow.reach_west = TalkableRoomsTest.MIN_AUTO_WIDTH * 0.5
+	narrow.reach_east = TalkableRoomsTest.MIN_AUTO_WIDTH * 0.5
+	var dialogues: Array[Dialogue] = [F.dialogue(&"run_past", [F.line("DIALOGUE_TRIAL_FIRST_01")])]
+	narrow.talk = F.dialogue_set(dialogues)
+	_holder.add_child(narrow)
+	await _land()
+	var run := InputEventAction.new()
+	run.action = &"move_right"
+	run.pressed = true
+	Input.parse_input_event(run)
+	for i: int in 150:
+		await get_tree().physics_frame
+		if not _started.is_empty() or _ivo.global_position.x > 600.0:
+			break
+	run.pressed = false
+	Input.parse_input_event(run)
+	assert_array(_started).contains_exactly([narrow])
+
+## STORY-14: the prompt shows exactly where Up would talk, across the zone's edge (both read the door sensor).
+func test_the_prompt_and_the_reach_agree_at_the_zone_edge() -> void:
+	await _land()
+	var prompt := _talkable.get_node("Prompt") as CanvasItem
+	var talks := _ivo.get_node("Talks") as TalkComponent
+	var shown := 0
+	for x: int in range(36, 72, 2):
+		_ivo.teleport(Vector2(x, FLOOR_Y))
+		await _frames(3)
+		var reached := talks.reachable() == _talkable
+		assert_bool(prompt.visible).override_failure_message("x %d: prompt %s, reach %s" % [x, prompt.visible, reached]).is_equal(reached)
+		shown += 1 if reached else 0
+	assert_int(shown).is_between(1, 17)

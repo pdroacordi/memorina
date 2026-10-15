@@ -43,7 +43,7 @@ func _leave() -> void:
 	await _frames(3)
 
 func test_the_zone_rises_from_the_floor_and_the_prompt_stands_over_it() -> void:
-	assert_vector(_talkable.size()).is_equal(Vector2(64, 64))
+	assert_vector(_talkable.size()).is_equal(Vector2(Talkable.REACH * 2.0, 64))
 	var prompt := _talkable.get_node("Prompt") as Control
 	assert_float(prompt.position.y + prompt.size.y).is_equal(-64.0 - Talkable.PROMPT_GAP)
 	assert_float(prompt.position.x + prompt.size.x * 0.5).is_equal(0.0)
@@ -83,3 +83,17 @@ func test_without_auto_start_nothing_is_due() -> void:
 	await _enter()
 	await await_millis(int(_talkable.auto_delay * 1000.0) + 100)
 	assert_bool(_talkable.auto_ready()).is_false()
+
+## STORY-14: the zone is centred on the speaker and the prompt stands over the speaker's head; a door-side trim moves
+## only that edge.
+func test_the_zone_and_the_prompt_follow_the_speaker() -> void:
+	var placed := auto_free(TALKABLE.instantiate()) as Talkable
+	placed.speaker_offset = 10.0
+	placed.reach_east = 16.0
+	add_child(placed)
+	var shape := placed.get_node("CollisionShape2D") as CollisionShape2D
+	var box := (shape.shape as RectangleShape2D).size
+	assert_float(shape.position.x - box.x * 0.5).is_equal(10.0 - Talkable.REACH)
+	assert_float(shape.position.x + box.x * 0.5).is_equal(26.0)
+	var prompt := placed.get_node("Prompt") as Control
+	assert_float(prompt.position.x + prompt.size.x * 0.5).is_equal(10.0)

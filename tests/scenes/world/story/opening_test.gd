@@ -1,7 +1,7 @@
 class_name OpeningTest extends GdUnitTestSuite
 
 ## The opening's stages follow the talks heard, in the order the east gate guarantees (systems/story): a new game starts
-## in Ivo's house with the daughter asleep, debug's items included; the errand, the song and the mentor's gift move her;
+## in Ivo's house with the daughter asleep, items owned early included; the errand, the song and the mentor's gift move her;
 ## the elder's audience leaves for the square after his story or at 0.6; the mentor holds the Memorina, gives it and goes
 ## still; the east gate stays shut until the elder's story.
 
@@ -25,14 +25,16 @@ func before_test() -> void:
 func after_test() -> void:
 	SaveSystem.begin("", true)
 
-## Release and `-- --new-game --opening` have no bench, so Ivo starts where game.tscn places him: in his house.
+## A new game has no bench, so Ivo starts where game.tscn places him: in his house, owning nothing.
 func test_a_new_game_starts_in_ivos_house() -> void:
 	var player := _position((load(GAME) as PackedScene).get_state(), &"Player")
 	var house := _position((load(HOME) as PackedScene).get_state(), &"VillageHouse")
 	assert_bool(Rect2(house, ROOM).has_point(player)).is_true()
-	assert_bool(BootPolicy.new_game_owns_items(true, PackedStringArray(["--new-game", "--opening"]))).is_false()
+	SaveSystem.begin("", true)
+	assert_bool(SaveSystem.has_item(Enums.PlayerItem.SWORD)).is_false()
+	assert_bool(SaveSystem.has_item(Enums.PlayerItem.MEMORINA)).is_false()
 
-## A debug new game owns both items from the first frame; the stages read talks, so the morning is the same.
+## Owning both items early (a playtest's kit) changes nothing: the stages read talks, so the morning is the same.
 func test_owning_the_items_early_changes_nothing_in_the_house() -> void:
 	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, true)

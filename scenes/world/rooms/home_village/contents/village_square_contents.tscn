@@ -142,6 +142,7 @@ position = Vector2(318, 288)
 
 [node name="WaterCarrier" parent="Props" instance=ExtResource("in_water_carrier")]
 position = Vector2(1050, 288)
+flip_h = true
 
 [node name="Children" type="Node2D" parent="Props"]
 script = ExtResource("st_staging")

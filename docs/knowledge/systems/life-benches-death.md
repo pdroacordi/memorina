@@ -76,7 +76,7 @@ Plan and options: `architecture/save-slots-and-the-boot-swap`.
 
 ## The opening's new game (STORY-03, 2026-10-15)
 
-- A release new game owns nothing. A debug new game owns the sword and the Memorina, unless `-- --new-game --opening` starts it as a release does (`BootPolicy.new_game_owns_items`, `systems/story`).
+- A new game owns nothing, in every build (STORY-14; "eu tenho a memorina desde o inicio do jogo e também a espada. Isso não está certo. E eu consigo utilizar a espada dentro de casa na minha filha." (user, 2026-10-15)): `SaveSystem._new_game` is a bare `PlayerData`, and `-- --new-game --opening` and `BootPolicy.new_game_owns_items` are retired. The kits for testing live in the tools: a playtest timeline without `owned_items` gets the sword and the Memorina (the runner's kit), and F10 (`DebugTrials`) gives them as it moves Ivo to a trial.
 - What the opening's rooms show (`FactStaging`) is read from the save on ready, so a death rebuild shows the bench's stage with no fade and no stand-in.
 
 ## Items lying in the world (STORY-02, built 2026-10-15)

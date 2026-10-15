@@ -5,7 +5,7 @@ extends Control
 
 @export var glyph_sets: Array[NoteGlyphSet] = []
 
-@onready var _frame: TextureRect = $Frame
+@onready var _frame: Control = $Frame
 @onready var _sheet: NoteSheet = $Frame/NoteSheet
 
 

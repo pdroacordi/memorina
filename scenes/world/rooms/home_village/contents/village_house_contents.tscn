@@ -236,7 +236,7 @@ offset = Vector2(-17, -22)
 position = Vector2(72, 288)
 
 [node name="Girl" type="Sprite2D" parent="Props/Daughter/HoldingOut"]
-position = Vector2(104, 288)
+position = Vector2(72, 288)
 texture = ExtResource("st_guitar_out")
 centered = false
 offset = Vector2(-26, -62)

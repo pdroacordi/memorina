@@ -39,10 +39,8 @@ func test_a_release_build_begins_nothing() -> void:
 	var fresh := PackedStringArray([BootPolicy.NEW_GAME_ARG])
 	assert_int(BootPolicy.decide(false, false, _no_args, fresh)).is_equal(BootPolicy.Session.NONE)
 
-## `-- --new-game --opening` starts a debug build as a release starts: with no items (systems/story).
-func test_the_opening_starts_with_no_items_in_debug() -> void:
-	assert_bool(BootPolicy.new_game_owns_items(true, PackedStringArray())).is_true()
-	assert_bool(BootPolicy.new_game_owns_items(true, PackedStringArray(["--new-game"]))).is_true()
-	assert_bool(BootPolicy.new_game_owns_items(true, PackedStringArray(["--new-game", "--opening"]))).is_false()
-	assert_bool(BootPolicy.new_game_owns_items(true, PackedStringArray(["--opening"]))).is_true()
-	assert_bool(BootPolicy.new_game_owns_items(false, PackedStringArray())).is_false()
+## A new game owns nothing in a debug build too (STORY-14): the opening gives the sword and the Memorina.
+func test_a_new_game_owns_no_items_in_any_build() -> void:
+	SaveSystem.begin("", true)
+	assert_bool(SaveSystem.has_item(Enums.PlayerItem.SWORD)).is_false()
+	assert_bool(SaveSystem.has_item(Enums.PlayerItem.MEMORINA)).is_false()

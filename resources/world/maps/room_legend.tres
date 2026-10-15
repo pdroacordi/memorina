@@ -347,7 +347,7 @@ ground = 0
 scene = ExtResource("i28_talk")
 anchor = 0
 required_params = PackedStringArray("talk")
-description = "A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Zone width_cells wide (default 2, centred) and height_cells tall (default 2); presence (0..1) hides it below that region baseline, like its villager. Put it beside the villager prop, never on it: a prop carries no gameplay; speaker_offset (px along x from this cell's centre to the villager) is where Ivo turns to face."
+description = "A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Put it on the speaker's cell; speaker_offset (px along x from this cell's centre to the speaker, a villager prop that carries no gameplay itself) is the zone's centre, the prompt's column and what Ivo faces. The zone reaches reach_west and reach_east px each side of the speaker (default 48, about a cell and a half) and is height_cells tall (default 2); trim the side that faces a door so the zones keep more than 22 px apart and the door wins. presence (0..1) hides it below that region baseline, like its villager."
 
 [sub_resource type="Resource" id="item_pickup"]
 script = ExtResource("2_entry")

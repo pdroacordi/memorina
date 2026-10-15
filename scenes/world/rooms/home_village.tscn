@@ -22,6 +22,7 @@ script = ExtResource("1_region")
 name_key = "REGION_HOME_VILLAGE"
 epithet_key = "REGION_HOME_VILLAGE_EPITHET"
 shows_title = false
+calm_interiors = true
 season = 3
 backdrop_set = ExtResource("bd_region_set")
 horizon_y = 235.0

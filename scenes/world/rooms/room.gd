@@ -99,6 +99,10 @@ func map() -> RoomMap:
 func id() -> StringName:
 	return StringName(scene_file_path.get_file().get_basename())
 
+## No sword here: an interior of a region with calm interiors. On the Region, since Room triggers regenerate.
+func is_calm() -> bool:
+	return interior and get_region().calm_interiors
+
 func get_region() -> Region:
 	var region := get_parent() as Region
 	assert(region != null, "Room %s is not a child of a Region." % name)

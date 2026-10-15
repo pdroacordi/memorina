@@ -71,11 +71,11 @@ func _ready() -> void:
 	var responses: Dictionary = timeline.get("responses", {})
 	for ask_id: Variant in responses:
 		SaveSystem.record_response(StringName(str(ask_id)), StringName(str(responses[ask_id])))
-	# Exactly these items: a debug new game owns the sword and the Memorina, so this is how a run starts without them.
-	if timeline.has("owned_items"):
-		var owned: Array = timeline["owned_items"]
-		for item: int in Enums.PlayerItem.values():
-			SaveSystem.set_item_owned(item as Enums.PlayerItem, owned.has(item) or owned.has(float(item)))
+	# Exactly these items; a timeline without `owned_items` gets the runner's kit, the sword and the Memorina, because
+	# a new game owns nothing (STORY-14) and most timelines were written for that kit.
+	var owned: Array = timeline.get("owned_items", [Enums.PlayerItem.SWORD, Enums.PlayerItem.MEMORINA])
+	for item: int in Enums.PlayerItem.values():
+		SaveSystem.set_item_owned(item as Enums.PlayerItem, owned.has(item) or owned.has(float(item)))
 	SaveSystem.commit()
 
 	var scene_path: String = timeline.get("scene", "res://scenes/world/game.tscn")

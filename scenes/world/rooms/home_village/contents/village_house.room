@@ -1,7 +1,9 @@
 ; village_house.room - Ivo's house (design 04 section 3.1), where a new game starts (x 320, floor row 9).
 ; One flat floor; the furniture is props (systems/props, Interiors). No gate or puzzle.
 ; The opening (STORY-03, systems/story): the daughter's poses are a FactStaging under Props; three talks
-; (legend t): the bed (col 2, Up: the errand, "...", her eyes at 0.6), by the door (col 3, auto: the song, the
+; (legend t, each centred on her; STORY-14): the bed (col 2, Up: the errand, "...", her eyes at 0.6; it stops 24 px
+; short of the door at col 4), by the door (col 3, auto, on the girl holding the guitar out at x 72, 80 px wide and
+; 24 px short of the door: the song, the
 ; hummed return) and at the guitar (col 9, auto: the played return). The guitar beats are under Beats.
 
 ; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
@@ -26,6 +28,6 @@ ____________________
 
 [entities]
 4,8 = {"link": "village_house_door", "to_room": "village_square", "arrive_facing": 1}
-2,8 = {"talk": "res://resources/dialogue/story/daughter_bed.tres", "width_cells": 3, "speaker_offset": -8.0}
-3,8 = {"talk": "res://resources/dialogue/story/daughter_near.tres", "auto_start": true, "width_cells": 3, "speaker_offset": 0.0}
-9,8 = {"talk": "res://resources/dialogue/story/daughter_guitar.tres", "auto_start": true, "width_cells": 3, "speaker_offset": -14.0}
+2,8 = {"talk": "res://resources/dialogue/story/daughter_bed.tres", "speaker_offset": -8.0, "reach_east": 32.0}
+3,8 = {"talk": "res://resources/dialogue/story/daughter_near.tres", "auto_start": true, "speaker_offset": -40.0, "reach_east": 32.0}
+9,8 = {"talk": "res://resources/dialogue/story/daughter_guitar.tres", "auto_start": true, "speaker_offset": -14.0}

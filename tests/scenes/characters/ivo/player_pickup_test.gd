@@ -165,3 +165,17 @@ func test_the_prompt_hides_while_he_talks() -> void:
 	_ivo.end_talk()
 	await _frames(2)
 	assert_bool(prompt.visible).is_true()
+
+## STORY-14: the prompt shows exactly where Up would take the item, across its edge (both read the door sensor).
+func test_the_prompt_and_the_reach_agree_at_the_pickup_edge() -> void:
+	await _land()
+	var prompt := _pickup.get_node("Prompt") as CanvasItem
+	var pickups := _ivo.get_node("Pickups") as PickupComponent
+	var shown := 0
+	for x: int in range(20, 56, 2):
+		_ivo.teleport(Vector2(x, FLOOR_Y))
+		await _frames(3)
+		var reached := pickups.reachable() == _pickup
+		assert_bool(prompt.visible).override_failure_message("x %d: prompt %s, reach %s" % [x, prompt.visible, reached]).is_equal(reached)
+		shown += 1 if reached else 0
+	assert_int(shown).is_between(1, 17)
