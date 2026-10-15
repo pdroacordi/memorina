@@ -126,6 +126,8 @@ func test_the_memorina_pose_shows_without_drawing_it() -> void:
 	_ivo.begin_talk(Vector2(100, FLOOR_Y))
 	_ivo.pause_talk(DialogueBeat.Hold.STILL, DialogueBeat.Pose.MEMORINA)
 	await _frames(2)
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_DRAW))
+	await _frames(25)
 	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_IDLE))
 	assert_bool(_ivo.is_memorina_drawn()).is_false()
 	# Held after the beat while the talk goes on, dropped at its end.
@@ -135,7 +137,44 @@ func test_the_memorina_pose_shows_without_drawing_it() -> void:
 	_ivo.end_talk()
 	await _frames(2)
 	assert_int(_ivo.held_pose()).is_equal(DialogueBeat.Pose.NONE)
-	assert_str(String(_driver().current)).is_not_equal(String(PlayerAnimationResolver.MEMORINA_IDLE))
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_LOWER))
+	await _frames(25)
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.IDLE))
+
+## STORY-11: the draw is the lower sheet backward, the play loop runs at 8 fps, the put-away is the lower sheet forward.
+func test_the_memorina_clips_raise_play_and_lower_the_flute() -> void:
+	var player := _ivo.get_node("AnimationPlayer") as AnimationPlayer
+	var expected := {
+		PlayerAnimationResolver.MEMORINA_DRAW: [0.33333334, Animation.LOOP_NONE, [3, 2, 1, 0]],
+		PlayerAnimationResolver.MEMORINA_IDLE: [1.0, Animation.LOOP_LINEAR, [0, 1, 2, 3, 4, 5, 6, 7]],
+		PlayerAnimationResolver.MEMORINA_LOWER: [0.33333334, Animation.LOOP_NONE, [0, 1, 2, 3]],
+	}
+	for name: StringName in expected:
+		var clip := player.get_animation(name)
+		assert_float(clip.length).is_equal_approx(expected[name][0], 0.001)
+		assert_int(clip.loop_mode).is_equal(expected[name][1])
+		var track := clip.find_track(^"Sprite2D:frame", Animation.TYPE_VALUE)
+		var frames: Array[int] = []
+		for key: int in clip.track_get_key_count(track):
+			frames.append(int(clip.track_get_key_value(track, key)))
+		assert_array(frames).is_equal(expected[name][2])
+
+## A drawn Memorina plays the draw, then the loop; sheathed, he lowers it, then stands idle.
+func test_drawing_and_sheathing_the_memorina_raise_and_lower_it() -> void:
+	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
+	await _land()
+	_player_input().draw_memorina_pressed.emit()
+	await _frames(2)
+	assert_bool(_ivo.is_memorina_drawn()).is_true()
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_DRAW))
+	await _frames(25)
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_IDLE))
+	_player_input().draw_memorina_pressed.emit()
+	await _frames(2)
+	assert_bool(_ivo.is_memorina_drawn()).is_false()
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_LOWER))
+	await _frames(25)
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.IDLE))
 
 ## STILL keeps the talk's block; the resume does not count it as a refusal.
 func test_a_still_beat_keeps_him_blocked_and_resumes() -> void:
@@ -191,3 +230,14 @@ func test_up_takes_no_item_during_a_talk() -> void:
 	_player_input().look_up_pressed.emit()
 	await _frames(4)
 	assert_bool(SaveSystem.has_item(Enums.PlayerItem.SWORD)).is_false()
+
+## A freeze stops the resolver but not Ivo's ALWAYS tree, so the draw must end before the earliest freeze: a lesson's
+## lead-in, or the shortest song's notes at the voice's minimum gap (gotchas/a-freeze-stops-the-resolver-but-not-ivos-always-animation-tree).
+func test_the_draw_ends_before_the_earliest_freeze() -> void:
+	var draw := (_ivo.get_node("AnimationPlayer") as AnimationPlayer).get_animation(PlayerAnimationResolver.MEMORINA_DRAW)
+	var shortest := 1 << 30
+	for song: Song in _ivo.song_catalog.songs:
+		shortest = mini(shortest, song.notes.size())
+	var gap := (_ivo.get_node("MemorinaVoice") as MemorinaVoice).min_note_gap
+	assert_float(draw.length).is_less(_ivo.lesson_lead_in)
+	assert_float(draw.length).is_less((shortest - 1) * gap)

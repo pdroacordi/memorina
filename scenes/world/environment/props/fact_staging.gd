@@ -34,14 +34,15 @@ func picked() -> int:
 func shown() -> CanvasItem:
 	return _shown
 
-## A beat shows `child` at once, until the picked stage next changes or `release()`.
+## A beat shows `child` at once, until the picked stage next changes or `release(child)`.
 func stand_in(child: StringName) -> void:
 	_stand_in = get_node_or_null(NodePath(child)) as CanvasItem
 	assert(_stand_in != null, "%s has no child '%s' to stand in" % [name, child])
 	_show(_stand_in, 0.0)
 
-func release() -> void:
-	if _stand_in == null:
+## Returns to the picked stage if `child` is still the stand-in; a later beat's stand-in stays.
+func release(child: StringName) -> void:
+	if _stand_in == null or _stand_in.name != child:
 		return
 	_stand_in = null
 	_show(_child_of(_picked), 0.0)

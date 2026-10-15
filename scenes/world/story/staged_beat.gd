@@ -5,6 +5,8 @@ extends DialogueBeat
 
 ## FactStaging path to the child it stands in, until that staging's stage changes.
 @export var stand_ins: Dictionary[NodePath, StringName] = {}
+## The stand-ins give way to their staging's picked stage when the beat ends.
+@export var release_stand_ins: bool = false
 ## Played as the beat starts; null for none.
 @export var stream: AudioStream
 ## Played note by note through a MelodyPlayer child instead of `stream`; null for none.
@@ -35,6 +37,9 @@ func _process(delta: float) -> void:
 	_left -= delta
 	if _left <= 0.0:
 		_running = false
+		if release_stand_ins:
+			for path: NodePath in stand_ins:
+				(get_node(path) as FactStaging).release(stand_ins[path])
 		finish()
 
 func start() -> void:

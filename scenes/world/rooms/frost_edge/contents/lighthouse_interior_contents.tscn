@@ -21,6 +21,9 @@
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="st_note_right"]
 [ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/raise.png" id="st_raise"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/play.png" id="st_play"]
+[ext_resource type="Script" path="res://scenes/world/story/staged_strip.gd" id="st_strip"]
 
 [sub_resource type="Resource" id="stage_1"]
 script = ExtResource("st_fact")
@@ -37,6 +40,96 @@ fade_seconds = 1.5
 script = ExtResource("st_stage")
 show = &"Holding"
 fade_seconds = 0.5
+
+[sub_resource type="AtlasTexture" id="strip_raise_0"]
+atlas = ExtResource("st_raise")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="strip_raise_1"]
+atlas = ExtResource("st_raise")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="strip_raise_2"]
+atlas = ExtResource("st_raise")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="strip_raise_3"]
+atlas = ExtResource("st_raise")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="strip_raise_4"]
+atlas = ExtResource("st_raise")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="strip_play_0"]
+atlas = ExtResource("st_play")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="strip_play_1"]
+atlas = ExtResource("st_play")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="strip_play_2"]
+atlas = ExtResource("st_play")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="strip_play_3"]
+atlas = ExtResource("st_play")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="strip_play_4"]
+atlas = ExtResource("st_play")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="strip_play_5"]
+atlas = ExtResource("st_play")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="strip_frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("strip_raise_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("strip_raise_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("strip_raise_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("strip_raise_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("strip_raise_4")
+}],
+"loop": false,
+"name": &"raise",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("strip_play_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("strip_play_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("strip_play_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("strip_play_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("strip_play_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("strip_play_5")
+}],
+"loop": true,
+"name": &"play",
+"speed": 8.0
+}]
 
 [node name="Contents" type="Node2D"]
 
@@ -85,6 +178,17 @@ centered = false
 offset = Vector2(-43, -120)
 flip_h = true
 
+[node name="Playing" type="AnimatedSprite2D" parent="Props/Mentor"]
+position = Vector2(240, 800)
+sprite_frames = SubResource("strip_frames")
+animation = &"raise"
+centered = false
+offset = Vector2(-61, -126)
+flip_h = true
+script = ExtResource("st_strip")
+intro = &"raise"
+loop = &"play"
+
 [node name="Beats" type="Node2D" parent="."]
 
 [node name="Pair" type="Marker2D" parent="Beats"]
@@ -92,6 +196,8 @@ position = Vector2(272, 770)
 
 [node name="MentorPhrase" parent="Beats" instance=ExtResource("st_staged_beat")]
 cue = &"mentor_phrase"
+stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Mentor"): &"Playing"})
+release_stand_ins = true
 face = NodePath("../../Props/Mentor/Holding/Body")
 melody = ExtResource("st_phrase")
 voices = Array[AudioStream]([ExtResource("st_note_up"), ExtResource("st_note_down"), ExtResource("st_note_left"), ExtResource("st_note_right")])

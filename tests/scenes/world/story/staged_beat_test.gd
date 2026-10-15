@@ -66,3 +66,26 @@ func test_the_melody_player_sounds_each_note_on_its_onset() -> void:
 	assert_array(played).is_equal([0, 1, 2])
 	assert_int(done[0]).is_equal(1)
 	assert_bool(player.is_playing()).is_false()
+
+## A releasing beat gives back only its own stand-in, so it cannot undo a later beat's.
+func test_a_beat_cannot_release_another_beats_stand_in() -> void:
+	var staging := auto_free(FactStaging.new()) as FactStaging
+	staging.name = "Staging"
+	var still := FactStage.new()
+	still.show = &"Still"
+	staging.stages = [still]
+	for child: String in ["Still", "Mine", "Theirs"]:
+		var sprite := Sprite2D.new()
+		sprite.name = child
+		staging.add_child(sprite)
+	add_child(staging)
+	_beat.stand_ins = {_beat.get_path_to(staging): &"Mine"}
+	_beat.release_stand_ins = true
+	_beat.start()
+	assert_str(String(staging.shown().name)).is_equal("Mine")
+	staging.stand_in(&"Theirs")
+	await await_millis(450)
+	assert_int(_finished[0]).is_equal(1)
+	assert_str(String(staging.shown().name)).is_equal("Theirs")
+	staging.release(&"Theirs")
+	assert_str(String(staging.shown().name)).is_equal("Still")

@@ -1,0 +1,469 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "max_duration": 17.0,
+ "locale": "en",
+ "player_position": [
+  160,
+  5960
+ ],
+ "known_songs": [
+  0
+ ],
+ "steps": [
+  {
+   "t": 2.3,
+   "screenshot": "a_00_standing"
+  },
+  {
+   "t": 2.5,
+   "pressed": true,
+   "action": "draw_memorina"
+  },
+  {
+   "t": 2.52,
+   "screenshot": "b_draw_0"
+  },
+  {
+   "t": 2.55,
+   "pressed": false,
+   "action": "draw_memorina"
+  },
+  {
+   "t": 2.562,
+   "screenshot": "b_draw_1"
+  },
+  {
+   "t": 2.603,
+   "screenshot": "b_draw_2"
+  },
+  {
+   "t": 2.645,
+   "screenshot": "b_draw_3"
+  },
+  {
+   "t": 2.687,
+   "screenshot": "b_draw_4"
+  },
+  {
+   "t": 2.728,
+   "screenshot": "b_draw_5"
+  },
+  {
+   "t": 3.1,
+   "pressed": true,
+   "action": "note_up"
+  },
+  {
+   "t": 3.15,
+   "pressed": false,
+   "action": "note_up"
+  },
+  {
+   "t": 3.2,
+   "screenshot": "c_play_0"
+  },
+  {
+   "t": 3.325,
+   "screenshot": "c_play_1"
+  },
+  {
+   "t": 3.45,
+   "screenshot": "c_play_2"
+  },
+  {
+   "t": 3.5,
+   "pressed": true,
+   "action": "note_right"
+  },
+  {
+   "t": 3.55,
+   "pressed": false,
+   "action": "note_right"
+  },
+  {
+   "t": 3.575,
+   "screenshot": "c_play_3"
+  },
+  {
+   "t": 3.7,
+   "screenshot": "c_play_4"
+  },
+  {
+   "t": 3.825,
+   "screenshot": "c_play_5"
+  },
+  {
+   "t": 3.9,
+   "pressed": true,
+   "action": "note_left"
+  },
+  {
+   "t": 3.95,
+   "pressed": false,
+   "action": "note_left"
+  },
+  {
+   "t": 3.95,
+   "screenshot": "c_play_6"
+  },
+  {
+   "t": 4.075,
+   "screenshot": "c_play_7"
+  },
+  {
+   "t": 4.3,
+   "pressed": true,
+   "action": "note_down"
+  },
+  {
+   "t": 4.35,
+   "pressed": false,
+   "action": "note_down"
+  },
+  {
+   "t": 4.7,
+   "pressed": true,
+   "action": "note_down"
+  },
+  {
+   "t": 4.75,
+   "pressed": false,
+   "action": "note_down"
+  },
+  {
+   "t": 5.1,
+   "pressed": true,
+   "action": "note_down"
+  },
+  {
+   "t": 5.1,
+   "log": "last_note"
+  },
+  {
+   "t": 5.15,
+   "pressed": false,
+   "action": "note_down"
+  },
+  {
+   "t": 5.4,
+   "screenshot": "d_perf_00"
+  },
+  {
+   "t": 5.4,
+   "log": "d_perf_00"
+  },
+  {
+   "t": 5.65,
+   "screenshot": "d_perf_01"
+  },
+  {
+   "t": 5.65,
+   "log": "d_perf_01"
+  },
+  {
+   "t": 5.9,
+   "screenshot": "d_perf_02"
+  },
+  {
+   "t": 5.9,
+   "log": "d_perf_02"
+  },
+  {
+   "t": 6.15,
+   "screenshot": "d_perf_03"
+  },
+  {
+   "t": 6.15,
+   "log": "d_perf_03"
+  },
+  {
+   "t": 6.4,
+   "screenshot": "d_perf_04"
+  },
+  {
+   "t": 6.4,
+   "log": "d_perf_04"
+  },
+  {
+   "t": 6.65,
+   "screenshot": "d_perf_05"
+  },
+  {
+   "t": 6.65,
+   "log": "d_perf_05"
+  },
+  {
+   "t": 6.9,
+   "screenshot": "d_perf_06"
+  },
+  {
+   "t": 6.9,
+   "log": "d_perf_06"
+  },
+  {
+   "t": 7.15,
+   "screenshot": "d_perf_07"
+  },
+  {
+   "t": 7.15,
+   "log": "d_perf_07"
+  },
+  {
+   "t": 7.4,
+   "screenshot": "d_perf_08"
+  },
+  {
+   "t": 7.4,
+   "log": "d_perf_08"
+  },
+  {
+   "t": 7.65,
+   "screenshot": "d_perf_09"
+  },
+  {
+   "t": 7.65,
+   "log": "d_perf_09"
+  },
+  {
+   "t": 7.9,
+   "screenshot": "d_perf_10"
+  },
+  {
+   "t": 7.9,
+   "log": "d_perf_10"
+  },
+  {
+   "t": 8.15,
+   "screenshot": "d_perf_11"
+  },
+  {
+   "t": 8.15,
+   "log": "d_perf_11"
+  },
+  {
+   "t": 8.4,
+   "screenshot": "d_perf_12"
+  },
+  {
+   "t": 8.4,
+   "log": "d_perf_12"
+  },
+  {
+   "t": 8.65,
+   "screenshot": "d_perf_13"
+  },
+  {
+   "t": 8.65,
+   "log": "d_perf_13"
+  },
+  {
+   "t": 8.9,
+   "screenshot": "d_perf_14"
+  },
+  {
+   "t": 8.9,
+   "log": "d_perf_14"
+  },
+  {
+   "t": 9.15,
+   "screenshot": "d_perf_15"
+  },
+  {
+   "t": 9.15,
+   "log": "d_perf_15"
+  },
+  {
+   "t": 9.4,
+   "screenshot": "d_perf_16"
+  },
+  {
+   "t": 9.4,
+   "log": "d_perf_16"
+  },
+  {
+   "t": 9.65,
+   "screenshot": "d_perf_17"
+  },
+  {
+   "t": 9.65,
+   "log": "d_perf_17"
+  },
+  {
+   "t": 9.9,
+   "screenshot": "d_perf_18"
+  },
+  {
+   "t": 9.9,
+   "log": "d_perf_18"
+  },
+  {
+   "t": 10.15,
+   "screenshot": "d_perf_19"
+  },
+  {
+   "t": 10.15,
+   "log": "d_perf_19"
+  },
+  {
+   "t": 10.4,
+   "screenshot": "d_perf_20"
+  },
+  {
+   "t": 10.4,
+   "log": "d_perf_20"
+  },
+  {
+   "t": 10.65,
+   "screenshot": "d_perf_21"
+  },
+  {
+   "t": 10.65,
+   "log": "d_perf_21"
+  },
+  {
+   "t": 10.9,
+   "screenshot": "d_perf_22"
+  },
+  {
+   "t": 10.9,
+   "log": "d_perf_22"
+  },
+  {
+   "t": 11.15,
+   "screenshot": "d_perf_23"
+  },
+  {
+   "t": 11.15,
+   "log": "d_perf_23"
+  },
+  {
+   "t": 11.4,
+   "screenshot": "d_perf_24"
+  },
+  {
+   "t": 11.4,
+   "log": "d_perf_24"
+  },
+  {
+   "t": 11.65,
+   "screenshot": "d_perf_25"
+  },
+  {
+   "t": 11.65,
+   "log": "d_perf_25"
+  },
+  {
+   "t": 11.9,
+   "screenshot": "d_perf_26"
+  },
+  {
+   "t": 11.9,
+   "log": "d_perf_26"
+  },
+  {
+   "t": 12.15,
+   "screenshot": "d_perf_27"
+  },
+  {
+   "t": 12.15,
+   "log": "d_perf_27"
+  },
+  {
+   "t": 12.4,
+   "screenshot": "d_perf_28"
+  },
+  {
+   "t": 12.4,
+   "log": "d_perf_28"
+  },
+  {
+   "t": 12.65,
+   "screenshot": "d_perf_29"
+  },
+  {
+   "t": 12.65,
+   "log": "d_perf_29"
+  },
+  {
+   "t": 12.9,
+   "screenshot": "d_perf_30"
+  },
+  {
+   "t": 12.9,
+   "log": "d_perf_30"
+  },
+  {
+   "t": 13.15,
+   "screenshot": "d_perf_31"
+  },
+  {
+   "t": 13.15,
+   "log": "d_perf_31"
+  },
+  {
+   "t": 13.4,
+   "screenshot": "d_perf_32"
+  },
+  {
+   "t": 13.4,
+   "log": "d_perf_32"
+  },
+  {
+   "t": 13.65,
+   "screenshot": "d_perf_33"
+  },
+  {
+   "t": 13.65,
+   "log": "d_perf_33"
+  },
+  {
+   "t": 13.9,
+   "screenshot": "d_perf_34"
+  },
+  {
+   "t": 13.9,
+   "log": "d_perf_34"
+  },
+  {
+   "t": 14.15,
+   "screenshot": "d_perf_35"
+  },
+  {
+   "t": 14.15,
+   "log": "d_perf_35"
+  },
+  {
+   "t": 14.4,
+   "screenshot": "d_perf_36"
+  },
+  {
+   "t": 14.4,
+   "log": "d_perf_36"
+  },
+  {
+   "t": 14.65,
+   "screenshot": "d_perf_37"
+  },
+  {
+   "t": 14.65,
+   "log": "d_perf_37"
+  },
+  {
+   "t": 14.9,
+   "screenshot": "d_perf_38"
+  },
+  {
+   "t": 14.9,
+   "log": "d_perf_38"
+  },
+  {
+   "t": 15.15,
+   "screenshot": "d_perf_39"
+  },
+  {
+   "t": 15.15,
+   "log": "d_perf_39"
+  }
+ ]
+}

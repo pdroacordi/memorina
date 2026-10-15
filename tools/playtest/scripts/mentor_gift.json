@@ -29,8 +29,68 @@
    "pressed": false
   },
   {
+   "t": 2.82,
+   "screenshot": "m_raise_0"
+  },
+  {
+   "t": 2.92,
+   "screenshot": "m_raise_1"
+  },
+  {
+   "t": 3.02,
+   "screenshot": "m_raise_2"
+  },
+  {
+   "t": 3.12,
+   "screenshot": "m_raise_3"
+  },
+  {
    "t": 3.2,
    "screenshot": "02_phrase_pulse"
+  },
+  {
+   "t": 3.22,
+   "screenshot": "m_raise_4"
+  },
+  {
+   "t": 3.4,
+   "screenshot": "m_play_0"
+  },
+  {
+   "t": 3.65,
+   "screenshot": "m_play_1"
+  },
+  {
+   "t": 3.9,
+   "screenshot": "m_play_2"
+  },
+  {
+   "t": 4.15,
+   "screenshot": "m_play_3"
+  },
+  {
+   "t": 4.4,
+   "screenshot": "m_play_4"
+  },
+  {
+   "t": 4.65,
+   "screenshot": "m_play_5"
+  },
+  {
+   "t": 4.9,
+   "screenshot": "m_play_6"
+  },
+  {
+   "t": 5.15,
+   "screenshot": "m_play_7"
+  },
+  {
+   "t": 5.8,
+   "screenshot": "m_after_phrase"
+  },
+  {
+   "t": 5.8,
+   "log": "after_phrase"
   },
   {
    "t": 6.8,

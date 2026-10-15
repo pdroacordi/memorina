@@ -97,7 +97,16 @@ func test_a_stand_in_holds_until_the_stage_changes() -> void:
 
 func test_release_returns_to_the_stage() -> void:
 	_staging.stand_in(&"Lowered")
-	_staging.release()
+	_staging.release(&"Lowered")
+	assert_array(_visible(_staging)).is_equal(["Asleep"])
+
+## A beat releases only its own stand-in: a later beat's stays.
+func test_a_release_of_another_stand_in_changes_nothing() -> void:
+	_staging.stand_in(&"Lowered")
+	_staging.stand_in(&"Up")
+	_staging.release(&"Lowered")
+	assert_array(_visible(_staging)).is_equal(["Up"])
+	_staging.release(&"Up")
 	assert_array(_visible(_staging)).is_equal(["Asleep"])
 
 ## A death rebuilds the world: a new staging reads the rewound save, with no stand-in.

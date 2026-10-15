@@ -4,8 +4,12 @@ class_name IvoSheetTest extends GdUnitTestSuite
 
 const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const PALETTE := "res://tools/art/sources/ivo/ivo_palette.png"
-## A sheet where Ivo holds a prop may also use that prop's own colours (its contract snaps to both).
-const HELD_PROPS := {"ivo_guitar.png": "res://assets/sprites/world/props/interiors/ivo_house/guitar.png"}
+## A sheet where Ivo holds a prop may also use the colours its contract snaps to: the prop's, or its still's.
+const HELD_PROPS := {
+	"ivo_guitar.png": "res://assets/sprites/world/props/interiors/ivo_house/guitar.png",
+	"ivo_memorina_play.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
+	"ivo_memorina_lower.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
+}
 const FRAME := 128
 ## Game px: the feet end on the row above the floor line (row 96).
 const FEET_ROW := 95
@@ -18,7 +22,7 @@ const CENTRE_TOLERANCE := 4.0
 ## Game px (2 art px): how far an attack's body may move between two frames, so a swing never slides or pops.
 const STEADY_TOLERANCE := 4.0
 const GROUNDED: Array[StringName] = [
-	&"idle", &"run", &"brace", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle",
+	&"idle", &"run", &"brace", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle", &"memorina_lower",
 	&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in", &"run_attack_swing_out",
 	&"guitar_hold", &"guitar_strum",
 ]
@@ -50,13 +54,13 @@ const FRAME_ORIGIN := Vector2(-64, -96)
 const WALL: Array[StringName] = [&"wall_landing", &"wall_slide"]
 ## The blade's colours, left out of an attack's body centroid.
 const STEEL: Array[Color] = [Color8(98, 106, 112), Color8(150, 160, 166), Color8(200, 208, 210), Color8(234, 240, 240)]
-## Seconds; the 2x sheets kept every clip's timing.
+## Seconds; the 2x sheets kept every clip's timing but the Memorina's, redrawn in STORY-11.
 const LENGTHS := {
 	&"idle": 0.8333333, &"run": 0.6666667, &"brace": 1.0, &"jump_start": 0.25, &"jump_idle": 0.083333336,
 	&"fall_start": 0.25, &"fall_idle": 0.083333336, &"air_spin": 0.5, &"land": 0.75, &"wall_landing": 0.5,
 	&"wall_slide": 1.0, &"roll": 0.5833333, &"hurt": 0.33333334, &"death": 0.8333333, &"sit": 1.0,
-	&"climb": 0.6, &"climb_hold": 0.1, &"climb_back": 0.6, &"climb_back_hold": 0.1, &"memorina_draw": 0.25,
-	&"memorina_idle": 0.6666667, &"idle_attack_swing_in": 0.41666666, &"idle_attack_swing_out": 0.33333334,
+	&"climb": 0.6, &"climb_hold": 0.1, &"climb_back": 0.6, &"climb_back_hold": 0.1, &"memorina_draw": 0.33333334,
+	&"memorina_idle": 1.0, &"memorina_lower": 0.33333334, &"idle_attack_swing_in": 0.41666666, &"idle_attack_swing_out": 0.33333334,
 	&"run_attack_swing_in": 0.41666666, &"run_attack_swing_out": 0.33333334, &"jump_attack": 0.33333334,
 	&"fall_attack": 0.33333334, &"air_downwards_attack": 0.5,
 }
@@ -188,7 +192,7 @@ func test_every_colour_is_from_the_palette() -> void:
 		var allowed := palette.duplicate()
 		var file := _texture(clip).resource_path.get_file()
 		if HELD_PROPS.has(file):
-			var prop := (load(HELD_PROPS[file]) as Texture2D).get_image()
+			var prop := Image.load_from_file(ProjectSettings.globalize_path(HELD_PROPS[file]))
 			prop.convert(Image.FORMAT_RGBA8)
 			for y: int in prop.get_height():
 				for x: int in prop.get_width():

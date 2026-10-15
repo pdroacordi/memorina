@@ -119,6 +119,27 @@ func test_the_mentor_holds_gives_and_goes_still() -> void:
 	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("Stasis")
 	assert_float((lighthouse.get_node("Props/Mentor") as FactStaging).stages[0].fade_seconds).is_equal(1.5)
 
+## STORY-11: his phrase stands in the strip that raises the flute and plays it, then gives way to the holding still.
+func test_the_mentor_raises_and_plays_the_flute_during_his_phrase() -> void:
+	var lighthouse := _mount(LIGHTHOUSE)
+	var staging := lighthouse.get_node("Props/Mentor") as FactStaging
+	var strip := lighthouse.get_node("Props/Mentor/Playing") as StagedStrip
+	assert_bool(strip.is_visible_in_tree()).is_false()
+	assert_int(strip.sprite_frames.get_frame_count(&"raise")).is_equal(5)
+	assert_bool(strip.sprite_frames.get_animation_loop(&"raise")).is_false()
+	assert_int(strip.sprite_frames.get_frame_count(&"play")).is_equal(6)
+	assert_bool(strip.sprite_frames.get_animation_loop(&"play")).is_true()
+	var phrase := lighthouse.get_node("Beats/MentorPhrase") as StagedBeat
+	phrase.start()
+	assert_str(String(staging.shown().name)).is_equal("Playing")
+	assert_str(String(strip.animation)).is_equal("raise")
+	assert_bool(strip.is_playing()).is_true()
+	await await_signal_on(strip, "animation_changed", [], 2000)
+	assert_str(String(strip.animation)).is_equal("play")
+	await await_signal_on(phrase, "finished", [], 5000)
+	assert_str(String(staging.shown().name)).is_equal("Holding")
+	assert_bool(strip.is_playing()).is_false()
+
 ## The gift's line grants the Memorina as its beat starts, once.
 func test_the_mentor_gives_the_memorina_once() -> void:
 	var gift := (load("res://resources/dialogue/story/mentor.tres") as DialogueSet).dialogues[0]

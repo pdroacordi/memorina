@@ -22,6 +22,7 @@ const ATTACK_FALL := &"attack_fall"
 const ATTACK_POGO := &"attack_pogo"
 const MEMORINA_DRAW := &"memorina_draw"
 const MEMORINA_IDLE := &"memorina_idle"
+const MEMORINA_LOWER := &"memorina_lower"
 const GUITAR_HOLD := &"guitar_hold"
 const GUITAR_STRUM := &"guitar_strum"
 const CLIMB := &"climb"
@@ -86,7 +87,7 @@ func resolve() -> StringName:
 				return GUITAR_STRUM
 			return GUITAR_HOLD
 		DialogueBeat.Pose.MEMORINA:
-			return MEMORINA_IDLE
+			return driver.sequence(MEMORINA_DRAW, MEMORINA_IDLE)
 
 	# Drawn implies grounded; instrument holding outranks idle, while hurt and death take priority.
 	if _player.is_memorina_drawn():
@@ -96,6 +97,9 @@ func resolve() -> StringName:
 		return BRACE if _player.is_bracing() else RUN
 	if _player.just_landed() or driver.holding(LAND):
 		return LAND
+	# Puts the instrument away after playing it; any movement cuts it.
+	if driver.current == MEMORINA_IDLE or driver.holding(MEMORINA_LOWER):
+		return MEMORINA_LOWER
 	return IDLE
 
 func is_death_finished() -> bool:
