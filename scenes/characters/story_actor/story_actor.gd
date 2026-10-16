@@ -9,6 +9,8 @@ const GROUP := &"story_actors"
 @export var actor_id: StringName = &""
 ## The FactStaging whose shown child this actor stands for.
 @export var stands_for: NodePath
+## The side its art faces unflipped: 1 east (the daughter), -1 west (the villagers' strips).
+@export_range(-1, 1, 2) var drawn_facing: int = 1
 
 ## The clip a gesture asked for; empty shows the resolver's idle clip.
 var _clip: StringName = &""
@@ -44,7 +46,7 @@ func enter() -> void:
 	if child != null:
 		teleport(child.global_position)
 		var sprite := child as Sprite2D
-		face_towards(-1.0 if sprite != null and sprite.flip_h else 1.0)
+		face_towards(float(drawn_facing * (-1 if sprite != null and sprite.flip_h else 1)))
 		_clip = StringName(String(child.name).to_snake_case())
 		assert(_resolver.has_clip(_clip), "%s has no clip for its rest child '%s'" % [actor_id, child.name])
 	if staging() != null:
@@ -59,6 +61,11 @@ func leave() -> void:
 	_controller.stop()
 	hide()
 	set_deferred(&"process_mode", Node.PROCESS_MODE_DISABLED)
+
+## Flips its art by the side it is drawn facing, on every call: the flip may be stale when the facing does not change.
+func face_towards(axis: float) -> void:
+	super(axis)
+	_sprite.flip_h = facing != drawn_facing
 
 func is_in_scene() -> bool:
 	return _in_scene

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e3"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e4"]
+
+[sub_resource type="Resource" id="wait_1"]
+script = ExtResource("e1")
+seconds = 0.3
+
+[sub_resource type="Resource" id="face_2"]
+script = ExtResource("e2")
+actor = &"elder"
+toward = &"painting"
+
+[sub_resource type="Resource" id="wait_3"]
+script = ExtResource("e1")
+seconds = 1.2
+
+[resource]
+script = ExtResource("e4")
+id = &"elder_looks_at_painting"
+steps = Array[ExtResource("e3")]([SubResource("wait_1"), SubResource("face_2"), SubResource("wait_3")])

@@ -15,6 +15,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/daughter/lower_eyes.png" id="t_lower_eyes"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/daughter/sit.png" id="t_sit"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/daughter/lie_down.png" id="t_lie_down"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/daughter/reach_up.png" id="t_reach_up"]
 
 [sub_resource type="CapsuleShape2D" id="body_shape"]
 radius = 7.0
@@ -85,6 +86,71 @@ tracks/4/keys = {
 
 [sub_resource type="Animation" id="anim_standing"]
 resource_name = "standing"
+length = 2.3333333
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("t_standing")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1666667, 0.3333333, 0.5, 0.6666667, 0.8333333, 1, 1.1666667, 1.3333333, 1.5, 1.6666667, 1.8333333, 2, 2.1666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:offset")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(-32, -62)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="anim_listening"]
+resource_name = "listening"
 length = 2.3333333
 loop_mode = 1
 tracks/0/type = "value"
@@ -795,10 +861,140 @@ tracks/4/keys = {
 "values": [Vector2(0, 0), Vector2(0, -4), Vector2(0, -10), Vector2(0, -12)]
 }
 
+[sub_resource type="Animation" id="anim_reach_up"]
+resource_name = "reach_up"
+length = 0.75
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("t_reach_up")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [6]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5, 0.625),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:offset")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(-32, -62)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="anim_guitar_at_chest"]
+resource_name = "guitar_at_chest"
+length = 0.1
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("t_reach_up")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [6]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [5]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:offset")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(-32, -62)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(0, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="library"]
 _data = {
 &"RESET": SubResource("anim_reset"),
 &"standing": SubResource("anim_standing"),
+&"listening": SubResource("anim_listening"),
 &"holding_out": SubResource("anim_holding_out"),
 &"at_guitar": SubResource("anim_at_guitar"),
 &"asleep": SubResource("anim_asleep"),
@@ -808,11 +1004,16 @@ _data = {
 &"eyes_lowered": SubResource("anim_eyes_lowered"),
 &"sit": SubResource("anim_sit"),
 &"seated": SubResource("anim_seated"),
-&"lie_down": SubResource("anim_lie_down")
+&"lie_down": SubResource("anim_lie_down"),
+&"reach_up": SubResource("anim_reach_up"),
+&"guitar_at_chest": SubResource("anim_guitar_at_chest")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="node_standing"]
 animation = &"standing"
+
+[sub_resource type="AnimationNodeAnimation" id="node_listening"]
+animation = &"listening"
 
 [sub_resource type="AnimationNodeAnimation" id="node_holding_out"]
 animation = &"holding_out"
@@ -844,29 +1045,41 @@ animation = &"seated"
 [sub_resource type="AnimationNodeAnimation" id="node_lie_down"]
 animation = &"lie_down"
 
+[sub_resource type="AnimationNodeAnimation" id="node_reach_up"]
+animation = &"reach_up"
+
+[sub_resource type="AnimationNodeAnimation" id="node_guitar_at_chest"]
+animation = &"guitar_at_chest"
+
 [sub_resource type="AnimationNodeStateMachine" id="machine"]
 states/standing/node = SubResource("node_standing")
 states/standing/position = Vector2(300, 60)
+states/listening/node = SubResource("node_listening")
+states/listening/position = Vector2(460, 60)
 states/holding_out/node = SubResource("node_holding_out")
-states/holding_out/position = Vector2(460, 60)
+states/holding_out/position = Vector2(620, 60)
 states/at_guitar/node = SubResource("node_at_guitar")
-states/at_guitar/position = Vector2(620, 60)
+states/at_guitar/position = Vector2(780, 60)
 states/asleep/node = SubResource("node_asleep")
-states/asleep/position = Vector2(780, 60)
+states/asleep/position = Vector2(300, 140)
 states/in_bed_turned/node = SubResource("node_in_bed_turned")
-states/in_bed_turned/position = Vector2(300, 140)
+states/in_bed_turned/position = Vector2(460, 140)
 states/walk/node = SubResource("node_walk")
-states/walk/position = Vector2(460, 140)
+states/walk/position = Vector2(620, 140)
 states/lower_eyes/node = SubResource("node_lower_eyes")
-states/lower_eyes/position = Vector2(620, 140)
+states/lower_eyes/position = Vector2(780, 140)
 states/eyes_lowered/node = SubResource("node_eyes_lowered")
-states/eyes_lowered/position = Vector2(780, 140)
+states/eyes_lowered/position = Vector2(300, 220)
 states/sit/node = SubResource("node_sit")
-states/sit/position = Vector2(300, 220)
+states/sit/position = Vector2(460, 220)
 states/seated/node = SubResource("node_seated")
-states/seated/position = Vector2(460, 220)
+states/seated/position = Vector2(620, 220)
 states/lie_down/node = SubResource("node_lie_down")
-states/lie_down/position = Vector2(620, 220)
+states/lie_down/position = Vector2(780, 220)
+states/reach_up/node = SubResource("node_reach_up")
+states/reach_up/position = Vector2(300, 300)
+states/guitar_at_chest/node = SubResource("node_guitar_at_chest")
+states/guitar_at_chest/position = Vector2(460, 300)
 
 [node name="Daughter" type="CharacterBody2D"]
 collision_layer = 0

@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="DialogueSet" format=3]
+[gd_resource type="Resource" script_class="DialogueSet" format=3 uid="uid://csj07rsawavf3"]
 
 [ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
 [ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
@@ -7,104 +7,155 @@
 [ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/elder.tres" id="s_elder"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/boy.tres" id="s_boy"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/ivo.tres" id="s_ivo"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/girl.tres" id="s_girl"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/elder_model.tres" id="s_elder_model"]
 
 [sub_resource type="Resource" id="line_1"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_elder")
-text_key = "DLG_ELDER_WAIT_01"
+text_key = "DLG_ELDER_STORY_01"
 
 [sub_resource type="Resource" id="line_2"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_elder")
-text_key = "DLG_ELDER_WAIT_02"
+text_key = "DLG_ELDER_STORY_02"
 
 [sub_resource type="Resource" id="line_3"]
 script = ExtResource("f_line")
-cue = &"elder_painting"
+speaker = ExtResource("s_boy")
+text_key = "DLG_ELDER_STORY_04"
+cue = &"elder_looks_at_painting"
 
 [sub_resource type="Resource" id="line_4"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_elder")
-text_key = "DLG_ELDER_PAINTING_01"
+text_key = "DLG_ELDER_WAIT_01"
 
 [sub_resource type="Resource" id="line_5"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_elder")
-text_key = "DLG_ELDER_STORY_01"
+text_key = "DLG_ELDER_WAIT_02"
 
-[sub_resource type="Resource" id="line_6"]
-script = ExtResource("f_line")
-speaker = ExtResource("s_elder")
-text_key = "DLG_ELDER_STORY_02"
-
-[sub_resource type="Resource" id="choice_7"]
+[sub_resource type="Resource" id="choice_6"]
 script = ExtResource("f_choice")
 id = &"elder_wait"
 text_key = "DLG_CHOICE_ELDER_WAIT"
 tone = 1
-reply = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_2")])
+reply = Array[ExtResource("f_line")]([SubResource("line_4"), SubResource("line_5")])
 
-[sub_resource type="Resource" id="choice_8"]
-script = ExtResource("f_choice")
-id = &"elder_painting"
-text_key = "DLG_CHOICE_ELDER_PAINTING"
-tone = 2
-reply = Array[ExtResource("f_line")]([SubResource("line_3"), SubResource("line_4")])
+[sub_resource type="Resource" id="line_7"]
+script = ExtResource("f_line")
+cue = &"elder_painting"
+
+[sub_resource type="Resource" id="line_8"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_ELDER_PAINTING_02"
 
 [sub_resource type="Resource" id="line_9"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_elder")
+text_key = "DLG_ELDER_PAINTING_01"
+
+[sub_resource type="Resource" id="choice_10"]
+script = ExtResource("f_choice")
+id = &"elder_painting"
+text_key = "DLG_CHOICE_ELDER_PAINTING"
+tone = 2
+reply = Array[ExtResource("f_line")]([SubResource("line_7"), SubResource("line_8"), SubResource("line_9")])
+
+[sub_resource type="Resource" id="line_11"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder")
 text_key = "DLG_ELDER_STORY_03"
 ask_id = &"elder_story"
-choices = Array[ExtResource("f_choice")]([SubResource("choice_7"), SubResource("choice_8")])
+choices = Array[ExtResource("f_choice")]([SubResource("choice_6"), SubResource("choice_10")])
 
-[sub_resource type="Resource" id="fact_10"]
+[sub_resource type="Resource" id="line_12"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_ELDER_STORY_05"
+
+[sub_resource type="Resource" id="line_13"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder")
+text_key = "DLG_ELDER_STORY_06"
+
+[sub_resource type="Resource" id="line_14"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_girl")
+text_key = "DLG_ELDER_STORY_07"
+cue = &"gate_bolt"
+
+[sub_resource type="Resource" id="fact_15"]
 script = ExtResource("f_fact")
 kind = 7
 id = &"daughter_song"
 
-[sub_resource type="Resource" id="dialogue_11"]
+[sub_resource type="Resource" id="dialogue_16"]
 script = ExtResource("f_dialogue")
 id = &"elder_story"
 once = true
-when = Array[ExtResource("f_fact")]([SubResource("fact_10")])
-lines = Array[ExtResource("f_line")]([SubResource("line_5"), SubResource("line_6"), SubResource("line_9")])
+when = Array[ExtResource("f_fact")]([SubResource("fact_15")])
+lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_2"), SubResource("line_3"), SubResource("line_11"), SubResource("line_12"), SubResource("line_13"), SubResource("line_14")])
+zoom = 2.0
 
-[sub_resource type="Resource" id="line_12"]
+[sub_resource type="Resource" id="line_17"]
+script = ExtResource("f_line")
+cue = &"elder_sees_flute"
+
+[sub_resource type="Resource" id="line_18"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_elder_model")
 text_key = "DLG_ELDER_RETURN_01"
 
-[sub_resource type="Resource" id="fact_13"]
+[sub_resource type="Resource" id="line_19"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_ELDER_RETURN_02"
+
+[sub_resource type="Resource" id="line_20"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder_model")
+text_key = "DLG_ELDER_RETURN_03"
+
+[sub_resource type="Resource" id="line_21"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder_model")
+text_key = "DLG_ELDER_RETURN_04"
+
+[sub_resource type="Resource" id="fact_22"]
 script = ExtResource("f_fact")
 kind = 7
 id = &"mentor_gift"
 
-[sub_resource type="Resource" id="dialogue_14"]
+[sub_resource type="Resource" id="dialogue_23"]
 script = ExtResource("f_dialogue")
 id = &"elder_return"
 once = true
-when = Array[ExtResource("f_fact")]([SubResource("fact_13")])
-lines = Array[ExtResource("f_line")]([SubResource("line_12")])
+when = Array[ExtResource("f_fact")]([SubResource("fact_22")])
+lines = Array[ExtResource("f_line")]([SubResource("line_17"), SubResource("line_18"), SubResource("line_19"), SubResource("line_20"), SubResource("line_21")])
+zoom = 2.0
 
-[sub_resource type="Resource" id="line_15"]
+[sub_resource type="Resource" id="line_24"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_elder")
 text_key = "DLG_ELDER_EMPTY_01"
 
-[sub_resource type="Resource" id="fact_16"]
+[sub_resource type="Resource" id="fact_25"]
 script = ExtResource("f_fact")
 kind = 6
 index = 2
 
-[sub_resource type="Resource" id="dialogue_17"]
+[sub_resource type="Resource" id="dialogue_26"]
 script = ExtResource("f_dialogue")
 id = &"elder_empty"
 once = true
-when = Array[ExtResource("f_fact")]([SubResource("fact_16")])
-lines = Array[ExtResource("f_line")]([SubResource("line_15")])
+when = Array[ExtResource("f_fact")]([SubResource("fact_25")])
+lines = Array[ExtResource("f_line")]([SubResource("line_24")])
 
 [resource]
 script = ExtResource("f_set")
-dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_11"), SubResource("dialogue_14"), SubResource("dialogue_17")])
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_16"), SubResource("dialogue_23"), SubResource("dialogue_26")])

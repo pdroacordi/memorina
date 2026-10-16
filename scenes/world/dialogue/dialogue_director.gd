@@ -11,6 +11,9 @@ signal talk_paused(hold: int, pose: int, at: Vector2)
 ## The beat is over; Ivo answers with `resume()` once the start gates hold.
 signal resume_wanted
 signal talk_ended
+## The camera holds the speaker at `at` and Ivo at `zoom` until `talk_unframed` (Dialogue.zoom).
+signal talk_framed(at: Vector2, zoom: float)
+signal talk_unframed
 ## Where the box opens for this talk; held until the talk ends or resumes.
 signal box_placed(side: DialogueBoxSide.Side)
 signal line_shown(speaker: Speaker, text_key: String)
@@ -37,6 +40,8 @@ var _facing: Vector2
 var _beat: DialogueBeat
 ## The beat is over and the talk waits for `resume()`.
 var _waiting: bool = false
+## The talk holds the camera's frame.
+var _framed: bool = false
 
 
 func _ready() -> void:
@@ -59,6 +64,9 @@ func start_dialogue(dialogue: Dialogue, at: Vector2) -> bool:
 	_runner = DialogueRunner.new(dialogue, SaveSystem.player_data)
 	_at = at
 	_facing = _at
+	if dialogue.zoom > 0.0:
+		_framed = true
+		talk_framed.emit(at, dialogue.zoom)
 	_begin()
 	return true
 
@@ -95,6 +103,7 @@ func interrupt() -> void:
 	if not _waiting:
 		box_closed.emit()
 	_drop()
+	_unframe()
 	talk_ended.emit()
 
 func _begin() -> void:
@@ -130,6 +139,7 @@ func _step() -> void:
 			_drop()
 			SaveSystem.mark_dialogue_heard(heard)
 			box_closed.emit()
+			_unframe()
 			talk_ended.emit()
 
 func _play(cue: StringName) -> void:
@@ -160,6 +170,7 @@ func _apply_grant() -> void:
 func _on_beat_over() -> void:
 	if _beat == null:
 		return
+	_facing = _beat.face_after(_facing)
 	_beat.finished.disconnect(_on_beat_over)
 	_beat.tree_exiting.disconnect(_on_beat_over)
 	_beat.phrase_shown.disconnect(phrase_shown.emit)
@@ -174,6 +185,11 @@ func _on_beat_over() -> void:
 		return
 	_waiting = true
 	resume_wanted.emit()
+
+func _unframe() -> void:
+	if _framed:
+		_framed = false
+		talk_unframed.emit()
 
 func _drop() -> void:
 	_runner = null

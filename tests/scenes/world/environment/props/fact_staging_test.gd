@@ -156,3 +156,15 @@ func test_an_uncover_keeps_a_live_stand_in() -> void:
 	_staging.cover()
 	_staging.uncover()
 	assert_array(_visible(_staging)).is_equal(["Lowered"])
+
+## A cutscene's CutsceneStage can stand in nothing (the guitar leaving its hook) or fade to a child; a stage change ends it.
+func test_a_stand_in_can_show_nothing_or_fade() -> void:
+	_staging.stand_in(&"")
+	assert_array(_visible(_staging)).is_empty()
+	_staging.release(&"")
+	assert_array(_visible(_staging)).is_equal(["Asleep"])
+	_staging.stand_in(&"Lowered", 0.4)
+	assert_array(_visible(_staging)).contains_exactly_in_any_order(["Asleep", "Lowered"])
+	SaveSystem.mark_dialogue_heard(&"errand")
+	await await_millis(600)
+	assert_array(_visible(_staging)).is_equal(["Up"])

@@ -39,7 +39,12 @@ func walk(id: StringName, x: float, pace: float) -> CutsceneTask:
 			_driving_ivo = true
 			_director.ivo_driven.emit(_ivo_controller)
 		_ivo_controller.walk_to(x, pace)
-		return CutsceneUntilTask.new(func() -> bool: return not _ivo_controller.is_walking(), _ivo_controller.stop)
+		var arrived := func() -> bool:
+			if _ivo_controller.is_walking():
+				return false
+			_director.note_ivo_turned()
+			return true
+		return CutsceneUntilTask.new(arrived, _ivo_controller.stop)
 	var found := cast.actor(id)
 	if found == null:
 		return CutsceneTask.new()
@@ -56,6 +61,8 @@ func face(id: StringName, direction: int) -> void:
 	var body := _body(id)
 	if body != null:
 		body.face_towards(float(direction))
+	if id == CutsceneStep.IVO:
+		_director.note_ivo_turned()
 
 func gesture(id: StringName, clip: StringName) -> CutsceneTask:
 	var found := cast.actor(id)
@@ -69,13 +76,15 @@ func land_gesture(id: StringName, clip: StringName) -> void:
 	if found != null:
 		found.land_gesture(clip)
 
-func emote(id: StringName, shown: CutsceneEmote.Emote, seconds: float) -> void:
+func emote(id: StringName, shown: CutsceneEmote.Emote, seconds: float, height: float = 0.0) -> void:
 	var target: Node2D = _director.ivo if id == CutsceneStep.IVO else cast.actor(id)
 	if target == null:
 		return
 	var bubble := EmoteBubble.new()
 	_director.add_child(bubble)
-	bubble.show_over(target, IVO_BUBBLE_HEIGHT if id == CutsceneStep.IVO else ACTOR_BUBBLE_HEIGHT, shown, seconds)
+	if height <= 0.0:
+		height = IVO_BUBBLE_HEIGHT if id == CutsceneStep.IVO else ACTOR_BUBBLE_HEIGHT
+	bubble.show_over(target, height, shown, seconds)
 	_bubbles.append(bubble)
 
 func pose(held: DialogueBeat.Pose) -> void:
@@ -153,6 +162,11 @@ func show_visual(id: StringName, alpha: float, seconds: float) -> void:
 	visual.fade_to(alpha, seconds)
 	if not _visuals.has(visual):
 		_visuals.append(visual)
+
+func stage(staging_id: StringName, child: StringName, seconds: float) -> void:
+	var staging := cast.find_staging(staging_id)
+	if staging != null:
+		staging.stand_in(child, seconds)
 
 ## Whether the frame was taken from Ivo and must return to him.
 func took_camera() -> bool:

@@ -63,6 +63,8 @@ signal sat_down(seat: Seat)
 signal door_entered(door: Door)
 ## Up at a Talkable, or its auto start; the dialogue director runs the talk.
 signal talk_started(talkable: Talkable)
+## Taking an item started what he says about it (`ItemPickup.talk`), spoken from `at`.
+signal pickup_talk_started(dialogue: Dialogue, at: Vector2)
 ## A talk handed to a beat may go on: Ivo is free on the floor again (request_talk_resume).
 signal talk_resumed
 ## A note input while a beat holds him to the notes (the guitar); the dialogue director hands it to the beat.
@@ -85,6 +87,8 @@ const STILL_SPEED_EPSILON := 1.0
 const RECALL_ESCAPE_TIME := 0.6
 ## Seconds an Up press waits for a door, a Talkable or an item to come in reach ("Buffer it ~0.1 s", user, 2026-10-08).
 const UP_BUFFER := 0.1
+## A cutscene walk under this pace (0..1 of his run) shows the walk clip, not the run (STORY-16).
+const STROLL_PACE := 0.75
 
 enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 
@@ -209,6 +213,9 @@ var _strum_pending: bool = false
 var _just_strummed: bool = false
 ## A beat ended; the talk goes on once the start gates hold.
 var _resume_wanted: bool = false
+## A scene stood him up from SEATED since the last physics step; the resolver plays the stand-up once on it.
+var _rise_pending: bool = false
+var _just_rose: bool = false
 ## From `begin_scene` to `end_scene`: a cutscene has him (systems/cutscenes).
 var _in_scene: bool = false
 ## The map is open over him (Screens.BLOCKING).
@@ -296,6 +303,8 @@ func _process_motion(delta: float) -> void:
 	_just_double_jumped = false
 	_just_strummed = _strum_pending
 	_strum_pending = false
+	_just_rose = _rise_pending
+	_rise_pending = false
 	if _just_strummed:
 		_animation_driver.request_replay()
 	if is_dead():
@@ -665,6 +674,10 @@ func _try_pickup(on_floor: bool) -> bool:
 		return false
 	_drop_buffers()
 	pickup.take()
+	# The take itself starts the line, so no zone can miss it (bugs/the-sword-line-is-missed-when-ivo-takes-it-from-the-west-edge-of-its-reach).
+	var said := pickup.talk_after_take()
+	if said != null:
+		pickup_talk_started.emit(said, pickup.global_position)
 	return true
 
 # One gate list for doors, talks and pickups, so a moment refused for one is refused for all.
@@ -1240,7 +1253,7 @@ func end_scene() -> void:
 	_in_scene = false
 	drive(null)
 	if not _in_talk:
-		_pose = DialogueBeat.Pose.NONE
+		stage_pose(DialogueBeat.Pose.NONE)
 	_refresh_block()
 
 ## A cutscene's controller walks him; null gives him back to PlayerInput.
@@ -1249,9 +1262,19 @@ func drive(controller: ScriptedController) -> void:
 		_driver.stop()
 	_driver = controller
 
-## What a beat or a scene has him hold (DialogueBeat.Pose).
+## What a beat or a scene has him hold (DialogueBeat.Pose); leaving SEATED stands him up (the stand-up clip).
 func stage_pose(pose: int) -> void:
+	if _pose == DialogueBeat.Pose.SEATED and pose != DialogueBeat.Pose.SEATED:
+		_rise_pending = true
 	_pose = pose
+
+## He stood up from SEATED this step. Read by the resolver.
+func just_rose() -> bool:
+	return _just_rose
+
+## A cutscene walks him slower than STROLL_PACE: the resolver shows the walk clip.
+func is_strolling() -> bool:
+	return _driver != null and _driver.is_walking() and _driver.pace() < STROLL_PACE
 
 ## In a talk (a beat included) or a cutscene.
 func is_in_story() -> bool:

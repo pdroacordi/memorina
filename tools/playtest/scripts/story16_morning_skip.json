@@ -1,0 +1,63 @@
+{
+ "max_duration": 7.0,
+ "owned_items": [],
+ "clock": "real",
+ "steps": [
+  {
+   "t": 3.0,
+   "screenshot": "a00_black_morning"
+  },
+  {
+   "t": 4.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 4.08,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 4.5,
+   "screenshot": "a01_pause_skip"
+  },
+  {
+   "t": 4.7,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 4.78,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 5.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 5.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 5.3,
+   "screenshot": "a02_after_skip"
+  },
+  {
+   "t": 5.4,
+   "log": "after_skip"
+  },
+  {
+   "t": 6.5,
+   "screenshot": "a03_control"
+  },
+  {
+   "t": 6.6,
+   "log": "end"
+  }
+ ],
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en"
+}

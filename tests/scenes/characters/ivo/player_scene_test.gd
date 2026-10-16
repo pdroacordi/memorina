@@ -113,3 +113,27 @@ func test_the_memorina_is_refused_in_a_scene() -> void:
 		await get_tree().physics_frame
 	assert_bool(_ivo.is_memorina_drawn()).is_false()
 	_ivo.end_scene()
+
+## STORY-16: a scene seats him (the bench's clip) and walks him slower than his run with the walk clip.
+func test_a_scene_seats_him_and_strolls_him() -> void:
+	await _land()
+	var driver := _ivo.get_node("AnimationDriver") as AnimationDriver
+	_ivo.begin_scene()
+	_ivo.stage_pose(DialogueBeat.Pose.SEATED)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_str(String(driver.current)).is_equal(String(PlayerAnimationResolver.SIT))
+	_ivo.stage_pose(DialogueBeat.Pose.NONE)
+	var controller := auto_free(ScriptedController.new()) as ScriptedController
+	add_child(controller)
+	_ivo.drive(controller)
+	controller.walk_to(200.0, 0.4)
+	for i: int in 4:
+		await get_tree().physics_frame
+	assert_bool(_ivo.is_strolling()).is_true()
+	assert_str(String(driver.current)).is_equal(String(PlayerAnimationResolver.WALK))
+	controller.walk_to(-200.0, 1.0)
+	for i: int in 4:
+		await get_tree().physics_frame
+	assert_str(String(driver.current)).is_equal(String(PlayerAnimationResolver.RUN))
+	_ivo.end_scene()

@@ -120,3 +120,5 @@ res://scenes/world/story/staged_beat.tscn
 res://scenes/ui/phrase_sheet/phrase_sheet.tscn
 res://scenes/ui/letterbox/letterbox.tscn
 res://scenes/characters/story_actor/daughter/daughter_actor.tscn
+res://scenes/characters/story_actor/baker/baker_actor.tscn
+res://scenes/characters/story_actor/elder/elder_actor.tscn

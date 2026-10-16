@@ -37,6 +37,8 @@ var _return_from: Vector2
 ## The trigger armed in the current room, and scaled seconds left of its delay.
 var _armed: CutsceneTrigger
 var _armed_left: float = 0.0
+## The side the playing (or last) scene turned or walked Ivo to; 0 when it did not.
+var _ivo_turned: int = 0
 
 @onready var _rig: CameraRig = _make_rig()
 @onready var _ivo_controller: ScriptedController = _make_controller()
@@ -90,6 +92,7 @@ func play(scene: Cutscene, host: Node) -> bool:
 	_context = WorldCutsceneContext.new(self, _scope_of(host), _rig, _ivo_controller)
 	_tasks.clear()
 	_skip_requested = false
+	_ivo_turned = 0
 	scene_began.emit(scene)
 	_advance()
 	return true
@@ -136,6 +139,15 @@ func on_room_changed(room: Room) -> void:
 			_armed_left = trigger.delay
 			return
 
+## The side the last scene left Ivo facing, if it turned or walked him; 0 otherwise.
+func ivo_turned() -> int:
+	return _ivo_turned
+
+## Called by the context when a step turns or walks Ivo.
+func note_ivo_turned() -> void:
+	if ivo != null:
+		_ivo_turned = ivo.facing
+
 ## A new scene takes the frame from the rig's way back to Ivo.
 func stop_return() -> void:
 	_return_left = 0.0
@@ -176,13 +188,13 @@ func _end(record: bool, cut: bool = false) -> void:
 	_context.restore(not record, cut)
 	if _context.took_camera() and camera != null:
 		if cut:
-			camera.zoom_to(1.0, 0.0)
+			camera.zoom_to(camera.rest_zoom(), 0.0)
 			camera.follow(ivo)
 			camera.snap()
 		else:
 			_return_from = _rig.global_position
 			_return_left = WorldCutsceneContext.RETURN_SECONDS
-			camera.zoom_to(1.0, WorldCutsceneContext.RETURN_SECONDS)
+			camera.zoom_to(camera.rest_zoom(), WorldCutsceneContext.RETURN_SECONDS)
 	_scene = null
 	_host = null
 	_runner = null
@@ -211,7 +223,7 @@ func _tick_trigger(delta: float) -> void:
 	if not _armed.is_inside_tree():
 		return
 	_armed_left = maxf(_armed_left - delta, 0.0)
-	if _armed_left > 0.0 or ivo == null or not ivo.can_begin_scene():
+	if _armed_left > 0.0 or ivo == null or not (_armed.from_black or ivo.can_begin_scene()):
 		return
 	var trigger := _armed
 	_armed = null

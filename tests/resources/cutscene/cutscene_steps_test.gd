@@ -84,3 +84,12 @@ func test_pose_emote_silence_and_place() -> void:
 	place.begin(_context)
 	silence.begin(_context)
 	assert_array(_calls()).is_equal(["pose:1", "emote:girl:0:1.2", "place:ivo:58,288", "silence"])
+
+func test_a_stage_stands_a_staging_in_and_lands_at_once() -> void:
+	var step := CutsceneStage.new()
+	step.staging = &"guitar_staging"
+	step.child = &""
+	step.seconds = 0.5
+	assert_bool(step.begin(_context).tick(0.0)).is_false()
+	step.land(_context)
+	assert_array(_calls()).is_equal(["stage:guitar_staging::0.5", "stage:guitar_staging::0.0"])

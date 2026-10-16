@@ -502,6 +502,7 @@ Scene `res://scenes/world/interactables/item_pickup/item_pickup.tscn`, anchored 
 | `rest_offset` | Vector2 | `Vector2(0, 0)` |
 | `width_cells` | int | `2` |
 | `height_cells` | int | `2` |
+| `talk` | DialogueSet | `null` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

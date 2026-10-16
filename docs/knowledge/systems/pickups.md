@@ -40,6 +40,8 @@ The Memorina is not a pickup: the mentor's talk grants it in STORY-03 through a 
 - It is a room-map entity, so it draws at z 0, in front of the contents' `Props` (z -10).
 - `ItemPickup.lies(item, data)` is the one rule (static, pure): not owned. `is_available()` adds `is_visible_in_tree()`. `take()` calls `SaveSystem.set_item_owned(item, true)` and emits `taken(item)`; the sprite hides through `progress_changed`.
 
+- **Its line** (STORY-16): param `talk` (a DialogueSet path) is what Ivo says as he takes it. `Player._try_pickup` reads `talk_after_take()` after the take and emits `pickup_talk_started(dialogue, at)` → `DialogueDirector.start_dialogue`, so the talk starts from the take itself and no zone can miss it. The farmhouse sword says "…Sorry. I'll need this." (`sword.tres`; bugs/the-sword-line-is-missed-when-ivo-takes-it-from-the-west-edge-of-its-reach).
+
 ## Ivo
 
 - `PickupComponent` (`Ivo/Pickups`) reads the `DoorSensor` overlaps: `reachable()` is an available pickup.

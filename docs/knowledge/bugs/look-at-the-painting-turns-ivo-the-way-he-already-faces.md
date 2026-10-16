@@ -5,13 +5,15 @@ title: "[Look at the painting]" shows nothing - the beat turns Ivo to the painti
 status: fixed
 severity: low
 tags: [story, beat, dialogue, elder, choice, opening]
-related: [systems/story, architecture/the-opening-is-staged-by-save-facts, playtests/2026-10-15-story03-opening]
+related: [systems/story, systems/cutscenes, architecture/the-opening-is-staged-by-save-facts, playtests/2026-10-15-story03-opening, playtests/2026-10-16-story16-opening]
 created: 2026-10-15
-updated: 2026-10-15
+updated: 2026-10-16
 source_files:
   - scenes/world/rooms/home_village/contents/village_elder_contents.tscn
   - scenes/world/rooms/home_village/contents/village_elder.room
   - scenes/characters/ivo/player.gd
+  - scenes/world/dialogue/dialogue_director.gd
+  - resources/cutscene/story/ivo_walks_to_painting.tres
 ---
 
 ## Summary
@@ -33,3 +35,16 @@ Fixed 2026-10-15. The elder's Talkable moved to col 10 (x 336, two cells, `speak
 ## Prevention
 
 A `face` beat is a visible action only if the face point is on the other side from the speaker. Check every Talkable zone x against both points when placing it.
+
+## Revision (2026-10-16): regressed by STORY-16
+
+Reopened, low (STORY-16 review). STORY-16 replaced the `StagedBeat` `Beats/ElderPainting` (`face = ../../Props/LighthousePainting6`) with a `CutsceneBeat` that plays `ivo_walks_to_painting`: Ivo walks to `Marks/Painting` (x 392) and faces east. The new node (`village_elder_contents.tscn:164`) sets no `face`. `DialogueDirector._play` therefore keeps `_facing` on the elder (`dialogue_director.gd:151`). When the talk resumes, `Player.begin_talk` turns Ivo back west to him (`player.gd:1203`) before "Is that lighthouse still there?". The elder's "East. Past the fields…" is no longer said behind him. `playtests/2026-10-16-story16-opening` `e02` shows Ivo facing the elder on that line.
+
+The same resume also undoes the last beat of two other talks: `IvoHearsStory` (`village_house_contents.tscn:434`, Ivo turns to the door) and `GateBolt` (`village_elder_contents.tscn:169`, Ivo turns east to the bolt). Ivo turns back to the speaker for the frame the talk ends.
+
+Fix (not applied): give `ElderPainting` its old `face = NodePath("../../Props/LighthousePainting6")` (x 410, east of the mark Ivo stops on). Give the two others a mark on the side they turn to, or the door. `test_a_beat_face_holds_until_the_talk_ends` tests the mechanism, not this data. Add a rooms test: every `CutsceneBeat` whose scene ends with Ivo facing or walking names a `face` on that side.
+
+Fixed again 2026-10-16 (STORY-16), at the mechanism and in the data:
+- `DialogueBeat.face_after(facing)` is asked as a beat ends and sets `DialogueDirector._facing`; `CutsceneBeat` answers the side its scene last turned or walked Ivo to (`CutsceneDirector.ivo_turned()`, noted by the context's `face` and on a walk's arrival). A face a scene gives him therefore holds to the talk's end without the data repeating it.
+- The data names it too: `ElderPainting` has its `face` (the painting) back, `IvoHearsStory` faces `Marks/Door` (x 152, east of Ivo at 136) and `GateBolt` faces `Marks/Outside` (x 608, east).
+- Test: `cutscene_beat_test.test_a_face_the_scene_gives_ivo_holds_to_the_talks_end` (a scene turns him away from the speaker; after the resume he still faces the scene's side). Playtest: `playtests/2026-10-16-story16-opening`, second round.

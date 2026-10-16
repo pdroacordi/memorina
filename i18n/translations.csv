@@ -127,9 +127,9 @@ DIALOGUE_TRIAL_AFTER_01,Back again? I have nothing new to say.,De volta? Não te
 DIALOGUE_TRIAL_AFTER_01_V1,You held on to it. I remember.,Você a segurou. Eu lembro.
 DIALOGUE_TRIAL_AFTER_01_V2,You let it go. I remember.,Você a deixou ir. Eu lembro.
 SPEAKER_BAKER,Baker,Padeira
-DLG_DAUGHTER_ERRAND_01,Bread. The round one.,Pão. O redondo.
+DLG_DAUGHTER_ERRAND_01,Papa… it's round-loaf day.,Pai… hoje é dia de pão redondo.
 DLG_BAKER_ERRAND_01,"Morning, Ivo. Round one?","Bom dia, Ivo. O redondo?"
-DLG_BAKER_ERRAND_02,And the long one for—,E o comprido pra—
+DLG_BAKER_ERRAND_02,And the long one for…,E o comprido pra…
 DLG_BAKER_ERRAND_03,Just the round one.,Só o redondo.
 SPEAKER_TAVERNER,Taverner,Taverneiro
 SPEAKER_WATER_CARRIER,Water carrier,Aguadeira
@@ -143,29 +143,62 @@ DLG_WATER_CARRIER_06,…,…
 DLG_SELLER_APPLES,"Apples. West orchards. Last ones, till someone goes out there.","Maçãs. Pomares do oeste. As últimas, até alguém ir lá."
 DLG_BOY_STATUES,Don't move. You moved.,Não mexe. Mexeu.
 DLG_BOY_ALONE,Don't move.,Não mexe.
-DLG_DAUGHTER_SONG_01,The morning one.,A da manhã.
+DLG_DAUGHTER_SONG_01,Play the morning one? The one Mama used to sing.,Toca a da manhã? A que a mamãe cantava.
 DLG_CHOICE_GUITAR_TRY_AGAIN,[Try again],[Tentar de novo]
 DLG_CHOICE_GUITAR_LOWER,[Lower the guitar],[Baixar o violão]
-DLG_DAUGHTER_SONG_02,…,…
 DLG_DAUGHTER_TURNED_01,…,…
-DLG_ELDER_STORY_01,"…and the keeper climbed the stairs every night, and lit the lamp, and the ships came home, until one winter he—","…e o guardião subia a escada toda noite, acendia a lâmpada, e os barcos voltavam, até que um inverno ele—"
+DLG_ELDER_STORY_01,"…and he lit the lamp, and the ships came home, until one winter he—","…e acendia a lâmpada, e os barcos voltavam pra casa, até que um inverno ele—"
 DLG_ELDER_STORY_02,He…,Ele…
 DLG_ELDER_STORY_03,It had an end. It had a good end.,Tinha um fim. Tinha um fim bom.
 DLG_CHOICE_ELDER_WAIT,[Wait for him],[Esperar por ele]
 DLG_ELDER_WAIT_01,…until one winter— until one—,…até que um inverno— até que um—
 DLG_ELDER_WAIT_02,East. It's still there.,Leste. Ainda está lá.
 DLG_CHOICE_ELDER_PAINTING,[Look at the painting],[Olhar o quadro]
-DLG_ELDER_PAINTING_01,East. Past the fields. Nobody's been in years.,Leste. Depois dos campos. Faz anos que ninguém vai.
+DLG_ELDER_PAINTING_01,East. Past the fields. Nobody's gone in years.,Leste. Depois dos campos. Faz anos que ninguém vai.
 DLG_MENTOR_GIFT_01,…You came the ~long~ way.,…Você veio pelo caminho ~longo~.
 DLG_MENTOR_GIFT_02,Many hands. None of them ~kept~ it.,Muitas mãos. Nenhuma ~guardou~.
 DLG_CHOICE_MEMORINA_AGAIN,[Play it again],[Tocar de novo]
-DLG_CHOICE_MEMORINA_LOWER,[Lower it],[Baixá-la]
-DLG_MENTOR_GIFT_03,Yours ~too~. Maybe. If you—,Seu ~também~. Talvez. Se você—
+DLG_CHOICE_MEMORINA_LOWER,[Lower the flute],[Baixar a flauta]
+DLG_MENTOR_GIFT_03,Yours ~too~. Maybe. If you—,Sua ~também~. Talvez. Se você—
 DLG_MENTOR_STASIS_01,…,…
-DLG_ELDER_RETURN_01,…My father carved that. I never knew what it was.,…Meu pai entalhou isso. Nunca soube o que era.
-DLG_DAUGHTER_RETURN_01,That's a strange one.,Que estranha.
+DLG_ELDER_RETURN_01,…My father carved this. I never knew what it was.,…Meu pai entalhou isso. Nunca soube o que era.
+DLG_DAUGHTER_RETURN_01,That's a strange one. Does it play anything?,Que estranha. Toca alguma coisa?
 DLG_DAUGHTER_EYES_01,Papa. What colour were her eyes? …Don't guess.,Pai. De que cor eram os olhos dela? …Não chuta.
 DLG_DAUGHTER_EYES_01_V1,Papa. What colour were her eyes? …It's okay. I'll draw them grey for now.,Pai. De que cor eram os olhos dela? …Tudo bem. Vou pintar de cinza por enquanto.
 DLG_ELDER_EMPTY_01,"…and the keeper climbed the stairs every night, and—","…e o guardião subia a escada toda noite, e—"
+SPEAKER_IVO,Ivo,Ivo
+SPEAKER_GIRL,Girl,Menina
+DLG_DAUGHTER_ERRAND_02,Is it? Says who?,É? Quem disse?
+DLG_DAUGHTER_ERRAND_03,Mama always…,A mamãe sempre…
+DLG_DAUGHTER_ERRAND_04,…the round one.,…o redondo.
+DLG_DAUGHTER_ERRAND_05,Back soon.,Já volto.
+DLG_BAKER_ERRAND_04,The round one.,O redondo.
+DLG_DAUGHTER_SONG_03,You found the round one!,Achou o redondo!
+DLG_DAUGHTER_SONG_04,The last one.,O último.
+DLG_DAUGHTER_SONG_05,It's been a while…,Faz tempo…
+DLG_DAUGHTER_SONG_06,I remember the start. You remember the rest.,Eu lembro o começo. Você lembra o resto.
+DLG_DAUGHTER_SONG_07,Wait. I know this one. I know it…,Espera. Eu sei essa. Eu sei essa…
+DLG_DAUGHTER_SONG_08,That's all I know.,Só sei até aí.
+DLG_DAUGHTER_SONG_09,"It's all right, Papa.","Tá tudo bem, pai."
+DLG_DAUGHTER_SONG_10,It isn't.,Não tá.
+DLG_DAUGHTER_SONG_11,…and the keeper climbed the stairs every night…,…e o guardião subia a escada toda noite…
+DLG_ELDER_STORY_04,Until he what?,"Até que ele o quê, vô?"
+DLG_ELDER_STORY_05,I'm going.,Vou até lá.
+DLG_ELDER_STORY_06,Take a coat. The winter there doesn't end.,Leva um casaco. Lá o inverno não acaba.
+DLG_ELDER_STORY_07,Bring back the end of the story!,Traz o fim da história!
+DLG_ELDER_PAINTING_02,Is that lighthouse still there?,Esse farol ainda existe?
+DLG_SWORD_01,…Sorry. I'll need this.,…Desculpa. Vou precisar disso.
+DLG_MENTOR_GIFT_04,They say you keep things.,Disseram que você guarda as coisas.
+DLG_MENTOR_GIFT_05,I keep. I kept. ~I kept~.,Guardo. Guardava. ~Guardava~.
+DLG_MENTOR_GIFT_06,That's… that's her song.,Essa é… essa é a música dela.
+DLG_MENTOR_GIFT_07,If I what?,Se eu o quê?
+DLG_ELDER_RETURN_02,He gave it to me. The keeper.,Ele me deu. O guardião.
+DLG_ELDER_RETURN_03,Then he's real.,Então ele existe.
+DLG_ELDER_RETURN_04,Then the end of the story hasn't happened yet.,Então o fim da história ainda não aconteceu.
+DLG_DAUGHTER_RETURN_02,Almost.,Quase.
+DLG_DAUGHTER_RETURN_03,You stopped there too.,Você também parou aí.
+DLG_DAUGHTER_RETURN_04,Not yet.,Ainda não.
+DLG_DAUGHTER_RETURN_05,There was one more.,Tinha mais uma.
+DLG_DAUGHTER_RETURN_06,I know! I remembered it myself.,Eu sei! Lembrei sozinha.
 NOTEBOOK_LORE_MENTOR_TITLE,The keeper of the lighthouse,O guardião do farol
 NOTEBOOK_LORE_MENTOR,The keeper of the lighthouse. He gave me the Memorina and didn't finish his sentence.,O guardião do farol. Me deu a Memorina e não terminou a frase.

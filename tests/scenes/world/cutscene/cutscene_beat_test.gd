@@ -60,3 +60,28 @@ func test_the_talk_resumes_after_its_scene() -> void:
 	assert_array(Array(_log)).is_equal(["paused", "scene", "scene_end", "wanted", "ended"])
 	assert_bool(SaveSystem.is_scene_seen(&"to_bed")).is_true()
 	assert_bool(SaveSystem.is_dialogue_heard(&"song")).is_true()
+
+## A face the scene gives Ivo holds when the talk resumes and to its end (bugs/look-at-the-painting-turns-ivo-the-way-he-already-faces).
+func test_a_face_the_scene_gives_ivo_holds_to_the_talks_end() -> void:
+	var ivo := _cutscenes.ivo
+	ivo.position = Vector2(0, 0)
+	_talkable.position = Vector2(-200, 0)
+	_dialogue.talk_began.connect(ivo.begin_talk)
+	_dialogue.talk_paused.connect(ivo.pause_talk)
+	_dialogue.talk_ended.connect(ivo.end_talk)
+	var turn := CutsceneFace.new()
+	turn.actor = CutsceneStep.IVO
+	turn.side = 1
+	_beat.cutscene = C.scene(&"turns", [turn, C.wait(0.1)])
+	var dialogues: Array[Dialogue] = [D.dialogue(&"turning", [D.line("A"), D.cue_line(&"to_bed"), D.line("B")])]
+	_talkable.talk = D.dialogue_set(dialogues)
+	_dialogue.start(_talkable)
+	assert_int(ivo.facing).is_equal(-1)
+	_dialogue.advance()
+	for i: int in 30:
+		await get_tree().physics_frame
+		if _log.has("wanted"):
+			break
+	await get_tree().physics_frame
+	assert_bool(_dialogue.is_talking()).is_true()
+	assert_int(ivo.facing).is_equal(1)

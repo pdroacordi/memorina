@@ -20,6 +20,10 @@
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_low_mid_d4.mp3" id="st_note_left"]
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="st_note_right"]
 [ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="cs_beat"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_mark.gd" id="cs_mark"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/mentor_goes_still.tres" id="cs_goes_still"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/mentor_silence.tres" id="cs_silence"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/raise.png" id="st_raise"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/play.png" id="st_play"]
@@ -142,6 +146,7 @@ z_index = -10
 
 [node name="Mentor" type="Node2D" parent="Props"]
 script = ExtResource("st_staging")
+staging_id = &"mentor_staging"
 stages = Array[ExtResource("st_stage")]([SubResource("stage_2"), SubResource("stage_3")])
 
 [node name="Holding" type="Node2D" parent="Props/Mentor"]
@@ -227,6 +232,23 @@ duration = 1.6
 cue = &"memorina_lowered"
 face = NodePath("../../Props/Mentor/EmptyHand/Body")
 duration = 1.0
+
+[node name="MentorGoesStill" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"mentor_goes_still"
+cutscene = ExtResource("cs_goes_still")
+
+[node name="MentorSilence" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"mentor_silence"
+cutscene = ExtResource("cs_silence")
+
+[node name="Marks" type="Node2D" parent="."]
+
+[node name="MentorMark" type="Marker2D" parent="Marks"]
+position = Vector2(240, 800)
+script = ExtResource("cs_mark")
+mark_id = &"mentor"
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

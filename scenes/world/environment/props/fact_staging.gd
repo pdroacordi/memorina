@@ -3,14 +3,20 @@ extends Node2D
 ## Shows exactly one of its children, picked by the first FactStage that holds under the save (systems/story). It is the
 ## only writer of its children's visibility; never put RegionPresence on a direct child.
 
+const GROUP := &"fact_stagings"
+
 ## In priority order: the first that holds is shown.
 @export var stages: Array[FactStage] = []
+## The id a cutscene's CutsceneStage names it by; empty keeps it out of cutscenes (systems/cutscenes).
+@export var staging_id: StringName = &""
 
 ## The stage shown; -1 when none holds.
 var _picked: int = -1
 ## The child the stage shows, or a stand-in; null shows nothing.
 var _shown: CanvasItem
 var _stand_in: CanvasItem
+## A stand-in holds, `_stand_in` null when it shows nothing.
+var _standing_in: bool = false
 var _fade: Tween
 var _fade_from: CanvasItem
 ## A cutscene's actor stands for this staging (systems/cutscenes).
@@ -24,6 +30,10 @@ static func pick(from: Array[FactStage], data: PlayerData) -> int:
 			return i
 	return -1
 
+func _enter_tree() -> void:
+	if staging_id != &"":
+		add_to_group(GROUP)
+
 func _ready() -> void:
 	SaveSystem.progress_changed.connect(_on_progress_changed)
 	_go_to(pick(stages, SaveSystem.player_data), true)
@@ -36,17 +46,22 @@ func picked() -> int:
 func shown() -> CanvasItem:
 	return _shown
 
-## A beat shows `child` at once, until the picked stage next changes or `release(child)`.
-func stand_in(child: StringName) -> void:
-	_stand_in = get_node_or_null(NodePath(child)) as CanvasItem
-	assert(_stand_in != null, "%s has no child '%s' to stand in" % [name, child])
-	_show(_stand_in, 0.0)
+## A beat shows `child` (empty: nothing) until the picked stage next changes or `release(child)`; `seconds` of
+## cross-fade, 0 cuts.
+func stand_in(child: StringName, seconds: float = 0.0) -> void:
+	_stand_in = null
+	if child != &"":
+		_stand_in = get_node_or_null(NodePath(child)) as CanvasItem
+		assert(_stand_in != null, "%s has no child '%s' to stand in" % [name, child])
+	_standing_in = true
+	_show(_stand_in, seconds)
 
 ## Returns to the picked stage if `child` is still the stand-in; a later beat's stand-in stays.
 func release(child: StringName) -> void:
-	if _stand_in == null or _stand_in.name != child:
+	if not _standing_in or (_stand_in.name if _stand_in != null else &"") != child:
 		return
 	_stand_in = null
+	_standing_in = false
 	_show(_child_of(_picked), 0.0)
 
 ## A cutscene's actor takes the shown child's place: nothing shows, and the pick follows the save silently until `uncover()`.
@@ -72,6 +87,7 @@ func _on_progress_changed() -> void:
 func _go_to(index: int, instant: bool) -> void:
 	_picked = index
 	_stand_in = null
+	_standing_in = false
 	var seconds := 0.0 if instant or index < 0 else stages[index].fade_seconds
 	_show(_child_of(index), seconds)
 

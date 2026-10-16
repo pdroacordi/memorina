@@ -1,0 +1,214 @@
+{
+ "max_duration": 37.0,
+ "owned_items": [],
+ "steps": [
+  {
+   "t": 0.3,
+   "screenshot": "a00"
+  },
+  {
+   "t": 1.3,
+   "screenshot": "a01"
+  },
+  {
+   "t": 2.3,
+   "screenshot": "a02"
+  },
+  {
+   "t": 3.3,
+   "screenshot": "a03"
+  },
+  {
+   "t": 4.3,
+   "screenshot": "a04"
+  },
+  {
+   "t": 5.3,
+   "screenshot": "a05"
+  },
+  {
+   "t": 6.3,
+   "screenshot": "a06"
+  },
+  {
+   "t": 7.3,
+   "screenshot": "a07"
+  },
+  {
+   "t": 8.3,
+   "screenshot": "a08"
+  },
+  {
+   "t": 9.3,
+   "screenshot": "a09"
+  },
+  {
+   "t": 10.3,
+   "screenshot": "a10"
+  },
+  {
+   "t": 11.3,
+   "screenshot": "a11"
+  },
+  {
+   "t": 12.3,
+   "screenshot": "a12"
+  },
+  {
+   "t": 13.3,
+   "screenshot": "a13"
+  },
+  {
+   "t": 14.3,
+   "screenshot": "a14"
+  },
+  {
+   "t": 15.3,
+   "screenshot": "a15"
+  },
+  {
+   "t": 16.3,
+   "screenshot": "a16"
+  },
+  {
+   "t": 17.3,
+   "screenshot": "a17"
+  },
+  {
+   "t": 18.3,
+   "screenshot": "a18"
+  },
+  {
+   "t": 19.3,
+   "screenshot": "a19"
+  },
+  {
+   "t": 20.3,
+   "screenshot": "a20"
+  },
+  {
+   "t": 21.3,
+   "screenshot": "a21"
+  },
+  {
+   "t": 22.3,
+   "screenshot": "a22"
+  },
+  {
+   "t": 23.0,
+   "log": "control_back"
+  },
+  {
+   "t": 23.3,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 25.6,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 26.0,
+   "screenshot": "b00_at_the_bed"
+  },
+  {
+   "t": 26.1,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 26.18,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 27.2,
+   "screenshot": "b01_round_loaf_day"
+  },
+  {
+   "t": 27.4,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 27.48,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 28.6,
+   "screenshot": "b02_says_who"
+  },
+  {
+   "t": 28.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 28.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 30.0,
+   "screenshot": "b03_mama_always"
+  },
+  {
+   "t": 30.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 30.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 30.8,
+   "screenshot": "b04_turns_over"
+  },
+  {
+   "t": 32.2,
+   "screenshot": "b05_the_round_one"
+  },
+  {
+   "t": 32.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 32.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 33.4,
+   "screenshot": "b06_looks_at_the_shawl"
+  },
+  {
+   "t": 35.0,
+   "screenshot": "b07_back_soon"
+  },
+  {
+   "t": 35.4,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 35.48,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 36.6,
+   "screenshot": "b08_intent"
+  },
+  {
+   "t": 36.7,
+   "log": "end"
+  }
+ ],
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en"
+}

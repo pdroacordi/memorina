@@ -179,3 +179,33 @@ func test_the_prompt_and_the_reach_agree_at_the_pickup_edge() -> void:
 		assert_bool(prompt.visible).override_failure_message("x %d: prompt %s, reach %s" % [x, prompt.visible, reached]).is_equal(reached)
 		shown += 1 if reached else 0
 	assert_int(shown).is_between(1, 17)
+
+## STORY-16: taking the sword starts "…Sorry. I'll need this." from the take itself, wherever in its reach he stands
+## (bugs/the-sword-line-is-missed-when-ivo-takes-it-from-the-west-edge-of-its-reach); a save that owns it hears nothing.
+func test_taking_the_sword_starts_its_line_from_any_edge_of_its_reach() -> void:
+	var director := DialogueDirector.new()
+	_holder.add_child(director)
+	_ivo.pickup_talk_started.connect(director.start_dialogue)
+	director.talk_began.connect(_ivo.begin_talk)
+	director.talk_ended.connect(_ivo.end_talk)
+	_pickup.talk = load("res://resources/dialogue/story/sword.tres") as DialogueSet
+	await _land()
+	_ivo.teleport(Vector2(-_pickup.width_cells * RoomMap.CELL_PX * 0.5 - 5.0, FLOOR_Y))
+	await _frames(3)
+	_player_input().look_up_pressed.emit()
+	await _frames(3)
+	assert_bool(SaveSystem.has_item(Enums.PlayerItem.SWORD)).is_true()
+	assert_bool(director.is_talking()).is_true()
+	assert_bool(_ivo.is_talking()).is_true()
+	director.advance()
+	assert_bool(SaveSystem.is_dialogue_heard(&"sword_sorry")).is_true()
+
+func test_a_save_that_owns_the_sword_never_hears_its_line() -> void:
+	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, true)
+	_pickup.talk = load("res://resources/dialogue/story/sword.tres") as DialogueSet
+	var started: Array[int] = [0]
+	_ivo.pickup_talk_started.connect(func(_said: Dialogue, _at: Vector2) -> void: started[0] += 1)
+	await _land()
+	_player_input().look_up_pressed.emit()
+	await _frames(5)
+	assert_int(started[0]).is_equal(0)

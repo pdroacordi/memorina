@@ -1,0 +1,163 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e3"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e4"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e5"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_place.gd" id="e6"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sound.gd" id="e7"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/morning_room.wav" id="e8"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e9"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_pose.gd" id="e10"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e11"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_show.gd" id="e12"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e13"]
+
+[sub_resource type="Resource" id="fade_2"]
+script = ExtResource("e3")
+to_black = true
+seconds = 0
+
+[sub_resource type="Resource" id="bars_3"]
+script = ExtResource("e4")
+open = true
+seconds = 0
+
+[sub_resource type="Resource" id="camera_4"]
+script = ExtResource("e5")
+targets = Array[StringName]([&"window"])
+offset = Vector2(0, 0)
+zoom = 3
+seconds = 0
+
+[sub_resource type="Resource" id="place_5"]
+script = ExtResource("e6")
+actor = &"ivo"
+mark = &"ivo_bed"
+offset = Vector2(0, 0)
+
+[sub_resource type="Resource" id="sound_6"]
+script = ExtResource("e7")
+stream = ExtResource("e8")
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e1")
+steps = Array[ExtResource("e2")]([SubResource("fade_2"), SubResource("bars_3"), SubResource("camera_4"), SubResource("place_5"), SubResource("sound_6")])
+
+[sub_resource type="Resource" id="face_7"]
+script = ExtResource("e9")
+actor = &"ivo"
+side = -1
+
+[sub_resource type="Resource" id="pose_8"]
+script = ExtResource("e10")
+pose = 3
+
+[sub_resource type="Resource" id="wait_9"]
+script = ExtResource("e11")
+seconds = 1.6
+
+[sub_resource type="Resource" id="fade_11"]
+script = ExtResource("e3")
+to_black = false
+seconds = 2.4
+
+[sub_resource type="Resource" id="show_12"]
+script = ExtResource("e12")
+visual = &"morning_light"
+alpha = 1
+seconds = 2.4
+
+[sub_resource type="Resource" id="together_10"]
+script = ExtResource("e1")
+steps = Array[ExtResource("e2")]([SubResource("fade_11"), SubResource("show_12")])
+
+[sub_resource type="Resource" id="wait_13"]
+script = ExtResource("e11")
+seconds = 0.6
+
+[sub_resource type="Resource" id="camera_14"]
+script = ExtResource("e5")
+targets = Array[StringName]([&"shawl"])
+offset = Vector2(0, 0)
+zoom = 3
+seconds = 2.2
+
+[sub_resource type="Resource" id="wait_15"]
+script = ExtResource("e11")
+seconds = 1.4
+
+[sub_resource type="Resource" id="camera_16"]
+script = ExtResource("e5")
+targets = Array[StringName]([&"wall_guitar"])
+offset = Vector2(0, 0)
+zoom = 3
+seconds = 2
+
+[sub_resource type="Resource" id="wait_17"]
+script = ExtResource("e11")
+seconds = 0.6
+
+[sub_resource type="Resource" id="camera_18"]
+script = ExtResource("e5")
+targets = Array[StringName]([&"drawings"])
+offset = Vector2(0, 0)
+zoom = 3
+seconds = 1.4
+
+[sub_resource type="Resource" id="wait_19"]
+script = ExtResource("e11")
+seconds = 0.4
+
+[sub_resource type="Resource" id="camera_20"]
+script = ExtResource("e5")
+targets = Array[StringName]([&"bed_edge"])
+offset = Vector2(0, -20)
+zoom = 3
+seconds = 1.4
+
+[sub_resource type="Resource" id="wait_21"]
+script = ExtResource("e11")
+seconds = 2
+
+[sub_resource type="Resource" id="camera_22"]
+script = ExtResource("e5")
+targets = Array[StringName]([&"ivo"])
+offset = Vector2(0, -30)
+zoom = 3
+seconds = 0
+
+[sub_resource type="Resource" id="wait_23"]
+script = ExtResource("e11")
+seconds = 1.4
+
+[sub_resource type="Resource" id="camera_24"]
+script = ExtResource("e5")
+targets = Array[StringName]([&"shawl", &"ivo"])
+offset = Vector2(0, -40)
+zoom = 2
+seconds = 1.2
+
+[sub_resource type="Resource" id="wait_25"]
+script = ExtResource("e11")
+seconds = 1.2
+
+[sub_resource type="Resource" id="pose_26"]
+script = ExtResource("e10")
+pose = 0
+
+[sub_resource type="Resource" id="wait_27"]
+script = ExtResource("e11")
+seconds = 0.9
+
+[sub_resource type="Resource" id="show_28"]
+script = ExtResource("e12")
+visual = &"morning_light"
+alpha = 0
+seconds = 1
+
+[resource]
+script = ExtResource("e13")
+id = &"opening_morning"
+steps = Array[ExtResource("e2")]([SubResource("together_1"), SubResource("face_7"), SubResource("pose_8"), SubResource("wait_9"), SubResource("together_10"), SubResource("wait_13"), SubResource("camera_14"), SubResource("wait_15"), SubResource("camera_16"), SubResource("wait_17"), SubResource("camera_18"), SubResource("wait_19"), SubResource("camera_20"), SubResource("wait_21"), SubResource("camera_22"), SubResource("wait_23"), SubResource("camera_24"), SubResource("wait_25"), SubResource("pose_26"), SubResource("wait_27"), SubResource("show_28")])

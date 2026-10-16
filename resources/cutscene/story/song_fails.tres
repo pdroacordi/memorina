@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e3"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e4"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e5"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_emote.gd" id="e6"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e7"]
+
+[sub_resource type="Resource" id="bars_2"]
+script = ExtResource("e3")
+open = true
+seconds = 0.6
+
+[sub_resource type="Resource" id="camera_3"]
+script = ExtResource("e4")
+targets = Array[StringName]([&"ivo"])
+offset = Vector2(0, -44)
+zoom = 2
+seconds = 0.8
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e1")
+steps = Array[ExtResource("e2")]([SubResource("bars_2"), SubResource("camera_3")])
+
+[sub_resource type="Resource" id="wait_4"]
+script = ExtResource("e5")
+seconds = 0.6
+
+[sub_resource type="Resource" id="emote_5"]
+script = ExtResource("e6")
+actor = &"daughter"
+emote = 0
+seconds = 1.4
+
+[sub_resource type="Resource" id="wait_6"]
+script = ExtResource("e5")
+seconds = 0.6
+
+[resource]
+script = ExtResource("e7")
+id = &"song_fails"
+steps = Array[ExtResource("e2")]([SubResource("together_1"), SubResource("wait_4"), SubResource("emote_5"), SubResource("wait_6")])

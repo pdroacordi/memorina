@@ -21,6 +21,10 @@
 [ext_resource type="PackedScene" path="res://scenes/world/story/staged_beat.tscn" id="st_staged_beat"]
 [ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+[ext_resource type="PackedScene" path="res://scenes/characters/story_actor/baker/baker_actor.tscn" id="cs_baker"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="cs_beat"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/baker_reaches.tres" id="cs_reaches"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/baker_puts_back.tres" id="cs_puts_back"]
 
 [sub_resource type="Resource" id="story_1"]
 script = ExtResource("st_fact")
@@ -31,6 +35,30 @@ id = &"baker_errand"
 script = ExtResource("st_stage")
 when = Array[ExtResource("st_fact")]([SubResource("story_1")])
 show = &"Idle"
+fade_seconds = 0.5
+
+[sub_resource type="Resource" id="seen_puts_back"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"baker_puts_back"
+
+[sub_resource type="Resource" id="seen_reaches"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"baker_reaches"
+
+[sub_resource type="Resource" id="story_one_loaf"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("seen_puts_back")])
+unless = Array[ExtResource("st_fact")]([SubResource("story_1")])
+show = &"OneLoaf"
+fade_seconds = 0.5
+
+[sub_resource type="Resource" id="story_two_loaves"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("seen_reaches")])
+unless = Array[ExtResource("st_fact")]([SubResource("story_1")])
+show = &"TwoLoaves"
 fade_seconds = 0.5
 
 [sub_resource type="Resource" id="story_3"]
@@ -79,7 +107,7 @@ position = Vector2(592, 288)
 
 [node name="Baker" type="Node2D" parent="Props"]
 script = ExtResource("st_staging")
-stages = Array[ExtResource("st_stage")]([SubResource("story_2"), SubResource("story_3")])
+stages = Array[ExtResource("st_stage")]([SubResource("story_one_loaf"), SubResource("story_two_loaves"), SubResource("story_2"), SubResource("story_3")])
 
 [node name="Idle" parent="Props/Baker" instance=ExtResource("in_baker")]
 position = Vector2(240, 288)
@@ -101,15 +129,21 @@ flip_h = true
 
 [node name="Beats" type="Node2D" parent="."]
 
-[node name="TwoLoaves" parent="Beats" instance=ExtResource("st_staged_beat")]
+[node name="TwoLoaves" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
 cue = &"baker_two_loaves"
-stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Baker"): &"TwoLoaves"})
-duration = 0.6
+cutscene = ExtResource("cs_reaches")
 
-[node name="OneLoaf" parent="Beats" instance=ExtResource("st_staged_beat")]
+[node name="OneLoaf" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
 cue = &"baker_loaves"
-stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Baker"): &"OneLoaf"})
-duration = 1.2
+cutscene = ExtResource("cs_puts_back")
+
+[node name="Cast" type="Node2D" parent="."]
+z_index = -10
+
+[node name="Baker" parent="Cast" instance=ExtResource("cs_baker")]
+stands_for = NodePath("../../Props/Baker")
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

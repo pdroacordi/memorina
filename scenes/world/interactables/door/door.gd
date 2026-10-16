@@ -143,7 +143,7 @@ func _dress() -> void:
 func _refresh() -> void:
 	var open := is_open()
 	_sprite.frame = 0 if open else 1
-	_prompt.visible = open and _body != null and not _body.is_talking() and _body.reaches(self)
+	_prompt.visible = open and _body != null and not _body.is_in_story() and _body.reaches(self)
 
 func _on_body_entered(body: Node2D) -> void:
 	_bodies += 1

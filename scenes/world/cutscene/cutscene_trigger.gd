@@ -12,6 +12,9 @@ const GROUP := &"cutscene_triggers"
 @export var delay: float = 0.0
 ## A seen scene plays again.
 @export var repeat: bool = false
+## The room opens on this scene in black (the new game's start): it plays as soon as its contents are in the world,
+## without waiting for Ivo's gates, and its first step owns the fade.
+@export var from_black: bool = false
 
 
 func _enter_tree() -> void:

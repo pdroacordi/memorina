@@ -90,7 +90,7 @@ class Recorder:
 	func land_gesture(id: StringName, clip: StringName) -> void:
 		calls.append("land_gesture:%s:%s" % [id, clip])
 
-	func emote(id: StringName, shown: CutsceneEmote.Emote, seconds: float) -> void:
+	func emote(id: StringName, shown: CutsceneEmote.Emote, seconds: float, _height: float = 0.0) -> void:
 		calls.append("emote:%s:%d:%.1f" % [id, shown, seconds])
 
 	func pose(held: DialogueBeat.Pose) -> void:
@@ -122,3 +122,6 @@ class Recorder:
 
 	func show_visual(id: StringName, alpha: float, seconds: float) -> void:
 		calls.append("show:%s:%.1f:%.1f" % [id, alpha, seconds])
+
+	func stage(staging_id: StringName, child: StringName, seconds: float) -> void:
+		calls.append("stage:%s:%s:%.1f" % [staging_id, child, seconds])

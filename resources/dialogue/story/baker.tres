@@ -1,94 +1,106 @@
 [gd_resource type="Resource" script_class="DialogueSet" format=3 uid="uid://krcl7rdum2r1"]
 
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
+[ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
 [ext_resource type="Resource" path="res://resources/save_facts/village_at_six_tenths.tres" id="f_at06"]
-[ext_resource type="Script" uid="uid://da7s57is2erh6" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
-[ext_resource type="Script" uid="uid://ehxc5gppjkxp" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
-[ext_resource type="Script" uid="uid://b7dtsefilgm6i" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
-[ext_resource type="Script" uid="uid://0kha27ytvt2r" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
-[ext_resource type="Script" uid="uid://d2eoql5qejigt" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
-[ext_resource type="Script" uid="uid://bhja2tfpavop7" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/baker.tres" id="s_baker"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/ivo.tres" id="s_ivo"]
 
 [sub_resource type="Resource" id="line_1"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_baker")
 text_key = "DLG_BAKER_ERRAND_01"
-cue = &"baker_two_loaves"
 
 [sub_resource type="Resource" id="line_2"]
 script = ExtResource("f_line")
-speaker = ExtResource("s_baker")
-text_key = "DLG_BAKER_ERRAND_02"
-cue = &"baker_loaves"
-
-[sub_resource type="Resource" id="grant_bread"]
-script = ExtResource("f_fact")
-kind = 2
-index = 2
+speaker = ExtResource("s_ivo")
+text_key = "DLG_BAKER_ERRAND_04"
+cue = &"baker_two_loaves"
 
 [sub_resource type="Resource" id="line_3"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_baker")
-text_key = "DLG_BAKER_ERRAND_03"
-grants = SubResource("grant_bread")
+text_key = "DLG_BAKER_ERRAND_02"
 
-[sub_resource type="Resource" id="dialogue_4"]
+[sub_resource type="Resource" id="line_4"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_BAKER_ERRAND_03"
+cue = &"baker_loaves"
+
+[sub_resource type="Resource" id="fact_5"]
+script = ExtResource("f_fact")
+kind = 2
+index = 2
+
+[sub_resource type="Resource" id="line_6"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_baker")
+text_key = "DLG_BAKER_ERRAND_03"
+grants = SubResource("fact_5")
+
+[sub_resource type="Resource" id="dialogue_7"]
 script = ExtResource("f_dialogue")
 id = &"baker_errand"
 once = true
-lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_2"), SubResource("line_3")])
+lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_2"), SubResource("line_3"), SubResource("line_4"), SubResource("line_6")])
+zoom = 2.0
 
-[sub_resource type="Resource" id="v_1"]
+[sub_resource type="Resource" id="line_8"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_baker")
 text_key = "DLG_BAKER_06"
 
-[sub_resource type="Resource" id="v_2"]
+[sub_resource type="Resource" id="dialogue_9"]
 script = ExtResource("f_dialogue")
 id = &"baker_06"
 when = Array[ExtResource("f_fact")]([ExtResource("f_at06")])
-lines = Array[ExtResource("f_line")]([SubResource("v_1")])
+lines = Array[ExtResource("f_line")]([SubResource("line_8")])
 
-[sub_resource type="Resource" id="v_3"]
+[sub_resource type="Resource" id="line_10"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_baker")
 text_key = "DLG_BAKER_ERRAND_01"
 
-[sub_resource type="Resource" id="v_4"]
+[sub_resource type="Resource" id="line_11"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_baker")
 text_key = "DLG_BAKER_COUGH"
 
-[sub_resource type="Resource" id="v_5"]
+[sub_resource type="Resource" id="fact_12"]
 script = ExtResource("f_fact")
 kind = 7
 id = &"baker_errand"
 
-[sub_resource type="Resource" id="v_6"]
+[sub_resource type="Resource" id="dialogue_13"]
 script = ExtResource("f_dialogue")
 id = &"baker_cough"
 once = true
-when = Array[ExtResource("f_fact")]([SubResource("v_5")])
+when = Array[ExtResource("f_fact")]([SubResource("fact_12")])
 unless = Array[ExtResource("f_fact")]([ExtResource("f_at06")])
-lines = Array[ExtResource("f_line")]([SubResource("v_3"), SubResource("v_4")])
+lines = Array[ExtResource("f_line")]([SubResource("line_10"), SubResource("line_11")])
 
-[sub_resource type="Resource" id="v_7"]
+[sub_resource type="Resource" id="line_14"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_baker")
 text_key = "DLG_BAKER_ERRAND_01"
 
-[sub_resource type="Resource" id="v_8"]
+[sub_resource type="Resource" id="fact_15"]
 script = ExtResource("f_fact")
 kind = 7
 id = &"baker_errand"
 
-[sub_resource type="Resource" id="v_9"]
+[sub_resource type="Resource" id="dialogue_16"]
 script = ExtResource("f_dialogue")
 id = &"baker_again"
-when = Array[ExtResource("f_fact")]([SubResource("v_8")])
+when = Array[ExtResource("f_fact")]([SubResource("fact_15")])
 unless = Array[ExtResource("f_fact")]([ExtResource("f_at06")])
-lines = Array[ExtResource("f_line")]([SubResource("v_7")])
+lines = Array[ExtResource("f_line")]([SubResource("line_14")])
 
 [resource]
 script = ExtResource("f_set")
-dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_4"), SubResource("v_2"), SubResource("v_6"), SubResource("v_9")])
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_7"), SubResource("dialogue_9"), SubResource("dialogue_13"), SubResource("dialogue_16")])

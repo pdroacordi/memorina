@@ -24,6 +24,13 @@
 [ext_resource type="PackedScene" path="res://scenes/world/story/staged_beat.tscn" id="st_staged_beat"]
 [ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+[ext_resource type="PackedScene" path="res://scenes/characters/story_actor/elder/elder_actor.tscn" id="cs_elder"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="cs_beat"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_mark.gd" id="cs_mark"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/elder_looks_at_painting.tres" id="cs_elder_looks"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/ivo_walks_to_painting.tres" id="cs_ivo_painting"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/gate_bolt.tres" id="cs_gate_bolt"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/elder_sees_flute.tres" id="cs_elder_sees_flute"]
 
 [sub_resource type="Resource" id="stage_1"]
 script = ExtResource("st_fact")
@@ -50,6 +57,28 @@ fade_seconds = 1.0
 [sub_resource type="Resource" id="stage_5"]
 script = ExtResource("st_stage")
 show = &"Listening"
+fade_seconds = 0.5
+
+[sub_resource type="Resource" id="seen_elder_looks"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"elder_looks_at_painting"
+
+[sub_resource type="Resource" id="heard_elder_story"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"elder_story"
+
+[sub_resource type="Resource" id="stage_turned"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("seen_elder_looks")])
+unless = Array[ExtResource("st_fact")]([SubResource("heard_elder_story")])
+show = &"Turned"
+fade_seconds = 0.0
+
+[sub_resource type="Resource" id="stage_idle"]
+script = ExtResource("st_stage")
+show = &"Idle"
 fade_seconds = 0.5
 
 [node name="Contents" type="Node2D"]
@@ -97,8 +126,16 @@ position = Vector2(540, 264)
 [node name="BookshelfLighthouse11" parent="Props" instance=ExtResource("pi_elder_house_bookshelf_lighthouse")]
 position = Vector2(584, 288)
 
-[node name="Elder" parent="Props" instance=ExtResource("in_elder")]
+[node name="Elder" type="Node2D" parent="Props"]
+script = ExtResource("st_staging")
+stages = Array[ExtResource("st_stage")]([SubResource("stage_turned"), SubResource("stage_idle")])
+
+[node name="Idle" parent="Props/Elder" instance=ExtResource("in_elder")]
 position = Vector2(272, 288)
+
+[node name="Turned" parent="Props/Elder" instance=ExtResource("in_elder")]
+position = Vector2(272, 288)
+flip_h = true
 
 [node name="Bench" parent="Props" instance=ExtResource("pi_elder_house_bench")]
 position = Vector2(196, 288)
@@ -119,10 +156,45 @@ flip_h = true
 
 [node name="Beats" type="Node2D" parent="."]
 
-[node name="ElderPainting" parent="Beats" instance=ExtResource("st_staged_beat")]
+[node name="ElderLooks" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"elder_looks_at_painting"
+cutscene = ExtResource("cs_elder_looks")
+
+[node name="ElderPainting" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
 cue = &"elder_painting"
 face = NodePath("../../Props/LighthousePainting6")
-duration = 1.5
+cutscene = ExtResource("cs_ivo_painting")
+
+[node name="GateBolt" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"gate_bolt"
+face = NodePath("../../Marks/Outside")
+cutscene = ExtResource("cs_gate_bolt")
+
+[node name="ElderSeesFlute" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"elder_sees_flute"
+cutscene = ExtResource("cs_elder_sees_flute")
+
+[node name="Cast" type="Node2D" parent="."]
+z_index = -10
+
+[node name="Elder" parent="Cast" instance=ExtResource("cs_elder")]
+stands_for = NodePath("../../Props/Elder")
+
+[node name="Marks" type="Node2D" parent="."]
+
+[node name="Painting" type="Marker2D" parent="Marks"]
+position = Vector2(392, 288)
+script = ExtResource("cs_mark")
+mark_id = &"painting"
+
+[node name="Outside" type="Marker2D" parent="Marks"]
+position = Vector2(608, 288)
+script = ExtResource("cs_mark")
+mark_id = &"outside"
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

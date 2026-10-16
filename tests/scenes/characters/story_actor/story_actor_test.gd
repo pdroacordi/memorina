@@ -109,3 +109,23 @@ func test_every_rest_clip_matches_a_house_staging_child() -> void:
 		var clip := StringName(String(child.name).to_snake_case())
 		assert_bool(DaughterAnimationResolver.CLIPS.has(clip)).override_failure_message(String(child.name)).is_true()
 	house.free()
+
+## A villager's strip is drawn facing west: the actor flips it by that side, so entering on an unflipped child faces west.
+func test_an_actor_drawn_facing_west_flips_by_it() -> void:
+	var elder := (load("res://scenes/characters/story_actor/elder/elder_actor.tscn") as PackedScene).instantiate() as StoryActor
+	var staging := FactStaging.new()
+	var stage := FactStage.new()
+	stage.show = &"Idle"
+	staging.stages = [stage]
+	var idle := Sprite2D.new()
+	idle.name = "Idle"
+	idle.position = Vector2(272, FLOOR_Y)
+	staging.add_child(idle)
+	_holder.add_child(staging)
+	_holder.add_child(elder)
+	elder.stands_for = elder.get_path_to(staging)
+	elder.enter()
+	assert_int(elder.facing).is_equal(-1)
+	assert_bool((elder.get_node("Sprite2D") as Sprite2D).flip_h).is_false()
+	elder.face_towards(1.0)
+	assert_bool((elder.get_node("Sprite2D") as Sprite2D).flip_h).is_true()

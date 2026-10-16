@@ -2,8 +2,24 @@
 
 [ext_resource type="Script" path="res://resources/cutscene/cutscene_catalog.gd" id="s_catalog"]
 [ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="s_scene"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/opening_morning.tres" id="r_opening_morning"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/errand_turns_over.tres" id="r_errand_turns_over"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/errand_shawl.tres" id="r_errand_shawl"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/baker_reaches.tres" id="r_baker_reaches"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/baker_puts_back.tres" id="r_baker_puts_back"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/home_return.tres" id="r_home_return"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/ivo_takes_guitar.tres" id="r_ivo_takes_guitar"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/song_fails.tres" id="r_song_fails"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/daughter_to_bed.tres" id="r_daughter_to_bed"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/ivo_hears_story.tres" id="r_ivo_hears_story"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/elder_looks_at_painting.tres" id="r_elder_looks_at_painting"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/ivo_walks_to_painting.tres" id="r_ivo_walks_to_painting"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/gate_bolt.tres" id="r_gate_bolt"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/elder_sees_flute.tres" id="r_elder_sees_flute"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/daughter_sees_flute.tres" id="r_daughter_sees_flute"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/mentor_goes_still.tres" id="r_mentor_goes_still"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/mentor_silence.tres" id="r_mentor_silence"]
 
 [resource]
 script = ExtResource("s_catalog")
-scenes = Array[ExtResource("s_scene")]([ExtResource("r_daughter_to_bed")])
+scenes = Array[ExtResource("s_scene")]([ExtResource("r_opening_morning"), ExtResource("r_errand_turns_over"), ExtResource("r_errand_shawl"), ExtResource("r_baker_reaches"), ExtResource("r_baker_puts_back"), ExtResource("r_home_return"), ExtResource("r_ivo_takes_guitar"), ExtResource("r_song_fails"), ExtResource("r_daughter_to_bed"), ExtResource("r_ivo_hears_story"), ExtResource("r_elder_looks_at_painting"), ExtResource("r_ivo_walks_to_painting"), ExtResource("r_gate_bolt"), ExtResource("r_elder_sees_flute"), ExtResource("r_daughter_sees_flute"), ExtResource("r_mentor_goes_still"), ExtResource("r_mentor_silence")])

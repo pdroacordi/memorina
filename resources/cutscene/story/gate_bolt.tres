@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sound.gd" id="e3"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/gate_bolt.wav" id="e4"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e5"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e6"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e7"]
+
+[sub_resource type="Resource" id="sound_2"]
+script = ExtResource("e3")
+stream = ExtResource("e4")
+
+[sub_resource type="Resource" id="face_3"]
+script = ExtResource("e5")
+actor = &"ivo"
+side = 1
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e1")
+steps = Array[ExtResource("e2")]([SubResource("sound_2"), SubResource("face_3")])
+
+[sub_resource type="Resource" id="wait_4"]
+script = ExtResource("e6")
+seconds = 1.4
+
+[resource]
+script = ExtResource("e7")
+id = &"gate_bolt"
+steps = Array[ExtResource("e2")]([SubResource("together_1"), SubResource("wait_4")])

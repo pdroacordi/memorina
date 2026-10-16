@@ -67,7 +67,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if _armed:
 		_armed_for += delta
-	_prompt.visible = _body != null and not _body.is_talking() and has_talk() and _body.reaches(self)
+	_prompt.visible = _body != null and not _body.is_in_story() and has_talk() and _body.reaches(self)
 
 ## The zone's size in px.
 func size() -> Vector2:

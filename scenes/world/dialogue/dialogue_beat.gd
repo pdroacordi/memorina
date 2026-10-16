@@ -17,8 +17,9 @@ const GROUP := &"dialogue_beats"
 
 ## FREE: Ivo moves. STILL: he hears nothing. NOTES: only the four note inputs reach the beat.
 enum Hold { FREE, STILL, NOTES }
-## What Ivo holds from the beat's start until the next beat or the talk's end.
-enum Pose { NONE, GUITAR, MEMORINA }
+## What Ivo holds from the beat's start until the next beat or the talk's end; SEATED (STORY-16) sits him where he
+## stands, the bench's clip. Append only: scenes store these as ints.
+enum Pose { NONE, GUITAR, MEMORINA, SEATED }
 
 ## Matches a DialogueLine's `cue`.
 @export var cue: StringName = &""
@@ -43,6 +44,10 @@ func _enter_tree() -> void:
 func face_point(fallback: Vector2) -> Vector2:
 	var target := get_node_or_null(face) as Node2D if not face.is_empty() else null
 	return target.global_position if target != null else fallback
+
+## Where Ivo faces when the talk resumes and to its end: the point the beat started facing, unless the beat turned him.
+func face_after(facing: Vector2) -> Vector2:
+	return facing
 
 func start() -> void:
 	started.emit()

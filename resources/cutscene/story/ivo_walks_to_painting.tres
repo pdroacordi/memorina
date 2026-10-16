@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_walk.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e3"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e4"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e5"]
+
+[sub_resource type="Resource" id="walk_1"]
+script = ExtResource("e1")
+actor = &"ivo"
+pace = 0.4
+mark = &"painting"
+
+[sub_resource type="Resource" id="face_2"]
+script = ExtResource("e2")
+actor = &"ivo"
+side = 1
+
+[sub_resource type="Resource" id="wait_3"]
+script = ExtResource("e3")
+seconds = 0.8
+
+[resource]
+script = ExtResource("e5")
+id = &"ivo_walks_to_painting"
+steps = Array[ExtResource("e4")]([SubResource("walk_1"), SubResource("face_2"), SubResource("wait_3")])

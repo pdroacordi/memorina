@@ -1,0 +1,245 @@
+{
+ "max_duration": 25.0,
+ "owned_items": [
+  2
+ ],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_bread",
+  "daughter_song"
+ ],
+ "responses": {
+  "morning_song": "guitar_lower"
+ },
+ "scenes_seen": [
+  "home_return",
+  "daughter_to_bed"
+ ],
+ "player_position": [
+  4960,
+  12286
+ ],
+ "steps": [
+  {
+   "t": 0.6,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 1.4,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "screenshot": "k00_story"
+  },
+  {
+   "t": 3.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 3.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 4.8,
+   "screenshot": "k01_he"
+  },
+  {
+   "t": 5.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 5.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 6.2,
+   "screenshot": "k02_until_he_what"
+  },
+  {
+   "t": 6.4,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 6.48,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 6.6,
+   "screenshot": "k03_looks00"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "k03_looks01"
+  },
+  {
+   "t": 7.4,
+   "screenshot": "k03_looks02"
+  },
+  {
+   "t": 7.8,
+   "screenshot": "k03_looks03"
+  },
+  {
+   "t": 9.6,
+   "screenshot": "k04_it_had_an_end"
+  },
+  {
+   "t": 9.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 9.88,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 10.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 10.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 10.6,
+   "screenshot": "k100"
+  },
+  {
+   "t": 11.0,
+   "screenshot": "k101"
+  },
+  {
+   "t": 11.4,
+   "screenshot": "k102"
+  },
+  {
+   "t": 11.8,
+   "screenshot": "k103"
+  },
+  {
+   "t": 12.2,
+   "screenshot": "k104"
+  },
+  {
+   "t": 12.6,
+   "screenshot": "k105"
+  },
+  {
+   "t": 13.0,
+   "screenshot": "k106"
+  },
+  {
+   "t": 13.4,
+   "screenshot": "k107"
+  },
+  {
+   "t": 14.4,
+   "screenshot": "k05_is_it_still_there"
+  },
+  {
+   "t": 14.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 14.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 16.2,
+   "screenshot": "k06_past_the_fields"
+  },
+  {
+   "t": 16.4,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 16.48,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 17.8,
+   "screenshot": "k07_im_going"
+  },
+  {
+   "t": 18.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 18.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 19.6,
+   "screenshot": "k08_coat"
+  },
+  {
+   "t": 19.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 19.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 21.4,
+   "screenshot": "k09_bring_back"
+  },
+  {
+   "t": 21.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 21.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 22.0,
+   "screenshot": "k200"
+  },
+  {
+   "t": 22.4,
+   "screenshot": "k201"
+  },
+  {
+   "t": 22.8,
+   "screenshot": "k202"
+  },
+  {
+   "t": 23.2,
+   "screenshot": "k203"
+  },
+  {
+   "t": 24.6,
+   "screenshot": "k11_intent"
+  },
+  {
+   "t": 24.7,
+   "log": "end"
+  }
+ ],
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en"
+}

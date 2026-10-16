@@ -29,6 +29,9 @@ func find_mark(id: StringName) -> CutsceneMark:
 func find_visual(id: StringName) -> CutsceneVisual:
 	return find_in(_scope, CutsceneVisual.GROUP, &"visual_id", id) as CutsceneVisual
 
+func find_staging(id: StringName) -> FactStaging:
+	return find_in(_scope, FactStaging.GROUP, &"staging_id", id) as FactStaging
+
 ## The actor `id`, entered on first use; null when the contents have none.
 func actor(id: StringName) -> StoryActor:
 	var found := find_actor(id)

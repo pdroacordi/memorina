@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_stage.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e3"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e4"]
+
+[sub_resource type="Resource" id="wait_1"]
+script = ExtResource("e1")
+seconds = 0.4
+
+[sub_resource type="Resource" id="stage_2"]
+script = ExtResource("e2")
+staging = &"mentor_staging"
+child = &"Stasis"
+seconds = 1.6
+
+[sub_resource type="Resource" id="wait_3"]
+script = ExtResource("e1")
+seconds = 0.4
+
+[resource]
+script = ExtResource("e4")
+id = &"mentor_goes_still"
+steps = Array[ExtResource("e3")]([SubResource("wait_1"), SubResource("stage_2"), SubResource("wait_3")])

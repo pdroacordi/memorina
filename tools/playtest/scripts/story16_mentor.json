@@ -1,0 +1,255 @@
+{
+ "max_duration": 25.0,
+ "owned_items": [
+  0
+ ],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_bread",
+  "daughter_song",
+  "elder_story"
+ ],
+ "responses": {
+  "morning_song": "guitar_lower",
+  "elder_story": "elder_painting"
+ },
+ "player_position": [
+  24300,
+  12798
+ ],
+ "steps": [
+  {
+   "t": 0.6,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 0.75,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 1.8,
+   "screenshot": "m00_long_way"
+  },
+  {
+   "t": 2.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 2.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "screenshot": "m01_keep_things"
+  },
+  {
+   "t": 3.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 3.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 3.6,
+   "screenshot": "m100"
+  },
+  {
+   "t": 4.2,
+   "screenshot": "m101"
+  },
+  {
+   "t": 4.8,
+   "screenshot": "m102"
+  },
+  {
+   "t": 5.4,
+   "screenshot": "m103"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "m104"
+  },
+  {
+   "t": 6.6,
+   "screenshot": "m02_i_kept"
+  },
+  {
+   "t": 6.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 6.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "screenshot": "m03_many_hands"
+  },
+  {
+   "t": 8.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 8.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 8.6,
+   "screenshot": "m200"
+  },
+  {
+   "t": 9.1,
+   "screenshot": "m201"
+  },
+  {
+   "t": 9.6,
+   "screenshot": "m202"
+  },
+  {
+   "t": 10.1,
+   "screenshot": "m203"
+  },
+  {
+   "t": 10.6,
+   "screenshot": "m204"
+  },
+  {
+   "t": 11.4,
+   "screenshot": "m04_her_song"
+  },
+  {
+   "t": 11.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 11.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 12.6,
+   "screenshot": "m05_choice"
+  },
+  {
+   "t": 12.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 12.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 13.6,
+   "screenshot": "m06_flat_note"
+  },
+  {
+   "t": 15.2,
+   "screenshot": "m07_yours_too"
+  },
+  {
+   "t": 15.4,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 15.48,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 15.8,
+   "screenshot": "m300"
+  },
+  {
+   "t": 16.3,
+   "screenshot": "m301"
+  },
+  {
+   "t": 16.8,
+   "screenshot": "m302"
+  },
+  {
+   "t": 17.3,
+   "screenshot": "m303"
+  },
+  {
+   "t": 17.8,
+   "screenshot": "m304"
+  },
+  {
+   "t": 18.6,
+   "screenshot": "m08_if_i_what"
+  },
+  {
+   "t": 18.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 18.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 19.2,
+   "screenshot": "m400"
+  },
+  {
+   "t": 19.7,
+   "screenshot": "m401"
+  },
+  {
+   "t": 20.2,
+   "screenshot": "m402"
+  },
+  {
+   "t": 20.7,
+   "screenshot": "m403"
+  },
+  {
+   "t": 21.2,
+   "screenshot": "m404"
+  },
+  {
+   "t": 21.7,
+   "screenshot": "m405"
+  },
+  {
+   "t": 22.2,
+   "screenshot": "m406"
+  },
+  {
+   "t": 22.7,
+   "screenshot": "m407"
+  },
+  {
+   "t": 23.2,
+   "screenshot": "m408"
+  },
+  {
+   "t": 24.4,
+   "screenshot": "m09_after"
+  },
+  {
+   "t": 24.5,
+   "log": "end"
+  }
+ ],
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en"
+}

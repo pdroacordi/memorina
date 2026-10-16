@@ -26,7 +26,8 @@ func gesture(_id: StringName, _clip: StringName) -> CutsceneTask:
 func land_gesture(_id: StringName, _clip: StringName) -> void:
 	pass
 
-func emote(_id: StringName, _emote: CutsceneEmote.Emote, _seconds: float) -> void:
+## `height` px over the feet; 0 is the subject's standing height.
+func emote(_id: StringName, _emote: CutsceneEmote.Emote, _seconds: float, _height: float = 0.0) -> void:
 	pass
 
 func pose(_pose: DialogueBeat.Pose) -> void:
@@ -57,4 +58,8 @@ func fade(_to_black: bool, _seconds: float) -> void:
 
 ## `alpha` 0..1.
 func show_visual(_id: StringName, _alpha: float, _seconds: float) -> void:
+	pass
+
+## The FactStaging `staging_id` stands in `child` (empty: nothing) over `seconds`.
+func stage(_staging_id: StringName, _child: StringName, _seconds: float) -> void:
 	pass

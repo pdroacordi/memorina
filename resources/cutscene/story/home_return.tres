@@ -1,0 +1,99 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e3"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_emote.gd" id="e4"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e5"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_talk.gd" id="e6"]
+[ext_resource type="Resource" path="res://resources/dialogue/story/daughter_home.tres" id="e7"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_walk.gd" id="e8"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_gesture.gd" id="e9"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e10"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_stage.gd" id="e11"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e12"]
+
+[sub_resource type="Resource" id="face_2"]
+script = ExtResource("e3")
+actor = &"ivo"
+toward = &"daughter"
+
+[sub_resource type="Resource" id="emote_3"]
+script = ExtResource("e4")
+actor = &"daughter"
+emote = 2
+seconds = 0.9
+
+[sub_resource type="Resource" id="camera_4"]
+script = ExtResource("e5")
+targets = Array[StringName]([&"daughter", &"ivo"])
+offset = Vector2(0, -40)
+zoom = 2
+seconds = 0.8
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e1")
+steps = Array[ExtResource("e2")]([SubResource("face_2"), SubResource("emote_3"), SubResource("camera_4")])
+
+[sub_resource type="Resource" id="talk_5"]
+script = ExtResource("e6")
+talk = ExtResource("e7")
+speaker = &"daughter"
+
+[sub_resource type="Resource" id="walk_6"]
+script = ExtResource("e8")
+actor = &"daughter"
+pace = 1
+mark = &"hook"
+
+[sub_resource type="Resource" id="face_7"]
+script = ExtResource("e3")
+actor = &"daughter"
+side = 1
+
+[sub_resource type="Resource" id="gesture_8"]
+script = ExtResource("e9")
+actor = &"daughter"
+clip = &"reach_up"
+wait = false
+
+[sub_resource type="Resource" id="wait_9"]
+script = ExtResource("e10")
+seconds = 0.5
+
+[sub_resource type="Resource" id="stage_10"]
+script = ExtResource("e11")
+staging = &"guitar_staging"
+child = &""
+seconds = 0
+
+[sub_resource type="Resource" id="wait_11"]
+script = ExtResource("e10")
+seconds = 0.3
+
+[sub_resource type="Resource" id="gesture_12"]
+script = ExtResource("e9")
+actor = &"daughter"
+clip = &"holding_out"
+
+[sub_resource type="Resource" id="walk_13"]
+script = ExtResource("e8")
+actor = &"ivo"
+pace = 0.4
+mark = &"ivo_home"
+
+[sub_resource type="Resource" id="face_14"]
+script = ExtResource("e3")
+actor = &"ivo"
+toward = &"daughter"
+
+[sub_resource type="Resource" id="talk_15"]
+script = ExtResource("e6")
+talk = ExtResource("e7")
+speaker = &"daughter"
+wait = false
+
+[resource]
+script = ExtResource("e12")
+id = &"home_return"
+steps = Array[ExtResource("e2")]([SubResource("together_1"), SubResource("talk_5"), SubResource("walk_6"), SubResource("face_7"), SubResource("gesture_8"), SubResource("wait_9"), SubResource("stage_10"), SubResource("wait_11"), SubResource("gesture_12"), SubResource("walk_13"), SubResource("face_14"), SubResource("talk_15")])

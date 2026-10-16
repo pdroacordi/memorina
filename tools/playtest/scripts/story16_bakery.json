@@ -1,0 +1,115 @@
+{
+ "max_duration": 12.5,
+ "owned_items": [],
+ "dialogues_heard": [
+  "daughter_errand"
+ ],
+ "player_position": [
+  6600,
+  12286
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 1.08,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 2.0,
+   "screenshot": "c00_morning_ivo"
+  },
+  {
+   "t": 2.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 2.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "screenshot": "c01_the_round_one"
+  },
+  {
+   "t": 3.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 3.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "screenshot": "c02_two_loaves"
+  },
+  {
+   "t": 5.6,
+   "screenshot": "c03_the_long_one_for"
+  },
+  {
+   "t": 5.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 5.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 7.0,
+   "screenshot": "c04_just_the_round_one"
+  },
+  {
+   "t": 7.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 7.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 8.4,
+   "screenshot": "c05_puts_it_back"
+  },
+  {
+   "t": 9.4,
+   "screenshot": "c06_quietly"
+  },
+  {
+   "t": 9.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 9.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 10.4,
+   "screenshot": "c07_notice"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "c08_intent"
+  },
+  {
+   "t": 12.1,
+   "log": "end"
+  }
+ ],
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en"
+}

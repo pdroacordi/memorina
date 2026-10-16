@@ -42,13 +42,14 @@ func after_test() -> void:
 	SaveSystem.begin("", true)
 
 ## A contents scene holding one trigger for a short scene `id`.
-func _contents_with_trigger(id: StringName, delay: float = 0.0) -> PackedScene:
+func _contents_with_trigger(id: StringName, delay: float = 0.0, from_black: bool = false) -> PackedScene:
 	var root := Node2D.new()
 	root.name = "Contents"
 	var trigger := CutsceneTrigger.new()
 	trigger.name = "Trigger"
 	trigger.cutscene = C.scene(id, [C.wait(0.1)])
 	trigger.delay = delay
+	trigger.from_black = from_black
 	root.add_child(trigger)
 	trigger.owner = root
 	var packed := PackedScene.new()
@@ -186,3 +187,13 @@ func test_a_room_change_drops_its_scene() -> void:
 	assert_bool(_director.is_playing()).is_false()
 	assert_bool(_ivo.is_in_scene()).is_false()
 	assert_bool(SaveSystem.is_scene_seen(&"long")).is_false()
+
+## The new game's opening plays in black at once, without waiting for Ivo's gates (he is still behind the first fade).
+func test_a_scene_from_black_does_not_wait_for_ivo() -> void:
+	await _land()
+	var room := _room(_contents_with_trigger(&"morning", 0.0, true), Vector2.ZERO)
+	room.activate()
+	_ivo.block_input()
+	_director.on_room_changed(room)
+	assert_bool(await _until_playing(10)).is_true()
+	_ivo.unblock_input()

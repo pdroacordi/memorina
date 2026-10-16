@@ -41,6 +41,16 @@
 [ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_mark.gd" id="cs_mark"]
 [ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="cs_beat"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/daughter_to_bed.tres" id="cs_to_bed"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_trigger.gd" id="cs_trigger"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_visual.gd" id="cs_visual"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/opening_morning.tres" id="cs_opening"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/home_return.tres" id="cs_home_return"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/errand_turns_over.tres" id="cs_turns_over"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/errand_shawl.tres" id="cs_shawl"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/ivo_takes_guitar.tres" id="cs_takes_guitar"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/song_fails.tres" id="cs_song_fails"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/ivo_hears_story.tres" id="cs_hears_story"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/daughter_sees_flute.tres" id="cs_sees_flute"]
 
 [sub_resource type="Resource" id="stage_1"]
 script = ExtResource("st_fact")
@@ -108,10 +118,21 @@ script = ExtResource("st_fact")
 kind = 7
 id = &"baker_errand"
 
+[sub_resource type="Resource" id="seen_home_return"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"home_return"
+
+[sub_resource type="Resource" id="stage_holding_out"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("seen_home_return")])
+show = &"HoldingOut"
+fade_seconds = 0.5
+
 [sub_resource type="Resource" id="stage_12"]
 script = ExtResource("st_stage")
 when = Array[ExtResource("st_fact")]([SubResource("stage_11")])
-show = &"HoldingOut"
+show = &"Standing"
 fade_seconds = 0.5
 
 [sub_resource type="Resource" id="stage_13"]
@@ -152,19 +173,19 @@ when = Array[ExtResource("st_fact")]([SubResource("stage_18")])
 show = &"OnWall"
 fade_seconds = 0.5
 
-[sub_resource type="Resource" id="stage_20"]
-script = ExtResource("st_fact")
-kind = 7
-id = &"baker_errand"
-
 [sub_resource type="Resource" id="stage_21"]
 script = ExtResource("st_fact")
 kind = 7
 id = &"mentor_gift"
 
+[sub_resource type="Resource" id="seen_fetch"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"home_return"
+
 [sub_resource type="Resource" id="stage_22"]
 script = ExtResource("st_stage")
-when = Array[ExtResource("st_fact")]([SubResource("stage_20")])
+when = Array[ExtResource("st_fact")]([SubResource("seen_fetch")])
 unless = Array[ExtResource("st_fact")]([SubResource("stage_21")])
 show = &""
 fade_seconds = 0.5
@@ -189,6 +210,21 @@ fade_seconds = 0.5
 script = ExtResource("st_stage")
 show = &"Usual"
 fade_seconds = 0.5
+
+[sub_resource type="Resource" id="opening_errand_heard"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"daughter_errand"
+
+[sub_resource type="Resource" id="return_errand_heard"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"baker_errand"
+
+[sub_resource type="Resource" id="return_song_heard"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"daughter_song"
 
 [node name="Contents" type="Node2D"]
 
@@ -229,7 +265,8 @@ position = Vector2(56, 288)
 
 [node name="Daughter" type="Node2D" parent="Props"]
 script = ExtResource("st_staging")
-stages = Array[ExtResource("st_stage")]([SubResource("stage_4"), SubResource("stage_6"), SubResource("stage_8"), SubResource("stage_seen_to_bed"), SubResource("stage_10"), SubResource("stage_12"), SubResource("stage_13")])
+staging_id = &"daughter_staging"
+stages = Array[ExtResource("st_stage")]([SubResource("stage_4"), SubResource("stage_6"), SubResource("stage_8"), SubResource("stage_seen_to_bed"), SubResource("stage_10"), SubResource("stage_holding_out"), SubResource("stage_12"), SubResource("stage_13")])
 
 [node name="Asleep" type="Sprite2D" parent="Props/Daughter"]
 position = Vector2(58, 288)
@@ -250,7 +287,7 @@ hframes = 7
 frame = 6
 
 [node name="HoldingOut" type="Sprite2D" parent="Props/Daughter"]
-position = Vector2(84, 288)
+position = Vector2(104, 288)
 texture = ExtResource("st_guitar_out")
 centered = false
 offset = Vector2(-26, -62)
@@ -261,13 +298,25 @@ script = ExtResource("st_motion")
 frames_per_second = 6.0
 
 [node name="Standing" type="Sprite2D" parent="Props/Daughter"]
-position = Vector2(90, 288)
+position = Vector2(84, 288)
 texture = ExtResource("st_standing")
 centered = false
 offset = Vector2(-32, -62)
 hframes = 8
 
 [node name="AmbientMotion" type="Node" parent="Props/Daughter/Standing"]
+script = ExtResource("st_motion")
+frames_per_second = 6.0
+sequence = PackedInt32Array(0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1)
+
+[node name="Listening" type="Sprite2D" parent="Props/Daughter"]
+position = Vector2(104, 288)
+texture = ExtResource("st_standing")
+centered = false
+offset = Vector2(-32, -62)
+hframes = 8
+
+[node name="AmbientMotion" type="Node" parent="Props/Daughter/Listening"]
 script = ExtResource("st_motion")
 frames_per_second = 6.0
 sequence = PackedInt32Array(0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1)
@@ -280,10 +329,11 @@ offset = Vector2(-18, -40)
 
 [node name="WallGuitar" type="Node2D" parent="Props"]
 script = ExtResource("st_staging")
+staging_id = &"guitar_staging"
 stages = Array[ExtResource("st_stage")]([SubResource("stage_17"), SubResource("stage_19"), SubResource("stage_22"), SubResource("stage_23")])
 
 [node name="OnWall" parent="Props/WallGuitar" instance=ExtResource("pi_ivo_house_guitar")]
-position = Vector2(306, 288)
+position = Vector2(106, 246)
 
 [node name="Lowered" parent="Props/WallGuitar" instance=ExtResource("pi_ivo_house_guitar")]
 position = Vector2(184, 288)
@@ -318,19 +368,19 @@ position = Vector2(96, 200)
 
 [node name="GuitarFirst" parent="Beats" instance=ExtResource("st_guitar_beat")]
 cue = &"guitar_first"
-face = NodePath("../../Props/Daughter/Standing")
+face = NodePath("../../Props/Daughter/Listening")
 attempt = ExtResource("st_guitar_first")
-stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Daughter"): &"Standing"})
+stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Daughter"): &"Listening"})
 
 [node name="GuitarAgain" parent="Beats" instance=ExtResource("st_guitar_beat")]
 cue = &"guitar_again"
-face = NodePath("../../Props/Daughter/Standing")
+face = NodePath("../../Props/Daughter/Listening")
 attempt = ExtResource("st_guitar_again")
-stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Daughter"): &"Standing"})
+stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Daughter"): &"Listening"})
 
 [node name="GuitarLowered" parent="Beats" instance=ExtResource("st_staged_beat")]
 cue = &"guitar_lowered"
-face = NodePath("../../Props/Daughter/Standing")
+face = NodePath("../../Props/Daughter/Listening")
 stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/WallGuitar"): &"Lowered"})
 stream = ExtResource("st_hum_four")
 duration = 3.0
@@ -354,6 +404,67 @@ script = ExtResource("cs_beat")
 cue = &"daughter_to_bed"
 cutscene = ExtResource("cs_to_bed")
 
+[node name="ErrandTurnsOver" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"errand_turns_over"
+cutscene = ExtResource("cs_turns_over")
+
+[node name="ErrandShawl" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"errand_shawl"
+cutscene = ExtResource("cs_shawl")
+
+[node name="IvoTakesGuitar" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"ivo_takes_guitar"
+pose = 1
+cutscene = ExtResource("cs_takes_guitar")
+
+[node name="SongFails" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"song_fails"
+pose = 1
+cutscene = ExtResource("cs_song_fails")
+
+[node name="IvoHearsStory" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"ivo_hears_story"
+face = NodePath("../../Marks/Door")
+cutscene = ExtResource("cs_hears_story")
+
+[node name="SeesFlute" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"daughter_sees_flute"
+cutscene = ExtResource("cs_sees_flute")
+
+[node name="SeesFluteHum" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"daughter_sees_flute_hum"
+cutscene = ExtResource("cs_sees_flute")
+
+[node name="Triggers" type="Node" parent="."]
+
+[node name="OpeningMorning" type="Node" parent="Triggers"]
+script = ExtResource("cs_trigger")
+cutscene = ExtResource("cs_opening")
+unless = Array[ExtResource("st_fact")]([SubResource("opening_errand_heard")])
+from_black = true
+
+[node name="HomeReturn" type="Node" parent="Triggers"]
+script = ExtResource("cs_trigger")
+cutscene = ExtResource("cs_home_return")
+when = Array[ExtResource("st_fact")]([SubResource("return_errand_heard")])
+unless = Array[ExtResource("st_fact")]([SubResource("return_song_heard")])
+
+[node name="MorningLight" type="Node2D" parent="."]
+z_index = -10
+script = ExtResource("cs_visual")
+visual_id = &"morning_light"
+
+[node name="Beam" type="Polygon2D" parent="MorningLight"]
+color = Color(1, 0.93, 0.72, 0.16)
+polygon = PackedVector2Array(384, 172, 416, 172, 352, 288, 276, 288)
+
 [node name="Cast" type="Node2D" parent="."]
 z_index = -10
 
@@ -366,6 +477,46 @@ stands_for = NodePath("../../Props/Daughter")
 position = Vector2(58, 288)
 script = ExtResource("cs_mark")
 mark_id = &"bed_edge"
+
+[node name="Door" type="Marker2D" parent="Marks"]
+position = Vector2(152, 288)
+script = ExtResource("cs_mark")
+mark_id = &"door"
+
+[node name="Hook" type="Marker2D" parent="Marks"]
+position = Vector2(104, 288)
+script = ExtResource("cs_mark")
+mark_id = &"hook"
+
+[node name="IvoHome" type="Marker2D" parent="Marks"]
+position = Vector2(136, 288)
+script = ExtResource("cs_mark")
+mark_id = &"ivo_home"
+
+[node name="IvoBed" type="Marker2D" parent="Marks"]
+position = Vector2(516, 288)
+script = ExtResource("cs_mark")
+mark_id = &"ivo_bed"
+
+[node name="Window" type="Marker2D" parent="Marks"]
+position = Vector2(400, 214)
+script = ExtResource("cs_mark")
+mark_id = &"window"
+
+[node name="Shawl" type="Marker2D" parent="Marks"]
+position = Vector2(456, 266)
+script = ExtResource("cs_mark")
+mark_id = &"shawl"
+
+[node name="WallGuitarMark" type="Marker2D" parent="Marks"]
+position = Vector2(106, 232)
+script = ExtResource("cs_mark")
+mark_id = &"wall_guitar"
+
+[node name="DrawingsMark" type="Marker2D" parent="Marks"]
+position = Vector2(72, 214)
+script = ExtResource("cs_mark")
+mark_id = &"drawings"
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

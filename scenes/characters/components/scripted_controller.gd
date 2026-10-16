@@ -23,6 +23,10 @@ func is_walking() -> bool:
 func target_x() -> float:
 	return _target_x
 
+## 0..1 of the body's move speed.
+func pace() -> float:
+	return _pace
+
 ## Called by the body before it moves, from its own x and velocity; true on the step it arrives, when the body
 ## teleports onto `target_x()` (the last ArriveMath.SETTLE_PX or less).
 func steer(x: float, velocity_x: float, deceleration: float, delta: float) -> bool:

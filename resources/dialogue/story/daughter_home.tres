@@ -1,0 +1,140 @@
+[gd_resource type="Resource" script_class="DialogueSet" format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
+[ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/daughter.tres" id="s_daughter"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/ivo.tres" id="s_ivo"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/elder_offscreen.tres" id="s_elder_offscreen"]
+
+[sub_resource type="Resource" id="line_1"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_daughter")
+text_key = "DLG_DAUGHTER_SONG_03"
+
+[sub_resource type="Resource" id="line_2"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_DAUGHTER_SONG_04"
+
+[sub_resource type="Resource" id="fact_3"]
+script = ExtResource("f_fact")
+kind = 7
+id = &"baker_errand"
+
+[sub_resource type="Resource" id="fact_4"]
+script = ExtResource("f_fact")
+kind = 7
+id = &"mentor_gift"
+
+[sub_resource type="Resource" id="dialogue_5"]
+script = ExtResource("f_dialogue")
+id = &"daughter_bread"
+once = true
+when = Array[ExtResource("f_fact")]([SubResource("fact_3")])
+unless = Array[ExtResource("f_fact")]([SubResource("fact_4")])
+lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_2")])
+
+[sub_resource type="Resource" id="line_6"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_daughter")
+text_key = "DLG_DAUGHTER_SONG_01"
+cue = &"ivo_takes_guitar"
+
+[sub_resource type="Resource" id="line_7"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_DAUGHTER_SONG_05"
+
+[sub_resource type="Resource" id="line_8"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_daughter")
+text_key = "DLG_DAUGHTER_SONG_06"
+
+[sub_resource type="Resource" id="line_9"]
+script = ExtResource("f_line")
+cue = &"guitar_first"
+
+[sub_resource type="Resource" id="line_10"]
+script = ExtResource("f_line")
+cue = &"song_fails"
+
+[sub_resource type="Resource" id="line_11"]
+script = ExtResource("f_line")
+cue = &"guitar_again"
+
+[sub_resource type="Resource" id="line_12"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_DAUGHTER_SONG_07"
+
+[sub_resource type="Resource" id="choice_13"]
+script = ExtResource("f_choice")
+id = &"guitar_try_again"
+text_key = "DLG_CHOICE_GUITAR_TRY_AGAIN"
+tone = 1
+reply = Array[ExtResource("f_line")]([SubResource("line_11"), SubResource("line_12")])
+
+[sub_resource type="Resource" id="line_14"]
+script = ExtResource("f_line")
+cue = &"guitar_lowered"
+
+[sub_resource type="Resource" id="line_15"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_daughter")
+text_key = "DLG_DAUGHTER_SONG_08"
+
+[sub_resource type="Resource" id="choice_16"]
+script = ExtResource("f_choice")
+id = &"guitar_lower"
+text_key = "DLG_CHOICE_GUITAR_LOWER"
+tone = 2
+reply = Array[ExtResource("f_line")]([SubResource("line_14"), SubResource("line_15")])
+
+[sub_resource type="Resource" id="line_17"]
+script = ExtResource("f_line")
+ask_id = &"morning_song"
+choices = Array[ExtResource("f_choice")]([SubResource("choice_13"), SubResource("choice_16")])
+
+[sub_resource type="Resource" id="line_18"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_daughter")
+text_key = "DLG_DAUGHTER_SONG_09"
+
+[sub_resource type="Resource" id="line_19"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_DAUGHTER_SONG_10"
+cue = &"daughter_to_bed"
+
+[sub_resource type="Resource" id="line_20"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder_offscreen")
+text_key = "DLG_DAUGHTER_SONG_11"
+cue = &"ivo_hears_story"
+
+[sub_resource type="Resource" id="fact_21"]
+script = ExtResource("f_fact")
+kind = 7
+id = &"baker_errand"
+
+[sub_resource type="Resource" id="fact_22"]
+script = ExtResource("f_fact")
+kind = 7
+id = &"mentor_gift"
+
+[sub_resource type="Resource" id="dialogue_23"]
+script = ExtResource("f_dialogue")
+id = &"daughter_song"
+once = true
+when = Array[ExtResource("f_fact")]([SubResource("fact_21")])
+unless = Array[ExtResource("f_fact")]([SubResource("fact_22")])
+lines = Array[ExtResource("f_line")]([SubResource("line_6"), SubResource("line_7"), SubResource("line_8"), SubResource("line_9"), SubResource("line_10"), SubResource("line_17"), SubResource("line_18"), SubResource("line_19"), SubResource("line_20")])
+zoom = 2.0
+
+[resource]
+script = ExtResource("f_set")
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_5"), SubResource("dialogue_23")])

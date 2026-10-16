@@ -6,6 +6,8 @@
 [ext_resource type="Resource" path="res://resources/dialogue/story/daughter_bed.tres" id="s0_daughter_bed"]
 [ext_resource type="Resource" path="res://resources/dialogue/story/daughter_near.tres" id="s1_daughter_near"]
 [ext_resource type="Resource" path="res://resources/dialogue/story/daughter_guitar.tres" id="s2_daughter_guitar"]
+[ext_resource type="Resource" path="res://resources/dialogue/story/daughter_home.tres" id="s7_daughter_home"]
+[ext_resource type="Resource" path="res://resources/dialogue/story/sword.tres" id="s8_sword"]
 [ext_resource type="Resource" path="res://resources/dialogue/story/baker.tres" id="s3_baker"]
 [ext_resource type="Resource" path="res://resources/dialogue/story/elder.tres" id="s4_elder"]
 [ext_resource type="Resource" path="res://resources/dialogue/story/mentor.tres" id="s5_mentor"]
@@ -17,4 +19,4 @@
 
 [resource]
 script = ExtResource("1_catalog")
-sets = Array[ExtResource("2_set")]([ExtResource("s0_daughter_bed"), ExtResource("s1_daughter_near"), ExtResource("s2_daughter_guitar"), ExtResource("s3_baker"), ExtResource("s4_elder"), ExtResource("s5_mentor"), ExtResource("s6_mentor_stasis"), ExtResource("v_taverner"), ExtResource("v_water_carrier"), ExtResource("v_seller"), ExtResource("v_boy"), ExtResource("3_trial")])
+sets = Array[ExtResource("2_set")]([ExtResource("s0_daughter_bed"), ExtResource("s1_daughter_near"), ExtResource("s2_daughter_guitar"), ExtResource("s7_daughter_home"), ExtResource("s8_sword"), ExtResource("s3_baker"), ExtResource("s4_elder"), ExtResource("s5_mentor"), ExtResource("s6_mentor_stasis"), ExtResource("v_taverner"), ExtResource("v_water_carrier"), ExtResource("v_seller"), ExtResource("v_boy"), ExtResource("3_trial")])

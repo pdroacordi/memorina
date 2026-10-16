@@ -1,0 +1,131 @@
+{
+ "max_duration": 7.0,
+ "owned_items": [
+  2
+ ],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand"
+ ],
+ "player_position": [
+  144,
+  12286
+ ],
+ "clock": "real",
+ "steps": [
+  {
+   "t": 0.5,
+   "screenshot": "d00_sees_bread"
+  },
+  {
+   "t": 0.6,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 0.68,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 1.0,
+   "screenshot": "d01_pause_skip"
+  },
+  {
+   "t": 1.2,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 1.28,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 1.5,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 1.58,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 2.0,
+   "screenshot": "d02_talk_kept"
+  },
+  {
+   "t": 2.1,
+   "log": "after_skip"
+  },
+  {
+   "t": 3.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 3.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 4.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "screenshot": "d03_after_bread"
+  },
+  {
+   "t": 4.8,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 4.88,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 5.2,
+   "screenshot": "d04_pause_skip_again"
+  },
+  {
+   "t": 5.4,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 5.48,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 5.7,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 5.78,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 6.2,
+   "screenshot": "d05_song_begins"
+  },
+  {
+   "t": 6.3,
+   "log": "end"
+  }
+ ],
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en"
+}

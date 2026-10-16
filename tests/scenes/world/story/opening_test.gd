@@ -69,6 +69,9 @@ func test_the_daughter_follows_the_morning() -> void:
 	assert_str(_shown(house, "Props/WallGuitar")).is_equal("OnWall")
 	assert_str(_shown(house, "Props/Drawings")).is_equal("Usual")
 	SaveSystem.mark_dialogue_heard(&"baker_errand")
+	assert_str(_shown(house, "Props/Daughter")).is_equal("Standing")
+	assert_str(_shown(house, "Props/WallGuitar")).is_equal("OnWall")
+	SaveSystem.mark_scene_seen(&"home_return")
 	assert_str(_shown(house, "Props/Daughter")).is_equal("HoldingOut")
 	assert_str(_shown(house, "Props/WallGuitar")).is_equal("")
 	SaveSystem.record_response(&"morning_song", &"guitar_try_again")
@@ -245,6 +248,55 @@ func test_the_east_gate_opens_on_the_elders_story() -> void:
 	assert_bool(fact.holds(data)).is_false()
 	data.dialogues_heard.append(&"elder_story")
 	assert_bool(fact.holds(data)).is_true()
+
+## STORY-16: the morning's scene opens a new game in black and never again; the song comes home with the bread through
+## the HomeReturn trigger, and no Talkable in the house starts it.
+func test_the_house_starts_its_scenes_from_the_save() -> void:
+	var house := _mount(HOUSE)
+	var opening := house.get_node("Triggers/OpeningMorning") as CutsceneTrigger
+	var home := house.get_node("Triggers/HomeReturn") as CutsceneTrigger
+	assert_bool(opening.from_black).is_true()
+	assert_bool(opening.wants(SaveSystem.player_data)).is_true()
+	assert_bool(home.wants(SaveSystem.player_data)).is_false()
+	SaveSystem.mark_dialogue_heard(&"daughter_errand")
+	assert_bool(opening.wants(SaveSystem.player_data)).is_false()
+	SaveSystem.mark_dialogue_heard(&"baker_errand")
+	assert_bool(home.wants(SaveSystem.player_data)).is_true()
+	assert_object((load("res://resources/dialogue/story/daughter_near.tres") as DialogueSet).current(SaveSystem.player_data)).is_null()
+	var home_set := load("res://resources/dialogue/story/daughter_home.tres") as DialogueSet
+	assert_str(String(home_set.current(SaveSystem.player_data).id)).is_equal("daughter_bread")
+	SaveSystem.mark_dialogue_heard(&"daughter_bread")
+	assert_str(String(home_set.current(SaveSystem.player_data).id)).is_equal("daughter_song")
+	SaveSystem.mark_dialogue_heard(&"daughter_song")
+	assert_bool(home.wants(SaveSystem.player_data)).is_false()
+
+## The baker holds out the two loaves, then puts the long one back; the elder turns to his painting until his story ends.
+func test_the_bakery_and_the_elder_rest_where_their_scenes_left_them() -> void:
+	var bakery := _mount(load("res://scenes/world/rooms/home_village/contents/village_bakery_contents.tscn") as PackedScene)
+	assert_str(_shown(bakery, "Props/Baker")).is_equal("Idle")
+	SaveSystem.mark_scene_seen(&"baker_reaches")
+	assert_str(_shown(bakery, "Props/Baker")).is_equal("TwoLoaves")
+	SaveSystem.mark_scene_seen(&"baker_puts_back")
+	assert_str(_shown(bakery, "Props/Baker")).is_equal("OneLoaf")
+	SaveSystem.mark_dialogue_heard(&"baker_errand")
+	assert_str(_shown(bakery, "Props/Baker")).is_equal("Idle")
+	var elder := _mount(ELDER)
+	assert_str(_shown(elder, "Props/Elder")).is_equal("Idle")
+	SaveSystem.mark_scene_seen(&"elder_looks_at_painting")
+	assert_str(_shown(elder, "Props/Elder")).is_equal("Turned")
+	SaveSystem.mark_dialogue_heard(&"elder_story")
+	assert_str(_shown(elder, "Props/Elder")).is_equal("Idle")
+
+## Draft 3: Ivo speaks, in every act of the opening, with his portrait.
+func test_ivo_speaks_in_every_act() -> void:
+	var said: Array[StringName] = []
+	for line: DialogueLine in (load("res://resources/dialogue/dialogue_catalog.tres") as DialogueCatalog).lines():
+		if line.speaker != null and line.speaker.id == &"ivo":
+			said.append(StringName(line.text_key))
+			assert_object(line.speaker.portrait).is_not_null()
+	for key: StringName in [&"DLG_DAUGHTER_ERRAND_05", &"DLG_BAKER_ERRAND_04", &"DLG_DAUGHTER_SONG_10",
+			&"DLG_ELDER_STORY_05", &"DLG_SWORD_01", &"DLG_MENTOR_GIFT_07", &"DLG_ELDER_RETURN_02", &"DLG_DAUGHTER_RETURN_04"]:
+		assert_bool(said.has(key)).override_failure_message(String(key)).is_true()
 
 func _restore_two() -> void:
 	SaveSystem.restore_guardian(Enums.Guardian.FROST)

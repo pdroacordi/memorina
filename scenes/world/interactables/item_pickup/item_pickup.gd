@@ -18,6 +18,8 @@ const PROMPT_GAP := 8.0
 @export var width_cells: int = 2
 ## Reach height, in cells, rising from its cell's floor.
 @export var height_cells: int = 2
+## What Ivo says as he takes it (its current dialogue, started by the take itself); null says nothing.
+@export var talk: DialogueSet
 
 var _bodies: int = 0
 ## Ivo while he is in reach.
@@ -56,7 +58,7 @@ func _ready() -> void:
 
 # Every frame, as Talkable does: a talk starts and ends without a signal here.
 func _physics_process(_delta: float) -> void:
-	_prompt.visible = _sprite.visible and _body != null and not _body.is_talking() and _body.reaches(self)
+	_prompt.visible = _sprite.visible and _body != null and not _body.is_in_story() and _body.reaches(self)
 
 ## Shown and not owned: Up may take it. Read at the press, never cached.
 func is_available() -> bool:
@@ -66,6 +68,10 @@ func is_available() -> bool:
 func take() -> void:
 	SaveSystem.set_item_owned(item, true)
 	taken.emit(item)
+
+## The talk the take starts, read after the take; null when none is current.
+func talk_after_take() -> Dialogue:
+	return talk.current(SaveSystem.player_data) if talk != null else null
 
 func is_lying() -> bool:
 	return _sprite.visible

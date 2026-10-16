@@ -8,7 +8,9 @@ python -I tools/audio/synth_story_placeholders.py [out_dir]
     daughter_hum_four.wav, daughter_hum_five.wav  the first four (then five) notes hummed by a child: thinner and less
         steady than the woman's, the pitch wandering a little (the lowered guitar, then the return);
     guitar_muted.wav  a string damped under the hand: the press at the gap, which plays nothing;
-    memorina_flat.wav  one flat, breathy note on the pipes, a little under pitch: "[Play it again]" in the lighthouse.
+    memorina_flat.wav  one flat, breathy note on the pipes, a little under pitch: "[Play it again]" in the lighthouse;
+    morning_room.wav  (STORY-16) the opening's morning: a soft room tone with faint, far, high chirps;
+    gate_bolt.wav  (STORY-16) the village's east gate unbolted, heard from indoors: a wooden bolt sliding, then a clack.
     The morning song is E G E D | C D E C, beats 1 1 1.5 0.5 1 1 1 2.5 at 0.42 s ("Approve melody (Recommended)",
     user, 2026-10-15). A real recording replaces a file of the same name.
 """
@@ -137,6 +139,46 @@ def flat_pipe(f: float) -> np.ndarray:
     return (0.6 * tone + breath) * envelope
 
 
+def morning_room(dur: float = 7.0) -> np.ndarray:
+    """A still house in the morning: low brown room tone, and a few far birds, short high chirps falling in pitch."""
+    rng = np.random.default_rng(21)
+    length = int(SR * dur)
+    t = np.arange(length) / SR
+    tone = signal.lfilter(*signal.butter(2, 220 / (SR / 2)), np.cumsum(rng.normal(0, 1, length)))
+    tone = (tone - signal.lfilter(*signal.butter(1, 20 / (SR / 2)), tone)) * 0.004
+    chirps = np.zeros(length)
+    for at in [0.6, 0.78, 2.1, 2.25, 2.4, 3.9, 5.2, 5.35, 6.1]:
+        n = int(SR * rng.uniform(0.05, 0.09))
+        start = int(SR * at)
+        f0 = rng.uniform(3600, 4600)
+        f = np.linspace(f0, f0 * 0.82, n)
+        chirp = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.sin(np.pi * np.arange(n) / n) ** 2
+        chirps[start:start + n] += 0.18 * chirp[:max(0, min(n, length - start))]
+    chirps = signal.lfilter(*signal.butter(2, 7000 / (SR / 2)), chirps)
+    envelope = np.minimum(1, t / 1.0) * np.clip((dur - t) / 1.2, 0, 1)
+    return (tone + chirps) * envelope
+
+
+def gate_bolt() -> np.ndarray:
+    """A heavy wooden bolt drawn back, far off: a scraping slide, then the clack of it stopping."""
+    rng = np.random.default_rng(23)
+    length = int(SR * 0.9)
+    t = np.arange(length) / SR
+    slide_n = int(SR * 0.35)
+    slide = signal.lfilter(*signal.butter(2, [500 / (SR / 2), 2400 / (SR / 2)], btype="band"), rng.normal(0, 1, slide_n))
+    slide *= np.sin(np.pi * np.arange(slide_n) / slide_n) * 0.35
+    clack_at = int(SR * 0.38)
+    clack_n = length - clack_at
+    clack = signal.lfilter(*signal.butter(2, [180 / (SR / 2), 1300 / (SR / 2)], btype="band"), rng.normal(0, 1, clack_n))
+    for fc, q in [(240, 8), (610, 9)]:
+        clack += 0.6 * signal.lfilter(*signal.iirpeak(fc / (SR / 2), q), clack)
+    clack *= np.exp(-np.arange(clack_n) / (0.035 * SR))
+    y = np.zeros(length)
+    y[:slide_n] += slide
+    y[clack_at:] += clack
+    return signal.lfilter(*signal.butter(2, 3000 / (SR / 2)), y) * np.minimum(1, t / 0.01)
+
+
 def write(path: str, sound: np.ndarray) -> None:
     """Normalized, through a small room, 16-bit mono."""
     sound = sound / np.max(np.abs(sound))
@@ -163,6 +205,8 @@ def main(out_dir: str) -> None:
     write(os.path.join(out_dir, "daughter_hum_five.wav"), child_hum(MELODY[:5], BEATS[:5], seed=5))
     write(os.path.join(out_dir, "guitar_muted.wav"), muted_string(PITCH["c"] / 2))
     write(os.path.join(out_dir, "memorina_flat.wav"), flat_pipe(PITCH["e"]))
+    write(os.path.join(out_dir, "morning_room.wav"), morning_room())
+    write(os.path.join(out_dir, "gate_bolt.wav"), gate_bolt())
 
 
 if __name__ == "__main__":

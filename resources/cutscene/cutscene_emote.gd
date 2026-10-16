@@ -8,10 +8,12 @@ enum Emote { ELLIPSIS, NOTE, EXCLAIM }
 @export var emote: Emote = Emote.ELLIPSIS
 ## Scaled seconds shown; the step waits them out.
 @export var seconds: float = 1.2
+## Px over the feet; 0 is the subject's standing height (lower it for someone lying down).
+@export var height: float = 0.0
 
 
 func begin(context: CutsceneContext) -> CutsceneTask:
-	context.emote(actor, emote, seconds)
+	context.emote(actor, emote, seconds, height)
 	return CutsceneWaitTask.new(seconds)
 
 func subjects() -> Array[StringName]:

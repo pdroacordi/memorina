@@ -33,16 +33,19 @@ func test_every_scene_names_ids_its_contents_hold() -> void:
 		for node: Node in _descendants(root):
 			if node is StoryActor:
 				var actor := node as StoryActor
-				if ids.has(actor.actor_id):
-					problems.append("%s: id '%s' twice" % [path.get_file(), actor.actor_id])
 				ids.append(actor.actor_id)
 				actors.append(actor)
 			elif node is CutsceneMark:
 				ids.append((node as CutsceneMark).mark_id)
 			elif node is CutsceneVisual:
 				ids.append((node as CutsceneVisual).visual_id)
+			elif node is FactStaging and (node as FactStaging).staging_id != &"":
+				ids.append((node as FactStaging).staging_id)
 			if node is CutsceneBeat or node is CutsceneTrigger:
 				starts.append(node)
+		for id: StringName in ids:
+			if ids.count(id) > 1:
+				problems.append("%s: id '%s' names two nodes" % [path.get_file(), id])
 		for start: Node in starts:
 			hosts += 1
 			if start is CutsceneBeat and (start as CutsceneBeat).hold != DialogueBeat.Hold.STILL:

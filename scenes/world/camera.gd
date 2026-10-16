@@ -114,6 +114,10 @@ var _last_centre_y: float = INF
 var _shake_offset: Vector2 = Vector2.ZERO
 ## Reused by every ground ray.
 var _ground_ray := PhysicsRayQueryParameters2D.new()
+## The zoom the frame returns to after a focus or a cutscene: 1, or a talk's (`frame_talk`).
+var _rest_zoom: float = 1.0
+## The point a framed talk's speaker stands at; made on the first `frame_talk`.
+var _talk_point: Node2D
 
 
 func _ready() -> void:
@@ -216,7 +220,28 @@ func focus() -> void:
 
 func unfocus() -> void:
 	_focus_pending = false
-	_tween_zoom(Vector2.ONE)
+	_tween_zoom(Vector2.ONE * _rest_zoom)
+
+## A talk frames its speaker at `at` with Ivo at `zoom_level` until `release_talk()` (Dialogue.zoom, STORY-16).
+func frame_talk(at: Vector2, zoom_level: float) -> void:
+	if _talk_point == null:
+		_talk_point = Node2D.new()
+		_talk_point.top_level = true
+		add_child(_talk_point)
+	_talk_point.global_position = at
+	_rest_zoom = zoom_level
+	frame_pair(_talk_point)
+	_tween_zoom(Vector2.ONE * zoom_level, pair_duration)
+
+func release_talk() -> void:
+	_rest_zoom = 1.0
+	if _pair == _talk_point:
+		release_pair()
+	_tween_zoom(Vector2.ONE, pair_duration)
+
+## The zoom the frame rests at: 1, or a framed talk's.
+func rest_zoom() -> float:
+	return _rest_zoom
 
 ## Holds the frame between the subject and `other`, easing there. No zoom: a
 ## guardian already fills half the frame, and the call's sheet sits over the
@@ -262,7 +287,10 @@ func centre_for(subject: Node2D) -> Vector2:
 	var lead := 0.0
 	if subject is Character and not _pairing:
 		lead = look_ahead_distance * float((subject as Character).facing)
-	return subject.global_position + Vector2(lead, bias + offset.y)
+	var at := subject.global_position
+	if subject is Character and is_instance_valid(_pair) and _pair_blend > 0.0:
+		at.x = lerpf(at.x, (at.x + _pair.global_position.x) / 2.0, _pair_blend)
+	return at + Vector2(lead, bias + offset.y)
 
 ## Where a followed marker stands for the frame to centre on `centre`: a marker carries no look-ahead or framing, so the
 ## offset the camera holds is taken off.
@@ -302,7 +330,8 @@ func shake(strength: float) -> void:
 func _framed_position() -> Vector2:
 	var at := _subject.global_position
 	at.y += _frame_bias()
-	if is_instance_valid(_pair) and _pair_blend > 0.0:
+	# A cutscene's rig carries its own frame: the pair blends only a followed character.
+	if _subject is Character and is_instance_valid(_pair) and _pair_blend > 0.0:
 		at.x = lerpf(at.x, (at.x + _pair.global_position.x) / 2.0, _pair_blend)
 	return at
 

@@ -3,6 +3,7 @@ extends AnimationResolver
 
 const IDLE := &"idle"
 const RUN := &"run"
+const WALK := &"walk"
 const BRACE := &"brace"
 const JUMP_START := &"jump_start"
 const JUMP_IDLE := &"jump_idle"
@@ -32,6 +33,7 @@ const CLIMB_BACK_HOLD := &"climb_back_hold"
 const HURT := &"hurt"
 const DEATH := &"death"
 const SIT := &"sit"
+const STAND_UP := &"stand_up"
 
 ## These transitions start mid-motion, so jump and fall intro clips are skipped.
 const INTRO_SKIPPING_CLIPS: Array[StringName] = [AIR_SPIN, ATTACK_JUMP, ATTACK_FALL, ATTACK_POGO, HURT]
@@ -88,13 +90,21 @@ func resolve() -> StringName:
 			return GUITAR_HOLD
 		DialogueBeat.Pose.MEMORINA:
 			return driver.sequence(MEMORINA_DRAW, MEMORINA_IDLE)
+		DialogueBeat.Pose.SEATED:
+			return SIT
+
+	# Rising from a scene's seat; any move cuts it.
+	if (_player.just_rose() or driver.holding(STAND_UP)) and not _player.wants_to_move():
+		return STAND_UP
 
 	# Drawn implies grounded; instrument holding outranks idle, while hurt and death take priority.
 	if _player.is_memorina_drawn():
 		return driver.sequence(MEMORINA_DRAW, MEMORINA_IDLE)
 
 	if _player.wants_to_move():
-		return BRACE if _player.is_bracing() else RUN
+		if _player.is_bracing():
+			return BRACE
+		return WALK if _player.is_strolling() else RUN
 	if _player.just_landed() or driver.holding(LAND):
 		return LAND
 	# Puts the instrument away after playing it; any movement cuts it.
