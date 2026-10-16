@@ -29,6 +29,7 @@ Third-party art used in Memorina, with the terms it was taken under.
 - **The village gate, the orchard bramble barrier and the leaf curtain** (`assets/sprites/world/props/fact_barrier/fact_barrier.png`, `assets/sprites/world/props/wind_orchards/bramble_barrier.png`, `assets/sprites/world/props/wind_orchards/leaf_curtain.png`, WORLD-36) - one Codex image generation each (our village fence and gate tower, our orchard tiles and backdrop and the wind leaf the only references), kept in `tools/art/sources/village/` and `tools/art/sources/wind_orchards/` and cut by `tools/art/cut_single_prop.py`.
 - **The farmhouse props and the sword** (`assets/sprites/world/props/interiors/farmhouse/`, `assets/sprites/world/pickups/sword.png`, STORY-02) - one Codex image generation (our approved Ivo's house props the only reference), kept in `tools/art/sources/interiors/farmhouse_props_codex.png` and cut by `tools/art/cut_props.py`.
 - **The tavern mug** (`assets/sprites/world/props/interiors/tavern/mug.png`, STORY-09) - drawn by hand at 5x5 art px in the colours of our tavern's shelf of mugs.
+- **The rest bench** (`assets/sprites/world/props/bench/bench.png`, STORY-17, redrawn 2026-10-16) - one Codex image generation (our approved props and village concept the only references), kept in `tools/art/sources/props/bench_codex.png` and cut by `tools/art/cut_single_prop.py`.
 - **The daughter's idle loops and scene clips** (`assets/sprites/world/story/daughter/standing.png`, `guitar_out.png`, STORY-12; `walk.png`, `lower_eyes.png`, `sit.png`, `lie_down.png`, STORY-15) - her standing still redrawn by Codex on her guitar pose's pixel grid (our sprite the only reference), then PixelLab animate-with-text-v3 loops from our stills; sources in `tools/art/sources/story/`.
 - **Playing the Memorina** (`assets/sprites/characters/ivo/ivo_memorina_play.png`, `ivo_memorina_lower.png`, `assets/sprites/world/story/mentor/raise.png`, `play.png`, STORY-11) - PixelLab animate-with-text-v3 loops from our own stills (Ivo's idle frame with a Codex-drawn flute in his hands; the mentor's still with his flute); sources in `tools/art/sources/story/`.
 - **Ivo playing the guitar** (`assets/sprites/characters/ivo/ivo_guitar.png`, STORY-10) - Ivo's own idle frame with his arms and the guitar redrawn by Codex image generation on his pixel grid (our sprite and house guitar the only references), then a PixelLab animate-with-text-v3 strumming loop from that still; sources in `tools/art/sources/story/`.
@@ -77,7 +78,7 @@ Third-party art used in Memorina, with the terms it was taken under.
   `tools/art/cut_wall.py`. Every region set shares the village valley's sky.
 
 - **Props** (`assets/sprites/world/props/`: pressure plate, stone gate, lift, seesaw plank
-  and fulcrum, drawbridge, hanging cocoon, root strand, fallen log, the rest bench, the door) - generated for this project with
+  and fulcrum, drawbridge, hanging cocoon, root strand, fallen log, the door; the rest bench is credited on its own above) - generated for this project with
   Codex CLI's image tool from the prompts in `tools/art/prompts/`, then keyed, snapped to
   the world palette and packed by `tools/art/process_image.gd`. No third-party art was
   given as a reference. The village concept painting `tools/art/references/village_concept.png` (the
