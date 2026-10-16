@@ -136,6 +136,25 @@ func test_skip_scene_shows_only_while_a_scene_can_be_skipped() -> void:
 	assert_int(asked[0]).is_equal(1)
 	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.NONE)
 
+## The current intent shows under the box while it holds; none shows nothing (systems/notices). It follows the box when
+## "Skip scene" grows it.
+func test_the_pause_menu_shows_the_current_intent_under_its_box() -> void:
+	var line := _pause_menu.find_child("Intent") as Label
+	var panel := _pause_menu.find_child("Panel") as Control
+	_menu_input.pause_pressed.emit()
+	assert_bool(line.visible).is_false()
+	assert_str(_pause_menu.shown_intent()).is_empty()
+	_menu_input.pause_pressed.emit()
+	_screens.set_intent(func() -> String: return "INTENT_ELDER")
+	_menu_input.pause_pressed.emit()
+	assert_bool(line.visible).is_true()
+	assert_str(_pause_menu.shown_intent()).is_equal(tr("INTENT_ELDER"))
+	assert_float(line.offset_top).is_greater(panel.offset_bottom)
+	_menu_input.pause_pressed.emit()
+	_screens.set_scene_skip(func() -> bool: return true)
+	_menu_input.pause_pressed.emit()
+	assert_float(line.offset_top).is_greater(panel.offset_bottom)
+
 func test_quit_to_title_asks_first_and_back_returns_to_it() -> void:
 	_menu_input.pause_pressed.emit()
 	(_pause_menu.find_child("QuitToTitle") as Button).pressed.emit()

@@ -46,7 +46,7 @@ The Memorina is not a pickup: the mentor's talk grants it in STORY-03 through a 
 - The Up chain is door, then talk, then pickup (`_try_door`, `_try_talk`, `_try_pickup` in `Player._process_motion`), then the helix stair and climbing.
   - All three use the one Up buffer (`UP_BUFFER`, 0.1 s, ticked every frame) and the one gate list `_free_for_up`: on the floor, no roll, swing, knockback, climb, wall slide, Memorina, stair, call, recall or fight.
   - A door or a talk in reach wins. A refused press is spent. Taking drops the other buffered presses.
-- No animation: the item leaves the table and the notebook quill announces the ITEM entry (`systems/notebook`).
+- No animation: the item leaves the table, the item-acquired notice shows its icon and name (`systems/notices`) and the notebook quill announces the ITEM entry (`systems/notebook`).
 - Without the sword, Ivo cannot swing (`Player._can_use_sword` reads the save), so the pickup is the start of combat in a new game.
 
 ## Today

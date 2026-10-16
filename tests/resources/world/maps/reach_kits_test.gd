@@ -34,7 +34,9 @@ func test_each_kit_after_the_base_adds_one_milestone_to_an_earlier_kit() -> void
 
 func test_the_base_kit_is_movement_and_the_sword() -> void:
 	var data := _kit(&"base").player_data()
-	assert_array(data.owned_items).contains_exactly([true, false])
+	assert_bool(data.owned_items[Enums.PlayerItem.SWORD]).is_true()
+	# The sword alone: the bread or any later item leaking into the base kit fails here.
+	assert_int(data.owned_items.count(true)).is_equal(1)
 	assert_bool(data.unlocked_player_skills.has(true)).is_false()
 	assert_bool(data.learned_songs.has(true)).is_false()
 

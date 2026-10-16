@@ -44,6 +44,25 @@ func test_owning_the_items_early_changes_nothing_in_the_house() -> void:
 	var lighthouse := _mount(LIGHTHOUSE)
 	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("Holding")
 
+## The baker hands over the round loaf on "Just the round one." (UI-11): a talk grants it, and nothing takes it back.
+func test_the_baker_hands_over_the_round_loaf_on_her_last_line() -> void:
+	var baker := load("res://resources/dialogue/story/baker.tres") as DialogueSet
+	var errand := baker.current(PlayerData.new())
+	assert_str(String(errand.id)).is_equal("baker_errand")
+	var granting := errand.lines.filter(func(line: DialogueLine) -> bool: return line.grants != null)
+	assert_int(granting.size()).is_equal(1)
+	var line := granting[0] as DialogueLine
+	assert_str(line.text_key).is_equal("DLG_BAKER_ERRAND_03")
+	assert_int(line.grants.kind).is_equal(SaveFact.Kind.ITEM)
+	assert_int(line.grants.index).is_equal(Enums.PlayerItem.BREAD)
+
+## The house reads the errand heard, not the loaf (the stages read talks): owning the bread alone moves nobody.
+func test_owning_the_bread_alone_changes_nothing_in_the_house() -> void:
+	SaveSystem.set_item_owned(Enums.PlayerItem.BREAD, true)
+	var house := _mount(HOUSE)
+	assert_str(_shown(house, "Props/Daughter")).is_equal("Asleep")
+	assert_str(_shown(house, "Props/WallGuitar")).is_equal("OnWall")
+
 func test_the_daughter_follows_the_morning() -> void:
 	var house := _mount(HOUSE)
 	assert_str(_shown(house, "Props/Daughter")).is_equal("Asleep")

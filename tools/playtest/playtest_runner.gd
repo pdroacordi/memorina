@@ -237,6 +237,7 @@ func _log_state(label: String) -> void:
 	line += _foes_state(player)
 	line += _map_state()
 	line += _notebook_state()
+	line += _notice_state()
 	print(line)
 
 ## The current room and its camera bounds, Ivo's facing, the fade's alpha, the weather and every loaded door.
@@ -333,6 +334,20 @@ func _notebook_state() -> String:
 	if watcher != null:
 		line += " waiting=%s holding=%s" % [watcher.waiting(), watcher.is_holding()]
 	return line
+
+## The notice showing (its text and alpha), the notices waiting, and the current intent's key (systems/notices).
+func _notice_state() -> String:
+	var watcher := get_tree().root.find_child("NoticeWatcher", true, false) as NoticeWatcher
+	var toast := get_tree().root.find_child("NoticeToast", true, false) as NoticeToast
+	if watcher == null or toast == null:
+		return ""
+	var waiting: PackedStringArray = []
+	for notice: Notice in watcher.waiting():
+		waiting.append("item %d" % notice.item if notice.is_item() else "intent %s" % notice.intent_id)
+	return " notice=%.2f '%s' waiting=[%s] intent=%s" % [
+		(toast.get_node("Art") as CanvasItem).modulate.a if toast.is_showing() else 0.0, toast.shown_text(),
+		", ".join(waiting), watcher.intent_key(),
+	]
 
 func _capture(screenshot_name: String) -> void:
 	## get_viewport().get_texture() reflects the last COMPLETED render, not the frame

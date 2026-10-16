@@ -72,7 +72,7 @@ STORY-15, built 2026-10-16 from the plan `architecture/cutscenes-are-data-played
 
 - `Player.begin_scene()` / `end_scene()` (wired from the director's signals), `drive(ScriptedController)` (`move_axis()` reads the driver; `_steer_driver` teleports onto the mark on arrival), `stage_pose(pose)` (shared with `pause_talk`), `can_begin_scene()`, `is_in_story()` (talk or scene), `is_in_scene()`.
 - **The block is derived** (`_refresh_block`): in a talk, the talk's listening (or the map); else in a scene, blocked; else the map. `block_input` / `unblock_input` set the map's part only. So a NOTES beat inside a scene still gets its notes, and a scene ending under the map leaves him blocked.
-- In a scene, doors, talks, pickups, benches, the Memorina and the map are refused (`is_in_story()`); the pause and the notebook hold over it; `NotebookWatcher.is_holding()` reads `is_in_story()`.
+- In a scene, doors, talks, pickups, benches, the Memorina and the map are refused (`is_in_story()`); the pause and the notebook hold over it; `NoticeHold.applies` (both HUD notice watchers) reads `is_in_story()`.
 - Ivo has only `run` (192 px/s): a scene walk at pace < 1 slides his feet until he gets a `walk` clip (STORY-16/17).
 
 ## Camera, letterbox, fade

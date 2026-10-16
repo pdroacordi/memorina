@@ -1,0 +1,54 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/notice/notice_toast.gd" id="1_toast"]
+[ext_resource type="FontFile" uid="uid://dsutvchk6baqt" path="res://assets/fonts/memorina_text_font_size_8.ttf" id="2_text_font"]
+
+[node name="NoticeToast" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_toast")
+
+[node name="Art" type="Control" parent="."]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+
+[node name="Card" type="Control" parent="Art"]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+mouse_filter = 2
+
+[node name="Row" type="HBoxContainer" parent="Art/Card"]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 4.0
+offset_right = 296.0
+offset_bottom = 20.0
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 2
+
+[node name="Icon" type="TextureRect" parent="Art/Card/Row"]
+custom_minimum_size = Vector2(16, 16)
+layout_mode = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Text" type="Label" parent="Art/Card/Row"]
+layout_mode = 2
+size_flags_vertical = 1
+theme_override_colors/font_color = Color(0.96, 0.9, 0.72, 1)
+theme_override_colors/font_outline_color = Color(0.13, 0.08, 0.05, 1)
+theme_override_constants/outline_size = 2
+theme_override_fonts/font = ExtResource("2_text_font")
+theme_override_font_sizes/font_size = 8
+vertical_alignment = 1

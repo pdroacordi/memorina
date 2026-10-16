@@ -10,7 +10,9 @@ enum PlayerSkill {
 ## PlayerData stores possessions by enum index; append members only.
 enum PlayerItem {
 	SWORD,
-	MEMORINA
+	MEMORINA,
+	## The round loaf from the baker's errand; kept, never given away (systems/story).
+	BREAD,
 }
 
 ## SeasonPalette resources key seasons by enum value.

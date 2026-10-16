@@ -25,6 +25,11 @@ PAUSE_TITLE,Pause,Pausa
 PAUSE_RESUME,Resume,Continuar
 PAUSE_SKIP_SCENE,Skip scene,Pular cena
 PAUSE_QUIT_GAME,Quit game,Sair do jogo
+INTENT_BREAD,The round loaf.,O pão redondo.
+INTENT_HOME,Home.,Para casa.
+INTENT_ELDER,The elder's story.,A história do ancião.
+INTENT_EAST,"The lighthouse, east.","O farol, a leste."
+INTENT_VILLAGE,Back to the village.,De volta à vila.
 CONFIRM_QUIT_GAME,Quit the game?\nProgress since the last bench will be lost.,Sair do jogo?\nO progresso desde o último banco será perdido.
 CONFIRM_YES,Yes,Sim
 CONFIRM_NO,No,Não
@@ -103,8 +108,10 @@ NOTEBOOK_LORE_ROLL,"I rolled without thinking. My legs remembered first: the gir
 NOTEBOOK_LORE_DOUBLE_JUMP,"I jumped again, in mid-air. I have climbed like that before, on a roof, mending leaks before the rain.","Saltei de novo, no ar. Eu já subi assim antes, num telhado, consertando goteiras antes da chuva."
 ITEM_SWORD,Sword,Espada
 ITEM_MEMORINA,Memorina,Memorina
+ITEM_BREAD,Round loaf,Pão redondo
 NOTEBOOK_ITEM_SWORD,"A plain sword. I wasn't made for it, but it serves.","Uma espada simples. Não fui feito para ela, mas ela serve."
 NOTEBOOK_ITEM_MEMORINA,"A pan flute patched by many hands. Each pipe is a different material, a different season.","Uma flauta remendada por muitas mãos. Cada tubo é de um material, de uma estação."
+NOTEBOOK_ITEM_BREAD,"The round one, still warm. She never asks for any other.","O redondo, ainda quente. Ela nunca pede outro."
 SPEAKER_ELDER,Elder,Ancião
 SPEAKER_DAUGHTER,Daughter,Filha
 SPEAKER_MENTOR,Mentor,Mentor

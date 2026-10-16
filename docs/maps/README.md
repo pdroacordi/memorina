@@ -497,7 +497,7 @@ Scene `res://scenes/world/interactables/item_pickup/item_pickup.tscn`, anchored 
 | Param | Type | Default |
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
-| `item` | enum (Sword:0,Memorina:1) | **required** |
+| `item` | enum (Sword:0,Memorina:1,Bread:2) | **required** |
 | `texture` | Texture2D | **required** |
 | `rest_offset` | Vector2 | `Vector2(0, 0)` |
 | `width_cells` | int | `2` |

@@ -1,0 +1,74 @@
+[gd_resource type="Resource" script_class="IntentCatalog" format=3]
+
+[ext_resource type="Script" path="res://resources/story/intent_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" path="res://resources/story/intent.gd" id="2_intent"]
+[ext_resource type="Script" uid="uid://b7dtsefilgm6i" path="res://resources/save_facts/save_fact.gd" id="3_fact"]
+
+[sub_resource type="Resource" id="heard_daughter_errand"]
+script = ExtResource("3_fact")
+kind = 7
+id = &"daughter_errand"
+
+[sub_resource type="Resource" id="heard_baker_errand"]
+script = ExtResource("3_fact")
+kind = 7
+id = &"baker_errand"
+
+[sub_resource type="Resource" id="heard_daughter_song"]
+script = ExtResource("3_fact")
+kind = 7
+id = &"daughter_song"
+
+[sub_resource type="Resource" id="heard_elder_story"]
+script = ExtResource("3_fact")
+kind = 7
+id = &"elder_story"
+
+[sub_resource type="Resource" id="heard_mentor_gift"]
+script = ExtResource("3_fact")
+kind = 7
+id = &"mentor_gift"
+
+[sub_resource type="Resource" id="heard_elder_return"]
+script = ExtResource("3_fact")
+kind = 7
+id = &"elder_return"
+
+[sub_resource type="Resource" id="intent_bread"]
+script = ExtResource("2_intent")
+id = &"bread"
+text_key = "INTENT_BREAD"
+when = Array[ExtResource("3_fact")]([SubResource("heard_daughter_errand")])
+unless = Array[ExtResource("3_fact")]([SubResource("heard_baker_errand")])
+
+[sub_resource type="Resource" id="intent_home"]
+script = ExtResource("2_intent")
+id = &"home"
+text_key = "INTENT_HOME"
+when = Array[ExtResource("3_fact")]([SubResource("heard_baker_errand")])
+unless = Array[ExtResource("3_fact")]([SubResource("heard_daughter_song")])
+
+[sub_resource type="Resource" id="intent_elder"]
+script = ExtResource("2_intent")
+id = &"elder"
+text_key = "INTENT_ELDER"
+when = Array[ExtResource("3_fact")]([SubResource("heard_daughter_song")])
+unless = Array[ExtResource("3_fact")]([SubResource("heard_elder_story")])
+
+[sub_resource type="Resource" id="intent_east"]
+script = ExtResource("2_intent")
+id = &"east"
+text_key = "INTENT_EAST"
+when = Array[ExtResource("3_fact")]([SubResource("heard_elder_story")])
+unless = Array[ExtResource("3_fact")]([SubResource("heard_mentor_gift")])
+
+[sub_resource type="Resource" id="intent_village"]
+script = ExtResource("2_intent")
+id = &"village"
+text_key = "INTENT_VILLAGE"
+when = Array[ExtResource("3_fact")]([SubResource("heard_mentor_gift")])
+unless = Array[ExtResource("3_fact")]([SubResource("heard_elder_return")])
+
+[resource]
+script = ExtResource("1_catalog")
+intents = Array[ExtResource("2_intent")]([SubResource("intent_bread"), SubResource("intent_home"), SubResource("intent_elder"), SubResource("intent_east"), SubResource("intent_village")])

@@ -18,6 +18,13 @@ func get_entry(id: StringName) -> NotebookEntry:
 			return entry
 	return null
 
+## The Items entry for `item` (an Enums.PlayerItem); null when there is none.
+func item_entry(item: int) -> NotebookEntry:
+	for entry: NotebookEntry in in_section(NotebookEntry.Section.ITEMS):
+		if entry.index == item:
+			return entry
+	return null
+
 func in_section(section: NotebookEntry.Section) -> Array[NotebookEntry]:
 	var found: Array[NotebookEntry] = []
 	for entry: NotebookEntry in entries:
@@ -43,6 +50,8 @@ func validate() -> PackedStringArray:
 			problems.append("%s reads a dialogue fact with no fact_id" % entry.id)
 		if entry.title_key.is_empty() or entry.body_key.is_empty():
 			problems.append("%s has no title or body key" % entry.id)
+		if entry.section == NotebookEntry.Section.ITEMS and entry.icon == null:
+			problems.append("%s has no icon for the item notice" % entry.id)
 	problems.append_array(_one_per(NotebookEntry.Section.SONGS, Enums.Song.size()))
 	problems.append_array(_one_per(NotebookEntry.Section.ITEMS, Enums.PlayerItem.size()))
 	problems.append_array(_one_per(NotebookEntry.Section.GUARDIANS, Enums.Guardian.size()))

@@ -116,6 +116,9 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | guardião conhecido / estado de corrupção | `PlayerData.met_guardians` (`SaveSystem.meet_guardian`) / `restored_guardians` |
 | entrada não lida / lida | `NotebookIndex.unread()` / `PlayerData.notebook_read` (`SaveSystem.mark_notebook_read`) |
 | aviso de entrada nova (a pena no HUD) | `NotebookWatcher.announced` → `NotebookToast` |
+| Aviso (item obtido, intenção nova) | `Notice`, `NoticeToast` (`NoticeWatcher.shown`, `systems/notices`) |
+| Intenção (atual) | `Intent`, `IntentCatalog.current()`, `NoticeWatcher.intent_key()` |
+| pão redondo | `Enums.PlayerItem.BREAD` (`ITEM_BREAD`, `item_bread`) |
 | parte da sala vista (célula do mapa) | `MapGrid` (64 px cells), `PlayerData.map_seen`, revealed by `MapRevealer` |
 | contorno do mapa (área vista, contornada) | `MapOutline` (`fill_runs`, `edges`, `notches`, `ink`) |
 | Ivo bloqueado (mapa aberto, o mundo segue) | `Screens.BLOCKING`, `Player.block_input` / `unblock_input`, `PlayerInput.blocked` |

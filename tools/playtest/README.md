@@ -45,13 +45,14 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   `"skills": [ids]` unlocks `Enums.PlayerSkill`s (roll is 2) the way `known_songs` teaches
   songs. `"met_guardians"` / `"restored_guardians": [ids]` (`Enums.Guardian`) and
   `"notebook_read": ["<entry id>"]` seed the save the same way; `"owned_items": [ids]` (`Enums.PlayerItem`: 0 the
-  sword, 1 the Memorina) sets the owned items to exactly that list, so a run can start without the items a debug new
+  sword, 1 the Memorina, 2 the bread) sets the owned items to exactly that list, so a run can start without the items a debug new
   game owns (`[]` owns nothing); `"dialogues_heard": ["<dialogue id>"]` marks talks heard and
   `"responses": {"<ask id>": "<choice id>"}` records answers, so a run can start mid-story (`systems/story`), and `"locale": "en"` sets
   the locale before the scene loads (the default is the OS locale). `log` also prints the
   notebook: phase, section, the entry on the right page, its rows (`>` focused, `*` unread,
   `()` hidden), the scroll cues, tab marks, read ids, the HUD quill's alpha and the
-  watcher's queue. It also prints the current room id and `interior`, the camera bounds and
+  watcher's queue, then the notice showing (its alpha and text), the notices waiting and the current intent's key
+  (`notice=<alpha> '<text>' waiting=[...] intent=<key>`, `systems/notices`). It also prints the current room id and `interior`, the camera bounds and
   centre, the fade's alpha, `transitioning`, Ivo's facing and process mode, whether the region weather
   is visible, every loaded door (`link@x:open|sealed[+prompt] shake=<sprite x>`), and the region title's
   alpha, text and the count of announced regions (`title=<alpha> '<name>' announced=<n>`).

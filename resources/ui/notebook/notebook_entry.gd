@@ -18,6 +18,8 @@ enum Section { LORE, SONGS, ITEMS, GUARDIANS }
 @export var body_key: String = ""
 ## A guardian's portrait; null for none.
 @export var art: Texture2D
+## An item's icon, 16x16 art px; the item notice draws it (systems/notices). Null outside the Items section.
+@export var icon: Texture2D
 
 
 func is_present(data: PlayerData) -> bool:

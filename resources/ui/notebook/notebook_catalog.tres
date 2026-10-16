@@ -1,22 +1,16 @@
-[gd_resource type="Resource" script_class="NotebookCatalog" format=3]
+[gd_resource type="Resource" script_class="NotebookCatalog" format=3 uid="uid://bip23f7nnbudn"]
 
-[ext_resource type="Script" path="res://resources/ui/notebook/notebook_catalog.gd" id="1_catalog"]
-[ext_resource type="Script" path="res://resources/ui/notebook/notebook_entry.gd" id="2_entry"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_idle.png" id="3_frost"]
-[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_idle.png" id="4_bloom"]
-
-[sub_resource type="AtlasTexture" id="portrait_frost"]
-atlas = ExtResource("3_frost")
-region = Rect2(56, 18, 79, 60)
-
-[sub_resource type="AtlasTexture" id="portrait_bloom"]
-atlas = ExtResource("4_bloom")
-region = Rect2(36, 52, 58, 44)
+[ext_resource type="Script" uid="uid://cymn7jqhfwx0" path="res://resources/ui/notebook/notebook_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" uid="uid://c2bk7o41sywx" path="res://resources/ui/notebook/notebook_entry.gd" id="2_entry"]
+[ext_resource type="Texture2D" uid="uid://ds11rfnyvj31i" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_idle.png" id="3_frost"]
+[ext_resource type="Texture2D" uid="uid://bgqmsx8a0hg0x" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_idle.png" id="4_bloom"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_sword.png" id="5_icon_sword"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_memorina.png" id="6_icon_memorina"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_bread.png" id="7_icon_bread"]
 
 [sub_resource type="Resource" id="lore_mentor"]
 script = ExtResource("2_entry")
 id = &"lore_mentor"
-section = 0
 requirement = 7
 fact_id = &"mentor_gift"
 title_key = "NOTEBOOK_LORE_MENTOR_TITLE"
@@ -25,8 +19,6 @@ body_key = "NOTEBOOK_LORE_MENTOR"
 [sub_resource type="Resource" id="lore_roll"]
 script = ExtResource("2_entry")
 id = &"lore_roll"
-section = 0
-requirement = 0
 index = 2
 title_key = "SKILL_ROLL"
 body_key = "NOTEBOOK_LORE_ROLL"
@@ -34,9 +26,6 @@ body_key = "NOTEBOOK_LORE_ROLL"
 [sub_resource type="Resource" id="lore_double_jump"]
 script = ExtResource("2_entry")
 id = &"lore_double_jump"
-section = 0
-requirement = 0
-index = 0
 title_key = "SKILL_DOUBLE_JUMP"
 body_key = "NOTEBOOK_LORE_DOUBLE_JUMP"
 
@@ -45,7 +34,6 @@ script = ExtResource("2_entry")
 id = &"song_freeze"
 section = 1
 requirement = 1
-index = 0
 title_key = "SONG_TITLE_FREEZE"
 detail_key = "NOTEBOOK_SONG_FREEZE_DETAIL"
 body_key = "NOTEBOOK_SONG_FREEZE_BODY"
@@ -125,9 +113,9 @@ script = ExtResource("2_entry")
 id = &"item_sword"
 section = 2
 requirement = 2
-index = 0
 title_key = "ITEM_SWORD"
 body_key = "NOTEBOOK_ITEM_SWORD"
+icon = ExtResource("5_icon_sword")
 
 [sub_resource type="Resource" id="item_memorina"]
 script = ExtResource("2_entry")
@@ -137,16 +125,34 @@ requirement = 2
 index = 1
 title_key = "ITEM_MEMORINA"
 body_key = "NOTEBOOK_ITEM_MEMORINA"
+icon = ExtResource("6_icon_memorina")
+
+[sub_resource type="Resource" id="item_bread"]
+script = ExtResource("2_entry")
+id = &"item_bread"
+section = 2
+requirement = 2
+index = 2
+title_key = "ITEM_BREAD"
+body_key = "NOTEBOOK_ITEM_BREAD"
+icon = ExtResource("7_icon_bread")
+
+[sub_resource type="AtlasTexture" id="portrait_frost"]
+atlas = ExtResource("3_frost")
+region = Rect2(56, 18, 79, 60)
 
 [sub_resource type="Resource" id="guardian_frost"]
 script = ExtResource("2_entry")
 id = &"guardian_frost"
 section = 3
 requirement = 3
-index = 0
 title_key = "GUARDIAN_FROST"
 body_key = "NOTEBOOK_GUARDIAN_FROST_BODY"
 art = SubResource("portrait_frost")
+
+[sub_resource type="AtlasTexture" id="portrait_bloom"]
+atlas = ExtResource("4_bloom")
+region = Rect2(36, 52, 58, 44)
 
 [sub_resource type="Resource" id="guardian_bloom"]
 script = ExtResource("2_entry")
@@ -178,4 +184,4 @@ body_key = "NOTEBOOK_GUARDIAN_SUMMER_BODY"
 
 [resource]
 script = ExtResource("1_catalog")
-entries = Array[ExtResource("2_entry")]([SubResource("lore_mentor"), SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer")])
+entries = Array[ExtResource("2_entry")]([SubResource("lore_mentor"), SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_bread"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer")])

@@ -81,6 +81,7 @@ Plan and options: `architecture/save-slots-and-the-boot-swap`.
 
 ## Items lying in the world (STORY-02, built 2026-10-15)
 
+- The item-acquired notice and the intent line (`systems/notices`) are derived from the save and seeded silently on a world build, so a death neither repeats nor records them; an item regained after a death is told again.
 - An `ItemPickup` (the sword on the farmhouse table) shows only while `owned_items` lacks its item. Taking it is `SaveSystem.set_item_owned(item, true)`, a live gain: a death before a bench forgets it, and the rebuilt world shows the item where it was left (`systems/pickups`).
 
 ## Dialogue facts (STORY-08, built 2026-10-15)

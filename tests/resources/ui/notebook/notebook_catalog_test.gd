@@ -79,6 +79,19 @@ func test_every_guardian_has_a_portrait() -> void:
 		if entry.index not in unbuilt:
 			assert_object(entry.art).override_failure_message("%s has no portrait" % entry.id).is_not_null()
 
+## The item notice draws each item's icon (systems/notices).
+func test_every_item_has_an_icon() -> void:
+	for entry: NotebookEntry in _catalog().in_section(NotebookEntry.Section.ITEMS):
+		assert_object(entry.icon).override_failure_message("%s has no icon" % entry.id).is_not_null()
+	assert_object(_catalog().item_entry(Enums.PlayerItem.BREAD)).is_not_null()
+	assert_str(String(_catalog().item_entry(Enums.PlayerItem.BREAD).id)).is_equal("item_bread")
+
+func test_an_item_without_an_icon_is_reported() -> void:
+	var catalog := NotebookCatalog.new()
+	catalog.entries = _catalog().entries.duplicate()
+	catalog.entries.append(_entry(&"item_iconless", NotebookEntry.Section.ITEMS, SaveFact.Kind.ITEM, 0))
+	assert_str(", ".join(catalog.validate())).contains("item_iconless has no icon")
+
 func test_every_catalog_key_has_both_languages() -> void:
 	var rows := _csv_keys()
 	for entry: NotebookEntry in _catalog().entries:

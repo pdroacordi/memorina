@@ -83,6 +83,10 @@ func set_notebook_watcher(watcher: NotebookWatcher) -> void:
 func set_scene_skip(check: Callable) -> void:
 	_pause_menu.can_skip = check
 
+## The current intent's text key the pause menu shows. Game sets it to NoticeWatcher.intent_key.
+func set_intent(source: Callable) -> void:
+	_pause_menu.intent = source
+
 ## Any hit Ivo takes closes the map.
 func close_map() -> void:
 	if _open == ScreenRouter.Kind.MAP:

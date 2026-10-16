@@ -32,11 +32,9 @@ func _process(_delta: float) -> void:
 	if not ids.is_empty():
 		announced.emit(ids)
 
-## A fight is on where Ivo stands, a lesson is in its lead-in or playing, or a talk or a cutscene runs; the queue waits
-## for them to end. A lesson starts unpaused (the lead-in) and freezes later, so the pause alone would let the quill in.
+## The queue waits while a lesson, a talk, a cutscene or a fight is on (`NoticeHold`, shared with NoticeWatcher).
 func is_holding() -> bool:
-	return subject != null and (subject.is_in_lesson() or subject.is_in_story()
-			or Guardian.fight_at(get_tree(), subject.global_position))
+	return NoticeHold.applies(subject)
 
 func waiting() -> Array[StringName]:
 	return _waiting

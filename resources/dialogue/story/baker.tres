@@ -1,13 +1,13 @@
-[gd_resource type="Resource" script_class="DialogueSet" format=3]
+[gd_resource type="Resource" script_class="DialogueSet" format=3 uid="uid://krcl7rdum2r1"]
 
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
-[ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
-[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
-[ext_resource type="Resource" path="res://resources/dialogue/speakers/baker.tres" id="s_baker"]
 [ext_resource type="Resource" path="res://resources/save_facts/village_at_six_tenths.tres" id="f_at06"]
+[ext_resource type="Script" uid="uid://da7s57is2erh6" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
+[ext_resource type="Script" uid="uid://ehxc5gppjkxp" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" uid="uid://b7dtsefilgm6i" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Script" uid="uid://0kha27ytvt2r" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" uid="uid://d2eoql5qejigt" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" uid="uid://bhja2tfpavop7" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/baker.tres" id="s_baker"]
 
 [sub_resource type="Resource" id="line_1"]
 script = ExtResource("f_line")
@@ -21,10 +21,16 @@ speaker = ExtResource("s_baker")
 text_key = "DLG_BAKER_ERRAND_02"
 cue = &"baker_loaves"
 
+[sub_resource type="Resource" id="grant_bread"]
+script = ExtResource("f_fact")
+kind = 2
+index = 2
+
 [sub_resource type="Resource" id="line_3"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_baker")
 text_key = "DLG_BAKER_ERRAND_03"
+grants = SubResource("grant_bread")
 
 [sub_resource type="Resource" id="dialogue_4"]
 script = ExtResource("f_dialogue")

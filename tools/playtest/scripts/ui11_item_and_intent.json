@@ -1,0 +1,172 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 15.0,
+ "clock": "real",
+ "locale": "en",
+ "owned_items": [],
+ "dialogues_heard": [
+  "daughter_errand"
+ ],
+ "player_position": [
+  6600,
+  12286
+ ],
+ "steps": [
+  {
+   "t": 1.2,
+   "screenshot": "00_bakery"
+  },
+  {
+   "t": 1.25,
+   "log": "start"
+  },
+  {
+   "t": 1.5,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 1.58,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 2.2,
+   "screenshot": "01_pause_round_loaf"
+  },
+  {
+   "t": 2.25,
+   "log": "pause_before"
+  },
+  {
+   "t": 2.5,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 2.58,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 3.28,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 4.1,
+   "screenshot": "02_round_one"
+  },
+  {
+   "t": 4.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 4.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 5.7,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 5.78,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 7.6,
+   "screenshot": "03_just_the_round_one"
+  },
+  {
+   "t": 7.65,
+   "log": "granted_in_talk"
+  },
+  {
+   "t": 7.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 7.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "log": "talk_ended"
+  },
+  {
+   "t": 8.25,
+   "screenshot": "04_bread_notice_in"
+  },
+  {
+   "t": 9.3,
+   "screenshot": "05_bread_notice_hold"
+  },
+  {
+   "t": 9.35,
+   "log": "bread_notice"
+  },
+  {
+   "t": 10.6,
+   "screenshot": "06_bread_notice_leaving"
+  },
+  {
+   "t": 10.65,
+   "log": "leaving"
+  },
+  {
+   "t": 11.6,
+   "screenshot": "07_intent_notice"
+  },
+  {
+   "t": 11.65,
+   "log": "intent_notice"
+  },
+  {
+   "t": 12.6,
+   "screenshot": "08_intent_notice_hold"
+  },
+  {
+   "t": 13.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 13.08,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 13.7,
+   "screenshot": "09_pause_home"
+  },
+  {
+   "t": 13.75,
+   "log": "pause_after"
+  },
+  {
+   "t": 14.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 14.08,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 14.5,
+   "log": "end"
+  }
+ ]
+}
