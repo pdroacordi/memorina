@@ -86,3 +86,4 @@ O "mostre, não conte" (`05`, regras 1 a 6) continua valendo, mas mostrar não �
 - **Inventário:** "Seção no caderno + aviso (Recommended)": um aviso de item obtido com ícone ao pegar, e o item listado numa seção do caderno de campo; sem tela nova.
 - **O banco:** "O banco de descanso": o banco onde Ivo senta para salvar o jogo é redesenhado no estilo do mundo (STORY-17).
 - **Segunda opinião:** o Codex foi consultado sobre o motor (2026-10-16); o plano do arquiteto foi mantido.
+- **Fonte (UI-12):** depois de comparar cinco fontes pixel livres na caixa real e uma versão da fonte de hoje com minúsculas redesenhadas, "1: deixar como está" (usuário, 2026-10-16). A fonte de hoje fica.
