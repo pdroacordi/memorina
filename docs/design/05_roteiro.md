@@ -21,6 +21,8 @@
 
 Draft 2, 2026-10-15. Reworked after "The story feels rushed. The dialogues feel unnatural… show, don't tell."
 
+- **Rascunho 3 (2026-10-16):** "Aprovar (Recommended)", depois de "Os diálogos poderiam ser melhorados no geral" (2026-10-15) e "Fala, escolhas viram gestos (Recommended)" (2026-10-16): Ivo fala, as escolhas continuam gestos, cada batida tem uma cena que a marca (`06_cinematica_e_experiencia.md`). As dúvidas do fim do rascunho: "Como proposto (Recommended)": "vô" é só como as crianças chamam o velho, e "Leva um casaco. Lá o inverno não acaba." fica. Os atos 1 a 4 abaixo são o rascunho 3; as vozes da vila e as visitas a 0.6 seguem do rascunho 2.
+
 ## The rules this draft follows (all from the design)
 
 1. **The symptoms are seen before anything names them** (01 §9.1). The player spends the first minutes of play in a village that is already slipping, before the daughter asks for the song.
@@ -34,124 +36,183 @@ English, then Portuguese. ★ = a remembered choice (HOLD / LET). ↺ = changes 
 
 ---
 
-## Act 1: the ordinary morning (playable, no rush)
+## Ato 1: a manhã
 
-### 1a. Ivo's house: waking
-No talk. Ivo stands by the bed. The daughter is asleep. The shawl lies on the chair, the guitar against the wall. The door is open.
+### 1. Abertura [CENA, ~30 s]
+Preto. Passarinhos ao longe; uma carroça passa lá fora.
+Abre na janela: a luz da manhã entra torta pela casa. A câmera passa devagar pelo xale na cadeira (segura um instante), pelo violão na parede, pelos desenhos, e para na caminha: **a filha dormindo**, encolhida, o braço pra fora da colcha.
+Corta para Ivo, sentado na beira da própria cama. Esfrega o rosto. Olha o xale. Levanta.
+Volta o controle.
 
-If the player walks to the sleeping daughter (Up):
-**Daughter** (half asleep): Bread. The round one.
-*Filha (meio dormindo): Pão. O redondo.*
+### 2. A filha, meio dormindo (ao chegar perto da caminha)
+**Filha** (de olhos fechados): Pai… hoje é dia de pão redondo.
+*Daughter (eyes closed): Papa… it's round-loaf day.*
+**Ivo:** É? Quem disse?
+*Ivo: Is it? Says who?*
+**Filha:** A mamãe sempre… (para; vira para o outro lado) …o redondo.
+*Daughter: Mama always… (she stops; turns over) …the round one.*
+(Ivo olha o xale, um instante.)
+**Ivo:** Já volto.
+*Ivo: Back soon.*
+→ Intenção: "O pão redondo." / "The round loaf."
 
-That is the errand. Nothing else points the way; the bakery is in the lane.
+### 3. O caminho (jogo)
+A vila como está, a 0.8. As falas dos aldeões (STORY-09) seguem iguais.
 
-### 1b. The walk (the village at 0.8)
-The player passes the square, the house of notes and the villagers on the way. Each villager has one optional line (Act 4 lists them). Nobody is told to talk.
+### 4. A padaria
+**Padeira:** Bom dia, Ivo. O redondo?
+*Baker: Morning, Ivo. Round one?*
+**Ivo:** O redondo.
+*Ivo: The round one.*
+[CENA curta] Ela pega o redondo e, sem pensar, o comprido também. Estende os dois. Para.
+**Padeira:** E o comprido pra… (olha o pão comprido na mão)
+*Baker: And the long one for… (she looks at the long loaf in her hand)*
+**Ivo:** Só o redondo.
+*Ivo: Just the round one.*
+(Ela devolve o comprido à prateleira, devagar.)
+**Padeira** (baixo): Só o redondo.
+*Baker (quietly): Just the round one.*
+→ Aviso: **Pão redondo**. Intenção: "Para casa." / "Home."
 
-### 1c. The bakery
-**Baker:** Morning, Ivo. Round one?
-*Padeira: Bom dia, Ivo. O redondo?*
+### 5. Em casa: a música [CENA → violão → CENA]
+Ivo entra. A filha está sentada na beira da caminha, balançando as pernas. Vê o pão e sorri.
+**Filha:** Achou o redondo!
+*Daughter: You found the round one!*
+**Ivo:** O último.
+*Ivo: The last one.*
+Ela pula da cama, vai até a parede, tira o violão do prego e traz até ele, segurando com os dois braços.
+**Filha:** Toca a da manhã? A que a mamãe cantava.
+*Daughter: Play the morning one? The one Mama used to sing.*
+(Ivo pega o violão. Olha para ele um instante.)
+**Ivo:** Faz tempo…
+*Ivo: It's been a while…*
+**Filha:** Eu lembro o começo. Você lembra o resto.
+*Daughter: I remember the start. You remember the rest.*
 
-**Baker:** And the long one for— (she stops, a loaf in each hand. She puts one back.)
-*Padeira: E o comprido pra— (para, um pão em cada mão. Devolve um.)*
+> **[Violão]** Ivo toca. Na lacuna, **a música corta**. A câmera fecha no rosto dele. Ele aperta a próxima nota: uma corda morta. Outra vez: nada. O sorriso dela se desfaz.
 
-**Baker:** Just the round one.
-*Padeira: Só o redondo.*
+★ **Escolha A** (`morning_song`), sem palavras:
+1. **[Tentar de novo]** (HOLD). Ele toca de novo, do começo. Desta vez a lacuna vem uma nota antes.
+   **Ivo:** Espera. Eu sei essa. Eu sei essa…
+   *Ivo: Wait. I know this one. I know it…*
+2. **[Baixar o violão]** (LET). Ele baixa o violão. Ela cantarola as quatro primeiras notas e para no mesmo lugar.
+   **Filha:** Só sei até aí.
+   *Daughter: That's all I know.*
 
-(The wife bought the long loaf. The baker reached for it out of habit. Nobody explains.)
+**Filha** (baixo): Tá tudo bem, pai.
+*Daughter (quietly): It's all right, Papa.*
+**Ivo:** Não tá.
+*Ivo: It isn't.*
+[CENA] Ela baixa os olhos, dá as costas, anda até a caminha e deita virada para a parede. A câmera fica nela um instante.
+Lá fora, abafada, uma voz velha começa uma história:
+**Ancião** (fora de cena): …e o guardião subia a escada toda noite…
+*Elder (offscreen): …and the keeper climbed the stairs every night…*
+(Ivo olha para a porta.)
+→ Intenção: "A história do ancião." / "The elder's story."
 
-### 1d. Home: the song
-Ivo comes back with the loaf. The daughter is up and holds the guitar out to him.
+### 6. A casa do ancião
+As paredes são todas farol. O ancião conta a história às duas crianças no banco.
+**Ancião:** …e acendia a lâmpada, e os barcos voltavam pra casa, até que um inverno ele—
+*Elder: …and he lit the lamp, and the ships came home, until one winter he—*
+**Ancião:** Ele…
+*Elder: He…*
+**Menino:** Até que ele o quê, vô?
+*Boy: Until he what?*
+(Ele olha o quadro do farol.)
+**Ancião:** Tinha um fim. Tinha um fim bom.
+*Elder: It had an end. It had a good end.*
 
-**Daughter:** The morning one.
-*Filha: A da manhã.*
+★ **Escolha B** (`elder_story`):
+1. **[Esperar por ele]** (HOLD). **Ancião:** …até que um inverno— até que um— (desiste; aponta o quadro) Leste. Ainda está lá.
+   *Elder: …until one winter— until one— (he gives up; points at the painting) East. It's still there.*
+2. **[Olhar o quadro]** (LET). Ivo vai até o quadro.
+   **Ivo:** Esse farol ainda existe?
+   *Ivo: Is that lighthouse still there?*
+   **Ancião** (atrás dele): Leste. Depois dos campos. Faz anos que ninguém vai.
+   *Elder (behind him): East. Past the fields. Nobody's gone in years.*
 
-> **[Guitar beat]** Ivo plays. Partway through, the next note isn't there. No input finishes it. The strings ring out and stop.
-
-Silence. She looks at the guitar, not at him.
-
-★ **Choice A** (`morning_song`), no words:
-1. **[Try again]** (HOLD). He plays again, from the top. This time the gap comes **one note earlier**. He stops on his own.
-2. **[Lower the guitar]** (LET). He sets it down. After a moment she hums the opening herself, four notes, and stops in the same place.
-
-**Daughter:** …
-*Filha: …*
-
-She goes back to her bed and turns to the wall. (Up on her: "…")
-
-### 1e. The elder's house
-The walls are all lighthouse: painted, mapped, a model on the shelf (already dressed, WORLD-11). The elder is in the middle of telling it to the two children.
-
-**Elder:** …and the keeper climbed the stairs every night, and lit the lamp, and the ships came home, until one winter he—
-*Ancião: …e o guardião subia a escada toda noite, acendia a lâmpada, e os barcos voltavam, até que um inverno ele—*
-
-**Elder:** He…
-*Ancião: Ele…*
-
-(The children wait. He looks at the painting.)
-
-**Elder:** It had an end. It had a good end.
-*Ancião: Tinha um fim. Tinha um fim bom.*
-
-★ **Choice B** (`elder_story`):
-1. **[Wait for him]** (HOLD). The elder tries twice, gets less each time: "…until one winter— until one—". He gives up and points at the painting: "East. It's still there."
-   *"…até que um inverno— até que um—" Desiste e aponta o quadro: "Leste. Ainda está lá."*
-2. **[Look at the painting]** (LET). Ivo walks to it. The elder, behind him: "East. Past the fields. Nobody's been in years."
-   *Ancião, atrás dele: "Leste. Depois dos campos. Faz anos que ninguém vai."*
-
-That is the only direction anyone gives. The east road is open; the elder is a pointer, not a gate.
+**Ivo:** Vou até lá.
+*Ivo: I'm going.*
+**Ancião:** Leva um casaco. Lá o inverno não acaba.
+*Elder: Take a coat. The winter there doesn't end.*
+**Menina:** Traz o fim da história!
+*Girl: Bring back the end of the story!*
+→ O portão leste abre (o som do ferrolho, lá fora). Intenção: "O farol, a leste." / "The lighthouse, east."
 
 ---
 
-## Act 2: the Threshold (no talk)
-The fields stopped mid-sway. The farmhouse: a meal stopped mid-bite, a chair pushed back, and the sword on the table, where someone set it down to eat (STORY-02, Up to take). The notebook's existing line for the sword is enough.
+## Ato 2: o Limiar
+Os campos parados no meio do balanço. O sítio: a refeição parada, a cadeira afastada, a espada na mesa.
+Ao pegar a espada:
+**Ivo:** …Desculpa. Vou precisar disso.
+*Ivo: …Sorry. I'll need this.*
+→ Aviso: **Espada**.
 
 ---
 
-## Act 3: the lighthouse
+## Ato 3: o farol
 
-Ivo climbs the stair. On the mentor's floor stands a tall figure, mostly grey, one hand still raised as if about to play. The talk starts when Ivo comes near.
+Ivo sobe a escada. No andar do meio, uma figura alta, quase toda cinza, a mão ainda erguida com uma flauta.
+[CENA]
+**Mentor:** …Você veio pelo caminho ~longo~.
+*Mentor: …You came the ~long~ way.*
+**Ivo:** Disseram que você guarda as coisas.
+*Ivo: They say you keep things.*
+(Ele leva a flauta à máscara e toca uma frase curta. A cor abre em volta dos dois por um fôlego e fecha.)
+**Mentor:** Guardo. Guardava. ~Guardava~.
+*Mentor: I keep. I kept. ~I kept~.*
+**Mentor:** Muitas mãos. Nenhuma ~guardou~. (estende a flauta)
+*Mentor: Many hands. None of them ~kept~ it. (holds the flute out)*
 
-**Mentor:** …You came the ~long~ way.
-*Mentor: …Você veio pelo caminho ~longo~.*
+> **[Presente]** Ivo pega a Memorina. Aviso: **Memorina**.
+> **[Lampejo]** Quando a mão dele fecha na flauta, as primeiras notas da música da manhã soam numa voz de mulher, em cor, por um segundo.
 
-(He lifts the Memorina and plays one short phrase. Colour opens around the two of them for a breath, then closes.)
+**Ivo** (baixo): Essa é… essa é a música dela.
+*Ivo (quietly): That's… that's her song.*
 
-**Mentor:** Many hands. None of them ~kept~ it.
-*Mentor: Muitas mãos. Nenhuma ~guardou~.*
+★ **Escolha C** (`mentor_flicker`):
+1. **[Tocar de novo]** (HOLD). Ele sopra: uma nota chata, cinza.
+2. **[Baixar a flauta]** (LET). Ele baixa a flauta e olha o mentor.
 
-> **[Grant]** He holds it out; Ivo takes the Memorina.
-> **[Flicker]** As Ivo's hand closes on it, **the first notes of the morning song** sound in a woman's voice, in colour, for a second. Then they're gone. (The design's hint that it can restore the memory of the one who touches it, shown and never said; 01 §4.)
-
-★ **Choice C** (`mentor_flicker`):
-1. **[Play it again]** (HOLD). Ivo lifts it and blows. Nothing: one flat note, grey.
-2. **[Lower it]** (LET). Ivo lowers it and looks at the mentor.
-
-**Mentor:** Yours ~too~. Maybe. If you—
-*Mentor: Seu ~também~. Talvez. Se você—*
-
-> **[Stasis]** He doesn't finish. His raised hand stops. The grey closes over him. Up on him again: "…"
-
-**Notebook, short entry** (appears after the gift; the full one comes at his restoration):
-"The keeper of the lighthouse. He gave me the Memorina and didn't finish his sentence."
-*"O guardião do farol. Me deu a Memorina e não terminou a frase."*
+**Mentor:** Sua ~também~. Talvez. Se você—
+*Mentor: Yours ~too~. Maybe. If you—*
+[CENA] Ele não termina. A mão erguida para. O cinza fecha sobre ele.
+**Ivo:** Se eu o quê?
+*Ivo: If I what?*
+(Silêncio. A câmera segura no mentor parado.)
+→ Intenção: "De volta à vila." / "Back to the village."
 
 ---
 
-## Act 4: back in the village
+## Ato 4: a volta
 
-**Elder** (in his house, the first time Ivo enters with the instrument):
-He sees the Memorina. He takes the lighthouse model from the shelf and turns it over. On its base there is a drawing of the same flute.
-**Elder:** …My father carved that. I never knew what it was.
-*Ancião: …Meu pai entalhou isso. Nunca soube o que era.*
-(The fences already stand open: they read "owns the Memorina". Amended 2026-10-15, "In his house, maybe heard late (Recommended)".)
+### O ancião (na casa dele, na primeira vez com a Memorina)
+Ele vê a flauta. Pega o modelo do farol da estante e vira. [retrato: a base com a flauta entalhada]
+**Ancião:** …Meu pai entalhou isso. Nunca soube o que era.
+*Elder: …My father carved this. I never knew what it was.*
+**Ivo:** Ele me deu. O guardião.
+*Ivo: He gave it to me. The keeper.*
+**Ancião:** Então ele existe. (pausa) Então o fim da história ainda não aconteceu.
+*Elder: Then he's real. (beat) Then the end of the story hasn't happened yet.*
 
-**Daughter** (at home, after the Memorina):
-↺ (A = HOLD) She's at the guitar, trying the song herself. She stops one note early, where he did. She puts it back against the wall.
-↺ (A = LET) She's humming her four notes. **Five** this time. She notices, and stops.
-Then she sees the instrument.
-**Daughter:** That's a strange one.
-*Filha: Que estranha.*
+### A filha (em casa, depois da Memorina)
+↺ (A = HOLD) Ela está no violão, tentando sozinha. Para uma nota antes, onde ele parou.
+**Ivo:** Quase.
+*Ivo: Almost.*
+**Filha:** Você também parou aí.
+*Daughter: You stopped there too.*
+↺ (A = LET) Ela cantarola as notas dela. Cinco, desta vez. Percebe, e para.
+**Ivo:** Tinha mais uma.
+*Ivo: There was one more.*
+**Filha:** Eu sei! Lembrei sozinha.
+*Daughter: I know! I remembered it myself.*
+Então ela vê a flauta.
+**Filha:** Que estranha. Toca alguma coisa?
+*Daughter: That's a strange one. Does it play anything?*
+**Ivo:** Ainda não.
+*Ivo: Not yet.*
+
+## Act 4 (continued): later visits
 
 ### Later visits (memory steps: 0.8 at the start, 0.6 from the 2nd guardian restored)
 
@@ -185,12 +246,11 @@ Forgetting is shown through behaviour, and nobody comments on it.
 
 ---
 
-## What this needs beyond dialogue (so you can judge the scope)
-- **The errand:** the bread is a story item (a talk grants it; the daughter's talk reads it). No pickup scene is needed.
-- **The flicker** (Act 3): a short colour-and-voice moment, a scripted beat like the guitar. It needs a few seconds of the morning song hummed, which comes from the song pipeline.
-- **The elder's model with the flute on its base:** one new prop (art).
-- **"Gap one note earlier" on [Try again]:** the guitar beat takes the gap position as data.
-- **Scenery that changes at 0.6** (the repeated drawings, the empty bench, two mugs): props under `RegionPresence`, the same mechanism the villagers who leave already use.
+## O que esta versão pede além do texto
+- **Arte:** Ivo sentado na cama e levantando (cena 1); a filha sentada na beira da cama balançando as pernas, pulando da cama e pegando o violão na parede (cena 5); a padeira devolvendo o pão (cena 4, já temos os dois estados).
+- **Som:** ambiente da manhã (passarinhos, uma carroça); o ferrolho do portão leste.
+- **A voz do ancião fora de cena:** uma fala na caixa de diálogo marcada como vinda de fora (sem retrato, nome "Ancião"), ou um balão no canto da tela. Decidir no motor.
+- **Ivo andando:** ele só tem o clipe de corrida, então uma caminhada de cena precisa de um clipe de andar (STORY-17).
 
 ## Open points
 1. Names stay unspoken: no one in these scenes needs one.
