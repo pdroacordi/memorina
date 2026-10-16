@@ -42,7 +42,7 @@ STORY-08. Plan, options and the reasons: `architecture/dialogue-is-data-and-choi
 
 ## Data (`resources/dialogue/`, one `class_name` per file)
 
-- `Speaker`: `id`, `name_key` (`SPEAKER_<ID>`; empty shows no plate), `portrait` (null leaves the slot empty). `speakers/` holds the elder, `elder_model`, the daughter, the mentor, `mentor_stasis`, the baker, the taverner, the water carrier, the seller and the boy; plate names `SPEAKER_<ROLE>` (the villagers have no portrait).
+- `Speaker`: `id`, `name_key` (`SPEAKER_<ID>`; empty shows no plate), `portrait` (null leaves the slot empty). `speakers/` holds the elder, `elder_model`, the daughter, the mentor, `mentor_stasis`, the baker, the taverner, the water carrier, the seller, the boy, the girl, Ivo and `elder_offscreen`; plate names `SPEAKER_<ROLE>`. Every speaker in `speakers/` has a portrait except `elder_offscreen`, a voice from outside (`dialogue_catalog_test`).
 - `Dialogue`: `id` (unique, the heard key), `once` (closed once heard), `when` / `unless`, `lines`.
 - `DialogueLine`: `speaker`, `text_key` (empty for a cue-only line), `when` / `unless`, `variants` (the first `LineVariant` that holds replaces the text), `ask_id` + `choices` (2..3), `cue`, `grants` (an ITEM `SaveFact`).
 - `DialogueChoice`: `id` (unique across the catalog), `text_key`, `tone` (`Tone { NONE, HOLD_ON, LET_GO }`, append only), `reply` (lines with no choices; the talk then rejoins).
@@ -132,6 +132,8 @@ No story text is approved yet (STORY-03 drafts the opening), so the only talk is
 - Input: no new InputEvent reader; GUI focus and Buttons like the pause menu.
 
 2026-10-15, after the first playtest showed the bottom box over Ivo's feet: box placement "Opposite the speakers (Recommended)": the box opens in the screen half the speakers aren't in. In most rooms (floor low on screen) that's the top; it goes to the bottom only when they stand high. Same box and portraits.
+
+2026-10-16, UI-13 ("tem personagens que a caixa de diálogo está estranha pela falta de retrato", 2026-10-15): "Sim: retratos para os aldeões que falam (UI-13), quadro primeiro para eu aprovar." The first board's faults were redrawn ("Refazer as duas falhas (Recommended)": the baker and the seller shared a face, the girl's braid read as the daughter), then "Aprovar (Recommended)". The baker, taverner, water carrier, seller, boy and girl have 48-art-px busts cut from `tools/art/sources/story/villager_portraits*_codex.png` (contracts `tools/art/prompts/portrait_<id>.md`).
 
 ## Story beats (STORY-03, `systems/story`)
 

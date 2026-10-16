@@ -80,7 +80,8 @@ func test_each_villager_speaks_by_step() -> void:
 		var ids: Array[String] = [_id(talk, early), _id(talk, heard), _id(talk, late)]
 		assert_array(ids).override_failure_message(who).is_equal(expected[who])
 
-func test_every_village_set_is_in_the_catalog_with_a_plate_and_no_portrait() -> void:
+## UI-13: every villager who speaks has a portrait.
+func test_every_village_set_is_in_the_catalog_with_a_plate_and_a_portrait() -> void:
 	var catalog := load("res://resources/dialogue/dialogue_catalog.tres") as DialogueCatalog
 	for who: String in ["taverner", "water_carrier", "seller", "boy"]:
 		var talk := load(VILLAGE + who + ".tres") as DialogueSet
@@ -88,7 +89,7 @@ func test_every_village_set_is_in_the_catalog_with_a_plate_and_no_portrait() -> 
 		for dialogue: Dialogue in talk.dialogues:
 			for line: DialogueLine in dialogue.lines:
 				assert_str(line.speaker.name_key).is_equal("SPEAKER_" + who.to_upper())
-				assert_object(line.speaker.portrait).is_null()
+				assert_object(line.speaker.portrait).override_failure_message(who).is_not_null()
 
 ## STORY-14 ("Eu preciso chegar por trás da aguadeira pra conseguir disparar o dialogo com ela. E bem longe", user,
 ## 2026-10-15): every talk's zone is centred on its speaker, reaching a cell and a half each way unless a door trims it.

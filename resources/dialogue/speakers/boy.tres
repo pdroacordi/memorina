@@ -1,8 +1,10 @@
-[gd_resource type="Resource" script_class="Speaker" format=3]
+[gd_resource type="Resource" script_class="Speaker" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://resources/dialogue/speaker.gd" id="1_speaker"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/portraits/boy.png" id="2_portrait"]
 
 [resource]
 script = ExtResource("1_speaker")
 id = &"boy"
 name_key = "SPEAKER_BOY"
+portrait = ExtResource("2_portrait")

@@ -482,6 +482,23 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     column top to bottom with Pillow: post, ripple row, 12 px foot, reflection, plank reflection. That separated the foot
     from the reflection where eyeballing could not.
 
+- **Learned 2026-10-16 (UI-13 portraits)**:
+  - **A forced UI state through the real runner:** a `-s` SceneTree driver whose `_initialize` does
+    `change_scene_to_file.call_deferred("res://tools/playtest/playtest_runner.tscn")` runs any timeline unchanged (the
+    runner reads `--script`/`--out` from the user args as usual). Its `_process` can then poke the live game: every frame
+    while `root.find_child("DialogueBox", true, false).visible`, call `place(1)` to hold the box at the BOTTOM. That
+    is how the bottom placement was seen. No villager reaches it in play, because every one stands on a floor the
+    camera clamps 84 px below the screen's middle. Label such frames "forced".
+  - **Prove a portrait/icon render is 1:1 from pixels, not by eye.** For a `TextureRect` with `STRETCH_KEEP_ASPECT_CENTERED`,
+    compute the expected offset and scale from the PNG size, then compare every opaque source pixel with its 2x2 window block
+    (mean diff 0.00, 0 off = nothing cut, squashed or drawn over). Grid phase: count colour edges in the slot by
+    `(x - slot_left) % 4`; all at 0 means on the 2x art grid (`gotchas/a-centred-texture-rect-can-land-half-an-art-pixel-off-the-grid`).
+    "Did the text move" = diff the text area against an older playtest's screenshot of the same line (same timeline, same
+    camera).
+  - Sibling agents can edit and re-import ASSETS mid-session, too (four portraits were padded between this session's runs).
+    `ls -l --time-style=+%H:%M:%S` the asset folder and `.godot/imported/<name>*.ctex` before writing, and compare a
+    PNG's md5 with its `.godot/imported/*.md5` `source_md5` to know which version a run drew.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

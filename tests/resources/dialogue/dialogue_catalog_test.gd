@@ -5,6 +5,7 @@ class_name DialogueCatalogTest extends GdUnitTestSuite
 const F := preload("res://tests/resources/dialogue/dialogue_fixture.gd")
 const SHIPPED := "res://resources/dialogue/dialogue_catalog.tres"
 const CSV := "res://i18n/translations.csv"
+const SPEAKERS := "res://resources/dialogue/speakers/"
 
 
 func _one(lines: Array[DialogueLine], id: StringName = &"talk") -> DialogueCatalog:
@@ -42,6 +43,15 @@ func test_every_shipped_key_has_a_row() -> void:
 	for key: String in keys:
 		if not key.is_empty():
 			assert_bool(rows.has(key)).override_failure_message("%s has no row" % key).is_true()
+
+## UI-13: everyone who speaks on screen has a portrait; only the voice from offscreen has none.
+func test_every_shipped_speaker_has_a_portrait_but_the_offscreen_voice() -> void:
+	var files := Array(ResourceLoader.list_directory(SPEAKERS)).filter(func(f: String) -> bool: return f.ends_with(".tres"))
+	assert_array(files).is_not_empty()
+	for file: String in files:
+		var speaker := load(SPEAKERS + file) as Speaker
+		var offscreen := speaker.id == &"elder_offscreen"
+		assert_bool(speaker.portrait == null).override_failure_message(file).is_equal(offscreen)
 
 func test_a_sound_dialogue_has_no_problems() -> void:
 	assert_str(_problems([F.line("A"), F.keep_question(), F.cue_line(&"guitar")])).is_empty()
