@@ -80,9 +80,9 @@ O "mostre, não conte" (`05`, regras 1 a 6) continua valendo, mas mostrar não �
 3. O motor de cinemáticas (STORY-15), planejado antes pelo arquiteto.
 4. A abertura refeita (STORY-16), com o rascunho 3, os retratos (UI-13) e a fonte (UI-12); o retorno de ação e a intenção (UI-11); a arte (STORY-17).
 
-## 9. Em aberto (perguntas ao usuário, 2026-10-15)
+## 9. Respostas (usuário, 2026-10-16)
 
-- **Qual banco** (ponto 2): o banco das crianças na casa do ancião, ou o banco de descanso onde Ivo salva o jogo?
-- **Inventário** (ponto 7): só uma seção no caderno, ou uma tela de inventário de verdade?
-- **Ivo volta a falar,** ou fica mudo, só com gestos? (Recomendado: as escolhas seguem sendo gestos, mas Ivo tem voz nas conversas.)
-- **Segunda opinião:** chamar o Codex para um brainstorm independente sobre o motor de cinemáticas?
+- **Ivo fala:** "Fala, escolhas viram gestos (Recommended)": Ivo tem falas de verdade nas conversas, curtas e com subtexto; as escolhas lembradas continuam sendo gestos.
+- **Inventário:** "Seção no caderno + aviso (Recommended)": um aviso de item obtido com ícone ao pegar, e o item listado numa seção do caderno de campo; sem tela nova.
+- **O banco:** "O banco de descanso": o banco onde Ivo senta para salvar o jogo é redesenhado no estilo do mundo (STORY-17).
+- **Segunda opinião:** o Codex foi consultado sobre o motor (2026-10-16); o plano do arquiteto foi mantido.
