@@ -20,6 +20,7 @@ signal room_changed(room: Room)
 @onready var _memory_field : MemoryField = %MemoryField
 @onready var _screens : Screens = $ScreenLayer/Screens
 @onready var _notebook_watcher : NotebookWatcher = $World/NotebookWatcher
+@onready var _cutscenes : CutsceneDirector = $World/CutsceneDirector
 @onready var _edges : WorldEdges = %WorldEdges
 var _current_room    : Room
 var _is_transitioning: bool      = false
@@ -45,6 +46,7 @@ func _ready() -> void:
 	_player.door_entered.connect(_on_player_entered_door)
 	_screens.set_map_subject(_player)
 	_screens.set_notebook_watcher(_notebook_watcher)
+	_screens.set_scene_skip(_cutscenes.can_skip)
 	# After DebugTrials._ready (a child readies before its parent), so the trials it mounted are walled too.
 	var rooms: Array[Room] = []
 	rooms.assign(get_tree().get_nodes_in_group(Room.GROUP))

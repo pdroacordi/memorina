@@ -1,6 +1,6 @@
 class_name NotebookWatcher
 extends Node
-## Announces notebook entries that became present; pausable, and silent during a guardian fight, a lesson or a talk (design 02 §4, "pós-combate").
+## Announces notebook entries that became present; pausable, and silent during a guardian fight, a lesson, a talk or a cutscene (design 02 §4, "pós-combate").
 
 ## New unread entry ids, oldest first.
 signal announced(ids: Array[StringName])
@@ -32,10 +32,10 @@ func _process(_delta: float) -> void:
 	if not ids.is_empty():
 		announced.emit(ids)
 
-## A fight is on where Ivo stands, a lesson is in its lead-in or playing, or a talk runs; the queue waits for them to end.
-## A lesson starts unpaused (the lead-in) and freezes later, so the pause alone would let the quill in.
+## A fight is on where Ivo stands, a lesson is in its lead-in or playing, or a talk or a cutscene runs; the queue waits
+## for them to end. A lesson starts unpaused (the lead-in) and freezes later, so the pause alone would let the quill in.
 func is_holding() -> bool:
-	return subject != null and (subject.is_in_lesson() or subject.is_talking()
+	return subject != null and (subject.is_in_lesson() or subject.is_in_story()
 			or Guardian.fight_at(get_tree(), subject.global_position))
 
 func waiting() -> Array[StringName]:

@@ -13,6 +13,8 @@ var _shown: CanvasItem
 var _stand_in: CanvasItem
 var _fade: Tween
 var _fade_from: CanvasItem
+## A cutscene's actor stands for this staging (systems/cutscenes).
+var _covered: bool = false
 
 
 ## The index of the first stage that holds under `data`; -1 when none does.
@@ -46,6 +48,21 @@ func release(child: StringName) -> void:
 		return
 	_stand_in = null
 	_show(_child_of(_picked), 0.0)
+
+## A cutscene's actor takes the shown child's place: nothing shows, and the pick follows the save silently until `uncover()`.
+func cover() -> void:
+	_covered = true
+	_snap_fade()
+	visible = false
+
+## The actor left: the pick (or a live stand-in) shows at once, with no fade.
+func uncover() -> void:
+	_covered = false
+	_snap_fade()
+	visible = true
+
+func is_covered() -> bool:
+	return _covered
 
 func _on_progress_changed() -> void:
 	var now := pick(stages, SaveSystem.player_data)

@@ -118,7 +118,23 @@ func test_quit_to_title_sits_between_resume_and_quit_game() -> void:
 	var names: Array[String] = []
 	for entry: Node in _pause_menu.find_child("Entries").get_children():
 		names.append(entry.name)
-	assert_array(names).contains_exactly(["Resume", "QuitToTitle", "QuitGame"])
+	assert_array(names).contains_exactly(["Resume", "SkipScene", "QuitToTitle", "QuitGame"])
+
+## "Skip scene" shows only while a scene can be skipped; pressing it asks for the skip and resumes (systems/cutscenes).
+func test_skip_scene_shows_only_while_a_scene_can_be_skipped() -> void:
+	var skip := _pause_menu.find_child("SkipScene") as Button
+	_menu_input.pause_pressed.emit()
+	assert_bool(skip.visible).is_false()
+	_menu_input.pause_pressed.emit()
+	var asked: Array[int] = [0]
+	_screens.skip_scene_requested.connect(func() -> void: asked[0] += 1)
+	_screens.set_scene_skip(func() -> bool: return true)
+	_menu_input.pause_pressed.emit()
+	assert_bool(skip.visible).is_true()
+	assert_str(skip.text).is_equal(tr("PAUSE_SKIP_SCENE"))
+	skip.pressed.emit()
+	assert_int(asked[0]).is_equal(1)
+	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.NONE)
 
 func test_quit_to_title_asks_first_and_back_returns_to_it() -> void:
 	_menu_input.pause_pressed.emit()

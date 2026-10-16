@@ -49,10 +49,10 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 - `Game._ready` calls `Screens.set_map_subject(player)`. The map centres on Ivo and asks `Player.can_open_map()` before it opens.
 - `Game._ready` also calls `Screens.set_notebook_watcher(World/NotebookWatcher)`: the notebook opens on the newest unread entry the watcher announced.
 
-## Over a talk (`systems/dialogue`)
+## Over a talk or a cutscene (`systems/dialogue`, `systems/cutscenes`)
 
 - A talk is not a router screen: `DialogueBox` lives under `CanvasLayer`, INHERIT, and blocks Ivo through `Player.begin_talk` (`PlayerInput.blocked`, as the map does). The tree keeps running, so the pause and the notebook open over a talk; their hold stops the box and its typing.
-- The map is refused while talking (`Player.can_open_map()` is false), so the block has one owner at a time.
+- The map is refused while talking or in a cutscene (`Player.can_open_map()` is false); `PlayerInput.blocked` has one writer, `Player._refresh_block()`.
 - Opening the pause or the notebook takes GUI focus from the box; closing releases it, and the box grabs it back on `NOTIFICATION_UNPAUSED`.
 
 ## Deciding and applying
@@ -77,7 +77,8 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 - **Adding a screen:** a `MenuScreen` scene (`can_open() -> bool`, `open()`, `close()`, `step_back() -> bool`) as a child of `Screens`, one entry in `_screens`, and its kind in `HOLDING` if it holds or `BLOCKING` if it only stops Ivo.
 - **`MapScreen`:** see `systems/map`. It has no entries and takes no focus; its pan, zoom and refusals are there.
 - **`Notebook`:** see `systems/notebook`. It holds the world; its rows take focus after the opening animation, and its open, close and page-turn strips are real-time tweens.
-- **`PauseMenu`:** Resume, Quit to title, Quit game. Opening focuses Resume.
+- **`PauseMenu`:** Resume, Skip scene, Quit to title, Quit game. Opening focuses Resume.
+  - **Skip scene** (STORY-15, `systems/cutscenes`; "Pelo menu de pausa (Recommended)", user, 2026-10-16): hidden unless `PauseMenu.can_skip` (set by `Game._ready` through `Screens.set_scene_skip(CutsceneDirector.can_skip)`) answers true when the menu opens; then the panel and the entries grow by 20 art px. Pressing it emits `Screens.skip_scene_requested` (→ `World/CutsceneDirector.request_skip`) and closes the menu; the scene lands on its next unpaused tick. Text `PAUSE_SKIP_SCENE`.
   - Quit to title and Quit game each hide the box and open their own confirmation (`ConfirmQuitToTitle`, `ConfirmQuit`) with No focused.
   - Back or No returns to the box with the entry that asked focused (`_asked_by`). Yes emits `quit_to_title_requested` / `quit_game_requested`.
 - **Leaving for the title** (`Screens._leave_for_title`): the world stays held.
@@ -121,7 +122,7 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 
 ## Text
 
-`PAUSE_TITLE`, `PAUSE_RESUME`, `PAUSE_QUIT_TO_TITLE`, `PAUSE_QUIT_GAME`, `CONFIRM_QUIT_TO_TITLE`, `CONFIRM_QUIT_GAME`, `CONFIRM_YES`, `CONFIRM_NO`; the title's `TITLE_NEW_GAME`, `TITLE_CONTINUE`, `TITLE_QUIT_GAME`, `TITLE_ERASE`, `TITLE_EMPTY_SLOT`, `TITLE_PLAY_TIME` (`%dh %02dm`: keep both placeholders), `CONFIRM_ERASE`, `CONFIRM_OVERWRITE`; and the place names `REGION_*` / `BENCH_*`, all in `i18n/translations.csv`, set through `tr()` in `_ready`. A `\n` in the CSV becomes a newline. `CONFIRM_QUIT_GAME` puts the question on its own line; the body Label uses `line_spacing = 0` to fit three lines in the panel.
+`PAUSE_TITLE`, `PAUSE_RESUME`, `PAUSE_SKIP_SCENE`, `PAUSE_QUIT_TO_TITLE`, `PAUSE_QUIT_GAME`, `CONFIRM_QUIT_TO_TITLE`, `CONFIRM_QUIT_GAME`, `CONFIRM_YES`, `CONFIRM_NO`; the title's `TITLE_NEW_GAME`, `TITLE_CONTINUE`, `TITLE_QUIT_GAME`, `TITLE_ERASE`, `TITLE_EMPTY_SLOT`, `TITLE_PLAY_TIME` (`%dh %02dm`: keep both placeholders), `CONFIRM_ERASE`, `CONFIRM_OVERWRITE`; and the place names `REGION_*` / `BENCH_*`, all in `i18n/translations.csv`, set through `tr()` in `_ready`. A `\n` in the CSV becomes a newline. `CONFIRM_QUIT_GAME` puts the question on its own line; the body Label uses `line_spacing = 0` to fit three lines in the panel.
 
 ## User decisions, 2026-10-02
 

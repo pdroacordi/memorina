@@ -17,13 +17,15 @@ enum Kind {
 	DIALOGUE_HEARD,
 	## The choice `id` is the answer recorded to its question.
 	RESPONSE_CHOSEN,
+	## The cutscene `id` was played or skipped to its end (systems/cutscenes).
+	SCENE_SEEN,
 }
 
 @export var kind: Kind = Kind.ITEM
 ## Index into the PlayerData flag array `kind` names (an Enums.PlayerSkill, Song, PlayerItem or Guardian), or the count
 ## GUARDIANS_RESTORED_AT_LEAST needs; the other kinds ignore it.
 @export var index: int = 0
-## A dialogue id (DIALOGUE_HEARD) or a choice id (RESPONSE_CHOSEN); the other kinds ignore it.
+## A dialogue id (DIALOGUE_HEARD), a choice id (RESPONSE_CHOSEN) or a cutscene id (SCENE_SEEN); the other kinds ignore it.
 @export var id: StringName = &""
 
 
@@ -63,4 +65,6 @@ static func check(fact_kind: Kind, fact_index: int, data: PlayerData, fact_id: S
 			return data.dialogues_heard.has(fact_id)
 		Kind.RESPONSE_CHOSEN:
 			return data.responses.values().has(fact_id)
+		Kind.SCENE_SEEN:
+			return data.scenes_seen.has(fact_id)
 	return false

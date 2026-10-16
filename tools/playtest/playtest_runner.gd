@@ -31,6 +31,8 @@ var _max_duration := DEFAULT_MAX_DURATION
 var _pending_captures := 0
 ## While true, every physics frame prints one `trace` line (a `"trace"` step sets it).
 var _tracing := false
+## `as_text()` of every event the timeline sent, so `_input` can tell them from the OS's.
+var _sent: PackedStringArray = PackedStringArray()
 
 func _ready() -> void:
 	var args := _parse_args()
@@ -68,6 +70,8 @@ func _ready() -> void:
 		SaveSystem.mark_notebook_read(StringName(entry_id))
 	for dialogue_id: Variant in timeline.get("dialogues_heard", []):
 		SaveSystem.mark_dialogue_heard(StringName(str(dialogue_id)))
+	for scene_id: Variant in timeline.get("scenes_seen", []):
+		SaveSystem.mark_scene_seen(StringName(str(scene_id)))
 	var responses: Dictionary = timeline.get("responses", {})
 	for ask_id: Variant in responses:
 		SaveSystem.record_response(StringName(str(ask_id)), StringName(str(responses[ask_id])))
@@ -118,7 +122,7 @@ func _run_step(step: Dictionary) -> void:
 		event.action = StringName(step["action"])
 		event.pressed = bool(step.get("pressed", true))
 		event.strength = 1.0 if event.pressed else 0.0
-		Input.parse_input_event(event)
+		_send(event)
 	# Raw device events: an action event matches only its own action, so a key bound to
 	# two actions (Z is jump and ui_accept) needs the real key to reproduce the overlap.
 	if step.has("key"):
@@ -127,18 +131,18 @@ func _run_step(step: Dictionary) -> void:
 		key.keycode = code
 		key.physical_keycode = code
 		key.pressed = bool(step.get("pressed", true))
-		Input.parse_input_event(key)
+		_send(key)
 	if step.has("joy_button"):
 		var button := InputEventJoypadButton.new()
 		button.button_index = int(step["joy_button"]) as JoyButton
 		button.pressed = bool(step.get("pressed", true))
 		button.pressure = 1.0 if button.pressed else 0.0
-		Input.parse_input_event(button)
+		_send(button)
 	if step.has("joy_axis"):
 		var motion := InputEventJoypadMotion.new()
 		motion.axis = int(step["joy_axis"][0]) as JoyAxis
 		motion.axis_value = float(step["joy_axis"][1])
-		Input.parse_input_event(motion)
+		_send(motion)
 	if step.has("teleport"):
 		_place_player(step["teleport"])
 	if step.has("log"):
@@ -146,11 +150,25 @@ func _run_step(step: Dictionary) -> void:
 	if step.has("trace"):
 		_tracing = bool(step["trace"])
 
+# An unexplained F10 once moved Ivo to the song trials mid-run (playtests/2026-10-16-story15-cutscenes): every
+# `debug_trials` press is logged with where it came from.
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed("debug_trials"):
+		var source := "timeline" if _sent.has(event.as_text()) else "not the timeline"
+		print("[playtest] debug_trials t=%.2f event='%s' class=%s device=%d echo=%s source=%s focus=%s" % [_elapsed,
+				event.as_text(), event.get_class(), event.device, event.is_echo(), source,
+				DisplayServer.window_is_focused()])
+
 func _physics_process(_delta: float) -> void:
 	if _tracing:
 		_trace()
 
 ## One line per physics frame: Ivo's position, velocity, floor, helix ride and progress, the camera's centre, hp and nearby foes.
+func _send(event: InputEvent) -> void:
+	if not _sent.has(event.as_text()):
+		_sent.append(event.as_text())
+	Input.parse_input_event(event)
+
 func _trace() -> void:
 	var player := get_tree().get_first_node_in_group(Player.GROUP) as Player
 	if player == null:

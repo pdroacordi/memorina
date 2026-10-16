@@ -118,3 +118,5 @@ res://scenes/world/interactables/item_pickup/item_pickup.tscn
 res://scenes/world/story/guitar_beat.tscn
 res://scenes/world/story/staged_beat.tscn
 res://scenes/ui/phrase_sheet/phrase_sheet.tscn
+res://scenes/ui/letterbox/letterbox.tscn
+res://scenes/characters/story_actor/daughter/daughter_actor.tscn

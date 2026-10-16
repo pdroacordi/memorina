@@ -1,20 +1,12 @@
-[gd_resource type="Resource" script_class="DialogueSet" format=3]
+[gd_resource type="Resource" script_class="DialogueSet" format=3 uid="uid://da3ir7f0smo3h"]
 
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
-[ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
-[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Script" uid="uid://da7s57is2erh6" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
+[ext_resource type="Script" uid="uid://ehxc5gppjkxp" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" uid="uid://b7dtsefilgm6i" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Script" uid="uid://0kha27ytvt2r" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" uid="uid://d2eoql5qejigt" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" uid="uid://bhja2tfpavop7" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/daughter.tres" id="s_daughter"]
-
-[sub_resource type="Resource" id="line_1"]
-script = ExtResource("f_line")
-cue = &"guitar_again"
-
-[sub_resource type="Resource" id="line_2"]
-script = ExtResource("f_line")
-cue = &"guitar_lowered"
 
 [sub_resource type="Resource" id="line_3"]
 script = ExtResource("f_line")
@@ -25,12 +17,20 @@ text_key = "DLG_DAUGHTER_SONG_01"
 script = ExtResource("f_line")
 cue = &"guitar_first"
 
+[sub_resource type="Resource" id="line_1"]
+script = ExtResource("f_line")
+cue = &"guitar_again"
+
 [sub_resource type="Resource" id="choice_5"]
 script = ExtResource("f_choice")
 id = &"guitar_try_again"
 text_key = "DLG_CHOICE_GUITAR_TRY_AGAIN"
 tone = 1
 reply = Array[ExtResource("f_line")]([SubResource("line_1")])
+
+[sub_resource type="Resource" id="line_2"]
+script = ExtResource("f_line")
+cue = &"guitar_lowered"
 
 [sub_resource type="Resource" id="choice_6"]
 script = ExtResource("f_choice")
@@ -49,15 +49,19 @@ script = ExtResource("f_line")
 speaker = ExtResource("s_daughter")
 text_key = "DLG_DAUGHTER_SONG_02"
 
-[sub_resource type="Resource" id="fact_9"]
-script = ExtResource("f_fact")
-kind = 7
-id = &"baker_errand"
+[sub_resource type="Resource" id="line_to_bed"]
+script = ExtResource("f_line")
+cue = &"daughter_to_bed"
 
 [sub_resource type="Resource" id="fact_10"]
 script = ExtResource("f_fact")
 kind = 7
 id = &"mentor_gift"
+
+[sub_resource type="Resource" id="fact_9"]
+script = ExtResource("f_fact")
+kind = 7
+id = &"baker_errand"
 
 [sub_resource type="Resource" id="dialogue_11"]
 script = ExtResource("f_dialogue")
@@ -65,7 +69,7 @@ id = &"daughter_song"
 once = true
 when = Array[ExtResource("f_fact")]([SubResource("fact_9")])
 unless = Array[ExtResource("f_fact")]([SubResource("fact_10")])
-lines = Array[ExtResource("f_line")]([SubResource("line_3"), SubResource("line_4"), SubResource("line_7"), SubResource("line_8")])
+lines = Array[ExtResource("f_line")]([SubResource("line_3"), SubResource("line_4"), SubResource("line_7"), SubResource("line_8"), SubResource("line_to_bed")])
 
 [sub_resource type="Resource" id="line_12"]
 script = ExtResource("f_line")

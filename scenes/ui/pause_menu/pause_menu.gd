@@ -3,15 +3,25 @@ extends MenuScreen
 ## The pause screen. Quitting, to the title or the desktop, asks first: progress since the last bench is lost.
 
 signal resume_requested
+## "Skip scene": the cutscene lands its end state (systems/cutscenes).
+signal skip_scene_requested
 signal quit_to_title_requested
 signal quit_game_requested
 
+## Px the box grows by while "Skip scene" shows: one entry and its gap, in art px.
+const SKIP_ROOM := 20.0
+
+## Asked as the menu opens: whether "Skip scene" shows. Game sets it to CutsceneDirector.can_skip.
+var can_skip: Callable = func() -> bool: return false
 ## The entry each confirmation returns focus to.
 var _asked_by: Dictionary[ConfirmPanel, Button] = {}
 
 @onready var _box: Control = %Box
 @onready var _title: Label = %Title
 @onready var _resume: Button = %Resume
+@onready var _skip_scene: Button = %SkipScene
+@onready var _panel: Control = %Panel
+@onready var _entries: Control = %Entries
 @onready var _quit_to_title: Button = %QuitToTitle
 @onready var _quit_game: Button = %QuitGame
 @onready var _confirm_quit_to_title: ConfirmPanel = %ConfirmQuitToTitle
@@ -21,11 +31,13 @@ var _asked_by: Dictionary[ConfirmPanel, Button] = {}
 func _ready() -> void:
 	_title.text = tr("PAUSE_TITLE")
 	_resume.text = tr("PAUSE_RESUME")
+	_skip_scene.text = tr("PAUSE_SKIP_SCENE")
 	_quit_to_title.text = tr("PAUSE_QUIT_TO_TITLE")
 	_quit_game.text = tr("PAUSE_QUIT_GAME")
 	_asked_by[_confirm_quit_to_title] = _quit_to_title
 	_asked_by[_confirm_quit] = _quit_game
 	_resume.pressed.connect(resume_requested.emit)
+	_skip_scene.pressed.connect(skip_scene_requested.emit)
 	_quit_to_title.pressed.connect(_ask.bind(_confirm_quit_to_title))
 	_quit_game.pressed.connect(_ask.bind(_confirm_quit))
 	_confirm_quit_to_title.confirmed.connect(quit_to_title_requested.emit)
@@ -34,6 +46,12 @@ func _ready() -> void:
 		confirm.cancelled.connect(step_back)
 
 func open() -> void:
+	var skip := bool(can_skip.call())
+	if skip != _skip_scene.visible:
+		var grow := SKIP_ROOM if skip else -SKIP_ROOM
+		_panel.offset_bottom += grow
+		_entries.offset_bottom += grow
+		_skip_scene.visible = skip
 	show()
 	_show_box(_resume)
 

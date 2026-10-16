@@ -209,6 +209,12 @@ var _strum_pending: bool = false
 var _just_strummed: bool = false
 ## A beat ended; the talk goes on once the start gates hold.
 var _resume_wanted: bool = false
+## From `begin_scene` to `end_scene`: a cutscene has him (systems/cutscenes).
+var _in_scene: bool = false
+## The map is open over him (Screens.BLOCKING).
+var _map_blocked: bool = false
+## A cutscene's controller walks him instead of PlayerInput; null while none does.
+var _driver: ScriptedController
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
@@ -325,6 +331,7 @@ func _process_motion(delta: float) -> void:
 			_states.update(delta)
 			return
 
+	_steer_driver(delta)
 	face_towards(_rider.facing_axis() if _rider.is_riding() else move_axis())
 	# The recall's window is real seconds: the world is slowed while it is open,
 	# and `delta` is game time.
@@ -387,7 +394,7 @@ func move_axis() -> float:
 		return 0.0
 	if is_attacking() and _attack_context == CTX_IDLE:
 		return 0.0
-	return _input.direction
+	return _driver.direction if _driver != null else _input.direction
 
 func wants_to_move() -> bool:
 	return not is_zero_approx(move_axis())
@@ -576,7 +583,7 @@ func _try_sit(on_floor: bool) -> void:
 	if not _sit_requested:
 		return
 	_sit_requested = false
-	if _sit.is_sitting() or not on_floor or wants_to_move():
+	if _sit.is_sitting() or not on_floor or wants_to_move() or _in_scene:
 		return
 	if is_rolling() or is_attacking() or is_in_knockback() or is_climbing() or is_memorina_drawn():
 		return
@@ -604,7 +611,7 @@ func _try_door(on_floor: bool) -> bool:
 		return false
 	_up_buffer = 0.0
 	# A FREE beat lets him walk, but a talk never leaves its room (bugs/up-takes-a-door-during-a-free-beat-and-strands-the-talk).
-	if _in_talk or not _free_for_up(on_floor):
+	if is_in_story() or not _free_for_up(on_floor):
 		return false
 	if door.is_open():
 		# Nothing else pressed this frame may act on the way out.
@@ -637,7 +644,7 @@ func _try_talk(on_floor: bool) -> bool:
 	if by_press:
 		_up_buffer = 0.0
 	# Blocked is the map's: a talk must not start, then unblock, under it.
-	if _in_talk or _input.blocked or not _free_for_up(on_floor):
+	if is_in_story() or _input.blocked or not _free_for_up(on_floor):
 		return false
 	if not by_press:
 		talkable.take_auto()
@@ -654,7 +661,7 @@ func _try_pickup(on_floor: bool) -> bool:
 	if pickup == null:
 		return false
 	_up_buffer = 0.0
-	if _in_talk or not _free_for_up(on_floor):
+	if is_in_story() or not _free_for_up(on_floor):
 		return false
 	_drop_buffers()
 	pickup.take()
@@ -722,7 +729,7 @@ func _try_memorina() -> void:
 	if _memorina.is_drawn():
 		_memorina.sheathe()
 		return
-	if is_attacking() or is_rolling() or is_recovering() or is_in_knockback():
+	if is_attacking() or is_rolling() or is_recovering() or is_in_knockback() or _in_scene:
 		return
 	_memorina.enabled = _has_item(Enums.PlayerItem.MEMORINA)
 	_memorina.try_draw(is_still(), _known_songs())
@@ -1156,19 +1163,32 @@ func teleport(point: Vector2) -> void:
 	_rider.release()
 	super(point)
 
-## On the floor, alive, not sinking, not climbing, not talking, with the Memorina sheathed.
+## On the floor, alive, not sinking, not climbing, not in a talk or a cutscene, with the Memorina sheathed.
 func can_open_map() -> bool:
 	return (is_on_floor() and not is_dead() and not _sinking and not is_climbing() and not is_riding_stair()
-			and not is_wall_sliding() and not is_memorina_drawn() and not _in_talk)
+			and not is_wall_sliding() and not is_memorina_drawn() and not is_in_story())
 
-## The map is open or a talk runs: Ivo stays in the world, hittable, but hears no input.
+## The map is open: Ivo stays in the world, hittable, but hears no input.
 func block_input() -> void:
-	_input.blocked = true
-	# A press buffered just before the open would otherwise act under the map.
-	_drop_buffers()
+	_map_blocked = true
+	_refresh_block()
 
 func unblock_input() -> void:
-	_input.blocked = false
+	_map_blocked = false
+	_refresh_block()
+
+## `PlayerInput.blocked` has one writer: a talk owns it while it runs, else a cutscene, else the map, so a NOTES beat
+## inside a scene still gets its notes (systems/cutscenes).
+func _refresh_block() -> void:
+	var blocked := _map_blocked
+	if _in_talk:
+		blocked = _listening or _map_blocked
+	elif _in_scene:
+		blocked = true
+	if blocked and not _input.blocked:
+		# A press buffered just before the block would otherwise act under it.
+		_drop_buffers()
+	_input.blocked = blocked
 
 ## A talk began or resumed: he listens, facing the speaker at `at`. The map is refused until `end_talk`, so the block is
 ## the talk's.
@@ -1176,9 +1196,8 @@ func begin_talk(at: Vector2) -> void:
 	_in_talk = true
 	_beat_hold = -1
 	_input.notes_only = false
-	if not _listening:
-		_listening = true
-		block_input()
+	_listening = true
+	_refresh_block()
 	face_towards(signf(at.x - global_position.x))
 
 ## A beat has the talk (systems/story): STILL keeps him blocked, NOTES lets only the four notes through, FREE frees him;
@@ -1186,13 +1205,8 @@ func begin_talk(at: Vector2) -> void:
 func pause_talk(hold: int = DialogueBeat.Hold.FREE, pose: int = DialogueBeat.Pose.NONE, at: Vector2 = Vector2.INF) -> void:
 	_beat_hold = hold
 	_pose = pose
-	var still := hold == DialogueBeat.Hold.STILL
-	if _listening and not still:
-		_listening = false
-		unblock_input()
-	elif still and not _listening:
-		_listening = true
-		block_input()
+	_listening = hold == DialogueBeat.Hold.STILL
+	_refresh_block()
 	_input.notes_only = hold == DialogueBeat.Hold.NOTES
 	if at != Vector2.INF:
 		face_towards(signf(at.x - global_position.x))
@@ -1207,6 +1221,52 @@ func end_talk() -> void:
 	_pose = DialogueBeat.Pose.NONE
 	_in_talk = false
 	_resume_wanted = false
+	_refresh_block()
+
+## Whether a cutscene may start now: free on the floor as for a door, and not in a talk, a cutscene or the map.
+func can_begin_scene() -> bool:
+	return (not is_dead() and not _sinking and not is_in_story() and not _map_blocked and not is_sitting()
+			and _free_for_up(is_on_floor()))
+
+## A cutscene has him (CutsceneDirector.scene_began): no input reaches him, and doors, talks, pickups, benches, the
+## Memorina and the map are refused until `end_scene`.
+func begin_scene() -> void:
+	_in_scene = true
+	if _memorina.is_drawn():
+		_memorina.sheathe()
+	_refresh_block()
+
+func end_scene() -> void:
+	_in_scene = false
+	drive(null)
+	if not _in_talk:
+		_pose = DialogueBeat.Pose.NONE
+	_refresh_block()
+
+## A cutscene's controller walks him; null gives him back to PlayerInput.
+func drive(controller: ScriptedController) -> void:
+	if _driver != null and _driver != controller:
+		_driver.stop()
+	_driver = controller
+
+## What a beat or a scene has him hold (DialogueBeat.Pose).
+func stage_pose(pose: int) -> void:
+	_pose = pose
+
+## In a talk (a beat included) or a cutscene.
+func is_in_story() -> bool:
+	return _in_talk or _in_scene
+
+func is_in_scene() -> bool:
+	return _in_scene
+
+## The driver's walk ends with a teleport onto its mark (ArriveMath.SETTLE_PX or less).
+func _steer_driver(delta: float) -> void:
+	if _driver == null:
+		return
+	if _driver.steer(global_position.x, velocity.x, _locomotion.stats.deceleration, delta):
+		velocity.x = 0.0
+		teleport(Vector2(_driver.target_x(), global_position.y))
 
 ## What a beat has him hold (DialogueBeat.Pose); NONE outside a talk. Read by the resolver.
 func held_pose() -> int:

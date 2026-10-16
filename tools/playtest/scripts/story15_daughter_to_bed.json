@@ -1,0 +1,270 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 22.0,
+ "locale": "en",
+ "owned_items": [],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand"
+ ],
+ "player_position": [
+  140,
+  12286
+ ],
+ "steps": [
+  {
+   "t": 0.4,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 0.75,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 1.2,
+   "screenshot": "00_holding_out"
+  },
+  {
+   "t": 1.3,
+   "log": "talk"
+  },
+  {
+   "t": 1.7,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 1.78,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 2.2,
+   "screenshot": "01_guitar"
+  },
+  {
+   "t": 2.4,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 2.48,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 2.8,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 2.88,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 3.28,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 3.6,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 3.68,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 4.08,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 4.5,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 4.58,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 4.9,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 4.98,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 5.3,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 5.38,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 5.8,
+   "screenshot": "02_choice"
+  },
+  {
+   "t": 5.9,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 5.98,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 6.3,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 6.38,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "screenshot": "03_lowered"
+  },
+  {
+   "t": 9.8,
+   "screenshot": "04_silence"
+  },
+  {
+   "t": 10.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 10.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 10.2,
+   "log": "scene_start"
+  },
+  {
+   "t": 10.4,
+   "screenshot": "s00"
+  },
+  {
+   "t": 10.9,
+   "screenshot": "s01"
+  },
+  {
+   "t": 11.4,
+   "screenshot": "s02"
+  },
+  {
+   "t": 11.9,
+   "screenshot": "s03"
+  },
+  {
+   "t": 12.4,
+   "screenshot": "s04"
+  },
+  {
+   "t": 12.9,
+   "screenshot": "s05"
+  },
+  {
+   "t": 13.4,
+   "screenshot": "s06"
+  },
+  {
+   "t": 13.9,
+   "screenshot": "s07"
+  },
+  {
+   "t": 14.4,
+   "screenshot": "s08"
+  },
+  {
+   "t": 14.9,
+   "screenshot": "s09"
+  },
+  {
+   "t": 15.4,
+   "screenshot": "s10"
+  },
+  {
+   "t": 15.9,
+   "screenshot": "s11"
+  },
+  {
+   "t": 16.4,
+   "screenshot": "s12"
+  },
+  {
+   "t": 16.9,
+   "screenshot": "s13"
+  },
+  {
+   "t": 17.4,
+   "screenshot": "s14"
+  },
+  {
+   "t": 17.9,
+   "screenshot": "s15"
+  },
+  {
+   "t": 18.4,
+   "screenshot": "s16"
+  },
+  {
+   "t": 18.9,
+   "screenshot": "s17"
+  },
+  {
+   "t": 19.4,
+   "screenshot": "s18"
+  },
+  {
+   "t": 19.9,
+   "screenshot": "s19"
+  },
+  {
+   "t": 20.4,
+   "screenshot": "s20"
+  },
+  {
+   "t": 20.5,
+   "log": "after"
+  },
+  {
+   "t": 21.5,
+   "screenshot": "z_after"
+  },
+  {
+   "t": 21.6,
+   "log": "end"
+  }
+ ]
+}

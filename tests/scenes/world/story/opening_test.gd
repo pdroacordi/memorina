@@ -83,9 +83,9 @@ func test_a_late_held_return_finds_her_at_the_guitar() -> void:
 ## drawn, and every frame's feet (row 61) stand on the floor (y 288).
 func test_the_daughter_moves_as_a_strip_with_her_feet_on_the_floor() -> void:
 	var house := _mount(HOUSE)
-	for path: String in ["Props/Daughter/Standing/Girl", "Props/Daughter/HoldingOut/Girl"]:
+	for path: String in ["Props/Daughter/Standing", "Props/Daughter/HoldingOut"]:
 		var girl := house.get_node(path) as Sprite2D
-		var frames := {"Props/Daughter/Standing/Girl": 8, "Props/Daughter/HoldingOut/Girl": 6}[path] as int
+		var frames := {"Props/Daughter/Standing": 8, "Props/Daughter/HoldingOut": 6}[path] as int
 		assert_int(girl.hframes).override_failure_message(path).is_equal(frames)
 		assert_int(girl.texture.get_width()).is_equal(frames * 64)
 		assert_int(girl.texture.get_height()).is_equal(64)
@@ -100,6 +100,22 @@ func test_the_daughter_moves_as_a_strip_with_her_feet_on_the_floor() -> void:
 				feet = feet or image.get_pixel(x, 61).a > 0.0
 				below = below or image.get_pixel(x, 62).a > 0.0 or image.get_pixel(x, 63).a > 0.0
 			assert_bool(feet and not below).override_failure_message("%s frame %d" % [path, frame]).is_true()
+
+## STORY-15: in bed she is the lie-down clip's last frame on the bed prop, where the cutscene's actor lands; the song's
+## cutscene, once seen, is enough to put her there, before the talk itself is heard.
+func test_in_bed_she_is_the_lie_down_clips_last_frame_on_the_bed() -> void:
+	var house := _mount(HOUSE)
+	var bed := house.get_node("Props/ChildBed") as Sprite2D
+	for path: String in ["Props/Daughter/Asleep", "Props/Daughter/InBedTurned"]:
+		var girl := house.get_node(path) as Sprite2D
+		assert_str(girl.texture.resource_path).is_equal("res://assets/sprites/world/story/daughter/lie_down.png")
+		assert_int(girl.frame).is_equal(girl.hframes - 1)
+		assert_bool(girl.flip_h).is_true()
+		assert_vector(girl.position).is_equal((house.get_node("Marks/BedEdge") as Node2D).position)
+		assert_float(absf(girl.position.x - bed.position.x)).is_less(bed.texture.get_width() * 0.5)
+	SaveSystem.mark_dialogue_heard(&"baker_errand")
+	SaveSystem.mark_scene_seen(&"daughter_to_bed")
+	assert_str(_shown(house, "Props/Daughter")).is_equal("InBedTurned")
 
 ## Lowered, she hums at home after the gift instead of playing; the guitar stays on the wall.
 func test_the_lowered_guitar_leaves_her_humming() -> void:

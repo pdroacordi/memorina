@@ -31,6 +31,8 @@ class_name PlayerData extends Resource
 @export var dialogues_heard: Array[StringName] = []
 ## The choice id answered to each question, by ask id; asked again, the new answer replaces it. Live data like heard.
 @export var responses: Dictionary[StringName, StringName] = {}
+## Cutscene ids played or skipped to their end; live data like heard (systems/cutscenes).
+@export var scenes_seen: Array[StringName] = []
 
 func _init() -> void:
 	migrate()

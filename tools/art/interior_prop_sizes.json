@@ -1,6 +1,6 @@
 {
 	"about": "Art-px size per interior prop (hN height, wN width), against Ivo's 29 art px (about 1.75 m): each Codex sheet's scale figure is out of proportion with some objects (\"some of the props are way too big. They are bigger than Ivo\", user, 2026-10-11). Fireplaces are sized by width; their chimneys are stretched to the ceiling.",
-	"ivo_house": "hearth:w30,guitar:h17,table:h14,chair:h17,chair_shawl:h17,firewood:h7,bed:h13,child_bed:h11,wall_shelf_cups:w30,window:h17,drawing_sun:h7,drawing_house:h7,drawing_heart:h7",
+	"ivo_house": "hearth:w30,guitar:h17,table:h14,chair:h17,chair_shawl:h17,firewood:h7,bed:h13,child_bed:h15,wall_shelf_cups:w30,window:h17,drawing_sun:h7,drawing_house:h7,drawing_heart:h7",
 	"elder_house": "fireplace_lit:w30,bookshelf_lighthouse:h32,lighthouse_painting:h13,map:h15,dried_flowers:h13,armchair:h17,walking_stick:h16,desk:h15,stool:h8,globe:h13,chest:h9,book_pile:h6,bench:w24",
 	"bakery": "bread_oven:w32,bread_peel:h20,bread_rack_a:h28,bread_rack_b:h28,kneading_table:h16,flour_sacks:h12,firewood_stack:h9,chalkboard:h11,herb_rail:w24,wall_shelf_bowls:w32",
 	"tavern": "shelf_jugs:w22,bar_counter:h18,barrel_rack:h27,shelf_mugs:w21,tavern_fireplace:w32,notice_board:h16,chandelier:w24,tavern_table_a:h15,tavern_table_b:h15,bench_a:h7,bench_b:h7,barrel:h11,keg:h13,firewood_tavern:h8,mug:w5",

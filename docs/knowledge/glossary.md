@@ -127,6 +127,11 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | acumulado silencioso (01 §9) | `DialogueTally.count` (derived, never stored) |
 | ouvido (diálogo já dito) | `PlayerData.dialogues_heard`, `SaveFact.Kind.DIALOGUE_HEARD` |
 | encenação por fatos (pose de uma cena) | `FactStaging`, `FactStage`, `stand_in` (`systems/story`) |
+| cena, cinemática, motor de cinemáticas | `Cutscene` (data), `CutsceneDirector`, `CutsceneRunner`, steps `Cutscene<Kind>`; seen = `SaveFact.Kind.SCENE_SEEN` (`systems/cutscenes`) |
+| ator (personagem numa cena) | `StoryActor` (`actor_id`, `stands_for`), `ScriptedController`, `ArriveMath` |
+| pular cena | `PauseMenu` "Skip scene" (`PAUSE_SKIP_SCENE`), `CutsceneDirector.request_skip` |
+| barras de letterbox | `Letterbox` (shared by a lesson and a cutscene) |
+| balão de emote | `EmoteBubble`, `CutsceneEmote.Emote { ELLIPSIS, NOTE, EXCLAIM }` |
 | batida (cena roteirizada após uma fala) | `DialogueBeat` (`hold`, `pose`, `face`), `GuitarBeat`, `StagedBeat` |
 | gesto (escolha sem fala) | a silent ask: an asking `DialogueLine` with no text and no speaker |
 | melodia da manhã | `Melody`, `morning_song.tres`; the guitar's tries `GuitarAttempt` (`guitar_first`, `guitar_again`), rules `GuitarPhrase` |

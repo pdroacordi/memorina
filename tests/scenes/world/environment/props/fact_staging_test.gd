@@ -138,3 +138,21 @@ func test_an_empty_show_hides_every_child() -> void:
 	empty.add_child(sprite)
 	add_child(empty)
 	assert_array(_visible(empty)).is_empty()
+
+## Covered by a cutscene's actor it shows nothing and re-picks silently; uncovered it shows the new pick at once.
+func test_a_cover_hides_it_and_the_uncover_shows_the_new_pick_with_no_fade() -> void:
+	_staging.cover()
+	assert_bool(_staging.is_visible_in_tree()).is_false()
+	SaveSystem.mark_dialogue_heard(&"errand")
+	assert_str(String(_staging.shown().name)).is_equal("Up")
+	_staging.uncover()
+	assert_bool(_staging.is_visible_in_tree()).is_true()
+	assert_array(_visible(_staging)).is_equal(["Up"])
+	assert_float((_staging.get_node("Up") as CanvasItem).modulate.a).is_equal(1.0)
+
+## A dropped scene gives the rest back as it was, a stand-in included.
+func test_an_uncover_keeps_a_live_stand_in() -> void:
+	_staging.stand_in(&"Lowered")
+	_staging.cover()
+	_staging.uncover()
+	assert_array(_visible(_staging)).is_equal(["Lowered"])

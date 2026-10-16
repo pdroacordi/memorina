@@ -85,6 +85,7 @@ Plan and options: `architecture/save-slots-and-the-boot-swap`.
 
 ## Dialogue facts (STORY-08, built 2026-10-15)
 
+- `PlayerData.scenes_seen` (cutscene ids played or skipped to their end, STORY-15, `systems/cutscenes`) is live data like heard: a bench commits it, a death forgets it, so a scene seen after the last bench plays again.
 - `PlayerData.dialogues_heard` (dialogue ids heard to their end) and `PlayerData.responses` (ask id to choice id) are live data like a learned song: a bench commits them, a death before one forgets them. `SaveLedger` needed no change. A grant a talk gave rewinds with them, so the giver gives it again (`systems/dialogue`).
 - `SaveSystem.mark_dialogue_heard` and `record_response` emit `progress_changed`. A save written before them loads both empty.
 - Tests: `save_ledger_test` (forgotten by a death, kept by a rest, live and committed share nothing), `player_data_test` (round trip, old save), `save_system_dialogue_test`.

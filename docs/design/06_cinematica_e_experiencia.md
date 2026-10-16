@@ -43,6 +43,13 @@ O "mostre, não conte" (`05`, regras 1 a 6) continua valendo, mas mostrar não �
 - **O relógio e as regras.** Roda no relógio pausável e com escala; nenhum novo escritor de `WorldFreeze`. Pode ser acelerada e pulada.
 - **O `FactStaging` fica para o cenário.** Ele continua mostrando o estado de repouso de cada lugar (quem está onde quando a cena acaba); a cena é o caminho entre dois estados.
 
+**Decisões do motor (usuário, 2026-10-16), sobre o plano `docs/knowledge/architecture/cutscenes-are-data-played-between-two-rest-states.md`:**
+- Pular: "Pelo menu de pausa (Recommended)": uma entrada "Pular cena" no menu de pausa, sempre disponível; a cena salta para o estado final e grava que foi vista, e nunca escolhe pelo jogador.
+- Acelerar: "Não, só pular (Recommended)": sem acelerar; o `WorldFreeze` continua o único escritor da escala de tempo.
+- Arte da cena de demonstração: "Desenhar agora (Recommended)": os clipes da filha (andar, baixar os olhos, sentar, deitar virada para a parede) feitos já, com PixelLab.
+- Atores no cinza: "Sim, se movem na cena (Recommended)": durante a cena o personagem anda e gesticula no relógio normal, mesmo onde o lugar está cinza; ao terminar volta a ser cenário e congela como antes.
+- Padrões adotados (recomendados, não perguntados): os balões de emote ficam cinzas com o lugar; um barramento de música e o abafar ficam para quando houver música.
+
 ## 5. Pilar 2: a experiência do jogador
 
 - **Retorno de ação (UI-11).** Um aviso de item obtido, com ícone, no mesmo espaço do aviso do caderno: o pão, a espada, a Memorina.

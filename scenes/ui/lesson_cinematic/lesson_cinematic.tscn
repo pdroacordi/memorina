@@ -31,21 +31,6 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0.04, 0.03, 0.06, 0)
 
-[node name="TopBar" type="ColorRect" parent="."]
-layout_mode = 0
-offset_right = 640.0
-offset_bottom = 36.0
-mouse_filter = 2
-color = Color(0.02, 0.015, 0.03, 1)
-
-[node name="BottomBar" type="ColorRect" parent="."]
-layout_mode = 0
-offset_top = 324.0
-offset_right = 640.0
-offset_bottom = 360.0
-mouse_filter = 2
-color = Color(0.02, 0.015, 0.03, 1)
-
 [node name="Card" type="Control" parent="."]
 layout_mode = 0
 offset_left = 160.0

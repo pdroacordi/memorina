@@ -224,6 +224,16 @@ func record_response(ask_id: StringName, choice_id: StringName) -> void:
 	player_data.responses[ask_id] = choice_id
 	progress_changed.emit()
 
+func is_scene_seen(scene_id: StringName) -> bool:
+	return player_data.scenes_seen.has(scene_id)
+
+## Live only, like heard: a bench commits it and a death forgets it (systems/cutscenes).
+func mark_scene_seen(scene_id: StringName) -> void:
+	assert(scene_id != &"", "A cutscene needs an id")
+	if not is_scene_seen(scene_id):
+		player_data.scenes_seen.append(scene_id)
+		progress_changed.emit()
+
 func is_shortcut_resolved(shortcut_id: StringName) -> bool:
 	return shortcut_id in player_data.resolved_shortcuts
 

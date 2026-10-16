@@ -1,0 +1,78 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="s_scene"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="s_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="s_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="s_bars"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="s_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_gesture.gd" id="s_gesture"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="s_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="s_face"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_walk.gd" id="s_walk"]
+
+[sub_resource type="Resource" id="bars_in"]
+script = ExtResource("s_bars")
+open = true
+seconds = 0.6
+
+[sub_resource type="Resource" id="frame_pair"]
+script = ExtResource("s_camera")
+targets = Array[StringName]([&"daughter", &"ivo"])
+offset = Vector2(0, -40)
+zoom = 1.0
+seconds = 0.8
+
+[sub_resource type="Resource" id="opening"]
+script = ExtResource("s_together")
+steps = Array[ExtResource("s_step")]([SubResource("bars_in"), SubResource("frame_pair")])
+
+[sub_resource type="Resource" id="lower_eyes"]
+script = ExtResource("s_gesture")
+actor = &"daughter"
+clip = &"lower_eyes"
+
+[sub_resource type="Resource" id="hold_eyes"]
+script = ExtResource("s_wait")
+seconds = 0.6
+
+[sub_resource type="Resource" id="turn_away"]
+script = ExtResource("s_face")
+actor = &"daughter"
+toward = &"ivo"
+away = true
+
+[sub_resource type="Resource" id="to_bed"]
+script = ExtResource("s_walk")
+actor = &"daughter"
+mark = &"bed_edge"
+pace = 0.5
+
+[sub_resource type="Resource" id="sit"]
+script = ExtResource("s_gesture")
+actor = &"daughter"
+clip = &"sit"
+
+[sub_resource type="Resource" id="hold_seated"]
+script = ExtResource("s_wait")
+seconds = 0.4
+
+[sub_resource type="Resource" id="lie_down"]
+script = ExtResource("s_gesture")
+actor = &"daughter"
+clip = &"lie_down"
+
+[sub_resource type="Resource" id="close_on_her"]
+script = ExtResource("s_camera")
+targets = Array[StringName]([&"daughter"])
+offset = Vector2(0, -24)
+zoom = 2.0
+seconds = 1.2
+
+[sub_resource type="Resource" id="hold_still"]
+script = ExtResource("s_wait")
+seconds = 1.5
+
+[resource]
+script = ExtResource("s_scene")
+id = &"daughter_to_bed"
+steps = Array[ExtResource("s_step")]([SubResource("opening"), SubResource("lower_eyes"), SubResource("hold_eyes"), SubResource("turn_away"), SubResource("to_bed"), SubResource("sit"), SubResource("hold_seated"), SubResource("lie_down"), SubResource("close_on_her"), SubResource("hold_still")])

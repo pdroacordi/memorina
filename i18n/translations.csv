@@ -23,6 +23,7 @@ MEMORINA_LEARNED,You learned how to play,Você aprendeu a tocar
 GUARDIAN_CALL_LISTEN,Listen…,Ouça…
 PAUSE_TITLE,Pause,Pausa
 PAUSE_RESUME,Resume,Continuar
+PAUSE_SKIP_SCENE,Skip scene,Pular cena
 PAUSE_QUIT_GAME,Quit game,Sair do jogo
 CONFIRM_QUIT_GAME,Quit the game?\nProgress since the last bench will be lost.,Sair do jogo?\nO progresso desde o último banco será perdido.
 CONFIRM_YES,Yes,Sim

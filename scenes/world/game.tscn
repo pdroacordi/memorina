@@ -47,6 +47,9 @@
 [ext_resource type="Resource" path="res://resources/dialogue/dialogue_catalog.tres" id="47_dialogues"]
 [ext_resource type="PackedScene" path="res://scenes/ui/dialogue_box/dialogue_box.tscn" id="48_box"]
 [ext_resource type="PackedScene" path="res://scenes/ui/phrase_sheet/phrase_sheet.tscn" id="49_phrase"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_director.gd" id="50_cutscenes"]
+[ext_resource type="Resource" path="res://resources/cutscene/cutscene_catalog.tres" id="51_cutscene_catalog"]
+[ext_resource type="PackedScene" path="res://scenes/ui/letterbox/letterbox.tscn" id="52_letterbox"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -121,6 +124,15 @@ script = ExtResource("44_titlewatch")
 script = ExtResource("46_director")
 catalog = ExtResource("47_dialogues")
 listener = NodePath("../Player")
+
+[node name="CutsceneDirector" type="Node" parent="World" node_paths=PackedStringArray("ivo", "camera", "letterbox", "fade", "dialogue")]
+script = ExtResource("50_cutscenes")
+catalog = ExtResource("51_cutscene_catalog")
+ivo = NodePath("../Player")
+camera = NodePath("../Camera2D")
+letterbox = NodePath("../../CanvasLayer/Letterbox")
+fade = NodePath("../../CanvasLayer/Fade")
+dialogue = NodePath("../DialogueDirector")
 
 [node name="Spawner" type="Node2D" parent="World" unique_id=1572119967]
 script = ExtResource("2_hqfqh")
@@ -204,7 +216,10 @@ texture = SubResource("ViewportTexture_foreground")
 
 [node name="RegionTitle" parent="CanvasLayer" instance=ExtResource("45_title")]
 
-[node name="LessonCinematic" parent="CanvasLayer" unique_id=2033014400 instance=ExtResource("18_cine")]
+[node name="LessonCinematic" parent="CanvasLayer" unique_id=2033014400 node_paths=PackedStringArray("letterbox") instance=ExtResource("18_cine")]
+letterbox = NodePath("../Letterbox")
+
+[node name="Letterbox" parent="CanvasLayer" instance=ExtResource("52_letterbox")]
 
 [node name="MemorinaHud" parent="CanvasLayer" unique_id=1302556383 instance=ExtResource("10_hud")]
 
@@ -317,3 +332,11 @@ layer = 2
 [connection signal="phrase_shown" from="World/DialogueDirector" to="CanvasLayer/PhraseSheet" method="show_phrase"]
 [connection signal="phrase_lit" from="World/DialogueDirector" to="CanvasLayer/PhraseSheet" method="light"]
 [connection signal="phrase_closed" from="World/DialogueDirector" to="CanvasLayer/PhraseSheet" method="close"]
+[connection signal="scene_began" from="World/CutsceneDirector" to="World/Player" method="begin_scene" unbinds=1]
+[connection signal="scene_ended" from="World/CutsceneDirector" to="World/Player" method="end_scene" unbinds=1]
+[connection signal="ivo_driven" from="World/CutsceneDirector" to="World/Player" method="drive"]
+[connection signal="ivo_posed" from="World/CutsceneDirector" to="World/Player" method="stage_pose"]
+[connection signal="hurt" from="World/Player" to="World/CutsceneDirector" method="interrupt"]
+[connection signal="fell_into_hazard" from="World/Player" to="World/CutsceneDirector" method="interrupt"]
+[connection signal="room_changed" from="." to="World/CutsceneDirector" method="on_room_changed"]
+[connection signal="skip_scene_requested" from="ScreenLayer/Screens" to="World/CutsceneDirector" method="request_skip"]

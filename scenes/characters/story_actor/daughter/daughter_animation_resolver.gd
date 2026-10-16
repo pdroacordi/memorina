@@ -1,0 +1,37 @@
+class_name DaughterAnimationResolver
+extends StoryAnimationResolver
+## The daughter's clips. Each rest clip is named like the `Daughter` staging child it stands for (systems/cutscenes).
+
+const STANDING := &"standing"
+const HOLDING_OUT := &"holding_out"
+const AT_GUITAR := &"at_guitar"
+const ASLEEP := &"asleep"
+const IN_BED_TURNED := &"in_bed_turned"
+const WALK := &"walk"
+const LOWER_EYES := &"lower_eyes"
+const EYES_LOWERED := &"eyes_lowered"
+const SIT := &"sit"
+const SEATED := &"seated"
+const LIE_DOWN := &"lie_down"
+
+const CLIPS: Array[StringName] = [
+	STANDING, HOLDING_OUT, AT_GUITAR, ASLEEP, IN_BED_TURNED, WALK, LOWER_EYES, EYES_LOWERED, SIT, SEATED, LIE_DOWN,
+]
+const SETTLES: Dictionary[StringName, StringName] = {
+	LOWER_EYES: EYES_LOWERED,
+	SIT: SEATED,
+	LIE_DOWN: IN_BED_TURNED,
+}
+
+
+func clips() -> Array[StringName]:
+	return CLIPS
+
+func settles() -> Dictionary[StringName, StringName]:
+	return SETTLES
+
+func walk_clip() -> StringName:
+	return WALK
+
+func idle_clip() -> StringName:
+	return STANDING

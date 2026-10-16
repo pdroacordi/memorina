@@ -49,15 +49,18 @@ func is_talking() -> bool:
 	return _runner != null
 
 func start(talkable: Talkable) -> void:
-	if _runner != null:
-		return
-	var dialogue := talkable.current(SaveSystem.player_data)
-	if dialogue == null:
-		return
+	start_dialogue(talkable.current(SaveSystem.player_data), talkable.speaker_position())
+
+## Runs `dialogue` spoken from `at` (a Talkable, or a cutscene's CutsceneTalk); false when a talk already runs or there is
+## nothing to say.
+func start_dialogue(dialogue: Dialogue, at: Vector2) -> bool:
+	if _runner != null or dialogue == null:
+		return false
 	_runner = DialogueRunner.new(dialogue, SaveSystem.player_data)
-	_at = talkable.speaker_position()
+	_at = at
 	_facing = _at
 	_begin()
+	return true
 
 ## Ivo is free on the floor again after a beat: the talk goes on.
 func resume() -> void:

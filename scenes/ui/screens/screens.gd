@@ -10,6 +10,8 @@ signal unblock_requested
 ## The Blackout is drawn; the world stays held until it is swapped out.
 signal quit_to_title_requested
 signal quit_game_requested
+## The pause menu's "Skip scene"; the menu closes and the scene lands on its next unpaused tick.
+signal skip_scene_requested
 
 ## Screens that stop everything behind them while open; the map does not.
 const HOLDING: Array[ScreenRouter.Kind] = [ScreenRouter.Kind.PAUSE, ScreenRouter.Kind.NOTEBOOK]
@@ -43,6 +45,7 @@ func _ready() -> void:
 	_menu_input.page_pressed.connect(_on_page)
 	_notebook.close_requested.connect(_unless_leaving.bind(close))
 	_pause_menu.resume_requested.connect(_unless_leaving.bind(close))
+	_pause_menu.skip_scene_requested.connect(_unless_leaving.bind(_skip_scene))
 	_pause_menu.quit_to_title_requested.connect(_leave_for_title)
 	_pause_menu.quit_game_requested.connect(_unless_leaving.bind(quit_game_requested.emit))
 	_dim.hide()
@@ -75,6 +78,10 @@ func clear_map_anchor() -> void:
 ## The notebook opens on the newest unread entry this watcher announced. Game sets it.
 func set_notebook_watcher(watcher: NotebookWatcher) -> void:
 	_notebook.watcher = watcher
+
+## Whether the pause menu offers "Skip scene". Game sets it to CutsceneDirector.can_skip.
+func set_scene_skip(check: Callable) -> void:
+	_pause_menu.can_skip = check
 
 ## Any hit Ivo takes closes the map.
 func close_map() -> void:
@@ -121,6 +128,10 @@ func _leave_for_title() -> void:
 	get_viewport().gui_release_focus()
 	await _blackout.to_black()
 	quit_to_title_requested.emit()
+
+func _skip_scene() -> void:
+	skip_scene_requested.emit()
+	close()
 
 func _unless_leaving(action: Callable) -> void:
 	if not _leaving:

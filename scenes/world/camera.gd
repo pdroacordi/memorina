@@ -193,6 +193,9 @@ func follow(subject: Node2D) -> void:
 		_subject.facing_changed.disconnect(_on_subject_facing_changed)
 
 	_subject = subject
+	# A marker holds the offset it was given: a look-ahead still easing would drift the frame off the rig.
+	if _look_ahead_tween and not (_subject is Character):
+		_look_ahead_tween.kill()
 
 	if _subject is Character:
 		_subject.facing_changed.connect(_on_subject_facing_changed)
@@ -237,6 +240,34 @@ func push_in() -> void:
 
 func release_push() -> void:
 	_tween_zoom(Vector2.ONE, focus_duration)
+
+## Eases the zoom to `value` over `seconds` scaled seconds on the physics clock; 0 seconds sets it at once. A cutscene's
+## frame uses it; prefer integer zooms (1.5 draws uneven pixels).
+func zoom_to(value: float, seconds: float) -> void:
+	if seconds <= 0.0:
+		if _focus_tween:
+			_focus_tween.kill()
+		zoom = Vector2.ONE * value
+		return
+	_tween_zoom(Vector2.ONE * value, seconds)
+
+## The centre of the frame shown now, without this step's shake.
+func shown_centre() -> Vector2:
+	return global_position + offset - _shake_offset
+
+## The centre the frame aims at while following `subject`, before the room clamp: its feet, its look-ahead and the
+## vertical framing as they stand now. A cutscene's rig returns here before `follow(subject)`, so the hand-back does not jump.
+func centre_for(subject: Node2D) -> Vector2:
+	var bias: float = subject.frame_bias() if subject.has_method("frame_bias") else 0.0
+	var lead := 0.0
+	if subject is Character and not _pairing:
+		lead = look_ahead_distance * float((subject as Character).facing)
+	return subject.global_position + Vector2(lead, bias + offset.y)
+
+## Where a followed marker stands for the frame to centre on `centre`: a marker carries no look-ahead or framing, so the
+## offset the camera holds is taken off.
+func rig_point_for(centre: Vector2) -> Vector2:
+	return centre - offset
 
 ## Px below the subject's feet the frame keeps in view now; Game counts the rooms it reaches.
 func fall_lead() -> float:

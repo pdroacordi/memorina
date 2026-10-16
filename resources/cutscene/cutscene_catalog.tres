@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="CutsceneCatalog" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_catalog.gd" id="s_catalog"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="s_scene"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/daughter_to_bed.tres" id="r_daughter_to_bed"]
+
+[resource]
+script = ExtResource("s_catalog")
+scenes = Array[ExtResource("s_scene")]([ExtResource("r_daughter_to_bed")])
