@@ -256,6 +256,16 @@ func resolve_shortcut(shortcut_id: StringName) -> void:
 	if not is_shortcut_resolved(shortcut_id):
 		player_data.resolved_shortcuts.append(shortcut_id)
 
+func has_found(slot_id: StringName) -> bool:
+	return slot_id in player_data.found_pieces
+
+## Live data like mark_dialogue_heard(): emits only on a change.
+func mark_found(slot_id: StringName) -> void:
+	assert(slot_id != &"", "A found piece needs a slot id")
+	if not has_found(slot_id):
+		player_data.found_pieces.append(slot_id)
+		progress_changed.emit()
+
 func is_secret_found(secret_id: StringName) -> bool:
 	return secret_id in player_data.found_secrets
 

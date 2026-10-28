@@ -150,3 +150,10 @@ func test_a_half_and_its_completion_are_announced() -> void:
 	SaveSystem.learn_song_half(Enums.Song.RAIN, Enums.SongHalf.SECOND)
 	_watcher._process(0.0)
 	assert_array(_announced).contains_exactly([[&"song_rain@first"], [&"song_rain@ear"], [&"song_rain@confirmed"]])
+
+## STORY-06: taking a found piece announces its Found entry.
+func test_a_found_piece_announces() -> void:
+	_watch()
+	SaveSystem.mark_found(&"woods_hut_letter")
+	_watcher._process(0.0)
+	assert_array(_announced).contains_exactly([[&"found_bento_1"]])

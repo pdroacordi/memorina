@@ -64,6 +64,26 @@ func test_a_song_learned_whole_is_learned() -> void:
 	assert_int(SongHalves.state(data, SONG)).is_equal(SongHalves.State.LEARNED)
 	assert_int(SongHalves.missing(data, SONG)).is_equal(Enums.SongHalf.NONE)
 
+## A songbook's rule (architecture/found-pieces): a half teaches while unknown, unless the song is learned without guessing it.
+func test_can_teach_per_state() -> void:
+	var data := PlayerData.new()
+	assert_bool(SongHalves.can_teach(data, SONG, Enums.SongHalf.SECOND)).is_true()
+	SongHalves.teach(data, SONG, Enums.SongHalf.FIRST)
+	assert_bool(SongHalves.can_teach(data, SONG, Enums.SongHalf.FIRST)).is_false()
+	assert_bool(SongHalves.can_teach(data, SONG, Enums.SongHalf.SECOND)).is_true()
+	SongHalves.guess(data, SONG)
+	assert_bool(SongHalves.can_teach(data, SONG, Enums.SongHalf.SECOND)).is_true()
+	SongHalves.teach(data, SONG, Enums.SongHalf.SECOND)
+	assert_bool(SongHalves.can_teach(data, SONG, Enums.SongHalf.SECOND)).is_false()
+	var whole := PlayerData.new()
+	whole.learned_songs[SONG] = true
+	assert_bool(SongHalves.can_teach(whole, SONG, Enums.SongHalf.SECOND)).is_false()
+	var guessed_first := PlayerData.new()
+	SongHalves.teach(guessed_first, SONG, Enums.SongHalf.SECOND)
+	SongHalves.guess(guessed_first, SONG)
+	assert_bool(SongHalves.can_teach(guessed_first, SONG, Enums.SongHalf.FIRST)).is_true()
+	assert_bool(SongHalves.can_teach(guessed_first, SONG, Enums.SongHalf.SECOND)).is_false()
+
 func test_part_known_is_a_save_fact() -> void:
 	var data := PlayerData.new()
 	assert_bool(SaveFact.check(SaveFact.Kind.SONG_PART_KNOWN, SONG, data)).is_false()

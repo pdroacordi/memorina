@@ -190,6 +190,176 @@ index = 3
 title_key = "GUARDIAN_SUMMER"
 body_key = "NOTEBOOK_GUARDIAN_SUMMER_BODY"
 
+[sub_resource type="Resource" id="found_songbook_bell_jar"]
+script = ExtResource("2_entry")
+id = &"found_songbook_bell_jar"
+section = 4
+requirement = 11
+fact_id = &"woods_root_caves_alcove"
+title_key = "NOTEBOOK_FOUND_SONGBOOK_BELL_JAR_TITLE"
+detail_key = "NOTEBOOK_FOUND_SONGBOOK_BELL_JAR_DETAIL"
+body_key = "NOTEBOOK_FOUND_SONGBOOK_BELL_JAR_BODY"
+
+[sub_resource type="Resource" id="found_songbook_rain"]
+script = ExtResource("2_entry")
+id = &"found_songbook_rain"
+section = 4
+requirement = 11
+fact_id = &"lake_shore_far_niche"
+title_key = "NOTEBOOK_FOUND_SONGBOOK_RAIN_TITLE"
+detail_key = "NOTEBOOK_FOUND_SONGBOOK_RAIN_DETAIL"
+body_key = "NOTEBOOK_FOUND_SONGBOOK_RAIN_BODY"
+
+[sub_resource type="Resource" id="found_songbook_gale"]
+script = ExtResource("2_entry")
+id = &"found_songbook_gale"
+section = 4
+requirement = 11
+fact_id = &"caldera_seesaw_ledge"
+title_key = "NOTEBOOK_FOUND_SONGBOOK_GALE_TITLE"
+detail_key = "NOTEBOOK_FOUND_SONGBOOK_GALE_DETAIL"
+body_key = "NOTEBOOK_FOUND_SONGBOOK_GALE_BODY"
+
+[sub_resource type="Resource" id="found_songbook_solstice"]
+script = ExtResource("2_entry")
+id = &"found_songbook_solstice"
+section = 4
+requirement = 11
+fact_id = &"orchard_ridge_letter"
+title_key = "NOTEBOOK_FOUND_SONGBOOK_SOLSTICE_TITLE"
+detail_key = "NOTEBOOK_FOUND_SONGBOOK_SOLSTICE_DETAIL"
+body_key = "NOTEBOOK_FOUND_SONGBOOK_SOLSTICE_BODY"
+
+[sub_resource type="Resource" id="found_bento_1"]
+script = ExtResource("2_entry")
+id = &"found_bento_1"
+section = 4
+requirement = 11
+fact_id = &"woods_hut_letter"
+title_key = "NOTEBOOK_FOUND_BENTO_1_TITLE"
+detail_key = "NOTEBOOK_FOUND_BENTO_1_DETAIL"
+body_key = "NOTEBOOK_FOUND_BENTO_1_BODY"
+
+[sub_resource type="Resource" id="found_bento_2"]
+script = ExtResource("2_entry")
+id = &"found_bento_2"
+section = 4
+requirement = 11
+fact_id = &"orchard_well_catch"
+title_key = "NOTEBOOK_FOUND_BENTO_2_TITLE"
+detail_key = "NOTEBOOK_FOUND_BENTO_2_DETAIL"
+body_key = "NOTEBOOK_FOUND_BENTO_2_BODY"
+
+[sub_resource type="Resource" id="found_bento_3"]
+script = ExtResource("2_entry")
+id = &"found_bento_3"
+section = 4
+requirement = 11
+fact_id = &"caldera_long_corridor_alcove"
+title_key = "NOTEBOOK_FOUND_BENTO_3_TITLE"
+detail_key = "NOTEBOOK_FOUND_BENTO_3_DETAIL"
+body_key = "NOTEBOOK_FOUND_BENTO_3_BODY"
+
+[sub_resource type="Resource" id="found_marta"]
+script = ExtResource("2_entry")
+id = &"found_marta"
+section = 4
+requirement = 11
+fact_id = &"village_tavern_cellar"
+title_key = "NOTEBOOK_FOUND_MARTA_TITLE"
+detail_key = "NOTEBOOK_FOUND_MARTA_DETAIL"
+body_key = "NOTEBOOK_FOUND_MARTA_BODY"
+
+[sub_resource type="Resource" id="found_gull_log"]
+script = ExtResource("2_entry")
+id = &"found_gull_log"
+section = 4
+requirement = 11
+fact_id = &"frost_wreck_letter"
+title_key = "NOTEBOOK_FOUND_GULL_LOG_TITLE"
+detail_key = "NOTEBOOK_FOUND_GULL_LOG_DETAIL"
+body_key = "NOTEBOOK_FOUND_GULL_LOG_BODY"
+
+[sub_resource type="Resource" id="found_gull_note"]
+script = ExtResource("2_entry")
+id = &"found_gull_note"
+section = 4
+requirement = 11
+fact_id = &"lake_glacier_alcove"
+title_key = "NOTEBOOK_FOUND_GULL_NOTE_TITLE"
+detail_key = "NOTEBOOK_FOUND_GULL_NOTE_DETAIL"
+body_key = "NOTEBOOK_FOUND_GULL_NOTE_BODY"
+
+[sub_resource type="Resource" id="found_gull_oar"]
+script = ExtResource("2_entry")
+id = &"found_gull_oar"
+section = 4
+requirement = 11
+fact_id = &"lake_well_reeds"
+title_key = "NOTEBOOK_FOUND_GULL_OAR_TITLE"
+detail_key = "NOTEBOOK_FOUND_GULL_OAR_DETAIL"
+body_key = "NOTEBOOK_FOUND_GULL_OAR_BODY"
+
+[sub_resource type="Resource" id="found_clara_pond"]
+script = ExtResource("2_entry")
+id = &"found_clara_pond"
+section = 4
+requirement = 11
+fact_id = &"woods_pond_alcove"
+title_key = "NOTEBOOK_FOUND_CLARA_POND_TITLE"
+detail_key = "NOTEBOOK_FOUND_CLARA_POND_DETAIL"
+body_key = "NOTEBOOK_FOUND_CLARA_POND_BODY"
+
+[sub_resource type="Resource" id="found_clara_crater"]
+script = ExtResource("2_entry")
+id = &"found_clara_crater"
+section = 4
+requirement = 11
+fact_id = &"caldera_dry_moat_ledge"
+title_key = "NOTEBOOK_FOUND_CLARA_CRATER_TITLE"
+detail_key = "NOTEBOOK_FOUND_CLARA_CRATER_DETAIL"
+body_key = "NOTEBOOK_FOUND_CLARA_CRATER_BODY"
+
+[sub_resource type="Resource" id="found_clara_ringer"]
+script = ExtResource("2_entry")
+id = &"found_clara_ringer"
+section = 4
+requirement = 11
+fact_id = &"village_bell_tower_alcove"
+title_key = "NOTEBOOK_FOUND_CLARA_RINGER_TITLE"
+detail_key = "NOTEBOOK_FOUND_CLARA_RINGER_DETAIL"
+body_key = "NOTEBOOK_FOUND_CLARA_RINGER_BODY"
+
+[sub_resource type="Resource" id="found_pilgrim_1"]
+script = ExtResource("2_entry")
+id = &"found_pilgrim_1"
+section = 4
+requirement = 11
+fact_id = &"lake_high_wall_exit"
+title_key = "NOTEBOOK_FOUND_PILGRIM_1_TITLE"
+detail_key = "NOTEBOOK_FOUND_PILGRIM_1_DETAIL"
+body_key = "NOTEBOOK_FOUND_PILGRIM_1_BODY"
+
+[sub_resource type="Resource" id="found_pilgrim_2"]
+script = ExtResource("2_entry")
+id = &"found_pilgrim_2"
+section = 4
+requirement = 11
+fact_id = &"caldera_sun_stair_shrine"
+title_key = "NOTEBOOK_FOUND_PILGRIM_2_TITLE"
+detail_key = "NOTEBOOK_FOUND_PILGRIM_2_DETAIL"
+body_key = "NOTEBOOK_FOUND_PILGRIM_2_BODY"
+
+[sub_resource type="Resource" id="found_pilgrim_last"]
+script = ExtResource("2_entry")
+id = &"found_pilgrim_last"
+section = 4
+requirement = 11
+fact_id = &"village_empty_house_reward"
+title_key = "NOTEBOOK_FOUND_PILGRIM_LAST_TITLE"
+detail_key = "NOTEBOOK_FOUND_PILGRIM_LAST_DETAIL"
+body_key = "NOTEBOOK_FOUND_PILGRIM_LAST_BODY"
+
 [resource]
 script = ExtResource("1_catalog")
-entries = Array[ExtResource("2_entry")]([SubResource("lore_mentor"), SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_bread"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer")])
+entries = Array[ExtResource("2_entry")]([SubResource("lore_mentor"), SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_bread"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer"), SubResource("found_songbook_bell_jar"), SubResource("found_songbook_rain"), SubResource("found_songbook_gale"), SubResource("found_songbook_solstice"), SubResource("found_bento_1"), SubResource("found_bento_2"), SubResource("found_bento_3"), SubResource("found_marta"), SubResource("found_gull_log"), SubResource("found_gull_note"), SubResource("found_gull_oar"), SubResource("found_clara_pond"), SubResource("found_clara_crater"), SubResource("found_clara_ringer"), SubResource("found_pilgrim_1"), SubResource("found_pilgrim_2"), SubResource("found_pilgrim_last")])

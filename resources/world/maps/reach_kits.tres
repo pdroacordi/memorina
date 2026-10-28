@@ -30,7 +30,7 @@ room = &"bloom_hollow"
 skills = Array[int]([0])
 songs = Array[int]([6, 7])
 restored_guardians = Array[int]([1])
-note = "Bloom Guardian: Enraizar + double jump; Chuva stands in for its two halves (SONG-14: the woods creature and a songbook in the lake) until CORE-04 and STORY-06 place them as their own milestones."
+note = "Bloom Guardian: Enraizar + double jump; Chuva stands in for its two halves (SONG-14): its songbook lies in lake_shore_far_niche (STORY-06); the first half waits for the woods creature (CORE-04), which adds the half milestones."
 
 [sub_resource type="Resource" id="frost"]
 script = ExtResource("3_milestone")
@@ -39,7 +39,7 @@ room = &"lake_frost_arena"
 skills = Array[int]([2])
 songs = Array[int]([0, 1])
 restored_guardians = Array[int]([0])
-note = "Frost Guardian: Congelar + roll; Redoma stands in for its two halves (SONG-14: the lake creature and a songbook in the woods) until CORE-04 and STORY-06 place them as their own milestones. The roll gates nothing."
+note = "Frost Guardian: Congelar + roll; Redoma stands in for its two halves (SONG-14): its songbook lies in woods_root_caves_alcove (STORY-06); the first half waits for the lake creature (CORE-04), which adds the half milestones. The roll gates nothing."
 
 [sub_resource type="Resource" id="autumn"]
 script = ExtResource("3_milestone")
@@ -48,7 +48,7 @@ room = &"orchard_arena"
 skills = Array[int]([1])
 songs = Array[int]([4, 5])
 restored_guardians = Array[int]([2])
-note = "Autumn guardian: Soltar + wall climb; Vendaval stands in for its two halves (SONG-14: the orchard creature and a songbook in the Caldera) until CORE-04 and STORY-06 place them. Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given)."
+note = "Autumn guardian: Soltar + wall climb; Vendaval stands in for its two halves (SONG-14): its songbook lies in caldera_seesaw_ledge (STORY-06); the first half waits for the orchard creature (CORE-04). Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given)."
 
 [sub_resource type="Resource" id="summer"]
 script = ExtResource("3_milestone")
@@ -56,7 +56,7 @@ id = &"summer"
 room = &"caldera_arena"
 songs = Array[int]([2, 3])
 restored_guardians = Array[int]([3])
-note = "Summer guardian: Sombra; Solsticio stands in for its two halves (SONG-14: the Caldera creature and a songbook in the orchards) until CORE-04 and STORY-06 place them. Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given). Its flag opens the sun stair grate (guardian_restored_summer.tres)."
+note = "Summer guardian: Sombra; Solsticio stands in for its two halves (SONG-14): its songbook lies in orchard_ridge_letter (STORY-06); the first half waits for the Caldera creature (CORE-04). Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given). Its flag opens the sun stair grate (guardian_restored_summer.tres)."
 
 [sub_resource type="Resource" id="kit_base"]
 script = ExtResource("2_kit")

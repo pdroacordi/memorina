@@ -25,6 +25,8 @@ class_name PlayerData extends Resource
 @export var notebook_read: Array[StringName] = []
 ## Secret spaces opened, by `SecretWall.secret_id`; live data that a bench commits and a death forgets (architecture/secret-false-walls).
 @export var found_secrets: Array[StringName] = []
+## Found pieces taken, by reward `slot_id`; live data like heard (architecture/found-pieces).
+@export var found_pieces: Array[StringName] = []
 ## Regions whose title has played, by region `SceneKey`; a death keeps them (SaveLedger.rewind).
 @export var announced_regions: Array[StringName] = []
 ## Dialogue ids heard to their end; live data that a bench commits and a death forgets (systems/dialogue).

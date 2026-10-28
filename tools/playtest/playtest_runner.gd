@@ -65,6 +65,9 @@ func _ready() -> void:
 		SaveSystem.learn_song_half(int(pair[0]) as Enums.Song, int(pair[1]) as Enums.SongHalf)
 	for song_id: Variant in timeline.get("songs_by_ear", []):
 		SaveSystem.learn_song_by_ear(int(song_id) as Enums.Song)
+	# Reward slot ids of found pieces already taken (architecture/found-pieces).
+	for slot_id: Variant in timeline.get("found", []):
+		SaveSystem.mark_found(StringName(slot_id))
 	for skill_id: Variant in timeline.get("skills", []):
 		SaveSystem.unlock_skill(int(skill_id) as Enums.PlayerSkill)
 	for guardian_id: Variant in timeline.get("met_guardians", []):

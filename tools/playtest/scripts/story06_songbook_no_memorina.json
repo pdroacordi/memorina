@@ -1,0 +1,59 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  -4290,
+  920
+ ],
+ "owned_items": [
+  0
+ ],
+ "max_duration": 7,
+ "steps": [
+  {
+   "t": 1.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.2,
+   "screenshot": "01_in_reach"
+  },
+  {
+   "t": 2.2,
+   "log": "01_in_reach"
+  },
+  {
+   "t": 2.6,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 2.7,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 3.2,
+   "screenshot": "02_after_up"
+  },
+  {
+   "t": 3.2,
+   "log": "02_after_up"
+  },
+  {
+   "t": 4.5,
+   "screenshot": "03_later"
+  },
+  {
+   "t": 4.5,
+   "log": "03_later"
+  }
+ ]
+}

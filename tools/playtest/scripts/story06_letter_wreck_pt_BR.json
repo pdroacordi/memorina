@@ -1,0 +1,142 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "pt_BR",
+ "player_position": [
+  26100,
+  12110
+ ],
+ "max_duration": 12,
+ "steps": [
+  {
+   "t": 1.2,
+   "screenshot": "00_out_of_reach"
+  },
+  {
+   "t": 1.2,
+   "log": "00_out_of_reach"
+  },
+  {
+   "t": 1.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.7,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 2.2,
+   "screenshot": "01_in_reach"
+  },
+  {
+   "t": 2.2,
+   "log": "01_in_reach"
+  },
+  {
+   "t": 2.6,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 2.7,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 2.72,
+   "screenshot": "02_taken_0"
+  },
+  {
+   "t": 2.72,
+   "log": "02_taken_0"
+  },
+  {
+   "t": 2.85,
+   "screenshot": "02_taken_1"
+  },
+  {
+   "t": 2.85,
+   "log": "02_taken_1"
+  },
+  {
+   "t": 3.1,
+   "screenshot": "02_taken_2"
+  },
+  {
+   "t": 3.1,
+   "log": "02_taken_2"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "02_taken_3"
+  },
+  {
+   "t": 3.6,
+   "log": "02_taken_3"
+  },
+  {
+   "t": 4.5,
+   "screenshot": "02_taken_4"
+  },
+  {
+   "t": 4.5,
+   "log": "02_taken_4"
+  },
+  {
+   "t": 5.5,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 5.58,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 6.4,
+   "screenshot": "03_notebook"
+  },
+  {
+   "t": 6.4,
+   "log": "03_notebook"
+  },
+  {
+   "t": 7.2,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 7.28,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 7.8,
+   "screenshot": "04_notebook_down"
+  },
+  {
+   "t": 7.8,
+   "log": "04_notebook_down"
+  },
+  {
+   "t": 8.4,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 8.48,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 9.4,
+   "screenshot": "05_closed"
+  },
+  {
+   "t": 9.4,
+   "log": "05_closed"
+  }
+ ]
+}

@@ -39,6 +39,13 @@ static func knows(data: PlayerData, song: int, half: Enums.SongHalf) -> bool:
 	return false
 
 
+## Teaching `half` would change the save: unknown, and the song is unlearned or Ivo guessed that half.
+static func can_teach(data: PlayerData, song: int, half: Enums.SongHalf) -> bool:
+	if knows(data, song, half):
+		return false
+	return not data.learned_songs[song] or data.guessed_halves[song] == half
+
+
 ## The half a half-known song lacks; NONE unless exactly one half is known and the song is unlearned.
 static func missing(data: PlayerData, song: int) -> Enums.SongHalf:
 	match state(data, song):

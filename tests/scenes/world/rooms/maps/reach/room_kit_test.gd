@@ -129,6 +129,36 @@ func test_every_reward_slot_is_reached_by_some_kit() -> void:
 	assert_int(slots).is_greater(0)
 	assert_array(unreached).override_failure_message("Reward slots no kit reaches:\n%s" % "\n".join(unreached)).is_empty()
 
+## Design 07: no songbook needs its own song; some kit without the song reaches its slot.
+func test_no_songbook_needs_its_own_song() -> void:
+	var catalog := load(FoundCatalog.DEFAULT_PATH) as FoundCatalog
+	var problems: Array[String] = []
+	for piece: FoundPiece in catalog.pieces:
+		if piece.song == null:
+			continue
+		var at := _slot_cell(piece.slot_id)
+		assert_bool(at.x != -1 or at.y != -1).override_failure_message("no slot %s" % piece.slot_id).is_true()
+		var by := _reports.filter(func(report: ReachReport) -> bool:
+			return not _kit(report.kit).player_data().learned_songs[piece.song.id] and _reaches(report, at))
+		if by.is_empty():
+			problems.append("%s (song %d)" % [piece.slot_id, piece.song.id])
+	assert_array(problems).override_failure_message("Songbooks no kit without their song reaches:\n%s" % "\n".join(problems)).is_empty()
+
+func _kit(id: StringName) -> ReachKit:
+	for kit: ReachKit in _kits.kits:
+		if kit.id == id:
+			return kit
+	return null
+
+# The world cell of reward slot `slot_id`; (-1, -1) when no map holds it.
+func _slot_cell(slot_id: StringName) -> Vector2i:
+	for i: int in _grid.room_count():
+		var map: RoomMap = _loaded.maps[_grid.room_id(i)]
+		for placed: Dictionary in map.entities:
+			if placed.symbol == "$" and StringName(placed.params.get("slot_id", "")) == slot_id:
+				return _grid.room_rect(i).position - map.origin + placed.cell
+	return Vector2i(-1, -1)
+
 # Whether `report`'s kit reaches the surface an anchor at `cell` stands on: the nearest within ReachAudit.ANCHOR_DROP
 # rows below, as the audit marks anchors.
 func _reaches(report: ReachReport, cell: Vector2i) -> bool:

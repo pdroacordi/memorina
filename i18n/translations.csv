@@ -75,6 +75,57 @@ NOTEBOOK_SECTION_SONGS,Songs,Canções
 NOTEBOOK_SECTION_ITEMS,Items,Itens
 NOTEBOOK_SECTION_GUARDIANS,Guardians,Guardiões
 NOTEBOOK_SECTION_FOUND,Found,Achados
+NOTEBOOK_FOUND_SONGBOOK_BELL_JAR_TITLE,A winter hand's songbook,Caderno de uma mão de inverno
+NOTEBOOK_FOUND_SONGBOOK_BELL_JAR_DETAIL,Songbook · Root caves,Caderno · Grutas de raízes
+NOTEBOOK_FOUND_SONGBOOK_BELL_JAR_BODY,Only the end of it. Nothing gets in under it; anyone may leave. The start is sung by the frozen lake.,"Só o fim. Nada entra debaixo dela; quem quiser, sai. O começo é cantado junto ao lago gelado."
+NOTEBOOK_FOUND_SONGBOOK_RAIN_TITLE,An earthy hand's songbook,Caderno de uma mão de terra
+NOTEBOOK_FOUND_SONGBOOK_RAIN_DETAIL,Songbook · Far shore,Caderno · Margem distante
+NOTEBOOK_FOUND_SONGBOOK_RAIN_BODY,The end of the song that brings rain and lets it go. Its start is sung in the spring woods.,O fim da canção que traz a chuva e a deixa ir. O começo é cantado no bosque da primavera.
+NOTEBOOK_FOUND_SONGBOOK_GALE_TITLE,A restless hand's songbook,Caderno de uma mão inquieta
+NOTEBOOK_FOUND_SONGBOOK_GALE_DETAIL,Songbook · The seesaw,Caderno · A gangorra
+NOTEBOOK_FOUND_SONGBOOK_GALE_BODY,Turn your face and the wind goes with you. I never stood still long enough to learn the start.,Vire o rosto e o vento vai junto. Nunca parei quieto o bastante para aprender o começo.
+NOTEBOOK_FOUND_SONGBOOK_SOLSTICE_TITLE,An old hand's songbook,Caderno de uma mão antiga
+NOTEBOOK_FOUND_SONGBOOK_SOLSTICE_DETAIL,Songbook · Wind ridge,Caderno · Crista do vento
+NOTEBOOK_FOUND_SONGBOOK_SOLSTICE_BODY,"For the longest day, when every other song needs more time. The start is kept where the sun stands still.","Para o dia mais longo, quando toda canção precisa de mais tempo. O começo fica onde o sol para."
+NOTEBOOK_FOUND_BENTO_1_TITLE,"Bento's letter, I","Carta de Bento, I"
+NOTEBOOK_FOUND_BENTO_1_DETAIL,Letter · Woodcutter's hut,Carta · Cabana do lenhador
+NOTEBOOK_FOUND_BENTO_1_BODY,"Marta, the woodcutter let me sleep by his fire. He called his dog three names tonight. None was right.","Marta, o lenhador me deixou dormir junto ao fogo. Chamou o cachorro por três nomes hoje. Nenhum era o certo."
+NOTEBOOK_FOUND_BENTO_2_TITLE,"Bento's letter, II","Carta de Bento, II"
+NOTEBOOK_FOUND_BENTO_2_DETAIL,Letter · Roots well,Carta · Poço das raízes
+NOTEBOOK_FOUND_BENTO_2_BODY,The mills here turn only while someone remembers the wind. I sold two pots and forgot the price of both.,Os moinhos daqui só giram enquanto alguém lembra do vento. Vendi duas panelas e esqueci o preço das duas.
+NOTEBOOK_FOUND_BENTO_3_TITLE,"Bento's letter, III","Carta de Bento, III"
+NOTEBOOK_FOUND_BENTO_3_DETAIL,Letter · Long corridor,Carta · Corredor longo
+NOTEBOOK_FOUND_BENTO_3_BODY,"Hot, even in the grey. I wrote your name inside my hat, Marta, so I can read it every morning.","Faz calor até no cinza. Escrevi seu nome dentro do chapéu, Marta, para ler toda manhã."
+NOTEBOOK_FOUND_MARTA_TITLE,A letter to Bento,Uma carta para Bento
+NOTEBOOK_FOUND_MARTA_DETAIL,Letter · Tavern cellar,Carta · Adega
+NOTEBOOK_FOUND_MARTA_BODY,"Bento, your letters come, but you never do. I keep them down here, where it stays cool. Come home. M.","Bento, suas cartas chegam, mas você não. Guardo todas aqui embaixo, onde é fresco. Volte. M."
+NOTEBOOK_FOUND_GULL_LOG_TITLE,Log of the Gull,Diário da Gaivota
+NOTEBOOK_FOUND_GULL_LOG_DETAIL,Log · The wreck's hold,Diário · Porão do naufrágio
+NOTEBOOK_FOUND_GULL_LOG_BODY,"The sea stopped mid-wave and held us up like a hand. The crew went ashore. I stay, to remember the ship.","O mar parou no meio da onda e nos segurou como uma mão. A tripulação desceu. Eu fico, para lembrar do barco."
+NOTEBOOK_FOUND_GULL_NOTE_TITLE,A note on the ice,Bilhete no gelo
+NOTEBOOK_FOUND_GULL_NOTE_DETAIL,Note · The glacier,Bilhete · Geleira
+NOTEBOOK_FOUND_GULL_NOTE_BODY,Whoever finds this: I sailed on the Gull. The sea is west. I keep walking east and don't know why.,Quem achar isto: naveguei na Gaivota. O mar fica a oeste. Sigo andando para leste e não sei por quê.
+NOTEBOOK_FOUND_GULL_OAR_TITLE,A carved oar,Um remo entalhado
+NOTEBOOK_FOUND_GULL_OAR_DETAIL,Carving · The well,Entalhe · O poço
+NOTEBOOK_FOUND_GULL_OAR_BODY,"GULL, cut deep into the blade. Under it, smaller and newer: what is a gull?","GAIVOTA, talhado fundo na pá. Embaixo, menor e mais novo: o que é uma gaivota?"
+NOTEBOOK_FOUND_CLARA_POND_TITLE,Sketch: the pond,Esboço: a lagoa
+NOTEBOOK_FOUND_CLARA_POND_DETAIL,Drawing · The pond,Desenho · Lagoa
+NOTEBOOK_FOUND_CLARA_POND_BODY,On the back: frogs too loud to count. Next spring I'll paint them singing. Clara.,No verso: rãs demais para contar. Na próxima primavera eu pinto elas cantando. Clara.
+NOTEBOOK_FOUND_CLARA_CRATER_TITLE,Sketch: the crater lake,Esboço: o lago da cratera
+NOTEBOOK_FOUND_CLARA_CRATER_DETAIL,Drawing · Dry moat,Desenho · Fosso seco
+NOTEBOOK_FOUND_CLARA_CRATER_BODY,On the back: everyone swears there was never water here. I painted it anyway. Clara.,No verso: todos juram que nunca houve água aqui. Pintei assim mesmo. Clara.
+NOTEBOOK_FOUND_CLARA_RINGER_TITLE,Sketch: the ringer,Esboço: o sineiro
+NOTEBOOK_FOUND_CLARA_RINGER_DETAIL,Drawing · Bell tower,Desenho · Torre do sino
+NOTEBOOK_FOUND_CLARA_RINGER_BODY,On the back: he rings at noon so the village knows it is noon. Lately he asks me the time. Clara.,No verso: ele toca ao meio-dia para a vila saber que é meio-dia. Agora me pergunta as horas. Clara.
+NOTEBOOK_FOUND_PILGRIM_1_TITLE,"A pilgrim's diary, I","Diário de uma peregrina, I"
+NOTEBOOK_FOUND_PILGRIM_1_DETAIL,Diary · The high wall,Diário · A parede alta
+NOTEBOOK_FOUND_PILGRIM_1_BODY,They say the lighthouse keeps something. I mean to ask it what. The wall of water let me through.,Dizem que o farol guarda alguma coisa. Vou perguntar o quê. A parede d'água me deixou passar.
+NOTEBOOK_FOUND_PILGRIM_2_TITLE,"A pilgrim's diary, II","Diário de uma peregrina, II"
+NOTEBOOK_FOUND_PILGRIM_2_DETAIL,Diary · Sun stair,Diário · Escada do sol
+NOTEBOOK_FOUND_PILGRIM_2_BODY,I prayed here for a long summer. The stair is warm. I have forgotten what I meant to ask.,Rezei aqui por um verão comprido. A escada é morna. Esqueci o que ia perguntar.
+NOTEBOOK_FOUND_PILGRIM_LAST_TITLE,"A pilgrim's diary, last","Diário de uma peregrina, fim"
+NOTEBOOK_FOUND_PILGRIM_LAST_DETAIL,Diary · The empty house,Diário · A casa vazia
+NOTEBOOK_FOUND_PILGRIM_LAST_BODY,"Home. The door knew me before I knew it. Whatever I went looking for, I left it on the road. That's all right.","Em casa. A porta me reconheceu antes de eu a reconhecer. O que fui buscar, deixei na estrada. Está tudo bem."
 NOTEBOOK_UNKNOWN,? ? ?,? ? ?
 NOTEBOOK_SONG_FREEZE_DETAIL,Winter · petrified branch,Inverno · galho petrificado
 NOTEBOOK_SONG_FREEZE_BODY,Water stops where the song reaches. It holds my weight while the colour lasts.,A água para onde a canção alcança. Aguenta meu peso enquanto a cor dura.

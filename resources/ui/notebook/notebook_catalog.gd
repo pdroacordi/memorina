@@ -7,6 +7,7 @@ const SECTION_REQUIREMENT: Dictionary[NotebookEntry.Section, SaveFact.Kind] = {
 	NotebookEntry.Section.SONGS: SaveFact.Kind.SONG_PART_KNOWN,
 	NotebookEntry.Section.ITEMS: SaveFact.Kind.ITEM,
 	NotebookEntry.Section.GUARDIANS: SaveFact.Kind.GUARDIAN_MET,
+	NotebookEntry.Section.FOUND: SaveFact.Kind.PIECE_FOUND,
 }
 
 @export var entries: Array[NotebookEntry] = []
@@ -47,9 +48,9 @@ func validate() -> PackedStringArray:
 		ids[entry.id] = true
 		if SECTION_REQUIREMENT.has(entry.section) and SECTION_REQUIREMENT[entry.section] != entry.requirement:
 			problems.append("%s: section %d needs requirement %d" % [entry.id, entry.section, SECTION_REQUIREMENT[entry.section]])
-		var reads_an_id := entry.requirement in [SaveFact.Kind.DIALOGUE_HEARD, SaveFact.Kind.RESPONSE_CHOSEN]
+		var reads_an_id := entry.requirement in [SaveFact.Kind.DIALOGUE_HEARD, SaveFact.Kind.RESPONSE_CHOSEN, SaveFact.Kind.PIECE_FOUND]
 		if reads_an_id and entry.fact_id == &"":
-			problems.append("%s reads a dialogue fact with no fact_id" % entry.id)
+			problems.append("%s reads an id fact with no fact_id" % entry.id)
 		if entry.title_key.is_empty() or entry.body_key.is_empty():
 			problems.append("%s has no title or body key" % entry.id)
 		if entry.section == NotebookEntry.Section.ITEMS and entry.icon == null:

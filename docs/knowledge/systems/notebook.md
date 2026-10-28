@@ -31,7 +31,7 @@ source_files:
 
 ## Summary
 
-UI-03, design 02 "UI" ("Caderno de campo"). E / pad Select toggles it; Esc and B close it. It holds the world like the pause and is refused over an existing freeze or hold (`systems/screens`). Five sections, one tab each: Memories (Ivo's diary), Songs, Items, Guardians and Found (UI-14: letters, diaries, drawings and songbooks, "A fifth tab, Found (Recommended)", user, 2026-10-28; its entries come with STORY-06, so it is empty until then). The left page shows the section title and its entry list; the right page shows the focused entry. Plan and options: `architecture/notebook-entries-are-derived-from-the-save`.
+UI-03, design 02 "UI" ("Caderno de campo"). E / pad Select toggles it; Esc and B close it. It holds the world like the pause and is refused over an existing freeze or hold (`systems/screens`). Five sections, one tab each: Memories (Ivo's diary), Songs, Items, Guardians and Found (UI-14: letters, diaries, drawings and songbooks, "A fifth tab, Found (Recommended)", user, 2026-10-28; 17 entries from STORY-06: one per found piece, `requirement` PIECE_FOUND with the slot id as `fact_id`, in design 07's order; plain pages with a title, a detail line and a body; `systems/found-pieces`). The left page shows the section title and its entry list; the right page shows the focused entry. Plan and options: `architecture/notebook-entries-are-derived-from-the-save`.
 
 ## Data
 

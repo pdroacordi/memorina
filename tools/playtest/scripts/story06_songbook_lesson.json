@@ -1,0 +1,194 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  -4290,
+  920
+ ],
+ "song_halves": [
+  [
+   1,
+   1
+  ]
+ ],
+ "max_duration": 100,
+ "steps": [
+  {
+   "t": 1.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.2,
+   "screenshot": "01_in_reach"
+  },
+  {
+   "t": 2.2,
+   "log": "01_in_reach"
+  },
+  {
+   "t": 2.6,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 2.7,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 2.8,
+   "screenshot": "02_lesson_00"
+  },
+  {
+   "t": 2.8,
+   "log": "02_lesson_00"
+  },
+  {
+   "t": 3.2,
+   "screenshot": "02_lesson_01"
+  },
+  {
+   "t": 3.2,
+   "log": "02_lesson_01"
+  },
+  {
+   "t": 4.0,
+   "screenshot": "02_lesson_02"
+  },
+  {
+   "t": 4.0,
+   "log": "02_lesson_02"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "02_lesson_03"
+  },
+  {
+   "t": 6.0,
+   "log": "02_lesson_03"
+  },
+  {
+   "t": 10.0,
+   "screenshot": "02_lesson_04"
+  },
+  {
+   "t": 10.0,
+   "log": "02_lesson_04"
+  },
+  {
+   "t": 20.0,
+   "screenshot": "02_lesson_05"
+  },
+  {
+   "t": 20.0,
+   "log": "02_lesson_05"
+  },
+  {
+   "t": 40.0,
+   "screenshot": "02_lesson_06"
+  },
+  {
+   "t": 40.0,
+   "log": "02_lesson_06"
+  },
+  {
+   "t": 60.0,
+   "screenshot": "02_lesson_07"
+  },
+  {
+   "t": 60.0,
+   "log": "02_lesson_07"
+  },
+  {
+   "t": 78.0,
+   "screenshot": "02_lesson_08"
+  },
+  {
+   "t": 78.0,
+   "log": "02_lesson_08"
+  },
+  {
+   "t": 80.0,
+   "screenshot": "02_lesson_09"
+  },
+  {
+   "t": 80.0,
+   "log": "02_lesson_09"
+  },
+  {
+   "t": 81.0,
+   "screenshot": "02_lesson_10"
+  },
+  {
+   "t": 81.0,
+   "log": "02_lesson_10"
+  },
+  {
+   "t": 82.0,
+   "screenshot": "02_lesson_11"
+  },
+  {
+   "t": 82.0,
+   "log": "02_lesson_11"
+  },
+  {
+   "t": 83.5,
+   "screenshot": "02_lesson_12"
+  },
+  {
+   "t": 83.5,
+   "log": "02_lesson_12"
+  },
+  {
+   "t": 86.0,
+   "screenshot": "02_lesson_13"
+  },
+  {
+   "t": 86.0,
+   "log": "02_lesson_13"
+  },
+  {
+   "t": 88.0,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 88.08,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 89.0,
+   "screenshot": "03_notebook"
+  },
+  {
+   "t": 89.0,
+   "log": "03_notebook"
+  },
+  {
+   "t": 89.8,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 89.88,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 90.6,
+   "screenshot": "04_closed"
+  },
+  {
+   "t": 90.6,
+   "log": "04_closed"
+  }
+ ]
+}

@@ -365,7 +365,8 @@ func _process_motion(delta: float) -> void:
 	if on_floor:
 		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
-	if not _try_door(on_floor) and not _try_talk(on_floor) and not _try_pickup(on_floor) and not _try_board(on_floor):
+	if not _try_door(on_floor) and not _try_talk(on_floor) and not _try_pickup(on_floor) and not _try_found(on_floor) \
+			and not _try_board(on_floor):
 		_try_climb()
 	# Every frame, whichever branch ran: a press spent above is already 0.
 	_up_buffer = maxf(_up_buffer - delta, 0.0)
@@ -684,6 +685,29 @@ func _try_pickup(on_floor: bool) -> bool:
 		pickup_talk_started.emit(said, pickup.global_position)
 	return true
 
+# After an item, Up takes a found piece (systems/found-pieces), under the same gates; a refused press is spent.
+# A songbook is read standing still, as the Memorina is played, so a held direction refuses it.
+func _try_found(on_floor: bool) -> bool:
+	if _up_buffer <= 0.0:
+		return false
+	var found := _pickups.reachable_found()
+	if found == null:
+		return false
+	_up_buffer = 0.0
+	if is_in_story() or not _free_for_up(on_floor):
+		return false
+	var book := found.teaches()
+	if book != null:
+		if wants_to_move():
+			return false
+		velocity.x = 0.0
+		# A refused lesson (a hard landing's recovery, no Memorina) spends only the Up press.
+		if not learn_song_half(book, FoundPickup.TAUGHT_HALF):
+			return false
+	_drop_buffers()
+	found.take()
+	return true
+
 # One gate list for doors, talks and pickups, so a moment refused for one is refused for all.
 func _free_for_up(on_floor: bool) -> bool:
 	if not on_floor or is_rolling() or is_attacking() or is_in_knockback():
@@ -863,7 +887,7 @@ func learn_song_half(song: Song, half: Enums.SongHalf) -> bool:
 		return false
 	assert(song.learned_in_halves, "Song %d is not learned in halves" % song.id)
 	var data := SaveSystem.player_data
-	if SongHalves.knows(data, song.id, half):
+	if not SongHalves.can_teach(data, song.id, half):
 		return false
 	# The half that makes the song whole, or the one Ivo guessed, is a lesson: the real name is heard at last.
 	var lesson := SongHalves.missing(data, song.id) == half or data.guessed_halves[song.id] == half

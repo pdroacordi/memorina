@@ -47,7 +47,7 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   `"notebook_read": ["<entry id>"]` seed the save the same way; `"owned_items": [ids]` (`Enums.PlayerItem`: 0 the
   sword, 1 the Memorina, 2 the bread) sets the owned items to exactly that list, so a run can start without the items a debug new
   game owns (`[]` owns nothing); `"dialogues_heard": ["<dialogue id>"]` marks talks heard and
-  `"responses": {"<ask id>": "<choice id>"}` records answers, so a run can start mid-story (`systems/story`), and `"locale": "en"` sets
+  `"responses": {"<ask id>": "<choice id>"}` records answers, `"found": ["<slot id>"]` marks found pieces taken, so a run can start mid-story (`systems/story`), and `"locale": "en"` sets
   the locale before the scene loads (the default is the OS locale). `log` also prints the
   notebook: phase, section, the entry on the right page, its rows (`>` focused, `*` unread,
   `()` hidden), the scroll cues, tab marks, read ids, the HUD quill's alpha and the

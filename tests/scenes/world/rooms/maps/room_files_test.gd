@@ -56,6 +56,28 @@ func test_every_reward_slot_has_a_known_kind() -> void:
 				problems.append("%s: slot %s has kind %s" % [path, placed.params.get("slot_id", "?"), kind])
 	assert_array(Array(problems)).is_empty()
 
+## Every COLLECTIBLE slot holds a found piece but the LIFE-05 life note's, and every piece names a COLLECTIBLE slot
+## (architecture/found-pieces).
+func test_found_pieces_and_collectible_slots_match() -> void:
+	const RESERVED: Array[StringName] = [&"caldera_temple_sanctum"]
+	var catalog := load(FoundCatalog.DEFAULT_PATH) as FoundCatalog
+	var legend := RoomLegend.load_default()
+	var slots: Dictionary[StringName, bool] = {}
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var result := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
+		for placed: Dictionary in result.map.entities:
+			if placed.symbol != "$" or int(placed.params.get("kind", RewardSlot.Kind.COLLECTIBLE)) != RewardSlot.Kind.COLLECTIBLE:
+				continue
+			var slot_id := StringName(placed.params.get("slot_id", ""))
+			slots[slot_id] = true
+			if catalog.get_piece(slot_id) == null and slot_id not in RESERVED:
+				problems.append("%s: slot %s holds no found piece" % [path, slot_id])
+	for piece: FoundPiece in catalog.pieces:
+		if not slots.has(piece.slot_id):
+			problems.append("found piece %s names no COLLECTIBLE slot" % piece.slot_id)
+	assert_array(Array(problems)).is_empty()
+
 ## A slot stands on ground or a one-way, so it never floats; room_kit_test's ANCHOR_DROP lookup would not notice one that did.
 func test_every_reward_slot_stands_on_a_floor() -> void:
 	var legend := RoomLegend.load_default()

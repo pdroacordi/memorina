@@ -51,6 +51,10 @@ The Memorina is not a pickup: the mentor's talk grants it in STORY-03 through a 
 - No animation: the item leaves the table, the item-acquired notice shows its icon and name (`systems/notices`) and the notebook quill announces the ITEM entry (`systems/notebook`).
 - Without the sword, Ivo cannot swing (`Player._can_use_sword` reads the save), so the pickup is the start of combat in a new game.
 
+## Found pieces
+
+Letters and songbooks are `FoundPickup`s, not `ItemPickup`s: a reward slot adds one from `found_catalog.tres`, and Up takes it in `Player._try_found`, after `_try_pickup`, under the same buffer and gates (`systems/found-pieces`).
+
 ## Today
 
 One pickup: the sword in `threshold_farmhouse` (cell 9,8; `rest_offset` (-4, -19); `width_cells` 4).

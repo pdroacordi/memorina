@@ -1,0 +1,92 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  -4290,
+  920
+ ],
+ "max_duration": 7,
+ "steps": [
+  {
+   "t": 1.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.8,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.2,
+   "screenshot": "00_in_reach_still"
+  },
+  {
+   "t": 2.2,
+   "log": "00_in_reach_still"
+  },
+  {
+   "t": 2.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.56,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 2.6,
+   "screenshot": "01_up_with_left_held"
+  },
+  {
+   "t": 2.6,
+   "log": "01_up_with_left_held"
+  },
+  {
+   "t": 2.64,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 2.7,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "screenshot": "02_released"
+  },
+  {
+   "t": 2.9,
+   "log": "02_released"
+  },
+  {
+   "t": 3.3,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 3.38,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 3.45,
+   "screenshot": "03_after_still_up"
+  },
+  {
+   "t": 3.45,
+   "log": "03_after_still_up"
+  },
+  {
+   "t": 4.0,
+   "screenshot": "04_later"
+  },
+  {
+   "t": 4.0,
+   "log": "04_later"
+  }
+ ]
+}
