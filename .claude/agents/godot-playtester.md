@@ -499,6 +499,30 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     `ls -l --time-style=+%H:%M:%S` the asset folder and `.godot/imported/<name>*.ctex` before writing, and compare a
     PNG's md5 with its `.godot/imported/*.md5` `source_md5` to know which version a run drew.
 
+- **Learned 2026-10-28 (SONG-14 half songs)**:
+  - **Song state seeding:** `"song_halves": [[song, half]]` (half 1 = notes 1-3, 2 = notes 4-6) and `"songs_by_ear": [song]`
+    are applied after `known_songs`. The debug half key is **F8** (it was Shift+F9 until 2026-10-28: Shift is `roll`). It skips
+    learned songs, so no timeline reaches a by-ear-then-confirmed page. `tools/playtest/scripts/song14_confirmed_driver.gd`
+    (a `-s` driver, run with `song14_confirmed_page.json`) calls `Player.learn_song_half` at 4 s real for that.
+  - **Lessons run 32-95 s of real time** and pause the tree, so a lesson timeline needs `"clock": "real"`. Get a track's
+    length from a headless probe: `load(<mp3>).get_length()`. Lullaby Under Glass is 79.0 s, and the quill shows ~0.5 s
+    after the lesson ends.
+  - **A seeded save opens the notebook on the newest unread entry, often an item** (the runner's kit owns the Sword and the
+    Memorina). To see a seeded song page, make the song progress live (F8, a guess) or navigate to the Songs tab.
+  - **A one-line label never looks too wide to its container's size:** the container widens to it. Check overflow against
+    the page's pixel column in the screenshot (compare with another page's left margin), not against a log or a test of
+    the parent's size.
+
+- **Learned 2026-10-28 (STORY-06 found pieces)**:
+  - **Up reach is Ivo's 12 px `DoorSensor`, not his 22 px body.** A `FoundPickup` (2x2 cells) prompts only while his
+    feet are within ~38 px of the slot centre. A walk that stopped 40 px away showed no prompt, and Up did nothing.
+    Log `pos` and aim for the slot's x within 30 px.
+  - **Slot world position:** room node position + (32 * col + 16, 32 * (row + 1)) is the slot's floor point. Check
+    that the floor under it really is under Ivo's spawn x: a loft one-way that starts at the slot's column drops a
+    spawn 2 cells left of it to the floor below. Spawn ~20 px above a one-way, never at its top y.
+  - Slot positions: woods_hut letter (36336, 12160), loft x 36320..36544; frost_wreck_hold letter (26160, 12128);
+    woods_root_caves Redoma songbook (-4368, 928), alcove x -4448..-4192.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
