@@ -160,3 +160,11 @@ func test_every_dialogue_entry_names_a_catalog_dialogue_or_choice() -> void:
 			assert_bool(heard.has(entry.fact_id)).override_failure_message("%s reads heard '%s'" % [entry.id, entry.fact_id]).is_true()
 		elif entry.requirement == SaveFact.Kind.RESPONSE_CHOSEN:
 			assert_bool(chosen.has(entry.fact_id)).override_failure_message("%s reads choice '%s'" % [entry.id, entry.fact_id]).is_true()
+
+## By-ear texts exist exactly on the songs learned in halves (architecture/half-songs).
+func test_ear_texts_are_on_exactly_the_halved_songs() -> void:
+	var songs := load("res://resources/songs/song_catalog.tres") as SongCatalog
+	for entry: NotebookEntry in _catalog().in_section(NotebookEntry.Section.SONGS):
+		var halved := songs.get_song(entry.index as Enums.Song).learned_in_halves
+		assert_bool(not entry.ear_body_key.is_empty()).override_failure_message("%s ear_body_key" % entry.id).is_equal(halved)
+		assert_bool(not entry.ear_margin_key.is_empty()).override_failure_message("%s ear_margin_key" % entry.id).is_equal(halved)

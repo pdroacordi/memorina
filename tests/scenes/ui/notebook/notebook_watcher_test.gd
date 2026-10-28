@@ -138,3 +138,15 @@ class HeldWatcher extends NotebookWatcher:
 
 	func is_holding() -> bool:
 		return held
+
+## Each state of a halved song is announced as it changes (architecture/half-songs).
+func test_a_half_and_its_completion_are_announced() -> void:
+	_watch()
+	SaveSystem.learn_song_half(Enums.Song.RAIN, Enums.SongHalf.FIRST)
+	_watcher._process(0.0)
+	SaveSystem.mark_notebook_read(&"song_rain@first")
+	SaveSystem.learn_song_by_ear(Enums.Song.RAIN)
+	_watcher._process(0.0)
+	SaveSystem.learn_song_half(Enums.Song.RAIN, Enums.SongHalf.SECOND)
+	_watcher._process(0.0)
+	assert_array(_announced).contains_exactly([[&"song_rain@first"], [&"song_rain@ear"], [&"song_rain@confirmed"]])

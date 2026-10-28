@@ -23,6 +23,15 @@ func test_each_season_carries_exactly_two_songs() -> void:
 	for season: int in Enums.Season.size():
 		assert_array(catalog.songs_for_season(season)).has_size(2)
 
+## Design 02 section 7.2.1: the second song of each season.
+func test_exactly_the_four_second_songs_are_learned_in_halves() -> void:
+	var halved: Array[int] = []
+	for song: Song in _catalog().songs:
+		if song.learned_in_halves:
+			halved.append(song.id)
+	halved.sort()
+	assert_array(halved).is_equal([Enums.Song.BELL_JAR, Enums.Song.SOLSTICE, Enums.Song.GALE, Enums.Song.RAIN])
+
 func test_an_unknown_id_looks_up_to_nothing() -> void:
 	assert_object(_catalog().get_song(Enums.Song.size() as Enums.Song)).is_null()
 

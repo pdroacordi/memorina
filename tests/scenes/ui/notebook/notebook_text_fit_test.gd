@@ -129,3 +129,64 @@ func test_every_note_glyph_inks_inside_the_right_page() -> void:
 						"set %d, %s: %s ink at %s leaves the %s page" % [glyph_set, entry.id, glyph.name, ink, page.size]).is_true()
 				assert_vector(glyph.size).is_equal(Vector2(16, 16))
 	InputDevice.glyph_set = was
+
+## Every halved song's half, by-ear and confirmed states, from either half first (architecture/half-songs).
+func _half_states() -> Array[PlayerData]:
+	var states: Array[PlayerData] = []
+	for first: Enums.SongHalf in [Enums.SongHalf.FIRST, Enums.SongHalf.SECOND]:
+		var other := Enums.SongHalf.SECOND if first == Enums.SongHalf.FIRST else Enums.SongHalf.FIRST
+		for step: int in 3:
+			var data := PlayerData.new()
+			for song: int in [Enums.Song.BELL_JAR, Enums.Song.SOLSTICE, Enums.Song.GALE, Enums.Song.RAIN]:
+				SongHalves.teach(data, song, first)
+				if step >= 1:
+					SongHalves.guess(data, song)
+				if step == 2:
+					SongHalves.teach(data, song, other)
+			states.append(data)
+	return states
+
+func test_every_half_song_state_fits_both_pages() -> void:
+	_notebook.open()
+	await _settle()
+	var page := _page("RightPage")
+	var detail := _page("Detail")
+	var struck := _page("StruckTitle") as Label
+	for locale: String in LOCALES:
+		TranslationServer.set_locale(locale)
+		for data: PlayerData in _half_states():
+			for entry: NotebookEntry in _notebook.catalog.in_section(NotebookEntry.Section.SONGS):
+				_notebook.render_entry(entry, data)
+				await _settle()
+				var needed := detail.get_combined_minimum_size().y
+				assert_float(needed).override_failure_message(
+						"[%s] %s needs %.0f px, the page has %.0f" % [locale, entry.page_id(data), needed, page.size.y]).is_less_equal(page.size.y)
+				_assert_labels_fit(detail, "[%s] %s" % [locale, entry.page_id(data)])
+				if struck.visible:
+					var width := struck.get_theme_font(&"font").get_string_size(struck.text, HORIZONTAL_ALIGNMENT_LEFT, -1,
+							struck.get_theme_font_size(&"font_size")).x
+					assert_float(width).override_failure_message(
+							"[%s] %s: the struck name is %.0f px on a %.0f px page" % [locale, entry.id, width, page.size.x]).is_less_equal(page.size.x)
+				assert_float(detail.size.x).override_failure_message(
+						"[%s] %s widens the page's column to %.0f px" % [locale, entry.page_id(data), detail.size.x]).is_less_equal(page.size.x)
+			SaveSystem.player_data.song_first_halves = data.song_first_halves.duplicate()
+			SaveSystem.player_data.song_second_halves = data.song_second_halves.duplicate()
+			SaveSystem.player_data.learned_songs = data.learned_songs.duplicate()
+			SaveSystem.player_data.guessed_halves = data.guessed_halves.duplicate()
+			_notebook.turn_to(NotebookEntry.Section.SONGS)
+			await _settle()
+			_assert_labels_fit(_page("LeftPage"), "[%s] songs list" % locale)
+
+func test_a_blank_note_inks_inside_the_right_page() -> void:
+	_notebook.open()
+	await _settle()
+	var page := _page("RightPage")
+	var notes := _page("Notes")
+	var data := _half_states()[0]
+	_notebook.render_entry(_notebook.catalog.get_entry(&"song_bell_jar"), data)
+	await _settle()
+	var blank := notes.get_child(Song.NOTE_COUNT - 1) as TextureRect
+	assert_object(blank.texture).is_same(_notebook.blank_texture)
+	var used := blank.texture.get_image().get_used_rect()
+	var ink := Rect2(notes.position + blank.position + Vector2(used.position), Vector2(used.size))
+	assert_bool(Rect2(Vector2.ZERO, page.size).encloses(ink)).is_true()

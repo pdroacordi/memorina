@@ -14,6 +14,7 @@ signal look_up_pressed
 signal note_pressed(note: Enums.Note, glyph_set: Enums.GlyphSet)
 ## Debug-build action for teaching the next unknown song.
 signal debug_learn_song_pressed
+signal debug_learn_song_half_pressed
 
 ## Which action plays which note. A dictionary rather than four branches
 ## because the mapping is data, and every entry behaves identically.
@@ -117,6 +118,8 @@ func _input(event: InputEvent) -> void:
 		_up_held = up
 	if OS.is_debug_build() and event.is_action_pressed("debug_learn_song"):
 		debug_learn_song_pressed.emit()
+	if OS.is_debug_build() and event.is_action_pressed("debug_learn_song_half"):
+		debug_learn_song_half_pressed.emit()
 	# MemorinaComponent decides whether notes are accepted while the instrument is sheathed.
 	_emit_notes(event)
 

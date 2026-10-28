@@ -60,6 +60,11 @@ func _ready() -> void:
 	SaveSystem.begin("", true)
 	for song_id: Variant in timeline.get("known_songs", []):
 		SaveSystem.learn_song(int(song_id) as Enums.Song)
+	# Pairs [song, half], half 1 FIRST or 2 SECOND (architecture/half-songs).
+	for pair: Variant in timeline.get("song_halves", []):
+		SaveSystem.learn_song_half(int(pair[0]) as Enums.Song, int(pair[1]) as Enums.SongHalf)
+	for song_id: Variant in timeline.get("songs_by_ear", []):
+		SaveSystem.learn_song_by_ear(int(song_id) as Enums.Song)
 	for skill_id: Variant in timeline.get("skills", []):
 		SaveSystem.unlock_skill(int(skill_id) as Enums.PlayerSkill)
 	for guardian_id: Variant in timeline.get("met_guardians", []):

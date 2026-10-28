@@ -30,7 +30,7 @@ room = &"bloom_hollow"
 skills = Array[int]([0])
 songs = Array[int]([6, 7])
 restored_guardians = Array[int]([1])
-note = "Bloom Guardian: Enraizar + double jump; the Chuva fragment (design 04 section 2), modelled as found with the guardian."
+note = "Bloom Guardian: Enraizar + double jump; Chuva stands in for its two halves (SONG-14: the woods creature and a songbook in the lake) until CORE-04 and STORY-06 place them as their own milestones."
 
 [sub_resource type="Resource" id="frost"]
 script = ExtResource("3_milestone")
@@ -39,7 +39,7 @@ room = &"lake_frost_arena"
 skills = Array[int]([2])
 songs = Array[int]([0, 1])
 restored_guardians = Array[int]([0])
-note = "Frost Guardian: Congelar + roll; the Redoma fragment (design 04 section 2), modelled as found with the guardian. The roll gates nothing."
+note = "Frost Guardian: Congelar + roll; Redoma stands in for its two halves (SONG-14: the lake creature and a songbook in the woods) until CORE-04 and STORY-06 place them as their own milestones. The roll gates nothing."
 
 [sub_resource type="Resource" id="autumn"]
 script = ExtResource("3_milestone")
@@ -48,7 +48,7 @@ room = &"orchard_arena"
 skills = Array[int]([1])
 songs = Array[int]([4, 5])
 restored_guardians = Array[int]([2])
-note = "Autumn guardian: Soltar + wall climb; the Vendaval fragment (design 04 sections 1 and 2). Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given)."
+note = "Autumn guardian: Soltar + wall climb; Vendaval stands in for its two halves (SONG-14: the orchard creature and a songbook in the Caldera) until CORE-04 and STORY-06 place them. Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given)."
 
 [sub_resource type="Resource" id="summer"]
 script = ExtResource("3_milestone")
@@ -56,7 +56,7 @@ id = &"summer"
 room = &"caldera_arena"
 songs = Array[int]([2, 3])
 restored_guardians = Array[int]([3])
-note = "Summer guardian: Sombra; the Solsticio fragment (design 04 section 2). Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given). Its flag opens the sun stair grate (guardian_restored_summer.tres)."
+note = "Summer guardian: Sombra; Solsticio stands in for its two halves (SONG-14: the Caldera creature and a songbook in the orchards) until CORE-04 and STORY-06 place them. Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given). Its flag opens the sun stair grate (guardian_restored_summer.tres)."
 
 [sub_resource type="Resource" id="kit_base"]
 script = ExtResource("2_kit")

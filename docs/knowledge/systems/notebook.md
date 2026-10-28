@@ -6,7 +6,7 @@ status: active
 tags: [notebook, ui, screens, save, unread, toast, i18n, art]
 related: [systems/notices, architecture/notebook-entries-are-derived-from-the-save, bugs/the-notebook-quill-shows-through-a-lesson, bugs/the-notebook-list-cannot-scroll-back-up-past-a-hidden-row, gotchas/gui-focus-skips-a-neighbour-wholly-clipped-by-a-scroll-container, gotchas/autowrapped-rows-settle-over-several-sorts, playtests/2026-10-06-notebook, systems/screens, systems/input, systems/life-benches-death, systems/guardians, systems/greyhush, gotchas/time-scale-zero-stops-delta-particles-and-time, gotchas/a-killed-tween-never-emits-finished]
 created: 2026-10-06
-updated: 2026-10-16
+updated: 2026-10-28
 source_files:
   - resources/ui/notebook/notebook_entry.gd
   - resources/ui/notebook/notebook_catalog.gd
@@ -45,6 +45,13 @@ UI-03, design 02 "UI" ("Caderno de campo"). E / pad Select toggles it; Esc and B
 - `PlayerData.met_guardians` (`migrate()` grows it) is set by `Guardian._on_player_entered` through `SaveSystem.meet_guardian`. GUARDIAN_MET is met by met OR restored, so older saves are correct.
 - `PlayerData.notebook_read` (ids). `SaveLedger.rewind` merges the live ids into the committed save, so a death keeps what was read (both `record_death` and `SaveSystem.rewind` go through it).
 - `SaveSystem.progress_changed` is emitted by `learn_song`, `unlock_skill`, `set_item_owned`, `restore_guardian` and `meet_guardian`. `mark_notebook_read` does not emit it.
+
+## Song pages per state (SONG-14, 2026-10-28)
+
+- Every song entry's requirement is `SONG_PART_KNOWN`; `NotebookEntry.song_state(data)` reads `SongHalves.state` (LEARNED for non-song entries).
+- **Page ids:** `NotebookEntry.page_id(data)` is the entry id, or `id@first`, `id@second`, `id@ear`, `id@confirmed` while a halved song is being completed. `NotebookIndex.present`/`unread` and the watcher work on page ids, so each new state is unread and announced again ("the diary entry changes with that", user, 2026-10-28). `NotebookCatalog.get_entry` takes either id. An old save's plain read id still reads a LEARNED song.
+- **The page:** a half shows `NOTEBOOK_SONG_HALF_TITLE` ("Half a song (Recommended)", user), three glyphs and three blanks (`Notebook.blank_texture`), the detail line and the shared half body. By ear: Ivo's title (`Song.ear_title_key`), the guessed glyphs modulated by `Notebook.IVO_INK`, `NotebookEntry.ear_body_key`. Confirmed: the real title, Ivo's name under it in `StruckTitle` (`StruckLabel`, one line, crossed by a 1 px line), the real body and `NotebookEntry.ear_margin_key` in `Margin` (one per song, "One per song (Recommended)", user); the season line is hidden there to fit the 106 px page.
+- `notebook_text_fit_test.test_every_half_song_state_fits_both_pages` and `test_a_blank_note_inks_inside_the_right_page` cover these. Fitting the confirmed Chuva page shortened the pt_BR `NOTEBOOK_SONG_RAIN_BODY` by one clause (2026-10-28).
 
 ## Watcher and the HUD quill
 

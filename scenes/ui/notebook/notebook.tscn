@@ -31,6 +31,8 @@
 [ext_resource type="Script" path="res://resources/characters/guardians/guardian_stats.gd" id="17_stats"]
 [ext_resource type="Script" path="res://resources/ui/memorina/note_glyph_set.gd" id="18_glyphs"]
 [ext_resource type="Script" path="res://scenes/ui/notebook/notebook_cue.gd" id="19_cue"]
+[ext_resource type="Script" path="res://scenes/ui/notebook/struck_label.gd" id="90_struck"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/memorina/note_blank.png" id="91_blank"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_forgotten"]
 shader = ExtResource("15_shader")
@@ -54,6 +56,7 @@ previous_page_strip = ExtResource("14_prev")
 tab_normal = Array[Texture2D]([ExtResource("t1n"), ExtResource("t2n"), ExtResource("t3n"), ExtResource("t4n")])
 tab_selected = Array[Texture2D]([ExtResource("t1s"), ExtResource("t2s"), ExtResource("t3s"), ExtResource("t4s")])
 forgotten_material = SubResource("ShaderMaterial_forgotten")
+blank_texture = ExtResource("91_blank")
 
 [node name="Art" type="Control" parent="."]
 layout_mode = 0
@@ -191,6 +194,13 @@ layout_mode = 2
 theme_override_constants/line_spacing = 1
 autowrap_mode = 2
 
+[node name="StruckTitle" type="Label" parent="Art/Pages/RightPage/Detail"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.32, 0.2, 0.25, 0.65)
+script = ExtResource("90_struck")
+
 [node name="EntryRule" type="ColorRect" parent="Art/Pages/RightPage/Detail"]
 custom_minimum_size = Vector2(0, 1)
 layout_mode = 2
@@ -263,6 +273,14 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_colors/font_color = Color(0.32, 0.2, 0.25, 1)
+theme_override_constants/line_spacing = 1
+autowrap_mode = 2
+
+[node name="Margin" type="Label" parent="Art/Pages/RightPage/Detail"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(0.45, 0.55, 0.85, 1)
 theme_override_constants/line_spacing = 1
 autowrap_mode = 2
 

@@ -40,7 +40,7 @@ func _ready() -> void:
 ## Preserve current dim across the call-to-lesson transition to avoid a one-frame flash.
 func on_lesson_started(song: Song, _glyph_set: Enums.GlyphSet) -> void:
 	_lesson_active = true
-	_title.text = song.title_key
+	_title.text = SongHalves.title_key(SaveSystem.player_data, song)
 	_cue_target = song.notes.size() - 1
 	_card_pending = true
 	var dim := _dim.color.a

@@ -272,3 +272,34 @@ func test_closing_the_call_restores_the_known_songs() -> void:
 	var monitor := monitor_signals(_memorina)
 	_play_freeze()
 	await assert_signal(monitor).is_emitted("song_matched", [_freeze])
+
+#############################################
+##  H A L F   S O N G S                    ##
+#############################################
+
+func _half_jar() -> SongCandidate:
+	var jar := Song.new()
+	jar.id = Enums.Song.BELL_JAR
+	jar.notes = [DOWN, UP, DOWN, LEFT, LEFT, RIGHT]
+	return SongCandidate.new(jar, [true, true, true, false, false, false])
+
+## A guess is taught as a lesson, so the instrument stays drawn and nothing is performed.
+func test_a_right_guess_emits_song_guessed_and_does_not_perform() -> void:
+	var half := _half_jar()
+	_memorina.try_draw(true, _known(), [half])
+	var monitor := monitor_signals(_memorina)
+	for note: Enums.Note in half.song.notes:
+		_memorina.receive_note(note)
+	await assert_signal(monitor).is_emitted("song_guessed", [half.song])
+	await assert_signal(monitor).is_not_emitted("song_matched")
+	assert_bool(_memorina.is_performing()).is_false()
+	assert_bool(_memorina.is_drawn()).is_true()
+
+func test_a_call_ignores_half_known_songs() -> void:
+	var half := _half_jar()
+	_memorina.call_song = _root_song()
+	_memorina.try_draw(true, _known(), [half])
+	var monitor := monitor_signals(_memorina)
+	_memorina.receive_note(DOWN)
+	_memorina.receive_note(UP)
+	await assert_signal(monitor).is_emitted("sequence_failed")

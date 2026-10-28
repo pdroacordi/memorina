@@ -125,6 +125,28 @@ func on_lesson_started(song: Song, glyph_set: Enums.GlyphSet) -> void:
 	show()
 	_show_in_slot()
 
+## Shows a half as it is taught: its three notes and three blanks, then fades like a lesson sheet.
+func on_song_half_learned(song: Song, half: Enums.SongHalf, glyph_set: Enums.GlyphSet) -> void:
+	_stop_linger()
+	_leave_answer()
+	modulate = Color.WHITE
+	var known: Array[bool] = []
+	for i: int in song.notes.size():
+		known.append((i < SongHalves.HALF_LENGTH) == (half == Enums.SongHalf.FIRST))
+	_sheet.show_notes(song.notes, glyph_sets[glyph_set], -1, known)
+	show()
+	_frame.position = Vector2(_sheet.encounter_x(size.x, _call_side, _call_height), _sheet.encounter_y())
+	_frame.modulate.a = 0.0
+	_frame.show()
+	# One chain: a separate fade-in would be killed by the close before it rose.
+	if _fade_tween:
+		_fade_tween.kill()
+	_fade_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
+	_fade_tween.tween_property(_frame, "modulate:a", 1.0, fade_in_time)
+	_fade_tween.tween_interval(LESSON_SHEET_HOLD)
+	_fade_tween.tween_property(_frame, "modulate:a", 0.0, LESSON_SHEET_FADE)
+	_fade_tween.tween_callback(_frame.hide)
+
 func on_song_played(_song: Song, _position: Vector2) -> void:
 	_lesson_notes = 0
 	_sheet.clear()

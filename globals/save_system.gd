@@ -162,6 +162,19 @@ func learn_song(song: Enums.Song) -> void:
 	player_data.learned_songs[song] = true
 	progress_changed.emit()
 
+func knows_song_half(song: Enums.Song, half: Enums.SongHalf) -> bool:
+	return SongHalves.knows(player_data, song, half)
+
+## A half from a teaching creature or a songbook; the second half learns the song. Live only, like learn_song().
+func learn_song_half(song: Enums.Song, half: Enums.SongHalf) -> void:
+	if SongHalves.teach(player_data, song, half):
+		progress_changed.emit()
+
+## A right guess of a half-known song's missing half (architecture/half-songs).
+func learn_song_by_ear(song: Enums.Song) -> void:
+	if SongHalves.guess(player_data, song):
+		progress_changed.emit()
+
 ## Items, unlike skills, can be taken away again - hence the explicit value
 ## rather than a grant-only setter. Same no-autosave rule as learn_song().
 func set_item_owned(item: Enums.PlayerItem, owned: bool) -> void:

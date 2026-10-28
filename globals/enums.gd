@@ -51,6 +51,13 @@ enum Song {
 	RAIN
 }
 
+## Which half of a six-note song: notes 1-3 or 4-6 (design 02 section 7.2.1). Saved as an int; append members only.
+enum SongHalf {
+	NONE,
+	FIRST,
+	SECOND
+}
+
 ## PlayerData.restored_guardians is indexed by this enum; append members only.
 enum Guardian {
 	FROST,

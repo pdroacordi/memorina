@@ -21,6 +21,8 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | segredo, parede falsa | `SecretWall`, `[secret]`, `found_secrets` |
 | rachadura (dica de segredo) | `crack` (`BiomeTileset.crack`, legend `k`) |
 | lugar de recompensa (coletável / esconderijo) | `RewardSlot` (legend `$`, `slot_id`, `Kind.COLLECTIBLE` / `Kind.CACHE`); not a save slot (`SaveSlots`) |
+| meia canção, metade (notas 1-3 / 4-6) | `Enums.SongHalf` (`FIRST` / `SECOND`), `SongHalves`, `song_first_halves` / `song_second_halves` |
+| de ouvido (canção adivinhada), o nome que Ivo dá | `learn_song_by_ear`, `guessed_halves`, `Song.ear_title_key` |
 | neve funda, aterrissagem macia | `SoftLanding` (legend `n`), `LandingRule.is_hard`, `LandingComponent.enter_soft_zone`; the art is the `snow_drift` prop |
 | grade (da rua), alçapão de grade | `FactGrate` (legend `g`, `fact_grate.tscn`, the `FactBarrier` script under a floor shape); the vertical fence is `FactBarrier` (legend `X`) |
 | Escada do Sol | `caldera_sun_stair` |

@@ -44,3 +44,19 @@ func test_announcing_a_region_emits_nothing_and_is_kept_once() -> void:
 	assert_int(_changes).is_equal(0)
 	assert_bool(SaveSystem.is_region_announced("uid://road")).is_true()
 	assert_array(SaveSystem.player_data.announced_regions).has_size(1)
+
+func test_a_new_half_and_a_guess_emit_and_a_repeat_does_not() -> void:
+	SaveSystem.learn_song_half(Enums.Song.RAIN, Enums.SongHalf.SECOND)
+	SaveSystem.learn_song_half(Enums.Song.RAIN, Enums.SongHalf.SECOND)
+	SaveSystem.learn_song_by_ear(Enums.Song.RAIN)
+	SaveSystem.learn_song_by_ear(Enums.Song.RAIN)
+	assert_int(_changes).is_equal(2)
+	assert_bool(SaveSystem.has_song(Enums.Song.RAIN)).is_true()
+
+func test_a_death_forgets_a_half_and_a_guess() -> void:
+	SaveSystem.learn_song_half(Enums.Song.GALE, Enums.SongHalf.FIRST)
+	SaveSystem.learn_song_by_ear(Enums.Song.GALE)
+	SaveSystem.rewind()
+	assert_bool(SaveSystem.knows_song_half(Enums.Song.GALE, Enums.SongHalf.FIRST)).is_false()
+	assert_bool(SaveSystem.has_song(Enums.Song.GALE)).is_false()
+	assert_int(SaveSystem.player_data.guessed_halves[Enums.Song.GALE]).is_equal(Enums.SongHalf.NONE)

@@ -1,0 +1,1046 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  160,
+  5960
+ ],
+ "max_duration": 104,
+ "steps": [
+  {
+   "t": 1.0,
+   "log": "pre"
+  },
+  {
+   "t": 1.0,
+   "screenshot": "b00_start"
+  },
+  {
+   "t": 1.5,
+   "key": "F8",
+   "pressed": true
+  },
+  {
+   "t": 1.56,
+   "key": "F8",
+   "pressed": false
+  },
+  {
+   "t": 1.6,
+   "screenshot": "b01_half_001.6"
+  },
+  {
+   "t": 1.6,
+   "log": "L1.60"
+  },
+  {
+   "t": 1.8,
+   "screenshot": "b01_half_001.8"
+  },
+  {
+   "t": 1.8,
+   "log": "L1.80"
+  },
+  {
+   "t": 2.0,
+   "screenshot": "b01_half_002.0"
+  },
+  {
+   "t": 2.0,
+   "log": "L2.00"
+  },
+  {
+   "t": 2.2,
+   "screenshot": "b01_half_002.2"
+  },
+  {
+   "t": 2.2,
+   "log": "L2.20"
+  },
+  {
+   "t": 2.4,
+   "screenshot": "b01_half_002.4"
+  },
+  {
+   "t": 2.4,
+   "log": "L2.40"
+  },
+  {
+   "t": 2.6,
+   "screenshot": "b01_half_002.6"
+  },
+  {
+   "t": 2.6,
+   "log": "L2.60"
+  },
+  {
+   "t": 2.8,
+   "screenshot": "b01_half_002.8"
+  },
+  {
+   "t": 2.8,
+   "log": "L2.80"
+  },
+  {
+   "t": 3.0,
+   "screenshot": "b01_half_003.0"
+  },
+  {
+   "t": 3.0,
+   "log": "L3.00"
+  },
+  {
+   "t": 3.2,
+   "screenshot": "b01_half_003.2"
+  },
+  {
+   "t": 3.2,
+   "log": "L3.20"
+  },
+  {
+   "t": 3.4,
+   "screenshot": "b01_half_003.4"
+  },
+  {
+   "t": 3.4,
+   "log": "L3.40"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "b01_half_003.6"
+  },
+  {
+   "t": 3.6,
+   "log": "L3.60"
+  },
+  {
+   "t": 3.8,
+   "screenshot": "b01_half_003.8"
+  },
+  {
+   "t": 3.8,
+   "log": "L3.80"
+  },
+  {
+   "t": 4.0,
+   "screenshot": "b01_half_004.0"
+  },
+  {
+   "t": 4.0,
+   "log": "L4.00"
+  },
+  {
+   "t": 4.2,
+   "screenshot": "b01_half_004.2"
+  },
+  {
+   "t": 4.2,
+   "log": "L4.20"
+  },
+  {
+   "t": 4.4,
+   "screenshot": "b01_half_004.4"
+  },
+  {
+   "t": 4.4,
+   "log": "L4.40"
+  },
+  {
+   "t": 4.6,
+   "log": "L4.60"
+  },
+  {
+   "t": 5.0,
+   "log": "L5.00"
+  },
+  {
+   "t": 5.4,
+   "log": "L5.40"
+  },
+  {
+   "t": 5.8,
+   "log": "L5.80"
+  },
+  {
+   "t": 6.2,
+   "log": "L6.20"
+  },
+  {
+   "t": 6.6,
+   "log": "L6.60"
+  },
+  {
+   "t": 7.0,
+   "log": "L7.00"
+  },
+  {
+   "t": 7.5,
+   "action": "notebook",
+   "pressed": true
+  },
+  {
+   "t": 7.56,
+   "action": "notebook",
+   "pressed": false
+  },
+  {
+   "t": 8.2,
+   "screenshot": "b02_book_008.2"
+  },
+  {
+   "t": 8.2,
+   "log": "L8.20"
+  },
+  {
+   "t": 8.8,
+   "screenshot": "b02_book_008.8"
+  },
+  {
+   "t": 8.8,
+   "log": "L8.80"
+  },
+  {
+   "t": 9.4,
+   "screenshot": "b02_book_009.4"
+  },
+  {
+   "t": 9.4,
+   "log": "L9.40"
+  },
+  {
+   "t": 10.0,
+   "action": "notebook",
+   "pressed": true
+  },
+  {
+   "t": 10.06,
+   "action": "notebook",
+   "pressed": false
+  },
+  {
+   "t": 10.4,
+   "log": "L10.40"
+  },
+  {
+   "t": 10.7,
+   "log": "L10.70"
+  },
+  {
+   "t": 11.0,
+   "log": "L11.00"
+  },
+  {
+   "t": 11.5,
+   "key": "F8",
+   "pressed": true
+  },
+  {
+   "t": 11.56,
+   "key": "F8",
+   "pressed": false
+  },
+  {
+   "t": 11.7,
+   "screenshot": "b03_lesson_011.7"
+  },
+  {
+   "t": 11.7,
+   "log": "L11.70"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "b03_lesson_012.0"
+  },
+  {
+   "t": 12.0,
+   "log": "L12.00"
+  },
+  {
+   "t": 12.3,
+   "screenshot": "b03_lesson_012.3"
+  },
+  {
+   "t": 12.3,
+   "log": "L12.30"
+  },
+  {
+   "t": 12.6,
+   "screenshot": "b03_lesson_012.6"
+  },
+  {
+   "t": 12.6,
+   "log": "L12.60"
+  },
+  {
+   "t": 12.9,
+   "screenshot": "b03_lesson_012.9"
+  },
+  {
+   "t": 12.9,
+   "log": "L12.90"
+  },
+  {
+   "t": 13.2,
+   "screenshot": "b03_lesson_013.2"
+  },
+  {
+   "t": 13.2,
+   "log": "L13.20"
+  },
+  {
+   "t": 13.5,
+   "screenshot": "b03_lesson_013.5"
+  },
+  {
+   "t": 13.5,
+   "log": "L13.50"
+  },
+  {
+   "t": 13.8,
+   "screenshot": "b03_lesson_013.8"
+  },
+  {
+   "t": 13.8,
+   "log": "L13.80"
+  },
+  {
+   "t": 14.1,
+   "screenshot": "b03_lesson_014.1"
+  },
+  {
+   "t": 14.1,
+   "log": "L14.10"
+  },
+  {
+   "t": 15,
+   "screenshot": "b04_lesson_015.0"
+  },
+  {
+   "t": 15,
+   "log": "L15.00"
+  },
+  {
+   "t": 16.0,
+   "screenshot": "b04_lesson_016.0"
+  },
+  {
+   "t": 16.0,
+   "log": "L16.00"
+  },
+  {
+   "t": 17.0,
+   "screenshot": "b04_lesson_017.0"
+  },
+  {
+   "t": 17.0,
+   "log": "L17.00"
+  },
+  {
+   "t": 18.0,
+   "screenshot": "b04_lesson_018.0"
+  },
+  {
+   "t": 18.0,
+   "log": "L18.00"
+  },
+  {
+   "t": 19.0,
+   "screenshot": "b04_lesson_019.0"
+  },
+  {
+   "t": 19.0,
+   "log": "L19.00"
+  },
+  {
+   "t": 20.0,
+   "screenshot": "b04_lesson_020.0"
+  },
+  {
+   "t": 20.0,
+   "log": "L20.00"
+  },
+  {
+   "t": 21.0,
+   "screenshot": "b04_lesson_021.0"
+  },
+  {
+   "t": 21.0,
+   "log": "L21.00"
+  },
+  {
+   "t": 22.0,
+   "screenshot": "b04_lesson_022.0"
+  },
+  {
+   "t": 22.0,
+   "log": "L22.00"
+  },
+  {
+   "t": 23.0,
+   "screenshot": "b04_lesson_023.0"
+  },
+  {
+   "t": 23.0,
+   "log": "L23.00"
+  },
+  {
+   "t": 24.0,
+   "screenshot": "b04_lesson_024.0"
+  },
+  {
+   "t": 24.0,
+   "log": "L24.00"
+  },
+  {
+   "t": 25.0,
+   "screenshot": "b04_lesson_025.0"
+  },
+  {
+   "t": 25.0,
+   "log": "L25.00"
+  },
+  {
+   "t": 26.0,
+   "screenshot": "b04_lesson_026.0"
+  },
+  {
+   "t": 26.0,
+   "log": "L26.00"
+  },
+  {
+   "t": 27.0,
+   "screenshot": "b04_lesson_027.0"
+  },
+  {
+   "t": 27.0,
+   "log": "L27.00"
+  },
+  {
+   "t": 28.0,
+   "screenshot": "b04_lesson_028.0"
+  },
+  {
+   "t": 28.0,
+   "log": "L28.00"
+  },
+  {
+   "t": 29.0,
+   "screenshot": "b04_lesson_029.0"
+  },
+  {
+   "t": 29.0,
+   "log": "L29.00"
+  },
+  {
+   "t": 30.0,
+   "screenshot": "b04_lesson_030.0"
+  },
+  {
+   "t": 30.0,
+   "log": "L30.00"
+  },
+  {
+   "t": 31.0,
+   "screenshot": "b04_lesson_031.0"
+  },
+  {
+   "t": 31.0,
+   "log": "L31.00"
+  },
+  {
+   "t": 32.0,
+   "screenshot": "b04_lesson_032.0"
+  },
+  {
+   "t": 32.0,
+   "log": "L32.00"
+  },
+  {
+   "t": 33.0,
+   "screenshot": "b04_lesson_033.0"
+  },
+  {
+   "t": 33.0,
+   "log": "L33.00"
+  },
+  {
+   "t": 34.0,
+   "screenshot": "b04_lesson_034.0"
+  },
+  {
+   "t": 34.0,
+   "log": "L34.00"
+  },
+  {
+   "t": 35.0,
+   "screenshot": "b04_lesson_035.0"
+  },
+  {
+   "t": 35.0,
+   "log": "L35.00"
+  },
+  {
+   "t": 36.0,
+   "screenshot": "b04_lesson_036.0"
+  },
+  {
+   "t": 36.0,
+   "log": "L36.00"
+  },
+  {
+   "t": 37.0,
+   "screenshot": "b04_lesson_037.0"
+  },
+  {
+   "t": 37.0,
+   "log": "L37.00"
+  },
+  {
+   "t": 38.0,
+   "screenshot": "b04_lesson_038.0"
+  },
+  {
+   "t": 38.0,
+   "log": "L38.00"
+  },
+  {
+   "t": 39.0,
+   "screenshot": "b04_lesson_039.0"
+  },
+  {
+   "t": 39.0,
+   "log": "L39.00"
+  },
+  {
+   "t": 40.0,
+   "screenshot": "b04_lesson_040.0"
+  },
+  {
+   "t": 40.0,
+   "log": "L40.00"
+  },
+  {
+   "t": 41.0,
+   "screenshot": "b04_lesson_041.0"
+  },
+  {
+   "t": 41.0,
+   "log": "L41.00"
+  },
+  {
+   "t": 42.0,
+   "screenshot": "b04_lesson_042.0"
+  },
+  {
+   "t": 42.0,
+   "log": "L42.00"
+  },
+  {
+   "t": 43.0,
+   "screenshot": "b04_lesson_043.0"
+  },
+  {
+   "t": 43.0,
+   "log": "L43.00"
+  },
+  {
+   "t": 44.0,
+   "screenshot": "b04_lesson_044.0"
+  },
+  {
+   "t": 44.0,
+   "log": "L44.00"
+  },
+  {
+   "t": 45.0,
+   "screenshot": "b04_lesson_045.0"
+  },
+  {
+   "t": 45.0,
+   "log": "L45.00"
+  },
+  {
+   "t": 46.0,
+   "screenshot": "b04_lesson_046.0"
+  },
+  {
+   "t": 46.0,
+   "log": "L46.00"
+  },
+  {
+   "t": 47.0,
+   "screenshot": "b04_lesson_047.0"
+  },
+  {
+   "t": 47.0,
+   "log": "L47.00"
+  },
+  {
+   "t": 48.0,
+   "screenshot": "b04_lesson_048.0"
+  },
+  {
+   "t": 48.0,
+   "log": "L48.00"
+  },
+  {
+   "t": 49.0,
+   "screenshot": "b04_lesson_049.0"
+  },
+  {
+   "t": 49.0,
+   "log": "L49.00"
+  },
+  {
+   "t": 50.0,
+   "screenshot": "b04_lesson_050.0"
+  },
+  {
+   "t": 50.0,
+   "log": "L50.00"
+  },
+  {
+   "t": 51.0,
+   "screenshot": "b04_lesson_051.0"
+  },
+  {
+   "t": 51.0,
+   "log": "L51.00"
+  },
+  {
+   "t": 52.0,
+   "screenshot": "b04_lesson_052.0"
+  },
+  {
+   "t": 52.0,
+   "log": "L52.00"
+  },
+  {
+   "t": 53.0,
+   "screenshot": "b04_lesson_053.0"
+  },
+  {
+   "t": 53.0,
+   "log": "L53.00"
+  },
+  {
+   "t": 54.0,
+   "screenshot": "b04_lesson_054.0"
+  },
+  {
+   "t": 54.0,
+   "log": "L54.00"
+  },
+  {
+   "t": 55.0,
+   "screenshot": "b04_lesson_055.0"
+  },
+  {
+   "t": 55.0,
+   "log": "L55.00"
+  },
+  {
+   "t": 56.0,
+   "screenshot": "b04_lesson_056.0"
+  },
+  {
+   "t": 56.0,
+   "log": "L56.00"
+  },
+  {
+   "t": 57.0,
+   "screenshot": "b04_lesson_057.0"
+  },
+  {
+   "t": 57.0,
+   "log": "L57.00"
+  },
+  {
+   "t": 58.0,
+   "screenshot": "b04_lesson_058.0"
+  },
+  {
+   "t": 58.0,
+   "log": "L58.00"
+  },
+  {
+   "t": 59.0,
+   "screenshot": "b04_lesson_059.0"
+  },
+  {
+   "t": 59.0,
+   "log": "L59.00"
+  },
+  {
+   "t": 60.0,
+   "screenshot": "b04_lesson_060.0"
+  },
+  {
+   "t": 60.0,
+   "log": "L60.00"
+  },
+  {
+   "t": 61.0,
+   "screenshot": "b04_lesson_061.0"
+  },
+  {
+   "t": 61.0,
+   "log": "L61.00"
+  },
+  {
+   "t": 62.0,
+   "screenshot": "b04_lesson_062.0"
+  },
+  {
+   "t": 62.0,
+   "log": "L62.00"
+  },
+  {
+   "t": 63.0,
+   "screenshot": "b04_lesson_063.0"
+  },
+  {
+   "t": 63.0,
+   "log": "L63.00"
+  },
+  {
+   "t": 64.0,
+   "screenshot": "b04_lesson_064.0"
+  },
+  {
+   "t": 64.0,
+   "log": "L64.00"
+  },
+  {
+   "t": 65.0,
+   "screenshot": "b04_lesson_065.0"
+  },
+  {
+   "t": 65.0,
+   "log": "L65.00"
+  },
+  {
+   "t": 66.0,
+   "screenshot": "b04_lesson_066.0"
+  },
+  {
+   "t": 66.0,
+   "log": "L66.00"
+  },
+  {
+   "t": 67.0,
+   "screenshot": "b04_lesson_067.0"
+  },
+  {
+   "t": 67.0,
+   "log": "L67.00"
+  },
+  {
+   "t": 68.0,
+   "screenshot": "b04_lesson_068.0"
+  },
+  {
+   "t": 68.0,
+   "log": "L68.00"
+  },
+  {
+   "t": 69.0,
+   "screenshot": "b04_lesson_069.0"
+  },
+  {
+   "t": 69.0,
+   "log": "L69.00"
+  },
+  {
+   "t": 70.0,
+   "screenshot": "b04_lesson_070.0"
+  },
+  {
+   "t": 70.0,
+   "log": "L70.00"
+  },
+  {
+   "t": 71.0,
+   "screenshot": "b04_lesson_071.0"
+  },
+  {
+   "t": 71.0,
+   "log": "L71.00"
+  },
+  {
+   "t": 72.0,
+   "screenshot": "b04_lesson_072.0"
+  },
+  {
+   "t": 72.0,
+   "log": "L72.00"
+  },
+  {
+   "t": 73.0,
+   "screenshot": "b04_lesson_073.0"
+  },
+  {
+   "t": 73.0,
+   "log": "L73.00"
+  },
+  {
+   "t": 74.0,
+   "screenshot": "b04_lesson_074.0"
+  },
+  {
+   "t": 74.0,
+   "log": "L74.00"
+  },
+  {
+   "t": 75.0,
+   "screenshot": "b04_lesson_075.0"
+  },
+  {
+   "t": 75.0,
+   "log": "L75.00"
+  },
+  {
+   "t": 76.0,
+   "screenshot": "b04_lesson_076.0"
+  },
+  {
+   "t": 76.0,
+   "log": "L76.00"
+  },
+  {
+   "t": 77.0,
+   "screenshot": "b04_lesson_077.0"
+  },
+  {
+   "t": 77.0,
+   "log": "L77.00"
+  },
+  {
+   "t": 78.0,
+   "screenshot": "b04_lesson_078.0"
+  },
+  {
+   "t": 78.0,
+   "log": "L78.00"
+  },
+  {
+   "t": 79.0,
+   "screenshot": "b04_lesson_079.0"
+  },
+  {
+   "t": 79.0,
+   "log": "L79.00"
+  },
+  {
+   "t": 80.0,
+   "screenshot": "b04_lesson_080.0"
+  },
+  {
+   "t": 80.0,
+   "log": "L80.00"
+  },
+  {
+   "t": 81.0,
+   "screenshot": "b04_lesson_081.0"
+  },
+  {
+   "t": 81.0,
+   "log": "L81.00"
+  },
+  {
+   "t": 82.0,
+   "screenshot": "b04_lesson_082.0"
+  },
+  {
+   "t": 82.0,
+   "log": "L82.00"
+  },
+  {
+   "t": 83.0,
+   "screenshot": "b04_lesson_083.0"
+  },
+  {
+   "t": 83.0,
+   "log": "L83.00"
+  },
+  {
+   "t": 84.0,
+   "screenshot": "b04_lesson_084.0"
+  },
+  {
+   "t": 84.0,
+   "log": "L84.00"
+  },
+  {
+   "t": 85.0,
+   "screenshot": "b04_lesson_085.0"
+  },
+  {
+   "t": 85.0,
+   "log": "L85.00"
+  },
+  {
+   "t": 86.0,
+   "screenshot": "b04_lesson_086.0"
+  },
+  {
+   "t": 86.0,
+   "log": "L86.00"
+  },
+  {
+   "t": 87.0,
+   "screenshot": "b04_lesson_087.0"
+  },
+  {
+   "t": 87.0,
+   "log": "L87.00"
+  },
+  {
+   "t": 88.0,
+   "screenshot": "b04_lesson_088.0"
+  },
+  {
+   "t": 88.0,
+   "log": "L88.00"
+  },
+  {
+   "t": 89.0,
+   "screenshot": "b04_lesson_089.0"
+  },
+  {
+   "t": 89.0,
+   "log": "L89.00"
+  },
+  {
+   "t": 90.0,
+   "screenshot": "b04_lesson_090.0"
+  },
+  {
+   "t": 90.0,
+   "log": "L90.00"
+  },
+  {
+   "t": 91.0,
+   "screenshot": "b04_lesson_091.0"
+  },
+  {
+   "t": 91.0,
+   "log": "L91.00"
+  },
+  {
+   "t": 92.0,
+   "screenshot": "b04_lesson_092.0"
+  },
+  {
+   "t": 92.0,
+   "log": "L92.00"
+  },
+  {
+   "t": 93.0,
+   "screenshot": "b04_lesson_093.0"
+  },
+  {
+   "t": 93.0,
+   "log": "L93.00"
+  },
+  {
+   "t": 94.0,
+   "screenshot": "b04_lesson_094.0"
+  },
+  {
+   "t": 94.0,
+   "log": "L94.00"
+  },
+  {
+   "t": 95.0,
+   "screenshot": "b04_lesson_095.0"
+  },
+  {
+   "t": 95.0,
+   "log": "L95.00"
+  },
+  {
+   "t": 95.5,
+   "screenshot": "b05_after_095.5"
+  },
+  {
+   "t": 95.5,
+   "log": "L95.50"
+  },
+  {
+   "t": 96.0,
+   "screenshot": "b05_after_096.0"
+  },
+  {
+   "t": 96.0,
+   "log": "L96.00"
+  },
+  {
+   "t": 96.5,
+   "screenshot": "b05_after_096.5"
+  },
+  {
+   "t": 96.5,
+   "log": "L96.50"
+  },
+  {
+   "t": 97.0,
+   "screenshot": "b05_after_097.0"
+  },
+  {
+   "t": 97.0,
+   "log": "L97.00"
+  },
+  {
+   "t": 97.5,
+   "screenshot": "b05_after_097.5"
+  },
+  {
+   "t": 97.5,
+   "log": "L97.50"
+  },
+  {
+   "t": 98.0,
+   "screenshot": "b05_after_098.0"
+  },
+  {
+   "t": 98.0,
+   "log": "L98.00"
+  },
+  {
+   "t": 98.5,
+   "action": "notebook",
+   "pressed": true
+  },
+  {
+   "t": 98.56,
+   "action": "notebook",
+   "pressed": false
+  },
+  {
+   "t": 99.2,
+   "screenshot": "b06_book_099.2"
+  },
+  {
+   "t": 99.2,
+   "log": "L99.20"
+  },
+  {
+   "t": 99.8,
+   "screenshot": "b06_book_099.8"
+  },
+  {
+   "t": 99.8,
+   "log": "L99.80"
+  },
+  {
+   "t": 100.4,
+   "screenshot": "b06_book_100.4"
+  },
+  {
+   "t": 100.4,
+   "log": "L100.40"
+  }
+ ]
+}

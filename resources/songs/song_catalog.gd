@@ -37,6 +37,7 @@ func validate() -> void:
 		assert(song.palette != null, "Song %d has no SeasonPalette." % song.id)
 		assert(song.pulse_stats != null, "Song %d has no PulseStats." % song.id)
 		assert(not song.title_key.is_empty(), "Song %d has no title_key." % song.id)
+		assert(song.learned_in_halves == not song.ear_title_key.is_empty(), "Song %d: ear_title_key goes with learned_in_halves." % song.id)
 		assert(song.track != null, "Song %d has no track." % song.id)
 		_validate_cues(song)
 		seen[song.id] = true

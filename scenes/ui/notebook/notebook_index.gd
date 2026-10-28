@@ -3,15 +3,15 @@ extends RefCounted
 ## Pure queries over a NotebookCatalog and a save: which entries are present, unread and new.
 
 
-## Ids of the present entries, in catalog order.
+## Page ids of the present entries, in catalog order; a page id is the entry id except for a song still being completed.
 static func present(catalog: NotebookCatalog, data: PlayerData) -> Array[StringName]:
 	var ids: Array[StringName] = []
 	for entry: NotebookEntry in catalog.entries:
 		if entry.is_present(data):
-			ids.append(entry.id)
+			ids.append(entry.page_id(data))
 	return ids
 
-## Present entries the player has not read, in catalog order.
+## Page ids of present entries the player has not read, in catalog order.
 static func unread(catalog: NotebookCatalog, data: PlayerData) -> Array[StringName]:
 	var ids: Array[StringName] = []
 	for id: StringName in present(catalog, data):

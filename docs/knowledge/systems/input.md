@@ -33,7 +33,7 @@ source_files:
 | `map_zoom_in` / `map_zoom_out` | Z / X | A (0) / X (2) | 0.2 |
 | `ui_accept` (override) | Enter, keypad Enter, Space, Z | A (0) | 0.5 |
 | `ui_cancel` (override) | Esc | B (1) | 0.5 |
-| `debug_learn_song` / `debug_trials` | F9 / F10 | none | debug builds |
+| `debug_learn_song` / `debug_learn_song_half` / `debug_trials` | F9 / F8 / F10 | none | debug builds |
 
 - The gameplay pad layout is the user's (2026-10-01). While the instrument is out the face buttons are its notes, and `move_axis` / `_try_jump` / `_try_roll` / `_try_attack` ignore input; a jump, roll or attack press that was a note is dropped (`Player._as_move`), never buffered.
 - **`ui_accept` and `ui_cancel` are overridden** because Godot 4.7's built-ins carry no pad binding (measured: `ui_accept` is Enter, keypad Enter and Space; `ui_cancel` is Escape). The override copies those keys and adds Z, pad A and pad B. Keyboard X is not in `ui_cancel`.

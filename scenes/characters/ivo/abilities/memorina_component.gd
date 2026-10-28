@@ -12,6 +12,8 @@ signal note_rejected(note: Enums.Note)
 signal sequence_failed
 ## The last note matched; notes are ignored until finish_performance().
 signal song_matched(song: Song)
+## A half-known song's blanks were guessed right; the instrument stays drawn for the lesson.
+signal song_guessed(song: Song)
 ## The performance finished.
 signal song_played(song: Song)
 ## The guardian's phrase was answered without a performance (docs/design/02_mecanicas.md section 3).
@@ -31,12 +33,13 @@ var call_song: Song = null:
 			return
 		call_song = value
 		if _state == State.DRAWN:
-			_matcher.set_candidates(_candidates())
+			_install_candidates()
 
 var _matcher := SongMatcher.new()
 var _state := State.SHEATHED
 var _performing: Song = null
 var _known_songs: Array[Song] = []
+var _half_known: Array[SongCandidate] = []
 var _toggle_buffer: float = 0.0
 
 func tick_timers(delta: float) -> void:
@@ -60,14 +63,15 @@ func is_performing() -> bool:
 func performing_song() -> Song:
 	return _performing
 
-## Draws the instrument when the body allows play and installs learned songs.
-func try_draw(can_play: bool, known_songs: Array[Song]) -> bool:
+## Draws the instrument when the body allows play and installs learned and half-known songs.
+func try_draw(can_play: bool, known_songs: Array[Song], half_known: Array[SongCandidate] = []) -> bool:
 	if not enabled or is_drawn() or not can_play:
 		return false
 	_toggle_buffer = 0.0
 	_state = State.DRAWN
 	_known_songs = known_songs
-	_matcher.set_candidates(_candidates())
+	_half_known = half_known
+	_install_candidates()
 	drawn.emit(known_songs)
 	return true
 
@@ -101,6 +105,9 @@ func receive_note(note: Enums.Note) -> void:
 			if song == call_song:
 				call_answered.emit(song)
 				return
+			if _matcher.matched_by_ear():
+				song_guessed.emit(song)
+				return
 			start_performance(song)
 			song_matched.emit(song)
 		SongMatcher.Result.FAILED:
@@ -128,8 +135,9 @@ func finish_performance() -> void:
 	song_played.emit(song)
 	sheathe()
 
-## Returns the guardian phrase or the learned songs as matcher candidates.
-func _candidates() -> Array[Song]:
+## A guardian's call admits only its phrase; otherwise the learned songs and the half-known ones.
+func _install_candidates() -> void:
 	if call_song != null:
-		return [call_song]
-	return _known_songs
+		_matcher.set_candidates([call_song])
+	else:
+		_matcher.set_candidates(_known_songs, _half_known)

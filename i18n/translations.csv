@@ -86,7 +86,7 @@ NOTEBOOK_SONG_GALE_BODY,The wind runs the way I face when the song ends.,O vento
 NOTEBOOK_SONG_ROOT_DETAIL,Spring · living stem,Primavera · caule vivo
 NOTEBOOK_SONG_ROOT_BODY,Roots join earth to earth. Stone never takes root.,Raízes ligam terra a terra. Pedra não enraíza.
 NOTEBOOK_SONG_RAIN_DETAIL,Spring · living stem,Primavera · caule vivo
-NOTEBOOK_SONG_RAIN_BODY,"It rains inside the song. The water rises, and settles back when the colour leaves.","Chove dentro da canção. A água sobe e, quando a cor vai embora, volta ao que era."
+NOTEBOOK_SONG_RAIN_BODY,"It rains inside the song. The water rises, and settles back when the colour leaves.","Chove dentro da canção. A água sobe, e baixa quando a cor vai embora."
 NOTEBOOK_SONG_SHADOW_DETAIL,Summer · volcanic stone,Verão · pedra vulcânica
 NOTEBOOK_SONG_SHADOW_BODY,"The sun burns my shadow onto the ground. It weighs what I weigh, and creatures believe it.","O sol queima minha sombra no chão. Ela pesa o que eu peso, e as criaturas acreditam nela."
 NOTEBOOK_SONG_SOLSTICE_DETAIL,Summer · volcanic stone,Verão · pedra vulcânica
@@ -202,3 +202,18 @@ DLG_DAUGHTER_RETURN_05,There was one more.,Tinha mais uma.
 DLG_DAUGHTER_RETURN_06,I know! I remembered it myself.,Eu sei! Lembrei sozinha.
 NOTEBOOK_LORE_MENTOR_TITLE,The keeper of the lighthouse,O guardião do farol
 NOTEBOOK_LORE_MENTOR,The keeper of the lighthouse. He gave me the Memorina and didn't finish his sentence.,O guardião do farol. Me deu a Memorina e não terminou a frase.
+NOTEBOOK_SONG_HALF_TITLE,Half a song,Meia canção
+NOTEBOOK_SONG_FIRST_HALF_BODY,"I know how it begins. Someone, somewhere, knows how it ends.","Sei como começa. Alguém, em algum lugar, sabe como termina."
+NOTEBOOK_SONG_SECOND_HALF_BODY,A stranger wrote down how it ends. Not how it begins.,Um estranho anotou como termina. Não como começa.
+SONG_EAR_TITLE_BELL_JAR,Keeps the Cold Out,Deixa o Frio Fora
+SONG_EAR_TITLE_SOLSTICE,Long Afternoon,Tarde Comprida
+SONG_EAR_TITLE_GALE,Turn and Blow,Vira e Sopra
+SONG_EAR_TITLE_RAIN,Puddle Song,Canção de Poça
+NOTEBOOK_SONG_BELL_JAR_EAR_BODY,I guessed the missing notes. The frost closed round me and still let me out.,Adivinhei as notas que faltavam. A geada me cercou e ainda me deixou sair.
+NOTEBOOK_SONG_SOLSTICE_EAR_BODY,I found the rest by ear. Every song I played inside it lasted longer.,Achei o resto de ouvido. Toda canção que toquei dentro dela durou mais.
+NOTEBOOK_SONG_GALE_EAR_BODY,I guessed the rest. The wind went where I was looking; it must be right.,Adivinhei o resto. O vento foi para onde eu olhava; deve estar certo.
+NOTEBOOK_SONG_RAIN_EAR_BODY,I made up the rest. It rained anyway; the water went back down after.,Inventei o resto. Choveu mesmo assim; depois a água baixou.
+NOTEBOOK_SONG_BELL_JAR_EAR_MARGIN,I had it right.,Eu tinha acertado.
+NOTEBOOK_SONG_SOLSTICE_EAR_MARGIN,My name was better.,Meu nome era melhor.
+NOTEBOOK_SONG_GALE_EAR_MARGIN,The same wind.,O mesmo vento.
+NOTEBOOK_SONG_RAIN_EAR_MARGIN,Right all along.,Sempre certo.

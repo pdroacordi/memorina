@@ -23,6 +23,8 @@ signal performance_finished
 signal note_cue_reached(index: int)
 ## A song was learned and its full track is about to play.
 signal lesson_started(song: Song, glyph_set: Enums.GlyphSet)
+## A half of a song was taught and the song is not yet whole; the HUD shows its notes and blanks.
+signal song_half_learned(song: Song, half: Enums.SongHalf, glyph_set: Enums.GlyphSet)
 signal song_played(song: Song, position: Vector2)
 ## The camera and lights stage `caller` and Ivo until `call_unstaged`.
 signal call_staged(caller: Node2D)
@@ -258,12 +260,14 @@ func _ready() -> void:
 	_input.look_up_pressed.connect(_as_move.bind(func() -> void: _up_buffer = UP_BUFFER))
 	_input.note_pressed.connect(_on_note_pressed)
 	_input.debug_learn_song_pressed.connect(_on_debug_learn_song_pressed)
+	_input.debug_learn_song_half_pressed.connect(_on_debug_learn_song_half_pressed)
 	_memorina.drawn.connect(_on_memorina_drawn)
 	_memorina.sheathed.connect(_on_memorina_sheathed)
 	_memorina.note_played.connect(_on_note_played)
 	_memorina.note_rejected.connect(_on_note_rejected)
 	_memorina.sequence_failed.connect(_on_sequence_failed)
 	_memorina.song_matched.connect(_on_song_matched)
+	_memorina.song_guessed.connect(_on_song_guessed)
 	_memorina.song_played.connect(_on_song_played)
 	_memorina.call_answered.connect(call_answered.emit)
 	_voice.mistake_finished.connect(sequence_reset.emit)
@@ -745,7 +749,7 @@ func _try_memorina() -> void:
 	if is_attacking() or is_rolling() or is_recovering() or is_in_knockback() or _in_scene:
 		return
 	_memorina.enabled = _has_item(Enums.PlayerItem.MEMORINA)
-	_memorina.try_draw(is_still(), _known_songs())
+	_memorina.try_draw(is_still(), _known_songs(), _half_known_songs())
 
 ## Whether a note may sound yet is the voice's verdict (never over the mistake,
 ## never inside the gap after the last note), pushed in here the same way
@@ -846,28 +850,62 @@ func _on_song_played(song: Song) -> void:
 ## once it will really start. A note still
 ## ringing (the last of a guardian's answer) is let finish before the track.
 func learn_song(song: Song) -> bool:
+	if not _can_take_lesson(song):
+		return false
+	SaveSystem.learn_song(song.id)
+	_begin_lesson(song)
+	return true
+
+## A teaching creature or a songbook gives half a song (architecture/half-songs); the half
+## that makes it whole starts the lesson, as learn_song does. Refused under learn_song's gates.
+func learn_song_half(song: Song, half: Enums.SongHalf) -> bool:
+	if not _can_take_lesson(song):
+		return false
+	assert(song.learned_in_halves, "Song %d is not learned in halves" % song.id)
+	var data := SaveSystem.player_data
+	if SongHalves.knows(data, song.id, half):
+		return false
+	# The half that makes the song whole, or the one Ivo guessed, is a lesson: the real name is heard at last.
+	var lesson := SongHalves.missing(data, song.id) == half or data.guessed_halves[song.id] == half
+	SaveSystem.learn_song_half(song.id, half)
+	if lesson:
+		_begin_lesson(song)
+		return true
+	# The matcher takes half-known songs only when drawn, so a half arrives on a sheathed instrument.
+	if _memorina.is_drawn():
+		_memorina.sheathe()
+	song_half_learned.emit(song, half, _last_glyph_set)
+	return true
+
+## A right guess is learned by ear and taught like any lesson.
+func _on_song_guessed(song: Song) -> void:
+	if not _can_take_lesson(song):
+		return
+	SaveSystem.learn_song_by_ear(song.id)
+	_begin_lesson(song)
+
+func _can_take_lesson(song: Song) -> bool:
 	if song == null or _memorina.is_performing() or _voice.is_faulting() or not is_still() or is_sitting():
 		return false
 	# No instrument, no lesson. Handing one over is the WORLD's to do - a
 	# pickup, the mentor - and a body that granted itself an item on the way
 	# into a cutscene would skip that scene entirely.
-	if not _has_item(Enums.PlayerItem.MEMORINA):
-		return false
-	SaveSystem.learn_song(song.id)
+	return _has_item(Enums.PlayerItem.MEMORINA)
+
+func _begin_lesson(song: Song) -> void:
 	# A call that was still open has been answered for good.
 	if _memorina.call_song != null:
 		_memorina.call_song = null
 		call_closed.emit()
 	if not _memorina.is_drawn():
 		_memorina.enabled = true
-		_memorina.try_draw(true, _known_songs())
+		_memorina.try_draw(true, _known_songs(), _half_known_songs())
 	_memorina.start_performance(song)
 	lesson_started.emit(song, _last_glyph_set)
 	_pending_performance = song
 	_pending_lesson = true
 	_in_lesson = true
 	_lead_in_left = lesson_lead_in
-	return true
 
 ## A lesson is in its lead-in or playing its track. Pulled by the notebook watcher, which waits it out.
 func is_in_lesson() -> bool:
@@ -875,6 +913,17 @@ func is_in_lesson() -> bool:
 
 func _on_debug_learn_song_pressed() -> void:
 	learn_song(_next_unknown_song())
+
+## F8: the first half of the first unlearned halved song, then the half it lacks.
+func _on_debug_learn_song_half_pressed() -> void:
+	if song_catalog == null:
+		return
+	for song: Song in song_catalog.songs:
+		if not song.learned_in_halves or SaveSystem.has_song(song.id):
+			continue
+		var half := SongHalves.missing(SaveSystem.player_data, song.id)
+		learn_song_half(song, Enums.SongHalf.FIRST if half == Enums.SongHalf.NONE else half)
+		return
 
 #############################################
 ##  A   G U A R D I A N ' S   C A L L      ##
@@ -1079,6 +1128,16 @@ func _known_songs() -> Array[Song]:
 		if SaveSystem.has_song(song.id):
 			known.append(song)
 	return known
+
+## Songs with one half known: guessable on the Memorina, never playable until whole.
+func _half_known_songs() -> Array[SongCandidate]:
+	var half_known: Array[SongCandidate] = []
+	if song_catalog == null:
+		return half_known
+	for song: Song in song_catalog.songs:
+		if SongHalves.missing(SaveSystem.player_data, song.id) != Enums.SongHalf.NONE:
+			half_known.append(SongCandidate.new(song, SongHalves.known_mask(SaveSystem.player_data, song.id)))
+	return half_known
 
 #############################################
 ##  J U M P I N G                          ##

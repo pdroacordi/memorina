@@ -19,10 +19,12 @@ enum Kind {
 	RESPONSE_CHOSEN,
 	## The cutscene `id` was played or skipped to its end (systems/cutscenes).
 	SCENE_SEEN,
+	## The song `index` is learned or one of its halves is known (architecture/half-songs).
+	SONG_PART_KNOWN,
 }
 
 @export var kind: Kind = Kind.ITEM
-## Index into the PlayerData flag array `kind` names (an Enums.PlayerSkill, Song, PlayerItem or Guardian), or the count
+## Index into the PlayerData flag array `kind` names (an Enums.PlayerSkill, Song, PlayerItem or Guardian; SONG_PART_KNOWN a Song), or the count
 ## GUARDIANS_RESTORED_AT_LEAST needs; the other kinds ignore it.
 @export var index: int = 0
 ## A dialogue id (DIALOGUE_HEARD), a choice id (RESPONSE_CHOSEN) or a cutscene id (SCENE_SEEN); the other kinds ignore it.
@@ -67,4 +69,6 @@ static func check(fact_kind: Kind, fact_index: int, data: PlayerData, fact_id: S
 			return data.responses.values().has(fact_id)
 		Kind.SCENE_SEEN:
 			return data.scenes_seen.has(fact_id)
+		Kind.SONG_PART_KNOWN:
+			return SongHalves.state(data, fact_index) != SongHalves.State.UNKNOWN
 	return false

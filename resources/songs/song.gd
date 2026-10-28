@@ -15,6 +15,10 @@ const DEFAULT_CUE_WINDOW := 6.0
 @export var name_key: String = ""
 ## Translation key for the title shown when the player learns the song.
 @export var title_key: String = ""
+## Learned in two halves, from a teaching creature and a songbook, instead of whole (design 02 section 7.2.1).
+@export var learned_in_halves: bool = false
+## Translation key for the name Ivo gives the song when he guesses its missing half; set only with learned_in_halves.
+@export var ear_title_key: String = ""
 @export var pulse_stats: PulseStats
 ## Optional effect scene mounted under ColorPulse; world responses are handled by receivers.
 @export var pulse_effect: PackedScene

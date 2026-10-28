@@ -16,6 +16,8 @@ const LINE_Y: Dictionary[Enums.Note, float] = {
 	Enums.Note.LEFT: 37.0,
 	Enums.Note.DOWN: 41.0,
 }
+## A blank slot sits on the staff's middle, source px.
+const BLANK_Y := 32.0
 const FLASH_COLOR := Color(0.85, 0.4, 0.4)
 const FLASH_TIME := 0.25
 const POP_SCALE := 1.3
@@ -25,11 +27,15 @@ const POP_TIME := 0.18
 @export_range(1.0, 2.0, 0.25) var icon_scale: float = 1.5
 ## Columns on the staff: a song's six, or a longer phrase (the morning song's eight, systems/story).
 @export var slot_count: int = Song.NOTE_COUNT
+## A note of a half-known song not known yet (tools/art/prompts/note_blank.md).
+@export var blank_texture: Texture2D
 
 var _slots: Array[TextureRect] = []
 ## What each filled slot shows, so light() can fetch the lit texture.
 var _notes: Array[Enums.Note] = []
 var _glyphs: Array[NoteGlyphSet] = []
+## False where a slot shows a blank instead of its note; empty means every note is known.
+var _known: Array[bool] = []
 var _flash_tween: Tween
 
 func _ready() -> void:
@@ -51,8 +57,10 @@ func push_note(note: Enums.Note, glyphs: NoteGlyphSet) -> void:
 	_glyphs.append(glyphs)
 	_show(index, false)
 
-func show_notes(notes: Array[Enums.Note], glyphs: NoteGlyphSet, count: int = -1) -> void:
+## `known` blanks the notes flagged false (a half-known song); empty shows every note.
+func show_notes(notes: Array[Enums.Note], glyphs: NoteGlyphSet, count: int = -1, known: Array[bool] = []) -> void:
 	clear()
+	_known = known
 	var shown := notes.size() if count < 0 else mini(count, notes.size())
 	for i: int in shown:
 		push_note(notes[i], glyphs)
@@ -84,15 +92,18 @@ func flash() -> void:
 func clear() -> void:
 	_notes.clear()
 	_glyphs.clear()
+	_known = []
 	for slot: TextureRect in _slots:
 		slot.hide()
 
 func _show(index: int, lit: bool) -> void:
-	var note := _notes[index]
 	var slot := _slots[index]
-	slot.texture = _glyphs[index].texture(note, lit)
-	slot.position.y = _slot_y(note)
+	slot.texture = _glyphs[index].texture(_notes[index], lit) if _is_known(index) else blank_texture
+	slot.position.y = _slot_y_at(index)
 	slot.show()
+
+func _is_known(index: int) -> bool:
+	return _known.is_empty() or _known[index]
 
 ## The frame-pixel x coordinate at the staff's center.
 func staff_center() -> float:
@@ -117,14 +128,15 @@ func _layout() -> void:
 		_slots[i].size = Vector2(icon, icon)
 		_slots[i].position.x = _slot_x(i)
 	for i: int in _notes.size():
-		_slots[i].position.y = _slot_y(_notes[i])
+		_slots[i].position.y = _slot_y_at(i)
 
 func _slot_x(index: int) -> float:
 	var column_width := (_staff_right() - STAFF_LEFT) / slot_count
 	return roundf(_to_frame(STAFF_LEFT + (index + 0.5) * column_width) - ICON_SIZE * icon_scale / 2.0)
 
-func _slot_y(note: Enums.Note) -> float:
-	return roundf(_to_frame(LINE_Y[note]) - ICON_SIZE * icon_scale / 2.0)
+func _slot_y_at(index: int) -> float:
+	var line := LINE_Y[_notes[index]] if _is_known(index) else BLANK_Y
+	return roundf(_to_frame(line) - ICON_SIZE * icon_scale / 2.0)
 
 ## The staff's right end in source px: the art's, plus whatever the sheet is wider than the art at its scale.
 func _staff_right() -> float:

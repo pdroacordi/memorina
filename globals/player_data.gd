@@ -33,6 +33,12 @@ class_name PlayerData extends Resource
 @export var responses: Dictionary[StringName, StringName] = {}
 ## Cutscene ids played or skipped to their end; live data like heard (systems/cutscenes).
 @export var scenes_seen: Array[StringName] = []
+## Known first halves (notes 1-3) by Enums.Song; live data like learned_songs (architecture/half-songs).
+@export var song_first_halves: Array[bool]
+## Known second halves (notes 4-6) by Enums.Song.
+@export var song_second_halves: Array[bool]
+## The Enums.SongHalf Ivo completed by ear, by Enums.Song; NONE when the song was not guessed.
+@export var guessed_halves: Array[int]
 
 func _init() -> void:
 	migrate()
@@ -44,6 +50,10 @@ func migrate() -> void:
 	_grow(learned_songs, Enums.Song.size())
 	_grow(restored_guardians, Enums.Guardian.size())
 	_grow(met_guardians, Enums.Guardian.size())
+	_grow(song_first_halves, Enums.Song.size())
+	_grow(song_second_halves, Enums.Song.size())
+	if guessed_halves.size() < Enums.Song.size():
+		guessed_halves.resize(Enums.Song.size())
 
 func _grow(flags: Array[bool], size: int) -> void:
 	if flags.size() < size:

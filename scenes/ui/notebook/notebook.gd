@@ -20,6 +20,8 @@ const SECTION_KEYS: Dictionary[NotebookEntry.Section, String] = {
 	NotebookEntry.Section.GUARDIANS: "NOTEBOOK_SECTION_GUARDIANS",
 }
 const UNKNOWN_KEY := "NOTEBOOK_UNKNOWN"
+## Ivo's own ink, on the notes he guessed (architecture/half-songs).
+const IVO_INK := Color(0.45, 0.55, 0.85)
 const ROW := preload("res://scenes/ui/notebook/notebook_row.tscn")
 
 @export var catalog: NotebookCatalog
@@ -38,6 +40,8 @@ const ROW := preload("res://scenes/ui/notebook/notebook_row.tscn")
 @export var frame_seconds: float = 0.05
 ## The grey of a corrupted guardian's portrait.
 @export var forgotten_material: Material
+## A note of a half-known song not known yet (tools/art/prompts/note_blank.md).
+@export var blank_texture: Texture2D
 
 ## Set through Screens; the notebook opens on the newest unread entry it announced.
 var watcher: NotebookWatcher
@@ -74,6 +78,8 @@ var _shown_first: int = 0
 @onready var _line: Label = %Line
 @onready var _taught: Label = %Taught
 @onready var _body: Label = %Body
+@onready var _struck_title: Label = %StruckTitle
+@onready var _margin: Label = %Margin
 @onready var _tabs: Control = %Tabs
 
 
@@ -107,7 +113,7 @@ func open() -> void:
 	var newest := NotebookIndex.newest_unread(catalog, data, watcher.recent if watcher != null else ([] as Array[StringName]))
 	if newest != &"":
 		_section = catalog.get_entry(newest).section
-		_focus_by_section[_section] = newest
+		_focus_by_section[_section] = catalog.get_entry(newest).id
 	_build_section(data)
 	_set_open_parts(false)
 	_phase = Phase.OPENING
@@ -159,10 +165,15 @@ func render_entry(entry: NotebookEntry, data: PlayerData) -> void:
 	_portrait.visible = entry != null and entry.art != null
 	if entry == null:
 		return
-	_entry_title.text = tr(entry.title_key)
+	_entry_title.text = tr(title_key(entry, data))
 	_notes.visible = entry.section == NotebookEntry.Section.SONGS
 	if _notes.visible:
-		_show_notes(songs.get_song(entry.index as Enums.Song).notes)
+		_show_notes(entry, data)
+	var confirmed := entry.song_state(data) == SongHalves.State.BY_EAR_CONFIRMED
+	_struck_title.visible = confirmed
+	_struck_title.text = tr(songs.get_song(entry.index as Enums.Song).ear_title_key) if confirmed else ""
+	_margin.visible = confirmed
+	_margin.text = tr(entry.ear_margin_key) if confirmed else ""
 	_line.visible = true
 	_taught.visible = false
 	match entry.section:
@@ -175,9 +186,19 @@ func render_entry(entry: NotebookEntry, data: PlayerData) -> void:
 			_portrait.texture = entry.art
 			_portrait.material = null if restored else forgotten_material
 		_:
-			_line.visible = not entry.detail_key.is_empty()
+			# The confirmed page gives the season line's room to the struck name and the margin.
+			_line.visible = not entry.detail_key.is_empty() and not confirmed
 			_line.text = tr(entry.detail_key) if _line.visible else ""
-	_body.text = tr(entry.body_key)
+	_body.text = tr(entry.body_key_for(data))
+
+## The title as `data` knows the entry: "half a song" until whole, Ivo's name while only he knows the ending.
+func title_key(entry: NotebookEntry, data: PlayerData) -> String:
+	match entry.song_state(data):
+		SongHalves.State.FIRST_HALF, SongHalves.State.SECOND_HALF:
+			return NotebookEntry.HALF_TITLE_KEY
+		SongHalves.State.BY_EAR:
+			return songs.get_song(entry.index as Enums.Song).ear_title_key
+	return entry.title_key
 
 func rows() -> Array[NotebookRow]:
 	var found: Array[NotebookRow] = []
@@ -207,17 +228,21 @@ func _stats_for(guardian: Enums.Guardian) -> GuardianStats:
 
 ## The scene sets the 16 px glyphs 14 px apart from x -3, as in the approved mockup: the glyphs' 3 px transparent margin
 ## falls outside the page and the ink stays inside it (notebook_text_fit_test).
-func _show_notes(notes: Array[Enums.Note]) -> void:
+func _show_notes(entry: NotebookEntry, data: PlayerData) -> void:
+	var notes := songs.get_song(entry.index as Enums.Song).notes
+	var known := SongHalves.known_mask(data, entry.index)
+	var guessed := SongHalves.guessed_mask(data, entry.index)
 	var glyphs := glyph_sets[InputDevice.glyph_set]
 	for i: int in _notes.get_child_count():
 		var slot := _notes.get_child(i) as TextureRect
 		slot.visible = i < notes.size()
 		if slot.visible:
-			slot.texture = glyphs.texture(notes[i], false)
+			slot.texture = glyphs.texture(notes[i], false) if known[i] else blank_texture
+			slot.modulate = IVO_INK if guessed[i] else Color.WHITE
 
 func _on_device_changed(_glyph_set: Enums.GlyphSet) -> void:
 	if _showing != null and _showing.section == NotebookEntry.Section.SONGS:
-		_show_notes(songs.get_song(_showing.index as Enums.Song).notes)
+		_show_notes(_showing, SaveSystem.player_data)
 
 func _build_section(data: PlayerData) -> void:
 	_section_title.text = tr(SECTION_KEYS[_section])
@@ -229,7 +254,7 @@ func _build_section(data: PlayerData) -> void:
 		var known := entry.is_present(data)
 		var row := ROW.instantiate() as NotebookRow
 		_rows.add_child(row)
-		row.setup(entry if known else null, tr(entry.title_key if known else UNKNOWN_KEY), waiting.has(entry.id))
+		row.setup(entry if known else null, tr(title_key(entry, data) if known else UNKNOWN_KEY), waiting.has(entry.page_id(data)))
 		if known:
 			row.focus_entered.connect(_on_row_focused.bind(row))
 	_link_known_rows()
@@ -325,12 +350,12 @@ func _reframe() -> void:
 func _leave_entry() -> void:
 	if _showing == null:
 		return
-	SaveSystem.mark_notebook_read(_showing.id)
-	_showing = null
 	var data := SaveSystem.player_data
+	SaveSystem.mark_notebook_read(_showing.page_id(data))
+	_showing = null
 	var waiting := NotebookIndex.unread(catalog, data)
 	for row: NotebookRow in rows():
-		row.set_unread(row.entry != null and waiting.has(row.entry.id))
+		row.set_unread(row.entry != null and waiting.has(row.entry.page_id(data)))
 	_refresh_tabs(data)
 
 func _refresh_tabs(data: PlayerData) -> void:

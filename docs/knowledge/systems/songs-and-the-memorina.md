@@ -6,7 +6,7 @@ status: active
 tags: [songs, memorina, pulse, performance, pause]
 related: [architecture/memory-runs-through-pause, architecture/played-pulses-hold-in-a-pause, architecture/pause-menu-worldfreeze-reuse, systems/screens, bugs/memorina-notes-dropped-while-previous-rings, gotchas/time-scale-zero-stops-delta-particles-and-time]
 created: 2026-10-02
-updated: 2026-10-15
+updated: 2026-10-28
 source_files:
   - scenes/characters/ivo/player.gd
   - scenes/characters/ivo/ivo.tscn
@@ -33,6 +33,17 @@ source_files:
 - **The glyph a note is drawn with is decided in `PlayerInput`** (`glyph_set_for(event, joy_name)`, pure and tested) and travels as `Enums.GlyphSet` beside the note. `MemorinaComponent` never sees it — `Player` remembers the pressed glyph and relays `note_played(note, glyph_set)`. The HUD maps a set to textures through `NoteGlyphSet` resources (`resources/ui/memorina/`); no script names a glyph PNG.
 - **The sheet is geometry, not layout.** `NoteSheet` authors the staff in `memorina_hud.png`'s own pixels (`LINE_Y`, `STAFF_LEFT/RIGHT`) and scales them by the sheet's height (`SOURCE_HEIGHT` 64), so the frame's offsets in `memorina_hud.tscn` are the one place that picks 1× (128×64) or 2× (256×128, current); a sheet wider than the art at that scale gets a staff as much longer (the guitar's 300 px frame, STORY-14); the glyphs have their own `icon_scale` (1.5). The frame is placed by code on the side Ivo faces (`MemorinaHud._place_frame`), but only once `GameCamera.focused` reports the zoom and any in-flight look-ahead have landed, with Ivo's final screen position — a frame laid out earlier would cover where he is about to be. The camera is the one node that converts world to screen for UI. The title's outline is the Label's `outline_size`, not the outline `.ttf` (two fonts never overlay glyph for glyph). No nested `scale`, so nothing is left for pixel snapping to round. The one exception is the guitar's `PhraseSheet`, whose frame art is a `NinePatchRect` drawn at an integer scale of 2 under an unscaled `NoteSheet` (`systems/story`, STORY-14); STORY-13's dedicated guitar frame removes it.
 
+
+## Half songs (SONG-14, 2026-10-28)
+
+Design 02 §7.2.1; plan and user decisions in `architecture/half-songs`.
+- **Redoma, Chuva, Vendaval and Solstício are learned in halves** (`Song.learned_in_halves`, pinned by `song_catalog_test`): notes 1-3 (`Enums.SongHalf.FIRST`) and 4-6 (`SECOND`). `PlayerData.song_first_halves`, `song_second_halves` and `guessed_halves` are live data: a bench commits them, a death forgets them.
+- **`SongHalves` (pure, static) is the one rule** for how halves combine: `state` (UNKNOWN, FIRST_HALF, SECOND_HALF, LEARNED, BY_EAR, BY_EAR_CONFIRMED), `teach` (both halves set `learned_songs`), `guess`, `known_mask`, `guessed_mask`, `title_key`. CONFIRMED is derived (guessed and that half found later), never recorded. `SaveFact.Kind.SONG_PART_KNOWN` reads it; `SONG` still means playable, so doors and kits are unchanged.
+- **The matcher takes half-known songs as `SongCandidate`s** (`set_candidates(songs, partials)`): known notes are rejected per note as before, blanks take any note, and only the sixth note decides. A guardian's call installs only its phrase. Accepted consequence: while a candidate with an unknown first half is installed, a known song's wrong note in positions 1-3 fails only at note 4 (`song_matcher_test.test_blanks_suspend_early_rejection_of_other_songs`).
+- **A right guess is a lesson, not a performance** ("Both get a full lesson", user, 2026-10-28): the component emits `song_guessed` and stays DRAWN; `Player._on_song_guessed` saves through `SaveSystem.learn_song_by_ear` and starts the lesson like `learn_song`, under the same gates (`_can_take_lesson`). `LessonCinematic` shows `SongHalves.title_key`: Ivo's name (`Song.ear_title_key`) while only he knows the ending.
+- **`Player.learn_song_half(song, half)` is the one entry point for teachers** (CORE-04 creatures, STORY-06 songbooks), refused under `learn_song`'s gates. The half that makes the song whole, or the half Ivo had guessed, runs the full lesson (the real name is heard); a half already known changes nothing and returns false; any other sheathes a drawn instrument (the matcher takes partials only at a draw) and emits `song_half_learned`, and `MemorinaHud.on_song_half_learned` shows the six slots once (three glyphs, three `note_blank.png` blanks) and fades like a lesson sheet. Nothing lists songs on draw (design 02 §6.2).
+- **Debug:** F8 (`debug_learn_song_half`; Shift is roll, `bugs/shift-f9-rolls-ivo-so-the-debug-half-is-refused`) teaches the first half of the first unlearned halved song, then the half it lacks. Playtest timelines take `"song_halves": [[song, half]]` and `"songs_by_ear": [song]`.
+- **Kits** still give each second song with its guardian (`reach_kits.tres` notes say so) until CORE-04 and STORY-06 place the halves as milestones.
 
 ## Freeze and hold
 

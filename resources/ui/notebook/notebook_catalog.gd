@@ -4,7 +4,7 @@ extends Resource
 
 ## The requirement every entry of a section must use; LORE takes any.
 const SECTION_REQUIREMENT: Dictionary[NotebookEntry.Section, SaveFact.Kind] = {
-	NotebookEntry.Section.SONGS: SaveFact.Kind.SONG,
+	NotebookEntry.Section.SONGS: SaveFact.Kind.SONG_PART_KNOWN,
 	NotebookEntry.Section.ITEMS: SaveFact.Kind.ITEM,
 	NotebookEntry.Section.GUARDIANS: SaveFact.Kind.GUARDIAN_MET,
 }
@@ -12,9 +12,11 @@ const SECTION_REQUIREMENT: Dictionary[NotebookEntry.Section, SaveFact.Kind] = {
 @export var entries: Array[NotebookEntry] = []
 
 
+## Takes an entry id or a page id (`NotebookEntry.page_id`).
 func get_entry(id: StringName) -> NotebookEntry:
+	var entry_id := StringName(String(id).get_slice("@", 0))
 	for entry: NotebookEntry in entries:
-		if entry.id == id:
+		if entry.id == entry_id:
 			return entry
 	return null
 

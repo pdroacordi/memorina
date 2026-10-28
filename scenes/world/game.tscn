@@ -288,6 +288,7 @@ layer = 2
 [connection signal="hurt" from="World/Player" to="World/Camera2D" method="shake" binds= [4.0]]
 [connection signal="lesson_started" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_lesson_started"]
 [connection signal="lesson_started" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_lesson_started"]
+[connection signal="song_half_learned" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_song_half_learned"]
 [connection signal="lesson_started" from="World/Player" to="World/Camera2D" method="push_in" unbinds=2]
 [connection signal="memorina_drawn" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_drawn"]
 [connection signal="memorina_drawn" from="World/Player" to="World/Camera2D" method="focus" unbinds=2]
