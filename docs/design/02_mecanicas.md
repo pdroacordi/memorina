@@ -38,6 +38,8 @@
  
 *Nota de design:* não há corrida para recuperar o que ficou no lugar da morte — a ausência de "recuperar o que foi perdido" reforça o tema central do jogo: aceitar a perda, não insistir em reter à força. *(Substitui, em 2026-10-01, a versão em que a morte não custava progresso nenhum.)*
  
+**Sementes de estação e o vendedor (usuário, 2026-10-28; LIFE-04):** "Season seeds, the seller (Recommended)". Os doze esconderijos do mapa guardam sementes duras de estações que o cinza parou. O vendedor da Vila as troca por: mapas regionais (o contorno das salas de uma região ainda não vista), rumores (marcam no mapa a região de uma carta ou de um caderno de canções) e o replantio da Vila (jardins que voltam a crescer, só visual). Inimigos nunca dão sementes. Sementes não gastas desde o último banco se perdem na morte, como todo o resto. Nenhuma compra ensina canção, devolve habilidade ou aumenta a vida. *Tensão a resolver na construção:* o mapa regional desenha contorno não explorado, e a seção UI diz que o contorno se desenha por exploração; a proposta é um traço mais fraco para o comprado.
+ 
 **Vitória:** derrotar o guardião-mentor na Grande Provação/Batalha Final, restaurando o mundo.
  
 **Pontos de restauração (bancos):** espalhados pelo mapa com mais frequência que os marcos de guardião. Sentar num banco recupera a vida cheia e salva o progresso no mesmo gesto. Função dupla: mecânica (cura e checkpoint) e de ritmo — força uma pausa deliberada, reforçando o tom contemplativo do jogo. **Decidido (2026-10-01): só os bancos salvam** — restaurar um guardião não é ponto de salvamento; morrer depois da lição sem ter sentado num banco devolve o guardião à corrupção, com a sequência e a habilidade que ele ensinou. Senta-se apertando **para baixo** diante do banco. Descansar traz de volta as criaturas derrotadas.
@@ -45,7 +47,7 @@
 ## Interface de Usuário (UI/HUD)
  
 - **Memorina (partitura):** aparece apenas quando o jogador saca o instrumento (tecla C), com um zoom suave da câmera sobre o herói, no espaço livre à frente dele (ou atrás, se ele já estiver encostado nesse lado). É uma pauta: cada nota tocada é desenhada na linha da sua altura (G4 em cima, C4 embaixo) com o ícone do botão físico usado — seta, WASD, Xbox ou PlayStation. Some ao guardar. (Ver seção 6.2 para a regra de execução.)
-- **Caderno de campo (tecla E):** dividido em seções — Lore (diário do personagem + fragmentos de portador), Canções aprendidas, Itens colecionáveis, Guardiões (registro de guardiões conhecidos e estado de corrupção).
+- **Caderno de campo (tecla E):** dividido em seções — Lore (diário do personagem + fragmentos de portador), Canções aprendidas, Itens colecionáveis, Guardiões (registro de guardiões conhecidos e estado de corrupção). Uma quinta aba, **Achados**, guarda cartas, diários, desenhos e cadernos de canções encontrados ("A fifth tab, Found (Recommended)", usuário, 2026-10-28), para que Memórias continue sendo só o diário de Ivo.
 - **Mapa (tecla M):** elemento separado do caderno. Estilo Metroid clássico — contorno se desenha por exploração. Deliberadamente pouco detalhado mesmo depois de revelado, sem indicar posição exata ou rota ótima — reforça a intenção de tentativa e erro na navegação.
 - **Indicador de vida:** ícone temático (estilo máscara/coração), sempre visível, não barra.
 - Telas de menu (inicial, pause, vitória): a definir.
@@ -66,7 +68,7 @@ Estilo fluido e rápido — referência Hollow Knight com tempero de jogo de aç
 ### Inimigos comuns
  
 - **Criaturas corrompidas:** fauna local distorcida por tempo demais numa região em avançado cinzesquecimento. Silhueta e comportamento reconhecíveis da região, mas com o mesmo glitch visual de borda perdendo definição usado em guardiões e flashbacks — assinatura visual coesa em todo o jogo.
-- **Criaturas-professoras:** encontros especiais, não hostis por padrão. Cada região tem uma criatura ligada à sua estação/material que ensina um fragmento de padrão musical através do próprio comportamento — tutorial diegético por observação e imitação, antes do guardião daquela região.
+- **Criaturas-professoras:** encontros especiais, não hostis por padrão. Cada região tem uma criatura ligada à sua estação/material que ensina um fragmento de padrão musical através do próprio comportamento — tutorial diegético por observação e imitação, antes do guardião daquela região. O fragmento que ela ensina é a primeira metade (notas 1-3) da segunda canção da região (seção 7.2.1, CORE-04).
 ## 3. Guardiões comuns — estrutura de três fases
  
 1. **Fase de pressão física:** o guardião ataca através de padrões ligados à sua estação. O jogador desvia, se posiciona, ataca para abrir brechas — não para "matar", mas para forçar instabilidade que abre a fase seguinte.
@@ -197,6 +199,17 @@ Cada estação carrega duas sequências de notas distintas, não uma. Isso ampli
 - **Regra:** pelo menos um guardião de cada estação ensina a sequência base pelo call-and-response do próprio combate. A segunda sequência daquela estação é ensinada através do fragmento de portador — do mesmo guardião ou de outro da mesma estação, a critério do design de cada região.
 - Isso separa claramente "o que aprendo lutando" de "o que aprendo ouvindo a história", e dá ao jogador razão mecânica para visitar todos os guardiões de uma estação, não só o primeiro que encontrar.
 - **Solstício é sempre de fragmento**, e tardio: sozinho ele faz pouco, e só se entende depois de o jogador já ter corrido contra o relógio de outras canções.
+
+### 7.2.1 Meias canções (usuário, 2026-10-28; SONG-14)
+
+"Teaching creatures and collectibles over the map teach only half songs. Create halfsies of learning. That half-learned song goes to a diary entry that will be completed when the other half is found. For example, a bird teaches you the first three notes of a song. An incomplete entry is created. The other half is learned by a lost book in a secret room, for example." (usuário, 2026-10-28)
+
+- **Quais canções:** as quatro segundas canções — Redoma, Chuva, Vendaval e Solstício ("The 4 second songs (Recommended)"). Substituem o fragmento de portador como forma de aprender a segunda canção; os guardiões continuam ensinando a canção base no combate, e os fragmentos de portador continuam como lore do tubo (`01_lore_e_narrativa.md`, seção 6).
+- **As duas metades:** toda canção tem seis notas. A criatura-professora da região ensina as notas 1-3 (o chamado); um caderno de canções perdido de um portador antigo ensina as notas 4-6 (a resposta). Qualquer metade pode vir primeiro.
+- **O caderno fica em outra região** ("Book in another region", usuário, 2026-10-28): alguém o levou para longe. Proposta de pares, de regiões vizinhas: Redoma (criatura no Lago Gelado, caderno no Bosque Florido), Chuva (criatura no Bosque, caderno no Lago), Vendaval (criatura no Pomar, caderno na Caldeira), Solstício (criatura na Caldeira, caderno no Pomar). O lugar exato de cada caderno sai do relatório de kits na construção, sem armadilha de kit; o modelo de kits deixa de dar a segunda canção junto com o guardião e passa a pedir as duas metades.
+- **Entrada incompleta:** com uma metade, a canção aparece no caderno (seção Canções) e na pauta da Memorina com as três notas conhecidas e três espaços vazios.
+- **De ouvido:** "Yes, but the diary entry changes with that. Being creative!" (usuário, 2026-10-28). Com uma metade conhecida, o jogador pode tentar a outra na Memorina. A frase é julgada inteira: as notas nos espaços vazios não são recusadas uma a uma, e só a sexta diz se acertou. Errar é a falha comum da sequência, sem custo. Acertar ensina a canção e a toca.
+- **O nome que Ivo dá** ("Ivo names the song (Recommended)"): uma canção completada de ouvido ganha um nome dado por Ivo, as notas adivinhadas na letra dele e um texto na voz dele (um eco da canção da manhã que o violão não termina, `05_roteiro.md`). Quando a metade verdadeira é achada depois, o nome de Ivo fica riscado sob o nome real e uma nota na margem diz que ele tinha acertado. Em jogo é a mesma canção.
 
 ### 7.3 Regras comuns a todas as sequências
 

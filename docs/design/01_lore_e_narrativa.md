@@ -97,6 +97,8 @@ Uma forma barata de implementar isso é reaproveitar o caderno de campo já plan
 ### Itens e coletáveis não-essenciais
  
 Distintos dos fragmentos de portador (que vêm da restauração de guardiões e contam a linhagem do instrumento), o mundo espalha cartas, diários, fotos e peças de arte que não são essenciais — não bloqueiam nem são exigidos para vencer o jogo. Contam lore do cotidiano: vida comum, viajantes, gente que nunca tocou a Memorina. Os dois sistemas cobrem escalas diferentes de história e não se sobrepõem.
+
+**Achados (usuário, 2026-10-28; STORY-06):** os 18 lugares de coletável do mapa guardam quatro cadernos de canções perdidos (a segunda metade de uma meia canção, `02_mecanicas.md`, seção 7.2.1), a quarta nota de vida no santuário da Caldeira (LIFE-05) e treze cartas, diários e desenhos em alguns fios curtos que atravessam regiões. São lidos na aba Achados do caderno. Os cadernos de canções são de portadores antigos: ficam entre as duas escalas, gente que tocou a Memorina, mas contada pelo que escreveu, não pelo tubo.
  
 ## 7. Escala do mundo
  
