@@ -1,0 +1,95 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  160,
+  5960
+ ],
+ "items": [
+  0,
+  1
+ ],
+ "known_songs": [
+  0
+ ],
+ "max_duration": 11.3,
+ "steps": [
+  {
+   "t": 1.0,
+   "screenshot": "u00_start"
+  },
+  {
+   "t": 1.5,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 1.56,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 2.7,
+   "screenshot": "u01_open"
+  },
+  {
+   "t": 3.0,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 3.06,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 4.26,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 5.4,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 5.46,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 6.6,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 6.66,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 7.8,
+   "screenshot": "u02_found"
+  },
+  {
+   "t": 8.1,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 8.16,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 9.3,
+   "screenshot": "u03_guardians"
+  }
+ ]
+}

@@ -270,3 +270,19 @@ func test_returning_to_a_section_keeps_the_rows_above_that_fit() -> void:
 		var first_shown := _notebook.rows().filter(func(row: NotebookRow) -> bool: return row.modulate.a > 0.0)[0] as NotebookRow
 		assert_float(first_shown.position.y).is_equal(float(list.scroll_vertical))
 
+
+## UI-14: Found is the fifth and last tab, reached by turning and drawn selected when shown.
+func test_found_is_the_fifth_tab() -> void:
+	await _open()
+	_notebook.turn_to(NotebookEntry.Section.GUARDIANS)
+	await _settle()
+	_notebook.turn(1)
+	await _settle()
+	assert_int(_notebook.section()).is_equal(NotebookEntry.Section.FOUND)
+	_notebook.turn(1)
+	await _settle()
+	assert_int(_notebook.section()).is_equal(NotebookEntry.Section.FOUND)
+	var tab := _notebook.find_child("Tabs").get_child(NotebookEntry.Section.FOUND) as TextureButton
+	assert_str(tab.name).is_equal("Found")
+	assert_object(tab.texture_normal).is_same(_notebook.tab_selected[NotebookEntry.Section.FOUND])
+	assert_str((_notebook.find_child("SectionTitle") as Label).text).is_equal(tr("NOTEBOOK_SECTION_FOUND"))

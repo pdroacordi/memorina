@@ -129,7 +129,7 @@ Third-party art used in Memorina, with the terms it was taken under.
 - **Key prompts, frames and banners** (`assets/sprites/hud/memorina/input_*.png`,
   `assets/sprites/hud/input/` - the keyboard, D-pad, stick, Xbox and PlayStation glyphs, the save quill `assets/sprites/hud/save/kept_quill.png`,
   `assets/sprites/hud/recall/`, the menu panel, banner and buttons `assets/sprites/hud/menu/`,
-  the notebook's spellbook, its open and page-turn strips, right tabs 01-04 and mini icons 15, 16, 20,
+  the notebook's spellbook, its open and page-turn strips, right tabs 01-04 (tab 05 is tab 01 recoloured by `tools/art/draw_notebook_found_tab.py`; its letter icon is our own, drawn by the same script) and mini icons 15, 16, 20,
   23 `assets/sprites/hud/notebook/`,
   the `memorina_*` fonts) — from the *RPG UI pack* by
   **Franuka**, https://franuka.itch.io/ (free for commercial use; a link back is asked for).

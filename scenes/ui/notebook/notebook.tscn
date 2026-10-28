@@ -26,6 +26,9 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/icon_note.png" id="icon_note"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/icon_pouch.png" id="icon_pouch"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/icon_leaf.png" id="icon_leaf"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/tab_05_normal.png" id="t5n"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/tab_05_selected.png" id="t5s"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/icon_letter.png" id="icon_letter"]
 [ext_resource type="Shader" path="res://scenes/ui/notebook/notebook_forgotten.gdshader" id="15_shader"]
 [ext_resource type="PackedScene" path="res://scenes/ui/notebook/notebook_mark.tscn" id="16_mark"]
 [ext_resource type="Script" path="res://resources/characters/guardians/guardian_stats.gd" id="17_stats"]
@@ -53,8 +56,8 @@ glyph_sets = Array[ExtResource("18_glyphs")]([ExtResource("7_arrows"), ExtResour
 opening_strip = ExtResource("12_open")
 next_page_strip = ExtResource("13_next")
 previous_page_strip = ExtResource("14_prev")
-tab_normal = Array[Texture2D]([ExtResource("t1n"), ExtResource("t2n"), ExtResource("t3n"), ExtResource("t4n")])
-tab_selected = Array[Texture2D]([ExtResource("t1s"), ExtResource("t2s"), ExtResource("t3s"), ExtResource("t4s")])
+tab_normal = Array[Texture2D]([ExtResource("t1n"), ExtResource("t2n"), ExtResource("t3n"), ExtResource("t4n"), ExtResource("t5n")])
+tab_selected = Array[Texture2D]([ExtResource("t1s"), ExtResource("t2s"), ExtResource("t3s"), ExtResource("t4s"), ExtResource("t5s")])
 forgotten_material = SubResource("ShaderMaterial_forgotten")
 blank_texture = ExtResource("91_blank")
 
@@ -290,7 +293,7 @@ layout_mode = 0
 offset_left = 256.0
 offset_top = 20.0
 offset_right = 289.0
-offset_bottom = 136.0
+offset_bottom = 148.0
 mouse_filter = 2
 
 [node name="Lore" type="TextureButton" parent="Art/Tabs"]
@@ -319,9 +322,9 @@ offset_bottom = 11.0
 
 [node name="Songs" type="TextureButton" parent="Art/Tabs"]
 layout_mode = 0
-offset_top = 28.0
+offset_top = 24.0
 offset_right = 32.0
-offset_bottom = 60.0
+offset_bottom = 56.0
 focus_mode = 0
 texture_normal = ExtResource("t2n")
 
@@ -343,9 +346,9 @@ offset_bottom = 11.0
 
 [node name="Items" type="TextureButton" parent="Art/Tabs"]
 layout_mode = 0
-offset_top = 56.0
+offset_top = 48.0
 offset_right = 32.0
-offset_bottom = 88.0
+offset_bottom = 80.0
 focus_mode = 0
 texture_normal = ExtResource("t3n")
 
@@ -367,9 +370,9 @@ offset_bottom = 11.0
 
 [node name="Guardians" type="TextureButton" parent="Art/Tabs"]
 layout_mode = 0
-offset_top = 84.0
+offset_top = 72.0
 offset_right = 32.0
-offset_bottom = 116.0
+offset_bottom = 104.0
 focus_mode = 0
 texture_normal = ExtResource("t4n")
 
@@ -383,6 +386,30 @@ mouse_filter = 2
 texture = ExtResource("icon_leaf")
 
 [node name="Mark" parent="Art/Tabs/Guardians" instance=ExtResource("16_mark")]
+visible = false
+offset_left = 21.0
+offset_top = 6.0
+offset_right = 26.0
+offset_bottom = 11.0
+
+[node name="Found" type="TextureButton" parent="Art/Tabs"]
+layout_mode = 0
+offset_top = 96.0
+offset_right = 32.0
+offset_bottom = 128.0
+focus_mode = 0
+texture_normal = ExtResource("t5n")
+
+[node name="Icon" type="TextureRect" parent="Art/Tabs/Found"]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 23.0
+offset_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource("icon_letter")
+
+[node name="Mark" parent="Art/Tabs/Found" instance=ExtResource("16_mark")]
 visible = false
 offset_left = 21.0
 offset_top = 6.0

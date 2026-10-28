@@ -2,7 +2,8 @@ class_name NotebookEntry
 extends Resource
 ## One notebook entry; whether it is present is derived from the save (architecture/notebook-entries-are-derived-from-the-save).
 
-enum Section { LORE, SONGS, ITEMS, GUARDIANS }
+## Append only: catalog entries store it as an int, and each section is a tab in this order.
+enum Section { LORE, SONGS, ITEMS, GUARDIANS, FOUND }
 
 ## A half-known song's title and bodies, shared by the four songs learned in halves (architecture/half-songs).
 const HALF_TITLE_KEY := "NOTEBOOK_SONG_HALF_TITLE"

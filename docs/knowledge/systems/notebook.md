@@ -31,7 +31,7 @@ source_files:
 
 ## Summary
 
-UI-03, design 02 "UI" ("Caderno de campo"). E / pad Select toggles it; Esc and B close it. It holds the world like the pause and is refused over an existing freeze or hold (`systems/screens`). Four sections, one tab each: Memories (Ivo's diary), Songs, Items, Guardians. The left page shows the section title and its entry list; the right page shows the focused entry. Plan and options: `architecture/notebook-entries-are-derived-from-the-save`.
+UI-03, design 02 "UI" ("Caderno de campo"). E / pad Select toggles it; Esc and B close it. It holds the world like the pause and is refused over an existing freeze or hold (`systems/screens`). Five sections, one tab each: Memories (Ivo's diary), Songs, Items, Guardians and Found (UI-14: letters, diaries, drawings and songbooks, "A fifth tab, Found (Recommended)", user, 2026-10-28; its entries come with STORY-06, so it is empty until then). The left page shows the section title and its entry list; the right page shows the focused entry. Plan and options: `architecture/notebook-entries-are-derived-from-the-save`.
 
 ## Data
 
@@ -51,6 +51,7 @@ UI-03, design 02 "UI" ("Caderno de campo"). E / pad Select toggles it; Esc and B
 - Every song entry's requirement is `SONG_PART_KNOWN`; `NotebookEntry.song_state(data)` reads `SongHalves.state` (LEARNED for non-song entries).
 - **Page ids:** `NotebookEntry.page_id(data)` is the entry id, or `id@first`, `id@second`, `id@ear`, `id@confirmed` while a halved song is being completed. `NotebookIndex.present`/`unread` and the watcher work on page ids, so each new state is unread and announced again ("the diary entry changes with that", user, 2026-10-28). `NotebookCatalog.get_entry` takes either id. An old save's plain read id still reads a LEARNED song.
 - **The page:** a half shows `NOTEBOOK_SONG_HALF_TITLE` ("Half a song (Recommended)", user), three glyphs and three blanks (`Notebook.blank_texture`), the detail line and the shared half body. By ear: Ivo's title (`Song.ear_title_key`), the guessed glyphs modulated by `Notebook.IVO_INK`, `NotebookEntry.ear_body_key`. Confirmed: the real title, Ivo's name under it in `StruckTitle` (`StruckLabel`, one line, crossed by a 1 px line), the real body and `NotebookEntry.ear_margin_key` in `Margin` (one per song, "One per song (Recommended)", user); the season line is hidden there to fit the 106 px page.
+- The half-song, Ivo-name, by-ear and margin texts: "Texts are fine as drafted." (user, 2026-10-28).
 - `notebook_text_fit_test.test_every_half_song_state_fits_both_pages` and `test_a_blank_note_inks_inside_the_right_page` cover these. Fitting the confirmed Chuva page shortened the pt_BR `NOTEBOOK_SONG_RAIN_BODY` by one clause (2026-10-28).
 
 ## Watcher and the HUD quill
@@ -66,8 +67,8 @@ UI-03, design 02 "UI" ("Caderno de campo"). E / pad Select toggles it; Esc and B
 - **Art (pack px, one 320x180 `Art` root at scale 2):**
   - book `spellbook.png` 256x160 at (24, 10);
   - page text rects 81x106: left (54, 26), right (167, 26). They sit 6 px inside the paper.
-  - Tabs (`tab_0N_normal/selected`, 32x32) are in `Tabs` at (256, 20), 28 px apart, drawn over the right edge of the book. They stick out 13 px, and the selected one is shifted 1 px further out (its art is also 1 px wider).
-  - Icons are at (7, 7) in each tab: quill (Lore), note (Songs), pouch (Items), leaf (Guardians).
+  - Tabs (`tab_0N_normal/selected`, 32x32) are in `Tabs` at (256, 20), 24 px apart (28 until UI-14; the fifth tab at 28 hung past the page edge beside the cover's corner), drawn over the right edge of the book. Tab 05 and its letter icon are drawn by `tools/art/draw_notebook_found_tab.py` (tab 01 recoloured blue; `tools/art/prompts/notebook_tab_05_*.md`, `notebook_icon_letter.md`). They stick out 13 px, and the selected one is shifted 1 px further out (its art is also 1 px wider).
+  - Icons are at (7, 7) in each tab: quill (Lore), note (Songs), pouch (Items), leaf (Guardians), letter (Found).
   - The unread mark (`notebook_mark.tscn`, a 3x3 red dot in a 5x5 dark rim) sits on rows and at (21, 6) on tabs.
 - **Animations:** `Flip` (Sprite2D, 8 frames) steps a pack strip with a tween that ignores the time scale, `frame_seconds` (0.05) per frame. The strips are bottom-aligned on the open book, so the strip's y = book y - (strip height - 160).
   - Opening uses `spellbook_opening.png`; closing plays the same strip backwards (the pack's Closing strip is its exact reverse, so it is not shipped).

@@ -18,6 +18,7 @@ const SECTION_KEYS: Dictionary[NotebookEntry.Section, String] = {
 	NotebookEntry.Section.SONGS: "NOTEBOOK_SECTION_SONGS",
 	NotebookEntry.Section.ITEMS: "NOTEBOOK_SECTION_ITEMS",
 	NotebookEntry.Section.GUARDIANS: "NOTEBOOK_SECTION_GUARDIANS",
+	NotebookEntry.Section.FOUND: "NOTEBOOK_SECTION_FOUND",
 }
 const UNKNOWN_KEY := "NOTEBOOK_UNKNOWN"
 ## Ivo's own ink, on the notes he guessed (architecture/half-songs).
