@@ -523,6 +523,21 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - Slot positions: woods_hut letter (36336, 12160), loft x 36320..36544; frost_wreck_hold letter (26160, 12128);
     woods_root_caves Redoma songbook (-4368, 928), alcove x -4448..-4192.
 
+- **Learned 2026-10-28 (LIFE-04 seeds and the seller)**:
+  - **The seller's talk:** spawn at (-740, 280). The seller is at x -720 (lane west col 17), and x -790 is out of the
+    talk's reach (no prompt, Up does nothing). Up at 1.6 s, then Z after each line has typed (~2 s for 80 chars at 40/s). The
+    shop panel opens on the Z that ends the line before the `seller_shop` cue. `log` has no shop fields: read the panel from
+    `focus=` (rows are `@Button@NN`, the last is `Leave`) and from frames. A Z press while the panel holds focus BUYS, so
+    script exact Down counts. After a buy, focus stays on the row index the bought row had.
+  - **Title with seeded slots:** a windowed `-s` driver can write the slots itself before booting:
+    `root.get_node("SaveSystem").slot_path(n)`, `load("res://globals/player_data.gd").new()`, `ResourceSaver.save`, then
+    `change_scene_to_file("res://scenes/boot/boot.tscn")` with `-- --title`. With any save present, the title opens
+    with Continue FOCUSED: Down + Enter presses Quit game and the run silently ends. Press Enter alone.
+  - **Prop placement check:** run a bare and a bought timeline from the same spawns and crop each prop's world x
+    (`(wx - cam_centre.x + 320) * 2`, floor `(288 - cam_centre.y + 180) * 2`). A Pillow bbox diff is drowned by snow, so crop by position.
+  - A UI colour you can predict (a texture's paper) that differs from its source and changes with memory means the UI is
+    under the greyhush. Sample the same texture in the dialogue box as the control.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
