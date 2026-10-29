@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="EnemyStats" format=3]
+
+[ext_resource type="Script" path="res://resources/characters/enemies/enemy_stats.gd" id="1_stats"]
+[ext_resource type="Resource" path="res://resources/characters/creatures/crab/crab_locomotion.tres" id="2_loco"]
+[ext_resource type="Resource" path="res://resources/characters/creatures/crab/crab_snap.tres" id="3_move"]
+[ext_resource type="Script" path="res://resources/characters/enemies/enemy_move.gd" id="4_move"]
+
+[resource]
+script = ExtResource("1_stats")
+health = 3
+contact_damage = 1
+contact_knockback = 300.0
+sight_radius = 256.0
+wake_radius = 200.0
+hidden_until_woken = true
+leash = 192.0
+wanders = false
+stop_distance = 28.0
+front_guard = true
+locomotion = ExtResource("2_loco")
+moves = Array[ExtResource("4_move")]([ExtResource("3_move")])

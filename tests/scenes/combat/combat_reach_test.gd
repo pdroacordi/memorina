@@ -4,10 +4,17 @@ class_name CombatReachTest extends GdUnitTestSuite
 ## (docs/knowledge/systems/guardians.md, "A move's attack_range"; architecture/ivo-at-2x, CORE-09, CORE-11).
 
 const IVO_SCENE := "res://scenes/characters/ivo/ivo.tscn"
-## Every creature walks: its parking spot and its moves are measured against Ivo on one floor.
-const CREATURE_SCENES: Array[String] = [
+## A walker's parking spot and its moves are measured against Ivo on one floor.
+const WALKER_SCENES: Array[String] = [
 	"res://scenes/characters/creatures/boar/boar.tscn",
 	"res://scenes/characters/creatures/scorpion/scorpion.tscn",
+	"res://scenes/characters/creatures/crab/crab.tscn",
+]
+## A flyer's moves reach above and below it: measured against Ivo at its reach's top and bottom.
+const FLYER_SCENES: Array[String] = [
+	"res://scenes/characters/creatures/hornet/hornet.tscn",
+	"res://scenes/characters/creatures/bat/bat.tscn",
+	"res://scenes/characters/creatures/spider/spider.tscn",
 ]
 const GUARDIAN_SCENES: Array[String] = [
 	"res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn",
@@ -54,7 +61,7 @@ func test_the_standing_combo_lands_both_swings_on_a_parked_walker() -> void:
 	var slash := _hit_box(_ivo, _clip_of(_ivo, phases[0].state_name))
 	var chop := _hit_box(_ivo, _clip_of(_ivo, phases[1].state_name))
 	var gap: float = phases[0].duration - slash.window_start + chop.window_start
-	for path: String in CREATURE_SCENES:
+	for path: String in WALKER_SCENES:
 		var creature := auto_free(_instance(path)) as Enemy
 		var stop := creature.stats.stop_distance
 		var target := _area_box(creature, ^"Hurtbox")
@@ -92,10 +99,10 @@ func test_every_guardian_keeps_its_comfort_point_outside_ivos_reach_and_gives_gr
 		assert_float(give_ground).override_failure_message("%s gives ground at %.1f, so it backs off after its %s from %.0f" % [
 			guardian.name, give_ground, main.resource_path.get_file(), main.attack_range]).is_less(main.attack_range)
 
-## A creature starts a move anywhere inside its reach, and inside its contact box touching already hurts, so from there
+## A walker starts a move anywhere inside its reach, and inside its contact box touching already hurts, so from there
 ## out to the reach's far edge the move's hitbox must touch a grounded Ivo; a lunge moves first, so it only has to touch him.
-func test_every_creature_move_lands_over_the_whole_reach_it_is_thrown_from() -> void:
-	for path: String in CREATURE_SCENES:
+func test_every_walker_move_lands_over_the_whole_reach_it_is_thrown_from() -> void:
+	for path: String in WALKER_SCENES:
 		var creature := auto_free(_instance(path)) as Enemy
 		var contact := _area_box(creature, ^"ContactHitbox")
 		for move: EnemyMove in creature.stats.moves:
@@ -115,9 +122,37 @@ func test_every_creature_move_lands_over_the_whole_reach_it_is_thrown_from() -> 
 			assert_float(miss).override_failure_message("%s is thrown from %.1f to %.0f px but misses a grounded Ivo at %.1f" % [
 				label, near, move.reach.end.x, miss]).is_equal(-1.0)
 
+## A flyer starts a move with its target anywhere in the reach, top and bottom included. A standing move (the bite)
+## touches an Ivo at both heights from where its contact already hurts out to the reach's far edge; a dash or a swoop,
+## flown through FlightComponent from the AI's own steer, touches an Ivo standing at each corner of the reach.
+func test_every_flyer_move_lands_across_its_reach_top_and_bottom() -> void:
+	for path: String in FLYER_SCENES:
+		var creature := auto_free(_instance(path)) as Enemy
+		var ai := creature.get_node(^"AI") as EnemyAI
+		var contact := _area_box(creature, ^"ContactHitbox")
+		for move: EnemyMove in creature.stats.moves:
+			var box := _area_box(creature, NodePath(String(move.hitbox)))
+			var label := "%s %s" % [creature.name, move.resource_path.get_file()]
+			if ai is CeilingAI or move.lunge_speed > 0.0:
+				for corner: Vector2 in _corners(move.reach):
+					var xforms: Array[Transform2D] = []
+					for point: Vector2 in _flown(creature, ai, move, corner):
+						xforms.append(Transform2D(0.0, point) * (box.xform as Transform2D))
+					var ivo := {"shape": _ivo_hurtbox.shape, "xform": Transform2D(0.0, corner) * (_ivo_hurtbox.xform as Transform2D)}
+					assert_bool(_touches({"shape": box.shape, "xforms": xforms}, ivo, 0.0)).override_failure_message(
+						"%s misses an Ivo standing at %s of its reach" % [label, corner]).is_true()
+				continue
+			for height: float in [move.reach.position.y, move.reach.end.y]:
+				var ivo := {"shape": _ivo_hurtbox.shape, "xform": Transform2D(0.0, Vector2(0.0, height)) * (_ivo_hurtbox.xform as Transform2D)}
+				var near := maxf(_farthest(contact, ivo),
+						_farthest({"shape": contact.shape, "xform": Transform2D.FLIP_X * contact.xform}, ivo))
+				var miss := _first_miss(box, ivo, near, move.reach.end.x)
+				assert_float(miss).override_failure_message("%s is thrown at an Ivo %.0f px down from %.1f to %.0f px but misses at %.1f" % [
+					label, height, near, move.reach.end.x, miss]).is_equal(-1.0)
+
 ## A walker parks where touching it does not hurt.
 func test_every_walker_parks_clear_of_its_body() -> void:
-	for path: String in CREATURE_SCENES:
+	for path: String in WALKER_SCENES:
 		var creature := auto_free(_instance(path)) as Enemy
 		var contact := _area_box(creature, ^"ContactHitbox")
 		var touch := maxf(_farthest(contact, _ivo_hurtbox),
@@ -128,6 +163,29 @@ func test_every_walker_parks_clear_of_its_body() -> void:
 func test_slide_is_the_integral_of_the_decayed_push() -> void:
 	assert_float(_slide(60.0, 6.0, 1000.0)).is_equal_approx(10.0, 0.001)
 	assert_float(_slide(60.0, 6.0, 0.0)).is_equal(0.0)
+
+## The four corners of a reach box, facing east.
+func _corners(reach: Rect2) -> Array[Vector2]:
+	return [reach.position, Vector2(reach.end.x, reach.position.y), Vector2(reach.position.x, reach.end.y), reach.end]
+
+## The positions a flyer takes through `move`'s hit window, from the origin at an Ivo whose feet are at `feet`: the
+## AI's steer (a locked dash aim, or a swoop path) flown through FlightComponent each physics frame, with no wind.
+func _flown(creature: Enemy, ai: EnemyAI, move: EnemyMove, feet: Vector2) -> Array[Vector2]:
+	var tuning := creature.stats.locomotion
+	var position := Vector2.ZERO
+	var velocity := Vector2.ZERO
+	var points: Array[Vector2] = [position]
+	var swoop := SwoopPath.new(position, feet + EnemyAI.CHEST, move.lunge_speed) if ai is CeilingAI else null
+	var aim := FlyerAI.aim_at(position, feet)
+	var length := minf(swoop.duration, move.active) if swoop != null else move.active
+	var t := 0.0
+	while t < length:
+		t += FRAME
+		var steer := CeilingAI.swoop_steer(swoop, t, position) if swoop != null else aim * move.lunge_speed
+		velocity = FlightComponent.steered(velocity, steer, Vector2.ZERO, tuning, FRAME)
+		position += velocity * FRAME
+		points.append(position)
+	return points
 
 ## A scene's root, never added to the tree, so no _ready runs.
 func _instance(path: String) -> Node:

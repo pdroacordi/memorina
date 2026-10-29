@@ -5,6 +5,9 @@ class_name EnemyTest extends GdUnitTestSuite
 
 const SCORPION := "res://scenes/characters/creatures/scorpion/scorpion.tscn"
 const BOAR := "res://scenes/characters/creatures/boar/boar.tscn"
+const CRAB := "res://scenes/characters/creatures/crab/crab.tscn"
+const BAT := "res://scenes/characters/creatures/bat/bat.tscn"
+const SPIDER := "res://scenes/characters/creatures/spider/spider.tscn"
 const DEFEATED_ID := "enemy_test_defeated"
 const HURTBOX := "res://scenes/combat/hurtbox/hurtbox.tscn"
 ## Ivo's hurtbox invulnerability, s (ivo.tscn).
@@ -118,6 +121,52 @@ func test_one_charge_costs_exactly_one_life() -> void:
 	await _until(func() -> bool: return boar.is_attacking(), 2.0)
 	await _until(func() -> bool: return not boar._ai.is_busy(), 4.0)
 	assert_int(hits[0]).is_equal(1)
+
+## User, 2026-10-29: "1 damage; shell blocks (Recommended)": a hit on the shell does no damage and flashes it white.
+func test_the_crabs_shell_blocks_a_hit_from_in_front() -> void:
+	var crab := await _gathered(CRAB)
+	var blocks: Array[int] = [0]
+	crab.blocked.connect(func() -> void: blocks[0] += 1)
+	crab.hurtbox.receive_hit(1, Vector2(300, -100), _source(crab, Vector2(40, 0)))
+	assert_int(crab.health.current_hp).is_equal(crab.stats.health)
+	assert_int(blocks[0]).is_equal(1)
+	assert_bool(crab.just_hit()).is_false()
+	assert_bool(crab.is_in_knockback()).is_false()
+	assert_float((crab.get_node(^"Sprite2D") as Sprite2D).modulate.r).is_greater(1.0)
+
+func test_the_crab_is_hurt_from_behind_and_from_above() -> void:
+	var crab := await _gathered(CRAB)
+	crab.hurtbox.receive_hit(1, Vector2.ZERO, _source(crab, Vector2(-40, 0)))
+	assert_int(crab.health.current_hp).is_equal(crab.stats.health - 1)
+	crab.hurtbox.receive_hit(1, Vector2.ZERO, _source(crab, Vector2(10, -40)))
+	assert_int(crab.health.current_hp).is_equal(crab.stats.health - 2)
+
+## User, 2026-10-29: the bat and the spider are drawn asleep, so they can be struck asleep, and a hit wakes them.
+func test_a_creature_drawn_asleep_is_present_and_a_hit_wakes_it() -> void:
+	var bat := _spawn(BAT)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_bool(bat.is_dormant()).is_true()
+	assert_bool(bat.is_present()).is_true()
+	assert_bool(bat.hurtbox.monitorable).is_true()
+	assert_bool((bat.get_node(^"ContactHitbox") as Hitbox).monitoring).is_true()
+	bat.hurtbox.receive_hit(1, Vector2.ZERO, _source(bat, Vector2(30, 0)))
+	assert_bool(bat.is_dormant()).is_false()
+
+func test_the_spiders_thread_hangs_from_its_anchor() -> void:
+	var spider := _spawn(SPIDER)
+	spider.global_position = Vector2(100, 200)
+	await await_idle_frame()
+	await await_idle_frame()
+	var thread := spider.get_node(^"SilkThread") as Node2D
+	assert_vector(thread.global_position).is_equal(Vector2(100, 200 - 16))
+	assert_bool(thread.visible).is_true()
+
+func _source(enemy: Enemy, offset: Vector2) -> Node2D:
+	var source := auto_free(Node2D.new()) as Node2D
+	add_child(source)
+	source.global_position = enemy.global_position + offset
+	return source
 
 func _gathered(path: String) -> Enemy:
 	var enemy := _spawn(path)

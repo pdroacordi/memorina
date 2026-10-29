@@ -191,6 +191,10 @@ else in the code knows what a character means.
 | `f` | `[water]` | water | - | - | ice | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
 | `B` | `[grid]` | entity | - | - | - | Boar (Threshold): wanders; on sight paws the ground and charges in a straight line, dazed by a wall or a ledge. Needs a save_id unique across every map: it stays down until the next rest or death. |
 | `J` | `[grid]` | entity | - | - | - | Scorpion (Summer Caldera): holds its ground; on sight raises its tail, strikes and sticks; the raised tail hurts from above. Needs a save_id unique across every map: it stays down until the next rest or death. Optional `stats`: `res://resources/characters/creatures/scorpion/scorpion_bait_stats.tres` for a territorial guard (A isca). |
+| `C` | `[grid]` | entity | - | - | - | Crab (Frost Edge): holds its ground and always faces Ivo; raises its claw and snaps. Its shell blocks a hit from in front (no damage, a white flash): pogo it or strike from behind. Needs a save_id unique across every map: it stays down until the next rest or death. |
+| `N` | `[grid]` | entity | - | - | - | Hornet (Wind Orchards): floats in open air; hovers beside Ivo at his chest, curls its stinger and dashes in a straight line that a current bends. Needs a save_id unique across every map: it stays down until the next rest or death. |
+| `A` | `[grid]` | entity | - | - | - | Icicle bat (Frozen Lake): hangs asleep under a solid cell, with 5 open cells below; drops and swoops through Ivo when he walks under it, then flies back to hang. Needs a save_id unique across every map: it stays down until the next rest or death. |
+| `Z` | `[grid]` | entity | - | - | - | Spider (Spring Woods): rests under ground or a one-way branch, with 3 open cells below; lets itself down its thread to Ivo's chest when he is under it, bites, and climbs back. Needs a save_id unique across every map: it stays down until the next rest or death. |
 | `W` | `[grid]` | entity | - | - | current | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
 | `P` | `[grid]` | entity | - | - | content | A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load. |
 | `G` | `[grid]` | entity | - | - | gate | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved. |
@@ -278,6 +282,70 @@ Scene `res://scenes/characters/creatures/scorpion/scorpion.tscn`, anchored at it
 | `terminal_velocity` | float | `500.0` |
 | `gravity_scale` | float | `1.0` |
 | `knockback_time` | float | `0.35` |
+| `knockback_damping` | float | `6.0` |
+| `hurt_flash_color` | Color | `Color(1, 0.5, 0.5, 1)` |
+| `hurt_flash_time` | float | `0.18` |
+
+#### `C` - Crab
+
+Scene `res://scenes/characters/creatures/crab/crab.tscn`, anchored at its cell's bottom centre (standing on the cell below). Crab (Frost Edge): holds its ground and always faces Ivo; raises its claw and snaps. Its shell blocks a hit from in front (no damage, a white flash): pogo it or strike from behind. Needs a save_id unique across every map: it stays down until the next rest or death.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `save_id` | String | **required** |
+| `stats` | EnemyStats | `Resource("res://resources/characters/creatures/crab/crab_stats.tres")` |
+| `terminal_velocity` | float | `500.0` |
+| `gravity_scale` | float | `1.0` |
+| `knockback_time` | float | `0.3` |
+| `knockback_damping` | float | `6.0` |
+| `hurt_flash_color` | Color | `Color(1, 0.5, 0.5, 1)` |
+| `hurt_flash_time` | float | `0.18` |
+
+#### `N` - Hornet
+
+Scene `res://scenes/characters/creatures/hornet/hornet.tscn`, anchored at its cell's centre. Hornet (Wind Orchards): floats in open air; hovers beside Ivo at his chest, curls its stinger and dashes in a straight line that a current bends. Needs a save_id unique across every map: it stays down until the next rest or death.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `save_id` | String | **required** |
+| `stats` | EnemyStats | `Resource("res://resources/characters/creatures/hornet/hornet_stats.tres")` |
+| `terminal_velocity` | float | `500.0` |
+| `gravity_scale` | float | `1.0` |
+| `knockback_time` | float | `0.3` |
+| `knockback_damping` | float | `6.0` |
+| `hurt_flash_color` | Color | `Color(1, 0.5, 0.5, 1)` |
+| `hurt_flash_time` | float | `0.18` |
+
+#### `A` - Bat
+
+Scene `res://scenes/characters/creatures/bat/bat.tscn`, anchored at its cell's centre. Icicle bat (Frozen Lake): hangs asleep under a solid cell, with 5 open cells below; drops and swoops through Ivo when he walks under it, then flies back to hang. Needs a save_id unique across every map: it stays down until the next rest or death.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `save_id` | String | **required** |
+| `stats` | EnemyStats | `Resource("res://resources/characters/creatures/bat/bat_stats.tres")` |
+| `terminal_velocity` | float | `500.0` |
+| `gravity_scale` | float | `1.0` |
+| `knockback_time` | float | `0.3` |
+| `knockback_damping` | float | `6.0` |
+| `hurt_flash_color` | Color | `Color(1, 0.5, 0.5, 1)` |
+| `hurt_flash_time` | float | `0.18` |
+
+#### `Z` - Spider
+
+Scene `res://scenes/characters/creatures/spider/spider.tscn`, anchored at its cell's centre. Spider (Spring Woods): rests under ground or a one-way branch, with 3 open cells below; lets itself down its thread to Ivo's chest when he is under it, bites, and climbs back. Needs a save_id unique across every map: it stays down until the next rest or death.
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `save_id` | String | **required** |
+| `stats` | EnemyStats | `Resource("res://resources/characters/creatures/spider/spider_stats.tres")` |
+| `terminal_velocity` | float | `500.0` |
+| `gravity_scale` | float | `1.0` |
+| `knockback_time` | float | `0.3` |
 | `knockback_damping` | float | `6.0` |
 | `hurt_flash_color` | Color | `Color(1, 0.5, 0.5, 1)` |
 | `hurt_flash_time` | float | `0.18` |

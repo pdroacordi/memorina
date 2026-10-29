@@ -4,6 +4,11 @@ extends Character
 ## each physics frame, and drives its motor from the AI (docs/knowledge/systems/creatures.md).
 
 signal woken
+## A hit turned away by its front guard: no damage, a white flash.
+signal blocked
+
+## Over-bright modulate: the shader multiplies the texel by it, so a blocked hit flashes the body white.
+const BLOCK_FLASH := Color(4.0, 4.0, 4.0)
 
 @export var save_id: String = ""
 @export var stats: EnemyStats
@@ -80,6 +85,10 @@ func is_recovering() -> bool:
 func is_armoured() -> bool:
 	return _ai.is_active() and _ai.current_move().armoured
 
+## At home or asleep: a ceiling creature hangs there, a thread creature rests under its anchor.
+func is_home() -> bool:
+	return _ai.is_home()
+
 func wants_to_move() -> bool:
 	return not _ai.steer.is_zero_approx()
 
@@ -117,9 +126,15 @@ func _after_move(_delta: float) -> void:
 		_ai.handle_wall_contact()
 	_was_on_wall = on_wall
 
-func _on_hit_received(damage: int, knockback: Vector2, _source: Node2D) -> void:
+func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
 	if is_dead():
 		return
+	if stats.front_guard and source != null and HitGuard.blocks(facing, body_rect(), source.global_position):
+		flash(BLOCK_FLASH, hurt_flash_time)
+		blocked.emit()
+		return
+	# Woken before the knock, so a creature drawn asleep keeps the place it was struck at as home.
+	wake()
 	var armoured := is_armoured()
 	_wound(damage)
 	if not armoured:
@@ -158,11 +173,13 @@ func _sync_areas() -> void:
 		_guard.monitoring = present and not _ai.is_recovering() and not _move_landed
 
 func _drive(delta: float, steer: Vector2) -> void:
+	# Asleep, it is not carried: a hanging bat or a creature not yet gathered stays where it was placed.
+	var wind := carry() if _woken else Vector2.ZERO
 	if _flight != null:
-		_flight.fly_update(delta, steer, carry())
+		_flight.fly_update(delta, steer, wind)
 	else:
 		# A lunge passes an axis above 1: ground_update targets axis * move_speed.
-		_locomotion.ground_update(delta, steer.x / stats.locomotion.move_speed, carry().x)
+		_locomotion.ground_update(delta, steer.x / stats.locomotion.move_speed, wind.x)
 
 ## No floor under the probe, moved to the side it faces; false in the air.
 func _ledge_ahead() -> bool:

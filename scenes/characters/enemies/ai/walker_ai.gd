@@ -3,6 +3,9 @@ extends EnemyAI
 ## A creature on the ground: wanders or holds home, closes in on x to its stop distance inside its leash,
 ## lunges along its facing, and never walks off a ledge.
 
+## Faces its target even while stepping away or sideways, so a front guard stays toward it (the crab).
+@export var always_face_target: bool = false
+
 var _wander_timer: float = 0.0
 ## Wander heading, -1/0/1.
 var _wander_dir: float = 0.0
@@ -12,6 +15,11 @@ func handle_wall_contact() -> void:
 	super()
 	if _states.current == State.IDLE:
 		_wander_dir = -_wander_dir
+
+func _get_facing_direction() -> float:
+	if always_face_target and _target != null and not _clock.is_busy():
+		return _side.side
+	return super()
 
 func _idle_tick(delta: float) -> void:
 	if not stats.wanders:

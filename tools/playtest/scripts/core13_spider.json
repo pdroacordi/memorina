@@ -1,0 +1,203 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -4200,
+  -870
+ ],
+ "max_duration": 9.5,
+ "skills": [
+  0,
+  1
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.2,
+   "screenshot": "c13s00_asleep"
+  },
+  {
+   "t": 1.2,
+   "log": "c13s00_asleep"
+  },
+  {
+   "t": 1.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "screenshot": "c13s01_lowers_02.00"
+  },
+  {
+   "t": 2.0,
+   "log": "c13s01_lowers_02.00"
+  },
+  {
+   "t": 2.03,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 2.2,
+   "screenshot": "c13s01_lowers_02.20"
+  },
+  {
+   "t": 2.2,
+   "log": "c13s01_lowers_02.20"
+  },
+  {
+   "t": 2.4,
+   "screenshot": "c13s01_lowers_02.40"
+  },
+  {
+   "t": 2.4,
+   "log": "c13s01_lowers_02.40"
+  },
+  {
+   "t": 2.55,
+   "screenshot": "c13s02_bob_02.55"
+  },
+  {
+   "t": 2.55,
+   "log": "c13s02_bob_02.55"
+  },
+  {
+   "t": 2.65,
+   "screenshot": "c13s02_bob_02.65"
+  },
+  {
+   "t": 2.65,
+   "log": "c13s02_bob_02.65"
+  },
+  {
+   "t": 2.75,
+   "screenshot": "c13s02_bob_02.75"
+  },
+  {
+   "t": 2.75,
+   "log": "c13s02_bob_02.75"
+  },
+  {
+   "t": 2.85,
+   "screenshot": "c13s02_bob_02.85"
+  },
+  {
+   "t": 2.85,
+   "log": "c13s02_bob_02.85"
+  },
+  {
+   "t": 2.9,
+   "screenshot": "c13s03_bite_02.90"
+  },
+  {
+   "t": 2.9,
+   "log": "c13s03_bite_02.90"
+  },
+  {
+   "t": 2.95,
+   "screenshot": "c13s03_bite_02.95"
+  },
+  {
+   "t": 2.95,
+   "log": "c13s03_bite_02.95"
+  },
+  {
+   "t": 3.0,
+   "screenshot": "c13s03_bite_03.00"
+  },
+  {
+   "t": 3.0,
+   "log": "c13s03_bite_03.00"
+  },
+  {
+   "t": 5.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.6,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 6.6,
+   "screenshot": "c13s04_climbs_06.60"
+  },
+  {
+   "t": 6.6,
+   "log": "c13s04_climbs_06.60"
+  },
+  {
+   "t": 6.9,
+   "screenshot": "c13s04_climbs_06.90"
+  },
+  {
+   "t": 6.9,
+   "log": "c13s04_climbs_06.90"
+  },
+  {
+   "t": 7.2,
+   "screenshot": "c13s04_climbs_07.20"
+  },
+  {
+   "t": 7.2,
+   "log": "c13s04_climbs_07.20"
+  },
+  {
+   "t": 7.5,
+   "screenshot": "c13s04_climbs_07.50"
+  },
+  {
+   "t": 7.5,
+   "log": "c13s04_climbs_07.50"
+  },
+  {
+   "t": 7.8,
+   "screenshot": "c13s04_climbs_07.80"
+  },
+  {
+   "t": 7.8,
+   "log": "c13s04_climbs_07.80"
+  },
+  {
+   "t": 8.1,
+   "screenshot": "c13s04_climbs_08.10"
+  },
+  {
+   "t": 8.1,
+   "log": "c13s04_climbs_08.10"
+  },
+  {
+   "t": 8.4,
+   "screenshot": "c13s04_climbs_08.40"
+  },
+  {
+   "t": 8.4,
+   "log": "c13s04_climbs_08.40"
+  }
+ ]
+}

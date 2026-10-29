@@ -1,0 +1,450 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/characters/enemies/enemy.gd" id="1_enemy"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/creatures/hornet/hornet_hover.png" id="tex_hover"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/creatures/hornet/hornet_tell.png" id="tex_tell"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/creatures/hornet/hornet_dash.png" id="tex_dash"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/creatures/hornet/hornet_recover.png" id="tex_recover"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/creatures/hornet/hornet_hurt.png" id="tex_hurt"]
+[ext_resource type="Shader" path="res://scenes/characters/components/corruption/corruption_edge.gdshader" id="2_shader"]
+[ext_resource type="PackedScene" path="res://scenes/combat/hurtbox/hurtbox.tscn" id="3_hurtbox"]
+[ext_resource type="Script" path="res://scenes/combat/hitbox/hitbox.gd" id="4_hitbox"]
+[ext_resource type="Script" path="res://scenes/characters/components/animation_driver.gd" id="5_driver"]
+[ext_resource type="Script" path="res://scenes/characters/creatures/hornet/hornet_animation_resolver.gd" id="6_resolver"]
+[ext_resource type="Script" path="res://scenes/combat/health/health.gd" id="7_health"]
+[ext_resource type="Script" path="res://scenes/characters/components/flight_component.gd" id="8_motor"]
+[ext_resource type="Script" path="res://scenes/characters/components/airflow_body.gd" id="9_airflow"]
+[ext_resource type="Script" path="res://scenes/characters/components/enemy_sight.gd" id="10_sight"]
+[ext_resource type="Script" path="res://scenes/characters/components/player_proximity_trigger.gd" id="11_wake"]
+[ext_resource type="Script" path="res://scenes/characters/enemies/ai/flyer_ai.gd" id="12_ai"]
+[ext_resource type="Script" path="res://scenes/characters/components/corruption/corruption_edge.gd" id="13_edge"]
+[ext_resource type="Resource" path="res://resources/characters/creatures/hornet/hornet_stats.tres" id="14_stats"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_edge"]
+resource_local_to_scene = true
+shader = ExtResource("2_shader")
+shader_parameter/frame_size = Vector2(48, 48)
+shader_parameter/drift = Vector2(1, 0)
+
+[sub_resource type="RectangleShape2D" id="Rect_body"]
+size = Vector2(22, 18)
+
+[sub_resource type="RectangleShape2D" id="Rect_hurtbox"]
+size = Vector2(28, 24)
+
+[sub_resource type="RectangleShape2D" id="Rect_contact"]
+size = Vector2(22, 18)
+
+[sub_resource type="RectangleShape2D" id="Rect_DashHitbox"]
+size = Vector2(30, 20)
+
+[sub_resource type="CircleShape2D" id="Circle_sight"]
+resource_local_to_scene = true
+radius = 200.0
+
+[sub_resource type="CircleShape2D" id="Circle_wake"]
+resource_local_to_scene = true
+radius = 200.0
+
+[sub_resource type="Animation" id="Animation_RESET"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_hover")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_hover"]
+resource_name = "hover"
+length = 0.3333333333333333
+loop_mode = 1
+step = 0.08333333333333333
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_hover")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.08333333333333333, 0.16666666666666666, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_tell"]
+resource_name = "tell"
+length = 0.375
+loop_mode = 1
+step = 0.125
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_tell")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_dash"]
+resource_name = "dash"
+length = 0.25
+loop_mode = 1
+step = 0.08333333333333333
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_dash")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.08333333333333333, 0.16666666666666666),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_recover"]
+resource_name = "recover"
+length = 0.5
+step = 0.16666666666666666
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_recover")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [3]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.16666666666666666, 0.3333333333333333),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_hurt"]
+resource_name = "hurt"
+length = 0.2
+step = 0.1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_hurt")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [2]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [0, 1]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_main"]
+_data = {
+&"RESET": SubResource("Animation_RESET"),
+&"dash": SubResource("Animation_dash"),
+&"hover": SubResource("Animation_hover"),
+&"hurt": SubResource("Animation_hurt"),
+&"recover": SubResource("Animation_recover"),
+&"tell": SubResource("Animation_tell")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="Node_hover"]
+animation = &"hover"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_tell"]
+animation = &"tell"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_dash"]
+animation = &"dash"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_recover"]
+animation = &"recover"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_hurt"]
+animation = &"hurt"
+
+[sub_resource type="AnimationNodeStateMachine" id="StateMachine_main"]
+states/hover/node = SubResource("Node_hover")
+states/hover/position = Vector2(200, 60)
+states/tell/node = SubResource("Node_tell")
+states/tell/position = Vector2(340, 60)
+states/dash/node = SubResource("Node_dash")
+states/dash/position = Vector2(480, 60)
+states/recover/node = SubResource("Node_recover")
+states/recover/position = Vector2(200, 140)
+states/hurt/node = SubResource("Node_hurt")
+states/hurt/position = Vector2(340, 140)
+
+[node name="Hornet" type="CharacterBody2D"]
+collision_layer = 65536
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_enemy")
+stats = ExtResource("14_stats")
+knockback_time = 0.3
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_edge")
+position = Vector2(0, 0)
+scale = Vector2(-1, 1)
+texture = ExtResource("tex_hover")
+hframes = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(2, 0)
+shape = SubResource("Rect_body")
+
+[node name="Hurtbox" parent="." instance=ExtResource("3_hurtbox")]
+collision_layer = 65536
+
+[node name="CollisionShape2D" parent="Hurtbox" index="0"]
+position = Vector2(2, -1)
+shape = SubResource("Rect_hurtbox")
+
+[node name="ContactHitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 512
+monitoring = false
+monitorable = false
+script = ExtResource("4_hitbox")
+knockback_strength = 300.0
+continuous = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ContactHitbox"]
+position = Vector2(2, 0)
+shape = SubResource("Rect_contact")
+debug_color = Color(0.93, 0.23, 0.34, 0.42)
+
+[node name="DashHitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 512
+monitoring = false
+monitorable = false
+script = ExtResource("4_hitbox")
+knockback_strength = 380.0
+strikes_once = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DashHitbox"]
+position = Vector2(4, 0)
+shape = SubResource("Rect_DashHitbox")
+debug_color = Color(0.93, 0.23, 0.34, 0.42)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries/ = SubResource("AnimationLibrary_main")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+unique_name_in_owner = true
+root_node = NodePath("%AnimationTree/..")
+callback_mode_process = 0
+tree_root = SubResource("StateMachine_main")
+anim_player = NodePath("../AnimationPlayer")
+
+[node name="AnimationDriver" type="Node" parent="."]
+script = ExtResource("5_driver")
+
+[node name="AnimationResolver" type="Node" parent="."]
+script = ExtResource("6_resolver")
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("7_health")
+
+[node name="Flight" type="Node" parent="."]
+script = ExtResource("8_motor")
+
+[node name="AirflowBody" type="Node" parent="."]
+script = ExtResource("9_airflow")
+sample_offset = Vector2(0, 0)
+
+[node name="EnemySight" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 768
+monitorable = false
+script = ExtResource("10_sight")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EnemySight"]
+shape = SubResource("Circle_sight")
+
+[node name="RayCast2D" type="RayCast2D" parent="EnemySight"]
+position = Vector2(0, 0)
+
+[node name="WakeTrigger" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 256
+monitorable = false
+script = ExtResource("11_wake")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="WakeTrigger"]
+shape = SubResource("Circle_wake")
+
+[node name="AI" type="Node" parent="."]
+script = ExtResource("12_ai")
+hover_distance = 128.0
+
+[node name="CorruptionEdge" type="Node" parent="." node_paths=PackedStringArray("sprite", "health")]
+script = ExtResource("13_edge")
+sprite = NodePath("../Sprite2D")
+health = NodePath("../Health")
+drift = Vector2(1, 0)
+frame_size = Vector2(48, 48)
+
+[connection signal="area_entered" from="ContactHitbox" to="ContactHitbox" method="_on_area_entered"]
+[connection signal="area_entered" from="DashHitbox" to="DashHitbox" method="_on_area_entered"]
+[connection signal="facing_changed" from="." to="DashHitbox" method="_on_character_facing_changed"]
+
+[editable path="Hurtbox"]

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="EnemyStats" format=3]
+
+[ext_resource type="Script" path="res://resources/characters/enemies/enemy_stats.gd" id="1_stats"]
+[ext_resource type="Resource" path="res://resources/characters/creatures/bat/bat_locomotion.tres" id="2_loco"]
+[ext_resource type="Resource" path="res://resources/characters/creatures/bat/bat_swoop.tres" id="3_move"]
+[ext_resource type="Script" path="res://resources/characters/enemies/enemy_move.gd" id="4_move"]
+
+[resource]
+script = ExtResource("1_stats")
+health = 2
+contact_damage = 1
+contact_knockback = 300.0
+sight_radius = 280.0
+wake_radius = 224.0
+hidden_until_woken = false
+leash = 0.0
+wanders = false
+stop_distance = 0.0
+locomotion = ExtResource("2_loco")
+moves = Array[ExtResource("4_move")]([ExtResource("3_move")])

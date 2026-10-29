@@ -4,6 +4,17 @@ class_name RoomFilesTest extends GdUnitTestSuite
 
 const ROOMS_DIR := "res://scenes/world/rooms"
 const TRANSLATIONS := "res://i18n/translations.csv"
+## Corrupted creatures' legend symbols (systems/creatures).
+const CREATURES: Array[String] = ["B", "J", "C", "N", "A", "Z"]
+## Rooms no creature is placed in: teachers' rooms, the guardians' arenas, the lighthouse, and the fields Ivo crosses
+## before he owns the sword (architecture/corrupted-creatures, "Placements").
+const NO_CREATURE_ROOMS: Array[String] = ["woods_edge", "lake_fishing_village", "orchard_windy_gap", "caldera_open_crater",
+	"threshold_fields", "bloom_hollow", "lake_frost_arena", "orchard_arena", "caldera_arena", "lighthouse_base",
+	"lighthouse_interior", "lighthouse_top"]
+## Open cells under a hanging creature: a bat needs room to swoop, a spider only to let itself down over Ivo.
+const HANG_CLEARANCE := {"A": 5, "Z": 3}
+## In the world (trials excluded): 1 boar, 3 crabs, 2 bats, 3 spiders, 3 hornets, 4 scorpions (the bait among them).
+const WORLD_CREATURES := {"B": 1, "C": 3, "A": 2, "Z": 3, "N": 3, "J": 4}
 
 func _room_files(dir: String) -> PackedStringArray:
 	var found := PackedStringArray()
@@ -41,6 +52,37 @@ func test_save_ids_bench_ids_and_slot_ids_are_unique_across_every_map() -> void:
 					problems.append("%s in %s and %s" % [id, seen[id], path])
 				seen[id] = path
 	assert_array(Array(problems)).is_empty()
+
+## A bat hangs under ground and a spider under ground or a one-way, over open cells (HANG_CLEARANCE); no creature lies
+## in the village or a room of NO_CREATURE_ROOMS; the world holds the 16 placed by the plan.
+func test_creatures_hang_clear_and_keep_out_of_the_rooms_they_must_not_enter() -> void:
+	var legend := RoomLegend.load_default()
+	var problems := PackedStringArray()
+	var counts := {}
+	for path: String in _room_files(ROOMS_DIR):
+		var room := path.get_file().get_basename()
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path).map
+		for placed: Dictionary in map.entities:
+			var symbol: String = placed.symbol
+			if symbol not in CREATURES:
+				continue
+			if not path.contains("/trials_"):
+				counts[symbol] = int(counts.get(symbol, 0)) + 1
+			if path.contains("/home_village/") or room in NO_CREATURE_ROOMS:
+				problems.append("%s: creature %s at %s in a room it must not enter" % [path, symbol, placed.cell - map.origin])
+			if not HANG_CLEARANCE.has(symbol):
+				continue
+			var cell: Vector2i = placed.cell
+			var above := cell + Vector2i.UP
+			if not (map.is_solid(above) or (symbol == "Z" and map.is_platform(above))):
+				problems.append("%s: %s at %s hangs from nothing" % [path, symbol, cell - map.origin])
+			for down: int in range(1, int(HANG_CLEARANCE[symbol]) + 1):
+				var below := cell + Vector2i(0, down)
+				if map.is_solid(below) or map.is_platform(below):
+					problems.append("%s: %s at %s has ground %d cell(s) below" % [path, symbol, cell - map.origin, down])
+					break
+	assert_array(Array(problems)).is_empty()
+	assert_dict(counts).is_equal(WORLD_CREATURES)
 
 ## A slot's kind is a member of RewardSlot.Kind (architecture/reward-slots-reserve-their-place-in-the-room-text).
 func test_every_reward_slot_has_a_known_kind() -> void:

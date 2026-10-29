@@ -24,6 +24,10 @@ extends Resource
 @export var stop_distance: float = 48.0
 @export var locomotion: LocomotionStats
 
+@export_group("Guard")
+## Hits from in front below the top of its body are blocked: no damage, a white flash (HitGuard; the crab's shell).
+@export var front_guard: bool = false
+
 @export_group("Moves")
 ## In priority order: the first whose reach holds the target is thrown.
 @export var moves: Array[EnemyMove] = []

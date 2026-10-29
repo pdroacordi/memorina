@@ -1,0 +1,247 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  4470,
+  -1640
+ ],
+ "max_duration": 7.0,
+ "skills": [
+  0,
+  1
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.2,
+   "screenshot": "c13b00_asleep"
+  },
+  {
+   "t": 1.2,
+   "log": "c13b00_asleep"
+  },
+  {
+   "t": 1.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.7,
+   "screenshot": "c13b01_drop_01.70"
+  },
+  {
+   "t": 1.7,
+   "log": "c13b01_drop_01.70"
+  },
+  {
+   "t": 1.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.8,
+   "screenshot": "c13b01_drop_01.80"
+  },
+  {
+   "t": 1.8,
+   "log": "c13b01_drop_01.80"
+  },
+  {
+   "t": 1.9,
+   "screenshot": "c13b01_drop_01.90"
+  },
+  {
+   "t": 1.9,
+   "log": "c13b01_drop_01.90"
+  },
+  {
+   "t": 2.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "screenshot": "c13b01_drop_02.00"
+  },
+  {
+   "t": 2.0,
+   "log": "c13b01_drop_02.00"
+  },
+  {
+   "t": 2.05,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.1,
+   "screenshot": "c13b02_swoop_02.10"
+  },
+  {
+   "t": 2.1,
+   "log": "c13b02_swoop_02.10"
+  },
+  {
+   "t": 2.2,
+   "screenshot": "c13b02_swoop_02.20"
+  },
+  {
+   "t": 2.2,
+   "log": "c13b02_swoop_02.20"
+  },
+  {
+   "t": 2.3,
+   "screenshot": "c13b02_swoop_02.30"
+  },
+  {
+   "t": 2.3,
+   "log": "c13b02_swoop_02.30"
+  },
+  {
+   "t": 2.4,
+   "screenshot": "c13b02_swoop_02.40"
+  },
+  {
+   "t": 2.4,
+   "log": "c13b02_swoop_02.40"
+  },
+  {
+   "t": 2.5,
+   "screenshot": "c13b02_swoop_02.50"
+  },
+  {
+   "t": 2.5,
+   "log": "c13b02_swoop_02.50"
+  },
+  {
+   "t": 2.6,
+   "screenshot": "c13b02_swoop_02.60"
+  },
+  {
+   "t": 2.6,
+   "log": "c13b02_swoop_02.60"
+  },
+  {
+   "t": 2.7,
+   "screenshot": "c13b02_swoop_02.70"
+  },
+  {
+   "t": 2.7,
+   "log": "c13b02_swoop_02.70"
+  },
+  {
+   "t": 2.8,
+   "screenshot": "c13b02_swoop_02.80"
+  },
+  {
+   "t": 2.8,
+   "log": "c13b02_swoop_02.80"
+  },
+  {
+   "t": 2.9,
+   "screenshot": "c13b02_swoop_02.90"
+  },
+  {
+   "t": 2.9,
+   "log": "c13b02_swoop_02.90"
+  },
+  {
+   "t": 3.0,
+   "screenshot": "c13b02_swoop_03.00"
+  },
+  {
+   "t": 3.0,
+   "log": "c13b02_swoop_03.00"
+  },
+  {
+   "t": 3.1,
+   "screenshot": "c13b02_swoop_03.10"
+  },
+  {
+   "t": 3.1,
+   "log": "c13b02_swoop_03.10"
+  },
+  {
+   "t": 3.2,
+   "screenshot": "c13b02_swoop_03.20"
+  },
+  {
+   "t": 3.2,
+   "log": "c13b02_swoop_03.20"
+  },
+  {
+   "t": 3.3,
+   "screenshot": "c13b02_swoop_03.30"
+  },
+  {
+   "t": 3.3,
+   "log": "c13b02_swoop_03.30"
+  },
+  {
+   "t": 3.4,
+   "screenshot": "c13b02_swoop_03.40"
+  },
+  {
+   "t": 3.4,
+   "log": "c13b02_swoop_03.40"
+  },
+  {
+   "t": 3.5,
+   "screenshot": "c13b02_swoop_03.50"
+  },
+  {
+   "t": 3.5,
+   "log": "c13b02_swoop_03.50"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "c13b02_swoop_03.60"
+  },
+  {
+   "t": 3.6,
+   "log": "c13b02_swoop_03.60"
+  },
+  {
+   "t": 4.0,
+   "screenshot": "c13b03_home_04.00"
+  },
+  {
+   "t": 4.0,
+   "log": "c13b03_home_04.00"
+  },
+  {
+   "t": 4.5,
+   "screenshot": "c13b03_home_04.50"
+  },
+  {
+   "t": 4.5,
+   "log": "c13b03_home_04.50"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "c13b03_home_05.00"
+  },
+  {
+   "t": 5.0,
+   "log": "c13b03_home_05.00"
+  },
+  {
+   "t": 5.5,
+   "screenshot": "c13b03_home_05.50"
+  },
+  {
+   "t": 5.5,
+   "log": "c13b03_home_05.50"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "c13b03_home_06.00"
+  },
+  {
+   "t": 6.0,
+   "log": "c13b03_home_06.00"
+  }
+ ]
+}

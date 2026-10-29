@@ -1,0 +1,296 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  8912,
+  280
+ ],
+ "max_duration": 8.5,
+ "skills": [
+  0
+ ],
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "c13c00_dormant"
+  },
+  {
+   "t": 1.0,
+   "log": "c13c00_dormant"
+  },
+  {
+   "t": 1.2,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.45,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.6,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 1.6,
+   "screenshot": "c13c01_gathers_01.60"
+  },
+  {
+   "t": 1.6,
+   "log": "c13c01_gathers_01.60"
+  },
+  {
+   "t": 1.8,
+   "screenshot": "c13c01_gathers_01.80"
+  },
+  {
+   "t": 1.8,
+   "log": "c13c01_gathers_01.80"
+  },
+  {
+   "t": 2.0,
+   "screenshot": "c13c01_gathers_02.00"
+  },
+  {
+   "t": 2.0,
+   "log": "c13c01_gathers_02.00"
+  },
+  {
+   "t": 2.2,
+   "screenshot": "c13c01_gathers_02.20"
+  },
+  {
+   "t": 2.2,
+   "log": "c13c01_gathers_02.20"
+  },
+  {
+   "t": 4.0,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 4.08,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 4.15,
+   "screenshot": "c13c02_shell_flash_04.15"
+  },
+  {
+   "t": 4.15,
+   "log": "c13c02_shell_flash_04.15"
+  },
+  {
+   "t": 4.2,
+   "screenshot": "c13c02_shell_flash_04.20"
+  },
+  {
+   "t": 4.2,
+   "log": "c13c02_shell_flash_04.20"
+  },
+  {
+   "t": 4.25,
+   "screenshot": "c13c02_shell_flash_04.25"
+  },
+  {
+   "t": 4.25,
+   "log": "c13c02_shell_flash_04.25"
+  },
+  {
+   "t": 4.3,
+   "screenshot": "c13c02_shell_flash_04.30"
+  },
+  {
+   "t": 4.3,
+   "log": "c13c02_shell_flash_04.30"
+  },
+  {
+   "t": 4.45,
+   "screenshot": "c13c03_tell_04.45"
+  },
+  {
+   "t": 4.45,
+   "log": "c13c03_tell_04.45"
+  },
+  {
+   "t": 4.5,
+   "screenshot": "c13c03_tell_04.50"
+  },
+  {
+   "t": 4.5,
+   "log": "c13c03_tell_04.50"
+  },
+  {
+   "t": 4.55,
+   "screenshot": "c13c03_tell_04.55"
+  },
+  {
+   "t": 4.55,
+   "log": "c13c03_tell_04.55"
+  },
+  {
+   "t": 4.6,
+   "screenshot": "c13c03_tell_04.60"
+  },
+  {
+   "t": 4.6,
+   "log": "c13c03_tell_04.60"
+  },
+  {
+   "t": 4.65,
+   "screenshot": "c13c04_snap_04.65"
+  },
+  {
+   "t": 4.65,
+   "log": "c13c04_snap_04.65"
+  },
+  {
+   "t": 4.7,
+   "screenshot": "c13c04_snap_04.70"
+  },
+  {
+   "t": 4.7,
+   "log": "c13c04_snap_04.70"
+  },
+  {
+   "t": 4.75,
+   "screenshot": "c13c04_snap_04.75"
+  },
+  {
+   "t": 4.75,
+   "log": "c13c04_snap_04.75"
+  },
+  {
+   "t": 6.5,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.76,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 6.85,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.0,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.1,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.2,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.3,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.36,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 7.4,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.44,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 7.5,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.5,
+   "screenshot": "c13c05_pogo_07.50"
+  },
+  {
+   "t": 7.5,
+   "log": "c13c05_pogo_07.50"
+  },
+  {
+   "t": 7.55,
+   "screenshot": "c13c05_pogo_07.55"
+  },
+  {
+   "t": 7.55,
+   "log": "c13c05_pogo_07.55"
+  },
+  {
+   "t": 7.6,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.6,
+   "screenshot": "c13c05_pogo_07.60"
+  },
+  {
+   "t": 7.6,
+   "log": "c13c05_pogo_07.60"
+  },
+  {
+   "t": 7.65,
+   "screenshot": "c13c05_pogo_07.65"
+  },
+  {
+   "t": 7.65,
+   "log": "c13c05_pogo_07.65"
+  },
+  {
+   "t": 7.7,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.7,
+   "screenshot": "c13c05_pogo_07.70"
+  },
+  {
+   "t": 7.7,
+   "log": "c13c05_pogo_07.70"
+  },
+  {
+   "t": 7.8,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.9,
+   "action": "look_down",
+   "pressed": false
+  }
+ ]
+}

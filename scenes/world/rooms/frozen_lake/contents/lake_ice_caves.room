@@ -10,8 +10,8 @@ tileset = frozen_lake
 [grid]
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 S....SS.......SS........S........SSS...S
-S.............SS........S........SSS...S
-S.............SS.......................S
+S.....A.......SS........S........SSS...S
+S.............SS..................A....S
 S......................................S
 ........................................
 ..........................SSSSSS........
@@ -51,3 +51,5 @@ S.........................SSSS..........
 
 [entities]
 27,8 = {"slot_id": "lake_ice_caves_niche", "kind": 1}
+6,2 = {"save_id": "lake_ice_caves_bat_1"}
+34,3 = {"save_id": "lake_ice_caves_bat_2"}

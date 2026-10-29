@@ -126,3 +126,7 @@ res://scenes/ui/seed_shop/seed_shop_panel.tscn
 res://scenes/world/story/seed_shop_beat.tscn
 res://scenes/characters/creatures/boar/boar.tscn
 res://scenes/characters/creatures/scorpion/scorpion.tscn
+res://scenes/characters/creatures/crab/crab.tscn
+res://scenes/characters/creatures/hornet/hornet.tscn
+res://scenes/characters/creatures/bat/bat.tscn
+res://scenes/characters/creatures/spider/spider.tscn

@@ -99,10 +99,14 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | contrapeso errado trava o elevador | `Mechanism.lock_path` |
 | Sombra (a sombra queimada) | `CastShadow`, `Character.silhouette()`, `burned_shadow.gdshader` |
 | vista pelas criaturas como o herói | `EnemySight.PRESENCE`, `EnemySight.visible_presence()` |
-| criatura corrompida | `Enemy` (scene) + `EnemyStats`; `EnemyAI`, `WalkerAI` (`systems/creatures`) |
+| criatura corrompida | `Enemy` (scene) + `EnemyStats`; `EnemyAI`, `WalkerAI`, `FlyerAI`, `CeilingAI`, `ThreadAI` (`systems/creatures`) |
 | golpe de uma criatura (aviso, golpe, recuperação) | `EnemyMove` (`telegraph`, `active`, `recovery`, `cooldown`), `MoveClock` |
 | javali (Limiar) | `scenes/characters/creatures/boar/` (legend `B`) |
 | escorpião, a isca (Caldeira do Verão) | `scenes/characters/creatures/scorpion/` (legend `J`), `scorpion_bait_stats.tres` |
+| caranguejo (Beira Gelada), a carapaça | `scenes/characters/creatures/crab/` (legend `C`); the shell is `EnemyStats.front_guard`, `HitGuard`, `Enemy.blocked` |
+| morcego-pingente (Lago Gelado), o mergulho | `scenes/characters/creatures/bat/` (legend `A`); `CeilingAI`, `SwoopPath` |
+| aranha (Bosque Florido), o fio | `scenes/characters/creatures/spider/` (legend `Z`); `ThreadAI`, `SilkThread` |
+| vespa (Pomares do Vento), a investida | `scenes/characters/creatures/hornet/` (legend `N`); `FlyerAI` |
 | a borda que desfia, o glitch das criaturas | `CorruptionEdge`, `corruption_edge.gdshaderinc` |
 | Soltar / o cinza guarda o estado antigo | `Releasable`, `ReleaseState` (`hold` / `let_go`) |
 | casulo pendurado / cortina de folhas / ponte levadiça | `HangingLoad`, `LeafCover`, `Drawbridge` |

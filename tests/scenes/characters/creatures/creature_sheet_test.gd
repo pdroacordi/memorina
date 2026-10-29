@@ -4,9 +4,9 @@ class_name CreatureSheetTest extends GdUnitTestSuite
 ## before frame, no Area2D track (systems/creatures: every area is script-owned), no transitions, and the
 ## resolver's consts naming exactly the tree's states.
 
-const SPECIES: Array[String] = ["boar", "scorpion"]
+const SPECIES: Array[String] = ["boar", "scorpion", "crab", "hornet", "bat", "spider"]
 ## One-shot attack clips whose length is their move's active window.
-const TIMED_ATTACKS := {"scorpion": &"strike"}
+const TIMED_ATTACKS := {"scorpion": &"strike", "crab": &"snap", "spider": &"bite"}
 
 
 func test_every_sheet_is_hframes_frames_of_the_contracted_size() -> void:

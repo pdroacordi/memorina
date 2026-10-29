@@ -32,13 +32,13 @@ S..................S
 S..................S
 SSSS...............S
 S..................S
-S..................S
+S....J.............S
 SSSSSSSSSSSSS......S
 S..................S
 S..................S
 S...............SSSS
 S..................S
-S..................S
+S............J.....S
 S......SSSSSSSSSSSSS
 S..................S
 S..................S
@@ -65,3 +65,5 @@ SSSSSSSSSSSSSSSSSSSS
 9,44 = {"id": "sun_stair_plate"}
 15,44 = {"id": "sun_stair_door", "trigger_path": "sun_stair_plate"}
 17,44 = {"slot_id": "caldera_sun_stair_shrine", "kind": 0}
+5,20 = {"save_id": "caldera_sun_stair_scorpion_1"}
+13,26 = {"save_id": "caldera_sun_stair_scorpion_2"}

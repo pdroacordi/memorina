@@ -12,6 +12,10 @@ enum State { DORMANT, IDLE, APPROACH, HOME, TELEGRAPH, ACTIVE, RECOVER }
 
 ## Distance from home under which a creature walking back counts as there, px.
 const HOME_TOLERANCE := 8.0
+## Where a flyer aims on a target, px from the target's feet (the centre of Ivo's hurtbox).
+const CHEST := Vector2(0.0, -28.0)
+## Horizontal steer under which a creature keeps its facing, px/s; a flyer settling on a point steers a little.
+const FACE_DEADBAND := 12.0
 
 ## Pushed by Enemy before the first tick.
 var stats: EnemyStats
@@ -80,6 +84,10 @@ func handle_wall_contact() -> void:
 func is_awake() -> bool:
 	return _awake
 
+## At home (asleep counts): a ceiling creature hangs, a thread creature rests at its anchor.
+func is_home() -> bool:
+	return not _awake or not _away_from_home()
+
 func is_telegraphing() -> bool:
 	return _clock.phase == MoveClock.Phase.TELEGRAPH
 
@@ -105,8 +113,8 @@ func _get_direction() -> float:
 func _get_facing_direction() -> float:
 	if _clock.is_busy():
 		return _move_side
-	if _target != null and is_zero_approx(steer.x):
-		return _side.side
+	if absf(steer.x) < FACE_DEADBAND:
+		return _side.side if _target != null else 0.0
 	return signf(steer.x)
 
 func _select_state() -> int:
@@ -165,7 +173,12 @@ func _active_tick(_delta: float) -> void:
 func _recover_tick(_delta: float) -> void:
 	steer = Vector2.ZERO
 
+## A style's hook on a move phase, before the phase's first tick (an aim or a path is locked here).
+func _enter_phase(_phase: MoveClock.Phase) -> void:
+	pass
+
 func _on_phase_entered(phase: MoveClock.Phase) -> void:
+	_enter_phase(phase)
 	match phase:
 		MoveClock.Phase.TELEGRAPH:
 			move_telegraphed.emit(_clock.move)
