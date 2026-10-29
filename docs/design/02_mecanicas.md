@@ -69,6 +69,12 @@ Estilo fluido e rápido — referência Hollow Knight com tempero de jogo de aç
  
 - **Criaturas corrompidas:** fauna local distorcida por tempo demais numa região em avançado cinzesquecimento. Silhueta e comportamento reconhecíveis da região, mas com o mesmo glitch visual de borda perdendo definição usado em guardiões e flashbacks — assinatura visual coesa em todo o jogo.
 - **Criaturas-professoras:** encontros especiais, não hostis por padrão. Cada região tem uma criatura ligada à sua estação/material que ensina um fragmento de padrão musical através do próprio comportamento — tutorial diegético por observação e imitação, antes do guardião daquela região. O fragmento que ela ensina é a primeira metade (notas 1-3) da segunda canção da região (seção 7.2.1, CORE-04).
+
+**Criaturas escolhidas (usuário, 2026-10-29; quadro em `docs/design/drafts/creatures_board.md`):**
+- Corrompidas, "The six picks (Recommended)": javali (Limiar, no lugar do bruto da ponte), caranguejo (Beira Gelada), morcego-pingente (Lago Gelado), aranha (Bosque Florido), vespa (Pomares do Vento), escorpião (Caldeira de Verão, com uma variante mais dura guardando "A isca"). Nenhum inimigo na Vila.
+- Professoras, "Same, but a thrush for Chuva": caracol de concha de vidro (Redoma, sob as palafitas da vila de pesca), sabiá (Chuva, Bosque Florido), falcão-peneireiro (Vendaval, `orchard_windy_gap`), lagarto (Solstício, `caldera_open_crater`).
+- Aprendizado, "He plays it back (Recommended)": a criatura faz as três notas como movimentos na direção de cada nota; perto de Ivo repete devagar; Ivo responde na Memorina; nota errada não custa nada e ela repete; a partitura da metade fica durante o dueto.
+- Depois, "Stays and repeats (Recommended)": ela fica e canta a frase de novo sempre que a Memorina é sacada por perto.
 ## 3. Guardiões comuns — estrutura de três fases
  
 1. **Fase de pressão física:** o guardião ataca através de padrões ligados à sua estação. O jogador desvia, se posiciona, ataca para abrir brechas — não para "matar", mas para forçar instabilidade que abre a fase seguinte.
