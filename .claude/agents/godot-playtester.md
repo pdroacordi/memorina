@@ -538,6 +538,28 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - A UI colour you can predict (a texture's paper) that differs from its source and changes with memory means the UI is
     under the greyhush. Sample the same texture in the dialogue box as the control.
 
+- **Learned 2026-10-29 (CORE-13 boar and scorpion)**:
+  - **Steps must be sorted by `t`.** Log steps appended after the screenshots, out of order, all fired at the end of the run.
+    Sort the list in your generator.
+  - **Creature positions (feet):**
+    - Bridge boar (7408, 160). Spawn (7160, 150) and step right 0.3 s: it wakes at 207 px, telegraphs at ~2.95 s and charges
+      at ~3.55 s. It dazes at the ledge (feet x 7159-7171). A spawn at (7240, 150) is inside the wake radius, so it gathers
+      during the load and charges at ~1.65 s.
+    - Bait scorpion (-5776, 1824). Spawn (-6128, 1814) and walk right 1.2-2.2 s and 3.0-3.45 s: it telegraphs at ~3.46 s.
+  - **The bait and lure tunnels are 96 px tall,** so Ivo rises only 42 px and can never get above the scorpion. For a pogo,
+    lead it out: walk right 1.2-2.2 s, then left 2.3-3.1 s (to x -6089). It reaches him at the leash end at ~7.9 s. Then
+    double-jump at 7.95 s with a right steer: 0.16 s puts him over its front, 0.30 s over its tail. Press attack late, from
+    take-off +1.2 s.
+  - **The performance zoom crops the frame to roughly 400x225 game px around Ivo.** To film a creature during a song's freeze,
+    stand within ~150 px of it. A creature that cannot reach Ivo works well: the bridge boar with Ivo on the step at
+    (7548, 214).
+  - **Re-roll proof:** diff a creature's region frame to frame against a control region. While paused the snow stops (the
+    control reads 0), so any change in the creature's region is the shader.
+  - The runner's `foes=` has no dissolve or fray value: judge those from frames.
+  - Working generators: `TL` (hold, tap, shots, sorted write), `wcrop.py` (crops a fixed world rect per frame from the
+    logged `cam_centre`) and `summ.py` (prints only the trace lines where the foe state changes). Rewrite them per session;
+    they are short.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
