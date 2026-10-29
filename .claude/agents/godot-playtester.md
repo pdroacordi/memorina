@@ -596,6 +596,41 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - Balloon/teacher lag check: find the paper pixels (≈246,229,186), take the lowest row as the tail tip, and compare its x
     with the centroid of saturated pixels below it, frame by frame through the zoom.
 
+- **Learned 2026-10-29 (GRD-07 guardian art)**:
+  - **Play a whole guardian fight with `tools/playtest/scripts/guardian_fight_bot_driver.gd`, not a timed timeline.** It is a
+    `-s` driver that loads the runner. Its timeline only sets up (`guardian_bot_bloom.json`, `guardian_bot_frost.json`, with
+    `"clock": "real"` and ~150 s for the lesson). The driver approaches and combos, presses the armed recall's own action and
+    answers `stats.song.notes` on `call_window_opened`. It plays Bloom in ~40 s and Frost in ~60 s to RESTORED. Env flags:
+    `BOT_GOD` (top up at hp 1), `BOT_KEEP`, `BOT_PASSIVE`, `BOT_POKE` (step out of moves, roll under lunges), `BOT_BOUNCE`
+    (double-jump and pogo), `BOT_RECALL_WAIT` (let the burst launch Ivo first), `BOT_ANSWER=0`. Its `[shot]` lines give the
+    guardian's screen position per screenshot. Crop around it with a 20-line Pillow script instead of guessing crops: guessed
+    crops cost three wasted reads here.
+  - `bloom_guardian_full` / `bloom_guardian_call` are obsolete: they start in village_house, and their fixed answer times
+    predate the recall.
+  - **A bot that mashes attack fails the Bloom recall** (`bugs/a-recall-jump-pressed-during-a-swing-counts-a-step-without-jumping`).
+    The driver stops attacking once the recall move telegraphs. Keep that in any policy you write.
+  - The runner's `foes=` shows the phase and telegraph/swing, but not which move or clip. The driver's `[bot] ATK` and `[spr]`
+    lines do (`Sprite2D.texture` path = the clip, because the AnimationPlayer's `current_animation` is empty under an AnimationTree).
+  - **Compare difficulty against a HEAD export** with the same driver policy (`git archive HEAD`, one `--import` ~60 s, a
+    wrapper copy that `cd`s there). A single build's "took 0 damage" means nothing on its own.
+  - The screenshot cap in the driver is 160. A full fight with lesson bursts fills it, so the third call's restored frames go
+    missing. For a RESTORED clip, use `"restored_guardians"` instead.
+
+- **Learned 2026-10-29 (GRD-07 round 2)**:
+  - **To test "does move X hit at distance D", place Ivo closed-loop during the telegraph.** A scratch `-s` driver
+    walked Ivo every frame toward |dx| = TARGET (±2 px) while the move telegraphed. It stopped at the first live
+    hitbox frame, never attacked, screenshotted every live frame and logged dx, sprite frame and hp. A one-shot
+    "walk (dx - D)/192 s" at telegraph start moved him 2 px instead of 8 (walk acceleration), so use closed loop.
+  - **The hurt frame's logged dx already includes a frame of knockback** (~7-14 px). Report the dx of the frame
+    before as the hit distance.
+  - **A driver screenshot shows the frame before the logged state.** The viewport texture lags one frame, so a
+    "hb live fr7" shot can still draw frame 6. Read the next shot for the pose that hit.
+  - **To see a leap, raise the driver's lucid burst to 0.1 s** (a scratch copy with `100 if _burst_tag == "lucid"`,
+    cap 320). Judge visibility from the `[shot]` g=(x,y) in game px: the guardian is on screen only while
+    x ± its half-width (Bloom 22, Frost 60) overlaps 0..640.
+  - The `[spr]` `flip` is not "facing left/right" for every strip. The lucid and leap clips face Ivo with
+    `flip=false` when he is to the right. Judge facing from the snout or fists in a crop, not from the flag.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
