@@ -1,11 +1,12 @@
-[gd_resource type="Resource" script_class="RoomLegend" load_steps=18 format=3]
+[gd_resource type="Resource" script_class="RoomLegend" format=3 uid="uid://bnmuxpk5lmg6d"]
 
-[ext_resource type="Script" path="res://resources/world/maps/room_legend.gd" id="1_legend"]
-[ext_resource type="Script" path="res://resources/world/maps/room_legend_entry.gd" id="2_entry"]
+[ext_resource type="Script" uid="uid://b20cbehcwlvhk" path="res://resources/world/maps/room_legend.gd" id="1_legend"]
+[ext_resource type="Script" uid="uid://d2dg3iyn2pyh2" path="res://resources/world/maps/room_legend_entry.gd" id="2_entry"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_pool_layer.tscn" id="3_pool"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_lake_layer.tscn" id="4_lake"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/freezable_water/freezable_water_layer.tscn" id="5_freezable"]
-[ext_resource type="PackedScene" path="res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn" id="6_brute"]
+[ext_resource type="PackedScene" path="res://scenes/characters/creatures/boar/boar.tscn" id="6_boar"]
+[ext_resource type="PackedScene" path="res://scenes/characters/creatures/scorpion/scorpion.tscn" id="6_scorpion"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/wind/wind_zone.tscn" id="7_wind"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/pressure_plate/pressure_plate.tscn" id="i10_plate"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/gate/gate.tscn" id="i11_gate"]
@@ -30,31 +31,30 @@
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
 symbol = "#"
-kind = 0
-ground = 1
+required_params = PackedStringArray()
 description = "Earth: soil with a grassy top (the season's top). Enraizar's roots grow from it."
 
 [sub_resource type="Resource" id="stone"]
 script = ExtResource("2_entry")
 symbol = "S"
-kind = 0
 ground = 2
 look = 1
+required_params = PackedStringArray()
 description = "Stone: the biome's rock or laid stone. Roots never grow from it - use it where a song must NOT reach."
 
 [sub_resource type="Resource" id="ledge"]
 script = ExtResource("2_entry")
 symbol = "="
 kind = 1
-ground = 1
+required_params = PackedStringArray()
 description = "One-way earth ledge, one cell high: jump up through it, stand on it, drop through it."
 
 [sub_resource type="Resource" id="wood"]
 script = ExtResource("2_entry")
 symbol = "%"
-kind = 0
 ground = 3
 look = 2
+required_params = PackedStringArray()
 description = "Wood: planks, beams, stilts. Solid; roots never grow from it."
 
 [sub_resource type="Resource" id="plank"]
@@ -63,6 +63,7 @@ symbol = "-"
 kind = 1
 ground = 3
 look = 2
+required_params = PackedStringArray()
 description = "One-way plank, one cell high: jump up through it, stand on it."
 
 [sub_resource type="Resource" id="roof"]
@@ -70,6 +71,7 @@ script = ExtResource("2_entry")
 symbol = "^"
 kind = 6
 ground = 3
+required_params = PackedStringArray()
 description = "Roof: a one-way ledge with no tile art, drawn by the building's facade prop; it lies on the facade's roof line (facade_doors_test)."
 
 [sub_resource type="Resource" id="back_wall"]
@@ -78,6 +80,7 @@ symbol = "h"
 kind = 4
 ground = 0
 look = 3
+required_params = PackedStringArray()
 description = "Built wall behind the room (plaster and timber, planks, sandstone): [back] grid only, no collision."
 
 [sub_resource type="Resource" id="pool"]
@@ -86,147 +89,200 @@ symbol = "~"
 kind = 2
 ground = 0
 water_layer = ExtResource("3_pool")
+required_params = PackedStringArray()
 description = "Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand."
 
 [sub_resource type="Resource" id="lake"]
 script = ExtResource("2_entry")
 symbol = "w"
 kind = 2
-reach_role = 5
 ground = 0
 water_layer = ExtResource("4_lake")
 takes_reach = false
+required_params = PackedStringArray()
+reach_role = 5
 description = "Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over air down to the room's bottom, never over ground or a ledge; run each row off a room side or end it against solid ground."
 
 [sub_resource type="Resource" id="freezable"]
 script = ExtResource("2_entry")
 symbol = "f"
 kind = 2
-reach_role = 6
 ground = 0
 water_layer = ExtResource("5_freezable")
+required_params = PackedStringArray()
+reach_role = 6
 description = "Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there."
 
-[sub_resource type="Resource" id="rain"]
-script = ExtResource("2_entry")
-symbol = "r"
-kind = 2
-reach_role = 6
-ground = 0
-water_layer = ExtResource("5_freezable")
-reach = true
-description = "Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake."
-
-[sub_resource type="Resource" id="shell_reach"]
-script = ExtResource("2_entry")
-symbol = "u"
-kind = 2
-reach_role = 6
-ground = 0
-water_layer = ExtResource("5_freezable")
-reach = true
-rains = false
-description = "Where water a Redoma shell holds out rises to: paint it above f or ~ water in the same pit. While a shell holds water out of its disc the pool rises around it, up to here, and Congelar can fix it there. The rain never raises it. Never alone, never over a lake."
-
-[sub_resource type="Resource" id="lowering"]
-script = ExtResource("2_entry")
-symbol = "V"
-kind = 3
-reach_role = 3
-ground = 0
-scene = ExtResource("i20_lowering")
-anchor = 0
-description = "A platform hanging hang_height above this floor on a braked rope: Soltar frees the brake and it lowers (drop px) swinging, no footing until it stops; Enraizar seizes it between earth walls a few cells away; the grey winches it back up."
-
-[sub_resource type="Resource" id="floater"]
-script = ExtResource("2_entry")
-symbol = "O"
-kind = 3
-reach_role = 3
-ground = 0
-scene = ExtResource("i18_floater")
-anchor = 0
-description = "A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it."
-
-[sub_resource type="Resource" id="brute"]
+[sub_resource type="Resource" id="boar"]
 script = ExtResource("2_entry")
 symbol = "B"
 kind = 3
 ground = 0
-scene = ExtResource("6_brute")
-anchor = 0
+scene = ExtResource("6_boar")
 required_params = PackedStringArray("save_id")
-description = "Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death."
+description = "Boar (Threshold): wanders; on sight paws the ground and charges in a straight line, dazed by a wall or a ledge. Needs a save_id unique across every map: it stays down until the next rest or death."
+
+[sub_resource type="Resource" id="scorpion"]
+script = ExtResource("2_entry")
+symbol = "J"
+kind = 3
+ground = 0
+scene = ExtResource("6_scorpion")
+required_params = PackedStringArray("save_id")
+description = "Scorpion (Summer Caldera): holds its ground; on sight raises its tail, strikes and sticks; the raised tail hurts from above. Needs a save_id unique across every map: it stays down until the next rest or death. Optional `stats`: `res://resources/characters/creatures/scorpion/scorpion_bait_stats.tres` for a territorial guard (A isca)."
 
 [sub_resource type="Resource" id="wind"]
 script = ExtResource("2_entry")
 symbol = "W"
 kind = 3
-reach_role = 4
 ground = 0
 scene = ExtResource("7_wind")
-anchor = 0
+required_params = PackedStringArray()
+reach_role = 4
 description = "A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it."
 
 [sub_resource type="Resource" id="plate"]
 script = ExtResource("2_entry")
 symbol = "P"
 kind = 3
-reach_role = 1
 ground = 0
 scene = ExtResource("i10_plate")
-anchor = 0
+required_params = PackedStringArray()
+reach_role = 1
 description = "A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load."
 
 [sub_resource type="Resource" id="gate"]
 script = ExtResource("2_entry")
 symbol = "G"
 kind = 3
-reach_role = 8
 ground = 0
 scene = ExtResource("i11_gate")
-anchor = 0
+required_params = PackedStringArray()
+reach_role = 8
 description = "A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved."
 
 [sub_resource type="Resource" id="lift"]
 script = ExtResource("2_entry")
 symbol = "L"
 kind = 3
-reach_role = 3
 ground = 0
 scene = ExtResource("i12_lift")
-anchor = 0
+required_params = PackedStringArray()
+reach_role = 3
 description = "A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go; while its lock_path holds (a counterweight on the wrong plate) it is jammed down."
 
 [sub_resource type="Resource" id="seesaw"]
 script = ExtResource("2_entry")
 symbol = "T"
 kind = 3
-reach_role = 3
 ground = 0
 scene = ExtResource("i13_seesaw")
-anchor = 0
+required_params = PackedStringArray()
+reach_role = 3
 description = "A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other."
 
 [sub_resource type="Resource" id="load"]
 script = ExtResource("2_entry")
 symbol = "H"
 kind = 3
-reach_role = 1
 ground = 0
 scene = ExtResource("i14_load")
-anchor = 0
+required_params = PackedStringArray()
+reach_role = 1
 description = "A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back."
 
 [sub_resource type="Resource" id="cover"]
 script = ExtResource("2_entry")
 symbol = "F"
 kind = 3
-reach_role = 8
 ground = 0
 scene = ExtResource("i15_cover")
-anchor = 0
+required_params = PackedStringArray()
+reach_role = 8
 description = "A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside."
+
+[sub_resource type="Resource" id="bridge"]
+script = ExtResource("2_entry")
+symbol = "D"
+kind = 3
+ground = 0
+scene = ExtResource("i16_bridge")
+required_params = PackedStringArray()
+reach_role = 3
+description = "A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up."
+
+[sub_resource type="Resource" id="rain"]
+script = ExtResource("2_entry")
+symbol = "r"
+kind = 2
+ground = 0
+water_layer = ExtResource("5_freezable")
+reach = true
+required_params = PackedStringArray()
+reach_role = 6
+description = "Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake."
+
+[sub_resource type="Resource" id="shell_reach"]
+script = ExtResource("2_entry")
+symbol = "u"
+kind = 2
+ground = 0
+water_layer = ExtResource("5_freezable")
+reach = true
+rains = false
+required_params = PackedStringArray()
+reach_role = 6
+description = "Where water a Redoma shell holds out rises to: paint it above f or ~ water in the same pit. While a shell holds water out of its disc the pool rises around it, up to here, and Congelar can fix it there. The rain never raises it. Never alone, never over a lake."
+
+[sub_resource type="Resource" id="lowering"]
+script = ExtResource("2_entry")
+symbol = "V"
+kind = 3
+ground = 0
+scene = ExtResource("i20_lowering")
+required_params = PackedStringArray()
+reach_role = 3
+description = "A platform hanging hang_height above this floor on a braked rope: Soltar frees the brake and it lowers (drop px) swinging, no footing until it stops; Enraizar seizes it between earth walls a few cells away; the grey winches it back up."
+
+[sub_resource type="Resource" id="floater"]
+script = ExtResource("2_entry")
+symbol = "O"
+kind = 3
+ground = 0
+scene = ExtResource("i18_floater")
+required_params = PackedStringArray()
+reach_role = 3
+description = "A fallen log that floats: it lies where placed until water reaches it, then rides the waterline (a one-way platform). Chuva's basin lifts it, and Ivo with it."
+
+[sub_resource type="Resource" id="bench"]
+script = ExtResource("2_entry")
+symbol = "R"
+kind = 3
+ground = 0
+scene = ExtResource("i19_bench")
+required_params = PackedStringArray("bench_id")
+reach_role = 9
+description = "A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map."
+
+[sub_resource type="Resource" id="door"]
+script = ExtResource("2_entry")
+symbol = "E"
+kind = 3
+ground = 0
+scene = ExtResource("i21_door")
+required_params = PackedStringArray("link", "to_room")
+reach_role = 2
+description = "A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here."
+
+[sub_resource type="Resource" id="barrier"]
+script = ExtResource("2_entry")
+symbol = "X"
+kind = 3
+ground = 0
+scene = ExtResource("i22_barrier")
+required_params = PackedStringArray("requires")
+reach_role = 8
+description = "A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2)."
 
 [sub_resource type="Resource" id="cracked"]
 script = ExtResource("2_entry")
@@ -235,6 +291,7 @@ kind = 5
 ground = 0
 look = 1
 crack = true
+required_params = PackedStringArray()
 description = "[secret] only: a secret cell drawn as cracked stone until Ivo steps in - the hint that the wall is false."
 
 [sub_resource type="Resource" id="draft"]
@@ -244,57 +301,8 @@ kind = 3
 ground = 0
 scene = ExtResource("i23_draft")
 anchor = 1
+required_params = PackedStringArray()
 description = "A faint draft of dust at a secret's mouth (facing 1 right, -1 left, 0 up); it freezes in the grey."
-
-[sub_resource type="Resource" id="bridge"]
-script = ExtResource("2_entry")
-symbol = "D"
-kind = 3
-reach_role = 3
-ground = 0
-scene = ExtResource("i16_bridge")
-anchor = 0
-description = "A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up."
-
-[sub_resource type="Resource" id="bench"]
-script = ExtResource("2_entry")
-symbol = "R"
-kind = 3
-reach_role = 9
-ground = 0
-scene = ExtResource("i19_bench")
-anchor = 0
-required_params = PackedStringArray("bench_id")
-description = "A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map."
-
-[sub_resource type="Resource" id="door"]
-script = ExtResource("2_entry")
-symbol = "E"
-kind = 3
-reach_role = 2
-ground = 0
-scene = ExtResource("i21_door")
-anchor = 0
-required_params = PackedStringArray("link", "to_room")
-description = "A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here."
-
-[sub_resource type="Resource" id="barrier"]
-script = ExtResource("2_entry")
-symbol = "X"
-kind = 3
-reach_role = 8
-ground = 0
-scene = ExtResource("i22_barrier")
-anchor = 0
-required_params = PackedStringArray("requires")
-description = "A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2)."
-
-[sub_resource type="Resource" id="void"]
-script = ExtResource("2_entry")
-symbol = "_"
-kind = 7
-ground = 2
-description = "Void outside a room's shell: solid stone to gameplay, drawn black. Every one of its 8 neighbours is ground (not a ledge), void or off the map, so a drawn wall always stands between the room's air and the void; never under water, a reach or a secret, and only in interiors for now."
 
 [sub_resource type="Resource" id="helix"]
 script = ExtResource("2_entry")
@@ -302,20 +310,26 @@ symbol = "@"
 kind = 3
 ground = 0
 scene = ExtResource("i24_helix")
-anchor = 0
 required_params = PackedStringArray("shape")
 reach_role = 7
 description = "A helix stair the tower turns around: Ivo rides straight up its axis while the view turns the stair, wall and slits by his progress. Place it on the bottom floor, its cell's bottom-left corner the axis. shape is a HelixStairShape .tres path, look a HelixLook; hand 1 climbs with right held, -1 with left. The head needs a plank gallery across the shell (one-way, so Ivo rises through it), the column up the axis must be clear of solid ground, and the shell's inner faces stand at the wall's silhouette (room_files_test)."
+
+[sub_resource type="Resource" id="void"]
+script = ExtResource("2_entry")
+symbol = "_"
+kind = 7
+ground = 2
+required_params = PackedStringArray()
+description = "Void outside a room's shell: solid stone to gameplay, drawn black. Every one of its 8 neighbours is ground (not a ledge), void or off the map, so a drawn wall always stands between the room's air and the void; never under water, a reach or a secret, and only in interiors for now."
 
 [sub_resource type="Resource" id="reward_slot"]
 script = ExtResource("2_entry")
 symbol = "$"
 kind = 3
-reach_role = 1
 ground = 0
 scene = ExtResource("i25_slot")
-anchor = 0
 required_params = PackedStringArray("slot_id")
+reach_role = 1
 description = "A reward slot, standing on this cell: a place the layout promises a reward. Needs a slot_id unique across every map; kind 0 COLLECTIBLE (STORY-06) or 1 CACHE (LIFE-04, undecided). Invisible in release, a small diamond in debug builds; no gameplay until STORY-06 or LIFE-04 fills it."
 
 [sub_resource type="Resource" id="soft_landing"]
@@ -324,42 +338,39 @@ symbol = "n"
 kind = 3
 ground = 0
 scene = ExtResource("i26_soft")
-anchor = 0
+required_params = PackedStringArray()
 description = "Deep snow that breaks a fall: a zone standing on this cell, width_cells wide (centred) and height_cells tall, where a landing is never a hard landing. Keep it 2 cells or more over the highest floor under it, and put the drift prop over it: the zone draws nothing."
 
 [sub_resource type="Resource" id="grate"]
 script = ExtResource("2_entry")
 symbol = "g"
 kind = 3
-reach_role = 8
 ground = 0
 scene = ExtResource("i27_grate")
-anchor = 0
 required_params = PackedStringArray("requires")
+reach_role = 8
 description = "A floor grate in this cell and the three east of it, one cell deep and flush with the floor: solid until the save holds requires (a SaveFact .tres path), then gone, leaving the hole. Keep the four cells air in the grid; the hatch in village_gate_east's road over caldera_sun_stair (WORLD-35)."
 
 [sub_resource type="Resource" id="talkable"]
 script = ExtResource("2_entry")
 symbol = "t"
 kind = 3
-reach_role = 1
 ground = 0
 scene = ExtResource("i28_talk")
-anchor = 0
 required_params = PackedStringArray("talk")
+reach_role = 1
 description = "A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Put it on the speaker's cell; speaker_offset (px along x from this cell's centre to the speaker, a villager prop that carries no gameplay itself) is the zone's centre, the prompt's column and what Ivo faces. The zone reaches reach_west and reach_east px each side of the speaker (default 48, about a cell and a half) and is height_cells tall (default 2); trim the side that faces a door so the zones keep more than 22 px apart and the door wins. presence (0..1) hides it below that region baseline, like its villager."
 
 [sub_resource type="Resource" id="item_pickup"]
 script = ExtResource("2_entry")
 symbol = "i"
 kind = 3
-reach_role = 1
 ground = 0
 scene = ExtResource("i29_pickup")
-anchor = 0
 required_params = PackedStringArray("item", "texture")
+reach_role = 1
 description = "An item lying where it was left, standing on this cell: up in reach takes it into the save (item, an Enums.PlayerItem: 0 the sword). It shows only while the save does not own the item, so a death before a bench puts it back. texture is the item lying down (a .png path); rest_offset ([x, y] px from this cell's bottom centre to the item's bottom centre) lays it on a table top; the reach is width_cells wide (default 2, centred) and height_cells tall (default 2)."
 
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("brute"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing"), SubResource("grate"), SubResource("talkable"), SubResource("item_pickup")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("boar"), SubResource("scorpion"),SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing"), SubResource("grate"), SubResource("talkable"), SubResource("item_pickup")])

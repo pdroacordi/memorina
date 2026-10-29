@@ -1,0 +1,148 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  6880,
+  150
+ ],
+ "skills": [
+  0
+ ],
+ "max_duration": 9.0,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "c13b00_west_deck"
+  },
+  {
+   "t": 1.0,
+   "log": "c13b00_west_deck"
+  },
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.45,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 2.8,
+   "screenshot": "c13b01_boar_gathers"
+  },
+  {
+   "t": 2.8,
+   "log": "c13b01_boar_gathers"
+  },
+  {
+   "t": 3.3,
+   "screenshot": "c13b02_tell"
+  },
+  {
+   "t": 3.3,
+   "log": "c13b02_tell"
+  },
+  {
+   "t": 3.55,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.8,
+   "screenshot": "c13b03_charge_under"
+  },
+  {
+   "t": 3.8,
+   "log": "c13b03_charge_under"
+  },
+  {
+   "t": 3.9,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "screenshot": "c13b04_dazed_at_the_gap"
+  },
+  {
+   "t": 4.2,
+   "log": "c13b04_dazed_at_the_gap"
+  },
+  {
+   "t": 4.3,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 4.35,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 4.4,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 4.45,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 4.75,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 4.8,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 5.0,
+   "screenshot": "c13b05_punish"
+  },
+  {
+   "t": 5.0,
+   "log": "c13b05_punish"
+  },
+  {
+   "t": 5.1,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 5.15,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 6.5,
+   "screenshot": "c13b06_after"
+  },
+  {
+   "t": 6.5,
+   "log": "c13b06_after"
+  },
+  {
+   "t": 8.5,
+   "trace": false
+  }
+ ]
+}

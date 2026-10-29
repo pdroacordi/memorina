@@ -142,12 +142,12 @@ func test_water_cells_are_grouped_by_kind() -> void:
 	assert_array(Array(cells)).contains_exactly([Vector2(11, 0), Vector2(12, 0)])
 
 func test_an_entity_takes_its_params_from_its_cell() -> void:
-	var result := _parse("[grid]\n.B.\n###\n[entities]\n1,0 = {\"save_id\": \"brute\"}\n")
+	var result := _parse("[grid]\n.B.\n###\n[entities]\n1,0 = {\"save_id\": \"boar\"}\n")
 	assert_bool(result.ok()).is_true()
 	assert_int(result.map.entities.size()).is_equal(1)
 	var placed: Dictionary = result.map.entities[0]
 	assert_vector(placed.cell).is_equal(Vector2i(1, 0))
-	assert_str(placed.params.save_id).is_equal("brute")
+	assert_str(placed.params.save_id).is_equal("boar")
 
 func test_entity_rows_are_grid_coordinates_not_tile_coordinates() -> void:
 	var result := _parse("[room]\norigin = -5, -5\n[grid]\n.B\n[entities]\n1,0 = {}\n")

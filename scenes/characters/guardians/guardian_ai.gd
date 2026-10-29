@@ -87,7 +87,7 @@ func _ready() -> void:
 	_states.transition_to(HOLD)
 
 ## The cooldown decays every tick regardless of state, so it is up to date
-## before _select_state reads it this same frame (see BruteShadowAI).
+## before _select_state reads it this same frame (see EnemyAI.tick).
 func tick(delta: float) -> void:
 	_cooldown = maxf(_cooldown - delta, 0.0)
 	_update_look()

@@ -177,16 +177,22 @@ float gh_shield_cover(vec2 px) {
 	return clamp(shield, 0.0, 1.0);
 }
 
-float gh_smooth_memory(vec2 px) {
+// `shield_weight` 0..1 scales the shields' light: 0 for a pixel marked unshielded (unshielded_mark.gdshaderinc).
+float gh_smooth_memory_weighted(vec2 px, float shield_weight) {
 	float memory = baseline;
 	for (int i = 0; i < source_count; i++) {
 		float dist;
 		memory += gh_source_influence(i, px, false, dist);
 	}
-	return mix(clamp(memory, 0.0, 1.0), 1.0, gh_shield_cover(px));
+	return mix(clamp(memory, 0.0, 1.0), 1.0, gh_shield_cover(px) * shield_weight);
 }
 
-float gh_memory(vec2 px, out float smooth_memory, out vec3 tint_rgb, out float tint_amount, out float ring) {
+float gh_smooth_memory(vec2 px) {
+	return gh_smooth_memory_weighted(px, 1.0);
+}
+
+// gh_memory with the shields' light scaled by `shield_weight` 0..1.
+float gh_memory_weighted(vec2 px, float shield_weight, out float smooth_memory, out vec3 tint_rgb, out float tint_amount, out float ring) {
 	float memory = baseline;
 	vec3 tint_sum = vec3(0.0);
 	float tint_total = 0.0;
@@ -209,12 +215,16 @@ float gh_memory(vec2 px, out float smooth_memory, out vec3 tint_rgb, out float t
 		}
 	}
 
-	memory = mix(clamp(memory, 0.0, 1.0), 1.0, gh_shield_cover(px));
-	smooth_memory = gh_smooth_memory(px);
+	memory = mix(clamp(memory, 0.0, 1.0), 1.0, gh_shield_cover(px) * shield_weight);
+	smooth_memory = gh_smooth_memory_weighted(px, shield_weight);
 
 	tint_rgb = tint_total > 0.0 ? tint_sum / tint_total : vec3(1.0);
 	tint_amount = tint_total;
 	return memory;
+}
+
+float gh_memory(vec2 px, out float smooth_memory, out vec3 tint_rgb, out float tint_amount, out float ring) {
+	return gh_memory_weighted(px, 1.0, smooth_memory, tint_rgb, tint_amount, ring);
 }
 
 float gh_quantise(float memory, vec2 px) {

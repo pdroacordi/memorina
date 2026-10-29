@@ -2,8 +2,8 @@
  "scene": "res://scenes/world/game.tscn",
  "max_duration": 15.0,
  "player_position": [
-  -300,
-  -69
+  7240,
+  150
  ],
  "steps": [
   {
@@ -18,7 +18,7 @@
   },
   {
    "t": 1.6,
-   "screenshot": "00_open_brute_awake"
+   "screenshot": "00_open_creature_awake"
   },
   {
    "t": 1.7,
@@ -192,5 +192,6 @@
    "t": 13.1,
    "screenshot": "14_after_death_zoomed_out"
   }
- ]
+ ],
+ "_note": "Starts 168 px from the threshold_bridge boar (woken at load): its charge closes the map, and three hits kill Ivo by ~5.5 s."
 }

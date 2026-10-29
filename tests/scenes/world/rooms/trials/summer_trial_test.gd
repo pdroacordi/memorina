@@ -108,40 +108,46 @@ func test_the_long_arm_comes_down_to_the_floor() -> void:
 	assert_float(_pivot() + seesaw.end_rise(angle).x).is_less_equal(4.0)
 
 func test_the_tunnel_roof_can_be_climbed() -> void:
-	var roof := _top(_cell("lure_brute").x)
+	var roof := _top(_cell("lure_scorpion").x)
 	assert_float(_peak()).is_greater_equal(roof + MARGIN)
 
 # --- The lure --------------------------------------------------------------
 
-const BRUTE_SCENE := "res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn"
+const BAIT_STATS := "res://resources/characters/creatures/scorpion/scorpion_bait_stats.tres"
 ## Where the room's comment says to cast the shadow.
 const LURE_COL := 45
 
-func _radius(node_path: String) -> float:
-	var brute := auto_free((load(BRUTE_SCENE) as PackedScene).instantiate()) as Node
-	return ((brute.get_node(node_path) as CollisionShape2D).shape as CircleShape2D).radius
+func _bait() -> EnemyStats:
+	var stats_path: String = _params["lure_scorpion"].params.get("stats", "")
+	assert_str(stats_path).is_equal(BAIT_STATS)
+	return load(stats_path) as EnemyStats
 
-func _brute_x() -> float:
-	return (_cell("lure_brute").x + 0.5) * CELL
+func _scorpion_x() -> float:
+	return (_cell("lure_scorpion").x + 0.5) * CELL
 
-func test_the_shadow_is_cast_where_the_brute_sees_it_but_does_not_wake() -> void:
-	var distance := absf(_brute_x() - (LURE_COL + 0.5) * CELL)
-	assert_float(distance).is_less(_radius("EnemySight/CollisionShape2D"))
-	assert_float(distance).is_greater(_radius("SpawnTrigger/CollisionShape2D"))
+func test_the_shadow_is_cast_where_the_scorpion_sees_it_but_does_not_wake() -> void:
+	var distance := absf(_scorpion_x() - (LURE_COL + 0.5) * CELL)
+	assert_float(distance).is_less(_bait().sight_radius)
+	assert_float(distance).is_greater(_bait().wake_radius)
 
-func test_nothing_stands_between_the_brute_and_the_shadow() -> void:
+## Its leash lets it go all the way to the shadow, so it leaves the shaft behind it.
+func test_the_leash_reaches_the_shadow() -> void:
+	var distance := absf(_scorpion_x() - (LURE_COL + 0.5) * CELL)
+	assert_float(_bait().leash).is_greater_equal(distance - _bait().stop_distance)
+
+func test_nothing_stands_between_the_scorpion_and_the_shadow() -> void:
 	# The sight ray runs at chest height, inside the bottom floor-level row.
-	for col: int in range(LURE_COL, _cell("lure_brute").x + 1):
+	for col: int in range(LURE_COL, _cell("lure_scorpion").x + 1):
 		assert_bool(_map.is_solid(_map.origin + Vector2i(col, FLOOR_ROW - 1))).is_false()
 
 func test_on_the_roof_he_wakes_it_and_the_roof_hides_him() -> void:
-	var roof := _top(_cell("lure_brute").x)
+	var roof := _top(_cell("lure_scorpion").x)
 	# Standing on the roof right above it: within its wake-up radius...
-	assert_float(roof).is_less(_radius("SpawnTrigger/CollisionShape2D"))
+	assert_float(roof).is_less(_bait().wake_radius)
 	# ...and the roof itself is between them.
-	assert_bool(_map.is_solid(_map.origin + Vector2i(_cell("lure_brute").x, FLOOR_ROW - int(roof / CELL)))).is_true()
+	assert_bool(_map.is_solid(_map.origin + Vector2i(_cell("lure_scorpion").x, FLOOR_ROW - int(roof / CELL)))).is_true()
 
 func test_a_shaft_behind_it_drops_into_the_chamber() -> void:
-	var shaft := _cell("lure_brute").x + 3
+	var shaft := _cell("lure_scorpion").x + 3
 	for row: int in range(0, FLOOR_ROW):
 		assert_bool(_map.is_solid(_map.origin + Vector2i(shaft, row))).is_false()

@@ -1,4 +1,4 @@
-; caldera_bait.room - a single low tunnel held by a territorial brute (design 04 section 3.7).
+; caldera_bait.room - a single low tunnel held by a territorial scorpion (the bait variant) (design 04 section 3.7).
 ; Verao Logico 1 (design 02 section 8): fight it, or cast Sombra in the open, wait on the roof
 ; (cols 13-26, hidden) while it goes for the shadow, and drop down the shaft behind it (col 15 or 24).
 
@@ -15,10 +15,10 @@ S......................................S
 .............SS.SSSSSSSS.SS.............
 ........................................
 ........................................
-....SSS............B.............SSS....
+....SSS............J.............SSS....
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 [entities]
-19,8 = {"id": "bait_brute", "save_id": "caldera_bait_brute"}
+19,8 = {"id": "bait_scorpion", "save_id": "caldera_bait_scorpion", "stats": "res://resources/characters/creatures/scorpion/scorpion_bait_stats.tres"}

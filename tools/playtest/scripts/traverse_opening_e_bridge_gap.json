@@ -457,7 +457,7 @@
   },
   {
    "t": 6,
-   "screenshot": "e06.0_brute"
+   "screenshot": "e06.0_boar"
   },
   {
    "t": 6.25,
@@ -472,12 +472,22 @@
    "log": "b03"
   },
   {
+   "t": 6.84,
+   "action": "jump",
+   "pressed": true
+  },
+  {
    "t": 7.0,
    "log": "b04"
   },
   {
    "t": 7,
-   "screenshot": "e07.0_brute"
+   "screenshot": "e07.0_boar"
+  },
+  {
+   "t": 7.19,
+   "action": "jump",
+   "pressed": false
   },
   {
    "t": 7.25,
@@ -492,24 +502,74 @@
    "log": "b07"
   },
   {
+   "t": 7.9,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 7.94,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
    "t": 8.0,
    "log": "b08"
   },
   {
    "t": 8,
-   "screenshot": "e08.0_brute"
+   "screenshot": "e08.0_boar"
+  },
+  {
+   "t": 8.0,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 8.05,
+   "action": "attack",
+   "pressed": false
   },
   {
    "t": 8.25,
    "log": "b09"
   },
   {
+   "t": 8.3,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 8.35,
+   "action": "attack",
+   "pressed": false
+  },
+  {
    "t": 8.5,
    "log": "b10"
   },
   {
+   "t": 8.6,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 8.65,
+   "action": "attack",
+   "pressed": false
+  },
+  {
    "t": 8.75,
    "log": "b11"
+  },
+  {
+   "t": 8.9,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 8.95,
+   "action": "attack",
+   "pressed": false
   },
   {
    "t": 9.0,
@@ -517,7 +577,7 @@
   },
   {
    "t": 9,
-   "screenshot": "e09.0_brute"
+   "screenshot": "e09.0_boar"
   },
   {
    "t": 9.0,
@@ -557,7 +617,7 @@
   },
   {
    "t": 10,
-   "screenshot": "e10.0_brute"
+   "screenshot": "e10.0_boar"
   },
   {
    "t": 10.2,
@@ -597,7 +657,7 @@
   },
   {
    "t": 11,
-   "screenshot": "e11.0_brute"
+   "screenshot": "e11.0_boar"
   },
   {
    "t": 11.25,
@@ -627,7 +687,7 @@
   },
   {
    "t": 12,
-   "screenshot": "e12.0_brute"
+   "screenshot": "e12.0_boar"
   },
   {
    "t": 12.0,
@@ -667,7 +727,7 @@
   },
   {
    "t": 13,
-   "screenshot": "e13.0_brute"
+   "screenshot": "e13.0_boar"
   },
   {
    "t": 13.2,
@@ -707,7 +767,7 @@
   },
   {
    "t": 14,
-   "screenshot": "e14.0_brute"
+   "screenshot": "e14.0_boar"
   },
   {
    "t": 14.25,
@@ -737,7 +797,7 @@
   },
   {
    "t": 15,
-   "screenshot": "e15.0_brute"
+   "screenshot": "e15.0_boar"
   },
   {
    "t": 15.0,
@@ -777,7 +837,7 @@
   },
   {
    "t": 16,
-   "screenshot": "e16.0_brute"
+   "screenshot": "e16.0_boar"
   },
   {
    "t": 16.2,
@@ -817,7 +877,7 @@
   },
   {
    "t": 17,
-   "screenshot": "e17.0_brute"
+   "screenshot": "e17.0_boar"
   },
   {
    "t": 17.25,
@@ -847,7 +907,7 @@
   },
   {
    "t": 18,
-   "screenshot": "e18.0_brute"
+   "screenshot": "e18.0_boar"
   },
   {
    "t": 18.0,
@@ -887,7 +947,7 @@
   },
   {
    "t": 19,
-   "screenshot": "e19.0_brute"
+   "screenshot": "e19.0_boar"
   },
   {
    "t": 19.2,
@@ -927,7 +987,7 @@
   },
   {
    "t": 20,
-   "screenshot": "e20.0_brute"
+   "screenshot": "e20.0_boar"
   },
   {
    "t": 20.25,
@@ -957,7 +1017,7 @@
   },
   {
    "t": 21,
-   "screenshot": "e21.0_brute"
+   "screenshot": "e21.0_boar"
   },
   {
    "t": 21.25,
@@ -977,7 +1037,7 @@
   },
   {
    "t": 22,
-   "screenshot": "e22.0_brute"
+   "screenshot": "e22.0_boar"
   }
  ]
 }

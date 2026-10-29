@@ -7,6 +7,7 @@ render_mode blend_premul_alpha;
 //
 // Must match the world pass through the shared include; preserve alpha so transparent areas do not cover the world.
 #include "res://scenes/world/memory/greyhush_common.gdshaderinc"
+#include "res://scenes/world/memory/unshielded_mark.gdshaderinc"
 
 void fragment() {
 	vec2 px = UV * game_size;
@@ -18,18 +19,21 @@ void fragment() {
 	} else {
 		// Unpremultiply before shading so edge coverage does not darken the colour.
 		vec3 straight = src.rgb / max(src.a, 0.0001);
+		// A corrupted creature's pixel: greyed by the field only, and fully opaque.
+		bool unshielded = gh_is_unshielded(src.a);
+		float cover = unshielded ? 1.0 : src.a;
 
 		vec3 tint_rgb;
 		float tint_amount;
 		float ring;
 		float smooth_memory;
-		float memory = gh_memory(px, smooth_memory, tint_rgb, tint_amount, ring);
+		float memory = gh_memory_weighted(px, unshielded ? 0.0 : 1.0, smooth_memory, tint_rgb, tint_amount, ring);
 		float lit_amount = gh_quantise(memory, px);
 
 		vec3 col = gh_shade(straight, lit_amount, smooth_memory, tint_rgb, tint_amount, ring, px);
 		col = gh_vignette(col, UV, smooth_memory);
 
 		// Match blend_premul_alpha.
-		COLOR = vec4(col * src.a, src.a);
+		COLOR = vec4(col * cover, cover);
 	}
 }

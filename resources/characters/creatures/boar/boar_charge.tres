@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="EnemyMove" format=3]
+
+[ext_resource type="Script" path="res://resources/characters/enemies/enemy_move.gd" id="1_move"]
+
+[resource]
+script = ExtResource("1_move")
+telegraph = 0.6
+active = 1.2
+recovery = 1.0
+cooldown = 0.8
+reach = Rect2(0, -16, 192, 32)
+lunge_speed = 300.0
+ends_on_wall = true
+armoured = true
+hitbox = &"ChargeHitbox"
+damage = 1
+knockback_strength = 420.0
+knockback_lift = 140.0

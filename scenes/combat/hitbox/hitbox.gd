@@ -2,7 +2,10 @@ class_name Hitbox
 extends Area2D
 ## Applies configured damage and knockback to overlapping hurtboxes.
 
+## Every touch that reached a hurtbox, its invulnerability or not (a pogo bounces off either).
 signal connected(target: Hurtbox)
+## A touch on a hurtbox that was not invulnerable: one that can cost a life.
+signal hit_landed(target: Hurtbox)
 
 @export var damage: int = 1
 @export var knockback_strength: float = 0.0
@@ -53,8 +56,11 @@ func _hit(area: Area2D) -> void:
 		# Godot 2D y is down-positive, so lift is subtracted to push upward.
 		knockback.y -= knockback_lift
 
+	var landed := not (area as Hurtbox).is_invulnerable()
 	area.receive_hit(damage, knockback, self)
 	connected.emit(area)
+	if landed:
+		hit_landed.emit(area)
 
 func _push_direction(area: Area2D) -> Vector2:
 	var away := global_position.direction_to(area.global_position)

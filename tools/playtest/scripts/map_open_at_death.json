@@ -2,8 +2,8 @@
  "scene": "res://scenes/world/game.tscn",
  "max_duration": 10.0,
  "player_position": [
-  -300,
-  -69
+  7240,
+  150
  ],
  "steps": [
   {
@@ -18,7 +18,7 @@
   },
   {
    "t": 1.6,
-   "screenshot": "00_open_brute_awake"
+   "screenshot": "00_open_creature_awake"
   },
   {
    "t": 1.7,
@@ -87,6 +87,20 @@
    "log": "t04.5"
   },
   {
+   "t": 4.6,
+   "key": "M",
+   "pressed": true
+  },
+  {
+   "t": 4.7,
+   "key": "M",
+   "pressed": false
+  },
+  {
+   "t": 4.9,
+   "log": "reopen_4.6"
+  },
+  {
    "t": 5.0,
    "screenshot": "05.0"
   },
@@ -95,26 +109,12 @@
    "log": "t05.0"
   },
   {
-   "t": 5.3,
-   "key": "M",
-   "pressed": true
-  },
-  {
-   "t": 5.4,
-   "key": "M",
-   "pressed": false
-  },
-  {
    "t": 5.5,
    "screenshot": "05.5"
   },
   {
    "t": 5.51,
    "log": "t05.5"
-  },
-  {
-   "t": 5.6,
-   "log": "reopen_5.3"
   },
   {
    "t": 6.0,
@@ -308,5 +308,6 @@
    "t": 10.01,
    "log": "t10.0"
   }
- ]
+ ],
+ "_note": "Starts 168 px from the threshold_bridge boar (woken at load): its charge closes the map, and three hits kill Ivo by ~5.5 s."
 }

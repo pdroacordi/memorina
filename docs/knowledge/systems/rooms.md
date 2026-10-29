@@ -6,7 +6,7 @@ status: active
 tags: [rooms, map, importer, legend, tilemap]
 related: [systems/map, systems/region-title, architecture/room-reachability-audit, architecture/reward-slots-reserve-their-place-in-the-room-text, architecture/world-edges-from-the-room-list, architecture/rooms-are-text, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/import-plugin-output-is-stale-when-its-logic-changes]
 created: 2026-10-02
-updated: 2026-10-15
+updated: 2026-10-29
 source_files:
   - addons/room_maps/room_map_importer.gd
   - resources/world/maps/room_legend.tres
@@ -87,6 +87,7 @@ User, 2026-10-14: "there are some places that should have invisible walls or som
 
 ## Item pickups (STORY-02, `systems/pickups`)
 
+- **`B`** boar and **`J`** scorpion (CORE-13 round 1; kind ENTITY, anchor FEET, reach role NONE, required param `save_id`, unique across every map): corrupted creatures (`systems/creatures`). `J` takes an optional `stats` (an `EnemyStats` .tres path), which `EntityParams` loads into the root's `stats` export; `scorpion_bait_stats.tres` is the territorial guard of `caldera_bait` and the summer trial's lure. `B` was the Brute Shadow until 2026-10-29. No `FORMAT_VERSION` bump: the parser did not change. The reachability audit neither anchors on nor blocks at a creature.
 - **`i`** (kind ENTITY, reach role CONTENT, required params `item` and `texture`): `ItemPickup` (`scenes/world/interactables/item_pickup/`), taken with Up after a door and a talk. `rest_offset` lays it on a table top; `width_cells` / `height_cells` size its reach.
 - `room_files_test` fails on an unknown item or missing art, and holds the sword to exactly one placement, in threshold_farmhouse.
 - **Today:** the sword on the farmhouse's meal table (cell 9,8).

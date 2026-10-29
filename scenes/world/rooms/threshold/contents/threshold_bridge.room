@@ -56,4 +56,4 @@ tileset = threshold
 
 [entities]
 21,7 = {"width_cells": 6, "height_cells": 6}
-31,4 = {"save_id": "threshold_bridge_brute"}
+31,4 = {"save_id": "threshold_bridge_boar"}

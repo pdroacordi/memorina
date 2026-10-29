@@ -53,7 +53,7 @@ func test_content_and_doors_come_from_the_legend_roles() -> void:
 	var grid := ReachFixture.grid(PackedStringArray(["R.E.B", "#####"]), Vector2i.ZERO, PackedStringArray(), PackedStringArray([
 		"0,0 = {\"bench_id\": \"fixture_bench\"}",
 		"2,0 = {\"link\": \"fixture_door\", \"to_room\": \"fixture\"}",
-		"4,0 = {\"save_id\": \"fixture_brute\"}",
+		"4,0 = {\"save_id\": \"fixture_boar\"}",
 	]))
 	assert_array(grid.anchors).contains_exactly([Vector2i(0, 0)])
 	assert_int(grid.doors.size()).is_equal(1)

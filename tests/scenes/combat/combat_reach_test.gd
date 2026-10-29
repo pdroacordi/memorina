@@ -4,7 +4,11 @@ class_name CombatReachTest extends GdUnitTestSuite
 ## (docs/knowledge/systems/guardians.md, "A move's attack_range"; architecture/ivo-at-2x, CORE-09, CORE-11).
 
 const IVO_SCENE := "res://scenes/characters/ivo/ivo.tscn"
-const BRUTE_SCENE := "res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn"
+## Every creature walks: its parking spot and its moves are measured against Ivo on one floor.
+const CREATURE_SCENES: Array[String] = [
+	"res://scenes/characters/creatures/boar/boar.tscn",
+	"res://scenes/characters/creatures/scorpion/scorpion.tscn",
+]
 const GUARDIAN_SCENES: Array[String] = [
 	"res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn",
 	"res://scenes/characters/guardians/frost_guardian/frost_guardian.tscn",
@@ -44,19 +48,20 @@ func test_every_guardian_move_lands_over_the_whole_distance_it_is_thrown_from() 
 				assert_float(miss).override_failure_message("%s is thrown from %.1f to %.0f px but misses a grounded Ivo at %.1f" % [
 					label, near, attack.attack_range, miss]).is_equal(-1.0)
 
-## Ivo's slash and chop both land on a brute parked at its stop distance, the chop after swing 1's shove.
-func test_the_standing_combo_lands_both_swings_on_a_parked_brute() -> void:
-	var brute := auto_free(_instance(BRUTE_SCENE)) as BruteShadow
-	var stop := _brute_stats(brute).stop_distance
-	var target := _area_box(brute, ^"Hurtbox")
+## Ivo's slash and chop both land on a walker parked at its stop distance, the chop after swing 1's shove.
+func test_the_standing_combo_lands_both_swings_on_a_parked_walker() -> void:
 	var phases := _ivo.attack_stats_idle.phases
 	var slash := _hit_box(_ivo, _clip_of(_ivo, phases[0].state_name))
 	var chop := _hit_box(_ivo, _clip_of(_ivo, phases[1].state_name))
 	var gap: float = phases[0].duration - slash.window_start + chop.window_start
-	var slide := _slide(phases[0].knockback_strength, brute.knockback_damping, gap)
-	assert_float(_reach(slash, target)).is_greater_equal(stop)
-	assert_float(_reach(chop, target)).override_failure_message(
-		"the chop reaches %.1f px; the brute is at %.1f after swing 1's shove" % [_reach(chop, target), stop + slide]).is_greater_equal(stop + slide)
+	for path: String in CREATURE_SCENES:
+		var creature := auto_free(_instance(path)) as Enemy
+		var stop := creature.stats.stop_distance
+		var target := _area_box(creature, ^"Hurtbox")
+		var slide := _slide(phases[0].knockback_strength, creature.knockback_damping, gap)
+		assert_float(_reach(slash, target)).override_failure_message("%s: the slash misses at %.1f" % [creature.name, stop]).is_greater_equal(stop)
+		assert_float(_reach(chop, target)).override_failure_message(
+			"%s: the chop reaches %.1f px; it is at %.1f after swing 1's shove" % [creature.name, _reach(chop, target), stop + slide]).is_greater_equal(stop + slide)
 
 ## A guardian's comfort point is outside Ivo's longest swing; it gives ground before Ivo touches its contact box, but
 ## not from where its main move (its most likely move that neither lunges nor leaps) was just thrown
@@ -87,14 +92,38 @@ func test_every_guardian_keeps_its_comfort_point_outside_ivos_reach_and_gives_gr
 		assert_float(give_ground).override_failure_message("%s gives ground at %.1f, so it backs off after its %s from %.0f" % [
 			guardian.name, give_ground, main.resource_path.get_file(), main.attack_range]).is_less(main.attack_range)
 
-## The brute swings only where its swing lands, and parks where touching it does not hurt.
-func test_the_brute_swings_from_inside_its_reach_and_parks_clear_of_its_body() -> void:
-	var brute := auto_free(_instance(BRUTE_SCENE)) as BruteShadow
-	var stats := _brute_stats(brute)
-	var swing := _hit_box(brute, _clip_of(brute, BruteShadowAnimationResolver.ATTACK))
-	assert_float(_reach(swing, _ivo_hurtbox)).is_greater_equal(stats.attack_range)
-	assert_float(stats.stop_distance).is_less_equal(stats.attack_range)
-	assert_float(stats.stop_distance).is_greater(_reach(_area_box(brute, ^"CollisionHitbox"), _ivo_hurtbox))
+## A creature starts a move anywhere inside its reach, and inside its contact box touching already hurts, so from there
+## out to the reach's far edge the move's hitbox must touch a grounded Ivo; a lunge moves first, so it only has to touch him.
+func test_every_creature_move_lands_over_the_whole_reach_it_is_thrown_from() -> void:
+	for path: String in CREATURE_SCENES:
+		var creature := auto_free(_instance(path)) as Enemy
+		var contact := _area_box(creature, ^"ContactHitbox")
+		for move: EnemyMove in creature.stats.moves:
+			var box := _area_box(creature, NodePath(String(move.hitbox)))
+			var label := "%s %s" % [creature.name, move.resource_path.get_file()]
+			assert_float(_reach(box, _ivo_hurtbox)).override_failure_message("%s never touches a grounded Ivo" % label).is_greater(0.0)
+			assert_bool(move.reach.position.y <= 0.0 and move.reach.end.y >= 0.0).override_failure_message(
+				"%s: its reach does not hold a target on its own floor" % label).is_true()
+			var raised := {"shape": _ivo_hurtbox.shape, "xform": Transform2D(0.0, Vector2(0.0, move.reach.position.y)) * _ivo_hurtbox.xform}
+			assert_float(_reach(box, raised)).override_failure_message(
+				"%s: its reach starts the move on an Ivo %.0f px up that the hitbox cannot touch" % [label, -move.reach.position.y]).is_greater(0.0)
+			if move.lunge_speed > 0.0:
+				continue
+			var near := maxf(_farthest(contact, _ivo_hurtbox),
+					_farthest({"shape": contact.shape, "xform": Transform2D.FLIP_X * contact.xform}, _ivo_hurtbox))
+			var miss := _first_miss(box, _ivo_hurtbox, near, move.reach.end.x)
+			assert_float(miss).override_failure_message("%s is thrown from %.1f to %.0f px but misses a grounded Ivo at %.1f" % [
+				label, near, move.reach.end.x, miss]).is_equal(-1.0)
+
+## A walker parks where touching it does not hurt.
+func test_every_walker_parks_clear_of_its_body() -> void:
+	for path: String in CREATURE_SCENES:
+		var creature := auto_free(_instance(path)) as Enemy
+		var contact := _area_box(creature, ^"ContactHitbox")
+		var touch := maxf(_farthest(contact, _ivo_hurtbox),
+				_farthest({"shape": contact.shape, "xform": Transform2D.FLIP_X * contact.xform}, _ivo_hurtbox))
+		assert_float(creature.stats.stop_distance).override_failure_message("%s parks at %.1f, inside its %.1f px contact" % [
+			creature.name, creature.stats.stop_distance, touch]).is_greater(touch)
 
 func test_slide_is_the_integral_of_the_decayed_push() -> void:
 	assert_float(_slide(60.0, 6.0, 1000.0)).is_equal_approx(10.0, 0.001)
@@ -113,9 +142,6 @@ func _main_move(attacks: Array[GuardianAttack]) -> GuardianAttack:
 		if main == null or attack.weight > main.weight:
 			main = attack
 	return main
-
-func _brute_stats(brute: BruteShadow) -> BruteShadowAttackStats:
-	return (brute.get_node(^"AI") as BruteShadowAI).attack_stats
 
 ## The animation an AnimationTree state plays.
 func _clip_of(root: Node, state: StringName) -> Animation:

@@ -67,7 +67,7 @@ wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww..................
 .............................................................
 
 [entities]              ; params for entities, by grid column,row
-30,1 = {"save_id": "downtown_brute"}
+30,1 = {"save_id": "downtown_boar"}
 ```
 
 - **One character is one 32 px cell.** The world position of grid column `c`,
@@ -189,7 +189,8 @@ else in the code knows what a character means.
 | `~` | `[water]` | water | - | - | - | Pool water in a pit, seen edge-on: waves, splashes, reflection. A hazard - Ivo does not swim. Fill the pit to where the water should stand. |
 | `w` | `[water]` | water | - | - | hazard | Lake in front of the land, seen from above: opaque, a straight far shore. Paint it over air down to the room's bottom, never over ground or a ledge; run each row off a room side or end it against solid ground. |
 | `f` | `[water]` | water | - | - | ice | Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there. |
-| `B` | `[grid]` | entity | - | - | - | Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death. |
+| `B` | `[grid]` | entity | - | - | - | Boar (Threshold): wanders; on sight paws the ground and charges in a straight line, dazed by a wall or a ledge. Needs a save_id unique across every map: it stays down until the next rest or death. |
+| `J` | `[grid]` | entity | - | - | - | Scorpion (Summer Caldera): holds its ground; on sight raises its tail, strikes and sticks; the raised tail hurts from above. Needs a save_id unique across every map: it stays down until the next rest or death. Optional `stats`: `res://resources/characters/creatures/scorpion/scorpion_bait_stats.tres` for a territorial guard (A isca). |
 | `W` | `[grid]` | entity | - | - | current | A natural current: a box of air standing on this cell (size in px, centred on the cell, rising from its floor) blowing one way, gusting through its profile. Vendaval adds to it; Congelar stops it; the grey stills it. |
 | `P` | `[grid]` | entity | - | - | content | A stone pressure plate: holds whatever links to it (trigger_path) while enough weight stands on it - Ivo, his burned shadow, a released load. |
 | `G` | `[grid]` | entity | - | - | gate | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved. |
@@ -249,17 +250,34 @@ below): a placement without one fails the import, and the room-files test
 also fails when two maps use the same id.
 
 <!-- generated:entities -->
-#### `B` - BruteShadow
+#### `B` - Boar
 
-Scene `res://scenes/characters/enemies/brute_shadow/brute_shadow.tscn`, anchored at its cell's bottom centre (standing on the cell below). Brute Shadow: a common enemy that wanders, chases and swings. Needs a save_id unique across every map: it stays down until the next rest or death.
+Scene `res://scenes/characters/creatures/boar/boar.tscn`, anchored at its cell's bottom centre (standing on the cell below). Boar (Threshold): wanders; on sight paws the ground and charges in a straight line, dazed by a wall or a ledge. Needs a save_id unique across every map: it stays down until the next rest or death.
 
 | Param | Type | Default |
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `save_id` | String | **required** |
+| `stats` | EnemyStats | `Resource("res://resources/characters/creatures/boar/boar_stats.tres")` |
 | `terminal_velocity` | float | `500.0` |
 | `gravity_scale` | float | `1.0` |
-| `knockback_time` | float | `1.0` |
+| `knockback_time` | float | `0.4` |
+| `knockback_damping` | float | `6.0` |
+| `hurt_flash_color` | Color | `Color(1, 0.5, 0.5, 1)` |
+| `hurt_flash_time` | float | `0.18` |
+
+#### `J` - Scorpion
+
+Scene `res://scenes/characters/creatures/scorpion/scorpion.tscn`, anchored at its cell's bottom centre (standing on the cell below). Scorpion (Summer Caldera): holds its ground; on sight raises its tail, strikes and sticks; the raised tail hurts from above. Needs a save_id unique across every map: it stays down until the next rest or death. Optional `stats`: `res://resources/characters/creatures/scorpion/scorpion_bait_stats.tres` for a territorial guard (A isca).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `save_id` | String | **required** |
+| `stats` | EnemyStats | `Resource("res://resources/characters/creatures/scorpion/scorpion_stats.tres")` |
+| `terminal_velocity` | float | `500.0` |
+| `gravity_scale` | float | `1.0` |
+| `knockback_time` | float | `0.35` |
 | `knockback_damping` | float | `6.0` |
 | `hurt_flash_color` | Color | `Color(1, 0.5, 0.5, 1)` |
 | `hurt_flash_time` | float | `0.18` |

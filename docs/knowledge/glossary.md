@@ -6,7 +6,7 @@ status: active
 tags: [glossary, i18n, naming]
 related: []
 created: 2026-10-02
-updated: 2026-10-28
+updated: 2026-10-29
 source_files: []
 ---
 
@@ -99,6 +99,11 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | contrapeso errado trava o elevador | `Mechanism.lock_path` |
 | Sombra (a sombra queimada) | `CastShadow`, `Character.silhouette()`, `burned_shadow.gdshader` |
 | vista pelas criaturas como o herói | `EnemySight.PRESENCE`, `EnemySight.visible_presence()` |
+| criatura corrompida | `Enemy` (scene) + `EnemyStats`; `EnemyAI`, `WalkerAI` (`systems/creatures`) |
+| golpe de uma criatura (aviso, golpe, recuperação) | `EnemyMove` (`telegraph`, `active`, `recovery`, `cooldown`), `MoveClock` |
+| javali (Limiar) | `scenes/characters/creatures/boar/` (legend `B`) |
+| escorpião, a isca (Caldeira do Verão) | `scenes/characters/creatures/scorpion/` (legend `J`), `scorpion_bait_stats.tres` |
+| a borda que desfia, o glitch das criaturas | `CorruptionEdge`, `corruption_edge.gdshaderinc` |
 | Soltar / o cinza guarda o estado antigo | `Releasable`, `ReleaseState` (`hold` / `let_go`) |
 | casulo pendurado / cortina de folhas / ponte levadiça | `HangingLoad`, `LeafCover`, `Drawbridge` |
 | a canção tocada não corre durante outra resposta | `PulseEmitter.holds_in_pause` |
@@ -174,6 +179,7 @@ someone's memory of the project is exactly what causes an accidental regression 
 
 | Retired term | What replaced it |
 |---|---|
+| brute shadow (`BruteShadow`, `BruteShadowAI`, `BruteShadowAttackStats`, `EnemyAIStats`, `brute_shadow.tscn`) | retired 2026-10-29 (CORE-13 round 1): the six corrupted creatures, each a scene plus `EnemyStats`; its three placements went to the boar (`threshold_bridge`) and the bait scorpion (`caldera_bait`, the summer trial's lure) (`systems/creatures`) |
 | `floor_tileset.tres`, `floor_tiles.png`, the 9-column blob layout, `GroundAutotile.tile_for` | retired 2026-10-10 (WORLD-07): a room's `tileset =` biome, corner-Wang look sheets on a dual grid, the hidden `Solid` collision layer (`architecture/biome-tilesets`) |
 | "Lembre-se!" / `RECALL_PROMPT` (the recall banner) | retired 2026-09-21: the recall shows instead of telling (`RecallAura`, `RecallPrompt` key only) |
 | `GUARDIAN_CALL_ANSWER` ("Answer on the Memorina") | retired 2026-09-21: the answer moved to Ivo's own sheet with the key blinking; no prose |

@@ -1,0 +1,189 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  -6500,
+  1824
+ ],
+ "skills": [
+  0,
+  1
+ ],
+ "known_songs": [
+  4,
+  5,
+  6,
+  7
+ ],
+ "restored_guardians": [
+  1,
+  2
+ ],
+ "max_duration": 12.0,
+ "steps": [
+  {
+   "t": 1.0,
+   "trace": true
+  },
+  {
+   "t": 1.0,
+   "screenshot": "c13s00_corridor"
+  },
+  {
+   "t": 1.0,
+   "log": "c13s00_corridor"
+  },
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.3,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "screenshot": "c13s01_scorpion_gathers"
+  },
+  {
+   "t": 3.4,
+   "log": "c13s01_scorpion_gathers"
+  },
+  {
+   "t": 4.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 4.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 4.7,
+   "screenshot": "c13s02_tell"
+  },
+  {
+   "t": 4.7,
+   "log": "c13s02_tell"
+  },
+  {
+   "t": 4.75,
+   "action": "roll",
+   "pressed": true
+  },
+  {
+   "t": 4.8,
+   "action": "roll",
+   "pressed": false
+  },
+  {
+   "t": 5.4,
+   "screenshot": "c13s03_strike_misses"
+  },
+  {
+   "t": 5.4,
+   "log": "c13s03_strike_misses"
+  },
+  {
+   "t": 5.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 5.65,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 5.7,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 5.75,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 5.9,
+   "screenshot": "c13s04_punish_stuck"
+  },
+  {
+   "t": 5.9,
+   "log": "c13s04_punish_stuck"
+  },
+  {
+   "t": 6.05,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 6.1,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 7.2,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 7.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 7.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 7.55,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.6,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 7.65,
+   "action": "attack",
+   "pressed": true
+  },
+  {
+   "t": 7.7,
+   "action": "attack",
+   "pressed": false
+  },
+  {
+   "t": 7.8,
+   "screenshot": "c13s05_pogo_over_the_tail"
+  },
+  {
+   "t": 7.8,
+   "log": "c13s05_pogo_over_the_tail"
+  },
+  {
+   "t": 8.0,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 9.0,
+   "screenshot": "c13s06_after"
+  },
+  {
+   "t": 9.0,
+   "log": "c13s06_after"
+  },
+  {
+   "t": 11.5,
+   "trace": false
+  }
+ ]
+}

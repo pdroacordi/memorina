@@ -6,13 +6,12 @@ status: active
 tags: [guardian, boss, lucidity, recall, qte, ai]
 related: [systems/notebook, architecture/guardian-fight-phase-machine, features/lucidity-leap, features/encounter-sheet-slot, features/recall-in-more-than-one-press, architecture/the-region-owns-its-forgetting]
 created: 2026-10-02
-updated: 2026-10-15
+updated: 2026-10-29
 source_files:
   - scenes/characters/guardians/guardian.gd
   - scenes/world/world_freeze.gd
   - scenes/characters/ivo/player.gd
   - scenes/characters/guardians/guardian_ai.gd
-  - scenes/characters/enemies/brute_shadow/brute_shadow_ai.gd
   - tests/scenes/combat/combat_reach_test.gd
   - resources/characters/guardians/guardian_stats.gd
 ---
@@ -50,7 +49,7 @@ A guardian encounter is `docs/design/02_mecanicas.md` sections 3 and 4: pressure
 
 ## Reach against Ivo's sword (CORE-09, 2026-10-11; CORE-11, 2026-10-14)
 
-The CORE-09 paragraphs give the CORE-09 numbers; the CORE-11 item gives the current ones where they differ (brute `stop_distance` 57, comfort Bloom 114 and Frost 165, `give_ground_distance` Bloom 70 and Frost 101.5).
+The Brute Shadow retired on 2026-10-29 (CORE-13 round 1); its paragraphs below are history, and its rules (face a target in reach, park on x, `TURN_BAND`) now live in `EnemyAI`, `WalkerAI` and `SideTracker` (`systems/creatures`), with each creature's reach in `combat_reach_test`. The CORE-09 paragraphs give the CORE-09 numbers; the CORE-11 item gives the current ones where they differ (brute `stop_distance` 57, comfort Bloom 114 and Frost 165, `give_ground_distance` Bloom 70 and Frost 101.5).
 
 Ivo's swings were shrunk to the 2x art ("Shrink to the art", user, 2026-10-11; `architecture/ivo-at-2x`): measured centre to centre on the keyed boxes, the slash reaches a brute 67 px, Bloom 84-98 (its hurtbox sits 7 px off centre) and Frost 82; the chop 59, 76-90 and 74; the running swings 53 (swing 1) and 59 (swing 2) on the brute (CORE-10). Ivo's Hitbox has `strikes_once`: one hit per hurtbox per window, so a knockback that carries a target out of the box and back cannot land a second hit (`bugs/one-swing-hits-the-brute-twice-when-its-shove-carries-it-out-and-back`). Enemies and guardians were retuned to that reach, as data, without touching Ivo's hitboxes. `combat_reach_test` holds the numbers below.
 

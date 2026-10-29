@@ -219,12 +219,23 @@ func _foes_state(player: Player) -> String:
 			var guardian := foe as Guardian
 			state = "%s hits=%.2f %s" % [GuardianFight.Phase.keys()[guardian.phase()], guardian.pressure_progress(),
 				"swing" if guardian.is_swinging() else ("telegraph" if guardian.is_telegraphing() else "-")]
-		elif foe is BruteShadow:
-			var brute := foe as BruteShadow
-			state = "hp=%d %s%s" % [brute.health.current_hp, "swing" if brute.is_attacking() else "-",
-				" knocked" if brute.is_in_knockback() else ""]
+		elif foe is Enemy:
+			var enemy := foe as Enemy
+			state = "hp=%d %s%s" % [enemy.health.current_hp, _enemy_phase(enemy),
+				" knocked" if enemy.is_in_knockback() else ""]
 		foes.append("%s dx=%.1f dy=%.1f %s" % [foe.name, offset.x, offset.y, state])
 	return " foes=[%s]" % ", ".join(foes)
+
+func _enemy_phase(enemy: Enemy) -> String:
+	if enemy.is_dormant():
+		return "dormant"
+	if enemy.is_telegraphing():
+		return "telegraph"
+	if enemy.is_attacking():
+		return "attack"
+	if enemy.is_recovering():
+		return "recover"
+	return "-"
 
 ## Prints what a screenshot cannot show: pause, focus and Ivo's motion.
 func _log_state(label: String) -> void:

@@ -8,21 +8,21 @@ script = ExtResource("2_entry")
 room = &"caldera_bait"
 cell = Vector2i(13, 4)
 kind = 1
-reason = "WORLD-25: the roof over the brute's tunnel where Ivo waits hidden while it goes for his shadow, then drops down a shaft behind it (design 02 section 8, Verao Logico 1; caldera_bait header); the brute is no anchor"
+reason = "WORLD-25: the roof over the bait scorpion's tunnel where Ivo waits hidden while it goes for his shadow, then drops down a shaft behind it (design 02 section 8, Verao Logico 1; caldera_bait header); the scorpion is no anchor"
 
 [sub_resource type="Resource" id="entry_2"]
 script = ExtResource("2_entry")
 room = &"caldera_bait"
 cell = Vector2i(16, 4)
 kind = 1
-reason = "WORLD-25: the roof over the brute's tunnel where Ivo waits hidden while it goes for his shadow, then drops down a shaft behind it (design 02 section 8, Verao Logico 1; caldera_bait header); the brute is no anchor"
+reason = "WORLD-25: the roof over the bait scorpion's tunnel where Ivo waits hidden while it goes for his shadow, then drops down a shaft behind it (design 02 section 8, Verao Logico 1; caldera_bait header); the scorpion is no anchor"
 
 [sub_resource type="Resource" id="entry_3"]
 script = ExtResource("2_entry")
 room = &"caldera_bait"
 cell = Vector2i(25, 4)
 kind = 1
-reason = "WORLD-25: the roof over the brute's tunnel where Ivo waits hidden while it goes for his shadow, then drops down a shaft behind it (design 02 section 8, Verao Logico 1; caldera_bait header); the brute is no anchor"
+reason = "WORLD-25: the roof over the bait scorpion's tunnel where Ivo waits hidden while it goes for his shadow, then drops down a shaft behind it (design 02 section 8, Verao Logico 1; caldera_bait header); the scorpion is no anchor"
 
 [sub_resource type="Resource" id="entry_5"]
 script = ExtResource("2_entry")

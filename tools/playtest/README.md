@@ -63,7 +63,7 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
 - **Per-frame trace.** `"trace": true` prints one `[playtest] trace` line every physics frame until a
   `"trace": false` step: Ivo's position, velocity, floor, helix ride and progress `u`, the camera's centre and hp.
 - **Foes.** `log` and `trace` lines end with `foes=[...]`: every enemy and guardian within 600 px of Ivo, its
-  offset from him, a brute's hp, `swing` and `knocked`, or a guardian's phase, hit progress (0..1) and
+  offset from him, a creature's hp, its move phase (`dormant`, `telegraph`, `attack`, `recover`) and `knocked`, or a guardian's phase, hit progress (0..1) and
   `telegraph`/`swing`. Combat timelines read hits and dodges from it (`core09_*.json`).
 - `--out` must be an **absolute filesystem path** (not `res://`); the runner creates it if
   missing and writes `<name>.png` for every `screenshot` step there, then quits on its own

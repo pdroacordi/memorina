@@ -59,12 +59,12 @@ func test_live_and_committed_share_nothing() -> void:
 
 func test_a_rest_and_a_death_both_bring_the_defeated_back() -> void:
 	var ledger := _ledger()
-	ledger.defeated["brute"] = true
+	ledger.defeated["boar"] = true
 	ledger.commit()
-	assert_bool(ledger.defeated.has("brute")).is_false()
-	ledger.defeated["brute"] = true
+	assert_bool(ledger.defeated.has("boar")).is_false()
+	ledger.defeated["boar"] = true
 	ledger.record_death("a", Vector2.ZERO)
-	assert_bool(ledger.defeated.has("brute")).is_false()
+	assert_bool(ledger.defeated.has("boar")).is_false()
 
 func test_a_commit_adds_the_play_time_since_the_last_one() -> void:
 	var ledger := _ledger()
