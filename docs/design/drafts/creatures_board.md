@@ -8,6 +8,7 @@ Draft, 2026-10-29. Not a design decision: nothing here is approved. It asks the 
 - Teachers: "Same, but a thrush for Chuva": Redoma a glass-shelled snail (fishing village stilts), Chuva a thrush (spring woods), Vendaval a kestrel (orchard_windy_gap), Solstício a lizard (caldera_open_crater).
 - Learning: "He plays it back (Recommended)": the creature performs its three notes as moves in each note's direction, repeats slowly when Ivo is near, Ivo echoes them; a wrong note costs nothing; the half sheet holds through the duet.
 - After: "Stays and repeats (Recommended)": it stays and sings the phrase again whenever the Memorina is drawn near.
+- Teaching flow revised by the user, 2026-10-29 (design 02 §2, approved "ok"): the teacher is coloured because it has memory, like Ivo (`GreyhushShield`). It sings its three notes into a speech balloon of the player's controller glyphs; Ivo echoes them on the Memorina, each right note lighting its glyph; a wrong note shakes the balloon and it sings again. No freeze, no cinematic, no half sheet: the half is saved and the notebook quill announces it. A half that completes the song plays the duet, then the full lesson. Afterwards drawing the Memorina near it brings the balloon back. This replaces the "Teaching flow" sections below where they differ; teachers need a "sing" clip.
 
 ## Ground truth this board builds on
 

@@ -73,8 +73,13 @@ Estilo fluido e rápido — referência Hollow Knight com tempero de jogo de aç
 **Criaturas escolhidas (usuário, 2026-10-29; quadro em `docs/design/drafts/creatures_board.md`):**
 - Corrompidas, "The six picks (Recommended)": javali (Limiar, no lugar do bruto da ponte), caranguejo (Beira Gelada), morcego-pingente (Lago Gelado), aranha (Bosque Florido), vespa (Pomares do Vento), escorpião (Caldeira de Verão, com uma variante mais dura guardando "A isca"). Nenhum inimigo na Vila.
 - Professoras, "Same, but a thrush for Chuva": caracol de concha de vidro (Redoma, sob as palafitas da vila de pesca), sabiá (Chuva, Bosque Florido), falcão-peneireiro (Vendaval, `orchard_windy_gap`), lagarto (Solstício, `caldera_open_crater`).
-- Aprendizado, "He plays it back (Recommended)": a criatura faz as três notas como movimentos na direção de cada nota; perto de Ivo repete devagar; Ivo responde na Memorina; nota errada não custa nada e ela repete; a partitura da metade fica durante o dueto.
-- Depois, "Stays and repeats (Recommended)": ela fica e canta a frase de novo sempre que a Memorina é sacada por perto.
+- Aprendizado, "He plays it back (Recommended)", refeito pelo usuário em 2026-10-29: "The creature, differently from the scenario, has memory, like Ivo, so it is colored. When it teaches the player, instead of opening the memorina hud with the notes, just like with the guardians, maybe it could be simpler. The creature could have like a talking balloon with the notes of the controller the player is using. The player can try to repeat it and then the entry will come in." Aprovado como proposto ("ok", 2026-10-29):
+  - A professora tem memória, como Ivo, e por isso tem cor (um `GreyhushShield`).
+  - Perto de Ivo ela canta as três notas; cada nota surge num balão de fala com o glifo do controle que o jogador usa, no tempo do som.
+  - Ivo saca a Memorina e repete: cada nota certa acende seu glifo; nota errada sacode o balão e ela canta de novo, sem custo. Nada congela, sem cinemática e sem partitura no HUD.
+  - Três notas certas: um floreio da criatura, a metade é salva e a pena do caderno anuncia "Meia canção".
+  - Se a metade completa a canção (o caderno de canções já foi achado), o dueto vem primeiro e depois a lição completa, em que o nome verdadeiro é ouvido.
+- Depois, "Stays and repeats (Recommended)": ela fica, e sacar a Memorina por perto traz o balão com a frase de novo.
 ## 3. Guardiões comuns — estrutura de três fases
  
 1. **Fase de pressão física:** o guardião ataca através de padrões ligados à sua estação. O jogador desvia, se posiciona, ataca para abrir brechas — não para "matar", mas para forçar instabilidade que abre a fase seguinte.
