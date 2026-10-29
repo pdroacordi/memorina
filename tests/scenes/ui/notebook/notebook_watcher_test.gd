@@ -154,6 +154,6 @@ func test_a_half_and_its_completion_are_announced() -> void:
 ## STORY-06: taking a found piece announces its Found entry.
 func test_a_found_piece_announces() -> void:
 	_watch()
-	SaveSystem.mark_found(&"woods_hut_letter")
+	SaveSystem.mark_found(&"woods_root_caves_alcove")
 	_watcher._process(0.0)
 	assert_array(_announced).contains_exactly([[&"found_bento_1"]])

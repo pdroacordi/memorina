@@ -11,7 +11,7 @@ updated: 2026-09-20
 source_files:
   - scenes/characters/ivo/abilities/memorina_voice.gd
   - scenes/characters/ivo/player.gd
-  - scenes/characters/guardians/guardian_call.gd
+  - scenes/characters/components/phrase_call.gd
 ---
 
 ## Summary
@@ -39,7 +39,7 @@ than a playable beat.
 
 `MemorinaVoice.can_play_note()` with `min_note_gap` (0.25 s): a new note cuts the ringing
 one once the gap has passed; presses inside the gap are dropped as mashing. Player gates
-on `can_play_note()`. `GuardianCall` now plays its phrase on a fixed `note_interval`
+on `can_play_note()`. `GuardianCall` (now `PhraseCall`, CORE-04) plays its phrase on a fixed `note_interval`
 (0.55 s) so the call sounds like a melody and the answer window is proportionate.
 Verified in-engine (`playtests/2026-09-20-bloom-guardian-call`).
 

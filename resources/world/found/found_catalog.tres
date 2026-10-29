@@ -11,8 +11,8 @@
 
 [sub_resource type="Resource" id="piece_0"]
 script = ExtResource("2_piece")
-slot_id = &"woods_root_caves_alcove"
-room = &"woods_root_caves"
+slot_id = &"woods_hut_letter"
+room = &"woods_hut"
 texture = ExtResource("4_book")
 song = ExtResource("5_bell_jar")
 
@@ -39,8 +39,8 @@ song = ExtResource("8_solstice")
 
 [sub_resource type="Resource" id="piece_4"]
 script = ExtResource("2_piece")
-slot_id = &"woods_hut_letter"
-room = &"woods_hut"
+slot_id = &"woods_root_caves_alcove"
+room = &"woods_root_caves"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_5"]

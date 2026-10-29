@@ -144,6 +144,32 @@ func test_no_songbook_needs_its_own_song() -> void:
 			problems.append("%s (song %d)" % [piece.slot_id, piece.song.id])
 	assert_array(problems).override_failure_message("Songbooks no kit without their song reaches:\n%s" % "\n".join(problems)).is_empty()
 
+## No teacher needs its own song: some kit without the song whole reaches its feet cell (systems/teaching-creatures).
+func test_no_teacher_needs_its_own_song() -> void:
+	const TEACHERS := {"U": Enums.Song.BELL_JAR, "Y": Enums.Song.RAIN, "K": Enums.Song.GALE, "Q": Enums.Song.SOLSTICE}
+	var problems: Array[String] = []
+	var teachers := 0
+	for i: int in _grid.room_count():
+		var map: RoomMap = _loaded.maps[_grid.room_id(i)]
+		for placed: Dictionary in map.entities:
+			if not TEACHERS.has(placed.symbol):
+				continue
+			teachers += 1
+			var song: Enums.Song = TEACHERS[placed.symbol]
+			var world: Vector2i = _grid.room_rect(i).position - map.origin + placed.cell
+			var by := _reports.filter(func(report: ReachReport) -> bool:
+				return not _kit(report.kit).player_data().learned_songs[song] and _reaches(report, world))
+			if by.is_empty():
+				problems.append("%s %s (song %d)" % [_grid.room_id(i), placed.cell - map.origin, song])
+	assert_int(teachers).is_equal(TEACHERS.size())
+	assert_array(problems).override_failure_message("Teachers no kit without their song reaches:
+%s" % "
+".join(problems)).is_empty()
+
+## Redoma's songbook lies where the memorina kit, with no song, reaches it (user, 2026-10-29: "Move the Redoma book").
+func test_the_memorina_kit_reaches_the_redoma_book() -> void:
+	assert_bool(_report(&"memorina").rooms.has(&"woods_hut")).is_true()
+
 ## Nothing bought opens a way (systems/seeds-and-the-seller): no barrier, door or grate names a seed fact, so the kits
 ## need not model seeds.
 func test_no_way_is_gated_on_seeds() -> void:

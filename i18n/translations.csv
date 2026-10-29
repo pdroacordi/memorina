@@ -76,7 +76,7 @@ NOTEBOOK_SECTION_ITEMS,Items,Itens
 NOTEBOOK_SECTION_GUARDIANS,Guardians,Guardiões
 NOTEBOOK_SECTION_FOUND,Found,Achados
 NOTEBOOK_FOUND_SONGBOOK_BELL_JAR_TITLE,A winter hand's songbook,Caderno de uma mão de inverno
-NOTEBOOK_FOUND_SONGBOOK_BELL_JAR_DETAIL,Songbook · Root caves,Caderno · Grutas de raízes
+NOTEBOOK_FOUND_SONGBOOK_BELL_JAR_DETAIL,Songbook · Woodcutter's hut,Caderno · Cabana do lenhador
 NOTEBOOK_FOUND_SONGBOOK_BELL_JAR_BODY,Only the end of it. Nothing gets in under it; anyone may leave. The start is sung by the frozen lake.,"Só o fim. Nada entra debaixo dela; quem quiser, sai. O começo é cantado junto ao lago gelado."
 NOTEBOOK_FOUND_SONGBOOK_RAIN_TITLE,An earthy hand's songbook,Caderno de uma mão de terra
 NOTEBOOK_FOUND_SONGBOOK_RAIN_DETAIL,Songbook · Far shore,Caderno · Margem distante
@@ -88,8 +88,8 @@ NOTEBOOK_FOUND_SONGBOOK_SOLSTICE_TITLE,An old hand's songbook,Caderno de uma mã
 NOTEBOOK_FOUND_SONGBOOK_SOLSTICE_DETAIL,Songbook · Wind ridge,Caderno · Crista do vento
 NOTEBOOK_FOUND_SONGBOOK_SOLSTICE_BODY,"For the longest day, when every other song needs more time. The start is kept where the sun stands still.","Para o dia mais longo, quando toda canção precisa de mais tempo. O começo fica onde o sol para."
 NOTEBOOK_FOUND_BENTO_1_TITLE,"Bento's letter, I","Carta de Bento, I"
-NOTEBOOK_FOUND_BENTO_1_DETAIL,Letter · Woodcutter's hut,Carta · Cabana do lenhador
-NOTEBOOK_FOUND_BENTO_1_BODY,"Marta, the woodcutter let me sleep by his fire. He called his dog three names tonight. None was right.","Marta, o lenhador me deixou dormir junto ao fogo. Chamou o cachorro por três nomes hoje. Nenhum era o certo."
+NOTEBOOK_FOUND_BENTO_1_DETAIL,Letter · Root caves,Carta · Grutas de raízes
+NOTEBOOK_FOUND_BENTO_1_BODY,"Marta, I slept in a cave under the roots. Water dripped all night. I counted the drops instead of sheep.","Marta, dormi numa gruta debaixo das raízes. Pingou a noite toda. Contei as gotas em vez de carneiros."
 NOTEBOOK_FOUND_BENTO_2_TITLE,"Bento's letter, II","Carta de Bento, II"
 NOTEBOOK_FOUND_BENTO_2_DETAIL,Letter · Roots well,Carta · Poço das raízes
 NOTEBOOK_FOUND_BENTO_2_BODY,The mills here turn only while someone remembers the wind. I sold two pots and forgot the price of both.,Os moinhos daqui só giram enquanto alguém lembra do vento. Vendi duas panelas e esqueci o preço das duas.

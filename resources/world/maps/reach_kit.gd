@@ -47,6 +47,10 @@ func player_data() -> PlayerData:
 			_data.unlocked_player_skills[skill] = true
 		for which: Enums.Song in milestone.songs:
 			_data.learned_songs[which] = true
+		for which: Enums.Song in milestone.first_halves:
+			SongHalves.teach(_data, which, Enums.SongHalf.FIRST)
+		for which: Enums.Song in milestone.second_halves:
+			SongHalves.teach(_data, which, Enums.SongHalf.SECOND)
 		for item: Enums.PlayerItem in milestone.items:
 			_data.owned_items[item] = true
 		for guardian: Enums.Guardian in milestone.restored_guardians:

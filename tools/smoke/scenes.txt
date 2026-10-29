@@ -130,3 +130,9 @@ res://scenes/characters/creatures/crab/crab.tscn
 res://scenes/characters/creatures/hornet/hornet.tscn
 res://scenes/characters/creatures/bat/bat.tscn
 res://scenes/characters/creatures/spider/spider.tscn
+# Teaching creatures (CORE-04) and their HUD balloon.
+res://scenes/world/creatures/snail/snail.tscn
+res://scenes/world/creatures/thrush/thrush.tscn
+res://scenes/world/creatures/kestrel/kestrel.tscn
+res://scenes/world/creatures/lizard/lizard.tscn
+res://scenes/ui/teacher_balloon/teacher_balloon.tscn

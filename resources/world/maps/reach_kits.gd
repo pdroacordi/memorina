@@ -11,11 +11,16 @@ const DEFAULT_PATH := "res://resources/world/maps/reach_kits.tres"
 static func load_default() -> ReachKits:
 	return load(DEFAULT_PATH) as ReachKits
 
-## The listed kit holding exactly `kit`'s milestones and `milestone`, or null.
+## The listed kit holding `kit`'s milestones, `milestone`, and beyond them only half milestones (a region's halves
+## ride along with its guardian's milestone), or null.
 func next(kit: ReachKit, milestone: ReachMilestone) -> ReachKit:
+	if milestone.is_half():
+		return null
 	for other: ReachKit in kits:
-		if other.milestones.size() == kit.milestones.size() + 1 and other.has(milestone) \
-				and kit.milestones.all(func(held: ReachMilestone) -> bool: return other.has(held)):
+		if not other.has(milestone) or not kit.milestones.all(func(held: ReachMilestone) -> bool: return other.has(held)):
+			continue
+		var extra := other.milestones.filter(func(held: ReachMilestone) -> bool: return held != milestone and not kit.has(held))
+		if extra.all(func(held: ReachMilestone) -> bool: return held.is_half()):
 			return other
 	return null
 

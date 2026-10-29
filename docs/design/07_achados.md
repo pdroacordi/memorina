@@ -12,7 +12,7 @@ Regra da escolha: o caderno fica em outra região que a criatura ("Book in anoth
 
 | Canção | Criatura (CORE-04) | Caderno: lugar | Quem chega sem a canção |
 |---|---|---|---|
-| Redoma | Lago Gelado | `woods_root_caves_alcove` (Grutas de Raízes, a recompensa da ponte de raízes) | kit `woods` (sem Redoma) |
+| Redoma | Lago Gelado | `woods_hut_letter` (Cabana do lenhador, o mezanino) | kit `memorina` (nenhuma canção) |
 | Chuva | Bosque Florido | `lake_shore_far_niche` (o segredo da margem distante) | kit `lake` (sem Chuva) |
 | Vendaval | Pomar dos Ventos | `caldera_seesaw_ledge` (A Gangorra) | kit `both` (sem Vendaval) |
 | Solstício | Caldeira de Verão | `orchard_ridge_letter` (Crista do Vento, pela escalada do Penhasco) | kit `woods_orchards` (sem Solstício) |
@@ -21,10 +21,12 @@ Cada caderno é de um portador diferente, de outra era. O título nunca diz o no
 
 | Lugar | Título (en / pt) | Linha (en / pt) | Texto (en / pt) |
 |---|---|---|---|
-| `woods_root_caves_alcove` | A winter hand's songbook / Caderno de uma mão de inverno | Songbook · Root caves / Caderno · Grutas de raízes | Only the end of it. Nothing gets in under it; anyone may leave. The start is sung by the frozen lake. / Só o fim. Nada entra debaixo dela; quem quiser, sai. O começo é cantado junto ao lago gelado. |
+| `woods_hut_letter` | A winter hand's songbook / Caderno de uma mão de inverno | Songbook · Woodcutter's hut / Caderno · Cabana do lenhador | Only the end of it. Nothing gets in under it; anyone may leave. The start is sung by the frozen lake. / Só o fim. Nada entra debaixo dela; quem quiser, sai. O começo é cantado junto ao lago gelado. |
 | `lake_shore_far_niche` | An earthy hand's songbook / Caderno de uma mão de terra | Songbook · Far shore / Caderno · Margem distante | The end of the song that brings rain and lets it go. Its start is sung in the spring woods. / O fim da canção que traz a chuva e a deixa ir. O começo é cantado no bosque da primavera. |
 | `caldera_seesaw_ledge` | A restless hand's songbook / Caderno de uma mão inquieta | Songbook · The seesaw / Caderno · A gangorra | Turn your face and the wind goes with you. I never stood still long enough to learn the start. / Vire o rosto e o vento vai junto. Nunca parei quieto o bastante para aprender o começo. |
 | `orchard_ridge_letter` | An old hand's songbook / Caderno de uma mão antiga | Songbook · Wind ridge / Caderno · Crista do vento | For the longest day, when every other song needs more time. The start is kept where the sun stands still. / Para o dia mais longo, quando toda canção precisa de mais tempo. O começo fica onde o sol para. |
+
+**Troca (usuário, 2026-10-29, CORE-04): "Move the Redoma book (Recommended)" e "Approve the swap (Recommended)".** Com a primeira metade da Redoma no caracol do Lago, a Caldeira (que exige a Redoma inteira na cisterna) deixava de abrir para quem faz o Lago primeiro, porque o caderno estava atrás da parede de raízes (Enraizar). O caderno da Redoma foi para a cabana do lenhador, alcançada sem canção nenhuma, e a primeira carta de Bento foi para as Grutas de Raízes com texto novo.
 
 ## Os 13 achados
 
@@ -33,7 +35,7 @@ Um vendedor ambulante escreve para Marta, em casa, enquanto esquece o caminho de
 
 | Lugar | Título (en / pt) | Linha (en / pt) | Texto (en / pt) |
 |---|---|---|---|
-| `woods_hut_letter` | Bento's letter, I / Carta de Bento, I | Letter · Woodcutter's hut / Carta · Cabana do lenhador | Marta, the woodcutter let me sleep by his fire. He called his dog three names tonight. None was right. / Marta, o lenhador me deixou dormir junto ao fogo. Chamou o cachorro por três nomes hoje. Nenhum era o certo. |
+| `woods_root_caves_alcove` | Bento's letter, I / Carta de Bento, I | Letter · Root caves / Carta · Grutas de raízes | Marta, I slept in a cave under the roots. Water dripped all night. I counted the drops instead of sheep. / Marta, dormi numa gruta debaixo das raízes. Pingou a noite toda. Contei as gotas em vez de carneiros. |
 | `orchard_well_catch` | Bento's letter, II / Carta de Bento, II | Letter · Roots well / Carta · Poço das raízes | The mills here turn only while someone remembers the wind. I sold two pots and forgot the price of both. / Os moinhos daqui só giram enquanto alguém lembra do vento. Vendi duas panelas e esqueci o preço das duas. |
 | `caldera_long_corridor_alcove` | Bento's letter, III / Carta de Bento, III | Letter · Long corridor / Carta · Corredor longo | Hot, even in the grey. I wrote your name inside my hat, Marta, so I can read it every morning. / Faz calor até no cinza. Escrevi seu nome dentro do chapéu, Marta, para ler toda manhã. |
 | `village_tavern_cellar` | A letter to Bento / Uma carta para Bento | Letter · Tavern cellar / Carta · Adega | Bento, your letters come, but you never do. I keep them down here, where it stays cool. Come home. M. / Bento, suas cartas chegam, mas você não. Guardo todas aqui embaixo, onde é fresco. Volte. M. |

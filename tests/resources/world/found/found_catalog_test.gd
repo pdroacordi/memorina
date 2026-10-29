@@ -5,7 +5,7 @@ class_name FoundCatalogTest extends GdUnitTestSuite
 const SONGS := preload("res://resources/songs/song_catalog.tres")
 const LETTER := preload("res://assets/sprites/world/pickups/letter.png")
 const BOOKS: Dictionary[StringName, Enums.Song] = {
-	&"woods_root_caves_alcove": Enums.Song.BELL_JAR,
+	&"woods_hut_letter": Enums.Song.BELL_JAR,
 	&"lake_shore_far_niche": Enums.Song.RAIN,
 	&"caldera_seesaw_ledge": Enums.Song.GALE,
 	&"orchard_ridge_letter": Enums.Song.SOLSTICE,

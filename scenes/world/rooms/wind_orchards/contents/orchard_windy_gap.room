@@ -4,6 +4,7 @@
 ; cocoon (col 6) on the shelf, an eastward gale from the shelf's west end or the floor blows it onto the plate at col 10, eight cells from
 ; the gate (col 2); behind it, the alcove (col 1) opens west at rows 6-8 under the shelf into orchard_ridge, the puzzle's reward (WORLD-35).
 ; From the ridge the gate stays shut once the cocoon goes back to its rope; the ridge's drop and the crag lead down.
+; The kestrel teacher (K, 38,8) on the east ledge where Ivo lands, before the crossing (CORE-04, "The plan's picks (Recommended)", user, 2026-10-29).
 
 [room]
 origin = 0, 0
@@ -18,7 +19,7 @@ tileset = wind_orchards
 #SSSSSSSSSSS...........................#
 .......................................#
 .......................................#
-..G.......................W............#
+..G.......................W...........K#
 ################....................####
 ################....................####
 ################....................####

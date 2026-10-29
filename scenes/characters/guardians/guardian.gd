@@ -79,7 +79,7 @@ var _sprite_rest: Vector2 = Vector2.ZERO
 
 @onready var _ai                : GuardianAI = $AI
 @onready var _locomotion        : LocomotionComponent = $Locomotion
-@onready var _call              : GuardianCall = $Call
+@onready var _call              : PhraseCall = $Call
 @onready var _arena_trigger     : PlayerProximityTrigger = $ArenaTrigger
 @onready var _shield            : GreyhushShield = $GreyhushShield
 @onready var _hitbox            : Hitbox = $Hitbox

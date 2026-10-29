@@ -6,13 +6,19 @@ const ROOMS_DIR := "res://scenes/world/rooms"
 const TRANSLATIONS := "res://i18n/translations.csv"
 ## Corrupted creatures' legend symbols (systems/creatures).
 const CREATURES: Array[String] = ["B", "J", "C", "N", "A", "Z"]
-## Rooms no creature is placed in: teachers' rooms, the guardians' arenas, the lighthouse, and the fields Ivo crosses
+## Rooms no corrupted creature is placed in: teachers' rooms, the guardians' arenas, the lighthouse, and the fields Ivo crosses
 ## before he owns the sword (architecture/corrupted-creatures, "Placements").
 const NO_CREATURE_ROOMS: Array[String] = ["woods_edge", "lake_fishing_village", "orchard_windy_gap", "caldera_open_crater",
 	"threshold_fields", "bloom_hollow", "lake_frost_arena", "orchard_arena", "caldera_arena", "lighthouse_base",
 	"lighthouse_interior", "lighthouse_top"]
 ## Open cells under a hanging creature: a bat needs room to swoop, a spider only to let itself down over Ivo.
 const HANG_CLEARANCE := {"A": 5, "Z": 3}
+## Teaching creatures' symbols and the one room each stands in (systems/teaching-creatures; user, 2026-10-29).
+const TEACHERS := {"U": "lake_fishing_village", "Y": "woods_edge", "K": "orchard_windy_gap", "Q": "caldera_open_crater"}
+## Symbols a song acts on: an open echo admits only the teacher's phrase, so none lies in its reach.
+const SONG_PUZZLES: Array[String] = ["P", "G", "L", "T", "H", "F", "D", "V", "O"]
+## A teacher's reach in cells from its feet cell (CreatureLesson.reach: 4 cells either side, 3 rows up and down).
+const TEACHER_REACH := Vector2i(4, 3)
 ## In the world (trials excluded): 1 boar, 3 crabs, 2 bats, 3 spiders, 3 hornets, 4 scorpions (the bait among them).
 const WORLD_CREATURES := {"B": 1, "C": 3, "A": 2, "Z": 3, "N": 3, "J": 4}
 
@@ -85,6 +91,47 @@ func test_creatures_hang_clear_and_keep_out_of_the_rooms_they_must_not_enter() -
 	assert_dict(counts).is_equal(WORLD_CREATURES)
 
 ## A slot's kind is a member of RewardSlot.Kind (architecture/reward-slots-reserve-their-place-in-the-room-text).
+## Each teacher stands once in the world, in its room, on a floor, with no song puzzle in its reach.
+func test_each_teacher_stands_once_on_a_floor_with_no_puzzle_in_reach() -> void:
+	var legend := RoomLegend.load_default()
+	var problems := PackedStringArray()
+	var found := {}
+	for path: String in _room_files(ROOMS_DIR):
+		var room := path.get_file().get_basename()
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path).map
+		for placed: Dictionary in map.entities:
+			var symbol: String = placed.symbol
+			if not TEACHERS.has(symbol):
+				continue
+			found[symbol] = int(found.get(symbol, 0)) + 1
+			var cell: Vector2i = placed.cell
+			if room != TEACHERS[symbol]:
+				problems.append("%s: teacher %s belongs in %s" % [path, symbol, TEACHERS[symbol]])
+			if map.is_solid(cell) or not (map.is_solid(cell + Vector2i.DOWN) or map.is_platform(cell + Vector2i.DOWN)):
+				problems.append("%s: teacher %s at %s stands on nothing" % [path, symbol, cell - map.origin])
+			for at: Vector2i in _puzzle_cells(map):
+				var offset := at - cell
+				if absi(offset.x) <= TEACHER_REACH.x and absi(offset.y) <= TEACHER_REACH.y:
+					problems.append("%s: teacher %s at %s has a song puzzle in reach at %s" % [path, symbol, cell - map.origin, at - map.origin])
+	for symbol: String in TEACHERS:
+		if int(found.get(symbol, 0)) != 1:
+			problems.append("teacher %s placed %d times" % [symbol, int(found.get(symbol, 0))])
+	assert_array(Array(problems)).is_empty()
+
+## Cells a song acts on: puzzle pieces, freezable water and the reaches Chuva or a Redoma shell raise water to.
+func _puzzle_cells(map: RoomMap) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = []
+	for placed: Dictionary in map.entities:
+		if placed.symbol in SONG_PUZZLES:
+			cells.append(placed.cell)
+	var grids: Array[PackedVector2Array] = [map.water.get("f", PackedVector2Array())]
+	grids.append_array(map.reach.values())
+	grids.append_array(map.shell_reach.values())
+	for grid: PackedVector2Array in grids:
+		for at: Vector2 in grid:
+			cells.append(Vector2i(at))
+	return cells
+
 func test_every_reward_slot_has_a_known_kind() -> void:
 	var legend := RoomLegend.load_default()
 	var problems := PackedStringArray()

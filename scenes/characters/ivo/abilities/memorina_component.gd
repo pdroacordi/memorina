@@ -18,6 +18,8 @@ signal song_guessed(song: Song)
 signal song_played(song: Song)
 ## The guardian's phrase was answered without a performance (docs/design/02_mecanicas.md section 3).
 signal call_answered(song: Song)
+## A teacher's phrase was echoed whole; the instrument stays drawn (systems/teaching-creatures).
+signal phrase_echoed
 
 enum State { SHEATHED, DRAWN, PERFORMING }
 
@@ -31,11 +33,25 @@ var call_song: Song = null:
 	set(value):
 		if value == call_song:
 			return
+		assert(value == null or _echo == null, "An echo and a guardian's call are exclusive")
 		call_song = value
 		if _state == State.DRAWN:
 			_install_candidates()
 
+## A teacher's phrase to echo, or empty; while set it is the only thing the instrument plays.
+var echo_phrase: Array[Enums.Note] = []:
+	set(value):
+		if value == echo_phrase:
+			return
+		assert(value.is_empty() or call_song == null, "An echo and a guardian's call are exclusive")
+		echo_phrase = value.duplicate()
+		_echo = null if echo_phrase.is_empty() else PhraseEcho.new(echo_phrase)
+		_matcher.reset()
+		if _state == State.DRAWN:
+			_install_candidates()
+
 var _matcher := SongMatcher.new()
+var _echo: PhraseEcho = null
 var _state := State.SHEATHED
 var _performing: Song = null
 var _known_songs: Array[Song] = []
@@ -82,6 +98,8 @@ func sheathe() -> void:
 		return
 	_state = State.SHEATHED
 	_matcher.reset()
+	if _echo != null:
+		_echo.reset()
 	sheathed.emit()
 
 ## Interrupts the sequence or performance when control is taken away.
@@ -89,7 +107,8 @@ func interrupt() -> void:
 	if not is_drawn():
 		return
 	# Emit failure before sheathed hides the HUD.
-	if is_performing() or not _matcher.buffer().is_empty():
+	var echoing := _echo != null and _echo.count() > 0 and not _echo.is_complete()
+	if is_performing() or not _matcher.buffer().is_empty() or echoing:
 		sequence_failed.emit()
 	_performing = null
 	_state = State.DRAWN
@@ -97,6 +116,9 @@ func interrupt() -> void:
 
 func receive_note(note: Enums.Note) -> void:
 	if _state != State.DRAWN:
+		return
+	if _echo != null:
+		_receive_echo_note(note)
 		return
 	match _matcher.feed(note):
 		SongMatcher.Result.MATCHED:
@@ -134,6 +156,17 @@ func finish_performance() -> void:
 	_state = State.DRAWN
 	song_played.emit(song)
 	sheathe()
+
+func _receive_echo_note(note: Enums.Note) -> void:
+	match _echo.feed(note):
+		PhraseEcho.Result.RIGHT:
+			note_played.emit(note)
+		PhraseEcho.Result.COMPLETE:
+			note_played.emit(note)
+			phrase_echoed.emit()
+		PhraseEcho.Result.WRONG:
+			note_rejected.emit(note)
+			sequence_failed.emit()
 
 ## A guardian's call admits only its phrase; otherwise the learned songs and the half-known ones.
 func _install_candidates() -> void:

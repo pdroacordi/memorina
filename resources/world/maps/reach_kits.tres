@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="ReachKits" load_steps=4 format=3]
+[gd_resource type="Resource" script_class="ReachKits" format=3]
 
 [ext_resource type="Script" path="res://resources/world/maps/reach_kits.gd" id="1_kits"]
 [ext_resource type="Script" path="res://resources/world/maps/reach_kit.gd" id="2_kit"]
@@ -28,35 +28,91 @@ script = ExtResource("3_milestone")
 id = &"bloom"
 room = &"bloom_hollow"
 skills = Array[int]([0])
-songs = Array[int]([6, 7])
+songs = Array[int]([6])
 restored_guardians = Array[int]([1])
-note = "Bloom Guardian: Enraizar + double jump; Chuva stands in for its two halves (SONG-14): its songbook lies in lake_shore_far_niche (STORY-06); the first half waits for the woods creature (CORE-04), which adds the half milestones."
+note = "Bloom Guardian: Enraizar + double jump. Chuva is learned in halves (SONG-14): the thrush in woods_edge (half_rain_first, CORE-04) and the songbook in lake_shore_far_niche (half_rain_second, STORY-06)."
 
 [sub_resource type="Resource" id="frost"]
 script = ExtResource("3_milestone")
 id = &"frost"
 room = &"lake_frost_arena"
 skills = Array[int]([2])
-songs = Array[int]([0, 1])
+songs = Array[int]([0])
 restored_guardians = Array[int]([0])
-note = "Frost Guardian: Congelar + roll; Redoma stands in for its two halves (SONG-14): its songbook lies in woods_root_caves_alcove (STORY-06); the first half waits for the lake creature (CORE-04), which adds the half milestones. The roll gates nothing."
+note = "Frost Guardian: Congelar + roll. Redoma is learned in halves (SONG-14): the snail in lake_fishing_village (half_bell_jar_first, CORE-04) and the songbook in woods_hut_letter (half_bell_jar_second, STORY-06; moved there 2026-10-29 so a Lake-first player can enter the Caldera, user: \"Move the Redoma book (Recommended)\"). The roll gates nothing."
 
 [sub_resource type="Resource" id="autumn"]
 script = ExtResource("3_milestone")
 id = &"autumn"
 room = &"orchard_arena"
 skills = Array[int]([1])
-songs = Array[int]([4, 5])
+songs = Array[int]([4])
 restored_guardians = Array[int]([2])
-note = "Autumn guardian: Soltar + wall climb; Vendaval stands in for its two halves (SONG-14): its songbook lies in caldera_seesaw_ledge (STORY-06); the first half waits for the orchard creature (CORE-04). Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given)."
+note = "Autumn guardian: Soltar + wall climb. Vendaval is learned in halves (SONG-14): the kestrel in orchard_windy_gap (half_gale_first, CORE-04) and the songbook in caldera_seesaw_ledge (half_gale_second, STORY-06). Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given)."
 
 [sub_resource type="Resource" id="summer"]
 script = ExtResource("3_milestone")
 id = &"summer"
 room = &"caldera_arena"
-songs = Array[int]([2, 3])
+songs = Array[int]([2])
 restored_guardians = Array[int]([3])
-note = "Summer guardian: Sombra; Solsticio stands in for its two halves (SONG-14): its songbook lies in orchard_ridge_letter (STORY-06); the first half waits for the Caldera creature (CORE-04). Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given). Its flag opens the sun stair grate (guardian_restored_summer.tres)."
+note = "Summer guardian: Sombra. Solsticio is learned in halves (SONG-14): the lizard in caldera_open_crater (half_solstice_first, CORE-04) and the songbook in orchard_ridge_letter (half_solstice_second, STORY-06). Not built (GRD-04): no fight sets its restored flag yet, so its arena is no exit (ReachKitCheck.given). Its flag opens the sun stair grate (guardian_restored_summer.tres)."
+
+[sub_resource type="Resource" id="half_bell_jar_second"]
+script = ExtResource("3_milestone")
+id = &"half_bell_jar_second"
+room = &"woods_hut"
+second_halves = Array[int]([1])
+note = "Redoma's songbook (woods_hut_letter, STORY-06): the woodcutter's hut needs no song, so it rides along with the memorina kit and every kit after it."
+
+[sub_resource type="Resource" id="half_rain_first"]
+script = ExtResource("3_milestone")
+id = &"half_rain_first"
+room = &"woods_edge"
+first_halves = Array[int]([7])
+note = "The thrush teaches Chuva's first half (CORE-04); rides along with the woods kit, its region's guardian."
+
+[sub_resource type="Resource" id="half_bell_jar_first"]
+script = ExtResource("3_milestone")
+id = &"half_bell_jar_first"
+room = &"lake_fishing_village"
+first_halves = Array[int]([1])
+note = "The snail teaches Redoma's first half (CORE-04); rides along with the lake kit, its region's guardian."
+
+[sub_resource type="Resource" id="half_rain_second"]
+script = ExtResource("3_milestone")
+id = &"half_rain_second"
+room = &"lake_shore"
+second_halves = Array[int]([7])
+note = "Chuva's songbook (lake_shore_far_niche, STORY-06); rides along with the lake kit."
+
+[sub_resource type="Resource" id="half_gale_first"]
+script = ExtResource("3_milestone")
+id = &"half_gale_first"
+room = &"orchard_windy_gap"
+first_halves = Array[int]([5])
+note = "The kestrel teaches Vendaval's first half (CORE-04); rides along with the orchards kit, its region's guardian."
+
+[sub_resource type="Resource" id="half_solstice_second"]
+script = ExtResource("3_milestone")
+id = &"half_solstice_second"
+room = &"orchard_ridge"
+second_halves = Array[int]([3])
+note = "Solsticio's songbook (orchard_ridge_letter, STORY-06); rides along with the orchards kit."
+
+[sub_resource type="Resource" id="half_solstice_first"]
+script = ExtResource("3_milestone")
+id = &"half_solstice_first"
+room = &"caldera_open_crater"
+first_halves = Array[int]([3])
+note = "The lizard teaches Solsticio's first half (CORE-04); rides along with the caldera kit, its region's guardian."
+
+[sub_resource type="Resource" id="half_gale_second"]
+script = ExtResource("3_milestone")
+id = &"half_gale_second"
+room = &"caldera_seesaw"
+second_halves = Array[int]([5])
+note = "Vendaval's songbook (caldera_seesaw_ledge, STORY-06); rides along with the caldera kit."
 
 [sub_resource type="Resource" id="kit_base"]
 script = ExtResource("2_kit")
@@ -66,52 +122,52 @@ milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResourc
 [sub_resource type="Resource" id="kit_memorina"]
 script = ExtResource("2_kit")
 id = &"memorina"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("half_bell_jar_second")])
 
 [sub_resource type="Resource" id="kit_woods"]
 script = ExtResource("2_kit")
 id = &"woods"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("half_bell_jar_second"), SubResource("bloom"), SubResource("half_rain_first")])
 
 [sub_resource type="Resource" id="kit_lake"]
 script = ExtResource("2_kit")
 id = &"lake"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("frost")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("half_bell_jar_second"), SubResource("frost"), SubResource("half_bell_jar_first"), SubResource("half_rain_second")])
 
 [sub_resource type="Resource" id="kit_both"]
 script = ExtResource("2_kit")
 id = &"both"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("frost")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("half_bell_jar_second"), SubResource("bloom"), SubResource("half_rain_first"), SubResource("frost"), SubResource("half_bell_jar_first"), SubResource("half_rain_second")])
 
 [sub_resource type="Resource" id="kit_woods_orchards"]
 script = ExtResource("2_kit")
 id = &"woods_orchards"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("autumn")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("half_bell_jar_second"), SubResource("bloom"), SubResource("half_rain_first"), SubResource("autumn"), SubResource("half_gale_first"), SubResource("half_solstice_second")])
 
 [sub_resource type="Resource" id="kit_woods_orchards_caldera"]
 script = ExtResource("2_kit")
 id = &"woods_orchards_caldera"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("autumn"), SubResource("summer")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("half_bell_jar_second"), SubResource("bloom"), SubResource("half_rain_first"), SubResource("autumn"), SubResource("half_gale_first"), SubResource("half_solstice_second"), SubResource("summer"), SubResource("half_solstice_first"), SubResource("half_gale_second")])
 
 [sub_resource type="Resource" id="kit_lake_caldera"]
 script = ExtResource("2_kit")
 id = &"lake_caldera"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("frost"), SubResource("summer")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("half_bell_jar_second"), SubResource("frost"), SubResource("half_bell_jar_first"), SubResource("half_rain_second"), SubResource("summer"), SubResource("half_solstice_first"), SubResource("half_gale_second")])
 
 [sub_resource type="Resource" id="kit_both_caldera"]
 script = ExtResource("2_kit")
 id = &"both_caldera"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("summer")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("half_bell_jar_second"), SubResource("bloom"), SubResource("half_rain_first"), SubResource("frost"), SubResource("half_bell_jar_first"), SubResource("half_rain_second"), SubResource("summer"), SubResource("half_solstice_first"), SubResource("half_gale_second")])
 
 [sub_resource type="Resource" id="kit_orchards"]
 script = ExtResource("2_kit")
 id = &"orchards"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("autumn")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("half_bell_jar_second"), SubResource("bloom"), SubResource("half_rain_first"), SubResource("frost"), SubResource("half_bell_jar_first"), SubResource("half_rain_second"), SubResource("autumn"), SubResource("half_gale_first"), SubResource("half_solstice_second")])
 
 [sub_resource type="Resource" id="kit_caldera"]
 script = ExtResource("2_kit")
 id = &"caldera"
-milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("bloom"), SubResource("frost"), SubResource("autumn"), SubResource("summer")])
+milestones = Array[ExtResource("3_milestone")]([SubResource("sword"), SubResource("opening"), SubResource("memorina"), SubResource("half_bell_jar_second"), SubResource("bloom"), SubResource("half_rain_first"), SubResource("frost"), SubResource("half_bell_jar_first"), SubResource("half_rain_second"), SubResource("autumn"), SubResource("half_gale_first"), SubResource("half_solstice_second"), SubResource("summer"), SubResource("half_solstice_first"), SubResource("half_gale_second")])
 
 [resource]
 script = ExtResource("1_kits")

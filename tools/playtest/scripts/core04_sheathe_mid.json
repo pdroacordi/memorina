@@ -1,0 +1,235 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  944,
+  -1672
+ ],
+ "max_duration": 15.0,
+ "steps": [
+  {
+   "t": 2.3,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.38,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.6,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.68,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.08,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.1,
+   "screenshot": "a_two_003.10"
+  },
+  {
+   "t": 3.1,
+   "log": "a_two3.10"
+  },
+  {
+   "t": 3.5,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 3.58,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 3.6,
+   "screenshot": "b_sheathed_003.60"
+  },
+  {
+   "t": 3.6,
+   "log": "b_sheathed3.60"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "c_wait_005.00"
+  },
+  {
+   "t": 5.0,
+   "log": "c_wait5.00"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "c_wait_006.00"
+  },
+  {
+   "t": 6.0,
+   "log": "c_wait6.00"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "c_wait_007.00"
+  },
+  {
+   "t": 7.0,
+   "log": "c_wait7.00"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "c_wait_008.00"
+  },
+  {
+   "t": 8.0,
+   "log": "c_wait8.00"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "c_wait_009.00"
+  },
+  {
+   "t": 9.0,
+   "log": "c_wait9.00"
+  },
+  {
+   "t": 9.3,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 9.38,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 9.7,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 9.78,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 9.8,
+   "screenshot": "d_first_again_009.80"
+  },
+  {
+   "t": 9.8,
+   "log": "d_first_again9.80"
+  },
+  {
+   "t": 10.1,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 10.18,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 10.2,
+   "screenshot": "e_second_010.20"
+  },
+  {
+   "t": 10.2,
+   "log": "e_second10.20"
+  },
+  {
+   "t": 10.5,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 10.58,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 10.6,
+   "screenshot": "f_third_010.60"
+  },
+  {
+   "t": 10.6,
+   "log": "f_third10.60"
+  },
+  {
+   "t": 11.0,
+   "screenshot": "g_after_011.00"
+  },
+  {
+   "t": 11.0,
+   "log": "g_after11.00"
+  },
+  {
+   "t": 11.5,
+   "screenshot": "g_after_011.50"
+  },
+  {
+   "t": 11.5,
+   "log": "g_after11.50"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "g_after_012.00"
+  },
+  {
+   "t": 12.0,
+   "log": "g_after12.00"
+  },
+  {
+   "t": 12.5,
+   "screenshot": "g_after_012.50"
+  },
+  {
+   "t": 12.5,
+   "log": "g_after12.50"
+  },
+  {
+   "t": 13.0,
+   "screenshot": "g_after_013.00"
+  },
+  {
+   "t": 13.0,
+   "log": "g_after13.00"
+  },
+  {
+   "t": 13.5,
+   "screenshot": "g_after_013.50"
+  },
+  {
+   "t": 13.5,
+   "log": "g_after13.50"
+  },
+  {
+   "t": 14.0,
+   "screenshot": "g_after_014.00"
+  },
+  {
+   "t": 14.0,
+   "log": "g_after14.00"
+  },
+  {
+   "t": 14.5,
+   "screenshot": "g_after_014.50"
+  },
+  {
+   "t": 14.5,
+   "log": "g_after14.50"
+  }
+ ]
+}

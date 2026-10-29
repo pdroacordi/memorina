@@ -67,6 +67,8 @@ The plan, its options and the build order: [`architecture/corrupted-creatures`](
 - **The front guard** (crab): with `EnemyStats.front_guard`, `Enemy._on_hit_received` asks `HitGuard.blocks(facing, body_rect(), source.global_position)`: a hit from ahead whose source is below the body's top is blocked: no damage, no knockback, no cancel, a white flash (`BLOCK_FLASH`, an over-bright modulate the shader multiplies in), and `blocked` is emitted. Ivo's hitbox origin is his feet, so a pogo (feet over the shell) and a hit from behind land. Ivo gets no recoil (`Player` bounces only on a pogo). User, 2026-10-29: "1 damage; shell blocks (Recommended)".
 - **A hit wakes** a creature drawn asleep (the bat, the spider) before its knockback, so home is where it was struck. **Wind carries only an awake creature**: a hanging bat or a creature not yet gathered stays where it was placed.
 
+**Teachers are not creatures of this system** (CORE-04, `systems/teaching-creatures`): a `TeachingCreature` is a `Node2D` with no body, health, hurtbox or `CorruptionEdge`, so it carries no unshielded mark and its own SILHOUETTE `GreyhushShield` colours it. Their rooms hold no corrupted creature (`room_files_test.NO_CREATURE_ROOMS`).
+
 ## The corruption edge
 
 `corruption_edge.gdshaderinc` (canvas_item) holds the uniforms and the pure helpers; `corruption_edge.gdshader` is the fragment every species uses.

@@ -303,3 +303,76 @@ func test_a_call_ignores_half_known_songs() -> void:
 	_memorina.receive_note(DOWN)
 	_memorina.receive_note(UP)
 	await assert_signal(monitor).is_emitted("sequence_failed")
+
+#############################################
+##  A   T E A C H E R ' S   E C H O        ##
+#############################################
+
+func _bell_jar_phrase() -> Array[Enums.Note]:
+	return [LEFT, RIGHT, LEFT]
+
+func test_an_echo_admits_only_its_phrase() -> void:
+	_draw()
+	_memorina.echo_phrase = _bell_jar_phrase()
+	var monitor := monitor_signals(_memorina)
+	_memorina.receive_note(UP)
+	await assert_signal(monitor).is_emitted("note_rejected", [UP])
+	await assert_signal(monitor).is_emitted("sequence_failed")
+
+func test_echo_right_notes_play() -> void:
+	_draw()
+	_memorina.echo_phrase = _bell_jar_phrase()
+	var monitor := monitor_signals(_memorina)
+	_memorina.receive_note(LEFT)
+	await assert_signal(monitor).is_emitted("note_played", [LEFT])
+	await assert_signal(monitor).is_not_emitted("sequence_failed")
+
+func test_a_complete_echo_emits_phrase_echoed_and_stays_drawn() -> void:
+	_draw()
+	_memorina.echo_phrase = _bell_jar_phrase()
+	var monitor := monitor_signals(_memorina)
+	for note: Enums.Note in _bell_jar_phrase():
+		_memorina.receive_note(note)
+	await assert_signal(monitor).is_emitted("phrase_echoed")
+	await assert_signal(monitor).is_not_emitted("song_matched")
+	assert_bool(_memorina.is_drawn()).is_true()
+	assert_bool(_memorina.is_performing()).is_false()
+
+func test_notes_after_a_complete_echo_are_ignored() -> void:
+	_draw()
+	_memorina.echo_phrase = _bell_jar_phrase()
+	for note: Enums.Note in _bell_jar_phrase():
+		_memorina.receive_note(note)
+	var monitor := monitor_signals(_memorina)
+	_memorina.receive_note(UP)
+	await assert_signal(monitor).is_not_emitted("note_played")
+	await assert_signal(monitor).is_not_emitted("note_rejected")
+
+## Clearing the echo puts the learned songs back.
+func test_clearing_the_echo_reinstalls_the_songs() -> void:
+	_draw()
+	_memorina.echo_phrase = _bell_jar_phrase()
+	_memorina.echo_phrase = []
+	var monitor := monitor_signals(_memorina)
+	_play_freeze()
+	await assert_signal(monitor).is_emitted("song_matched", [_freeze])
+
+func test_interrupting_an_echo_in_progress_fails() -> void:
+	_draw()
+	_memorina.echo_phrase = _bell_jar_phrase()
+	_memorina.receive_note(LEFT)
+	var monitor := monitor_signals(_memorina)
+	_memorina.interrupt()
+	await assert_signal(monitor).is_emitted("sequence_failed")
+	await assert_signal(monitor).is_emitted("sheathed")
+
+func test_sheathing_resets_the_echo() -> void:
+	_draw()
+	_memorina.echo_phrase = _bell_jar_phrase()
+	for note: Enums.Note in _bell_jar_phrase():
+		_memorina.receive_note(note)
+	_memorina.sheathe()
+	_draw()
+	var monitor := monitor_signals(_memorina)
+	_memorina.receive_note(LEFT)
+	await assert_signal(monitor).is_emitted("note_played", [LEFT])

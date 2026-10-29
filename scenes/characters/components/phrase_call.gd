@@ -1,6 +1,6 @@
-class_name GuardianCall extends Node
+class_name PhraseCall extends Node
 
-## Plays a guardian's note sequence and reports note and phrase completion.
+## Plays a phrase of notes (a guardian's call, a teacher's song) and reports each note and the end.
 
 signal note_sounded(index: int)
 signal finished

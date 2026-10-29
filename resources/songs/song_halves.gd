@@ -56,6 +56,11 @@ static func missing(data: PlayerData, song: int) -> Enums.SongHalf:
 	return Enums.SongHalf.NONE
 
 
+## Teaching `half` ends in a lesson: it completes a half-known song, or it is the half Ivo guessed.
+static func completes(data: PlayerData, song: int, half: Enums.SongHalf) -> bool:
+	return missing(data, song) == half or data.guessed_halves[song] == half
+
+
 ## Which of the six notes the player knows: all of them once the song is learned.
 static func known_mask(data: PlayerData, song: int) -> Array[bool]:
 	if data.learned_songs[song]:

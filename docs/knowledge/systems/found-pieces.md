@@ -6,7 +6,7 @@ status: active
 tags: [story-06, found, collectibles, songbook, reward-slots, pickups, notebook, save, i18n]
 related: [architecture/found-pieces, architecture/reward-slots-reserve-their-place-in-the-room-text, architecture/half-songs, systems/pickups, systems/notebook, systems/songs-and-the-memorina, systems/life-benches-death, systems/rooms]
 created: 2026-10-28
-updated: 2026-10-28
+updated: 2026-10-29
 source_files:
   - resources/world/found/found_piece.gd
   - resources/world/found/found_catalog.gd
@@ -66,7 +66,11 @@ User decisions (2026-10-28): taking a letter, "Quill only (Recommended)": the pi
 
 ## Reachability
 
-Kits are unchanged: the four second songs still stand in for their halves (`reach_kits.tres` notes name each book's slot). CORE-04 must add first- and second-half milestones and drop the second songs from the guardian milestones in one change. `room_kit_test.test_no_songbook_needs_its_own_song` pins design 07's rule.
+The kits model the halves (CORE-04): each songbook is a `second_halves` milestone in its room, riding along with a kit's guardian milestone; Redoma's book (`woods_hut_letter`, room `woods_hut`) needs no song, so it rides with the memorina kit and every later kit holds it. The guardians' milestones no longer give the second songs. Redoma's book was moved from `woods_root_caves_alcove` to `woods_hut_letter` (and Bento's letter the other way) because, behind the woods root wall, it left a Lake-first kit without Redoma and so outside the Caldera (user, 2026-10-29: "Move the Redoma book (Recommended)", "Approve the swap (Recommended)"; `architecture/teaching-creatures`, "As built"). `room_kit_test.test_no_songbook_needs_its_own_song` pins design 07's rule; `test_the_memorina_kit_reaches_the_redoma_book` pins the move.
+
+## Completing a teacher's half
+
+A songbook whose second half completes a song the teacher already gave the first of runs the full lesson (`SongHalves.completes`). The reverse, a teacher completing a song whose book was read first, ends in a duet and the lesson (`systems/teaching-creatures`). Both enter through `Player.learn_song_half`; only the teacher passes `sheet = false`.
 
 ## Art
 

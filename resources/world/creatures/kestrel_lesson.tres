@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="CreatureLesson" format=3]
+
+[ext_resource type="Script" path="res://resources/world/creatures/creature_lesson.gd" id="1_lesson"]
+[ext_resource type="Resource" path="res://resources/songs/gale.tres" id="2_song"]
+
+[resource]
+script = ExtResource("1_lesson")
+song = ExtResource("2_song")

@@ -67,7 +67,7 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | resposta do instrumento / trecho | `SongPerformance`, `Song.excerpt` |
 | congelar o mundo (durante a resposta) | `WorldFreeze` |
 | guardião / fase de pressão / janela de lucidez | `Guardian` / `GuardianFight.Phase.PRESSURE` / `GuardianFight.Phase.LUCIDITY` |
-| chamado (call-and-response) / resposta | `GuardianCall`, `MemorinaComponent.call_song` / `call_answered` |
+| chamado (call-and-response) / resposta | `PhraseCall` (was `GuardianCall`), `MemorinaComponent.call_song` / `call_answered` |
 | QTE de emergência / habilidade recuperada | `AbilityRecallComponent`, `AbilityRecallStats` / `SaveSystem.unlock_skill` |
 | restaurar o guardião | `SaveSystem.restore_guardian`, `Region.current_baseline()` |
 | tempo desacelera | `WorldFreeze.slow()` |
@@ -99,6 +99,8 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | contrapeso errado trava o elevador | `Mechanism.lock_path` |
 | Sombra (a sombra queimada) | `CastShadow`, `Character.silhouette()`, `burned_shadow.gdshader` |
 | vista pelas criaturas como o herói | `EnemySight.PRESENCE`, `EnemySight.visible_presence()` |
+| criatura-professora (criaturas escolhidas) | `TeachingCreature` + `CreatureLesson`; `TeachingFlow`, `TeacherBalloon` (`systems/teaching-creatures`) |
+| eco (Ivo repete a frase da professora) | `PhraseEcho`, `MemorinaComponent.echo_phrase`, `Player.open_echo` / `phrase_echoed` |
 | criatura corrompida | `Enemy` (scene) + `EnemyStats`; `EnemyAI`, `WalkerAI`, `FlyerAI`, `CeilingAI`, `ThreadAI` (`systems/creatures`) |
 | golpe de uma criatura (aviso, golpe, recuperação) | `EnemyMove` (`telegraph`, `active`, `recovery`, `cooldown`), `MoveClock` |
 | javali (Limiar) | `scenes/characters/creatures/boar/` (legend `B`) |

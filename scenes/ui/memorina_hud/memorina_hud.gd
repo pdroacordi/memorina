@@ -35,6 +35,8 @@ var _call_glyphs: NoteGlyphSet
 ## True while the answer window is open.
 var _answering: bool = false
 var _drawn: bool = false
+## True while a teacher's echo is open: its balloon is the only notation (systems/teaching-creatures).
+var _echoing: bool = false
 ## Number of lesson notes that will light; zero when no lesson is active.
 var _lesson_notes: int = 0
 ## Full time-bar width in px.
@@ -71,6 +73,8 @@ func on_drawn(_known_songs: Array[Song], facing: int) -> void:
 		return
 	# Clear stale notes before showing a newly opened sheet.
 	_sheet.clear()
+	if _echoing:
+		return
 	_frame.hide()
 	show()
 
@@ -81,6 +85,15 @@ func on_camera_focused(subject_screen_position: Vector2) -> void:
 		return
 	_place_frame(_facing, subject_screen_position)
 	_fade_frame_in()
+
+func on_echo_opened() -> void:
+	_echoing = true
+	if _drawn and not _answering and not _call_staged:
+		_sheet.clear()
+		hide()
+
+func on_echo_closed() -> void:
+	_echoing = false
 
 func on_sheathed() -> void:
 	_drawn = false

@@ -15,7 +15,7 @@
 [ext_resource type="Script" uid="uid://cbjw3eoynfrex" path="res://scenes/characters/components/animation_driver.gd" id="10_animdrv"]
 [ext_resource type="Script" uid="uid://u2xx55kumdx8" path="res://scenes/characters/guardians/guardian_animation_resolver.gd" id="11_animres"]
 [ext_resource type="Script" uid="uid://cujp8nhl6kwel" path="res://scenes/characters/guardians/guardian_ai.gd" id="12_ai"]
-[ext_resource type="Script" uid="uid://cranij1o3nhbn" path="res://scenes/characters/guardians/guardian_call.gd" id="13_call"]
+[ext_resource type="Script" uid="uid://cranij1o3nhbn" path="res://scenes/characters/components/phrase_call.gd" id="13_call"]
 [ext_resource type="Script" uid="uid://bnttag3vs2ax6" path="res://scenes/characters/ivo/abilities/memorina_voice.gd" id="14_voice"]
 [ext_resource type="AudioStream" uid="uid://c8aq76pxwx3ne" path="res://assets/audios/sfx/memorina/note_up_g4.mp3" id="15_note_up"]
 [ext_resource type="AudioStream" uid="uid://d08lps65r0y32" path="res://assets/audios/sfx/memorina/note_down_c4.mp3" id="16_note_down"]

@@ -53,6 +53,7 @@
 [ext_resource type="Script" path="res://scenes/ui/notice/notice_watcher.gd" id="53_notices"]
 [ext_resource type="Resource" path="res://resources/story/intent_catalog.tres" id="54_intents"]
 [ext_resource type="PackedScene" path="res://scenes/ui/notice/notice_toast.tscn" id="55_notice_toast"]
+[ext_resource type="PackedScene" path="res://scenes/ui/teacher_balloon/teacher_balloon.tscn" id="56_balloon"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_seed.png" id="90_seedicon"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
@@ -238,6 +239,8 @@ letterbox = NodePath("../Letterbox")
 
 [node name="GuardianCallHud" parent="CanvasLayer" unique_id=978754071 instance=ExtResource("17_callhud")]
 
+[node name="TeacherBalloon" parent="CanvasLayer" instance=ExtResource("56_balloon")]
+
 [node name="PhraseSheet" parent="CanvasLayer" instance=ExtResource("49_phrase")]
 
 [node name="DialogueBox" parent="CanvasLayer" instance=ExtResource("48_box")]
@@ -291,6 +294,8 @@ layer = 3
 [connection signal="lesson_started" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_lesson_started"]
 [connection signal="lesson_started" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_lesson_started"]
 [connection signal="song_half_learned" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_song_half_learned"]
+[connection signal="echo_opened" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_echo_opened"]
+[connection signal="echo_closed" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_echo_closed"]
 [connection signal="lesson_started" from="World/Player" to="World/Camera2D" method="push_in" unbinds=2]
 [connection signal="memorina_drawn" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_drawn"]
 [connection signal="memorina_drawn" from="World/Player" to="World/Camera2D" method="focus" unbinds=2]

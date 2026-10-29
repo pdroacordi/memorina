@@ -1,0 +1,411 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  944,
+  -1672
+ ],
+ "max_duration": 15.0,
+ "known_songs": [
+  0
+ ],
+ "steps": [
+  {
+   "t": 2.4,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.48,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "screenshot": "a_drawn_002.50"
+  },
+  {
+   "t": 2.5,
+   "log": "a_drawn2.50"
+  },
+  {
+   "t": 2.8,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 2.85,
+   "screenshot": "b_near0_002.85"
+  },
+  {
+   "t": 2.85,
+   "log": "b_near02.85"
+  },
+  {
+   "t": 2.88,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 3.1,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.15,
+   "screenshot": "b_near1_003.15"
+  },
+  {
+   "t": 3.15,
+   "log": "b_near13.15"
+  },
+  {
+   "t": 3.18,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.4,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.45,
+   "screenshot": "b_near2_003.45"
+  },
+  {
+   "t": 3.45,
+   "log": "b_near23.45"
+  },
+  {
+   "t": 3.48,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.7,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.75,
+   "screenshot": "b_near3_003.75"
+  },
+  {
+   "t": 3.75,
+   "log": "b_near33.75"
+  },
+  {
+   "t": 3.78,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.05,
+   "screenshot": "b_near4_004.05"
+  },
+  {
+   "t": 4.05,
+   "log": "b_near44.05"
+  },
+  {
+   "t": 4.08,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.3,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 4.35,
+   "screenshot": "b_near5_004.35"
+  },
+  {
+   "t": 4.35,
+   "log": "b_near54.35"
+  },
+  {
+   "t": 4.38,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 4.7,
+   "screenshot": "c_wait_004.70"
+  },
+  {
+   "t": 4.7,
+   "log": "c_wait4.70"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "c_wait_005.00"
+  },
+  {
+   "t": 5.0,
+   "log": "c_wait5.00"
+  },
+  {
+   "t": 5.3,
+   "screenshot": "c_wait_005.30"
+  },
+  {
+   "t": 5.3,
+   "log": "c_wait5.30"
+  },
+  {
+   "t": 5.6,
+   "screenshot": "c_wait_005.60"
+  },
+  {
+   "t": 5.6,
+   "log": "c_wait5.60"
+  },
+  {
+   "t": 6.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 6.08,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 6.4,
+   "teleport": [
+    1400,
+    -1672
+   ]
+  },
+  {
+   "t": 7.4,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 7.48,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 7.5,
+   "screenshot": "d_away_007.50"
+  },
+  {
+   "t": 7.5,
+   "log": "d_away7.50"
+  },
+  {
+   "t": 7.9,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 7.95,
+   "screenshot": "e_away0_007.95"
+  },
+  {
+   "t": 7.95,
+   "log": "e_away07.95"
+  },
+  {
+   "t": 7.98,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 8.2,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 8.25,
+   "screenshot": "e_away1_008.25"
+  },
+  {
+   "t": 8.25,
+   "log": "e_away18.25"
+  },
+  {
+   "t": 8.28,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 8.5,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 8.55,
+   "screenshot": "e_away2_008.55"
+  },
+  {
+   "t": 8.55,
+   "log": "e_away28.55"
+  },
+  {
+   "t": 8.58,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 8.8,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 8.85,
+   "screenshot": "e_away3_008.85"
+  },
+  {
+   "t": 8.85,
+   "log": "e_away38.85"
+  },
+  {
+   "t": 8.88,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 9.1,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 9.15,
+   "screenshot": "e_away4_009.15"
+  },
+  {
+   "t": 9.15,
+   "log": "e_away49.15"
+  },
+  {
+   "t": 9.18,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 9.4,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 9.45,
+   "screenshot": "e_away5_009.45"
+  },
+  {
+   "t": 9.45,
+   "log": "e_away59.45"
+  },
+  {
+   "t": 9.48,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 9.9,
+   "screenshot": "f_song_009.90"
+  },
+  {
+   "t": 9.9,
+   "log": "f_song9.90"
+  },
+  {
+   "t": 10.3,
+   "screenshot": "f_song_010.30"
+  },
+  {
+   "t": 10.3,
+   "log": "f_song10.30"
+  },
+  {
+   "t": 10.7,
+   "screenshot": "f_song_010.70"
+  },
+  {
+   "t": 10.7,
+   "log": "f_song10.70"
+  },
+  {
+   "t": 11.1,
+   "screenshot": "f_song_011.10"
+  },
+  {
+   "t": 11.1,
+   "log": "f_song11.10"
+  },
+  {
+   "t": 11.5,
+   "screenshot": "f_song_011.50"
+  },
+  {
+   "t": 11.5,
+   "log": "f_song11.50"
+  },
+  {
+   "t": 11.9,
+   "screenshot": "f_song_011.90"
+  },
+  {
+   "t": 11.9,
+   "log": "f_song11.90"
+  },
+  {
+   "t": 12.3,
+   "screenshot": "f_song_012.30"
+  },
+  {
+   "t": 12.3,
+   "log": "f_song12.30"
+  },
+  {
+   "t": 12.7,
+   "screenshot": "f_song_012.70"
+  },
+  {
+   "t": 12.7,
+   "log": "f_song12.70"
+  },
+  {
+   "t": 13.1,
+   "screenshot": "f_song_013.10"
+  },
+  {
+   "t": 13.1,
+   "log": "f_song13.10"
+  },
+  {
+   "t": 13.5,
+   "screenshot": "f_song_013.50"
+  },
+  {
+   "t": 13.5,
+   "log": "f_song13.50"
+  },
+  {
+   "t": 13.9,
+   "screenshot": "f_song_013.90"
+  },
+  {
+   "t": 13.9,
+   "log": "f_song13.90"
+  },
+  {
+   "t": 14.3,
+   "screenshot": "f_song_014.30"
+  },
+  {
+   "t": 14.3,
+   "log": "f_song14.30"
+  }
+ ]
+}

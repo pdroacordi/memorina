@@ -219,6 +219,10 @@ else in the code knows what a character means.
 | `g` | `[grid]` | entity | - | - | gate | A floor grate in this cell and the three east of it, one cell deep and flush with the floor: solid until the save holds requires (a SaveFact .tres path), then gone, leaving the hole. Keep the four cells air in the grid; the hatch in village_gate_east's road over caldera_sun_stair (WORLD-35). |
 | `t` | `[grid]` | entity | - | - | content | A place Ivo talks, standing on this cell: up in reach (or, with auto_start true, coming into reach) runs the current dialogue of talk (a DialogueSet .tres path in the dialogue catalog). Put it on the speaker's cell; speaker_offset (px along x from this cell's centre to the speaker, a villager prop that carries no gameplay itself) is the zone's centre, the prompt's column and what Ivo faces. The zone reaches reach_west and reach_east px each side of the speaker (default 48, about a cell and a half) and is height_cells tall (default 2); trim the side that faces a door so the zones keep more than 22 px apart and the door wins. presence (0..1) hides it below that region baseline, like its villager. |
 | `i` | `[grid]` | entity | - | - | content | An item lying where it was left, standing on this cell: up in reach takes it into the save (item, an Enums.PlayerItem: 0 the sword). It shows only while the save does not own the item, so a death before a bench puts it back. texture is the item lying down (a .png path); rest_offset ([x, y] px from this cell's bottom centre to the item's bottom centre) lays it on a table top; the reach is width_cells wide (default 2, centred) and height_cells tall (default 2). |
+| `U` | `[grid]` | entity | - | - | content | Snail teacher (Frozen Lake): sings Redoma's first half (L R L) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures). |
+| `Y` | `[grid]` | entity | - | - | content | Thrush teacher (Spring Woods): sings Chuva's first half (R R R) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures). |
+| `K` | `[grid]` | entity | - | - | content | Kestrel teacher (Wind Orchards): sings Vendaval's first half (R R L) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures). |
+| `Q` | `[grid]` | entity | - | - | content | Lizard teacher (Summer Caldera): sings Solsticio's first half (R D U) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures). |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -589,6 +593,42 @@ Scene `res://scenes/world/interactables/item_pickup/item_pickup.tscn`, anchored 
 | `width_cells` | int | `2` |
 | `height_cells` | int | `2` |
 | `talk` | DialogueSet | `null` |
+
+#### `U` - Snail
+
+Scene `res://scenes/world/creatures/snail/snail.tscn`, anchored at its cell's bottom centre (standing on the cell below). Snail teacher (Frozen Lake): sings Redoma's first half (L R L) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `lesson` | CreatureLesson | `Resource("res://resources/world/creatures/snail_lesson.tres")` |
+
+#### `Y` - Thrush
+
+Scene `res://scenes/world/creatures/thrush/thrush.tscn`, anchored at its cell's bottom centre (standing on the cell below). Thrush teacher (Spring Woods): sings Chuva's first half (R R R) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `lesson` | CreatureLesson | `Resource("res://resources/world/creatures/thrush_lesson.tres")` |
+
+#### `K` - Kestrel
+
+Scene `res://scenes/world/creatures/kestrel/kestrel.tscn`, anchored at its cell's bottom centre (standing on the cell below). Kestrel teacher (Wind Orchards): sings Vendaval's first half (R R L) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `lesson` | CreatureLesson | `Resource("res://resources/world/creatures/kestrel_lesson.tres")` |
+
+#### `Q` - Lizard
+
+Scene `res://scenes/world/creatures/lizard/lizard.tscn`, anchored at its cell's bottom centre (standing on the cell below). Lizard teacher (Summer Caldera): sings Solsticio's first half (R D U) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `lesson` | CreatureLesson | `Resource("res://resources/world/creatures/lizard_lesson.tres")` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

@@ -1,0 +1,618 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "en",
+ "player_position": [
+  944,
+  -1672
+ ],
+ "max_duration": 95.0,
+ "song_halves": [
+  [
+   1,
+   2
+  ]
+ ],
+ "clock": "real",
+ "steps": [
+  {
+   "t": 0.5,
+   "screenshot": "a_sing_000.50"
+  },
+  {
+   "t": 0.5,
+   "log": "a_sing0.50"
+  },
+  {
+   "t": 1.0,
+   "screenshot": "a_sing_001.00"
+  },
+  {
+   "t": 1.0,
+   "log": "a_sing1.00"
+  },
+  {
+   "t": 1.5,
+   "screenshot": "a_sing_001.50"
+  },
+  {
+   "t": 1.5,
+   "log": "a_sing1.50"
+  },
+  {
+   "t": 2.0,
+   "screenshot": "a_sing_002.00"
+  },
+  {
+   "t": 2.0,
+   "log": "a_sing2.00"
+  },
+  {
+   "t": 2.4,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.48,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.8,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.88,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 2.9,
+   "screenshot": "b_echo0_002.90"
+  },
+  {
+   "t": 2.9,
+   "log": "b_echo02.90"
+  },
+  {
+   "t": 3.2,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 3.28,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 3.3,
+   "screenshot": "b_echo1_003.30"
+  },
+  {
+   "t": 3.3,
+   "log": "b_echo13.30"
+  },
+  {
+   "t": 3.6,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 3.68,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 3.7,
+   "screenshot": "b_echo2_003.70"
+  },
+  {
+   "t": 3.7,
+   "log": "b_echo23.70"
+  },
+  {
+   "t": 3.7,
+   "screenshot": "c_duet_003.70"
+  },
+  {
+   "t": 3.7,
+   "log": "c_duet3.70"
+  },
+  {
+   "t": 3.85,
+   "screenshot": "c_duet_003.85"
+  },
+  {
+   "t": 3.85,
+   "log": "c_duet3.85"
+  },
+  {
+   "t": 4.0,
+   "screenshot": "c_duet_004.00"
+  },
+  {
+   "t": 4.0,
+   "log": "c_duet4.00"
+  },
+  {
+   "t": 4.15,
+   "screenshot": "c_duet_004.15"
+  },
+  {
+   "t": 4.15,
+   "log": "c_duet4.15"
+  },
+  {
+   "t": 4.3,
+   "screenshot": "c_duet_004.30"
+  },
+  {
+   "t": 4.3,
+   "log": "c_duet4.30"
+  },
+  {
+   "t": 4.45,
+   "screenshot": "c_duet_004.45"
+  },
+  {
+   "t": 4.45,
+   "log": "c_duet4.45"
+  },
+  {
+   "t": 4.6,
+   "screenshot": "c_duet_004.60"
+  },
+  {
+   "t": 4.6,
+   "log": "c_duet4.60"
+  },
+  {
+   "t": 4.75,
+   "screenshot": "c_duet_004.75"
+  },
+  {
+   "t": 4.75,
+   "log": "c_duet4.75"
+  },
+  {
+   "t": 4.9,
+   "screenshot": "c_duet_004.90"
+  },
+  {
+   "t": 4.9,
+   "log": "c_duet4.90"
+  },
+  {
+   "t": 5.05,
+   "screenshot": "c_duet_005.05"
+  },
+  {
+   "t": 5.05,
+   "log": "c_duet5.05"
+  },
+  {
+   "t": 5.2,
+   "screenshot": "c_duet_005.20"
+  },
+  {
+   "t": 5.2,
+   "log": "c_duet5.20"
+  },
+  {
+   "t": 5.35,
+   "screenshot": "c_duet_005.35"
+  },
+  {
+   "t": 5.35,
+   "log": "c_duet5.35"
+  },
+  {
+   "t": 5.5,
+   "screenshot": "c_duet_005.50"
+  },
+  {
+   "t": 5.5,
+   "log": "c_duet5.50"
+  },
+  {
+   "t": 5.65,
+   "screenshot": "c_duet_005.65"
+  },
+  {
+   "t": 5.65,
+   "log": "c_duet5.65"
+  },
+  {
+   "t": 5.8,
+   "screenshot": "c_duet_005.80"
+  },
+  {
+   "t": 5.8,
+   "log": "c_duet5.80"
+  },
+  {
+   "t": 5.95,
+   "screenshot": "c_duet_005.95"
+  },
+  {
+   "t": 5.95,
+   "log": "c_duet5.95"
+  },
+  {
+   "t": 6.1,
+   "screenshot": "c_duet_006.10"
+  },
+  {
+   "t": 6.1,
+   "log": "c_duet6.10"
+  },
+  {
+   "t": 6.25,
+   "screenshot": "c_duet_006.25"
+  },
+  {
+   "t": 6.25,
+   "log": "c_duet6.25"
+  },
+  {
+   "t": 6.4,
+   "screenshot": "c_duet_006.40"
+  },
+  {
+   "t": 6.4,
+   "log": "c_duet6.40"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "d_lesson_007.00"
+  },
+  {
+   "t": 7.0,
+   "log": "d_lesson7.00"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "d_lesson_008.00"
+  },
+  {
+   "t": 8.0,
+   "log": "d_lesson8.00"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "d_lesson_009.00"
+  },
+  {
+   "t": 9.0,
+   "log": "d_lesson9.00"
+  },
+  {
+   "t": 10.0,
+   "screenshot": "d_lesson_010.00"
+  },
+  {
+   "t": 10.0,
+   "log": "d_lesson10.00"
+  },
+  {
+   "t": 11.0,
+   "screenshot": "d_lesson_011.00"
+  },
+  {
+   "t": 11.0,
+   "log": "d_lesson11.00"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "d_lesson_012.00"
+  },
+  {
+   "t": 12.0,
+   "log": "d_lesson12.00"
+  },
+  {
+   "t": 13.0,
+   "screenshot": "d_lesson_013.00"
+  },
+  {
+   "t": 13.0,
+   "log": "d_lesson13.00"
+  },
+  {
+   "t": 14.0,
+   "screenshot": "d_lesson_014.00"
+  },
+  {
+   "t": 14.0,
+   "log": "d_lesson14.00"
+  },
+  {
+   "t": 15.0,
+   "screenshot": "d_lesson_015.00"
+  },
+  {
+   "t": 15.0,
+   "log": "d_lesson15.00"
+  },
+  {
+   "t": 16.0,
+   "screenshot": "d_lesson_016.00"
+  },
+  {
+   "t": 16.0,
+   "log": "d_lesson16.00"
+  },
+  {
+   "t": 17.0,
+   "screenshot": "d_lesson_017.00"
+  },
+  {
+   "t": 17.0,
+   "log": "d_lesson17.00"
+  },
+  {
+   "t": 18.0,
+   "screenshot": "d_lesson_018.00"
+  },
+  {
+   "t": 18.0,
+   "log": "d_lesson18.00"
+  },
+  {
+   "t": 19.0,
+   "screenshot": "d_lesson_019.00"
+  },
+  {
+   "t": 19.0,
+   "log": "d_lesson19.00"
+  },
+  {
+   "t": 20.0,
+   "screenshot": "d_lesson_020.00"
+  },
+  {
+   "t": 20.0,
+   "log": "d_lesson20.00"
+  },
+  {
+   "t": 25.0,
+   "screenshot": "e_lesson_025.00"
+  },
+  {
+   "t": 25.0,
+   "log": "e_lesson25.00"
+  },
+  {
+   "t": 30.0,
+   "screenshot": "e_lesson_030.00"
+  },
+  {
+   "t": 30.0,
+   "log": "e_lesson30.00"
+  },
+  {
+   "t": 35.0,
+   "screenshot": "e_lesson_035.00"
+  },
+  {
+   "t": 35.0,
+   "log": "e_lesson35.00"
+  },
+  {
+   "t": 40.0,
+   "screenshot": "e_lesson_040.00"
+  },
+  {
+   "t": 40.0,
+   "log": "e_lesson40.00"
+  },
+  {
+   "t": 45.0,
+   "screenshot": "e_lesson_045.00"
+  },
+  {
+   "t": 45.0,
+   "log": "e_lesson45.00"
+  },
+  {
+   "t": 50.0,
+   "screenshot": "e_lesson_050.00"
+  },
+  {
+   "t": 50.0,
+   "log": "e_lesson50.00"
+  },
+  {
+   "t": 55.0,
+   "screenshot": "e_lesson_055.00"
+  },
+  {
+   "t": 55.0,
+   "log": "e_lesson55.00"
+  },
+  {
+   "t": 60.0,
+   "screenshot": "e_lesson_060.00"
+  },
+  {
+   "t": 60.0,
+   "log": "e_lesson60.00"
+  },
+  {
+   "t": 65.0,
+   "screenshot": "e_lesson_065.00"
+  },
+  {
+   "t": 65.0,
+   "log": "e_lesson65.00"
+  },
+  {
+   "t": 70.0,
+   "screenshot": "e_lesson_070.00"
+  },
+  {
+   "t": 70.0,
+   "log": "e_lesson70.00"
+  },
+  {
+   "t": 75.0,
+   "screenshot": "e_lesson_075.00"
+  },
+  {
+   "t": 75.0,
+   "log": "e_lesson75.00"
+  },
+  {
+   "t": 80.0,
+   "screenshot": "e_lesson_080.00"
+  },
+  {
+   "t": 80.0,
+   "log": "e_lesson80.00"
+  },
+  {
+   "t": 85.0,
+   "screenshot": "e_lesson_085.00"
+  },
+  {
+   "t": 85.0,
+   "log": "e_lesson85.00"
+  },
+  {
+   "t": 86.0,
+   "screenshot": "f_after_086.00"
+  },
+  {
+   "t": 86.0,
+   "log": "f_after86.00"
+  },
+  {
+   "t": 86.5,
+   "screenshot": "f_after_086.50"
+  },
+  {
+   "t": 86.5,
+   "log": "f_after86.50"
+  },
+  {
+   "t": 87.0,
+   "screenshot": "f_after_087.00"
+  },
+  {
+   "t": 87.0,
+   "log": "f_after87.00"
+  },
+  {
+   "t": 87.5,
+   "screenshot": "f_after_087.50"
+  },
+  {
+   "t": 87.5,
+   "log": "f_after87.50"
+  },
+  {
+   "t": 88.0,
+   "screenshot": "f_after_088.00"
+  },
+  {
+   "t": 88.0,
+   "log": "f_after88.00"
+  },
+  {
+   "t": 88.5,
+   "screenshot": "f_after_088.50"
+  },
+  {
+   "t": 88.5,
+   "log": "f_after88.50"
+  },
+  {
+   "t": 89.0,
+   "screenshot": "f_after_089.00"
+  },
+  {
+   "t": 89.0,
+   "log": "f_after89.00"
+  },
+  {
+   "t": 89.5,
+   "screenshot": "f_after_089.50"
+  },
+  {
+   "t": 89.5,
+   "log": "f_after89.50"
+  },
+  {
+   "t": 90.0,
+   "screenshot": "f_after_090.00"
+  },
+  {
+   "t": 90.0,
+   "log": "f_after90.00"
+  },
+  {
+   "t": 90.5,
+   "screenshot": "f_after_090.50"
+  },
+  {
+   "t": 90.5,
+   "log": "f_after90.50"
+  },
+  {
+   "t": 91.0,
+   "screenshot": "f_after_091.00"
+  },
+  {
+   "t": 91.0,
+   "log": "f_after91.00"
+  },
+  {
+   "t": 91.5,
+   "screenshot": "f_after_091.50"
+  },
+  {
+   "t": 91.5,
+   "log": "f_after91.50"
+  },
+  {
+   "t": 92.0,
+   "screenshot": "f_after_092.00"
+  },
+  {
+   "t": 92.0,
+   "log": "f_after92.00"
+  },
+  {
+   "t": 92.5,
+   "screenshot": "f_after_092.50"
+  },
+  {
+   "t": 92.5,
+   "log": "f_after92.50"
+  },
+  {
+   "t": 93.0,
+   "screenshot": "f_after_093.00"
+  },
+  {
+   "t": 93.0,
+   "log": "f_after93.00"
+  },
+  {
+   "t": 93.5,
+   "screenshot": "f_after_093.50"
+  },
+  {
+   "t": 93.5,
+   "log": "f_after93.50"
+  },
+  {
+   "t": 94.0,
+   "screenshot": "f_after_094.00"
+  },
+  {
+   "t": 94.0,
+   "log": "f_after94.00"
+  }
+ ]
+}

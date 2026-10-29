@@ -42,6 +42,11 @@ signal call_progress(count: int)
 signal call_closed
 ## The full phrase was answered in time.
 signal call_answered(song: Song)
+## A teacher's phrase became the only thing the Memorina plays (systems/teaching-creatures).
+signal echo_opened
+signal echo_closed
+## The teacher's phrase was echoed whole.
+signal phrase_echoed
 ## Recall opened for `action`; the world slows.
 signal recall_started(action: StringName, seconds: float, steps: int)
 ## A recall step landed and more steps remain.
@@ -270,6 +275,7 @@ func _ready() -> void:
 	_memorina.song_guessed.connect(_on_song_guessed)
 	_memorina.song_played.connect(_on_song_played)
 	_memorina.call_answered.connect(call_answered.emit)
+	_memorina.phrase_echoed.connect(phrase_echoed.emit)
 	_voice.mistake_finished.connect(sequence_reset.emit)
 	_performance.started.connect(performance_started.emit)
 	_performance.cue_reached.connect(note_cue_reached.emit)
@@ -895,9 +901,9 @@ func learn_song(song: Song) -> bool:
 	_begin_lesson(song)
 	return true
 
-## A teaching creature or a songbook gives half a song (architecture/half-songs); the half
-## that makes it whole starts the lesson, as learn_song does. Refused under learn_song's gates.
-func learn_song_half(song: Song, half: Enums.SongHalf) -> bool:
+## A teacher or songbook gives half a song; the half that makes it whole starts the lesson (architecture/half-songs).
+## Refused under learn_song's gates; `sheet` false (a teacher's balloon) shows no half sheet.
+func learn_song_half(song: Song, half: Enums.SongHalf, sheet: bool = true) -> bool:
 	if not _can_take_lesson(song):
 		return false
 	assert(song.learned_in_halves, "Song %d is not learned in halves" % song.id)
@@ -905,7 +911,8 @@ func learn_song_half(song: Song, half: Enums.SongHalf) -> bool:
 	if not SongHalves.can_teach(data, song.id, half):
 		return false
 	# The half that makes the song whole, or the one Ivo guessed, is a lesson: the real name is heard at last.
-	var lesson := SongHalves.missing(data, song.id) == half or data.guessed_halves[song.id] == half
+	var lesson := SongHalves.completes(data, song.id, half)
+	close_echo()
 	SaveSystem.learn_song_half(song.id, half)
 	if lesson:
 		_begin_lesson(song)
@@ -913,7 +920,8 @@ func learn_song_half(song: Song, half: Enums.SongHalf) -> bool:
 	# The matcher takes half-known songs only when drawn, so a half arrives on a sheathed instrument.
 	if _memorina.is_drawn():
 		_memorina.sheathe()
-	song_half_learned.emit(song, half, _last_glyph_set)
+	if sheet:
+		song_half_learned.emit(song, half, _last_glyph_set)
 	return true
 
 ## A right guess is learned by ear and taught like any lesson.
@@ -965,6 +973,33 @@ func _on_debug_learn_song_half_pressed() -> void:
 		return
 
 #############################################
+##  A   T E A C H E R ' S   E C H O        ##
+#############################################
+## A teaching creature drives these; an open echo gates nothing else.
+
+## Until close_echo(), the Memorina plays only `phrase`; refused while a guardian's call is open.
+func open_echo(phrase: Array[Enums.Note]) -> void:
+	if _memorina.call_song != null or phrase == _memorina.echo_phrase:
+		return
+	var was_open := is_echo_open()
+	_memorina.echo_phrase = phrase
+	if not was_open:
+		echo_opened.emit()
+
+func close_echo() -> void:
+	if not is_echo_open():
+		return
+	_memorina.echo_phrase = []
+	echo_closed.emit()
+
+func is_echo_open() -> bool:
+	return not _memorina.echo_phrase.is_empty()
+
+## The open echo's phrase; empty when none is open.
+func echo_phrase() -> Array[Enums.Note]:
+	return _memorina.echo_phrase
+
+#############################################
 ##  A   G U A R D I A N ' S   C A L L      ##
 #############################################
 ## The guardian drives these directly; Ivo relays them as signals so the HUD
@@ -988,6 +1023,7 @@ func unstage_call() -> void:
 ## listens for `song` alone - and stays in until the phrase has been heard.
 func open_call(song: Song, revealed: int, cure_done: int, cure_total: int) -> void:
 	_stand_up()
+	close_echo()
 	if _memorina.is_drawn():
 		_memorina.sheathe()
 	_memorina.call_song = song

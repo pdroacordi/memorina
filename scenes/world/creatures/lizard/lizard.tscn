@@ -1,0 +1,216 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/creatures/teaching_creature.gd" id="1_teacher"]
+[ext_resource type="Resource" path="res://resources/world/creatures/lizard_lesson.tres" id="2_lesson"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/creatures/lizard/lizard_idle.png" id="tex_idle"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/creatures/lizard/lizard_sing.png" id="tex_sing"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/creatures/lizard/lizard_flourish.png" id="tex_flourish"]
+[ext_resource type="Script" uid="uid://cbjw3eoynfrex" path="res://scenes/characters/components/animation_driver.gd" id="3_driver"]
+[ext_resource type="Script" path="res://scenes/world/creatures/teacher_animation_resolver.gd" id="4_resolver"]
+[ext_resource type="Script" uid="uid://bxrbxt0jji8yt" path="res://scenes/world/memory/greyhush_shield.gd" id="5_shield"]
+[ext_resource type="Script" uid="uid://cranij1o3nhbn" path="res://scenes/characters/components/phrase_call.gd" id="6_call"]
+[ext_resource type="Script" uid="uid://bnttag3vs2ax6" path="res://scenes/characters/ivo/abilities/memorina_voice.gd" id="7_voice"]
+[ext_resource type="AudioStream" uid="uid://c8aq76pxwx3ne" path="res://assets/audios/sfx/memorina/note_up_g4.mp3" id="8_note_up"]
+[ext_resource type="AudioStream" uid="uid://d08lps65r0y32" path="res://assets/audios/sfx/memorina/note_down_c4.mp3" id="9_note_down"]
+[ext_resource type="AudioStream" uid="uid://dptbpb61tc207" path="res://assets/audios/sfx/memorina/note_low_mid_d4.mp3" id="10_note_left"]
+[ext_resource type="AudioStream" uid="uid://4ci6801k1fq0" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="11_note_right"]
+[ext_resource type="AudioStream" uid="uid://dukqiaa0dgpkr" path="res://assets/audios/sfx/memorina/mistake.mp3" id="12_mistake"]
+
+[sub_resource type="Animation" id="Animation_RESET"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_idle")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_idle"]
+resource_name = "idle"
+length = 0.6666666666666666
+loop_mode = 1
+step = 0.16666666666666666
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_idle")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.0, 0.16666666666666666, 0.3333333333333333, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_sing"]
+resource_name = "sing"
+length = 0.5
+loop_mode = 1
+step = 0.125
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_sing")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.0, 0.125, 0.25, 0.375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="Animation" id="Animation_flourish"]
+resource_name = "flourish"
+length = 0.5
+step = 0.125
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_flourish")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.0, 0.125, 0.25, 0.375),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_main"]
+_data = {
+&"RESET": SubResource("Animation_RESET"),
+&"flourish": SubResource("Animation_flourish"),
+&"idle": SubResource("Animation_idle"),
+&"sing": SubResource("Animation_sing")
+}
+
+[sub_resource type="AnimationNodeAnimation" id="Node_idle"]
+animation = &"idle"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_sing"]
+animation = &"sing"
+
+[sub_resource type="AnimationNodeAnimation" id="Node_flourish"]
+animation = &"flourish"
+
+[sub_resource type="AnimationNodeStateMachine" id="StateMachine_main"]
+states/idle/node = SubResource("Node_idle")
+states/idle/position = Vector2(200, 60)
+states/sing/node = SubResource("Node_sing")
+states/sing/position = Vector2(340, 60)
+states/flourish/node = SubResource("Node_flourish")
+states/flourish/position = Vector2(480, 60)
+
+[node name="Lizard" type="Node2D"]
+script = ExtResource("1_teacher")
+lesson = ExtResource("2_lesson")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+position = Vector2(0, -16)
+texture = ExtResource("tex_idle")
+hframes = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries/ = SubResource("AnimationLibrary_main")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+unique_name_in_owner = true
+root_node = NodePath("%AnimationTree/..")
+callback_mode_process = 0
+tree_root = SubResource("StateMachine_main")
+anim_player = NodePath("../AnimationPlayer")
+
+[node name="AnimationDriver" type="Node" parent="."]
+script = ExtResource("3_driver")
+
+[node name="AnimationResolver" type="Node" parent="."]
+script = ExtResource("4_resolver")
+
+[node name="GreyhushShield" type="Node2D" parent="."]
+position = Vector2(0, -16)
+script = ExtResource("5_shield")
+shape = 0
+radius = 18.0
+feather = 8.0
+amount = 1.0
+
+[node name="BalloonAnchor" type="Marker2D" parent="."]
+position = Vector2(0, -30)
+
+[node name="Call" type="Node" parent="."]
+script = ExtResource("6_call")
+
+[node name="Voice" type="Node" parent="Call"]
+script = ExtResource("7_voice")
+note_streams = Array[AudioStream]([ExtResource("8_note_up"), ExtResource("9_note_down"), ExtResource("10_note_left"), ExtResource("11_note_right")])
+mistake_stream = ExtResource("12_mistake")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Call/Voice"]
+pitch_scale = 2.0
+
+[node name="Duet" type="Node" parent="."]
+script = ExtResource("6_call")
+
+[node name="Voice" type="Node" parent="Duet"]
+script = ExtResource("7_voice")
+note_streams = Array[AudioStream]([ExtResource("8_note_up"), ExtResource("9_note_down"), ExtResource("10_note_left"), ExtResource("11_note_right")])
+mistake_stream = ExtResource("12_mistake")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Duet/Voice"]
