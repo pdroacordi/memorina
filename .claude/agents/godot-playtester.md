@@ -578,6 +578,24 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - The runner sometimes segfaults on exit (exit 139) after writing everything. Check the frame count before
     calling a run failed.
 
+- **Learned 2026-10-29 (CORE-04 teaching creatures)**:
+  - **State the runner cannot log: wrap it in a probe driver.** `tools/playtest/scripts/core04_probe_driver.gd` (a `-s`
+    driver that loads the runner) prints `[probe]` on every change: teacher `TeachingFlow` state, balloon
+    revealed/lit/shake/box position, `MemorinaHud` visible/`_echoing`, echo/drawn/lesson, save halves, quill, pause. It also
+    prints `[sig]` for Ivo's signals. Copy it for any system whose state is not in `log`.
+  - A `-s` driver **must not name an autoload or a `class_name` that uses one**. `SaveSystem.x` fails to compile. Worse, `x is
+    TeachingCreature` compiles the class before the autoloads exist and breaks it in the live game ("Trying to assign value of
+    type 'Node2D' to a variable of type 'teaching_creature.gd'"). Use `root.get_node("SaveSystem")` and duck typing
+    (`has_method`).
+  - `Callable.unbind(0)` is an error. Bind a signal-agnostic handler with `unbind(argc)` only when argc > 0.
+  - Teachers (feet): snail (880,-1632), spawn (944,-1672); thrush (-1744,224), spawn (-1680,250); kestrel (-6448,-1632), spawn
+    (-6496,-1672); lizard (-1360,2208), spawn (-1264,2170). The balloon opens at t=0, the first glyph at 0.40 s, LISTENING at
+    ~2.06 s.
+  - A draw during the spawn drop (the first ~0.7 s) is refused. A note pressed during Ivo's mistake sound (1.7-2.9 s after a
+    wrong note) is silently dropped. A notebook open pauses the tree, so add `"clock": "real"` or the watchdog kills the run.
+  - Balloon/teacher lag check: find the paper pixels (≈246,229,186), take the lowest row as the tail tip, and compare its x
+    with the centroid of saturated pixels below it, frame by frame through the zoom.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
