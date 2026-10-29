@@ -157,7 +157,7 @@ icon = ExtResource("7_icon_bread")
 
 [sub_resource type="AtlasTexture" id="portrait_frost"]
 atlas = ExtResource("3_frost")
-region = Rect2(56, 18, 79, 60)
+region = Rect2(64, 36, 60, 60)
 
 [sub_resource type="Resource" id="guardian_frost"]
 script = ExtResource("2_entry")
@@ -170,7 +170,7 @@ art = SubResource("portrait_frost")
 
 [sub_resource type="AtlasTexture" id="portrait_bloom"]
 atlas = ExtResource("4_bloom")
-region = Rect2(36, 52, 58, 44)
+region = Rect2(52, 36, 24, 60)
 
 [sub_resource type="Resource" id="guardian_bloom"]
 script = ExtResource("2_entry")

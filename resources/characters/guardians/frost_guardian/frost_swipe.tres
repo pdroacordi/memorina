@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_attack")
 duration = 1.1666667
-attack_range = 110.0
+attack_range = 104.0
 cooldown = 1.6
 weight = 2.0
 knockback_strength = 460.0

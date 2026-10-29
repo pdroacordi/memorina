@@ -256,6 +256,7 @@ func _ready() -> void:
 	# that remembers the roll is also the roll that dodges the attack.
 	_input.roll_pressed.connect(_notify_recall.bind(&"roll"))
 	_input.jump_pressed.connect(_notify_recall.bind(&"jump"))
+	_jump.jumped.connect(_on_jumped_for_recall)
 	_recall.recalled.connect(_on_skill_recalled)
 	_recall.step_taken.connect(recall_step_taken.emit)
 	_recall.missed.connect(_on_skill_recall_missed)
@@ -1131,7 +1132,20 @@ func _open_recall(stats: AbilityRecallStats) -> void:
 ## body was when they came: the last press of a double jump only counts off
 ## the ground, and one given standing is left to the jump that gets him there.
 func _notify_recall(action: StringName) -> void:
+	if not _recall.is_armed() or _recall.armed_stats().action != action:
+		return
+	# The press must also act, and a swing would refuse it: at the recall's time scale a swing
+	# outlasts the window (bugs/a-recall-jump-pressed-during-a-swing-counts-a-step-without-jumping).
+	_attack.cancel()
+	# A jump step short of the last counts only when the jump happens (_on_jumped_for_recall);
+	# with no ground jump left the press is the step, or a launched Ivo could never count it.
+	if action == &"jump" and _recall.steps_left() > 1 and _jump.can_ground_jump(is_on_floor()):
+		return
 	_recall.notify(action, not is_on_floor())
+
+func _on_jumped_for_recall(_position: Vector2) -> void:
+	if _recall.steps_left() > 1:
+		_recall.notify(&"jump", not is_on_floor())
 
 ## The body remembered: the skill is Ivo's for good, and the attack that
 ## forced it does not land while he finishes the move.

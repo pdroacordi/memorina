@@ -1,0 +1,17 @@
+---
+id: guardian_frost_attack_2
+command: animate3
+target: res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_attack_2.png
+size: 192x128
+frames: 14
+keep: 0-0,2-7,5-7,5-5,14-16
+generate: 16
+view: side
+direction: west
+no_background: true
+reference: res://tools/art/sources/guardians/frost_ref.png
+action: shoulder ram: the ice golem ducks its head and drops into a deep low crouch, its whole body tilted far forward almost horizontal with its shoulder leading at the left, legs pumping in long powerful running strides as it rushes forward, then skids and straightens up, side view facing left the whole time
+source: pixellab
+---
+The charge, played by `frost_charge.tres` (clip_index 1 since GRD-07; it played the swipe before): 1.1667 s at 1/12 s a frame, the hitbox live 0.5-0.833 s (frames 6-9). The Frost guardian (GRD-07), a heavy ice golem: dark blue-grey stone body, pale blue ice crystals on its shoulders and back, huge stone fists, seen from the side facing west, body centred in the frame, feet on art row 127, the frame's bottom row (today's pack sheets stand on row 109, so wiring moves the Sprite2D from y -92 to -128; the 18 rows freed above hold the raised fists). Sheets are 1 px per art px, shown at Sprite2D scale 2. The still is cut from our own Codex concept tools/art/sources/guardians/guardians_concept_codex.png (approved by the user 2026-10-29: "A, the tree-stag" and "A, the ice golem"; "Scale to today's"): `python -I tools/art/cut_creatures.py tools/art/sources/guardians/guardians_concept_codex.png tools/art/sources/guardians --names=-,bloom_cut,-,frost --pitch=4-12 --colors=16 --size=bloom_cut:h44,frost:h92` cut it at 60x92 art px, the height of today's Frost body (92 art px): frost_still.png. The reference is the still padded onto the 192x128 frame (`python -I tools/art/pad_reference.py tools/art/sources/guardians/frost_still.png tools/art/sources/guardians/frost_ref.png 192x128 --at=bottom`). Round 2 (2026-10-29, user: "O deslizamento do guardião do gelo deve ser mais animado"): PixelLab animate-with-text-v3 (`tools/pixellab/pixellab.ps1 animate3 -Prompt guardian_frost_attack_2 -Name guardian_frost_attack_2_r2b -Out tools/art/sources/guardians`; the returned frames kept in tools/art/sources/guardians/guardian_frost_attack_2_r2b/), cut by `python -I tools/art/cut_inhabitant.py tools/art/sources/guardians/guardian_frost_attack_2_r2b guardian_frost_attack_2_r2b tools/art/sources/guardians/frost_still.png assets/sprites/characters/guardians/frost_guardian/frost_guardian_attack_2.png --scale=1 --keep=0-0,2-7,5-7,5-5,14-16 --floor=127`. The golem drops and leans (1-3), then rushes hunched forward with its fists out in front and its legs driving through two strides (4-10, the stride frames 5-7 run twice), and skids upright (11-13); clip frames 6-9, the hitbox window, are mid-rush. Kept from retry 1: the first run of round 2 (guardian_frost_attack_2_r2a) leaned less; retry 1 turned into a narrow profile on its frames 8-13, so those are left out and the stride is repeated. No ice spray is drawn (effects are not painted into the body strip); a scrape of ice at the feet would be its own effect. No pack art was shown to any generator; today's pack sheets were only measured (frame size, frame count, body bounds).
+Negative: outlines, black contour, front view, facing right, turning around, glow, flash, sparks, particles, motion lines, text, ground, scenery

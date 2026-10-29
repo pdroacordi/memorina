@@ -50,7 +50,8 @@ Third-party art used in Memorina, with the terms it was taken under.
 - **The village street grate** (`assets/sprites/world/props/fact_barrier/street_grate.png`, WORLD-35) - drawn by a script, `tools/art/draw_street_grate.py`, from no reference: iron bars in the fact barrier's iron colours and stone end blocks in the village cobble colours (`assets/sprites/world/tilesets/village/stone.png`), both our own art.
 - **Region fronts and doorways** (`assets/sprites/world/props/{spring_woods,threshold,frozen_lake,wind_orchards,frost_edge}/`, `assets/sprites/world/props/door/door_{passage,stairwell,hatch_up,hatch_down}.png`) - Codex image generation with our approved village concept and our own village fronts and door as the only references; kept in `tools/art/sources/{region_facades,doorways,stairwell}_codex.png` and cut by `tools/art/cut_facades.py`.
 - **Villagers and animals** (`assets/sprites/world/inhabitants/`) - stills from one Codex sheet (our concept and our village fronts as the only references, `tools/art/sources/village_people_codex.png`), idle loops PixelLab-generated (`animate-with-text-v3`) from those stills, cut by `tools/art/cut_inhabitant.py`.
-- **Corrupted creatures and teaching creatures** (`assets/sprites/characters/creatures/{boar,crab,bat,spider,hornet,scorpion}/`, `assets/sprites/world/creatures/{snail,thrush,kestrel,lizard}/`, CORE-13) - stills from two Codex sheets drawn for the project (`tools/art/sources/creatures/corrupted_codex.png`, `teachers_codex.png`; no reference images), cut by `tools/art/cut_creatures.py`; the crab, bat, scorpion and snail stills redrawn at their art size by PixelLab pixflux from our cut (`clean_prop.py`); every clip PixelLab-generated (`animate-with-text-v3`) from those stills, padded by `tools/art/pad_reference.py` and cut by `tools/art/cut_inhabitant.py`.
+- **Corrupted creatures and teaching creatures** (`assets/sprites/characters/creatures/{boar,crab,bat,spider,hornet,scorpion}/`, `assets/sprites/world/creatures/{snail,thrush,kestrel,lizard}/`, CORE-13) - stills from two Codex sheets drawn for the project (`tools/art/sources/creatures/corrupted_codex.png`, `teachers_codex.png`; no reference images), cut by `tools/art/cut_creatures.py`; the crab, bat, scorpion and snail stills redrawn at their art size by PixelLab pixflux from our cut (`clean_prop.py`); every clip PixelLab-generated (`animate-with-text-v3`) from those stills, padded by `tools/art/pad_reference.py` and cut by `tools/art/cut_inhabitant.py`. The Frost hurt recoil is procedural: `tools/art/lean_frames.py` leans the Frost still back above its hips.
+- **The Bloom and Frost guardians, our own** (`assets/sprites/characters/guardians/{bloom_guardian,frost_guardian}/`, GRD-07) - stills from one Codex concept sheet drawn for the project (`tools/art/sources/guardians/guardians_concept_codex.png`; no reference images; the tree-stag and the ice golem), cut by `tools/art/cut_creatures.py`; the tree-stag redrawn at its art size by PixelLab pixflux from our cut (`clean_prop.py`); every clip PixelLab-generated (`animate-with-text-v3`) from those stills, padded by `tools/art/pad_reference.py` and cut by `tools/art/cut_inhabitant.py`. The pack sheets they replaced were only measured, never shown to a generator, and are no longer in the project.
 
 - **The bell tower's bell, palette and front** (`assets/sprites/world/props/helix_stair/bell_tower_bell.png`, `resources/world/helix/bell_tower_look.tres`, `assets/sprites/world/props/village/bell_tower_facade.png`) - one Codex style board (`tools/art/sources/bell_tower_board_codex.png`; our approved village concept, our placeholder stair and our short tower front as the only references): the bell cut by `tools/art/cut_board_prop.py`, the turning tower's colours sampled from it, the tall front cut from its right panel by `tools/art/cut_facades.py`.
 - **Interior props** (`assets/sprites/world/props/interiors/`) - Codex image generation: one sheet per room (`tools/art/sources/interiors/<sheet>_props_codex.png`, redrawn 2026-10-11 in the flat style; the empty house's cobweb is from `empty_house_props_codex_v1.png`), drawn from its approved Codex room board with our Ivo still as the scale figure (our own art the only references), cut by `tools/art/cut_props.py`; chimneys stretched by `tools/art/stretch_prop.py`.
@@ -114,18 +115,6 @@ Third-party art used in Memorina, with the terms it was taken under.
   (https://cainos.itch.io/pixel-art-platformer-village-props; free and commercial use,
   no redistribution). That pack's page does not list dust effects, so their origin is
   **unconfirmed**: find the source before shipping, or replace them.
-
-## Guardians
-
-- **Frost Guardian** (`assets/sprites/characters/guardians/frost_guardian/`) —
-  *Boss: Frost Guardian* by **chierit**, https://chierit.itch.io/boss-frost-guardian.
-  Licensed [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/): frames from
-  the free tier, stitched into per-clip strips; otherwise unmodified.
-- **Bloom Guardian** (`assets/sprites/characters/guardians/bloom_guardian/`) —
-  the two-headed flower from *Free Forest Bosses Pixel Art* by **Free Game Assets
-  (Craftpix)**, https://free-game-assets.itch.io/free-forest-bosses-pixel-art-sprite-sheet-pack,
-  under the [Craftpix free licence](https://craftpix.net/file-licenses/) (commercial
-  use permitted, redistribution of the source files is not).
 
 ## UI
 

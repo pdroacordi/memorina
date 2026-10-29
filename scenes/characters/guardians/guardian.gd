@@ -76,6 +76,8 @@ var _leap_floor_y: float = 0.0
 var _leap_mask: int = 0
 var _shield_rest_radius: float = 0.0
 var _sprite_rest: Vector2 = Vector2.ZERO
+## Seconds of the flinch left: the facing it took on the hit is held until the hurt clip ends.
+var _flinch_left: float = 0.0
 
 @onready var _ai                : GuardianAI = $AI
 @onready var _locomotion        : LocomotionComponent = $Locomotion
@@ -86,6 +88,7 @@ var _sprite_rest: Vector2 = Vector2.ZERO
 @onready var _contact           : Hitbox = $ContactHitbox
 @onready var _pulse_emitter     : PulseEmitter = $PulseEmitter
 @onready var _arena             : Arena = get_node_or_null(arena_path) as Arena
+@onready var _sight             : EnemySight = $EnemySight
 ## A concrete view of Character's generic resolver, for the duration assert.
 @onready var _guardian_resolver : GuardianAnimationResolver = $AnimationResolver
 
@@ -136,18 +139,22 @@ func _process_motion(delta: float) -> void:
 		# world, and takes it back on the way down so it lands on real ground.
 		collision_mask = 0 if global_position.y < _leap_floor_y - 8.0 else _leap_mask
 		return
+	_flinch_left = maxf(_flinch_left - delta, 0.0)
 	if _fight.phase() == GuardianFight.Phase.PRESSURE and _player_in_arena():
 		_ai.tick(delta)
 		# Where it LOOKS, not where it walks: a guardian backing out from under
 		# a player keeps watching him, and an x sitting on its own never makes
-		# it turn on the spot.
-		face_towards(_ai.facing_intent())
+		# it turn on the spot. A flinch keeps the side it was hit from.
+		if _flinch_left <= 0.0 or _ai.is_attacking():
+			face_towards(_ai.facing_intent())
 		_locomotion.ground_update(delta, _ai.direction)
 		var attack := _ai.current_attack
 		if attack != null and _ai.is_swinging() and attack.lunge_speed > 0.0:
 			velocity.x = facing * attack.lunge_speed
 	else:
 		_locomotion.ground_update(delta, 0.0)
+		if _fight.phase() == GuardianFight.Phase.RESTORED:
+			_face_seen_player()
 	if not is_on_floor():
 		velocity.y = minf(velocity.y + base_gravity() * delta, terminal_velocity)
 
@@ -223,6 +230,14 @@ func pressure_progress() -> float:
 func wants_to_move() -> bool:
 	return not is_zero_approx(_ai.direction)
 
+## In the lucidity leap's ballistic arc, from take-off to touchdown.
+func is_leaping() -> bool:
+	return _leaping
+
+## Seconds until the lucidity leap takes off; INF when none is pending.
+func seconds_to_leap() -> float:
+	return _lucidity_wait if _lucidity_wait > 0.0 else INF
+
 #############################################
 ##  T H E   F I G H T                      ##
 #############################################
@@ -237,6 +252,7 @@ func _on_player_entered() -> void:
 	_player.call_progress.connect(_on_call_progress)
 	_player.sequence_failed.connect(_on_player_sequence_failed)
 	_player.skill_recalled.connect(_on_skill_recalled)
+	_ai.overhead_band = GuardianAI.overhead_band_for(body_rect().size.x, _player.body_rect().size.x)
 	_fight.begin()
 	_ai.active = true
 	SaveSystem.meet_guardian(stats.id)
@@ -250,6 +266,7 @@ func _on_hit_received(_damage: int, _knockback: Vector2, _source: Node2D) -> voi
 		return
 	_just_hit = true
 	_flash(hit_flash_color)
+	_flinch_from(_source)
 	if _fight.register_hit():
 		_open_lucidity()
 		return
@@ -263,6 +280,25 @@ func _on_hit_received(_damage: int, _knockback: Vector2, _source: Node2D) -> voi
 
 func _flash(color: Color) -> void:
 	flash(color, hit_flash_time)
+
+## Outside a move the hit plays the hurt clip: it turns to what hit it and keeps that side until the clip ends.
+func _flinch_from(source: Node2D) -> void:
+	if _ai.is_attacking():
+		return
+	var from := source if is_instance_valid(source) else _player
+	if from != null:
+		var dx := from.global_position.x - global_position.x
+		if absf(dx) > GuardianAI.TURN_BAND:
+			face_towards(dx)
+	_flinch_left = _animation_driver.clip_length(GuardianAnimationResolver.HURT)
+
+## A restored guardian watches Ivo while he is in sight, outside the dead band under it.
+func _face_seen_player() -> void:
+	if _sight.player == null:
+		return
+	var dx := _sight.player.global_position.x - global_position.x
+	if absf(dx) > GuardianAI.TURN_BAND:
+		face_towards(dx)
 
 ## A move winds up: the guardian squares up to Ivo (a charge thrown the way
 ## it happened to be facing goes into a wall) and the sprite pulses until the

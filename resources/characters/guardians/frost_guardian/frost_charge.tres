@@ -5,6 +5,7 @@
 
 [resource]
 script = ExtResource("1_attack")
+clip_index = 1
 duration = 1.1666667
 telegraph = 0.7
 attack_range = 300.0

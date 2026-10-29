@@ -6,7 +6,7 @@
 script = ExtResource("1_attack")
 duration = 0.6
 telegraph = 0.35
-attack_range = 72.0
+attack_range = 104.0
 cooldown = 1.4
 weight = 2.0
 knockback_strength = 380.0

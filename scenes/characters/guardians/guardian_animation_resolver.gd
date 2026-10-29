@@ -11,6 +11,12 @@ const HURT := &"hurt"
 ## The tremble between corrupted and lucid; the shield does the colour.
 const LUCID := &"lucid"
 const RESTORED := &"restored"
+## The lucidity leap, in four one-shots that each hold their last frame: the
+## crouch ends on take-off, rise and fall follow the arc, land plays on touchdown.
+const LEAP_CROUCH := &"leap_crouch"
+const LEAP_RISE := &"leap_rise"
+const LEAP_FALL := &"leap_fall"
+const LEAP_LAND := &"leap_land"
 
 const ATTACK_CLIPS: Array[StringName] = [ATTACK_1, ATTACK_2, ATTACK_3]
 
@@ -18,6 +24,9 @@ const ATTACK_CLIPS: Array[StringName] = [ATTACK_1, ATTACK_2, ATTACK_3]
 
 
 func resolve() -> StringName:
+	var leap := _leap_clip()
+	if leap != &"":
+		return leap
 	match _guardian.phase():
 		GuardianFight.Phase.RESTORED:
 			return RESTORED
@@ -40,3 +49,16 @@ func resolve() -> StringName:
 ## Maps attack indices to clips; Guardian's duration assertion uses this mapping too.
 func attack_clip_for(index: int) -> StringName:
 	return ATTACK_CLIPS[clampi(index, 0, ATTACK_CLIPS.size() - 1)]
+
+## The leap's clip, or empty when no leap is under way.
+func _leap_clip() -> StringName:
+	if _guardian.is_leaping():
+		if driver.holding(LEAP_CROUCH):
+			return LEAP_CROUCH
+		return LEAP_RISE if _guardian.velocity.y < 0.0 else LEAP_FALL
+	if driver.current == LEAP_RISE or driver.current == LEAP_FALL or driver.holding(LEAP_LAND):
+		return LEAP_LAND
+	# Started this early, the crouch's last frame (the spring) meets the take-off.
+	if _guardian.seconds_to_leap() <= driver.clip_length(LEAP_CROUCH):
+		return LEAP_CROUCH
+	return &""

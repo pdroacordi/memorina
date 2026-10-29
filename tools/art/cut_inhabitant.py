@@ -15,7 +15,9 @@ moves each frame sideways so the centroid of its non-steel pixels in game rows T
 (the frame's middle), so the body does not slide between frames. --drop=D clears every art pixel farther than D (RGB
 distance) from all of the still's colours before the snap, with any part left smaller than 4 art px: PixelLab sometimes
 paints a white note or flash, or a grey backdrop, that no still colour is near. --ceiling=ROW clears every pixel above
-game row ROW of the frame (a note drawn over a head in a colour the still has).
+game row ROW of the frame (a note drawn over a head in a colour the still has). --scale=1 reads and writes frames at
+1 px per art px (a guardian sheet, shown at Sprite2D scale 2); every row and column argument is then in art px.
+--write=1 reads 2x frames but writes the strip at 1 px per art px (a guardian animated from a 2x reference).
 """
 import sys
 from collections import Counter
@@ -119,13 +121,15 @@ def main(frames_dir, name, still_path, out_path, keep, size, at, strip_width, fl
         art = framed(art, size, at, f"{name}_{i}") if size else art
         arts.append(settled(art, floor_row, band, f"{name}_{i}"))
     strip = Image.fromarray(np.concatenate(arts, axis=1), "RGBA")
-    strip.resize((strip.width * ART_SCALE, strip.height * ART_SCALE), Image.NEAREST).save(out_path)
-    print(f"{name}: frames {','.join(map(str, keep))} ({len(arts)}) of {arts[0].shape[1] * ART_SCALE}x{arts[0].shape[0] * ART_SCALE}")
+    strip.resize((strip.width * WRITE_SCALE, strip.height * WRITE_SCALE), Image.NEAREST).save(out_path)
+    print(f"{name}: frames {','.join(map(str, keep))} ({len(arts)}) of {arts[0].shape[1] * WRITE_SCALE}x{arts[0].shape[0] * WRITE_SCALE}")
 
 
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     opts = dict((a[2:].split("=", 1) + [""])[:2] for a in sys.argv[1:] if a.startswith("--"))
+    ART_SCALE = int(opts.get("scale", ART_SCALE))
+    WRITE_SCALE = int(opts.get("write", ART_SCALE))
     keep = []
     for segment in opts.get("keep", f"0-{int(opts.get('frames', 8)) - 1}").split(","):
         bounds = segment.split("-")

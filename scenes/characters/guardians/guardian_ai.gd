@@ -8,8 +8,7 @@ signal attack_finished(attack: GuardianAttack)
 
 ## Horizontal dead band, in px, for movement and facing.
 const TURN_BAND := 10.0
-## Horizontal entry and exit bands, in px, for escaping an overhead player.
-const OVERHEAD_BAND := 64.0
+## Horizontal exit band, in px, for escaping an overhead player; the entry band is `overhead_band`.
 const ESCAPED_BAND := 150.0
 ## Lunge and minimum escape durations, in seconds.
 const STEP_OUT_TIME := 0.55
@@ -20,6 +19,9 @@ const ESCAPE_RELEASE_TIME := 0.3
 const REACH_RELEASE := 0.8
 ## Comfort-distance multiplier for entering close mode.
 const COMFORT_FAR := 1.3
+## Seconds a player out of reach overhead may keep it from moving before it throws where he will come down
+## ("O pogo é a brecha", user, 2026-10-29; bugs/a-pogo-on-the-frost-golems-head-stops-it-attacking).
+const OVERHEAD_PATIENCE := 1.5
 
 ## What it is doing about the spacing while a cooldown runs.
 const PACE := 0
@@ -46,6 +48,8 @@ var give_ground_distance: float = 98.0
 var pace_time: float = 0.9
 var pace_speed: float = 0.5
 var step_out_speed: float = 1.7
+## Horizontal distance, in px, inside which the player is on top of it: set by the guardian from both bodies' widths.
+var overhead_band: float = 0.0
 ## The move in progress (telegraph or swing), or null.
 var current_attack: GuardianAttack = null
 
@@ -68,6 +72,8 @@ var _escape_release: float = 0.0
 ## Whether the player is out of reach overhead, held sticky: see _update_reach.
 var _above_reach: bool = false
 var _above_release: float = 0.0
+## Seconds the player has been out of reach overhead with no move thrown.
+var _overhead_wait: float = 0.0
 ## Which way it is pacing while it waits out a cooldown, and for how long.
 var _spacing: int = PACE
 var _pace_direction: float = 1.0
@@ -86,10 +92,18 @@ func _ready() -> void:
 	_states.add_state(HOLD, _hold_tick)
 	_states.transition_to(HOLD)
 
+## Half of both bodies side by side, in px: closer than this the player's feet are over the guardian's body.
+static func overhead_band_for(body_width: float, player_width: float) -> float:
+	return (body_width + player_width) * 0.5
+
 ## The cooldown decays every tick regardless of state, so it is up to date
 ## before _select_state reads it this same frame (see EnemyAI.tick).
 func tick(delta: float) -> void:
 	_cooldown = maxf(_cooldown - delta, 0.0)
+	if not _above_reach:
+		_overhead_wait = 0.0
+	elif not is_attacking():
+		_overhead_wait += delta
 	_update_look()
 	super.tick(delta)
 
@@ -168,8 +182,8 @@ func _approach_tick(delta: float) -> void:
 	if _in_range(_next):
 		_current_direction = 0.0
 		return
-	# Avoid moving beneath an overhead player the current attacks cannot reach.
-	if _above_reach:
+	# Avoid moving beneath an overhead player the current attacks cannot reach, until patience runs out.
+	if _above_reach and not _impatient():
 		_hold_spacing(to_player, delta)
 		return
 	_close_in(to_player)
@@ -198,11 +212,11 @@ func _update_reach(to_player: Vector2, delta: float) -> void:
 		_above_release = 0.0
 
 ## The escape from under a player standing on the guardian: entered inside
-## OVERHEAD_BAND, left only once it is ESCAPED_BAND clear or the player has
+## `overhead_band`, left only once it is ESCAPED_BAND clear or the player has
 ## been back within reach for ESCAPE_RELEASE_TIME, and never before
 ## ESCAPE_MIN_TIME. True while it owns the movement.
 func _update_escape(to_player: Vector2, delta: float) -> bool:
-	var on_top := absf(to_player.x) <= OVERHEAD_BAND and _above_reach
+	var on_top := absf(to_player.x) <= overhead_band and _above_reach
 	if not _escaping:
 		if not on_top:
 			return false
@@ -213,6 +227,10 @@ func _update_escape(to_player: Vector2, delta: float) -> bool:
 		_escape_release = 0.0
 
 	_escape_time += delta
+	# Out of patience: once stepped out from under him, it goes back to its moves.
+	if _impatient() and _escape_lunge_left <= 0.0 and absf(to_player.x) > overhead_band:
+		_escaping = false
+		return false
 	# Require a continuous landing interval to end the escape.
 	_escape_release = 0.0 if _above_reach else _escape_release + delta
 	if _escape_time >= ESCAPE_MIN_TIME:
@@ -297,6 +315,7 @@ func _update_look() -> void:
 
 func _start_telegraph(attack: GuardianAttack) -> void:
 	current_attack = attack
+	_overhead_wait = 0.0
 	_swinging = false
 	_telegraph_timer = attack.telegraph
 	_current_direction = 0.0
@@ -328,7 +347,15 @@ func _in_range(attack: GuardianAttack) -> bool:
 	if attack == null:
 		return false
 	var to_player := _sight.player.global_position - _body.global_position
-	return absf(to_player.x) <= attack.attack_range and absf(to_player.y) <= attack.attack_height
+	if absf(to_player.x) > attack.attack_range:
+		return false
+	if absf(to_player.y) <= attack.attack_height:
+		return true
+	# Out of patience, it throws where he will come down, never from under him.
+	return _impatient() and absf(to_player.x) > overhead_band
+
+func _impatient() -> bool:
+	return _overhead_wait >= OVERHEAD_PATIENCE
 
 func _tallest_reach() -> float:
 	var tallest := 0.0

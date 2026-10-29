@@ -26,6 +26,10 @@ const SCAN_TO := 300.0
 const SCAN_STEP := 0.5
 ## Sampling step through a hit window, in s.
 const FRAME := 1.0 / 60.0
+## Ivo's drawn height, px: art at or below it in front of a guardian can strike him.
+const IVO_DRAWN_HEIGHT := 58.0
+## How far past the drawn art, px, a box may still touch.
+const DRAWN_SLACK := 4.0
 
 var _ivo: Player
 var _ivo_hurtbox: Dictionary
@@ -55,6 +59,38 @@ func test_every_guardian_move_lands_over_the_whole_distance_it_is_thrown_from() 
 				assert_float(miss).override_failure_message("%s is thrown from %.1f to %.0f px but misses a grounded Ivo at %.1f" % [
 					label, near, attack.attack_range, miss]).is_equal(-1.0)
 
+## On every sampled frame of a guardian's hit window, its box touches a grounded Ivo no farther out than the art that
+## frame draws at his height reaches (bugs/the-frost-swipe-hit-ivo-far-from-its-fist).
+func test_every_guardian_move_touches_a_grounded_ivo_only_where_its_art_is_drawn() -> void:
+	var ivo_shape := _ivo_hurtbox.shape as CapsuleShape2D
+	for path: String in GUARDIAN_SCENES:
+		var guardian := auto_free(_instance(path)) as Guardian
+		var sprite := guardian.get_node(^"Sprite2D") as Sprite2D
+		var reset := (guardian.get_node(^"AnimationPlayer") as AnimationPlayer).get_animation(&"RESET")
+		for attack: GuardianAttack in guardian.stats.attacks:
+			var clip := _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index])
+			var box := _hit_box(guardian, clip)
+			var at: float = box.window_start + 0.01
+			for xform: Transform2D in box.xforms:
+				var front := _drawn_front(sprite, clip, reset, at)
+				var touch := _reach({"shape": box.shape, "xform": xform}, _ivo_hurtbox)
+				assert_float(touch).override_failure_message("%s %s at %.3f s touches Ivo %.1f px out; the art reaches %.0f" % [
+					guardian.name, attack.resource_path.get_file(), at, touch, front]).is_less_equal(front + ivo_shape.radius + DRAWN_SLACK)
+				at += FRAME
+
+## A move tuned to start on a player higher than the default reaches an Ivo standing that high somewhere in its window.
+func test_every_guardian_move_set_to_reach_higher_lands_that_high() -> void:
+	var default_height := GuardianAttack.new().attack_height
+	for path: String in GUARDIAN_SCENES:
+		var guardian := auto_free(_instance(path)) as Guardian
+		for attack: GuardianAttack in guardian.stats.attacks:
+			if attack.attack_height <= default_height:
+				continue
+			var box := _hit_box(guardian, _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index]))
+			var raised := {"shape": _ivo_hurtbox.shape, "xform": Transform2D(0.0, Vector2(0.0, -attack.attack_height)) * (_ivo_hurtbox.xform as Transform2D)}
+			assert_float(_reach(box, raised)).override_failure_message("%s %s starts on an Ivo %.0f px up that its box cannot touch" % [
+				guardian.name, attack.resource_path.get_file(), attack.attack_height]).is_greater(0.0)
+
 ## Ivo's slash and chop both land on a walker parked at its stop distance, the chop after swing 1's shove.
 func test_the_standing_combo_lands_both_swings_on_a_parked_walker() -> void:
 	var phases := _ivo.attack_stats_idle.phases
@@ -71,8 +107,8 @@ func test_the_standing_combo_lands_both_swings_on_a_parked_walker() -> void:
 			"%s: the chop reaches %.1f px; it is at %.1f after swing 1's shove" % [creature.name, _reach(chop, target), stop + slide]).is_greater_equal(stop + slide)
 
 ## A guardian's comfort point is outside Ivo's longest swing; it gives ground before Ivo touches its contact box, but
-## not from where its main move (its most likely move that neither lunges nor leaps) was just thrown
-## (systems/guardians, "Comfort distances follow Ivo's reach").
+## not from where its main move (its most likely move that neither lunges nor leaps) was just thrown, and inside its
+## comfort point (systems/guardians, "Comfort distances follow Ivo's reach").
 func test_every_guardian_keeps_its_comfort_point_outside_ivos_reach_and_gives_ground_only_close_in() -> void:
 	var swings: Array[Dictionary] = []
 	for clip: StringName in [&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in",
@@ -98,6 +134,9 @@ func test_every_guardian_keeps_its_comfort_point_outside_ivos_reach_and_gives_gr
 			guardian.name, give_ground, touch]).is_greater(touch)
 		assert_float(give_ground).override_failure_message("%s gives ground at %.1f, so it backs off after its %s from %.0f" % [
 			guardian.name, give_ground, main.resource_path.get_file(), main.attack_range]).is_less(main.attack_range)
+		# GuardianAI leaves GIVE_GROUND back at the comfort distance, so the band must be open.
+		assert_float(give_ground).override_failure_message("%s gives ground at %.1f, beyond its comfort point %.0f" % [
+			guardian.name, give_ground, comfort]).is_less(comfort)
 
 ## A walker starts a move anywhere inside its reach, and inside its contact box touching already hurts, so from there
 ## out to the reach's far edge the move's hitbox must touch a grounded Ivo; a lunge moves first, so it only has to touch him.
@@ -227,6 +266,27 @@ func _hit_box(root: Node, clip: Animation) -> Dictionary:
 			_keyed(clip, reset, "Hitbox/CollisionShape2D:position", at, node.position)))
 		at += FRAME
 	return {"shape": shape, "xforms": xforms, "window_start": window.x}
+
+## The frontmost x, in px facing +x, of the opaque art the clip shows at `at` from Ivo's drawn height to the floor.
+func _drawn_front(sprite: Sprite2D, clip: Animation, reset: Animation, at: float) -> float:
+	var texture := _keyed(clip, reset, "Sprite2D:texture", at, sprite.texture) as Texture2D
+	var hframes: int = _keyed(clip, reset, "Sprite2D:hframes", at, sprite.hframes)
+	var frame: int = _keyed(clip, reset, "Sprite2D:frame", at, sprite.frame)
+	var image := texture.get_image()
+	var size := Vector2i(image.get_width() / hframes, image.get_height())
+	var xform := sprite.transform
+	var front := -INF
+	for row: int in size.y:
+		var top := (xform * Vector2(0.0, row - size.y / 2.0)).y
+		var bottom := (xform * Vector2(0.0, row + 1 - size.y / 2.0)).y
+		if maxf(top, bottom) <= -IVO_DRAWN_HEIGHT or minf(top, bottom) >= 0.0:
+			continue
+		for column: int in size.x:
+			if image.get_pixel(frame * size.x + column, row).a <= 0.0:
+				continue
+			for edge: int in [column, column + 1]:
+				front = maxf(front, (xform * Vector2(edge - size.x / 2.0, 0.0)).x)
+	return front
 
 func _area_box(root: Node, area_path: NodePath) -> Dictionary:
 	var area := root.get_node(area_path) as Node2D
