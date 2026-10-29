@@ -560,6 +560,24 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     logged `cam_centre`) and `summ.py` (prints only the trace lines where the foe state changes). Rewrite them per session;
     they are short.
 
+- **Learned 2026-10-29 (CORE-13 round 2)**:
+  - **Check a draft's spawn against the grid before running it.** Two of four drafts put Ivo inside solid ground,
+    so he "fell" forever in place (vel y 1000, pos unchanged). Origin + 32 * col; the floor is the top of the first
+    solid row under the feet.
+  - **Pogo timing:** Ivo's `air_downwards_attack` hitbox is live only from 0.167 s to 0.417 s into the clip. Press
+    when the feet are ~100 px above a low creature, not at ~40 px (contact hits first). A landing recovery drops an
+    attack pressed in the last ~0.1 s before touchdown.
+  - **Creature positions:**
+    - Crab: spawn (8912, 280), walk left 0.4 s; it parks at its leash end, x 8849.7.
+    - Bat 2: spawn (4470, -1640), walk left 0.55 s to x ~4369.
+    - Spider: spawn (-4200, -870), walk right 0.53 s to x ~-4102; it bites only 22-30 px from its column.
+    - Hornet 2: spawn (-3300, -2020), walk left 0.3 s; it tells at ~3.3 s and dashes at ~3.8-3.9 s.
+    - Sun stair scorpion 2: spawn (4090, 1240); it tells at ~3.98 s.
+  - A per-foe world position is Ivo's `pos` + `dx`/`dy` from `trace`. A 15-line `batpos.py` printing it every N
+    frames was how the pinned bat showed.
+  - The runner sometimes segfaults on exit (exit 139) after writing everything. Check the frame count before
+    calling a run failed.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
