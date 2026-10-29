@@ -1,7 +1,7 @@
 """Turn a PixelLab animation (frames at 2x) into an inhabitant's strip on the 2x grid, in its still's colours.
 
 python -I tools/art/cut_inhabitant.py <frames dir> <name> <still.png> <out.png> [--frames=8] [--keep=a-b[,c-d]]
-    [--frame=128 --at=x,y] [--strip=64] [--floor=95] [--centre=80-96]
+    [--frame=128 --at=x,y] [--strip=64] [--floor=95] [--centre=80-96] [--drop=70] [--ceiling=12]
 Reads <name>_<i>.png (animate-with-text-v3 returns frames 0..N, N usually repeating 0). By default it keeps
 0..frames-1, so a loop closes; --keep lists the frames kept in sheet order, each range inclusive and allowed to run
 downwards (a one-shot that returns to its first pose keeps 1..N-1 or 1..N; 5-10,9-6 is a ping-pong loop;
@@ -12,13 +12,17 @@ The frames are written side by side at 2x (Sprite2D.hframes = frames kept). --st
 strip of W px frames, instead of PixelLab's frame files (an approved pilot re-framed). After framing, --floor=ROW moves
 each frame up or down so its lowest opaque pixel sits on game row ROW (feet on the floor line), and --centre=TOP-BOTTOM
 moves each frame sideways so the centroid of its non-steel pixels in game rows TOP..BOTTOM-1 sits on the flip axis
-(the frame's middle), so the body does not slide between frames.
+(the frame's middle), so the body does not slide between frames. --drop=D clears every art pixel farther than D (RGB
+distance) from all of the still's colours before the snap, with any part left smaller than 4 art px: PixelLab sometimes
+paints a white note or flash, or a grey backdrop, that no still colour is near. --ceiling=ROW clears every pixel above
+game row ROW of the frame (a note drawn over a head in a colour the still has).
 """
 import sys
 from collections import Counter
 
 import numpy as np
 from PIL import Image
+from scipy import ndimage
 
 ART_SCALE = 2
 
@@ -85,12 +89,30 @@ def source_frame(frames_dir, name, index, strip_width):
     return np.asarray(Image.open(f"{frames_dir}/{name}_{index}.png").convert("RGBA"))
 
 
-def main(frames_dir, name, still_path, out_path, keep, size, at, strip_width, floor_row, band):
+def dropped(art, palette, limit):
+    """Clears pixels farther than limit from every palette colour, then opaque parts under 4 art px."""
+    opaque = art[..., 3] > 0
+    px = art[..., :3][opaque].astype(int)
+    far = np.sqrt(((px[:, None] - palette[None]) ** 2).sum(-1).min(1)) > limit
+    ys, xs = np.nonzero(opaque)
+    art[ys[far], xs[far], 3] = 0
+    labels, count = ndimage.label(art[..., 3] > 0, structure=np.ones((3, 3)))
+    for part in range(1, count + 1):
+        if (labels == part).sum() < 4:
+            art[labels == part, 3] = 0
+    return art
+
+
+def main(frames_dir, name, still_path, out_path, keep, size, at, strip_width, floor_row, band, drop=0, ceiling=0):
     still = np.asarray(Image.open(still_path).convert("RGBA"))
     palette = np.array(sorted({tuple(c) for c in still[still[..., 3] > 0][:, :3]}), dtype=int)
     arts = []
     for i in keep:
         art = to_art(source_frame(frames_dir, name, i, strip_width))
+        if drop:
+            art = dropped(art, palette, drop)
+        if ceiling:
+            art[:ceiling // ART_SCALE, :, 3] = 0
         opaque = art[..., 3] > 0
         px = art[..., :3][opaque].astype(int)
         art[..., :3][opaque] = palette[((px[:, None] - palette[None]) ** 2).sum(-1).argmin(1)]
@@ -116,4 +138,5 @@ if __name__ == "__main__":
         sys.exit("--at must be even game px, on the 2x grid")
     band = tuple(map(int, opts["centre"].split("-"))) if opts.get("centre") else None
     main(args[0], args[1], args[2], args[3], keep, int(opts.get("frame", 0)), offset, int(opts.get("strip", 0)),
-         int(opts.get("floor", 0)), band)
+         int(opts.get("floor", 0)), band, int(opts.get("drop", 0)),
+         int(opts.get("ceiling", 0)))

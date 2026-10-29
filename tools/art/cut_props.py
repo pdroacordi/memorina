@@ -15,6 +15,7 @@ python -I tools/art/cut_props.py <sheet.png> <out dir> [--names=a,b,...] [--ref-
     stands it on the floor (a keyed fringe dropped from the box left 2 px floats, WORLD-11).
     --size gives a named object its own art size, its height (hN) or width (wN) in art px, for a sheet whose scale
     figure is not in proportion with every object.
+    --figure=none reads a sheet with no Ivo (a creature sheet): every object is sized by --size alone.
 """
 import os
 import sys
@@ -90,10 +91,13 @@ def reading_order(found: list, row_gap: float) -> list:
 def main(sheet: str, out_dir: str, options: dict) -> None:
     rgb, solid = keyed(sheet)
     found = objects(solid, int(options.get("merge", 24)))
-    # Ivo stands tall and narrow; a table or a bench may start further left.
-    standing = [o for o in found if (o[0].stop - o[0].start) >= 1.6 * (o[1].stop - o[1].start)]
-    figure = min(standing, key=lambda o: o[1].start)
-    scale = int(options.get("ref-height", 29)) / (figure[0].stop - figure[0].start)
+    if options.get("figure") == "none":
+        figure, scale = None, 1.0
+    else:
+        # Ivo stands tall and narrow; a table or a bench may start further left.
+        standing = [o for o in found if (o[0].stop - o[0].start) >= 1.6 * (o[1].stop - o[1].start)]
+        figure = min(standing, key=lambda o: o[1].start)
+        scale = int(options.get("ref-height", 29)) / (figure[0].stop - figure[0].start)
     ordered = reading_order([o for o in found if o is not figure], rgb.shape[0] * 0.12)
     names = options["names"].split(",") if "names" in options else [f"prop_{i:02d}" for i in range(len(ordered))]
     sizes = dict((k, v) for k, v in (s.split(":") for s in options.get("size", "").split(",") if s))
