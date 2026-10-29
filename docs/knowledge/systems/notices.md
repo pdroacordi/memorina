@@ -30,7 +30,7 @@ source_files:
 
 # Notices
 
-**Never break:** A notice is derived from the save, never recorded: an item notice is an owned item that became true on `progress_changed`, an intent notice is a change of `IntentCatalog.current`, and a rebuilt world seeds both silently. A notice never shows over a talk, a cutscene, a lesson or a fight: it waits for them to end (`NoticeHold.applies`, the one test both watchers use), and one still sliding in or holding when they begin is withdrawn and shown again after; once it starts to slide out it is told and never shown again. The pause menu shows the intent last told, never one whose notice has not shown. `NoticeWatcher` and `NoticeToast` are pausable; the toast's tween is bound to it (pausable, scaled), never ALWAYS. The current intent is the first that holds, the rule `DialogueSet.current` uses. Every item name and intent fits its line in every language (`notice_text_fit_test`).
+**Never break:** A notice is derived from the save, never recorded: an item notice is an owned item that became true on `progress_changed`, a SEED notice a rise of `caches_taken.size()` (one per seed, LIFE-04), an intent notice is a change of `IntentCatalog.current`, and a rebuilt world seeds both silently. A notice never shows over a talk, a cutscene, a lesson or a fight: it waits for them to end (`NoticeHold.applies`, the one test both watchers use), and one still sliding in or holding when they begin is withdrawn and shown again after; once it starts to slide out it is told and never shown again. The pause menu shows the intent last told, never one whose notice has not shown. `NoticeWatcher` and `NoticeToast` are pausable; the toast's tween is bound to it (pausable, scaled), never ALWAYS. The current intent is the first that holds, the rule `DialogueSet.current` uses. Every item name and intent fits its line in every language (`notice_text_fit_test`).
 
 ## Summary
 
@@ -78,6 +78,12 @@ UI-11, design 06 §5 Pilar 2 and §9. Two kinds of notice share one queue and on
   - `Text`: the 8 px text font, cream (0.96, 0.9, 0.72) with a 2 px dark outline (0.13, 0.08, 0.05), the region title's epithet style, so it reads over any room; `TEXT_WIDTH` (180) is the widest text the line holds.
 - `show_notice(key, icon)`: slides in from 12 art px right while fading in (0.3 s), holds 2.0 s, emits `leaving`, slides out (0.5 s), waits `gap` (0.25 s) and emits `finished`. One tween bound to the toast: pausable and scaled, like the quill and the region title; under a menu hold it stops where it is.
 - `withdraw()` kills the tween and hides at once without `leaving` or `finished` (`gotchas/a-killed-tween-never-emits-finished`).
+
+## Season seeds (LIFE-04, `systems/seeds-and-the-seller`)
+
+- `Notice.Kind.SEED` (appended) and `Notice.is_intent()`; the queue's intent tests read `is_intent()`, so a SEED notice is never taken for an intent.
+- `NoticeQueue.add_seed()` queues one per seed gained (never merged); `drop_seeds()` drops those waiting when the count falls (a rewind).
+- `NoticeWatcher` keeps `caches_taken.size()` from `_ready` (seeded silently) and adds the difference on `progress_changed`; text `NoticeWatcher.SEED_KEY` (`NOTICE_SEED`), icon the `seed_icon` export (`assets/sprites/hud/items/item_icon_seed.png`, wired in `game.tscn`). Same hold and toast as items; the toast shows no count.
 
 ## The pause menu
 

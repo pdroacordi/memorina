@@ -27,6 +27,12 @@ class_name PlayerData extends Resource
 @export var found_secrets: Array[StringName] = []
 ## Found pieces taken, by reward `slot_id`; live data like heard (architecture/found-pieces).
 @export var found_pieces: Array[StringName] = []
+## Season-seed caches taken, by reward `slot_id`; live data like heard (systems/seeds-and-the-seller).
+@export var caches_taken: Array[StringName] = []
+## Seller offers bought (MAP and REPLANT), by `SeedOffer.id`; live data like heard.
+@export var offers_bought: Array[StringName] = []
+## Found-piece slot ids the seller told a rumour of, in the order bought; live data like heard.
+@export var rumours: Array[StringName] = []
 ## Regions whose title has played, by region `SceneKey`; a death keeps them (SaveLedger.rewind).
 @export var announced_regions: Array[StringName] = []
 ## Dialogue ids heard to their end; live data that a bench commits and a death forgets (systems/dialogue).

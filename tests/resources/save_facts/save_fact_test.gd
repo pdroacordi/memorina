@@ -62,6 +62,23 @@ func test_guardians_restored_at_least_counts_them() -> void:
 	assert_bool(two.holds(data)).is_true()
 	assert_bool(_fact(SaveFact.Kind.GUARDIANS_RESTORED_AT_LEAST, 0).holds(PlayerData.new())).is_true()
 
+func test_caches_taken_at_least() -> void:
+	var one := _fact(SaveFact.Kind.CACHES_TAKEN_AT_LEAST, 1)
+	var data := PlayerData.new()
+	assert_bool(one.holds(data)).is_false()
+	data.caches_taken.append(&"threshold_ravine_cache")
+	assert_bool(one.holds(data)).is_true()
+	assert_bool(_fact(SaveFact.Kind.CACHES_TAKEN_AT_LEAST, 2).holds(data)).is_false()
+
+func test_offer_bought() -> void:
+	var replanted := _fact(SaveFact.Kind.OFFER_BOUGHT, 0, &"replant_village")
+	var data := PlayerData.new()
+	assert_bool(replanted.holds(data)).is_false()
+	data.offers_bought.append(&"map_threshold")
+	assert_bool(replanted.holds(data)).is_false()
+	data.offers_bought.append(&"replant_village")
+	assert_bool(replanted.holds(data)).is_true()
+
 func test_dialogue_heard_reads_the_id() -> void:
 	var heard := _fact(SaveFact.Kind.DIALOGUE_HEARD, 0, &"trial_first")
 	var data := PlayerData.new()

@@ -1,6 +1,7 @@
 class_name MapScreen
 extends MenuScreen
 ## The map: every seen room over the dimmed world, opened centred on Ivo (indoors, on the building's door), panned and zoomed in real time. It never holds the world.
+## A bought region's rooms and the rumour marks are drawn from purchases, never written to `map_seen` (systems/seeds-and-the-seller).
 
 ## Pack px per 64 px cell at each zoom step, farthest first.
 const CELL_PX_STEPS: Array[int] = [1, 2, 4, 8]
@@ -19,6 +20,9 @@ var menu_input: MenuInput
 ## World px the map opens on instead of Ivo while `anchored`: the door of the building he is inside.
 var anchor: Vector2 = Vector2.ZERO
 var anchored: bool = false
+# Not exported: tests swap them.
+var seeds: SeedStock = preload(SeedStock.DEFAULT_PATH)
+var found: FoundCatalog = preload(FoundCatalog.DEFAULT_PATH)
 
 ## World px at the middle of the screen.
 var _centre: Vector2 = Vector2.ZERO
@@ -30,6 +34,9 @@ var _pan_armed: Vector2 = Vector2.ZERO
 ## Each room's geometry with the bytes it was built from, keyed by room scene key; an open rebuilds only rooms whose bytes changed.
 var _built: Dictionary[String, MapCanvas.Patch] = {}
 var _built_from: Dictionary[String, PackedByteArray] = {}
+## A bought room's full-grid geometry, keyed by room scene key, with the bounds it was built for.
+var _known: Dictionary[String, MapCanvas.Patch] = {}
+var _known_bounds: Dictionary[String, Rect2] = {}
 
 @onready var _art: Control = $Art
 @onready var _canvas: MapCanvas = %Canvas
@@ -50,7 +57,11 @@ func can_open() -> bool:
 	return subject != null and subject.can_open_map()
 
 func open() -> void:
-	_canvas.build(_seen_patches())
+	var infos := _room_infos()
+	var data := SaveSystem.player_data
+	var marks := MapExtras.rumour_points(infos, Rumours.marked(found, data))
+	_canvas.build(_seen_patches(), _known_patches(infos, SeedPurse.bought_map_regions(seeds, data)), marks,
+			MapExtras.steps(marks))
 	_step = OPEN_STEP
 	_canvas.set_cell_px(cell_px())
 	var opened_at := Vector2.ZERO
@@ -130,4 +141,24 @@ func _seen_patches() -> Array[MapCanvas.Patch]:
 			_built_from[key] = bytes
 		if patch != null:
 			patches.append(patch)
+	return patches
+
+func _room_infos() -> Array[MapRoomInfo]:
+	var infos: Array[MapRoomInfo] = []
+	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):
+		# A room outside a Region (a test bed) has no region to buy.
+		var region := room.get_parent() as Region
+		var region_key := region.name_key if region != null else ""
+		infos.append(MapRoomInfo.new(room.id(), SceneKey.of(room), region_key, room.get_bounds(), room.interior))
+	return infos
+
+func _known_patches(infos: Array[MapRoomInfo], regions: PackedStringArray) -> Array[MapCanvas.Patch]:
+	var patches: Array[MapCanvas.Patch] = []
+	for info: MapRoomInfo in MapExtras.known_rooms(infos, regions):
+		if _known_bounds.get(info.key, Rect2()) != info.bounds:
+			var grid := MapGrid.new(MapGrid.dims_for(info.bounds))
+			grid.mark_cells(Rect2i(Vector2i.ZERO, Vector2i(grid.cols, grid.rows)))
+			_known[info.key] = MapCanvas.Patch.new(info.bounds.position, grid)
+			_known_bounds[info.key] = info.bounds
+		patches.append(_known[info.key])
 	return patches

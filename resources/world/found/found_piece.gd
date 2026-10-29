@@ -4,6 +4,8 @@ extends Resource
 
 ## The RewardSlot that holds it; also the PIECE_FOUND fact id of its notebook entry.
 @export var slot_id: StringName
+## The id of the room whose `.room` holds the slot; a rumour reads its region (room_files_test pins it).
+@export var room: StringName
 ## Drawn lying on the slot's floor.
 @export var texture: Texture2D
 ## The song a songbook teaches the second half of; null for a letter.

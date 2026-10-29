@@ -88,6 +88,9 @@ func test_every_village_set_is_in_the_catalog_with_a_plate_and_a_portrait() -> v
 		assert_bool(catalog.sets.has(talk)).override_failure_message(who).is_true()
 		for dialogue: Dialogue in talk.dialogues:
 			for line: DialogueLine in dialogue.lines:
+				# A cue-only line (the seller's trade) has no speaker.
+				if line.text_key.is_empty():
+					continue
 				assert_str(line.speaker.name_key).is_equal("SPEAKER_" + who.to_upper())
 				assert_object(line.speaker.portrait).override_failure_message(who).is_not_null()
 
@@ -164,3 +167,29 @@ func test_the_taverners_two_mugs_show_only_at_six_tenths() -> void:
 	_restore_two(data)
 	assert_int(FactStaging.pick(mugs.stages, data)).is_equal(0)
 	assert_str(_id(load(VILLAGE + "taverner.tres") as DialogueSet, data)).is_equal("")
+
+## "He stays to trade (Recommended)" (user, 2026-10-28): only his apples line ends at 0.6. The talk, the seller and his
+## stall have no presence, and from his first seed he trades: once with the seeds line, then the trade line, at any step.
+func test_the_seller_stays_to_trade_all_game() -> void:
+	var path := CONTENTS + "village_lane_west.room"
+	var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), RoomLegend.load_default(), path).map
+	for placed: Dictionary in map.entities:
+		if str(placed.params.get("talk", "")).get_file() == "seller.tres":
+			assert_bool((placed.params as Dictionary).has("presence")).is_false()
+	for scene: String in ["res://scenes/world/environment/inhabitants/seller.tscn",
+			"res://scenes/world/environment/props/village/market_stall_apples.tscn"]:
+		var node := (load(scene) as PackedScene).instantiate()
+		assert_bool(node.get_children().any(func(child: Node) -> bool: return child is RegionPresence)).override_failure_message(scene).is_false()
+		node.free()
+	var seller := load(VILLAGE + "seller.tres") as DialogueSet
+	for late: bool in [false, true]:
+		var data := PlayerData.new()
+		if late:
+			_restore_two(data)
+		data.caches_taken.append(&"threshold_ravine_cache")
+		assert_str(_id(seller, data)).is_equal("seller_seeds_first")
+		data.dialogues_heard.append(&"seller_seeds_first")
+		assert_str(_id(seller, data)).is_equal("seller_trade")
+	var trade := seller.current(PlayerData.new())
+	assert_str(String(trade.id)).is_equal("seller_apples")
+	assert_array(_keys(trade)).is_equal(["DLG_SELLER_APPLES"])

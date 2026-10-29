@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://scenes/ui/title/slot_card.gd" id="1_card"]
 [ext_resource type="Theme" path="res://scenes/ui/menu/menu_theme.tres" id="2_theme"]
 [ext_resource type="Script" path="res://scenes/ui/menu/menu_entry.gd" id="3_entry"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_seed.png" id="4_seed"]
 
 [node name="SlotCard" type="Control"]
 custom_minimum_size = Vector2(204, 30)
@@ -46,10 +47,32 @@ unique_name_in_owner = true
 layout_mode = 0
 offset_left = 6.0
 offset_top = 15.0
-offset_right = 154.0
+offset_right = 126.0
 offset_bottom = 24.0
 theme_type_variation = &"SlotText"
 clip_text = true
+
+[node name="Seeds" type="Label" parent="Card"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 126.0
+offset_top = 15.0
+offset_right = 144.0
+offset_bottom = 24.0
+theme_type_variation = &"SlotText"
+horizontal_alignment = 2
+
+[node name="SeedIcon" type="TextureRect" parent="Card"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 146.0
+offset_top = 15.0
+offset_right = 154.0
+offset_bottom = 23.0
+mouse_filter = 2
+texture = ExtResource("4_seed")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Empty" type="Label" parent="Card"]
 unique_name_in_owner = true

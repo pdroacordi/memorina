@@ -36,7 +36,7 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 
 ## Tree and wiring (`game.tscn`)
 
-- `ScreenLayer` is a CanvasLayer at layer 2, process mode INHERIT, the last child of `Game`, after `World`. `_input` reaches it first (`gotchas/a-menu-press-reaches-the-last-node-first`).
+- `ScreenLayer` is a CanvasLayer at layer 3 (over the seed shop at 2, `systems/seeds-and-the-seller`), process mode INHERIT, the last child of `Game`, after `World`. `_input` reaches it first (`gotchas/a-menu-press-reaches-the-last-node-first`).
 - `Screens` is a full-rect Control, process mode ALWAYS, `mouse_filter` IGNORE. Its children are `MenuInput`, `Dim` (black at 0.55 alpha), `MapScreen`, `Notebook`, `PauseMenu` and `Blackout` (a `Fade` with `real_time = true`, last, so it covers the menu).
 - Connections in `game.tscn`:
   - `hold_requested` → `WorldFreeze.hold`

@@ -12,90 +12,107 @@
 [sub_resource type="Resource" id="piece_0"]
 script = ExtResource("2_piece")
 slot_id = &"woods_root_caves_alcove"
+room = &"woods_root_caves"
 texture = ExtResource("4_book")
 song = ExtResource("5_bell_jar")
 
 [sub_resource type="Resource" id="piece_1"]
 script = ExtResource("2_piece")
 slot_id = &"lake_shore_far_niche"
+room = &"lake_shore"
 texture = ExtResource("4_book")
 song = ExtResource("6_rain")
 
 [sub_resource type="Resource" id="piece_2"]
 script = ExtResource("2_piece")
 slot_id = &"caldera_seesaw_ledge"
+room = &"caldera_seesaw"
 texture = ExtResource("4_book")
 song = ExtResource("7_gale")
 
 [sub_resource type="Resource" id="piece_3"]
 script = ExtResource("2_piece")
 slot_id = &"orchard_ridge_letter"
+room = &"orchard_ridge"
 texture = ExtResource("4_book")
 song = ExtResource("8_solstice")
 
 [sub_resource type="Resource" id="piece_4"]
 script = ExtResource("2_piece")
 slot_id = &"woods_hut_letter"
+room = &"woods_hut"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_5"]
 script = ExtResource("2_piece")
 slot_id = &"orchard_well_catch"
+room = &"orchard_well"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_6"]
 script = ExtResource("2_piece")
 slot_id = &"caldera_long_corridor_alcove"
+room = &"caldera_long_corridor"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_7"]
 script = ExtResource("2_piece")
 slot_id = &"village_tavern_cellar"
+room = &"village_tavern_cellar"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_8"]
 script = ExtResource("2_piece")
 slot_id = &"frost_wreck_letter"
+room = &"frost_wreck_hold"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_9"]
 script = ExtResource("2_piece")
 slot_id = &"lake_glacier_alcove"
+room = &"lake_glacier"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_10"]
 script = ExtResource("2_piece")
 slot_id = &"lake_well_reeds"
+room = &"lake_well"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_11"]
 script = ExtResource("2_piece")
 slot_id = &"woods_pond_alcove"
+room = &"woods_pond"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_12"]
 script = ExtResource("2_piece")
 slot_id = &"caldera_dry_moat_ledge"
+room = &"caldera_dry_moat"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_13"]
 script = ExtResource("2_piece")
 slot_id = &"village_bell_tower_alcove"
+room = &"village_bell_tower"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_14"]
 script = ExtResource("2_piece")
 slot_id = &"lake_high_wall_exit"
+room = &"lake_high_wall"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_15"]
 script = ExtResource("2_piece")
 slot_id = &"caldera_sun_stair_shrine"
+room = &"caldera_sun_stair"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_16"]
 script = ExtResource("2_piece")
 slot_id = &"village_empty_house_reward"
+room = &"village_empty_house"
 texture = ExtResource("3_letter")
 
 [resource]

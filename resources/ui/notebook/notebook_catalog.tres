@@ -29,6 +29,16 @@ id = &"lore_double_jump"
 title_key = "SKILL_DOUBLE_JUMP"
 body_key = "NOTEBOOK_LORE_DOUBLE_JUMP"
 
+[sub_resource type="Resource" id="lore_seeds"]
+script = ExtResource("2_entry")
+id = &"lore_seeds"
+requirement = 12
+index = 1
+title_key = "NOTEBOOK_LORE_SEEDS_TITLE"
+detail_key = "NOTEBOOK_LORE_SEEDS_HELD"
+detail_counts_seeds = true
+body_key = "NOTEBOOK_LORE_SEEDS"
+
 [sub_resource type="Resource" id="song_freeze"]
 script = ExtResource("2_entry")
 id = &"song_freeze"
@@ -362,4 +372,4 @@ body_key = "NOTEBOOK_FOUND_PILGRIM_LAST_BODY"
 
 [resource]
 script = ExtResource("1_catalog")
-entries = Array[ExtResource("2_entry")]([SubResource("lore_mentor"), SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_bread"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer"), SubResource("found_songbook_bell_jar"), SubResource("found_songbook_rain"), SubResource("found_songbook_gale"), SubResource("found_songbook_solstice"), SubResource("found_bento_1"), SubResource("found_bento_2"), SubResource("found_bento_3"), SubResource("found_marta"), SubResource("found_gull_log"), SubResource("found_gull_note"), SubResource("found_gull_oar"), SubResource("found_clara_pond"), SubResource("found_clara_crater"), SubResource("found_clara_ringer"), SubResource("found_pilgrim_1"), SubResource("found_pilgrim_2"), SubResource("found_pilgrim_last")])
+entries = Array[ExtResource("2_entry")]([SubResource("lore_mentor"), SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("lore_seeds"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_bread"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer"), SubResource("found_songbook_bell_jar"), SubResource("found_songbook_rain"), SubResource("found_songbook_gale"), SubResource("found_songbook_solstice"), SubResource("found_bento_1"), SubResource("found_bento_2"), SubResource("found_bento_3"), SubResource("found_marta"), SubResource("found_gull_log"), SubResource("found_gull_note"), SubResource("found_gull_oar"), SubResource("found_clara_pond"), SubResource("found_clara_crater"), SubResource("found_clara_ringer"), SubResource("found_pilgrim_1"), SubResource("found_pilgrim_2"), SubResource("found_pilgrim_last")])

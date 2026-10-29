@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/story/seed_shop_beat.gd" id="1_beat"]
+[ext_resource type="PackedScene" path="res://scenes/ui/seed_shop/seed_shop_panel.tscn" id="2_panel"]
+
+[node name="SeedShopBeat" type="Node"]
+script = ExtResource("1_beat")
+cue = &"seller_shop"
+
+[node name="Layer" type="CanvasLayer" parent="."]
+layer = 2
+
+[node name="SeedShopPanel" parent="Layer" instance=ExtResource("2_panel")]

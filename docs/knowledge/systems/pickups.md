@@ -55,6 +55,14 @@ The Memorina is not a pickup: the mentor's talk grants it in STORY-03 through a 
 
 Letters and songbooks are `FoundPickup`s, not `ItemPickup`s: a reward slot adds one from `found_catalog.tres`, and Up takes it in `Player._try_found`, after `_try_pickup`, under the same buffer and gates (`systems/found-pieces`).
 
+## The shared reach (`UpReach`, LIFE-04)
+
+`scenes/world/interactables/up_reach/up_reach.gd`, a Node child of every Up pickup (`ItemPickup`, `FoundPickup`, `CachePickup`): the root calls `setup(cells, art_top, art_x)` in its `_ready` (the shape, and the prompt 8 px over the higher of the reach and the art) and `refresh(shown)` each physics frame (the prompt shows only while Ivo is in reach, not in a story, and `Player.reaches` the root). `player()` is Ivo in reach. A fourth pickup composes it. `Talkable` keeps its own reach.
+
+## Season seeds
+
+A CACHE reward slot holds a `CachePickup` (one seed); Up takes it in `Player._try_cache`, after `_try_found` and before `_try_board`, under the same buffer and gates (`systems/seeds-and-the-seller`).
+
 ## Today
 
 One pickup: the sword in `threshold_farmhouse` (cell 9,8; `rest_offset` (-4, -19); `width_cells` 4).

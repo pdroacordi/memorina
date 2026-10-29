@@ -36,7 +36,7 @@ User decisions (2026-10-28): taking a letter, "Quill only (Recommended)": the pi
 
 ## How a slot fills
 
-- `RewardSlot._ready` (COLLECTIBLE only) looks up its `slot_id` in `FoundCatalog` and adds a `FoundPickup` child; a filled slot stops drawing its debug marker. CACHE slots and unlisted slots stay markers.
+- `RewardSlot._ready` looks up a COLLECTIBLE `slot_id` in `FoundCatalog` and adds a `FoundPickup` child; a CACHE slot gets a `CachePickup` (LIFE-04, `systems/seeds-and-the-seller`); a filled slot stops drawing its debug marker. Unlisted COLLECTIBLE slots stay markers.
 - The legend, `.room` files and the importer are unchanged. The reach loader instantiates slots outside the tree, so `_ready` does not run there.
 - The pickup inherits the slot's z (`RoomMapNode.SECRET_Z - 10`), so a piece in a closed `[secret]` stays under its world copy.
 
@@ -44,6 +44,8 @@ User decisions (2026-10-28): taking a letter, "Quill only (Recommended)": the pi
 
 - An Area2D on `Seat.LAYER` masking the Player body, like `ItemPickup`; a 2x2-cell reach centred on the slot, rising from its floor; the sprite stands on the floor line; the `look_up` prompt shows over the reach while Ivo is in it, not in a story, and the piece lies there; a songbook's prompt also hides while Ivo moves, since a moving Ivo cannot read it (playtest 2026-10-28: a refused press on the run gave no sign why).
 - `lies(piece, data)` is the one rule (static, pure). `take()` calls `SaveSystem.mark_found(slot_id)` and emits `taken`.
+- The reach and prompt are the shared `UpReach` component (LIFE-04, `systems/seeds-and-the-seller`); a songbook passes `not wants_to_move()` into its `refresh`.
+- `FoundPiece.room` names the room whose `.room` holds the slot (LIFE-04: a rumour reads its region); `room_files_test.test_every_found_piece_names_its_room` pins it, so moving a piece is a two-field edit.
 
 ## Ivo
 

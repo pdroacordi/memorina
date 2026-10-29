@@ -23,13 +23,18 @@ enum Kind {
 	SONG_PART_KNOWN,
 	## The found piece in slot `id` was taken (architecture/found-pieces).
 	PIECE_FOUND,
+	## `index` season-seed caches or more taken (systems/seeds-and-the-seller).
+	CACHES_TAKEN_AT_LEAST,
+	## The seller offer `id` was bought.
+	OFFER_BOUGHT,
 }
 
 @export var kind: Kind = Kind.ITEM
 ## Index into the PlayerData flag array `kind` names (an Enums.PlayerSkill, Song, PlayerItem or Guardian; SONG_PART_KNOWN a Song), or the count
-## GUARDIANS_RESTORED_AT_LEAST needs; the other kinds ignore it.
+## GUARDIANS_RESTORED_AT_LEAST or CACHES_TAKEN_AT_LEAST needs; the other kinds ignore it.
 @export var index: int = 0
-## A dialogue id (DIALOGUE_HEARD), a choice id (RESPONSE_CHOSEN), a cutscene id (SCENE_SEEN) or a slot id (PIECE_FOUND); the other kinds ignore it.
+## A dialogue id (DIALOGUE_HEARD), a choice id (RESPONSE_CHOSEN), a cutscene id (SCENE_SEEN), a slot id (PIECE_FOUND) or an
+## offer id (OFFER_BOUGHT); the other kinds ignore it.
 @export var id: StringName = &""
 
 
@@ -75,4 +80,8 @@ static func check(fact_kind: Kind, fact_index: int, data: PlayerData, fact_id: S
 			return SongHalves.state(data, fact_index) != SongHalves.State.UNKNOWN
 		Kind.PIECE_FOUND:
 			return data.found_pieces.has(fact_id)
+		Kind.CACHES_TAKEN_AT_LEAST:
+			return data.caches_taken.size() >= fact_index
+		Kind.OFFER_BOUGHT:
+			return data.offers_bought.has(fact_id)
 	return false

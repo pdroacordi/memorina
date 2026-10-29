@@ -24,6 +24,7 @@ func _keys() -> Array[String]:
 		keys.append(entry.title_key)
 	for intent: Intent in INTENTS.intents:
 		keys.append(intent.text_key)
+	keys.append(NoticeWatcher.SEED_KEY)
 	return keys
 
 func _width(label: Label, text: String) -> float:

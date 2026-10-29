@@ -13,6 +13,22 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bush.tscn" id="w11_bush"]
 [ext_resource type="Script" path="res://scenes/world/environment/props/region_presence.gd" id="w11_presence"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/gate_tower.tscn" id="pr_gate_tower"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="ls_staging"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="ls_stage"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="ls_fact"]
+[ext_resource type="Resource" path="res://resources/save_facts/village_replanted.tres" id="ls_replanted"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/garden_bed_bare.tscn" id="ls_bed_bare"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/garden_bed_planted.tscn" id="ls_bed_planted"]
+
+[sub_resource type="Resource" id="ls_stage_replanted"]
+script = ExtResource("ls_stage")
+when = Array[ExtResource("ls_fact")]([ExtResource("ls_replanted")])
+show = &"Replanted"
+fade_seconds = 1.5
+
+[sub_resource type="Resource" id="ls_stage_bare"]
+script = ExtResource("ls_stage")
+show = &"Bare"
 
 [node name="Contents" type="Node2D"]
 
@@ -62,6 +78,19 @@ flip_h = true
 
 [node name="Farmer" parent="Props" instance=ExtResource("in_farmer")]
 position = Vector2(700, 288)
+
+[node name="Gardens" type="Node2D" parent="Props"]
+position = Vector2(1000, 288)
+script = ExtResource("ls_staging")
+stages = Array[ExtResource("ls_stage")]([SubResource("ls_stage_replanted"), SubResource("ls_stage_bare")])
+
+[node name="Replanted" type="Node2D" parent="Props/Gardens"]
+
+[node name="Bed" parent="Props/Gardens/Replanted" instance=ExtResource("ls_bed_planted")]
+
+[node name="Bare" type="Node2D" parent="Props/Gardens"]
+
+[node name="Bed" parent="Props/Gardens/Bare" instance=ExtResource("ls_bed_bare")]
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

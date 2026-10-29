@@ -185,7 +185,7 @@ DLG_BAKER_ERRAND_02,And the long one for…,E o comprido pra…
 DLG_BAKER_ERRAND_03,Just the round one.,Só o redondo.
 SPEAKER_TAVERNER,Taverner,Taverneiro
 SPEAKER_WATER_CARRIER,Water carrier,Aguadeira
-SPEAKER_SELLER,Seller,Vendedor
+SPEAKER_SELLER,Seller,Vendedora
 SPEAKER_BOY,Boy,Menino
 DLG_BAKER_06,Morning! …Ivo. Ivo. Sorry. Round one?,Bom dia! …Ivo. Ivo. Desculpa. O redondo?
 DLG_BAKER_COUGH,"She used to come in coughing, at the end. That thing she had. Never did have a name, did it.","No fim ela vinha tossindo. Aquilo que ela tinha. Nunca teve nome, né."
@@ -269,3 +269,20 @@ NOTEBOOK_SONG_BELL_JAR_EAR_MARGIN,I had it right.,Eu tinha acertado.
 NOTEBOOK_SONG_SOLSTICE_EAR_MARGIN,My name was better.,Meu nome era melhor.
 NOTEBOOK_SONG_GALE_EAR_MARGIN,The same wind.,O mesmo vento.
 NOTEBOOK_SONG_RAIN_EAR_MARGIN,Right all along.,Sempre certo.
+NOTICE_SEED,Season seed,Semente de estação
+SHOP_SEEDS_HELD,Seeds: %d,Sementes: %d
+SHOP_MAP,Map: %s,Mapa: %s
+SHOP_RUMOUR,A rumour,Um boato
+SHOP_REPLANT,Replant the village,Replantar a vila
+SHOP_LEAVE,Leave,Sair
+SHOP_SAID_MAP,"An old map. The roads were there, once.","Um mapa velho. Os caminhos estavam lá, um dia."
+SHOP_SAID_RUMOUR,"Something left behind. %s, they said.","Algo deixado pra trás. %s, disseram."
+SHOP_SAID_REPLANT,I'll put them in the ground myself. Come and see.,Eu mesma planto. Venha ver.
+DLG_SELLER_SEEDS_01,That's a season seed. Haven't seen one in years.,Isso é uma semente de estação. Faz anos que não vejo uma.
+DLG_SELLER_SEEDS_02,"Nobody plants anything now. I'll trade you for it. Maps, talk, whatever I've got.","Ninguém planta mais nada. Eu troco com você. Mapas, conversa, o que eu tiver."
+DLG_SELLER_SEEDS_03,"Find more, bring them here.","Achando mais, traga aqui."
+DLG_SELLER_TRADE_01,Seeds? Let's see.,Sementes? Vamos ver.
+DLG_SELLER_TRADE_02,Seeds keep. Apples don't.,"Semente guarda. Maçã, não."
+NOTEBOOK_LORE_SEEDS_TITLE,Season seeds,Sementes de estação
+NOTEBOOK_LORE_SEEDS_HELD,%d in my pocket,%d no bolso
+NOTEBOOK_LORE_SEEDS,"Hard little husks, hidden where nobody looks. The apple seller trades for them.","Casquinhas duras, escondidas onde ninguém olha. A vendedora de maçãs troca por elas."

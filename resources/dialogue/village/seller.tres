@@ -1,11 +1,14 @@
-[gd_resource type="Resource" script_class="DialogueSet" format=3]
+[gd_resource type="Resource" script_class="DialogueSet" format=3 uid="uid://bgqhpybfecd2b"]
 
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
-[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Script" uid="uid://da7s57is2erh6" path="res://resources/dialogue/dialogue_choice.gd" id="3_475vm"]
+[ext_resource type="Script" uid="uid://bhja2tfpavop7" path="res://resources/dialogue/line_variant.gd" id="6_8xasd"]
 [ext_resource type="Resource" path="res://resources/save_facts/village_at_six_tenths.tres" id="f_at06"]
+[ext_resource type="Script" uid="uid://ehxc5gppjkxp" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" uid="uid://b7dtsefilgm6i" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Script" uid="uid://0kha27ytvt2r" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" uid="uid://d2eoql5qejigt" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/seller.tres" id="s_speaker"]
+[ext_resource type="Resource" path="res://resources/save_facts/took_a_cache.tres" id="f_cache"]
 
 [sub_resource type="Resource" id="v_1"]
 script = ExtResource("f_line")
@@ -18,6 +21,52 @@ id = &"seller_apples"
 unless = Array[ExtResource("f_fact")]([ExtResource("f_at06")])
 lines = Array[ExtResource("f_line")]([SubResource("v_1")])
 
+[sub_resource type="Resource" id="seeds_1"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_speaker")
+text_key = "DLG_SELLER_SEEDS_01"
+
+[sub_resource type="Resource" id="seeds_2"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_speaker")
+text_key = "DLG_SELLER_SEEDS_02"
+
+[sub_resource type="Resource" id="seeds_shop"]
+script = ExtResource("f_line")
+cue = &"seller_shop"
+
+[sub_resource type="Resource" id="seeds_3"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_speaker")
+text_key = "DLG_SELLER_SEEDS_03"
+
+[sub_resource type="Resource" id="seeds_first"]
+script = ExtResource("f_dialogue")
+id = &"seller_seeds_first"
+once = true
+when = Array[ExtResource("f_fact")]([ExtResource("f_cache")])
+lines = Array[ExtResource("f_line")]([SubResource("seeds_1"), SubResource("seeds_2"), SubResource("seeds_shop"), SubResource("seeds_3")])
+
+[sub_resource type="Resource" id="trade_1"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_speaker")
+text_key = "DLG_SELLER_TRADE_01"
+
+[sub_resource type="Resource" id="trade_shop"]
+script = ExtResource("f_line")
+cue = &"seller_shop"
+
+[sub_resource type="Resource" id="trade_2"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_speaker")
+text_key = "DLG_SELLER_TRADE_02"
+
+[sub_resource type="Resource" id="trade"]
+script = ExtResource("f_dialogue")
+id = &"seller_trade"
+when = Array[ExtResource("f_fact")]([ExtResource("f_cache")])
+lines = Array[ExtResource("f_line")]([SubResource("trade_1"), SubResource("trade_shop"), SubResource("trade_2")])
+
 [resource]
 script = ExtResource("f_set")
-dialogues = Array[ExtResource("f_dialogue")]([SubResource("v_2")])
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("seeds_first"), SubResource("trade"), SubResource("v_2")])

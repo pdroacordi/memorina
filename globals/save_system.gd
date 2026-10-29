@@ -266,6 +266,30 @@ func mark_found(slot_id: StringName) -> void:
 		player_data.found_pieces.append(slot_id)
 		progress_changed.emit()
 
+func has_cache(slot_id: StringName) -> bool:
+	return slot_id in player_data.caches_taken
+
+## Live data like mark_found(): emits only on a change.
+func take_cache(slot_id: StringName) -> void:
+	assert(slot_id != &"", "A cache needs a slot id")
+	if not has_cache(slot_id):
+		player_data.caches_taken.append(slot_id)
+		progress_changed.emit()
+
+## A MAP or REPLANT offer. Affordability is the shop's check (SeedPurse); emits only on a change.
+func buy_offer(offer_id: StringName) -> void:
+	assert(offer_id != &"", "An offer needs an id")
+	if not player_data.offers_bought.has(offer_id):
+		player_data.offers_bought.append(offer_id)
+		progress_changed.emit()
+
+## A rumour of the found piece in `slot_id`; emits only on a change.
+func add_rumour(slot_id: StringName) -> void:
+	assert(slot_id != &"", "A rumour needs a slot id")
+	if not player_data.rumours.has(slot_id):
+		player_data.rumours.append(slot_id)
+		progress_changed.emit()
+
 func is_secret_found(secret_id: StringName) -> bool:
 	return secret_id in player_data.found_secrets
 

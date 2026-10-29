@@ -230,3 +230,34 @@ class HeldWatcher extends NoticeWatcher:
 
 	func is_holding() -> bool:
 		return held
+
+## A cache taken raises one SEED notice with the seed icon (systems/seeds-and-the-seller).
+func test_a_cache_raises_one_seed_notice_with_its_icon() -> void:
+	var icon := PlaceholderTexture2D.new()
+	_watch().seed_icon = icon
+	SaveSystem.take_cache(&"threshold_ravine_cache")
+	_watcher._process(0.0)
+	assert_array(_keys()).contains_exactly(["NOTICE_SEED"])
+	assert_object(_shown[0][1]).is_same(icon)
+	_watcher.on_notice_finished()
+	SaveSystem.take_cache(&"threshold_ravine_cache")
+	_watcher._process(0.0)
+	assert_array(_keys()).has_size(1)
+
+func test_a_rebuilt_world_tells_the_seeds_already_held_nothing() -> void:
+	SaveSystem.take_cache(&"threshold_ravine_cache")
+	_watch()
+	_watcher._process(0.0)
+	assert_array(_shown).is_empty()
+
+func test_a_seed_notice_waits_for_a_talk_to_end() -> void:
+	var ivo := _ivo()
+	_watch()
+	_watcher.subject = ivo
+	ivo.begin_talk(ivo.global_position + Vector2(20, 0))
+	SaveSystem.take_cache(&"threshold_ravine_cache")
+	_watcher._process(0.0)
+	assert_array(_shown).is_empty()
+	ivo.end_talk()
+	_watcher._process(0.0)
+	assert_array(_keys()).contains_exactly(["NOTICE_SEED"])

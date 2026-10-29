@@ -6,7 +6,7 @@ extends Node2D
 enum Kind {
 	## A STORY-06 collectible: a letter, a diary page, a photo.
 	COLLECTIBLE,
-	## A LIFE-04 cache, undecided until LIFE-04 is.
+	## A LIFE-04 cache: one season seed (systems/seeds-and-the-seller).
 	CACHE,
 }
 
@@ -21,6 +21,7 @@ const MARKER_LIFT := 22.0
 ## Over grass and ground; under a closed secret's world copy, which must hide it.
 const MARKER_Z := RoomMapNode.SECRET_Z - 10
 const FOUND_PICKUP := preload("res://scenes/world/interactables/found_pickup/found_pickup.tscn")
+const CACHE_PICKUP := preload("res://scenes/world/interactables/cache_pickup/cache_pickup.tscn")
 
 ## Unique across every map; the filling system's catalog keys its content by it.
 @export var slot_id: StringName
@@ -29,7 +30,8 @@ const FOUND_PICKUP := preload("res://scenes/world/interactables/found_pickup/fou
 # Not exported: the map guide lists exports as legend params.
 var found_catalog: FoundCatalog = preload(FoundCatalog.DEFAULT_PATH)
 
-var _content: FoundPickup
+## A FoundPickup or a CachePickup; null for an unfilled slot.
+var _content: Area2D
 
 
 func _ready() -> void:
@@ -37,13 +39,13 @@ func _ready() -> void:
 	_fill()
 
 
-## The pickup this slot holds; null for a CACHE or an unfilled slot.
-func content() -> FoundPickup:
+## The pickup this slot holds (a FoundPickup or a CachePickup); null for an unfilled slot.
+func content() -> Area2D:
 	return _content
 
 
 func _draw() -> void:
-	# Release builds and filled slots draw no marker: an unfilled slot gives nothing until LIFE-04 or LIFE-05 fills it.
+	# Release builds and filled slots draw no marker: an unfilled slot gives nothing until LIFE-05 fills it.
 	if not OS.is_debug_build() or _content != null:
 		return
 	var centre := Vector2(0.0, -MARKER_LIFT)
@@ -58,12 +60,19 @@ func _draw() -> void:
 	draw_polyline(points, Color.BLACK, 2.0)
 
 
+# Every cache holds one seed, so a CACHE needs no catalog.
 func _fill() -> void:
-	if kind != Kind.COLLECTIBLE or found_catalog == null:
+	if kind == Kind.CACHE:
+		var cache := CACHE_PICKUP.instantiate() as CachePickup
+		cache.slot_id = slot_id
+		_content = cache
+	elif found_catalog != null:
+		var piece := found_catalog.get_piece(slot_id)
+		if piece == null:
+			return
+		var found := FOUND_PICKUP.instantiate() as FoundPickup
+		found.piece = piece
+		_content = found
+	else:
 		return
-	var piece := found_catalog.get_piece(slot_id)
-	if piece == null:
-		return
-	_content = FOUND_PICKUP.instantiate() as FoundPickup
-	_content.piece = piece
 	add_child(_content)

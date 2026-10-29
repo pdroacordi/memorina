@@ -14,7 +14,10 @@ func _owned(items: Array[int]) -> Array[bool]:
 func _describe(queue: NoticeQueue) -> Array[String]:
 	var found: Array[String] = []
 	for notice: Notice in queue.waiting():
-		found.append("item %d" % notice.item if notice.is_item() else "intent %s" % notice.intent_id)
+		if notice.kind == Notice.Kind.SEED:
+			found.append("seed")
+		else:
+			found.append("item %d" % notice.item if notice.is_item() else "intent %s" % notice.intent_id)
 	return found
 
 func test_gained_lists_the_new_items_only() -> void:
@@ -126,3 +129,21 @@ func test_a_withdrawn_intent_a_newer_one_replaced_is_dropped() -> void:
 	queue.set_intent(&"elder")
 	queue.push_front(shown)
 	assert_array(_describe(queue)).contains_exactly(["intent elder"])
+
+## Every seed is told, after what already waits; a rewind drops the seeds waiting and keeps the rest.
+func test_each_seed_queues_one_notice_and_a_rewind_drops_them() -> void:
+	var queue := NoticeQueue.new()
+	queue.add_item(Enums.PlayerItem.BREAD)
+	queue.add_seed()
+	queue.add_seed()
+	assert_array(_describe(queue)).contains_exactly(["item %d" % Enums.PlayerItem.BREAD, "seed", "seed"])
+	queue.set_intent(&"home")
+	queue.drop_seeds()
+	assert_array(_describe(queue)).contains_exactly(["item %d" % Enums.PlayerItem.BREAD, "intent home"])
+
+## A seed popped is not an intent: the told intent is unchanged.
+func test_a_seed_popped_leaves_the_told_intent() -> void:
+	var queue := NoticeQueue.new(&"bread")
+	queue.add_seed()
+	assert_int(queue.pop().kind).is_equal(Notice.Kind.SEED)
+	assert_str(String(queue.told_intent())).is_equal("bread")

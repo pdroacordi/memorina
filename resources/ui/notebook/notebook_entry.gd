@@ -21,6 +21,8 @@ const SECOND_HALF_BODY_KEY := "NOTEBOOK_SONG_SECOND_HALF_BODY"
 @export var title_key: String = ""
 ## Translation key of the line under the title (a song's season and material); empty for none.
 @export var detail_key: String = ""
+## The detail line takes the season seeds held as its `%d` (systems/seeds-and-the-seller).
+@export var detail_counts_seeds: bool = false
 @export var body_key: String = ""
 ## A guardian's portrait; null for none.
 @export var art: Texture2D

@@ -1,0 +1,172 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  -740,
+  280
+ ],
+ "caches": [
+  "woods_crown_cache",
+  "orchard_crag_cache"
+ ],
+ "max_duration": 16,
+ "steps": [
+  {
+   "t": 1.0,
+   "screenshot": "00_start"
+  },
+  {
+   "t": 1.0,
+   "log": "00_start"
+  },
+  {
+   "t": 1.4,
+   "screenshot": "00b_prompt"
+  },
+  {
+   "t": 1.4,
+   "log": "00b_prompt"
+  },
+  {
+   "t": 1.6,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 1.7,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 2.0,
+   "screenshot": "01_line1_typing"
+  },
+  {
+   "t": 2.0,
+   "log": "01_line1_typing"
+  },
+  {
+   "t": 3.9,
+   "screenshot": "02_line1"
+  },
+  {
+   "t": 3.9,
+   "log": "02_line1"
+  },
+  {
+   "t": 4.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 4.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 6.9,
+   "screenshot": "03_line2"
+  },
+  {
+   "t": 6.9,
+   "log": "03_line2"
+  },
+  {
+   "t": 7.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 7.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 7.6,
+   "screenshot": "04_panel"
+  },
+  {
+   "t": 7.6,
+   "log": "04_panel"
+  },
+  {
+   "t": 8.3,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 8.38,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 8.7,
+   "log": "05_after_up"
+  },
+  {
+   "t": 9.1,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 9.18,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 9.5,
+   "log": "06_after_down"
+  },
+  {
+   "t": 10.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 10.08,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 10.4,
+   "log": "07_down_0"
+  },
+  {
+   "t": 10.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 10.88,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 11.2,
+   "log": "07_down_1"
+  },
+  {
+   "t": 11.6,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 11.68,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 12.0,
+   "log": "07_down_2"
+  },
+  {
+   "t": 12.6,
+   "screenshot": "08_three_down"
+  },
+  {
+   "t": 12.6,
+   "log": "08_three_down"
+  }
+ ]
+}

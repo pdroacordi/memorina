@@ -158,3 +158,56 @@ func _see(cells: Rect2i) -> void:
 	var grid := MapGrid.new(MapGrid.dims_for(_room.get_bounds()))
 	grid.mark_cells(cells)
 	SaveSystem.set_map_seen(_key, grid.to_bytes())
+
+## A bought region's surface rooms draw faint from the purchase alone: map_seen is never written, and the centre clamp
+## reaches them (systems/seeds-and-the-seller).
+func test_a_bought_region_draws_faint_and_leaves_map_seen_unchanged() -> void:
+	SaveSystem.begin("", true)
+	var region := _threshold()
+	SaveSystem.buy_offer(&"map_threshold")
+	var seen_before := SaveSystem.player_data.map_seen.duplicate(true)
+	_map.open()
+	var surface := 0
+	var union := Rect2()
+	for room: Room in region.get_children().filter(func(node: Node) -> bool: return node is Room):
+		if not room.interior:
+			surface += 1
+			union = room.get_bounds() if union.size == Vector2.ZERO else union.merge(room.get_bounds())
+	assert_int(_canvas.known_count()).is_equal(surface)
+	assert_dict(SaveSystem.player_data.map_seen).is_equal(seen_before)
+	assert_bool(_canvas.seen_rect().encloses(union)).is_true()
+	_map.pan_by(Vector2(-100000, -100000))
+	assert_object(_map.centre()).is_equal(_canvas.seen_rect().position)
+	SaveSystem.begin("", true)
+
+## A rumour's mark shows while its piece lies and goes once the piece is taken.
+func test_a_mark_shows_while_its_piece_lies() -> void:
+	SaveSystem.begin("", true)
+	var region := _threshold()
+	var room := region.get_node("ThresholdBridge") as Room
+	var catalog := FoundCatalog.new()
+	var piece := FoundPiece.new()
+	piece.slot_id = &"test_letter"
+	piece.room = room.id()
+	piece.texture = preload("res://assets/sprites/world/pickups/letter.png")
+	catalog.pieces.append(piece)
+	_map.found = catalog
+	SaveSystem.add_rumour(&"test_letter")
+	_map.open()
+	assert_int(_canvas.marks().size()).is_equal(1)
+	var inside := false
+	for child: Node in region.get_children():
+		var surface := child as Room
+		if surface != null and not surface.interior and surface.get_bounds().has_point(_canvas.marks()[0]):
+			inside = true
+	assert_bool(inside).is_true()
+	_map.close()
+	SaveSystem.mark_found(&"test_letter")
+	_map.open()
+	assert_int(_canvas.marks().size()).is_equal(0)
+	SaveSystem.begin("", true)
+
+func _threshold() -> Region:
+	var region := auto_free((load("res://scenes/world/rooms/threshold.tscn") as PackedScene).instantiate()) as Region
+	add_child(region)
+	return region

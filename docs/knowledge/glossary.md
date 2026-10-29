@@ -6,7 +6,7 @@ status: active
 tags: [glossary, i18n, naming]
 related: []
 created: 2026-10-02
-updated: 2026-10-15
+updated: 2026-10-28
 source_files: []
 ---
 
@@ -24,6 +24,12 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | meia canção, metade (notas 1-3 / 4-6) | `Enums.SongHalf` (`FIRST` / `SECOND`), `SongHalves`, `song_first_halves` / `song_second_halves` |
 | achado (carta, diário, desenho) | `FoundPiece`, `FoundCatalog`, `FoundPickup`, `PlayerData.found_pieces`, `SaveFact.Kind.PIECE_FOUND` |
 | caderno de canções | songbook (a `FoundPiece` with a `song`) |
+| semente de estação | season seed: `SeedPurse` (held, derived), `PlayerData.caches_taken`, `Notice.Kind.SEED`, `NOTICE_SEED` |
+| esconderijo (de sementes) | `CachePickup` in a `RewardSlot.Kind.CACHE`; `SaveFact.Kind.CACHES_TAKEN_AT_LEAST` |
+| vendedor (de maçãs) | the seller: `seller.tres`, `SeedShopBeat`, `SeedShopPanel`, `SeedStock` / `SeedOffer` |
+| mapa regional (comprado) | `SeedOffer.Kind.MAP`, `MapExtras.known_rooms`, `MapCanvas.FAINT_INK` |
+| rumor | rumour: `SeedOffer.Kind.RUMOUR`, `Rumours`, `PlayerData.rumours` |
+| replantio (da vila) | `replant_village` (`SeedOffer.Kind.REPLANT`, `village_replanted.tres`, the `Gardens` staging) |
 | de ouvido (canção adivinhada), o nome que Ivo dá | `learn_song_by_ear`, `guessed_halves`, `Song.ear_title_key` |
 | neve funda, aterrissagem macia | `SoftLanding` (legend `n`), `LandingRule.is_hard`, `LandingComponent.enter_soft_zone`; the art is the `snow_drift` prop |
 | grade (da rua), alçapão de grade | `FactGrate` (legend `g`, `fact_grate.tscn`, the `FactBarrier` script under a floor shape); the vertical fence is `FactBarrier` (legend `X`) |

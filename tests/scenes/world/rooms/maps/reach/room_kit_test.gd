@@ -144,6 +144,25 @@ func test_no_songbook_needs_its_own_song() -> void:
 			problems.append("%s (song %d)" % [piece.slot_id, piece.song.id])
 	assert_array(problems).override_failure_message("Songbooks no kit without their song reaches:\n%s" % "\n".join(problems)).is_empty()
 
+## Nothing bought opens a way (systems/seeds-and-the-seller): no barrier, door or grate names a seed fact, so the kits
+## need not model seeds.
+func test_no_way_is_gated_on_seeds() -> void:
+	const SEED_KINDS: Array[SaveFact.Kind] = [SaveFact.Kind.CACHES_TAKEN_AT_LEAST, SaveFact.Kind.OFFER_BOUGHT]
+	var problems: Array[String] = []
+	var checked := 0
+	for i: int in _grid.room_count():
+		var map: RoomMap = _loaded.maps[_grid.room_id(i)]
+		for placed: Dictionary in map.entities:
+			var path := str((placed.params as Dictionary).get("requires", ""))
+			if path.is_empty():
+				continue
+			checked += 1
+			var fact := load(path) as SaveFact
+			if fact != null and fact.kind in SEED_KINDS:
+				problems.append("%s %s requires %s" % [_grid.room_id(i), placed.cell - map.origin, path])
+	assert_int(checked).is_greater(0)
+	assert_array(problems).is_empty()
+
 func _kit(id: StringName) -> ReachKit:
 	for kit: ReachKit in _kits.kits:
 		if kit.id == id:

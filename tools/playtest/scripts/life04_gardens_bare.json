@@ -1,0 +1,80 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  -740,
+  280
+ ],
+ "max_duration": 16,
+ "steps": [
+  {
+   "t": 1.5,
+   "screenshot": "00_lane_west_stall"
+  },
+  {
+   "t": 1.5,
+   "log": "00_lane_west_stall"
+  },
+  {
+   "t": 2.0,
+   "teleport": [
+    -940,
+    280
+   ]
+  },
+  {
+   "t": 3.5,
+   "screenshot": "01_lane_west_bed"
+  },
+  {
+   "t": 3.5,
+   "log": "01_lane_west_bed"
+  },
+  {
+   "t": 4.0,
+   "teleport": [
+    430,
+    280
+   ]
+  },
+  {
+   "t": 5.5,
+   "screenshot": "02_square_bed"
+  },
+  {
+   "t": 5.5,
+   "log": "02_square_bed"
+  },
+  {
+   "t": 6.0,
+   "teleport": [
+    2670,
+    280
+   ]
+  },
+  {
+   "t": 7.5,
+   "screenshot": "03_mill_bed"
+  },
+  {
+   "t": 7.5,
+   "log": "03_mill_bed"
+  },
+  {
+   "t": 8.0,
+   "teleport": [
+    4250,
+    280
+   ]
+  },
+  {
+   "t": 9.5,
+   "screenshot": "04_gate_east_bed"
+  },
+  {
+   "t": 9.5,
+   "log": "04_gate_east_bed"
+  }
+ ]
+}

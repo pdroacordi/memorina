@@ -46,6 +46,8 @@ const ROW := preload("res://scenes/ui/notebook/notebook_row.tscn")
 
 ## Set through Screens; the notebook opens on the newest unread entry it announced.
 var watcher: NotebookWatcher
+# Not exported: tests swap it.
+var seeds: SeedStock = preload(SeedStock.DEFAULT_PATH)
 
 var _phase: Phase = Phase.SHUT
 var _section: NotebookEntry.Section = NotebookEntry.Section.LORE
@@ -189,8 +191,13 @@ func render_entry(entry: NotebookEntry, data: PlayerData) -> void:
 		_:
 			# The confirmed page gives the season line's room to the struck name and the margin.
 			_line.visible = not entry.detail_key.is_empty() and not confirmed
-			_line.text = tr(entry.detail_key) if _line.visible else ""
+			_line.text = _detail_text(entry, data) if _line.visible else ""
 	_body.text = tr(entry.body_key_for(data))
+
+## The detail line as `data` knows the entry: the seeds entry shows the count held.
+func _detail_text(entry: NotebookEntry, data: PlayerData) -> String:
+	var text := tr(entry.detail_key)
+	return text % SeedPurse.held(data, seeds) if entry.detail_counts_seeds else text
 
 ## The title as `data` knows the entry: "half a song" until whole, Ivo's name while only he knows the ending.
 func title_key(entry: NotebookEntry, data: PlayerData) -> String:

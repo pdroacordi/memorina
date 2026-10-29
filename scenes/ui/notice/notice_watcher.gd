@@ -1,6 +1,6 @@
 class_name NoticeWatcher
 extends Node
-## Tells each item Ivo gains and each change of his intent, one notice at a time, derived from the save; pausable,
+## Tells each item and season seed Ivo gains and each change of his intent, one notice at a time, derived from the save; pausable,
 ## and silent during a talk, a cutscene, a lesson or a guardian fight (systems/notices).
 
 ## A notice is due: the text key it shows and its icon (null for an intent).
@@ -8,14 +8,19 @@ signal shown(text_key: String, icon: Texture2D)
 ## A hold began while the notice was sliding in or holding: the view hides it at once.
 signal withdrawn
 
+const SEED_KEY := "NOTICE_SEED"
+
 ## Item names and icons: the Items section's entries.
 @export var notebook: NotebookCatalog
 @export var intents: IntentCatalog
+## The SEED notice's icon (systems/seeds-and-the-seller).
+@export var seed_icon: Texture2D
 ## Ivo: whether a talk, a scene, a lesson or a fight holds the notices (`NoticeHold`).
 @export var subject: Player
 
 var _queue: NoticeQueue
 var _owned: Array[bool] = []
+var _caches: int = 0
 ## The notice sliding in or holding; null once it starts to leave, when it counts as told.
 var _showing: Notice
 ## The view is busy with a notice, from `shown` to its `finished`.
@@ -25,6 +30,7 @@ var _view_busy: bool = false
 # Seeds silently: a world rebuilt after a death or a load tells nothing.
 func _ready() -> void:
 	_owned = SaveSystem.player_data.owned_items.duplicate()
+	_caches = SaveSystem.player_data.caches_taken.size()
 	_queue = NoticeQueue.new(_intent_id(SaveSystem.player_data))
 	SaveSystem.progress_changed.connect(_on_progress_changed)
 
@@ -68,12 +74,16 @@ func is_showing() -> bool:
 	return _showing != null
 
 func text_key(notice: Notice) -> String:
+	if notice.kind == Notice.Kind.SEED:
+		return SEED_KEY
 	if notice.is_item():
 		var entry := notebook.item_entry(notice.item)
 		return entry.title_key if entry != null else ""
 	return _key_of(notice.intent_id)
 
 func icon(notice: Notice) -> Texture2D:
+	if notice.kind == Notice.Kind.SEED:
+		return seed_icon
 	if not notice.is_item():
 		return null
 	var entry := notebook.item_entry(notice.item)
@@ -97,4 +107,10 @@ func _on_progress_changed() -> void:
 		_queue.add_item(item)
 	_queue.keep_owned(data.owned_items)
 	_owned = data.owned_items.duplicate()
+	var caches := data.caches_taken.size()
+	if caches < _caches:
+		_queue.drop_seeds()
+	for i: int in maxi(caches - _caches, 0):
+		_queue.add_seed()
+	_caches = caches
 	_queue.set_intent(_intent_id(data))

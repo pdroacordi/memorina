@@ -241,8 +241,10 @@ Forgetting is shown through behaviour, and nobody comments on it.
 | **Baker, once only** | "She used to come in coughing, at the end. That thing she had. Never did have a name, did it." Then back to the dough. (01 §9: once, in passing.) / *"No fim ela vinha tossindo. Aquilo que ela tinha. Nunca teve nome, né."* | (gone, never repeated) |
 | **Taverner** | Wiping the same mug. "Quiet one tonight." / *"Noite calma."* | He sets two mugs on the counter, one in front of the patron's empty seat, and waits. No line. |
 | **Water carrier** | "Up's heavy. Down's light. Same water." / *"Pra cima pesa. Pra baixo é leve. Mesma água."* | She stands at the well holding the full bucket. "…" |
-| **Seller** (leaves at 0.6) | "Apples. West orchards. Last ones, till someone goes out there." / *"Maçãs. Pomares do oeste. As últimas, até alguém ir lá."* | (stall gone) |
+| **Seller** (stays to trade) | "Apples. West orchards. Last ones, till someone goes out there." / *"Maçãs. Pomares do oeste. As últimas, até alguém ir lá."* | No apples line; she and her stall stay, and she trades season seeds (LIFE-04). |
 | **Boy** | Playing statues with the girl. "Don't move. You moved." / *"Não mexe. Mexeu."* | Alone. "Don't move." He waits for the girl, who isn't there. / *"Não mexe."* |
+
+*A vendedora fica para trocar (decisão do usuário, "He stays to trade (Recommended)", 2026-10-28; é uma mulher, como na arte aprovada: "A woman, fix the text (Recommended)", 2026-10-29): só a fala das maçãs acaba em 0.6; ela e a banca ficam na vila o jogo todo, e desde a primeira semente de estação que Ivo carrega ela troca sementes por mapas, boatos e o replantio da vila (LIFE-04, `docs/knowledge/systems/seeds-and-the-seller.md`).*
 
 ---
 

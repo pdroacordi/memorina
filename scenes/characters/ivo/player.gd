@@ -366,7 +366,7 @@ func _process_motion(delta: float) -> void:
 		_double_jump.refresh()
 	_landing.tick_timer(delta, on_floor)
 	if not _try_door(on_floor) and not _try_talk(on_floor) and not _try_pickup(on_floor) and not _try_found(on_floor) \
-			and not _try_board(on_floor):
+			and not _try_cache(on_floor) and not _try_board(on_floor):
 		_try_climb()
 	# Every frame, whichever branch ran: a press spent above is already 0.
 	_up_buffer = maxf(_up_buffer - delta, 0.0)
@@ -706,6 +706,21 @@ func _try_found(on_floor: bool) -> bool:
 			return false
 	_drop_buffers()
 	found.take()
+	return true
+
+# After a found piece, Up takes a season seed (systems/seeds-and-the-seller), the letter path: same buffer and gates,
+# and a refused press is spent.
+func _try_cache(on_floor: bool) -> bool:
+	if _up_buffer <= 0.0:
+		return false
+	var cache := _pickups.reachable_cache()
+	if cache == null:
+		return false
+	_up_buffer = 0.0
+	if is_in_story() or not _free_for_up(on_floor):
+		return false
+	_drop_buffers()
+	cache.take()
 	return true
 
 # One gate list for doors, talks and pickups, so a moment refused for one is refused for all.

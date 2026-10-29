@@ -91,6 +91,10 @@ Plan and options: `architecture/save-slots-and-the-boot-swap`.
 - `SaveSystem.mark_dialogue_heard` and `record_response` emit `progress_changed`. A save written before them loads both empty.
 - Tests: `save_ledger_test` (forgotten by a death, kept by a rest, live and committed share nothing), `player_data_test` (round trip, old save), `save_system_dialogue_test`.
 
+## Season seeds (LIFE-04, built 2026-10-28)
+
+`caches_taken`, `offers_bought` and `rumours` are live data like heard: a bench commits them, a death forgets all three together, so the state after a death is the bench's (caches taken since lie again, purchases since are unbought). "Everything, purchases too (Recommended)" (user, 2026-10-28). Seeds held are derived from them, never stored. The title's slot card shows the slot's seeds held beside the play time (`SlotCard`, `systems/seeds-and-the-seller`).
+
 ## Tests
 
 `tests/globals/save_slots_test.gd`, `save_ledger_test.gd`, `player_data_test.gd`, `boot_policy_test.gd`, `tests/scenes/characters/character_teleport_test.gd`, `tests/scenes/world/rooms/maps/room_files_test.gd` (bench keys).

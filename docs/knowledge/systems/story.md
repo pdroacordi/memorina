@@ -161,7 +161,7 @@ Draft 3 of design 05, Atos 1 to 4 ("Aprovar (Recommended)", user, 2026-10-16; "F
 - **Talkables** (legend `t`, on the speaker's cell, the zone centred on the speaker: STORY-14, `systems/dialogue`):
   - square col 18 on the boy (`speaker_offset` 8), reaching 16 px east of him so the bell tower door at col 20 keeps 24 px (bugs/the-boys-talk-prompt-shows-over-the-bell-tower-door-and-up-enters-the-tower);
   - square col 32 on the water carrier (`speaker_offset` 10). She is flipped to face east, away from the well's shaft, so Ivo talks to her from in front, close, over the well's lip;
-  - lane west col 17 on the seller, `presence` 0.7 so it leaves with him;
+  - lane west col 17 on the seller, no `presence`: she stays to trade all game ("He stays to trade (Recommended)", user, 2026-10-28; `systems/seeds-and-the-seller`);
   - tavern col 14, row 20, on the taverner (`speaker_offset` 12);
   - bakery col 7 on the baker.
   - **Rule:** a talk zone keeps more than Ivo's body width (22 px) from every door zone on its row, or both prompts show and Up takes the door. A door beside a talk wins: the talk is trimmed on the door's side only (`village_voices_test.test_no_talk_stands_within_a_body_of_a_door`, every room with a talk).
@@ -172,7 +172,7 @@ Draft 3 of design 05, Atos 1 to 4 ("Aprovar (Recommended)", user, 2026-10-16; "F
 | Baker (`story/baker.tres`) | `baker_errand` while due; then `baker_cough` once (the greeting `DLG_BAKER_ERRAND_01` again, then the cough line); then `baker_again` (the greeting alone, every time) | `baker_06` (the errand still wins while due) |
 | Taverner | `taverner_quiet` | none: no prompt |
 | Water carrier | `water_carrier_water` | `water_carrier_06` ("…") |
-| Seller | `seller_apples` | gone with him (Talkable `presence` 0.7) |
+| Seller | `seller_seeds_first` once from his first seed, then `seller_trade` (the shop beat); else `seller_apples` | the seed trade only, once Ivo holds a seed; no apples line (she and her stall stay, LIFE-04) |
 | Boy | `boy_statues`, once the children are in the square (`elder_story`) | `boy_alone` (the girl leaves at 0.6) |
 
 - **The cough says the greeting first** so it is said "in passing" (01 §9) and never comes out of nowhere; it is `once` and needs `baker_errand` heard. The baker's FactStaging is untouched: no new line has a cue. A death before a bench forgets it like any heard talk, so it can play again: "Keep it: a death rewinds what was heard, so the baker's cough can play again before a bench. It's consistent with the rest of the save." (user, 2026-10-15).

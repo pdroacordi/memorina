@@ -53,6 +53,7 @@
 [ext_resource type="Script" path="res://scenes/ui/notice/notice_watcher.gd" id="53_notices"]
 [ext_resource type="Resource" path="res://resources/story/intent_catalog.tres" id="54_intents"]
 [ext_resource type="PackedScene" path="res://scenes/ui/notice/notice_toast.tscn" id="55_notice_toast"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_seed.png" id="90_seedicon"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -124,6 +125,7 @@ subject = NodePath("../Player")
 script = ExtResource("53_notices")
 notebook = ExtResource("41_notecat")
 intents = ExtResource("54_intents")
+seed_icon = ExtResource("90_seedicon")
 subject = NodePath("../Player")
 
 [node name="RegionTitleWatcher" type="Node" parent="World"]
@@ -260,7 +262,7 @@ script = ExtResource("6_sarsd")
 [node name="NoticeToast" parent="CanvasLayer" instance=ExtResource("55_notice_toast")]
 
 [node name="ScreenLayer" type="CanvasLayer" parent="."]
-layer = 2
+layer = 3
 
 [node name="Screens" parent="ScreenLayer" instance=ExtResource("38_screens")]
 

@@ -1,0 +1,49 @@
+[gd_resource type="Resource" script_class="SeedStock" format=3]
+
+[ext_resource type="Script" path="res://resources/world/seeds/seed_stock.gd" id="1_stock"]
+[ext_resource type="Script" path="res://resources/world/seeds/seed_offer.gd" id="2_offer"]
+
+[sub_resource type="Resource" id="offer_0"]
+script = ExtResource("2_offer")
+id = &"map_threshold"
+region_key = "REGION_THRESHOLD"
+
+[sub_resource type="Resource" id="offer_1"]
+script = ExtResource("2_offer")
+id = &"map_frost_edge"
+region_key = "REGION_FROST_EDGE"
+
+[sub_resource type="Resource" id="offer_2"]
+script = ExtResource("2_offer")
+id = &"map_spring_woods"
+region_key = "REGION_SPRING_WOODS"
+
+[sub_resource type="Resource" id="offer_3"]
+script = ExtResource("2_offer")
+id = &"map_frozen_lake"
+region_key = "REGION_FROZEN_LAKE"
+
+[sub_resource type="Resource" id="offer_4"]
+script = ExtResource("2_offer")
+id = &"map_wind_orchards"
+region_key = "REGION_WIND_ORCHARDS"
+
+[sub_resource type="Resource" id="offer_5"]
+script = ExtResource("2_offer")
+id = &"map_summer_caldera"
+region_key = "REGION_SUMMER_CALDERA"
+
+[sub_resource type="Resource" id="offer_6"]
+script = ExtResource("2_offer")
+id = &"rumour"
+kind = 1
+
+[sub_resource type="Resource" id="offer_7"]
+script = ExtResource("2_offer")
+id = &"replant_village"
+kind = 2
+price = 3
+
+[resource]
+script = ExtResource("1_stock")
+offers = Array[ExtResource("2_offer")]([SubResource("offer_0"), SubResource("offer_1"), SubResource("offer_2"), SubResource("offer_3"), SubResource("offer_4"), SubResource("offer_5"), SubResource("offer_6"), SubResource("offer_7")])

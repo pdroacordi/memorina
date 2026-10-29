@@ -1,0 +1,362 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "pt_BR",
+ "player_position": [
+  -740,
+  280
+ ],
+ "caches": [
+  "woods_crown_cache",
+  "orchard_crag_cache"
+ ],
+ "max_duration": 30,
+ "steps": [
+  {
+   "t": 1.4,
+   "screenshot": "00_prompt"
+  },
+  {
+   "t": 1.4,
+   "log": "00_prompt"
+  },
+  {
+   "t": 1.6,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 1.7,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 3.9,
+   "screenshot": "01_line1"
+  },
+  {
+   "t": 3.9,
+   "log": "01_line1"
+  },
+  {
+   "t": 4.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 4.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 6.9,
+   "screenshot": "02_line2"
+  },
+  {
+   "t": 6.9,
+   "log": "02_line2"
+  },
+  {
+   "t": 7.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 7.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 7.6,
+   "screenshot": "03_panel"
+  },
+  {
+   "t": 7.6,
+   "log": "03_panel"
+  },
+  {
+   "t": 8.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 8.08,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 8.4,
+   "log": "04_down_0"
+  },
+  {
+   "t": 8.6,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 8.68,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 9.0,
+   "log": "04_down_1"
+  },
+  {
+   "t": 9.2,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 9.28,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 9.6,
+   "log": "04_down_2"
+  },
+  {
+   "t": 9.7,
+   "screenshot": "05_focus_lake"
+  },
+  {
+   "t": 9.7,
+   "log": "05_focus_lake"
+  },
+  {
+   "t": 10.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 10.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 10.5,
+   "screenshot": "06_bought_map"
+  },
+  {
+   "t": 10.5,
+   "log": "06_bought_map"
+  },
+  {
+   "t": 11.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 11.08,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 11.4,
+   "log": "07_d0"
+  },
+  {
+   "t": 11.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 11.88,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 12.2,
+   "log": "07_d1"
+  },
+  {
+   "t": 12.5,
+   "screenshot": "07_focus_rumour"
+  },
+  {
+   "t": 12.5,
+   "log": "07_focus_rumour"
+  },
+  {
+   "t": 12.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 12.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 13.3,
+   "screenshot": "08_bought_rumour"
+  },
+  {
+   "t": 13.3,
+   "log": "08_bought_rumour"
+  },
+  {
+   "t": 13.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 13.88,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 14.2,
+   "log": "09_wrap_down"
+  },
+  {
+   "t": 14.5,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 14.58,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 14.9,
+   "log": "09_wrap_up"
+  },
+  {
+   "t": 15.3,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 15.38,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 15.8,
+   "screenshot": "10_closing_typing"
+  },
+  {
+   "t": 15.8,
+   "log": "10_closing_typing"
+  },
+  {
+   "t": 17.3,
+   "screenshot": "11_closing"
+  },
+  {
+   "t": 17.3,
+   "log": "11_closing"
+  },
+  {
+   "t": 17.5,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 17.58,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 18.2,
+   "screenshot": "12_after_talk"
+  },
+  {
+   "t": 18.2,
+   "log": "12_after_talk"
+  },
+  {
+   "t": 19.0,
+   "key": "M",
+   "pressed": true
+  },
+  {
+   "t": 19.08,
+   "key": "M",
+   "pressed": false
+  },
+  {
+   "t": 20.0,
+   "screenshot": "13_map"
+  },
+  {
+   "t": 20.0,
+   "log": "13_map"
+  },
+  {
+   "t": 20.5,
+   "key": "X",
+   "pressed": true
+  },
+  {
+   "t": 20.58,
+   "key": "X",
+   "pressed": false
+  },
+  {
+   "t": 21.3,
+   "screenshot": "14_map_out1"
+  },
+  {
+   "t": 21.3,
+   "log": "14_map_out1"
+  },
+  {
+   "t": 21.6,
+   "key": "X",
+   "pressed": true
+  },
+  {
+   "t": 21.68,
+   "key": "X",
+   "pressed": false
+  },
+  {
+   "t": 22.4,
+   "screenshot": "15_map_out2"
+  },
+  {
+   "t": 22.4,
+   "log": "15_map_out2"
+  },
+  {
+   "t": 22.7,
+   "key": "X",
+   "pressed": true
+  },
+  {
+   "t": 22.78,
+   "key": "X",
+   "pressed": false
+  },
+  {
+   "t": 23.5,
+   "screenshot": "16_map_out3"
+  },
+  {
+   "t": 23.5,
+   "log": "16_map_out3"
+  },
+  {
+   "t": 24.0,
+   "key": "M",
+   "pressed": true
+  },
+  {
+   "t": 24.08,
+   "key": "M",
+   "pressed": false
+  },
+  {
+   "t": 25.0,
+   "screenshot": "17_closed"
+  },
+  {
+   "t": 25.0,
+   "log": "17_closed"
+  }
+ ]
+}

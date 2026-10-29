@@ -1,0 +1,149 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  -740,
+  280
+ ],
+ "max_duration": 18,
+ "restored_guardians": [
+  0,
+  1
+ ],
+ "caches": [
+  "woods_crown_cache",
+  "orchard_crag_cache"
+ ],
+ "dialogues_heard": [
+  "seller_seeds_first"
+ ],
+ "steps": [
+  {
+   "t": 1.4,
+   "screenshot": "00_prompt"
+  },
+  {
+   "t": 1.4,
+   "log": "00_prompt"
+  },
+  {
+   "t": 1.6,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 1.7,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "screenshot": "01_line1"
+  },
+  {
+   "t": 3.0,
+   "log": "01_line1"
+  },
+  {
+   "t": 3.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 3.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "screenshot": "02_after_z"
+  },
+  {
+   "t": 4.0,
+   "log": "02_after_z"
+  },
+  {
+   "t": 4.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 4.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 5.4,
+   "screenshot": "03_after_z2"
+  },
+  {
+   "t": 5.4,
+   "log": "03_after_z2"
+  },
+  {
+   "t": 6.2,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 6.28,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 6.6,
+   "log": "04_down"
+  },
+  {
+   "t": 7.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 7.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 7.6,
+   "screenshot": "05_after_z3"
+  },
+  {
+   "t": 7.6,
+   "log": "05_after_z3"
+  },
+  {
+   "t": 8.2,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 8.28,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 8.6,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 8.68,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 9.0,
+   "log": "06_up"
+  },
+  {
+   "t": 9.2,
+   "screenshot": "06_up"
+  },
+  {
+   "t": 9.2,
+   "log": "06_up"
+  }
+ ]
+}

@@ -54,6 +54,10 @@ UI-03, design 02 "UI" ("Caderno de campo"). E / pad Select toggles it; Esc and B
 - The half-song, Ivo-name, by-ear and margin texts: "Texts are fine as drafted." (user, 2026-10-28).
 - `notebook_text_fit_test.test_every_half_song_state_fits_both_pages` and `test_a_blank_note_inks_inside_the_right_page` cover these. Fitting the confirmed Chuva page shortened the pt_BR `NOTEBOOK_SONG_RAIN_BODY` by one clause (2026-10-28).
 
+## The seeds entry (LIFE-04, `systems/seeds-and-the-seller`)
+
+LORE entry `lore_seeds` (after `lore_double_jump`), present from the first cache (`CACHES_TAKEN_AT_LEAST` 1). `NotebookEntry.detail_counts_seeds` makes `Notebook.render_entry` format the detail line `NOTEBOOK_LORE_SEEDS_HELD` with `SeedPurse.held` of the save shown ("Shop + notebook entry somewhere and load save screen (with the palying time)", user, 2026-10-28). The count is read at render, never stored. `notebook_text_fit_test` measures it at two digits.
+
 ## Watcher and the HUD quill
 
 - `NotebookWatcher` (`World/NotebookWatcher`, pausable, `subject` = Ivo) seeds the present ids silently at `_ready`, so a rebuilt world never announces. On `progress_changed` it queues the ids added since, skipping ids already read, and drops a queued id the save no longer holds. `recent` keeps every announced id for the opening rule.

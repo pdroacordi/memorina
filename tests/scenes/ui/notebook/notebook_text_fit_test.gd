@@ -31,6 +31,9 @@ func _everything() -> PlayerData:
 	for flags: Array[bool] in [data.unlocked_player_skills, data.learned_songs, data.owned_items,
 			data.restored_guardians, data.met_guardians]:
 		flags.fill(true)
+	# Two digits: the seeds entry's widest count (systems/seeds-and-the-seller).
+	for i: int in 12:
+		data.caches_taken.append(StringName("cache_%d" % i))
 	return data
 
 func _settle() -> void:

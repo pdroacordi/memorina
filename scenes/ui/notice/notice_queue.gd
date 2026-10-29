@@ -1,6 +1,6 @@
 class_name NoticeQueue
 extends RefCounted
-## The notices waiting to show, oldest first: each item gained and the latest intent change (systems/notices).
+## The notices waiting to show, oldest first: each item and seed gained and the latest intent change (systems/notices).
 
 var _waiting: Array[Notice] = []
 ## The intent last popped, or the one the world was built with: a change back to it tells nothing. The pause menu shows it.
@@ -28,6 +28,16 @@ func add_item(item: int) -> void:
 			return
 	_waiting.append(Notice.new(Notice.Kind.ITEM, item))
 
+## Queues one season-seed notice; every seed gained is told (systems/seeds-and-the-seller).
+func add_seed() -> void:
+	_waiting.append(Notice.new(Notice.Kind.SEED))
+
+## Drops every waiting seed notice: a rewind took the caches back.
+func drop_seeds() -> void:
+	for notice: Notice in _waiting.duplicate():
+		if notice.kind == Notice.Kind.SEED:
+			_waiting.erase(notice)
+
 ## The intent is now `id` (empty: none holds). Unchanged, nothing moves, so the queue stays oldest first; changed, a
 ## waiting intent notice is replaced, so only the newest change is told.
 func set_intent(id: StringName) -> void:
@@ -49,15 +59,15 @@ func pop() -> Notice:
 	if _waiting.is_empty():
 		return null
 	var notice: Notice = _waiting.pop_front()
-	if not notice.is_item():
+	if notice.is_intent():
 		_told_intent = notice.intent_id
 	return notice
 
 ## A notice withdrawn mid-show goes back first, to show whole once the way is clear. An intent that no longer holds is
 ## dropped instead; with no intent waiting, the told intent becomes the current one, so the pause menu never keeps it.
 func push_front(notice: Notice) -> void:
-	if not notice.is_item() and notice.intent_id != _current_intent:
-		if not _waiting.any(func(waiting: Notice) -> bool: return not waiting.is_item()):
+	if notice.is_intent() and notice.intent_id != _current_intent:
+		if not _waiting.any(func(waiting: Notice) -> bool: return waiting.is_intent()):
 			_told_intent = _current_intent
 		return
 	_waiting.push_front(notice)
@@ -74,5 +84,5 @@ func is_empty() -> bool:
 
 func _drop_waiting_intent() -> void:
 	for notice: Notice in _waiting.duplicate():
-		if not notice.is_item():
+		if notice.is_intent():
 			_waiting.erase(notice)

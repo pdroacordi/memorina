@@ -68,6 +68,13 @@ func _ready() -> void:
 	# Reward slot ids of found pieces already taken (architecture/found-pieces).
 	for slot_id: Variant in timeline.get("found", []):
 		SaveSystem.mark_found(StringName(slot_id))
+	# Seed caches taken, offers bought and rumours told (systems/seeds-and-the-seller).
+	for slot_id: Variant in timeline.get("caches", []):
+		SaveSystem.take_cache(StringName(slot_id))
+	for offer_id: Variant in timeline.get("bought", []):
+		SaveSystem.buy_offer(StringName(offer_id))
+	for slot_id: Variant in timeline.get("rumours", []):
+		SaveSystem.add_rumour(StringName(slot_id))
 	for skill_id: Variant in timeline.get("skills", []):
 		SaveSystem.unlock_skill(int(skill_id) as Enums.PlayerSkill)
 	for guardian_id: Variant in timeline.get("met_guardians", []):
@@ -351,7 +358,10 @@ func _notice_state() -> String:
 		return ""
 	var waiting: PackedStringArray = []
 	for notice: Notice in watcher.waiting():
-		waiting.append("item %d" % notice.item if notice.is_item() else "intent %s" % notice.intent_id)
+		if notice.kind == Notice.Kind.SEED:
+			waiting.append("seed")
+		else:
+			waiting.append("item %d" % notice.item if notice.is_item() else "intent %s" % notice.intent_id)
 	return " notice=%.2f '%s' waiting=[%s] intent=%s" % [
 		(toast.get_node("Art") as CanvasItem).modulate.a if toast.is_showing() else 0.0, toast.shown_text(),
 		", ".join(waiting), watcher.intent_key(),

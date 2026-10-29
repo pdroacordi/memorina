@@ -1,8 +1,8 @@
 class_name Notice
 extends RefCounted
-## One notice waiting to show: an item gained, or the intent it changed to (systems/notices).
+## One notice waiting to show: an item gained, a season seed gained, or the intent it changed to (systems/notices).
 
-enum Kind { ITEM, INTENT }
+enum Kind { ITEM, INTENT, SEED }
 
 var kind: Kind
 ## An Enums.PlayerItem; -1 for an intent.
@@ -18,3 +18,6 @@ func _init(notice_kind: Kind, notice_item: int = -1, notice_intent: StringName =
 
 func is_item() -> bool:
 	return kind == Kind.ITEM
+
+func is_intent() -> bool:
+	return kind == Kind.INTENT

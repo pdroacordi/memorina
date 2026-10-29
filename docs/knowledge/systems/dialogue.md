@@ -143,6 +143,10 @@ No story text is approved yet (STORY-03 drafts the opening), so the only talk is
 - `DialogueDirector.hear_note` passes Ivo's notes to a NOTES beat. `phrase_shown` / `phrase_lit` / `phrase_closed` are relayed to `CanvasLayer/PhraseSheet`.
 - `~word~` in a text is a brief stutter (`StutterText`); the box shows the text without the marks.
 
+## The seller's trade (LIFE-04, `systems/seeds-and-the-seller`)
+
+The seller's talks reach a cue-only line `seller_shop`; `SeedShopBeat` (hold STILL, under `Beats` in village_lane_west's contents) owns a `SeedShopPanel` under its own CanvasLayer, worked by Buttons and GUI focus as the box is. Leave finishes the beat and the talk resumes on its closing line. So the shop adds no `WorldFreeze` writer, no input reader and no router screen; the talk's block, the map refusal and the notice hold cover it.
+
 ## Limits
 
 - **The reach audit reads talks the kits hold.** `ReachKit.of()` packs a `DIALOGUE_HEARD` or `RESPONSE_CHOSEN` fact as its kind and the id's place in `ReachKit._ids`. A `ReachMilestone.dialogues` list sets what a kit has heard: every kit holds the `opening` milestone (the errand, the song, the elder's story), so the east gate on `heard_elder_story.tres` is open to them all (`systems/story`). A way gated on any other talk reads as closed to every kit until a milestone holds it. `GUARDIANS_RESTORED_AT_LEAST` packs whole (its count is the index).

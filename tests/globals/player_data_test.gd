@@ -157,3 +157,22 @@ func test_the_dialogue_facts_round_trip_through_the_file() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	assert_array(loaded.dialogues_heard).contains_exactly([&"trial_first"])
 	assert_dict(loaded.responses).is_equal({&"trial_keep": &"trial_keep_hold"})
+
+func test_the_seed_facts_round_trip_through_the_file() -> void:
+	var path := "user://test_round_trip_seeds.tres"
+	var data := PlayerData.new()
+	data.caches_taken.append(&"threshold_ravine_cache")
+	data.offers_bought.append(&"map_frozen_lake")
+	data.rumours.append(&"woods_root_caves_alcove")
+	assert_int(ResourceSaver.save(data, path)).is_equal(OK)
+	var loaded := ResourceLoader.load(path, "", ResourceLoader.CACHE_MODE_IGNORE) as PlayerData
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+	assert_array(loaded.caches_taken).contains_exactly([&"threshold_ravine_cache"])
+	assert_array(loaded.offers_bought).contains_exactly([&"map_frozen_lake"])
+	assert_array(loaded.rumours).contains_exactly([&"woods_root_caves_alcove"])
+
+func test_an_old_save_loads_with_no_seeds() -> void:
+	var data := PlayerData.new()
+	assert_array(data.caches_taken).is_empty()
+	assert_array(data.offers_bought).is_empty()
+	assert_array(data.rumours).is_empty()

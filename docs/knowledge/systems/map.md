@@ -22,7 +22,7 @@ source_files:
 
 # The map: seen cells per room, the revealer, the outline and the map screen
 
-**Never break:** The map shows only cells whose centre was on screen, per room `SceneKey`. `MapGrid.CELL_PX` (64) is part of the save. Reassign a `PackedByteArray` in `map_seen`, never edit it in place. The revealer stays pausable, after `Camera2D`, and is armed only by `Game.room_changed`. The canvas is a Node2D.
+**Never break:** The map shows as seen only cells whose centre was on screen, per room `SceneKey`; a bought map or a rumour is drawn from purchases, never written to `map_seen`. `MapGrid.CELL_PX` (64) is part of the save. Reassign a `PackedByteArray` in `map_seen`, never edit it in place. The revealer stays pausable, after `Camera2D`, and is armed only by `Game.room_changed`. The canvas is a Node2D.
 
 ## Summary
 
@@ -74,6 +74,12 @@ The map (UI-04, design 02 "Mapa") reveals the parts of each room the camera show
   - An axis already held when the map opens is ignored until it reads zero (`bugs/a-direction-held-when-the-map-opens-pans-it-off-ivo`).
   - The centre is clamped to the seen area's world rect, so at any edge half the screen is empty dimmed world ("Keep centre clamp").
 - **Cache:** `MapScreen` keeps each room's `MapCanvas.Patch` with the bytes and origin it was built from, and rebuilds only rooms that changed since the last open.
+
+## Bought maps and rumours (LIFE-04, `systems/seeds-and-the-seller`)
+
+- `MapScreen.open()` builds a `MapRoomInfo` per room in the `Room` group (a room outside a Region has no region key) and passes `MapCanvas.build` three layers: the surface rooms of the regions bought (`SeedPurse.bought_map_regions`, `MapExtras.known_rooms`) as full-grid patches cached per room key and bounds; the seen patches; the rumour marks (`Rumours.marked`, `MapExtras.rumour_points`, spread by `MapExtras.steps`).
+- Drawn in that order: a bought room's outline in `FAINT_INK` (the cream at 0.35, no fill: "Accept all (Recommended)", user, 2026-10-28), the seen fill and ink over it, then each mark as a 5x5 pack px ink diamond, marks of one region 7 pack px apart.
+- `seen_rect()` merges all three, so the open and the pan clamp reach a bought region or a mark. `map_seen`, `MapRevealer` and `MapGrid` are unchanged.
 
 ## Opening and closing (wiring in `systems/screens`)
 

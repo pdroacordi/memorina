@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/village/garden_bed_planted.png" id="1_tex"]
+[ext_resource type="Material" path="res://scenes/world/environment/props/prop_seasonal_material.tres" id="2_season"]
+
+[node name="GardenBedPlanted" type="Sprite2D"]
+material = ExtResource("2_season")
+texture = ExtResource("1_tex")
+centered = false
+offset = Vector2(-24, -18)
+vframes = 3

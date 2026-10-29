@@ -78,6 +78,22 @@ func test_found_pieces_and_collectible_slots_match() -> void:
 			problems.append("found piece %s names no COLLECTIBLE slot" % piece.slot_id)
 	assert_array(Array(problems)).is_empty()
 
+## Every found piece names the room whose `.room` holds its slot, so a rumour finds its region (systems/seeds-and-the-seller).
+func test_every_found_piece_names_its_room() -> void:
+	var catalog := load(FoundCatalog.DEFAULT_PATH) as FoundCatalog
+	var legend := RoomLegend.load_default()
+	var rooms: Dictionary[StringName, StringName] = {}
+	for path: String in _room_files(ROOMS_DIR):
+		var result := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path)
+		for placed: Dictionary in result.map.entities:
+			if placed.symbol == "$":
+				rooms[StringName(placed.params.get("slot_id", ""))] = StringName(path.get_file().get_basename())
+	var problems := PackedStringArray()
+	for piece: FoundPiece in catalog.pieces:
+		if rooms.get(piece.slot_id, &"") != piece.room:
+			problems.append("%s names room %s, its slot is in %s" % [piece.slot_id, piece.room, rooms.get(piece.slot_id, &"?")])
+	assert_array(Array(problems)).is_empty()
+
 ## A slot stands on ground or a one-way, so it never floats; room_kit_test's ANCHOR_DROP lookup would not notice one that did.
 func test_every_reward_slot_stands_on_a_floor() -> void:
 	var legend := RoomLegend.load_default()

@@ -27,6 +27,19 @@ func test_a_used_slot_shows_its_region_bench_and_play_time() -> void:
 	assert_bool((card.find_child("Erase") as Button).visible).is_true()
 	assert_bool((_card(1).find_child("Erase") as Button).visible).is_false()
 
+## "Shop + notebook entry somewhere and load save screen (with the palying time)" (user, 2026-10-28): the seeds held
+## show beside the play time, derived from caches taken and purchases.
+func test_a_used_slot_shows_the_seeds_held_beside_the_play_time() -> void:
+	var saves := _saves_used_at([2])
+	saves[1].caches_taken.append_array([&"threshold_ravine_cache", &"woods_crown_cache", &"orchard_crag_cache"])
+	saves[1].offers_bought.append(&"map_threshold")
+	_screen.open(SlotScreen.Purpose.LOAD, saves)
+	var seeds := _label(_card(2), "Seeds")
+	assert_bool(seeds.visible).is_true()
+	assert_str(seeds.text).is_equal("2")
+	assert_bool((_card(2).find_child("SeedIcon") as Control).visible).is_true()
+	assert_bool(_label(_card(1), "Seeds").visible).is_false()
+
 func test_continuing_focuses_the_latest_save_and_greys_empty_slots() -> void:
 	var saves := _saves_used_at([1, 3])
 	saves[2].saved_at = 50

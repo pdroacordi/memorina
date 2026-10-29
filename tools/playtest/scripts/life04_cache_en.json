@@ -1,0 +1,181 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  6580,
+  630
+ ],
+ "max_duration": 14,
+ "steps": [
+  {
+   "t": 1.2,
+   "screenshot": "00_out_of_reach"
+  },
+  {
+   "t": 1.2,
+   "log": "00_out_of_reach"
+  },
+  {
+   "t": 1.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.8,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 2.2,
+   "screenshot": "01_in_reach"
+  },
+  {
+   "t": 2.2,
+   "log": "01_in_reach"
+  },
+  {
+   "t": 2.6,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 2.7,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 2.72,
+   "screenshot": "02_taken_0"
+  },
+  {
+   "t": 2.72,
+   "log": "02_taken_0"
+  },
+  {
+   "t": 2.9,
+   "screenshot": "02_taken_1"
+  },
+  {
+   "t": 2.9,
+   "log": "02_taken_1"
+  },
+  {
+   "t": 3.2,
+   "screenshot": "02_taken_2"
+  },
+  {
+   "t": 3.2,
+   "log": "02_taken_2"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "02_taken_3"
+  },
+  {
+   "t": 3.6,
+   "log": "02_taken_3"
+  },
+  {
+   "t": 4.2,
+   "screenshot": "02_taken_4"
+  },
+  {
+   "t": 4.2,
+   "log": "02_taken_4"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "02_taken_5"
+  },
+  {
+   "t": 5.0,
+   "log": "02_taken_5"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "02_taken_6"
+  },
+  {
+   "t": 6.0,
+   "log": "02_taken_6"
+  },
+  {
+   "t": 7.0,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 7.08,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "screenshot": "03_notebook"
+  },
+  {
+   "t": 8.0,
+   "log": "03_notebook"
+  },
+  {
+   "t": 8.6,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 8.68,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 9.2,
+   "screenshot": "04_notebook_down"
+  },
+  {
+   "t": 9.2,
+   "log": "04_notebook_down"
+  },
+  {
+   "t": 9.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 9.88,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 10.4,
+   "screenshot": "05_notebook_down2"
+  },
+  {
+   "t": 10.4,
+   "log": "05_notebook_down2"
+  },
+  {
+   "t": 11.0,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 11.08,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 12.0,
+   "screenshot": "06_closed"
+  },
+  {
+   "t": 12.0,
+   "log": "06_closed"
+  }
+ ]
+}
