@@ -1,0 +1,15 @@
+{"scene": "res://scenes/world/game.tscn", "max_duration": 16, "clock": "real", "locale": "en",
+ "player_position": [5130, -1638], "skills": [0],
+ "steps": [
+  {"t": 1.0, "screenshot": "00_before"},
+  {"t": 1.2, "action": "move_left", "pressed": true},
+  {"t": 2.6, "screenshot": "01_walking_west"},
+  {"t": 4.6, "screenshot": "02_at_west_wall"},
+  {"t": 5.6, "screenshot": "03_still_held_west"},
+  {"t": 5.7, "action": "move_left", "pressed": false},
+  {"t": 5.8, "action": "move_right", "pressed": true},
+  {"t": 9.5, "screenshot": "04_at_east_wall"},
+  {"t": 10.5, "screenshot": "05_still_held_east"},
+  {"t": 10.6, "action": "move_right", "pressed": false},
+  {"t": 15.5, "log": "end"}
+ ]}

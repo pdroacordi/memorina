@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/interactables/fight_wall/fight_wall.gd" id="1_wall"]
+[ext_resource type="Shader" path="res://scenes/world/interactables/fight_wall/fight_wall.gdshader" id="2_shader"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_curtain"]
+shader = ExtResource("2_shader")
+
+[node name="FightWall" type="StaticBody2D"]
+script = ExtResource("1_wall")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+[node name="Curtain" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_curtain")
+mouse_filter = 2

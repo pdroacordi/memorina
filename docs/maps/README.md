@@ -223,6 +223,7 @@ else in the code knows what a character means.
 | `Y` | `[grid]` | entity | - | - | content | Thrush teacher (Spring Woods): sings Chuva's first half (R R R) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures). |
 | `K` | `[grid]` | entity | - | - | content | Kestrel teacher (Wind Orchards): sings Vendaval's first half (R R L) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures). |
 | `Q` | `[grid]` | entity | - | - | content | Lizard teacher (Summer Caldera): sings Solsticio's first half (R D U) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures). |
+| `I` | `[grid]` | entity | - | - | - | A wall of stopped grey standing on this cell, cells tall (default 4): solid while a guardian fights Ivo inside its Arena, from when his body is clear of it until the guardian is restored. Put one in every arena exit, the column at the room's edge, the doorway's height (GRD-05). |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -630,6 +631,15 @@ Scene `res://scenes/world/creatures/lizard/lizard.tscn`, anchored at its cell's 
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `lesson` | CreatureLesson | `Resource("res://resources/world/creatures/lizard_lesson.tres")` |
+
+#### `I` - FightWall
+
+Scene `res://scenes/world/interactables/fight_wall/fight_wall.tscn`, anchored at its cell's bottom centre (standing on the cell below). A wall of stopped grey standing on this cell, cells tall (default 4): solid while a guardian fights Ivo inside its Arena, from when his body is clear of it until the guardian is restored. Put one in every arena exit, the column at the room's edge, the doorway's height (GRD-05).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `cells` | int | `4` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach
