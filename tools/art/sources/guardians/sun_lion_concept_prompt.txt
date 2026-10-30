@@ -1,0 +1,13 @@
+Draw ONE character concept sheet image. Style: minimalist 16-bit pixel art for a 2D side-view metroidvania set in a lived-in medieval valley, crisp hard pixels, no anti-aliasing, no smooth gradients, simple flat shapes with clear silhouettes and few details, limited palette of about 16 colours, base colours at MEDIUM brightness, no outlines, no baked lighting, glow or cast shadows, no text.
+Use ./style_ref.png (our own approved concept sheet) as the style and scale reference: match its pixel size, flat shading, no outlines, the villager woman on its left for scale, the magenta background.
+
+Content, left to right in one row, all seen from the side facing LEFT (west), all standing on the same invisible baseline at the bottom, equal spacing:
+1. The same small villager woman from the reference, for scale.
+2. Variant A: the SUMMER GUARDIAN, a great LION made of dark porous VOLCANIC STONE full of small holes like pumice and basalt (charcoal grey, warm dark brown), standing on four legs, its shoulder about 1.8 times the villager's height, a long heavy body. Its MANE is a ring of radiating flat stone rays like a carved sun disc, in warm sandstone, ochre and pale gold. Small warm orange-red colour sits flat inside some of the stone pores (flat colour, no glow). Calm, proud, ancient, a tail ending in a tuft of stone rays.
+3. Variant B: the same summer lion idea, leaner and taller: the stone body cracked into big plates, the mane made of layered stone plates fanned like the rays of the noon sun around the head, a large round sun-disc plate on its chest, the same porous volcanic stone and flat warm pores.
+
+Background: one flat solid magenta (#ff00ff), no shadow, no floor line, no scenery.
+Bold silhouettes, few colours, thick readable shapes.
+Avoid: blurry, anti-aliased, smooth gradient, photorealistic, painterly, 3d render, text, watermark, frame border, noisy dithering, speckle, neon colours, black outline, outlines, glow, fire, lava flowing, cartoon face.
+Use your image generation tool EXACTLY ONCE; do not regenerate or draw variants beyond the ones described.
+Do NOT resize, crop or post-process the generated file. Copy it byte-for-byte to ./raw.png in the current directory, then reply with only its pixel size.

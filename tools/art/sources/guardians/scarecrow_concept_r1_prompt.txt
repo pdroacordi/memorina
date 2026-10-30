@@ -1,0 +1,9 @@
+Edit ./concept.png (our own concept sheet). Keep the image size, the magenta background, the villager woman and the pixel-art style exactly.
+Remove the middle figure (variant A, the one with the hat): leave only magenta there.
+Redraw ONLY THE HEAD of the right figure (variant B, the hunched bone scarecrow); keep its hunched bone body, long arms reaching down, leaf skirt, apples, pose, colours and size exactly the same.
+The new head must NOT look like a deer or any animal skull: no snout, no muzzle, no antlers, no branches on top.
+New face: a flat, round, slightly cracked bone mask like an old scarecrow's face, with two round dark hollow eye holes and a thin stitched line for a mouth, melancholy and eerie, a little unsettling.
+New crown: instead of the branches, a ragged hood of dry autumn leaves (rust, ochre, amber, brown) drooping around and behind the mask, a few leaves about to fall.
+Style: minimalist 16-bit pixel art, crisp hard pixels, no anti-aliasing, flat shapes, few colours, no outlines, no glow.
+Use your image generation tool EXACTLY ONCE.
+Do NOT resize, crop or post-process the generated file. Copy it byte-for-byte to ./raw.png in the current directory, then reply with only its pixel size.

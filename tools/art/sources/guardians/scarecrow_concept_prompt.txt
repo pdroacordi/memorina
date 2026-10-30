@@ -1,0 +1,13 @@
+Draw ONE character concept sheet image. Style: minimalist 16-bit pixel art for a 2D side-view metroidvania set in a lived-in medieval valley, crisp hard pixels, no anti-aliasing, no smooth gradients, simple flat shapes with clear silhouettes and few details, limited palette of about 16 colours, base colours at MEDIUM brightness, no outlines, no baked lighting, glow or cast shadows, no text.
+Use ./style_ref.png (our own approved concept sheet) as the style and scale reference: match its pixel size, flat shading, no outlines, the villager woman on its left for scale, the magenta background.
+
+Content, left to right in one row, all seen from the side facing LEFT (west), all standing on the same invisible baseline at the bottom, equal spacing:
+1. The same small villager woman from the reference, for scale.
+2. Variant A: the AUTUMN GUARDIAN, a tall scarecrow built of hollow, light, bleached BONES (bone-white and pale ochre), about 2.6 times the villager's height. Upright on long thin stilt-like bone legs, a tall pole spine, long thin bone arms with long fingers hanging low. A ragged cloak of DRY AUTUMN LEAVES (rust, ochre, amber, brown) clings to its shoulders and arms, the leaves refusing to fall. A melancholy bone mask for a face with two dark hollow eye holes (gentle, sad, not horror), a wide brimmed hat woven of dry leaves and twigs. A few withered apples hang from its arms.
+3. Variant B: the same autumn guardian idea, hunched and longer-armed: the bone frame bent forward, arms reaching the ground like a crane, a crown of dry branches with a few last clinging leaves instead of a hat, a long skirt of hanging leaves, the same gentle bone mask. Also about 2.4 times the villager's height.
+
+Background: one flat solid magenta (#ff00ff), no shadow, no floor line, no scenery.
+Bold silhouettes, few colours, thick readable shapes.
+Avoid: blurry, anti-aliased, smooth gradient, photorealistic, painterly, 3d render, text, watermark, frame border, noisy dithering, speckle, neon colours, black outline, outlines, glow, gore, horror.
+Use your image generation tool EXACTLY ONCE; do not regenerate or draw variants beyond the ones described.
+Do NOT resize, crop or post-process the generated file. Copy it byte-for-byte to ./raw.png in the current directory, then reply with only its pixel size.
