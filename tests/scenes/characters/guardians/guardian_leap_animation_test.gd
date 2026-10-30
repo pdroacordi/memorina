@@ -20,7 +20,7 @@ func before_test() -> void:
 	_holder = auto_free(Node2D.new()) as Node2D
 	add_child(_holder)
 	var floor_body := StaticBody2D.new()
-	floor_body.collision_layer = 2
+	floor_body.collision_layer = GroundCollision.COLLISION_LAYER | 2
 	floor_body.position = Vector2(0, FLOOR_Y + 10.0)
 	var shape := CollisionShape2D.new()
 	var rect := RectangleShape2D.new()

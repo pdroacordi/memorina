@@ -3,7 +3,8 @@ extends SceneTree
 ## [bark] lines (open/close, text, rows, box, guardian/Ivo screen px, the call slot), lesson shots every 1.5 s, and after
 ## RESTORED it walks to the guardian, presses Up, logs each LINE (plate, portrait, text), picks BOT_CHOICE and talks twice.
 ## Run: "$GODOT_WINDOWED" --path . -s res://tools/playtest/scripts/guardian_fight_talk_driver.gd -- --script=<timeline> --out=<dir>
-## Env: as the fight bot, plus BOT_FAIL=wrong|skip (the first answer is wrong / never given) and BOT_CHOICE=0|1 (HOLD / LET).
+## Env: as the fight bot, plus BOT_FAIL=wrong|skip (the first answer is wrong / never given), BOT_CHOICE=0|1 (HOLD / LET)
+## and BOT_LUCID_MS (ms between lucid-burst shots, default 250; 100 to see a leap).
 ## Timeline: guardian_bot_<bloom|frost>.json with max_duration raised to 260 (the Frost lesson runs ~98 s).
 const PH := ["DORMANT", "PRESSURE", "LUCIDITY", "RELAPSE", "RESTORED"]
 var _out := ""
@@ -51,6 +52,7 @@ var _text_seen_at := 0
 var _prompt_was := false
 var _was_talking := false
 var _done_at := 0
+var _lucid_ms := 250
 
 func _initialize() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -58,6 +60,8 @@ func _initialize() -> void:
 			_out = a.substr(6)
 	_keep = float(OS.get_environment("BOT_KEEP")) if OS.get_environment("BOT_KEEP") != "" else 62.0
 	_god = OS.get_environment("BOT_GOD") == "1"
+	if OS.get_environment("BOT_LUCID_MS") != "":
+		_lucid_ms = int(OS.get_environment("BOT_LUCID_MS"))
 	_passive = OS.get_environment("BOT_PASSIVE") == "1"
 	_answer = OS.get_environment("BOT_ANSWER") != "0"
 	_fail = OS.get_environment("BOT_FAIL")
@@ -115,7 +119,7 @@ func _process(_d: float) -> bool:
 			_act(q[1], q[2])
 			_queue.erase(q)
 	if _burst_until > now and now >= _burst_next:
-		_burst_next = now + (250 if _burst_tag == "lucid" else 120)
+		_burst_next = now + (_lucid_ms if _burst_tag == "lucid" else 120)
 		_shot(_burst_tag)
 	_p = root.find_child("Player", true, false) as Node2D
 	if _p == null or not _p.has_method("is_in_lesson"):
@@ -129,7 +133,7 @@ func _process(_d: float) -> bool:
 		_t0 = now
 		_notes = _g.get("stats").song.notes
 		_p.connect("call_window_opened", _on_window)
-		for sig in ["call_opened", "call_closed", "call_answered", "skill_recalled", "skill_recall_missed", "recall_started", "recall_step_taken", "recall_ended", "lesson_started", "sequence_failed", "double_jumped", "jumped", "call_staged", "call_unstaged"]:
+		for sig in ["call_opened", "call_closed", "call_answered", "skill_recalled", "skill_recall_missed", "recall_started", "recall_step_taken", "recall_ended", "lesson_started", "sequence_failed", "double_jumped", "jumped", "call_framed", "call_staged", "call_unstaged"]:
 			var argc: int = _p.get_signal_list().filter(func(x: Dictionary) -> bool: return x.name == sig)[0].args.size()
 			var cb: Callable = _on_sig.bind(sig)
 			_p.connect(sig, cb.unbind(argc) if argc > 0 else cb)
@@ -273,6 +277,7 @@ func _on_sig(sig: String) -> void:
 		"skill_recalled": _burst("recalled", 900)
 		"recall_started": _shot("recall_start")
 		"lesson_started": _burst("lesson", 400)
+		"call_framed": _shot("framed")
 		"call_staged": _shot("staged")
 		"call_unstaged": _burst("unstaged", 2500)
 

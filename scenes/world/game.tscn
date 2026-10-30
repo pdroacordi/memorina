@@ -281,7 +281,7 @@ layer = 3
 [connection signal="call_opened" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_opened"]
 [connection signal="call_opened" from="World/Player" to="CanvasLayer/GuardianCallHud" method="on_call_opened"]
 [connection signal="call_progress" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_progress"]
-[connection signal="call_staged" from="World/Player" to="World/Camera2D" method="frame_pair"]
+[connection signal="call_framed" from="World/Player" to="World/Camera2D" method="frame_pair"]
 [connection signal="call_staged" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_call_staged" unbinds=1]
 [connection signal="call_staged" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_call_staged" unbinds=1]
 [connection signal="call_unstaged" from="World/Player" to="World/Camera2D" method="release_pair"]

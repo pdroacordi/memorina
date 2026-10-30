@@ -26,6 +26,8 @@ signal lesson_started(song: Song, glyph_set: Enums.GlyphSet)
 ## A half of a song was taught and the song is not yet whole; the HUD shows its notes and blanks.
 signal song_half_learned(song: Song, half: Enums.SongHalf, glyph_set: Enums.GlyphSet)
 signal song_played(song: Song, position: Vector2)
+## The camera holds `caller` with Ivo until `call_unstaged`; a leaping guardian asks at take-off, before the stage.
+signal call_framed(caller: Node2D)
 ## The camera and lights stage `caller` and Ivo until `call_unstaged`.
 signal call_staged(caller: Node2D)
 signal call_unstaged
@@ -174,6 +176,8 @@ var _call_progress: int = 0
 var _staged_height: float = 0.0
 ## Guardian currently staged for a call.
 var _staged_caller: Node2D
+## Guardian the camera holds with Ivo, from take-off or the stage until unstage_call().
+var _framed_caller: Node2D
 ## True while the guardian's phrase plays and the answer window is not open.
 var _call_listening: bool = false
 ## Matched or taught song waiting to be performed; started by `_tick_pending_performance`.
@@ -1006,6 +1010,13 @@ func echo_phrase() -> Array[Enums.Note]:
 ## The guardian drives these directly; Ivo relays them as signals so the HUD
 ## keeps listening to one node.
 
+## The camera holds `caller` with Ivo until unstage_call(): the whole leap is framed, not only its landing (GRD-09).
+func frame_call(caller: Node2D) -> void:
+	if _framed_caller == caller:
+		return
+	_framed_caller = caller
+	call_framed.emit(caller)
+
 ## The guardian went lucid: the stage is set around it until unstage_call().
 ## `caller_height` is how tall the body on stage is, in world pixels; the
 ## sheet needs it to know whether it can hang above the pair.
@@ -1014,10 +1025,12 @@ func stage_call(caller: Node2D, caller_height: float = 0.0) -> void:
 	_stand_up()
 	_staged_caller = caller
 	_staged_height = caller_height
+	frame_call(caller)
 	call_staged.emit(caller)
 
 func unstage_call() -> void:
 	_staged_caller = null
+	_framed_caller = null
 	call_unstaged.emit()
 
 ## A lucidity window opened: from now until close_call(), the instrument

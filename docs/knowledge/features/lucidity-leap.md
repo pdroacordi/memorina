@@ -6,7 +6,7 @@ status: active
 tags: [guardians, cinematic, camera, physics, collision]
 related: [features/encounter-sheet-slot, architecture/guardian-fight-phase-machine]
 created: 2026-09-22
-updated: 2026-09-22
+updated: 2026-10-30
 source_files:
   - scenes/characters/guardians/guardian.gd
   - scenes/world/camera.gd
@@ -36,6 +36,10 @@ call. The two phases are separated by an action instead of by a panel.
   arc meant to leave the frame has to be allowed through the ceiling.
 - `leapt` / `landed` are signals wired to a `DustEmitter` in each guardian scene, exactly
   the idiom `ivo.tscn` uses for jump and landing dust; the landing shakes the camera.
+- **The camera pairs at take-off, the call stages at the landing** (GRD-09, "Câmera na decolagem", user,
+  2026-10-30). `Player.frame_call` / `call_framed` starts `GameCamera.frame_pair` as the guardian leaves the
+  ground, so the frame has reached the pair's midpoint by touchdown and the landing clip is seen. The apex
+  still leaves through the top of the frame (`systems/guardians`, "The leap is framed from take-off").
 - `lucidity_leap_timeout` calls from where it stands if the leap never lands (a pit, a
   missing floor). A fight must not be able to stall on a cinematic.
 

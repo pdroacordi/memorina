@@ -68,7 +68,9 @@ var _hits_since_move: int = 0
 var _answered_notes: int = 0
 ## Shield amount as the relapse began, to drain from.
 var _relapse_from: float = 0.0
-## The camera and the lights are on this guardian.
+## The camera holds this guardian with Ivo, from take-off.
+var _framed: bool = false
+## The lights and the call are on this guardian, from the landing.
 var _staged: bool = false
 ## Counting down the beat between the opening blow and the leap.
 var _lucidity_wait: float = 0.0
@@ -389,6 +391,9 @@ func _begin_lucidity_leap() -> void:
 	_leap_mask = collision_mask
 	_leaping = true
 	_leap_left = lucidity_leap_timeout
+	# The frame pairs at take-off so the landing is in view; only the landing stages the call
+	# (bugs/the-lucidity-leap-lands-outside-the-frame-so-its-land-clip-is-not-seen).
+	_frame()
 	leapt.emit(global_position)
 
 ## The far side, worked out rather than assumed. Each direction is measured
@@ -582,10 +587,17 @@ func _on_lesson_cue(index: int) -> void:
 func _on_lesson_song_played(song: Song, _position: Vector2) -> void:
 	_pulse_emitter.spawn_pulse(song, global_position)
 
+func _frame() -> void:
+	if _framed:
+		return
+	_framed = true
+	_player.frame_call(self)
+
 func _stage() -> void:
 	if _staged:
 		return
 	_staged = true
+	_framed = true
 	_player.stage_call(self, body_height())
 
 # A walk across a seam leaves the arena running as a neighbour room, so leaving it must end the call
@@ -594,9 +606,10 @@ func _player_in_arena() -> bool:
 	return is_instance_valid(_player) and (_arena == null or _arena.bounds().has_point(_player.global_position))
 
 func _unstage() -> void:
-	if not _staged:
+	if not _staged and not _framed:
 		return
 	_staged = false
+	_framed = false
 	if is_instance_valid(_player):
 		_player.unstage_call()
 
