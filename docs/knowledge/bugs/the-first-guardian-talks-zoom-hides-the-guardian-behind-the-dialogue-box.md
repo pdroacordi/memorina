@@ -1,8 +1,8 @@
 ---
 id: bugs/the-first-guardian-talks-zoom-hides-the-guardian-behind-the-dialogue-box
 type: bug
-title: The first Frost guardian talk hides the golem behind the top dialogue box (Bloom fixed by zoom 1)
-status: active
+title: The first Frost guardian talk hid the golem behind the top dialogue box (Bloom fixed by zoom 1, Frost by a box placed off its face)
+status: resolved
 severity: low
 tags: [guardians, dialogue, talk, zoom, camera, story-18]
 related: [systems/guardians, systems/dialogue, playtests/2026-10-30-grd08-story18-guardian-clips-and-talks]
@@ -12,6 +12,9 @@ source_files:
   - resources/dialogue/guardians/guardian_bloom.tres
   - resources/dialogue/guardians/guardian_frost.tres
   - scenes/ui/dialogue_box/dialogue_box.gd
+  - scenes/ui/dialogue_box/dialogue_box_side.gd
+  - scenes/world/dialogue/dialogue_director.gd
+  - scenes/world/interactables/talkable/talkable.gd
 ---
 
 ## Summary
@@ -63,3 +66,14 @@ into account.
 Options (a design call, not taken): a shorter top box or a box at the side for tall speakers; for a speaker over
 about 100 px, place the box by the speaker's head height; let a talk's frame go past the room clamp; or accept the
 portrait standing in for the golem's face.
+
+## Fix (2026-10-30, STORY-19): Frost
+
+"Caixa pela cabeça" (user, 2026-10-30): the box is placed by the speaker's head height. `Talkable.face_height` (px from
+the feet to the eyes; Frost 150, 0 for every other speaker) reaches `DialogueDirector.start_dialogue`, and
+`DialogueBoxSide.place` opens the bottom box when those eyes are above `DialogueBox.TOP_BOX_BOTTOM` (176 screen px).
+Playtest (`guardian_bot_frost.json` to 259 s, `BOT_GOD=1`, HOLD): every line of the first talk and the repeat open the
+bottom box (`boxpos (0, 0)`); the golem shows from its crown to its ankles, only its feet under the box, and Ivo shows
+from the head up over the box's top edge (`playtests/screenshots/2026-10-30-grd08-story18-guardian-clips-and-talks/story19_frost_bottom_box.png`).
+Bloom keeps the top box (its eyes clear it at zoom 1). Tests: `dialogue_box_side_test`, `dialogue_director_test`
+(`test_a_tall_speakers_face_keeps_the_box_off_it`), `dialogue_box_test` (`TOP_BOX_BOTTOM` matches the panel).

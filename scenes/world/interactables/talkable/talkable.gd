@@ -26,6 +26,9 @@ const REACH := 48.0
 ## Px along x from its origin to where the speaker (the villager prop) stands: the zone's centre, the prompt's
 ## column and what Ivo faces.
 @export var speaker_offset: float = 0.0
+## Px from the speaker's feet up to its eyes, for a speaker the top dialogue box would cover (a guardian); 0 for one it
+## clears (DialogueBoxSide.place).
+@export var face_height: float = 0.0
 
 ## Ivo while he is in reach.
 var _body: Player

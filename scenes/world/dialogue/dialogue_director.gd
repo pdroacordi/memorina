@@ -33,6 +33,8 @@ signal phrase_closed
 var _runner: DialogueRunner
 ## Where the speaker stands; the box is placed from it.
 var _at: Vector2
+## Px from `_at` up to the speaker's eyes; 0 when the top box clears them (Talkable.face_height).
+var _face_height: float = 0.0
 ## What Ivo faces when the talk begins or resumes: the speaker, until a beat turns him to its `face` for the rest of the
 ## talk ("Ivo walks to it. The elder, behind him", design 05).
 var _facing: Vector2
@@ -54,15 +56,16 @@ func is_talking() -> bool:
 	return _runner != null
 
 func start(talkable: Talkable) -> void:
-	start_dialogue(talkable.current(SaveSystem.player_data), talkable.speaker_position())
+	start_dialogue(talkable.current(SaveSystem.player_data), talkable.speaker_position(), talkable.face_height)
 
-## Runs `dialogue` spoken from `at` (a Talkable, or a cutscene's CutsceneTalk); false when a talk already runs or there is
-## nothing to say.
-func start_dialogue(dialogue: Dialogue, at: Vector2) -> bool:
+## Runs `dialogue` spoken from `at` (a Talkable, or a cutscene's CutsceneTalk), its speaker's eyes `face_height` px above
+## it; false when a talk already runs or there is nothing to say.
+func start_dialogue(dialogue: Dialogue, at: Vector2, face_height: float = 0.0) -> bool:
 	if _runner != null or dialogue == null:
 		return false
 	_runner = DialogueRunner.new(dialogue, SaveSystem.player_data)
 	_at = at
+	_face_height = face_height
 	_facing = _at
 	if dialogue.zoom > 0.0:
 		_framed = true
@@ -111,13 +114,14 @@ func _begin() -> void:
 	talk_began.emit(_facing)
 	_step()
 
-## Opposite the speakers on screen (DialogueBoxSide); the top when Ivo is unknown.
+## Opposite the speakers on screen and off the speaker's face (DialogueBoxSide); the top when Ivo is unknown.
 func _side() -> DialogueBoxSide.Side:
 	if listener == null or not listener.is_inside_tree():
 		return DialogueBoxSide.Side.TOP
 	var canvas := listener.get_canvas_transform()
 	var ys := PackedFloat32Array([(canvas * _at).y, (canvas * listener.global_position).y])
-	return DialogueBoxSide.opposite(ys, listener.get_viewport_rect().size.y)
+	var face_y := (canvas * (_at + Vector2.UP * _face_height)).y if _face_height > 0.0 else NAN
+	return DialogueBoxSide.place(ys, listener.get_viewport_rect().size.y, face_y, DialogueBox.TOP_BOX_BOTTOM)
 
 func _step() -> void:
 	match _runner.advance():

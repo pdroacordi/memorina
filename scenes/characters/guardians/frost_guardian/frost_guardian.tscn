@@ -1296,6 +1296,7 @@ land_particles = ExtResource("92_landdust")
 reach_west = 82.0
 reach_east = 82.0
 height_cells = 6
+face_height = 150.0
 
 [node name="BarkAnchor" type="Marker2D" parent="."]
 position = Vector2(0, -168)

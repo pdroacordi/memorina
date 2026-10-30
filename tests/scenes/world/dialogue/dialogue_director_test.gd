@@ -172,6 +172,25 @@ func test_the_box_is_placed_opposite_the_speakers() -> void:
 	_director.start(_talkable)
 	assert_array(sides).is_equal([DialogueBoxSide.Side.TOP, DialogueBoxSide.Side.BOTTOM, DialogueBoxSide.Side.TOP])
 
+## A tall speaker whose face the top box would cover gets the bottom box (Talkable.face_height).
+func test_a_tall_speakers_face_keeps_the_box_off_it() -> void:
+	var sides: Array[int] = []
+	_director.box_placed.connect(func(side: DialogueBoxSide.Side) -> void: sides.append(side))
+	var ivo := auto_free(Node2D.new()) as Node2D
+	add_child(ivo)
+	_director.listener = ivo
+	var feet := DialogueBox.TOP_BOX_BOTTOM + 100.0
+	ivo.position = Vector2(0, feet)
+	_talkable.position = Vector2(40, feet)
+	_talk([F.line("A")])
+	_director.interrupt()
+	_talkable.face_height = 150.0
+	_director.start(_talkable)
+	_director.interrupt()
+	_talkable.face_height = 60.0
+	_director.start(_talkable)
+	assert_array(sides).is_equal([DialogueBoxSide.Side.TOP, DialogueBoxSide.Side.BOTTOM, DialogueBoxSide.Side.TOP])
+
 ## Ivo faces the speaker beside the Talkable, not its origin.
 func test_the_talk_faces_the_speaker_beside_the_talkable() -> void:
 	var at: Array[Vector2] = []

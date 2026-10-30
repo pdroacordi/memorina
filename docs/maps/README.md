@@ -579,6 +579,7 @@ Scene `res://scenes/world/interactables/talkable/talkable.tscn`, anchored at its
 | `height_cells` | int | `2` |
 | `auto_delay` | float | `0.4` |
 | `speaker_offset` | float | `0.0` |
+| `face_height` | float | `0.0` |
 
 #### `i` - ItemPickup
 

@@ -19,6 +19,12 @@ const PLATE_MAX_WIDTH := 120.0
 ## Pack px the box moves up to open at the top: its panel from y 106 to y 20, under the life notes and the quill
 ## (HUD y 8 to 40).
 const TOP_SHIFT := -86.0
+## The panel's bottom edge in the box, in pack px; must match the Panel node.
+const PANEL_BOTTOM := 174.0
+## Screen px per pack px; must match the Art node's scale.
+const ART_SCALE := 2.0
+## Screen px of the top box's lowest edge: a face above it is covered (DialogueBoxSide.place).
+const TOP_BOX_BOTTOM := (PANEL_BOTTOM + TOP_SHIFT) * ART_SCALE
 ## The plate's y in the box, in pack px: over the panel's top edge at the bottom, under its lower edge at the top,
 ## so it stays on screen and on the inner side.
 const PLATE_Y_BOTTOM := 99.0

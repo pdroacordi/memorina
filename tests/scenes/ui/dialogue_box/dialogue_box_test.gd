@@ -225,3 +225,11 @@ func test_a_silent_ask_clears_an_open_box() -> void:
 	assert_bool(_box.is_typing()).is_false()
 	assert_bool(_box.is_choosing()).is_true()
 	assert_object(_focused()).is_same(_box.choice_button(0))
+
+## TOP_BOX_BOTTOM is derived from the panel and the art scale; both must match the scene.
+func test_the_top_box_bottom_matches_the_panel() -> void:
+	var panel := _box.get_node("Art/Box/Panel") as Control
+	var art := _box.get_node("Art") as Control
+	assert_float(panel.offset_bottom).is_equal(DialogueBox.PANEL_BOTTOM)
+	assert_vector(art.scale).is_equal(Vector2.ONE * DialogueBox.ART_SCALE)
+	assert_float(DialogueBox.TOP_BOX_BOTTOM).is_equal(176.0)
