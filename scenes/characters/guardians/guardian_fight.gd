@@ -23,6 +23,8 @@ var _window_left: float = -1.0
 var _window_total: float = 0.0
 ## Seconds left in the relapse before pressure resumes.
 var _relapse_left: float = 0.0
+## Seconds the window loses per second; 1 normally, more under dissonance.
+var _drain: float = 1.0
 
 func _init(stats: GuardianStats) -> void:
 	_stats = stats
@@ -78,6 +80,19 @@ func open_window(call_length: float = 0.0) -> void:
 	if _phase == Phase.LUCIDITY:
 		_window_left = maxf(call_length, 0.0) + window_duration()
 		_window_total = _window_left
+		_drain = 1.0
+
+## The window drains `scale` times as fast (dissonance, design 02 section 5.3); its fraction keeps its total.
+func set_drain(scale: float) -> void:
+	_drain = maxf(scale, 0.0)
+
+## Ends a lucidity with no answer, cycle or relapse: back to pressure, hits at zero (the revelation's end).
+func dismiss() -> void:
+	if _phase != Phase.LUCIDITY:
+		return
+	_window_left = -1.0
+	_hits = 0
+	_transition(Phase.PRESSURE)
 
 func is_window_open() -> bool:
 	return _phase == Phase.LUCIDITY and _window_left >= 0.0
@@ -100,7 +115,7 @@ func tick(delta: float) -> bool:
 		return false
 	if not is_window_open():
 		return false
-	_window_left -= delta
+	_window_left -= delta * _drain
 	if _window_left >= 0.0:
 		return false
 	_window_left = -1.0

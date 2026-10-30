@@ -232,3 +232,26 @@ func test_phase_changes_are_announced() -> void:
 	var monitor := monitor_signals(_fight)
 	_fight.begin()
 	await assert_signal(monitor).is_emitted("phase_changed", [GuardianFight.Phase.DORMANT, GuardianFight.Phase.PRESSURE])
+
+## Dissonance drains the window faster; a new window drains normally again (GRD-06).
+func test_a_drain_shortens_the_window_and_a_new_window_resets_it() -> void:
+	_fight.begin()
+	_hit_until_open()
+	_fight.open_window()
+	_fight.set_drain(2.0)
+	assert_bool(_fight.tick(1.9)).is_false()
+	assert_float(_fight.window_left()).is_equal_approx(0.2, 0.001)
+	_fight.open_window()
+	_fight.tick(1.0)
+	assert_float(_fight.window_left()).is_equal_approx(3.0, 0.001)
+
+## The revelation ends with no answer: back to pressure, no cycle, no aggression, no relapse (GRD-06).
+func test_dismiss_returns_to_pressure_without_a_cycle_or_aggression() -> void:
+	_fight.begin()
+	_hit_until_open()
+	_fight.open_window()
+	_fight.dismiss()
+	assert_int(_fight.phase()).is_equal(GuardianFight.Phase.PRESSURE)
+	assert_int(_fight.cycles()).is_equal(0)
+	assert_int(_fight.aggression()).is_equal(0)
+	assert_float(_fight.pressure_progress()).is_equal(0.0)
