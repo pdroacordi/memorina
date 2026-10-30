@@ -59,6 +59,22 @@ func test_every_guardian_move_lands_over_the_whole_distance_it_is_thrown_from() 
 				assert_float(miss).override_failure_message("%s is thrown from %.1f to %.0f px but misses a grounded Ivo at %.1f" % [
 					label, near, attack.attack_range, miss]).is_equal(-1.0)
 
+## A move without body contact hurts only with its box, so the box is open for the whole lunge: from `lunge_delay` to the
+## end of the clip (GRD-10, "Só a investida").
+func test_a_guardian_move_without_body_contact_keeps_its_box_open_while_it_lunges() -> void:
+	for path: String in GUARDIAN_SCENES:
+		var guardian := auto_free(_instance(path)) as Guardian
+		for attack: GuardianAttack in guardian.stats.attacks:
+			if attack.body_contact or attack.lunge_speed <= 0.0:
+				continue
+			var clip := _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index])
+			var window := _window(clip)
+			var label := "%s %s" % [guardian.name, attack.resource_path.get_file()]
+			assert_float(window.x).override_failure_message("%s lunges at %.2f s before its box opens at %.2f s" % [
+				label, attack.lunge_delay, window.x]).is_less_equal(attack.lunge_delay + 0.001)
+			assert_float(window.y).override_failure_message("%s shuts its box at %.2f s of a %.2f s lunge" % [
+				label, window.y, attack.duration]).is_greater_equal(attack.duration - 0.001)
+
 ## On every sampled frame of a guardian's hit window, its box touches a grounded Ivo no farther out than the art that
 ## frame draws at his height reaches (bugs/the-frost-swipe-hit-ivo-far-from-its-fist).
 func test_every_guardian_move_touches_a_grounded_ivo_only_where_its_art_is_drawn() -> void:

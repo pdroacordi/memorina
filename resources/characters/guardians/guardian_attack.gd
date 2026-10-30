@@ -14,10 +14,14 @@ extends Resource
 @export var cooldown: float = 1.5
 ## Horizontal lunge speed in px/s, in the facing direction.
 @export var lunge_speed: float = 0.0
+## Seconds into the swing before the lunge starts; a move without body contact starts it as its box opens.
+@export var lunge_delay: float = 0.0
 ## Upward impulse in px/s; tune so airtime matches the attack clip.
 @export var leap_impulse: float = 0.0
 ## Relative selection weight; recall attacks use GuardianStats.recall_after_attacks.
 @export var weight: float = 1.0
+## The body hurts on touch during this move; false leaves the move's own box as its only hit (GRD-10).
+@export var body_contact: bool = true
 
 @export_group("Hitbox")
 @export var damage: int = 1

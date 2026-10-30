@@ -126,6 +126,10 @@ func is_telegraphing() -> bool:
 func is_swinging() -> bool:
 	return _swinging
 
+## Seconds since the swing started; 0 outside one.
+func swing_elapsed() -> float:
+	return current_attack.duration - _attack_timer if _swinging else 0.0
+
 ## Getting out from under a player standing on it.
 func is_escaping() -> bool:
 	return _escaping

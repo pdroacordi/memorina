@@ -161,7 +161,8 @@ func _process_motion(delta: float) -> void:
 			face_towards(_ai.facing_intent())
 		_locomotion.ground_update(delta, _ai.direction)
 		var attack := _ai.current_attack
-		if attack != null and _ai.is_swinging() and attack.lunge_speed > 0.0:
+		if (attack != null and _ai.is_swinging() and attack.lunge_speed > 0.0
+				and _ai.swing_elapsed() >= attack.lunge_delay):
 			velocity.x = facing * attack.lunge_speed
 	else:
 		_locomotion.ground_update(delta, 0.0)
@@ -196,7 +197,7 @@ func _after_move(delta: float) -> void:
 		_player.update_call_window(_fight.window_fraction())
 	# Dangerous to touch only while it fights; a lucid or restored guardian can
 	# be walked up to. Not RESET-owned, so this write is the script's.
-	_contact.monitoring = _fight.phase() == GuardianFight.Phase.PRESSURE
+	_contact.monitoring = _fight.phase() == GuardianFight.Phase.PRESSURE and body_hurts()
 	_update_shield(delta)
 
 ## Leaving a room during a call must stop the phrase and release its camera state.
@@ -227,6 +228,10 @@ func body_height() -> float:
 
 func is_attacking() -> bool:
 	return _ai.is_attacking()
+
+## The body hurts on touch, unless the move under way leaves its own box as its only hit (GuardianAttack.body_contact).
+func body_hurts() -> bool:
+	return _ai.current_attack == null or _ai.current_attack.body_contact
 
 ## The wind-up before a swing: still, announced, not yet dangerous.
 func is_telegraphing() -> bool:
