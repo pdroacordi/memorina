@@ -412,3 +412,33 @@ A loucura dele é o meio-dia que não acaba: segurou o sol no alto para ninguém
 | `AGAIN` | Evening came. It was kind. | A tarde caiu. Foi gentil. |
 | `AGAIN_V1` (2+ restaurados) | Far off, someone else let go. The stone cooled. | Longe, mais alguém soltou. A pedra esfriou. |
 | `AGAIN_V2` (todos os 4) | At the sea, a light still will not set. | No mar, uma luz ainda não quer se pôr. |
+
+## O mentor na luta final (GRD-06)
+
+Aprovado 2026-10-30 ("Aprovar as falas"). A revelação não tem fala; o nome dele não é dito (01 §4), e por quem ele segurou a primavera fica em aberto.
+
+### Balões na luta
+
+| Chave | Quando | EN | PT |
+|---|---|---|---|
+| `BARK_MENTOR_LUCID_0` | a janela de inverno, antes da revelação | …Long way. You ~kept~ it. | …Caminho longo. Você ~guardou~. |
+| `BARK_MENTOR_DUAL` | o primeiro chamado de duas trilhas | Both. I wanted ~both~. | As duas. Eu quis as ~duas~. |
+| `BARK_MENTOR_RETRY` | depois de uma falha | Again. Not both. | De novo. As duas não. |
+| `BARK_MENTOR_FINAL` | quando o chamado final começa | Yes. Let the other go. | Isso. Solta a outra. |
+
+### Primeira conversa (na lanterna, depois da vitória)
+
+1. **Mentor:** The lamp is lit. / A lâmpada acendeu.
+2. **Mentor:** I held the cold so the blossom would wait for someone. It waited. Everything waited. / Segurei o frio pra flor esperar alguém. Ela esperou. Tudo esperou.
+3. **Ivo:** For who? / Por quem?
+4. **Mentor:** …I don't have it anymore. Good. / …Não tenho mais. Que bom.
+5. **Mentor:** Your song was never mine to give. You carried it the whole way. / Sua música nunca foi minha pra dar. Você carregou ela o caminho todo.
+6. **Mentor:** (estende a mão vazia, a mesma que ficou erguida tanto tempo) …Go home. Someone left the window open. / …Vai pra casa. Alguém deixou a janela aberta.
+   - ★ **[Keep the flute] / [Ficar com a flauta]** (HOLD). **Mentor:** Good. Play it at home. Badly, at first. / Bom. Toca em casa. Mal, no começo.
+   - ★ **[Hold it out to him] / [Estender a flauta pra ele]** (LET). **Mentor:** (fecha os dedos de Ivo de volta sobre ela) Not to me. I only kept it. / Pra mim não. Eu só guardei.
+
+### De novo (repetível)
+
+| Chave | EN | PT |
+|---|---|---|
+| `AGAIN` | The sea is loud again. I listen to all of it. | O mar está alto de novo. Escuto ele inteiro. |
