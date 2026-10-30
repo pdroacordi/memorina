@@ -93,6 +93,8 @@ var _bowing: bool = false
 @onready var _ai                : GuardianAI = $AI
 @onready var _locomotion        : LocomotionComponent = $Locomotion
 @onready var _call              : PhraseCall = $Call
+## The final battle's strategy; null on every guardian but the mentor (GRD-06).
+@onready var _finale            : GuardianFinale = get_node_or_null(^"Finale") as GuardianFinale
 @onready var _arena_trigger     : PlayerProximityTrigger = $ArenaTrigger
 @onready var _shield            : GreyhushShield = $GreyhushShield
 @onready var _hitbox            : Hitbox = $Hitbox
@@ -137,7 +139,8 @@ func _ready() -> void:
 	_arena_trigger.player_entered.connect(_on_player_entered)
 	_shield_rest_radius = _shield.radius
 	_sprite_rest = _sprite.position
-	if SaveSystem.is_guardian_restored(stats.id):
+	assert((stats.finale != null) == (_finale != null), "%s: FinaleStats and a Finale child go together" % name)
+	if (_finale.is_restored() if _finale != null else SaveSystem.is_guardian_restored(stats.id)):
 		_fight.restore_silently()
 	_assert_clip_durations()
 	_update_shield(0.0)
@@ -268,6 +271,28 @@ func is_sounding() -> bool:
 func is_teaching() -> bool:
 	return _teaching and is_instance_valid(_player) and _player.is_in_lesson()
 
+## The fight's phase logic, for the Finale (GRD-06).
+func fight() -> GuardianFight:
+	return _fight
+
+## Sings `song`'s phrase after the lead-in.
+func call_phrase(song: Song) -> void:
+	_call.play(song.notes, stats.call_lead_in)
+
+## The AI's moves from now on (the Finale's revealed moves).
+func set_attacks(attacks: Array[GuardianAttack]) -> void:
+	_ai.attacks = attacks
+
+## A lucidity that ends with no answer, cycle or relapse: back to pressure where the bodies stand (the revelation).
+func end_lucidity_without_answer() -> void:
+	_fight.dismiss()
+	_close_call(true)
+	_unstage()
+
+func freeze_frame(seconds: float) -> void:
+	if is_instance_valid(_player):
+		_player.request_freeze_frame(seconds)
+
 #############################################
 ##  T H E   F I G H T                      ##
 #############################################
@@ -279,13 +304,17 @@ func _on_player_entered() -> void:
 	if _player == null:
 		return
 	_player.call_answered.connect(_on_call_answered)
+	if _finale != null:
+		_player.call_mixed.connect(_on_call_mixed)
 	_player.call_progress.connect(_on_call_progress)
 	_player.sequence_failed.connect(_on_player_sequence_failed)
 	_player.skill_recalled.connect(_on_skill_recalled)
 	_ai.overhead_band = GuardianAI.overhead_band_for(body_rect().size.x, _player.body_rect().size.x)
 	_fight.begin()
 	_ai.active = true
-	SaveSystem.meet_guardian(stats.id)
+	# The mentor has no Enums.Guardian id: the hatch's gate counts the four (architecture/grd-06-final-battle).
+	if _finale == null:
+		SaveSystem.meet_guardian(stats.id)
 
 ## Hazards do not affect guardians; hits destabilise them without damage.
 func receive_hazard(_hazard: HazardZone) -> void:
@@ -452,8 +481,12 @@ func _finish_lucidity_leap() -> void:
 	_shake_camera(lucidity_leap_shake)
 	face_towards(_player.global_position.x - global_position.x)
 	_stage()
-	_player.open_call(stats.song, stats.revealed_notes, _fight.cycles(), stats.cycles_to_restore)
 	# Emitted before the call plays, so a zero lead-in still closes the bark at the first note.
+	if _finale != null:
+		lucid_landed.emit(_fight.cycles(), _fight.relapse_failed())
+		_finale.open_call(_player)
+		return
+	_player.open_call(stats.song, stats.revealed_notes, _fight.cycles(), stats.cycles_to_restore)
 	lucid_landed.emit(_fight.cycles(), _fight.relapse_failed())
 	_call.play(stats.song.notes, stats.call_lead_in)
 
@@ -476,7 +509,8 @@ func _breathe() -> void:
 	_bob_tween.tween_property(_sprite, "position", _sprite_rest, _call.note_interval * 0.6)
 
 func _on_call_finished() -> void:
-	_fight.open_window(_call.duration())
+	if _finale == null or _finale.counts_window():
+		_fight.open_window(_call.duration())
 	_player.open_call_window()
 
 ## `count` notes of the answer are right so far: the cure shows note by note.
@@ -485,7 +519,11 @@ func _on_call_progress(count: int) -> void:
 		_answered_notes = count
 
 func _on_call_answered(song: Song) -> void:
-	if song != stats.song or _fight.phase() != GuardianFight.Phase.LUCIDITY:
+	if _fight.phase() != GuardianFight.Phase.LUCIDITY:
+		return
+	if _finale != null and _finale.answered(song, _player):
+		return
+	if song != stats.song and _finale == null:
 		return
 	_fight.answer_succeeded()
 	if _fight.phase() == GuardianFight.Phase.RESTORED:
@@ -546,11 +584,22 @@ func _begin_relapse() -> void:
 	# groan must come after that stop, not under it.
 	_call.groan.call_deferred()
 
+func _on_call_mixed(_note: Enums.Note) -> void:
+	if _fight.phase() == GuardianFight.Phase.LUCIDITY:
+		_finale.mixed(_player)
+
 ## Restoration updates the save, region memory, weather, song lesson and camera together.
 func _restore() -> void:
 	_call.stop()
 	_ai.active = false
 	call_ended.emit()
+	if _finale != null:
+		# The mentor teaches nothing: the world is restored and saved at once (GRD-06).
+		_player.close_call(true)
+		_unstage()
+		_finale.restored()
+		restored.emit(self)
+		return
 	SaveSystem.restore_guardian(stats.id)
 	# The guardian's colour: born at the first note, slow and wide, then the
 	# usual pulse answers the finished lesson from where it stands.

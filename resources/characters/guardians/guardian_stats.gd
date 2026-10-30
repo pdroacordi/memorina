@@ -8,6 +8,8 @@ extends Resource
 @export var attacks: Array[GuardianAttack] = []
 ## Its words: barks in the fight, talks after restoration (guardian_voice_test).
 @export var voice: GuardianVoice
+## The final battle's tuning; set only on the mentor, whose scene then has a Finale child (GRD-06).
+@export var finale: FinaleStats
 
 @export_group("Lucidity")
 ## Hits in the pressure phase before lucidity opens.

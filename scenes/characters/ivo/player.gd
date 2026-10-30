@@ -50,6 +50,8 @@ signal call_second_track(song: Song, solvable: bool)
 signal call_committed(song: Song)
 ## The answer played the other track's note: dissonance (design 02 section 5.3).
 signal call_mixed(note: Enums.Note)
+## A freeze frame of `seconds` (real) was asked for: the final battle's shatter (GRD-06). game.tscn wires it to WorldFreeze.
+signal freeze_frame_requested(seconds: float)
 ## A teacher's phrase became the only thing the Memorina plays (systems/teaching-creatures).
 signal echo_opened
 signal echo_closed
@@ -1202,6 +1204,15 @@ func _on_skill_recall_missed(stats: AbilityRecallStats) -> void:
 		health.take_damage(stats.miss_damage)
 		_just_hit = health.is_alive()
 	skill_recall_missed.emit(stats.skill)
+
+## Dissonance hurts straight through health, as a recall miss does (design 02 section 5.3).
+func take_dissonance(damage: int) -> void:
+	if damage > 0 and not is_dead():
+		health.take_damage(damage)
+		_just_hit = health.is_alive()
+
+func request_freeze_frame(seconds: float) -> void:
+	freeze_frame_requested.emit(seconds)
 
 func _end_recall() -> void:
 	_glow_shield(_resting_shield_amount)

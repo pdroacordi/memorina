@@ -294,6 +294,7 @@ layer = 3
 [connection signal="hit_landed" from="World/Player" to="WorldFreeze" method="hit_stop"]
 [connection signal="hit_landed" from="World/Player" to="World/Camera2D" method="shake" binds= [2.0]]
 [connection signal="hurt" from="World/Player" to="WorldFreeze" method="hit_stop"]
+[connection signal="freeze_frame_requested" from="World/Player" to="WorldFreeze" method="hit_stop"]
 [connection signal="hurt" from="World/Player" to="World/Camera2D" method="shake" binds= [4.0]]
 [connection signal="lesson_started" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_lesson_started"]
 [connection signal="lesson_started" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_lesson_started"]
