@@ -20,6 +20,10 @@ signal song_played(song: Song)
 signal call_answered(song: Song)
 ## A teacher's phrase was echoed whole; the instrument stays drawn (systems/teaching-creatures).
 signal phrase_echoed
+## A two-track call's answer told the tracks apart: `song` is the one chosen (GRD-06).
+signal call_committed(song: Song)
+## A two-track call heard the other track's note; the answer starts over (GRD-06).
+signal call_mixed(note: Enums.Note)
 
 enum State { SHEATHED, DRAWN, PERFORMING }
 
@@ -35,6 +39,9 @@ var call_song: Song = null:
 			return
 		assert(value == null or _echo == null, "An echo and a guardian's call are exclusive")
 		call_song = value
+		if value == null:
+			_second = null
+			_dual = null
 		if _state == State.DRAWN:
 			_install_candidates()
 
@@ -52,6 +59,10 @@ var echo_phrase: Array[Enums.Note] = []:
 
 var _matcher := SongMatcher.new()
 var _echo: PhraseEcho = null
+## The second track of a two-track call and its judge; null for an ordinary call (GRD-06).
+var _second: Song = null
+var _dual_solvable: bool = true
+var _dual: DualCallJudge = null
 var _state := State.SHEATHED
 var _performing: Song = null
 var _known_songs: Array[Song] = []
@@ -100,6 +111,7 @@ func sheathe() -> void:
 	_matcher.reset()
 	if _echo != null:
 		_echo.reset()
+	_renew_dual()
 	sheathed.emit()
 
 ## Interrupts the sequence or performance when control is taken away.
@@ -114,11 +126,21 @@ func interrupt() -> void:
 	_state = State.DRAWN
 	sheathe()
 
+## Makes the open call two-track: `second` beside `call_song`, judged by a DualCallJudge; `solvable` false for the
+## revelation. Null makes it an ordinary call again.
+func set_dual_call(second: Song, solvable: bool = true) -> void:
+	_second = second
+	_dual_solvable = solvable
+	_renew_dual()
+
 func receive_note(note: Enums.Note) -> void:
 	if _state != State.DRAWN:
 		return
 	if _echo != null:
 		_receive_echo_note(note)
+		return
+	if _dual != null:
+		_receive_dual_note(note)
 		return
 	match _matcher.feed(note):
 		SongMatcher.Result.MATCHED:
@@ -156,6 +178,30 @@ func finish_performance() -> void:
 	_state = State.DRAWN
 	song_played.emit(song)
 	sheathe()
+
+func _receive_dual_note(note: Enums.Note) -> void:
+	match _dual.feed(note):
+		DualCallJudge.Result.NOTE:
+			note_played.emit(note)
+		DualCallJudge.Result.COMMITTED:
+			note_played.emit(note)
+			call_committed.emit(_track_song(_dual.track()))
+		DualCallJudge.Result.MIXED:
+			note_played.emit(note)
+			call_mixed.emit(note)
+		DualCallJudge.Result.WRONG:
+			note_rejected.emit(note)
+			sequence_failed.emit()
+		DualCallJudge.Result.COMPLETE:
+			note_played.emit(note)
+			call_answered.emit(_track_song(_dual.track()))
+
+## A fresh answer for the two-track call, or none.
+func _renew_dual() -> void:
+	_dual = null if _second == null or call_song == null else DualCallJudge.new(call_song.notes, _second.notes, _dual_solvable)
+
+func _track_song(track: int) -> Song:
+	return _second if track == DualCallJudge.TRACK_B else call_song
 
 func _receive_echo_note(note: Enums.Note) -> void:
 	match _echo.feed(note):

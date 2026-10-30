@@ -44,6 +44,12 @@ signal call_progress(count: int)
 signal call_closed
 ## The full phrase was answered in time.
 signal call_answered(song: Song)
+## The open call is two-track: `song` is track B beside the call's song; `solvable` false for the revelation (GRD-06).
+signal call_second_track(song: Song, solvable: bool)
+## The answer chose a track of a two-track call.
+signal call_committed(song: Song)
+## The answer played the other track's note: dissonance (design 02 section 5.3).
+signal call_mixed(note: Enums.Note)
 ## A teacher's phrase became the only thing the Memorina plays (systems/teaching-creatures).
 signal echo_opened
 signal echo_closed
@@ -280,6 +286,8 @@ func _ready() -> void:
 	_memorina.song_guessed.connect(_on_song_guessed)
 	_memorina.song_played.connect(_on_song_played)
 	_memorina.call_answered.connect(call_answered.emit)
+	_memorina.call_committed.connect(call_committed.emit)
+	_memorina.call_mixed.connect(call_mixed.emit)
 	_memorina.phrase_echoed.connect(phrase_echoed.emit)
 	_voice.mistake_finished.connect(sequence_reset.emit)
 	_performance.started.connect(performance_started.emit)
@@ -1035,18 +1043,23 @@ func unstage_call() -> void:
 
 ## A lucidity window opened: from now until close_call(), the instrument
 ## listens for `song` alone - and stays in until the phrase has been heard.
-func open_call(song: Song, revealed: int, cure_done: int, cure_total: int) -> void:
+## `second` makes it two-track (GRD-06): track B beside `song`, unanswerable when `solvable` is false (the revelation).
+func open_call(song: Song, revealed: int, cure_done: int, cure_total: int, second: Song = null,
+		solvable: bool = true) -> void:
 	_stand_up()
 	close_echo()
 	if _memorina.is_drawn():
 		_memorina.sheathe()
 	_memorina.call_song = song
+	_memorina.set_dual_call(second, solvable)
 	_call_progress = 0
 	_call_listening = true
 	var side := facing
 	if is_instance_valid(_staged_caller):
 		side = 1 if _staged_caller.global_position.x >= global_position.x else -1
 	call_opened.emit(song, revealed, _last_glyph_set, cure_done, cure_total, side, _staged_height)
+	if second != null:
+		call_second_track.emit(second, solvable)
 
 func sound_call_note(index: int) -> void:
 	call_note_sounded.emit(index)

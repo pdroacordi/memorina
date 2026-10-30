@@ -376,3 +376,40 @@ func test_sheathing_resets_the_echo() -> void:
 	var monitor := monitor_signals(_memorina)
 	_memorina.receive_note(LEFT)
 	await assert_signal(monitor).is_emitted("note_played", [LEFT])
+
+func _spring() -> Song:
+	var spring := Song.new()
+	spring.id = Enums.Song.ROOT
+	spring.notes = [DOWN, UP, LEFT, RIGHT, UP, UP]
+	return spring
+
+## A two-track call (GRD-06): the first note commits, the other track's note is mixed, a pure track answers the call.
+func test_a_two_track_call_commits_mixes_and_answers_with_the_chosen_song() -> void:
+	var spring := _spring()
+	_memorina.call_song = _freeze
+	_memorina.set_dual_call(spring)
+	_draw()
+	var committed: Array[Song] = []
+	var mixed: Array[Enums.Note] = []
+	var answered: Array[Song] = []
+	_memorina.call_committed.connect(func(song: Song) -> void: committed.append(song))
+	_memorina.call_mixed.connect(func(note: Enums.Note) -> void: mixed.append(note))
+	_memorina.call_answered.connect(func(song: Song) -> void: answered.append(song))
+	_memorina.receive_note(UP)
+	_memorina.receive_note(UP)
+	assert_array(committed).contains_exactly([_freeze])
+	assert_array(mixed).contains_exactly([UP])
+	for note: Enums.Note in spring.notes:
+		_memorina.receive_note(note)
+	assert_array(answered).contains_exactly([spring])
+
+func test_clearing_the_call_drops_its_second_track() -> void:
+	_memorina.call_song = _freeze
+	_memorina.set_dual_call(_spring())
+	_memorina.call_song = null
+	_memorina.call_song = _freeze
+	_draw()
+	var answered: Array[Song] = []
+	_memorina.call_answered.connect(func(song: Song) -> void: answered.append(song))
+	_play_freeze()
+	assert_array(answered).contains_exactly([_freeze])
