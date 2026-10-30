@@ -203,3 +203,10 @@ func test_live_and_committed_answers_share_nothing() -> void:
 	ledger.live.responses[&"trial_keep"] = &"trial_keep_hold"
 	assert_array(ledger.committed.dialogues_heard).is_empty()
 	assert_bool(ledger.committed.responses.is_empty()).is_true()
+
+## The final battle's revelation plays once per save: a death keeps it ("Uma vez por save (Recommended)", GRD-06).
+func test_a_death_keeps_the_finale_revelation() -> void:
+	var ledger := _ledger()
+	ledger.live.finale_revealed = true
+	ledger.record_death("region", Vector2.ZERO)
+	assert_bool(ledger.live.finale_revealed).is_true()

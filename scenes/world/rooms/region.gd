@@ -33,10 +33,13 @@ func _ready() -> void:
 	_memory.mark_deaths(SaveSystem.deaths_in(SceneKey.of(self)))
 	_memory.follow_restorations(SaveSystem.restored_guardian_count())
 	var own_unrestored: bool = has_guardian and not SaveSystem.is_guardian_restored(guardian)
-	if has_guardian and not own_unrestored:
+	if (has_guardian and not own_unrestored) or SaveSystem.is_world_restored():
 		_memory.restore(0.0)
 	if own_unrestored or not _memory.steps.is_empty():
 		SaveSystem.guardian_restored.connect(_on_guardian_restored)
+	# The final battle restores every region, its own guardian or not (GRD-06).
+	if not SaveSystem.is_world_restored():
+		SaveSystem.world_restored.connect(_on_world_restored)
 
 ## Current baseline memory value.
 func current_baseline() -> float:
@@ -49,3 +52,8 @@ func _on_guardian_restored(restored: Enums.Guardian) -> void:
 		SaveSystem.clear_deaths(SceneKey.of(self))
 		_memory.erase_marks(_memory.lift_time)
 	_memory.follow_restorations(SaveSystem.restored_guardian_count())
+
+func _on_world_restored() -> void:
+	_memory.restore(_memory.lift_time)
+	SaveSystem.clear_deaths(SceneKey.of(self))
+	_memory.erase_marks(_memory.lift_time)

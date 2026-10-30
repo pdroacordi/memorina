@@ -47,6 +47,10 @@ class_name PlayerData extends Resource
 @export var song_second_halves: Array[bool]
 ## The Enums.SongHalf Ivo completed by ear, by Enums.Song; NONE when the song was not guessed.
 @export var guessed_halves: Array[int]
+## The final battle's revelation has played; a death keeps it ("Uma vez por save (Recommended)", user, 2026-10-30).
+@export var finale_revealed: bool = false
+## The mentor is restored and the whole world with him (GRD-06); written to disk at once (systems/life-benches-death).
+@export var world_restored: bool = false
 
 func _init() -> void:
 	migrate()

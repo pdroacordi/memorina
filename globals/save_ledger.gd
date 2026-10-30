@@ -29,6 +29,7 @@ func rewind(elapsed: float = 0.0) -> void:
 	committed.play_time += elapsed
 	_merge(live.notebook_read, committed.notebook_read)
 	_merge(live.announced_regions, committed.announced_regions)
+	committed.finale_revealed = committed.finale_revealed or live.finale_revealed
 	live = copy(committed)
 	defeated.clear()
 

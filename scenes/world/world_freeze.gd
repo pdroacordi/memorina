@@ -75,14 +75,16 @@ func restore() -> void:
 		_ease_to(1.0)
 
 ## A landed blow: the clock nearly stops for a moment, then resumes at the
-## rate the recall (if any) wants. Overlapping hits do not stack.
-func hit_stop() -> void:
-	if _stopping or hit_stop_time <= 0.0:
+## rate the recall (if any) wants. Overlapping hits do not stack. `seconds` (real) overrides `hit_stop_time`: the final
+## battle's freeze frame (GRD-06).
+func hit_stop(seconds: float = -1.0) -> void:
+	var length := seconds if seconds > 0.0 else hit_stop_time
+	if _stopping or length <= 0.0:
 		return
 	_stopping = true
 	_kill_ramp()
 	Engine.time_scale = _running_scale()
-	await get_tree().create_timer(hit_stop_time, true, false, true).timeout
+	await get_tree().create_timer(length, true, false, true).timeout
 	_stopping = false
 	Engine.time_scale = _running_scale()
 

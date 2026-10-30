@@ -2,6 +2,8 @@ extends Node
 
 ## Emitted when a guardian is restored so its region can update memory.
 signal guardian_restored(guardian: Enums.Guardian)
+## The final battle restored the world (GRD-06); every region reads it as full memory.
+signal world_restored
 ## Emitted when a rest commit succeeds, including in-memory playtest saves.
 signal saved
 ## A song, skill, item, guardian or dialogue fact changed; the notebook recomputes its entries from the save.
@@ -192,6 +194,26 @@ func restore_guardian(guardian: Enums.Guardian) -> void:
 	player_data.restored_guardians[guardian] = true
 	guardian_restored.emit(guardian)
 	progress_changed.emit()
+
+func is_finale_revealed() -> bool:
+	return player_data.finale_revealed
+
+## Not a gain: emits nothing, and a death keeps it (SaveLedger.rewind).
+func mark_finale_revealed() -> void:
+	player_data.finale_revealed = true
+
+func is_world_restored() -> bool:
+	return player_data.world_restored
+
+## The final battle won: the world is restored and the save is written at once, the one exception to "only benches save"
+## ("Exceção: salva na hora", user, 2026-10-30; systems/life-benches-death).
+func restore_world() -> void:
+	if player_data.world_restored:
+		return
+	player_data.world_restored = true
+	world_restored.emit()
+	progress_changed.emit()
+	commit()
 
 func is_guardian_met(guardian: Enums.Guardian) -> bool:
 	return player_data.met_guardians[guardian] or player_data.restored_guardians[guardian]

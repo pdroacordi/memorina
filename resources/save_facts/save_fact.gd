@@ -27,6 +27,8 @@ enum Kind {
 	CACHES_TAKEN_AT_LEAST,
 	## The seller offer `id` was bought.
 	OFFER_BOUGHT,
+	## The mentor is restored and the world with him (GRD-06).
+	WORLD_RESTORED,
 }
 
 @export var kind: Kind = Kind.ITEM
@@ -84,4 +86,6 @@ static func check(fact_kind: Kind, fact_index: int, data: PlayerData, fact_id: S
 			return data.caches_taken.size() >= fact_index
 		Kind.OFFER_BOUGHT:
 			return data.offers_bought.has(fact_id)
+		Kind.WORLD_RESTORED:
+			return data.world_restored
 	return false

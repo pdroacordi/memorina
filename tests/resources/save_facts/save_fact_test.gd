@@ -115,3 +115,9 @@ func test_gates_pass_needs_every_when_and_no_unless() -> void:
 	data.owned_items[Enums.PlayerItem.MEMORINA] = true
 	assert_bool(SaveFact.gates_pass(both, none, data)).is_true()
 	assert_bool(SaveFact.gates_pass(both, only_memorina, data)).is_false()
+
+func test_world_restored_follows_its_flag() -> void:
+	var data := PlayerData.new()
+	assert_bool(SaveFact.check(SaveFact.Kind.WORLD_RESTORED, 0, data)).is_false()
+	data.world_restored = true
+	assert_bool(SaveFact.check(SaveFact.Kind.WORLD_RESTORED, 0, data)).is_true()
