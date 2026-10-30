@@ -6,7 +6,7 @@ status: active
 tags: [dialogue, story, save, save-fact, ui, input, focus, i18n]
 related: [architecture/dialogue-is-data-and-choices-are-save-facts, playtests/2026-10-15-story08-dialogue, bugs/a-beat-that-ends-resumes-the-talk-without-the-start-gates, bugs/an-up-press-in-a-due-auto-start-zone-never-expires, bugs/ivo-faces-the-talkable-not-the-villager-beside-it, gotchas/a-removed-subtree-emits-tree-exiting-later-siblings-first, gotchas/a-static-func-returning-its-own-enum-fails-once-another-script-types-it, systems/screens, systems/input, systems/life-benches-death, systems/notebook, systems/props, systems/rooms, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-killed-tween-never-emits-finished, gotchas/autowrapped-rows-settle-over-several-sorts, gotchas/gdunit-await-millis-never-resumes-while-the-tree-is-paused, gotchas/a-typed-array-of-an-inner-class-is-refused-from-another-script]
 created: 2026-10-15
-updated: 2026-10-15
+updated: 2026-10-30
 source_files:
   - resources/save_facts/save_fact.gd
   - resources/dialogue/speaker.gd
@@ -42,7 +42,7 @@ STORY-08. Plan, options and the reasons: `architecture/dialogue-is-data-and-choi
 
 ## Data (`resources/dialogue/`, one `class_name` per file)
 
-- `Speaker`: `id`, `name_key` (`SPEAKER_<ID>`; empty shows no plate), `portrait` (null leaves the slot empty). `speakers/` holds the elder, `elder_model`, the daughter, the mentor, `mentor_stasis`, the baker, the taverner, the water carrier, the seller, the boy, the girl, Ivo and `elder_offscreen`; plate names `SPEAKER_<ROLE>`. Every speaker in `speakers/` has a portrait except `elder_offscreen`, a voice from outside (`dialogue_catalog_test`).
+- `Speaker`: `id`, `name_key` (`SPEAKER_<ID>`; empty shows no plate), `portrait` (null leaves the slot empty). `speakers/` holds the elder, `elder_model`, the daughter, the mentor, `mentor_stasis`, the baker, the taverner, the water carrier, the seller, the boy, the girl, Ivo, `elder_offscreen` and the two guardians (`guardian_bloom`, `guardian_frost`, STORY-18; plates `SPEAKER_GUARDIAN_<ID>`); plate names `SPEAKER_<ROLE>`. Every speaker in `speakers/` has a portrait except `elder_offscreen`, a voice from outside (`dialogue_catalog_test`).
 - `Dialogue`: `id` (unique, the heard key), `once` (closed once heard), `when` / `unless`, `lines`.
 - `DialogueLine`: `speaker`, `text_key` (empty for a cue-only line), `when` / `unless`, `variants` (the first `LineVariant` that holds replaces the text), `ask_id` + `choices` (2..3), `cue`, `grants` (an ITEM `SaveFact`).
 - `DialogueChoice`: `id` (unique across the catalog), `text_key`, `tone` (`Tone { NONE, HOLD_ON, LET_GO }`, append only), `reply` (lines with no choices; the talk then rejoins).
@@ -84,6 +84,7 @@ STORY-08. Plan, options and the reasons: `architecture/dialogue-is-data-and-choi
 - `begin_talk(at)` blocks input and faces `at`; `pause_talk(hold, pose, at)` (a beat) keeps the block for STILL, sets `notes_only` for NOTES, frees him for FREE, and keeps him in the talk; doors and item pickups are refused while he is in a talk (`bugs/up-takes-a-door-during-a-free-beat-and-strands-the-talk`); `request_talk_resume()` makes `_try_talk` emit `talk_resumed` once the start gates hold; `end_talk()` unblocks and ends it. `is_talking()` is true from `begin_talk` to `end_talk`, a beat included, and `can_open_map()` is false for all of it. Since STORY-15 `PlayerInput.blocked` is written only by `Player._refresh_block()`: in a talk, the talk's listening (or the map); else a cutscene; else the map (`systems/cutscenes`).
 - `NotebookWatcher.is_holding()` (`NoticeHold.applies`) includes `is_in_story()` (a talk or a cutscene), so a granted item's quill waits for the talk to end; `NoticeWatcher` holds the same way, so the item-acquired notice and the intent line show after the talk (`systems/notices`).
 - Grants today: the baker's "Just the round one." (the round loaf, `Enums.PlayerItem.BREAD`, UI-11) and the mentor's gift (the Memorina).
+- **A Talkable can ride a body** (STORY-18): each guardian scene composes one (`speaker_offset` 0, reach half its body plus 48, `height_cells` tall enough to put the prompt over its head), and `GuardianTalks` sets its `talk` from `GuardianStats.voice.talks` (`resources/dialogue/guardians/`, in the catalog). It is outside the room files, so `talkable_rooms_test` does not see it; `guardian_talk_rooms_test` checks its sweep (spawn to every leap landing) against the arena's doors. Keys `DLG_GUARDIAN_<ID>_FIRST_<NN>`, `DLG_GUARDIAN_<ID>_AGAIN_<NN>[_V<k>]`, `DLG_CHOICE_GUARDIAN_<ID>_*` (`systems/guardians`, "Talks"). A guardian's barks are not dialogue: a non-blocking `BarkBalloon`, no box, no block, nothing heard.
 
 ## The box (`CanvasLayer/DialogueBox`)
 

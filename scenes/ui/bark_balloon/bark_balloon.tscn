@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/bark_balloon/bark_balloon.gd" id="1_balloon"]
+[ext_resource type="Theme" path="res://scenes/ui/menu/menu_theme.tres" id="2_theme"]
+
+[node name="BarkBalloon" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_balloon")
+
+[node name="Art" type="Control" parent="."]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+theme = ExtResource("2_theme")
+
+[node name="Box" type="Control" parent="Art"]
+layout_mode = 0
+offset_right = 128.0
+offset_bottom = 20.0
+mouse_filter = 2
+
+[node name="Text" type="Label" parent="Art/Box"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 124.0
+offset_bottom = 16.0
+autowrap_mode = 3
+max_lines_visible = 2

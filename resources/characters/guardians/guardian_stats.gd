@@ -6,6 +6,8 @@ extends Resource
 ## Song taught when this guardian is restored.
 @export var song: Song
 @export var attacks: Array[GuardianAttack] = []
+## Its words: barks in the fight, talks after restoration (guardian_voice_test).
+@export var voice: GuardianVoice
 
 @export_group("Lucidity")
 ## Hits in the pressure phase before lucidity opens.
@@ -14,7 +16,7 @@ extends Resource
 @export var cycles_to_restore: int = 2
 ## Seconds before pressure resumes after an answer; failed answers use GuardianFight.FAILED_RELAPSE_SCALE.
 @export var relapse_time: float = 1.4
-## Seconds between lucidity opening and the first call note.
+## Seconds between the leap's landing and the first call note: the bark is read in it.
 @export var call_lead_in: float = 0.7
 ## Extra answer time in seconds beyond the call length.
 @export var window: float = 3.0

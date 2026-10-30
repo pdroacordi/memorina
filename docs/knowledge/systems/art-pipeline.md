@@ -6,8 +6,9 @@ status: active
 tags: [art, pipeline, codex, pixellab, palette]
 related: []
 created: 2026-10-02
-updated: 2026-10-13
+updated: 2026-10-30
 source_files:
+  - tools/art/compose_strip.py
   - tools/art/process_image.gd
   - tools/art/prompts/README.md
   - tools/art/cut_tile_bodies.py
@@ -48,4 +49,5 @@ Art the game needs is a **contract** before it is a picture: `tools/art/prompts/
 - A still with a near-white pixel puts PixelLab's white trails within `--drop` range of its own colours. Cut against a palette strip of the still's colours without the white (`tools/art/sources/guardians/bloom_palette.png`, passed as the still), and `--drop=45` clears them.
 - **Round 2 (2026-10-29): what moved a clip, and what did not.** A 16-frame generation gives room to compose a 14-frame attack whose hit window lands on the blow (`--keep` picks wind-up, impact and recovery). Wording the pose in body terms worked: "the fist just above the floor", "knees pulled up high to its chest", "lands upright on its two hind legs". Three things did not move in two retries each: the Frost walk turns from the still's three-quarter view to profile mid-cycle (the loop is composed from its three-quarter frames only); the Frost hurt and a second slam painted ice bursts and blocks in the crystals' blues; the Bloom stamp lands on all fours like a deer.
 - `tools/art/despeckle.py <strip> <frame width> [--min=6]` clears the loose specks a cut leaves (a dashed whip needs `--min=4`). `tools/art/lean_frames.py` makes a recoil from one still by leaning it back above a pivot row, where every generated recoil carried an effect.
+- **GRD-08 (2026-10-30): a prop the still lacks comes from a one-shot that adds it.** animate-with-text-v3 drew the flute when asked to "lift a flute to its mouth" from the restored still, and that raise played backwards is `perform_end`; its last frame is the playing still every flute clip animates from. A one-shot that must land on another clip is composed by `tools/art/compose_strip.py` with that clip's frame 0 as its last frame. Effects in the body's colours came back again (the Frost relapse threw ice flecks, cleared by `--despeckle`; a second Bloom play loop dropped the antler blossoms on half its frames, re-rolled). The beat is procedural: `--grow` opens the Bloom blossoms, `--lift` brightens the Frost crystals one step up the still's own ice ramp.
 - The lucidity leap has its own strip (`<name>_leap.png`, 8 frames: crouch, launch, flight, land, stand), feet on the floor row like every other clip, since the arc is the guardian's own motion. The flight lasts about 1.67 s, so the clip holds or loops its flight frames until the landing.

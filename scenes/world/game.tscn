@@ -54,6 +54,7 @@
 [ext_resource type="Resource" path="res://resources/story/intent_catalog.tres" id="54_intents"]
 [ext_resource type="PackedScene" path="res://scenes/ui/notice/notice_toast.tscn" id="55_notice_toast"]
 [ext_resource type="PackedScene" path="res://scenes/ui/teacher_balloon/teacher_balloon.tscn" id="56_balloon"]
+[ext_resource type="PackedScene" path="res://scenes/ui/bark_balloon/bark_balloon.tscn" id="57_bark"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_seed.png" id="90_seedicon"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
@@ -240,6 +241,9 @@ letterbox = NodePath("../Letterbox")
 [node name="GuardianCallHud" parent="CanvasLayer" unique_id=978754071 instance=ExtResource("17_callhud")]
 
 [node name="TeacherBalloon" parent="CanvasLayer" instance=ExtResource("56_balloon")]
+
+[node name="BarkBalloon" parent="CanvasLayer" node_paths=PackedStringArray("call_hud") instance=ExtResource("57_bark")]
+call_hud = NodePath("../GuardianCallHud")
 
 [node name="PhraseSheet" parent="CanvasLayer" instance=ExtResource("49_phrase")]
 

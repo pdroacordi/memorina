@@ -35,6 +35,12 @@ func on_call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet, cure_d
 	show()
 	_slide(true)
 
+## Where the sheet sits while the call shows, in this HUD's px; empty while hidden.
+func slot_rect() -> Rect2:
+	if not visible:
+		return Rect2()
+	return Rect2(Vector2(_sheet.encounter_x(size.x, _guardian_side, _guardian_height), _sheet.encounter_y()), _frame.size)
+
 func on_call_note_sounded(index: int) -> void:
 	_sheet.light(index)
 	_sheet.pop(index)

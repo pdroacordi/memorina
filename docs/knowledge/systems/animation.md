@@ -6,7 +6,7 @@ status: active
 tags: [animation, animation-tree, resolver, driver]
 related: [architecture/animation-driver-resolver-pattern, gotchas/animationtree-reset-track-overwrites-script-writes, architecture/ivo-at-2x]
 created: 2026-10-02
-updated: 2026-10-29
+updated: 2026-10-30
 source_files:
   - scenes/characters/animation_resolver.gd
   - scenes/characters/character.gd
@@ -26,6 +26,8 @@ Moved verbatim from `CLAUDE.md` ("Animation") on 2026-10-02.
 - **Intro / one-shot clips** (`jump_start`, `fall_start`, `wall_landing`, `land`, `air_spin`, `hurt`, `spawn`) are held until they finish via `AnimationDriver.holding()` / `sequence()`; the resolver never needs their durations. An event that must restart the *same* clip (a pogo chain, a second hit mid-flinch) calls `AnimationDriver.request_replay()`. Events that arrive from the physics flush (hits, area triggers) land *after* the frame's `_physics_process`, so a pulse for them (`Character.just_hit()`) is cleared after the resolve, not before.
 - **`RESET` is the default pose, and the tree owns every property it declares.** Each clip keys only what it changes (hitbox geometry per swing, i-frames); everything else blends back to `RESET`. Consequence: a script write to any property with a `RESET` track (`Hurtbox:monitorable`, `Hitbox:*`) is silently overwritten every frame. Gate the *decision* in script instead (`Character._on_hit_received` ignores hits while dead), or key it in the clip. Corrupted creatures avoid the trap entirely: their clips key only the `Sprite2D`, and `Enemy` writes every area each physics frame (`systems/creatures`).
 - **Durations that must equal a clip's length are asserted at startup** in debug builds (`Character._assert_clip_length`): `roll_time + roll_recovery_time` vs the roll clip, every `AttackPhaseData.duration` vs its swing, `LandingStats.hard_land_time` vs `land` (a landing in a soft-landing zone is never hard: `systems/rooms` "Soft landing"), a creature's one-shot attack clip vs its `EnemyMove.active` (checked by `creature_sheet_test`, not at startup: `Enemy` names no clip). Retune either side and the assert says which pair drifted.
+- **A one-shot can be derived instead of pulsed.** A guardian's `lucid_enter` and `relapse` (GRD-08) are `driver.sequence(intro, loop)` inside the phase that owns them (the pending leap, RELAPSE), and `perform_end` plays while the last clip was `perform`; no pulse has to be cleared after the resolve (`systems/guardians`, "Performance clips").
+- **An `AnimationTree` that must run through a freeze is ALWAYS only for it.** Ivo's for a performance, a guardian's for its lesson; both go back to INHERIT on `performance_finished` (`systems/songs-and-the-memorina`, pause-mode map).
 - When a component takes over logic that previously emitted a signal from `Player`, `Player` must RE-EMIT that signal, because `ivo.tscn`'s connections are declared with `from="."`. This is why `Player` relays `jumped`, `double_jumped` and `hard_landed`.
 
 ## Ivo's sheets (CORE-08, 2026-10-11)

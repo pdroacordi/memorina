@@ -69,7 +69,8 @@ func _assert_leap(scene: PackedScene) -> void:
 					guardian.name, driver.current, guardian.velocity.y]).is_equal(arc)
 	assert_array(at_take_off).override_failure_message("%s never leapt" % guardian.name).is_equal([GuardianAnimationResolver.LEAP_CROUCH])
 	assert_array(at_touchdown).override_failure_message("%s never landed from its fall" % guardian.name).is_equal([GuardianAnimationResolver.LEAP_FALL])
-	var tail := seen.slice(seen.find(GuardianAnimationResolver.LEAP_CROUCH))
+	# The landing settles on lucid; play_song follows once the call's lead-in is over.
+	var tail := seen.slice(seen.find(GuardianAnimationResolver.LEAP_CROUCH)).slice(0, 5)
 	assert_array(tail).is_equal([GuardianAnimationResolver.LEAP_CROUCH, GuardianAnimationResolver.LEAP_RISE,
 			GuardianAnimationResolver.LEAP_FALL, GuardianAnimationResolver.LEAP_LAND, GuardianAnimationResolver.LUCID])
 	# Closed while Ivo is still in the tree: freed mid-call, his failure sound would play outside it.

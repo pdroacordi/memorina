@@ -6,6 +6,11 @@ signal restored(guardian: Guardian)
 ## Emitted when the lucidity leap starts or lands; scenes can attach dust effects.
 signal leapt(position: Vector2)
 signal landed(position: Vector2, impact_speed: float)
+## The leap landed and the call is staged: `cycle` answers are in, `after_failure` if the last one failed.
+signal lucid_landed(cycle: int, after_failure: bool)
+signal call_note_sung(index: int)
+## The call closed: answered, failed, abandoned or restored.
+signal call_ended
 
 ## Guardians group used for encounter queries.
 const GROUP := &"guardians"
@@ -78,6 +83,10 @@ var _shield_rest_radius: float = 0.0
 var _sprite_rest: Vector2 = Vector2.ZERO
 ## Seconds of the flinch left: the facing it took on the hit is held until the hurt clip ends.
 var _flinch_left: float = 0.0
+## From restoration to the end of the lesson it starts.
+var _teaching: bool = false
+## The lesson ended and the stage holds until `perform_end` has played.
+var _bowing: bool = false
 
 @onready var _ai                : GuardianAI = $AI
 @onready var _locomotion        : LocomotionComponent = $Locomotion
@@ -91,6 +100,7 @@ var _flinch_left: float = 0.0
 @onready var _sight             : EnemySight = $EnemySight
 ## A concrete view of Character's generic resolver, for the duration assert.
 @onready var _guardian_resolver : GuardianAnimationResolver = $AnimationResolver
+@onready var _animation_tree    : AnimationTree = %AnimationTree
 
 
 ## Whether any guardian's fight is on at `point`.
@@ -161,6 +171,9 @@ func _process_motion(delta: float) -> void:
 func _after_move(delta: float) -> void:
 	if is_instance_valid(_player) and not _player_in_arena():
 		_abandon_call()
+	if _bowing and not _still_bowing():
+		_bowing = false
+		_unstage()
 	if _lucidity_wait > 0.0:
 		_lucidity_wait = maxf(_lucidity_wait - delta, 0.0)
 		if is_zero_approx(_lucidity_wait):
@@ -237,6 +250,14 @@ func is_leaping() -> bool:
 ## Seconds until the lucidity leap takes off; INF when none is pending.
 func seconds_to_leap() -> float:
 	return _lucidity_wait if _lucidity_wait > 0.0 else INF
+
+## The call is sounding, from its first note to its last.
+func is_sounding() -> bool:
+	return _call.is_calling()
+
+## The lesson its restoration started is in its lead-in or playing its track.
+func is_teaching() -> bool:
+	return _teaching and is_instance_valid(_player) and _player.is_in_lesson()
 
 #############################################
 ##  T H E   F I G H T                      ##
@@ -420,12 +441,15 @@ func _finish_lucidity_leap() -> void:
 	face_towards(_player.global_position.x - global_position.x)
 	_stage()
 	_player.open_call(stats.song, stats.revealed_notes, _fight.cycles(), stats.cycles_to_restore)
+	# Emitted before the call plays, so a zero lead-in still closes the bark at the first note.
+	lucid_landed.emit(_fight.cycles(), _fight.relapse_failed())
 	_call.play(stats.song.notes, stats.call_lead_in)
 
 ## A note of the call: the colour comes with it.
 func _on_call_note_sounded(index: int) -> void:
 	_player.sound_call_note(index)
 	_breathe()
+	call_note_sung.emit(index)
 
 func _breathe() -> void:
 	if _breath_tween != null:
@@ -472,6 +496,7 @@ func _close_call(success: bool) -> void:
 	_player.close_call(success)
 	_ai.cooldown_scale = _fight.cooldown_scale()
 	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE
+	call_ended.emit()
 
 func _abandon_call() -> void:
 	if _fight == null or _player == null:
@@ -501,7 +526,6 @@ func _on_phase_changed(from: GuardianFight.Phase, to: GuardianFight.Phase) -> vo
 ## its colour goes - snapped away with the hit's tint after a failure, drained
 ## slowly after a good answer that was not the last.
 func _begin_relapse() -> void:
-	_just_hit = true
 	_tremble_time = 0.0
 	_relapse_from = _shield.amount
 	if _fight.relapse_failed():
@@ -514,21 +538,40 @@ func _begin_relapse() -> void:
 func _restore() -> void:
 	_call.stop()
 	_ai.active = false
+	call_ended.emit()
 	SaveSystem.restore_guardian(stats.id)
 	# The guardian's colour: born at the first note, slow and wide, then the
 	# usual pulse answers the finished lesson from where it stands.
 	_player.note_cue_reached.connect(_on_lesson_cue)
 	_player.song_played.connect(_on_lesson_song_played, CONNECT_ONE_SHOT)
-	_player.performance_finished.connect(_unstage, CONNECT_ONE_SHOT)
+	_player.performance_started.connect(_on_lesson_started, CONNECT_ONE_SHOT)
+	_player.performance_finished.connect(_on_lesson_finished, CONNECT_ONE_SHOT)
+	_teaching = true
 	if not _player.learn_song(stats.song):
 		# The answer left Ivo still and the instrument out, so this should not
 		# happen; if it does, the song is still learned on the next bench-less
 		# visit because the save already remembers the guardian.
 		push_warning("%s was restored but the lesson could not start." % name)
 		_player.note_cue_reached.disconnect(_on_lesson_cue)
+		_player.performance_started.disconnect(_on_lesson_started)
+		_player.performance_finished.disconnect(_on_lesson_finished)
+		_teaching = false
 		_player.close_call(true)
 		_unstage()
 	restored.emit(self)
+
+## The lesson's freeze pauses the tree: the tree plays `perform` through it (systems/songs-and-the-memorina, pause-mode map).
+func _on_lesson_started() -> void:
+	_animation_tree.process_mode = Node.PROCESS_MODE_ALWAYS
+
+func _on_lesson_finished() -> void:
+	_animation_tree.process_mode = Node.PROCESS_MODE_INHERIT
+	_teaching = false
+	_bowing = true
+
+# Read before this frame's resolve: `perform` is still current on the frame the lesson ends.
+func _still_bowing() -> bool:
+	return _animation_driver.current == GuardianAnimationResolver.PERFORM 			or _animation_driver.holding(GuardianAnimationResolver.PERFORM_END)
 
 func _on_lesson_cue(index: int) -> void:
 	if index != 0:
@@ -615,3 +658,11 @@ func _relapse_amount(rest: float) -> float:
 func _assert_clip_durations() -> void:
 	for attack: GuardianAttack in stats.attacks:
 		_assert_clip_length(_guardian_resolver.attack_clip_for(attack.clip_index), attack.duration)
+	var enter := _animation_driver.clip_length(GuardianAnimationResolver.LUCID_ENTER)
+	var before_crouch := lucidity_delay - _animation_driver.clip_length(GuardianAnimationResolver.LEAP_CROUCH)
+	assert(enter <= before_crouch + 0.001,
+		"%s: 'lucid_enter' is %.4fs, the delay before the crouch %.4fs" % [name, enter, before_crouch])
+	var relapse := _animation_driver.clip_length(GuardianAnimationResolver.RELAPSE)
+	var shortest := stats.relapse_time * GuardianFight.FAILED_RELAPSE_SCALE
+	assert(relapse <= shortest + 0.001,
+		"%s: 'relapse' is %.4fs, the shortest relapse %.4fs" % [name, relapse, shortest])

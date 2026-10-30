@@ -6,10 +6,12 @@ status: active
 tags: [godot, tree, signals, scene-swap, tween]
 related: [bugs/a-beat-that-ends-resumes-the-talk-without-the-start-gates, gotchas/an-area2d-emits-body-exited-when-disabled-or-removed, architecture/the-life-loop-rewinds-by-reloading]
 created: 2026-10-15
-updated: 2026-10-15
+updated: 2026-10-30
 source_files:
   - scenes/world/dialogue/dialogue_director.gd
   - scenes/world/scene_swap.gd
+  - scenes/characters/guardians/guardian_talks.gd
+  - scenes/ui/bark_balloon/bark_balloon.gd
 ---
 
 ## Summary
@@ -26,3 +28,4 @@ Autoloads such as `SaveSystem` stay in the tree. A handler that writes the save 
 
 - Treat `tree_exiting` of a node you do not own as "maybe the whole world is going". Check `is_inside_tree()` on the receiver, or `is_queued_for_deletion()`, before acting on it.
 - Do not use a far node's `tree_exiting` to resume gameplay. It also fires for a scene swap, not only for a room unloading.
+- The same holds for a parent's own `NOTIFICATION_EXIT_TREE`: by then every child has fully left (`is_inside_tree()` false). `Guardian` emits `call_ended` from `_abandon_call` in its EXIT_TREE, so its child `GuardianTalks` skips the close (its `is_inside_tree()` guard) and `BarkBalloon._process` closes the balloon instead, because `is_visible_in_tree()` is false for a node outside the tree (both measured on 4.7.2, headless; STORY-18 review). A child that must react to its parent leaving needs its own exit hook or a fallback like that one.

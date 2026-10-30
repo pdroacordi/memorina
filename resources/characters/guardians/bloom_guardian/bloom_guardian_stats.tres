@@ -6,13 +6,16 @@
 [ext_resource type="Resource" uid="uid://bq8bloomlash" path="res://resources/characters/guardians/bloom_guardian/bloom_lash.tres" id="3_lash"]
 [ext_resource type="Resource" uid="uid://bq0bloombrst" path="res://resources/characters/guardians/bloom_guardian/bloom_burst.tres" id="4_burst"]
 [ext_resource type="Resource" uid="uid://brabloompnc" path="res://resources/characters/guardians/bloom_guardian/bloom_pounce.tres" id="5_pounce"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_guardian_voice.tres" id="9_voice"]
 
 [resource]
 script = ExtResource("1_stats")
 id = 1
 song = ExtResource("2_song")
+voice = ExtResource("9_voice")
 attacks = Array[ExtResource("1_mthau")]([ExtResource("3_lash"), ExtResource("4_burst"), ExtResource("5_pounce")])
 hits_to_open = 7
+call_lead_in = 2.2
 recall_after_attacks = 2
 comfort_distance = 82.0
 give_ground_distance = 46.0

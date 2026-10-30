@@ -146,11 +146,9 @@ func _refresh() -> void:
 
 func _follow() -> void:
 	var screen := get_viewport().get_canvas_transform() * _anchor.global_position
-	var wanted := screen - Vector2(_box.size.x / 2.0, _box.size.y + TAIL)
-	var limit := get_viewport_rect().size - _box.size - Vector2.ONE * MARGIN
-	var placed := Vector2(clampf(wanted.x, MARGIN, limit.x), clampf(wanted.y, MARGIN, limit.y)).round()
+	var placed := BalloonPlacement.above(screen, _box.size, TAIL, get_viewport_rect().size, MARGIN)
 	_box.position = placed + Vector2(_shake, 0.0)
-	var tail_x := clampf(roundf(screen.x - placed.x), TAIL, _box.size.x - TAIL)
+	var tail_x := BalloonPlacement.tail_x(screen.x, placed.x, _box.size.x, TAIL)
 	if tail_x != _tail_x:
 		_tail_x = tail_x
 		_box.queue_redraw()

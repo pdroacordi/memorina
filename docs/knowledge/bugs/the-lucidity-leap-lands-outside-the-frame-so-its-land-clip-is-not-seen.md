@@ -49,3 +49,12 @@ plus a 60 px half-width = 280 < 320), so the cut is timing, not distance.
 Either start the pair (or the glide toward the landing x) at take-off or at the apex, so the camera
 arrives as the guardian comes down. Or hold `leap_land` until the guardian is inside the view. That
 is a design call on `features/lucidity-leap`, so it is not a code-only fix.
+
+## Also seen in the GRD-08/STORY-18 playtest (2026-10-30)
+
+STORY-18's bark opens on `lucid_landed`, so the first bark of each fight opens while the guardian
+is still off screen. The balloon is clamped to the screen edge with its tail pointing at nothing.
+Measured from `[shot]` positions (0.25 s resolution): the guardian is fully on screen only +0.71 s
+(Bloom) and +0.95-1.05 s (Frost) into the 2.16 s bark, against +0.2 s for every later bark. Before
+the landing, the frame holds only Ivo for ~1.5 s (leap apex to touchdown). Details:
+`playtests/2026-10-30-grd08-story18-guardian-clips-and-talks`.

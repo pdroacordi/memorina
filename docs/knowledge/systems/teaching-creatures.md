@@ -6,7 +6,7 @@ status: active
 tags: [core-04, teachers, creatures, songs, memorina, half-songs, echo, balloon, glyphs, greyhush-shield, legend]
 related: [architecture/teaching-creatures, architecture/half-songs, systems/songs-and-the-memorina, systems/found-pieces, systems/creatures, systems/greyhush, systems/notices, systems/rooms, systems/input, systems/animation]
 created: 2026-10-29
-updated: 2026-10-29
+updated: 2026-10-30
 source_files:
   - scenes/characters/components/phrase_echo.gd
   - scenes/characters/components/phrase_call.gd
@@ -72,6 +72,7 @@ World feet = room position in its region scene + (32 col + 16, 32 (row + 1)); ev
 - **Species scenes** (`scenes/world/creatures/<name>/<name>.tscn`): `Sprite2D` (no material), a flat `AnimationTree` (`idle` loop 6 fps, `sing` loop 8 fps, `flourish` one-shot 8 fps; no transitions), `AnimationDriver`, the shared `TeacherAnimationResolver` (consts IDLE, SING, FLOURISH: flourish held via `holding()`, sing while a phrase sounds, else idle), `GreyhushShield` (SILHOUETTE, CIRCLE over the body, `amount` 1.0), `BalloonAnchor`, and two `PhraseCall`s: `Call` (its `Voice` a `MemorinaVoice` with the Memorina notes, `pitch_scale` 2.0) and `Duet` (Ivo's pitch, 1.0). No Hurtbox, Hitbox or body.
 - **`PhraseCall`** (`scenes/characters/components/`, renamed from `GuardianCall`): plays a phrase on `note_interval` and reports `note_sounded(index)` and `finished`. Guardians and teachers use it.
 - **`TeacherBalloon`** (one, `game.tscn`'s `CanvasLayer` after `GuardianCallHud`, group `teacher_balloons`, `find(tree)`): `show_for(anchor, notes, lit_as_sung)`, `reveal`, `reveal_all`, `light(count)`, `shake` (0.3 s, 2 px), `close(linger)`, `speaker()`. Paper box and tail in `EmoteBubble.PAPER`, three 16 px glyphs from `glyph_sets[InputDevice.glyph_set]`, re-textured on `InputDevice.device_changed`. An unlit glyph is drawn at alpha 0.4 and a lit one at full strength, so the difference reads at true scale. The box is clamped inside the viewport (2 px margin); the tail moves along the box to keep pointing at the teacher (`playtests/2026-10-29-core04-teaching-creatures`). Follows the anchor through the canvas transform in `_process`, rounded; hides itself when the anchor is freed or hidden. A teacher touches the balloon only while it is the speaker. Tweens are bound to it (pausable, scaled); `close` kills the shake and puts it home.
+- The balloon is placed by the pure `BalloonPlacement.above` and `tail_x` (`scenes/ui/balloon_placement/`), shared with the guardians' `BarkBalloon` (STORY-18, `systems/guardians` "Talks").
 
 ## Pause, notices, notation
 

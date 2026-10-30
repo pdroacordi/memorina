@@ -148,7 +148,7 @@ GUARDIAN_BLOOM,Bloom Guardian,Guardião da Flor
 GUARDIAN_AUTUMN,Autumn Guardian,Guardião do Outono
 GUARDIAN_SUMMER,Summer Guardian,Guardião do Verão
 NOTEBOOK_GUARDIAN_FROST_BODY,"It keeps the winter on an edge of ice. When the colour came back, the water remembered how to stand still.","Guarda o inverno numa borda de gelo. Quando a cor voltou, a água lembrou como parar."
-NOTEBOOK_GUARDIAN_BLOOM_BODY,"Two flower heads deep in the woods. When the colour came back, the earth held together again.","Duas cabeças de flor no fundo da mata. Quando a cor voltou, a terra voltou a se ligar."
+NOTEBOOK_GUARDIAN_BLOOM_BODY,"A stag of pale wood deep in the woods. When the colour came back, the earth held together again.","Um cervo de madeira clara no fundo da mata. Quando a cor voltou, a terra voltou a se ligar."
 NOTEBOOK_GUARDIAN_AUTUMN_BODY,"It keeps the autumn among the windmills of the orchards.","Guarda o outono entre os moinhos do pomar."
 NOTEBOOK_GUARDIAN_SUMMER_BODY,"It keeps the summer in the heat under the caldera.","Guarda o verão no calor sob a caldeira."
 NOTEBOOK_GUARDIAN_CORRUPTED,Corrupted,Corrompido
@@ -286,3 +286,38 @@ DLG_SELLER_TRADE_02,Seeds keep. Apples don't.,"Semente guarda. Maçã, não."
 NOTEBOOK_LORE_SEEDS_TITLE,Season seeds,Sementes de estação
 NOTEBOOK_LORE_SEEDS_HELD,%d in my pocket,%d no bolso
 NOTEBOOK_LORE_SEEDS,"Hard little husks, hidden where nobody looks. The apple seller trades for them.","Casquinhas duras, escondidas onde ninguém olha. A vendedora de maçãs troca por elas."
+SPEAKER_GUARDIAN_BLOOM,Bloom Guardian,Guardião da Flor
+SPEAKER_GUARDIAN_FROST,Frost Guardian,Guardião do Gelo
+BARK_GUARDIAN_BLOOM_LUCID_0,…Is it you? No. Your hands are wrong.,…É você? Não. As mãos são outras.
+BARK_GUARDIAN_BLOOM_LUCID_1,"That tune. Play it with me, quick.","Essa música. Toca comigo, rápido."
+BARK_GUARDIAN_BLOOM_RETRY,Again. Before it ~closes~.,De novo. Antes que ~feche~.
+BARK_GUARDIAN_FROST_LUCID_0,…Cold.,…Frio.
+BARK_GUARDIAN_FROST_LUCID_1,You. …Small. Moving.,Você. …Pequeno. Andando.
+BARK_GUARDIAN_FROST_LUCID_2,That song. Take it. Before I ~hold~ it.,Essa música. Leva. Antes que eu ~segure~.
+BARK_GUARDIAN_FROST_RETRY,…Again.,…De novo.
+DLG_GUARDIAN_BLOOM_FIRST_01,The roots found each other.,As raízes se acharam.
+DLG_GUARDIAN_BLOOM_FIRST_02,That flute has been in many hands. Yours are warm.,Essa flauta passou por muitas mãos. As suas são quentes.
+DLG_GUARDIAN_BLOOM_FIRST_03,"Do you know a morning song? E, G, E, D…","Conhece uma música da manhã? Mi, sol, mi, ré…"
+DLG_GUARDIAN_BLOOM_FIRST_04,Not one of mine. Someone made that one for someone.,"Não é minha. Essa, alguém fez pra alguém."
+DLG_GUARDIAN_BLOOM_FIRST_05,A bird in these woods still sings a tune of ours. Listen when it rains.,Um pássaro desta mata ainda canta uma música nossa. Escuta quando chover.
+DLG_GUARDIAN_BLOOM_FIRST_06,Take it. It won't last.,Leva. Não vai durar.
+DLG_CHOICE_GUARDIAN_BLOOM_TAKE,[Take the blossom],[Pegar a flor]
+DLG_GUARDIAN_BLOOM_FIRST_07,Hold it gently. It goes anyway.,Segura de leve. Vai embora mesmo assim.
+DLG_CHOICE_GUARDIAN_BLOOM_LET,[Let it fall],[Deixar cair]
+DLG_GUARDIAN_BLOOM_FIRST_08,Yes. That is how it comes back.,Isso. É assim que ela volta.
+DLG_GUARDIAN_BLOOM_AGAIN_01,The woods are loud again. I like it.,A mata está barulhenta de novo. Gosto disso.
+DLG_GUARDIAN_BLOOM_AGAIN_01_V1,Somewhere another one is standing. I hear it in the sap.,"Em algum lugar, outro está de pé. Ouço na seiva."
+DLG_GUARDIAN_BLOOM_AGAIN_01_V2,The sea pulls at the roots. Something there still holds on.,O mar puxa as raízes. Alguma coisa lá ainda segura.
+DLG_GUARDIAN_FROST_FIRST_01,The lake moves.,O lago se mexe.
+DLG_GUARDIAN_FROST_FIRST_02,I held it still. So nothing would go.,Eu segurei ele parado. Pra nada ir embora.
+DLG_GUARDIAN_FROST_FIRST_03,And nothing went?,E nada foi?
+DLG_GUARDIAN_FROST_FIRST_04,"Nothing came, either.","Nada veio, também."
+DLG_GUARDIAN_FROST_FIRST_05,"I watched a light, once. Far. I left it.","Eu vigiava uma luz, uma vez. Longe. Deixei."
+DLG_GUARDIAN_FROST_FIRST_06,Take. It melts in a hand.,Toma. Derrete na mão.
+DLG_CHOICE_GUARDIAN_FROST_CLOSE,[Close your hand],[Fechar a mão]
+DLG_GUARDIAN_FROST_FIRST_07,Yes. Hold. …It still goes.,Isso. Segura. …Vai mesmo assim.
+DLG_CHOICE_GUARDIAN_FROST_OPEN,[Open your hand],[Abrir a mão]
+DLG_GUARDIAN_FROST_FIRST_08,Water. Good. Let it run.,Água. Bom. Deixa correr.
+DLG_GUARDIAN_FROST_AGAIN_01,The ice talks at night. I let it.,O gelo fala de noite. Eu deixo.
+DLG_GUARDIAN_FROST_AGAIN_01_V1,Another one woke. The cold knows.,Outro acordou. O frio sabe.
+DLG_GUARDIAN_FROST_AGAIN_01_V2,By the sea there is a tower. Go slow.,Junto ao mar tem uma torre. Vai devagar.

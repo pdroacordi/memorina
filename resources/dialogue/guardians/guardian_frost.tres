@@ -1,0 +1,119 @@
+[gd_resource type="Resource" script_class="DialogueSet" format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
+[ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/guardian_frost.tres" id="s_guardian"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/ivo.tres" id="s_ivo"]
+
+[sub_resource type="Resource" id="fact_restored"]
+script = ExtResource("f_fact")
+kind = 4
+index = 0
+
+[sub_resource type="Resource" id="fact_heard_first"]
+script = ExtResource("f_fact")
+kind = 7
+id = &"guardian_frost_first"
+
+[sub_resource type="Resource" id="fact_two_restored"]
+script = ExtResource("f_fact")
+kind = 6
+index = 2
+
+[sub_resource type="Resource" id="fact_all_restored"]
+script = ExtResource("f_fact")
+kind = 5
+
+[sub_resource type="Resource" id="line_1"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_guardian")
+text_key = "DLG_GUARDIAN_FROST_FIRST_01"
+
+[sub_resource type="Resource" id="line_2"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_guardian")
+text_key = "DLG_GUARDIAN_FROST_FIRST_02"
+
+[sub_resource type="Resource" id="line_3"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_GUARDIAN_FROST_FIRST_03"
+
+[sub_resource type="Resource" id="line_4"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_guardian")
+text_key = "DLG_GUARDIAN_FROST_FIRST_04"
+
+[sub_resource type="Resource" id="line_5"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_guardian")
+text_key = "DLG_GUARDIAN_FROST_FIRST_05"
+
+[sub_resource type="Resource" id="line_hold_reply"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_guardian")
+text_key = "DLG_GUARDIAN_FROST_FIRST_07"
+
+[sub_resource type="Resource" id="choice_hold"]
+script = ExtResource("f_choice")
+id = &"guardian_frost_gift_close"
+text_key = "DLG_CHOICE_GUARDIAN_FROST_CLOSE"
+tone = 1
+reply = Array[ExtResource("f_line")]([SubResource("line_hold_reply")])
+
+[sub_resource type="Resource" id="line_let_reply"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_guardian")
+text_key = "DLG_GUARDIAN_FROST_FIRST_08"
+
+[sub_resource type="Resource" id="choice_let"]
+script = ExtResource("f_choice")
+id = &"guardian_frost_gift_open"
+text_key = "DLG_CHOICE_GUARDIAN_FROST_OPEN"
+tone = 2
+reply = Array[ExtResource("f_line")]([SubResource("line_let_reply")])
+
+[sub_resource type="Resource" id="line_6"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_guardian")
+text_key = "DLG_GUARDIAN_FROST_FIRST_06"
+ask_id = &"guardian_frost_gift"
+choices = Array[ExtResource("f_choice")]([SubResource("choice_hold"), SubResource("choice_let")])
+
+[sub_resource type="Resource" id="dialogue_first"]
+script = ExtResource("f_dialogue")
+id = &"guardian_frost_first"
+once = true
+when = Array[ExtResource("f_fact")]([SubResource("fact_restored")])
+lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_2"), SubResource("line_3"), SubResource("line_4"), SubResource("line_5"), SubResource("line_6")])
+zoom = 1.0
+
+[sub_resource type="Resource" id="variant_all"]
+script = ExtResource("f_variant")
+when = Array[ExtResource("f_fact")]([SubResource("fact_all_restored")])
+text_key = "DLG_GUARDIAN_FROST_AGAIN_01_V2"
+
+[sub_resource type="Resource" id="variant_two"]
+script = ExtResource("f_variant")
+when = Array[ExtResource("f_fact")]([SubResource("fact_two_restored")])
+text_key = "DLG_GUARDIAN_FROST_AGAIN_01_V1"
+
+[sub_resource type="Resource" id="line_again"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_guardian")
+text_key = "DLG_GUARDIAN_FROST_AGAIN_01"
+variants = Array[ExtResource("f_variant")]([SubResource("variant_all"), SubResource("variant_two")])
+
+[sub_resource type="Resource" id="dialogue_again"]
+script = ExtResource("f_dialogue")
+id = &"guardian_frost_again"
+when = Array[ExtResource("f_fact")]([SubResource("fact_restored"), SubResource("fact_heard_first")])
+lines = Array[ExtResource("f_line")]([SubResource("line_again")])
+
+[resource]
+script = ExtResource("f_set")
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_first"), SubResource("dialogue_again")])
