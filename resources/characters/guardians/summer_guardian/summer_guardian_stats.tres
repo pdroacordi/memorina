@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="GuardianStats" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack_script"]
+[ext_resource type="Script" uid="uid://bidtpnbfxl8an" path="res://resources/characters/guardians/guardian_stats.gd" id="1_stats"]
+[ext_resource type="Resource" path="res://resources/songs/shadow.tres" id="2_song"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_claw.tres" id="3_a1"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_charge.tres" id="4_a2"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_roar.tres" id="5_a3"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_guardian_voice.tres" id="9_voice"]
+
+[resource]
+script = ExtResource("1_stats")
+id = 3
+song = ExtResource("2_song")
+voice = ExtResource("9_voice")
+attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_a1"), ExtResource("4_a2"), ExtResource("5_a3")])
+hits_to_open = 9
+cycles_to_restore = 2
+call_lead_in = 2.2
+revealed_notes = 4
+recall_after_attacks = 0
+comfort_distance = 134.0
+give_ground_distance = 96.0
+pace_time = 1.0
+pace_speed = 0.45
+step_out_speed = 1.6

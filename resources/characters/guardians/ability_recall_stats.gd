@@ -17,5 +17,7 @@ extends Resource
 @export var step_window: float = 0.0
 ## Maximum attack distance in pixels for opening recall; 0 opens at swing start.
 @export var trigger_distance: float = 0.0
+## Opens recall only once Ivo's body touches a wall he could grip; a world edge never counts (GRD-04).
+@export var wall_cue: bool = false
 ## Damage taken when recall expires without an ability (design section 4).
 @export var miss_damage: int = 0

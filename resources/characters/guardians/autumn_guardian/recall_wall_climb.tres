@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="AbilityRecallStats" format=3]
+
+[ext_resource type="Script" uid="uid://fmfptlvvxb4" path="res://resources/characters/guardians/ability_recall_stats.gd" id="1_recall"]
+
+[resource]
+script = ExtResource("1_recall")
+skill = 1
+action = &"jump"
+window = 2.0
+grace_time = 1.0
+wall_cue = true

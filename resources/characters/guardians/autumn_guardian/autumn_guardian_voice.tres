@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="GuardianVoice" format=3]
+
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_voice.gd" id="1_voice"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/guardian_autumn.tres" id="2_speaker"]
+[ext_resource type="Resource" path="res://resources/dialogue/guardians/guardian_autumn.tres" id="3_talks"]
+
+[resource]
+script = ExtResource("1_voice")
+speaker = ExtResource("2_speaker")
+lucid_barks = Array[String](["BARK_GUARDIAN_AUTUMN_LUCID_0", "BARK_GUARDIAN_AUTUMN_LUCID_1", "BARK_GUARDIAN_AUTUMN_LUCID_2"])
+retry_bark = "BARK_GUARDIAN_AUTUMN_RETRY"
+talks = ExtResource("3_talks")

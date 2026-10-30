@@ -7,6 +7,8 @@ class_name GuardianPerformanceAnimationTest extends GdUnitTestSuite
 const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const BLOOM := preload("res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn")
 const FROST := preload("res://scenes/characters/guardians/frost_guardian/frost_guardian.tscn")
+const SUMMER := preload("res://scenes/characters/guardians/summer_guardian/summer_guardian.tscn")
+const AUTUMN := preload("res://scenes/characters/guardians/autumn_guardian/autumn_guardian.tscn")
 
 const FLOOR_Y := 30.0
 ## Physics frames that bound each wait.
@@ -40,7 +42,7 @@ func after_test() -> void:
 	SaveSystem.begin("", true)
 
 func test_every_guardian_fits_its_one_shots_in_their_moments() -> void:
-	for scene: PackedScene in [BLOOM, FROST]:
+	for scene: PackedScene in [BLOOM, FROST, SUMMER, AUTUMN]:
 		var guardian := scene.instantiate() as Guardian
 		guardian.position = Vector2(0, FLOOR_Y)
 		_holder.add_child(guardian)

@@ -24,7 +24,8 @@ uniform float art_scale = 2.0;
 void fragment() {
 	vec2 px = floor(UV * size_px / art_scale);
 	float epoch = floor(greyhush_time / reroll_period);
-	float side = min(UV.x, 1.0 - UV.x) * size_px.x;
+	// Frays across its thin axis: the sides of a doorway wall, the faces of a ceiling.
+	float side = size_px.x <= size_px.y ? min(UV.x, 1.0 - UV.x) * size_px.x : min(UV.y, 1.0 - UV.y) * size_px.y;
 	float density = core_density * clamp(side / fray_px, 0.0, 1.0);
 	float roll = wd_hash11(px.x * 17.3 + px.y * 113.9 + epoch * 7.7);
 	float shade = 0.8 + 0.2 * wd_hash11(px.y * 5.1 + epoch * 3.3);

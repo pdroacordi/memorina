@@ -5,6 +5,8 @@ extends StaticBody2D
 
 ## Height in cells, rising from its cell's floor.
 @export var cells: int = 4
+## Width in cells, growing east from its cell: a ceiling under a shaft is one cell tall and several across.
+@export var across: int = 1
 
 ## Closed: its body bars the way.
 var _closed: bool = false
@@ -18,15 +20,15 @@ static func closes(closed: bool, fighting: bool, clear: bool) -> bool:
 	return fighting and (closed or clear)
 
 func _ready() -> void:
-	var size := Vector2(RoomMap.CELL_PX, cells * RoomMap.CELL_PX)
+	var rect := _local_rect()
 	var box := RectangleShape2D.new()
-	box.size = size
+	box.size = rect.size
 	_shape.shape = box
-	_shape.position = Vector2(0.0, -size.y * 0.5)
+	_shape.position = rect.get_center()
 	_shape.disabled = true
-	_curtain.position = Vector2(-size.x * 0.5, -size.y)
-	_curtain.size = size
-	(_curtain.material as ShaderMaterial).set_shader_parameter(&"size_px", size)
+	_curtain.position = rect.position
+	_curtain.size = rect.size
+	(_curtain.material as ShaderMaterial).set_shader_parameter(&"size_px", rect.size)
 	_curtain.visible = false
 
 func _physics_process(_delta: float) -> void:
@@ -47,5 +49,10 @@ func is_closed() -> bool:
 
 ## Its body in global coordinates.
 func body_rect() -> Rect2:
-	var size := Vector2(RoomMap.CELL_PX, cells * RoomMap.CELL_PX)
-	return Rect2(global_position - Vector2(size.x * 0.5, size.y), size)
+	var rect := _local_rect()
+	return Rect2(global_position + rect.position, rect.size)
+
+## Its body around its origin, the first cell's bottom centre.
+func _local_rect() -> Rect2:
+	var size := Vector2(across * RoomMap.CELL_PX, cells * RoomMap.CELL_PX)
+	return Rect2(Vector2(-RoomMap.CELL_PX * 0.5, -size.y), size)

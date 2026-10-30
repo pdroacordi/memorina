@@ -18,7 +18,9 @@
 [ext_resource type="Resource" path="res://resources/dialogue/village/boy.tres" id="v_boy"]
 [ext_resource type="Resource" path="res://resources/dialogue/guardians/guardian_bloom.tres" id="g_bloom"]
 [ext_resource type="Resource" path="res://resources/dialogue/guardians/guardian_frost.tres" id="g_frost"]
+[ext_resource type="Resource" path="res://resources/dialogue/guardians/guardian_autumn.tres" id="g_autumn"]
+[ext_resource type="Resource" path="res://resources/dialogue/guardians/guardian_summer.tres" id="g_summer"]
 
 [resource]
 script = ExtResource("1_catalog")
-sets = Array[ExtResource("2_set")]([ExtResource("s0_daughter_bed"), ExtResource("s1_daughter_near"), ExtResource("s2_daughter_guitar"), ExtResource("s7_daughter_home"), ExtResource("s8_sword"), ExtResource("s3_baker"), ExtResource("s4_elder"), ExtResource("s5_mentor"), ExtResource("s6_mentor_stasis"), ExtResource("v_taverner"), ExtResource("v_water_carrier"), ExtResource("v_seller"), ExtResource("v_boy"), ExtResource("g_bloom"), ExtResource("g_frost"), ExtResource("3_trial")])
+sets = Array[ExtResource("2_set")]([ExtResource("s0_daughter_bed"), ExtResource("s1_daughter_near"), ExtResource("s2_daughter_guitar"), ExtResource("s7_daughter_home"), ExtResource("s8_sword"), ExtResource("s3_baker"), ExtResource("s4_elder"), ExtResource("s5_mentor"), ExtResource("s6_mentor_stasis"), ExtResource("v_taverner"), ExtResource("v_water_carrier"), ExtResource("v_seller"), ExtResource("v_boy"), ExtResource("g_bloom"), ExtResource("g_frost"), ExtResource("g_autumn"), ExtResource("g_summer"), ExtResource("3_trial")])

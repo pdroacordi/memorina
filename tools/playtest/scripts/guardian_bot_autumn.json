@@ -1,0 +1,3 @@
+{"scene": "res://scenes/world/game.tscn", "max_duration": 260, "clock": "real", "locale": "en",
+ "player_position": [-9574, -1254], "skills": [0],
+ "steps": [{"t": 0.5, "log": "start"}, {"t": 259, "log": "end"}]}

@@ -1,0 +1,8 @@
+Draw ONE image: two dialogue portraits side by side, on one flat solid magenta (#ff00ff) background, no shadow, no frame, no text.
+Style: match ./style_guardian_frost.png, ./style_guardian_bloom.png and ./style_ivo.png exactly (our own approved dialogue portraits): minimalist 16-bit pixel art bust, head and shoulders, crisp hard pixels, flat shapes, few colours, no outlines, no glow, medium brightness. Each bust is drawn on the same coarse pixel grid as those references, facing RIGHT (east), in three-quarter side view.
+LEFT bust: the autumn guardian from ./scarecrow_concept.png (the bone scarecrow on the right of that sheet), restored and at peace: its round, slightly cracked bone mask with two round dark eye holes and a thin stitched mouth, the hood of dry autumn leaves (rust, ochre, amber, brown) around and behind the mask, a few leaves drifting, the top of its thin bone shoulders. Calm and sad, not frightening.
+RIGHT bust: the summer guardian from ./lion_concept.png (the left lion), restored and at peace: the dark porous volcanic stone head of the lion with small warm orange pores, a calm half-closed eye, its mane of flat sunray stone petals in ochre and pale gold fanned around the head, the top of its chest.
+Both busts the same height, side by side with a wide magenta gap between them.
+Avoid: blurry, anti-aliased, smooth gradient, painterly, 3d render, text, frame border, noisy dithering, speckle, black outline, outlines, glow.
+Use your image generation tool EXACTLY ONCE.
+Do NOT resize, crop or post-process the generated file. Copy it byte-for-byte to ./raw.png in the current directory, then reply with only its pixel size.

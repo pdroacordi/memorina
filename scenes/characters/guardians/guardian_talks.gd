@@ -4,6 +4,8 @@ class_name GuardianTalks extends Node
 ## and its talks on its Talkable (systems/guardians, "Talks"). Glue only: it reads no input and records nothing.
 
 var _saying: bool = false
+## BarkAnchor's x as authored (facing west); mirrored by facing, so a head ahead of the body keeps its balloon.
+var _anchor_x: float = 0.0
 
 @onready var _guardian: Guardian = get_parent()
 @onready var _talkable: Talkable = $"../Talkable"
@@ -14,6 +16,7 @@ func _ready() -> void:
 	var voice := _guardian.stats.voice
 	assert(voice != null, "%s has no GuardianVoice." % _guardian.name)
 	_talkable.talk = voice.talks
+	_anchor_x = _anchor.position.x
 	_guardian.lucid_landed.connect(_on_lucid_landed)
 	_guardian.call_note_sung.connect(_close.unbind(1))
 	_guardian.call_ended.connect(_close)
@@ -24,6 +27,7 @@ func _on_lucid_landed(cycle: int, after_failure: bool) -> void:
 	var key := _guardian.stats.voice.bark_for(cycle, after_failure)
 	if balloon == null or key.is_empty():
 		return
+	_anchor.position.x = _anchor_x * -_guardian.facing
 	balloon.say(_anchor, key, -_guardian.facing, _guardian)
 	_saying = true
 

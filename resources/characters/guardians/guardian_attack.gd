@@ -29,6 +29,13 @@ extends Resource
 ## Upward knockback in px/s.
 @export var knockback_lift: float = 120.0
 
+@export_group("Gust")
+## Px/s the move carries Ivo along the floor, away from the guardian, while it swings; 0 for none (GuardianGust).
+@export var push_speed: float = 0.0
+## Px above the guardian's feet the push reaches; past a jump's apex (144), so a body jumping at the wall stays pressed
+## to it.
+@export var push_height: float = 240.0
+
 @export_group("Recall")
 ## Opens recall only while the player lacks this skill; the teaching attack is unavoidable.
 @export var recall: AbilityRecallStats

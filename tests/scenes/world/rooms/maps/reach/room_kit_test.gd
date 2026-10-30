@@ -92,12 +92,14 @@ func test_the_root_wall_keeps_redoma_out_of_the_root_caves() -> void:
 	assert_bool(_report(&"lake").rooms.has(&"woods_root_caves")).is_false()
 	assert_bool(_report(&"woods").rooms.has(&"woods_root_caves")).is_true()
 
-## bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera: the lake kit gets into the Caldera and back out on its
-## own, not through caldera_arena's guardian (not built, GRD-04).
+## bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera: the lake kit gets into the Caldera and never ends in a
+## pocket there; since GRD-04 its only Caldera exit is caldera_arena, the summer guardian's (the sun stair).
 func test_the_lake_kit_gets_out_of_the_caldera() -> void:
 	var lake := _report(&"lake")
 	assert_bool(lake.rooms.has(&"caldera_open_crater")).is_true()
-	assert_bool(lake.exits.any(func(room: StringName) -> bool: return String(room).begins_with("caldera_"))).is_false()
+	for room: StringName in lake.exits:
+		if String(room).begins_with("caldera_"):
+			assert_str(String(room)).is_equal("caldera_arena")
 	for pocket: ReachReport.Pocket in lake.pockets:
 		for room: StringName in pocket.rooms:
 			assert_bool(String(room).begins_with("caldera_")).override_failure_message("lake kit trapped in %s" % room).is_false()
@@ -106,7 +108,7 @@ func test_the_lake_kit_gets_out_of_the_caldera() -> void:
 ## world places is a way out.
 func test_every_exit_is_a_placed_guardians_arena() -> void:
 	var placed := _grid.guardians.values()
-	assert_array(placed).contains_exactly_in_any_order([&"bloom_hollow", &"lake_frost_arena"])
+	assert_array(placed).contains_exactly_in_any_order([&"bloom_hollow", &"lake_frost_arena", &"orchard_arena", &"caldera_arena"])
 	for report: ReachReport in _reports:
 		for room: StringName in report.exits:
 			assert_bool(room in placed).override_failure_message("kit %s exits through %s" % [report.kit, room]).is_true()

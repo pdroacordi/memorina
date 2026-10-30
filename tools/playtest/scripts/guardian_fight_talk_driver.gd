@@ -211,6 +211,11 @@ func _policy(now: int) -> void:
 			_log("JUMP press (armed steps=%d floor=%s ts=%.2f)" % [rc.steps_left(), _p.is_on_floor(), Engine.time_scale])
 			_press(String(rc.armed_stats().action), 120)
 		return
+	# A gust carries Ivo to a wall; a player lets go of the stick and waits for the wall (GRD-04).
+	var gust: Resource = _g.current_attack()
+	if gust != null and gust.get("push_speed") > 0.0 and _g.is_swinging():
+		_move("")
+		return
 	var ph: int = _g.phase()
 	if ph != 1 or _call_active or _p.is_in_lesson():
 		_move("")

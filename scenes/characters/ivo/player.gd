@@ -92,8 +92,8 @@ const AIR_ATTACK_CONTEXTS: Array[StringName] = [CTX_JUMP, CTX_FALL, CTX_POGO]
 
 ## Horizontal speed below this threshold counts as standing still.
 const STILL_SPEED_EPSILON := 1.0
-## Seconds after recall when a directionless dodge moves away from its source.
-const RECALL_ESCAPE_TIME := 0.6
+## Seconds after recall when a directionless dodge or wall grip goes away from its source; past a jump's apex (0.67 s).
+const RECALL_ESCAPE_TIME := 0.9
 ## Seconds an Up press waits for a door, a Talkable or an item to come in reach ("Buffer it ~0.1 s", user, 2026-10-08).
 const UP_BUFFER := 0.1
 ## A cutscene walk under this pace (0..1 of his run) shows the walk clip, not the run (STORY-16).
@@ -776,7 +776,7 @@ func _climb_motion(delta: float) -> void:
 
 func _air_physics(delta: float) -> void:
 	_wall_mobility.enabled = _has_unlocked(Enums.PlayerSkill.WALL_CLIMB)
-	if not _wall_mobility.update(delta, move_axis()):
+	if not _wall_mobility.update(delta, _escape_axis()):
 		_jump.apply_gravity(delta)
 	_locomotion.air_update(delta, move_axis(), carry().x)
 	_locomotion.lift_update(delta, carry().y)
@@ -1114,9 +1114,10 @@ func _tick_pending_recall(delta: float) -> void:
 	_pending_recall_left -= delta
 	if _recall_cue_met(_pending_recall) and not is_dead():
 		var stats := _pending_recall
+		var source := _pending_recall_source
 		_pending_recall = null
 		_pending_recall_source = null
-		_open_recall(stats)
+		_open_recall(stats, source)
 	elif _pending_recall_left <= 0.0:
 		_pending_recall = null
 		_pending_recall_source = null
@@ -1128,13 +1129,14 @@ func _recall_cue_met(stats: AbilityRecallStats) -> bool:
 			return false
 		if global_position.distance_to(_pending_recall_source.global_position) > stats.trigger_distance:
 			return false
+	if stats.wall_cue and not _wall_mobility.touches_wall():
+		return false
 	return true
 
 ## How many presses the memory asks for is settled here, by where the body
 ## is standing at the instant the moment opens: a double jump caught with the
 ## feet planted is jump and then jump again.
-func _open_recall(stats: AbilityRecallStats) -> void:
-	var source := _pending_recall_source
+func _open_recall(stats: AbilityRecallStats, source: Node2D) -> void:
 	if not _recall.arm(stats, is_on_floor()):
 		return
 	_remember_escape(source)
@@ -1171,6 +1173,9 @@ func _on_skill_recalled(stats: AbilityRecallStats) -> void:
 	# and the whole contract is that the press which remembers also acts.
 	clear_knockback()
 	_landing.cancel_recovery()
+	# The escape counts from the press, not the window: a late press still has it at the jump's apex.
+	if not is_zero_approx(_recall_escape_axis):
+		_recall_escape_left = RECALL_ESCAPE_TIME
 	_end_recall()
 	skill_recalled.emit(stats.skill)
 
@@ -1263,11 +1268,9 @@ func _try_jump(on_floor: bool) -> void:
 	elif _double_jump.try_jump():
 		_wall_mobility.stop()
 
-## Where a roll goes when nothing is held: normally the way Ivo faces (the
-## component's own fallback, from a zero axis), but for the moment after a
-## recall, AWAY from the thing that forced it - he is facing the charge, and
-## a dodge into it is not a dodge.
-func _dodge_axis() -> float:
+## Where a roll or a wall grip goes with nothing held: the held axis, or for RECALL_ESCAPE_TIME after a recall, away
+## from what forced it (a gust's wall is gripped with nothing held, GRD-04).
+func _escape_axis() -> float:
 	var axis := move_axis()
 	if not is_zero_approx(axis) or _recall_escape_left <= 0.0:
 		return axis
@@ -1295,7 +1298,7 @@ func _try_roll(on_floor: bool) -> void:
 		return
 
 	_roll.enabled = _has_unlocked(Enums.PlayerSkill.ROLL)
-	_roll.try_roll(on_floor, _dodge_axis(), facing)
+	_roll.try_roll(on_floor, _escape_axis(), facing)
 
 #############################################
 ##  A T T A C K I N G                      ##

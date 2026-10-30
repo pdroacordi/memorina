@@ -62,9 +62,9 @@ enum SongHalf {
 enum Guardian {
 	FROST,
 	BLOOM,
-	## Not built yet (GRD-04): no fight restores it, so its flag stays false.
+	## The bone scarecrow of the Wind Orchards (GRD-04).
 	AUTUMN,
-	## Not built yet (GRD-04): no fight restores it, so its flag stays false.
+	## The sun-lion of the Summer Caldera (GRD-04).
 	SUMMER,
 }
 

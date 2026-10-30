@@ -1,6 +1,8 @@
 ; orchard_arena.room - Colina do Guardiao: the autumn guardian's arena, empty until GRD-04 (design 04 section 3.6).
 ; Flat floor top at row 9 across all 40 cells, no pits, nine rows of air; the guardian stands at col 25. A FightWall `I` in
 ; each doorway holds Ivo in during the fight (GRD-05); the east one is three cells, under the lintel.
+; The one at (30,0), nine cells across and one tall, closes the top within reach of the east wall (col 39): the fight
+; recalls wall climb, which would otherwise climb out into orchard_crag (GRD-04; gotchas/a-one-screen-shaft-cannot-shut-out-wall-climb).
 
 ; The chimney gate: the cliff chimney (west) cannot be climbed back out without wall climb, so a
 ; barrier holds its mouth until the save holds it (design 04 section 3.6; no softlock while GRD-04 is open).
@@ -14,7 +16,7 @@ origin = 0, 0
 tileset = wind_orchards
 
 [grid]
-SSSS...................................#
+SSSS..........................I........#
 SSS....................................#
 SSS....................................#
 SSS....................................#
@@ -30,3 +32,4 @@ IX.....................................I
 [entities]
 1,8 = {"requires": "res://resources/save_facts/has_wall_climb.tres", "art": "res://assets/sprites/world/props/wind_orchards/bramble_barrier.png"}
 39,8 = {"cells": 3}
+30,0 = {"across": 9, "cells": 1}

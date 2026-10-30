@@ -17,8 +17,10 @@ const FLYER_SCENES: Array[String] = [
 	"res://scenes/characters/creatures/spider/spider.tscn",
 ]
 const GUARDIAN_SCENES: Array[String] = [
+	"res://scenes/characters/guardians/autumn_guardian/autumn_guardian.tscn",
 	"res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn",
 	"res://scenes/characters/guardians/frost_guardian/frost_guardian.tscn",
+	"res://scenes/characters/guardians/summer_guardian/summer_guardian.tscn",
 ]
 ## Scan limits and step of a reach measurement, in px.
 const SCAN_FROM := -300.0
@@ -77,6 +79,7 @@ func test_a_guardian_move_without_body_contact_keeps_its_box_open_while_it_lunge
 
 ## On every sampled frame of a guardian's hit window, its box touches a grounded Ivo no farther out than the art that
 ## frame draws at his height reaches (bugs/the-frost-swipe-hit-ivo-far-from-its-fist).
+## A move that blows (`push_speed`) is drawn by its GustStream, so its band is measured against the stream's reach.
 func test_every_guardian_move_touches_a_grounded_ivo_only_where_its_art_is_drawn() -> void:
 	var ivo_shape := _ivo_hurtbox.shape as CapsuleShape2D
 	for path: String in GUARDIAN_SCENES:
@@ -87,8 +90,9 @@ func test_every_guardian_move_touches_a_grounded_ivo_only_where_its_art_is_drawn
 			var clip := _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index])
 			var box := _hit_box(guardian, clip)
 			var at: float = box.window_start + 0.01
+			var stream := guardian.get_node_or_null(^"GustStream") as GustStream
 			for xform: Transform2D in box.xforms:
-				var front := _drawn_front(sprite, clip, reset, at)
+				var front := stream.reach if attack.push_speed > 0.0 and stream != null else _drawn_front(sprite, clip, reset, at)
 				var touch := _reach({"shape": box.shape, "xform": xform}, _ivo_hurtbox)
 				assert_float(touch).override_failure_message("%s %s at %.3f s touches Ivo %.1f px out; the art reaches %.0f" % [
 					guardian.name, attack.resource_path.get_file(), at, touch, front]).is_less_equal(front + ivo_shape.radius + DRAWN_SLACK)

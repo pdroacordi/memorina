@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://c2bk7o41sywx" path="res://resources/ui/notebook/notebook_entry.gd" id="2_entry"]
 [ext_resource type="Texture2D" uid="uid://ds11rfnyvj31i" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_idle.png" id="3_frost"]
 [ext_resource type="Texture2D" uid="uid://bgqmsx8a0hg0x" path="res://assets/sprites/characters/guardians/bloom_guardian/bloom_guardian_idle.png" id="4_bloom"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/autumn_guardian/autumn_guardian_idle.png" id="4_autumn"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/summer_guardian/summer_guardian_idle.png" id="4_summer"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_sword.png" id="5_icon_sword"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_memorina.png" id="6_icon_memorina"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_bread.png" id="7_icon_bread"]
@@ -28,6 +30,13 @@ script = ExtResource("2_entry")
 id = &"lore_double_jump"
 title_key = "SKILL_DOUBLE_JUMP"
 body_key = "NOTEBOOK_LORE_DOUBLE_JUMP"
+
+[sub_resource type="Resource" id="lore_wall_climb"]
+script = ExtResource("2_entry")
+id = &"lore_wall_climb"
+index = 1
+title_key = "SKILL_WALL_CLIMB"
+body_key = "NOTEBOOK_LORE_WALL_CLIMB"
 
 [sub_resource type="Resource" id="lore_seeds"]
 script = ExtResource("2_entry")
@@ -157,7 +166,7 @@ icon = ExtResource("7_icon_bread")
 
 [sub_resource type="AtlasTexture" id="portrait_frost"]
 atlas = ExtResource("3_frost")
-region = Rect2(64, 36, 60, 60)
+region = Rect2(64, 36, 60, 40)
 
 [sub_resource type="Resource" id="guardian_frost"]
 script = ExtResource("2_entry")
@@ -170,7 +179,15 @@ art = SubResource("portrait_frost")
 
 [sub_resource type="AtlasTexture" id="portrait_bloom"]
 atlas = ExtResource("4_bloom")
-region = Rect2(52, 36, 24, 60)
+region = Rect2(52, 36, 24, 40)
+
+[sub_resource type="AtlasTexture" id="portrait_autumn"]
+atlas = ExtResource("4_autumn")
+region = Rect2(28, 34, 60, 40)
+
+[sub_resource type="AtlasTexture" id="portrait_summer"]
+atlas = ExtResource("4_summer")
+region = Rect2(55, 32, 60, 40)
 
 [sub_resource type="Resource" id="guardian_bloom"]
 script = ExtResource("2_entry")
@@ -190,6 +207,7 @@ requirement = 3
 index = 2
 title_key = "GUARDIAN_AUTUMN"
 body_key = "NOTEBOOK_GUARDIAN_AUTUMN_BODY"
+art = SubResource("portrait_autumn")
 
 [sub_resource type="Resource" id="guardian_summer"]
 script = ExtResource("2_entry")
@@ -199,6 +217,7 @@ requirement = 3
 index = 3
 title_key = "GUARDIAN_SUMMER"
 body_key = "NOTEBOOK_GUARDIAN_SUMMER_BODY"
+art = SubResource("portrait_summer")
 
 [sub_resource type="Resource" id="found_songbook_bell_jar"]
 script = ExtResource("2_entry")
@@ -372,4 +391,4 @@ body_key = "NOTEBOOK_FOUND_PILGRIM_LAST_BODY"
 
 [resource]
 script = ExtResource("1_catalog")
-entries = Array[ExtResource("2_entry")]([SubResource("lore_mentor"), SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("lore_seeds"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_bread"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer"), SubResource("found_songbook_bell_jar"), SubResource("found_songbook_rain"), SubResource("found_songbook_gale"), SubResource("found_songbook_solstice"), SubResource("found_bento_1"), SubResource("found_bento_2"), SubResource("found_bento_3"), SubResource("found_marta"), SubResource("found_gull_log"), SubResource("found_gull_note"), SubResource("found_gull_oar"), SubResource("found_clara_pond"), SubResource("found_clara_crater"), SubResource("found_clara_ringer"), SubResource("found_pilgrim_1"), SubResource("found_pilgrim_2"), SubResource("found_pilgrim_last")])
+entries = Array[ExtResource("2_entry")]([SubResource("lore_mentor"), SubResource("lore_roll"), SubResource("lore_double_jump"), SubResource("lore_wall_climb"), SubResource("lore_seeds"), SubResource("song_freeze"), SubResource("song_bell_jar"), SubResource("song_release"), SubResource("song_gale"), SubResource("song_root"), SubResource("song_rain"), SubResource("song_shadow"), SubResource("song_solstice"), SubResource("item_bread"), SubResource("item_sword"), SubResource("item_memorina"), SubResource("guardian_frost"), SubResource("guardian_bloom"), SubResource("guardian_autumn"), SubResource("guardian_summer"), SubResource("found_songbook_bell_jar"), SubResource("found_songbook_rain"), SubResource("found_songbook_gale"), SubResource("found_songbook_solstice"), SubResource("found_bento_1"), SubResource("found_bento_2"), SubResource("found_bento_3"), SubResource("found_marta"), SubResource("found_gull_log"), SubResource("found_gull_note"), SubResource("found_gull_oar"), SubResource("found_clara_pond"), SubResource("found_clara_crater"), SubResource("found_clara_ringer"), SubResource("found_pilgrim_1"), SubResource("found_pilgrim_2"), SubResource("found_pilgrim_last")])

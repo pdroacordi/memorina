@@ -22,6 +22,8 @@ script = ExtResource("1_region")
 name_key = "REGION_WIND_ORCHARDS"
 epithet_key = "REGION_WIND_ORCHARDS_EPITHET"
 season = 2
+has_guardian = true
+guardian = 2
 backdrop_set = ExtResource("bd_region_set")
 horizon_y = -1301.0
 

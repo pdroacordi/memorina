@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/recall_wall_climb.tres" id="2_recall"]
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 1
+duration = 2.4
+telegraph = 0.9
+attack_range = 600.0
+cooldown = 2.4
+weight = 0.0
+knockback_strength = 300.0
+knockback_lift = 80.0
+push_speed = 1700.0
+recall = ExtResource("2_recall")

@@ -145,12 +145,12 @@ NOTEBOOK_SONG_SOLSTICE_DETAIL,Summer · volcanic stone,Verão · pedra vulcânic
 NOTEBOOK_SONG_SOLSTICE_BODY,The longest day. Any song that touches this one lasts longer.,O dia mais longo. Toda canção que encosta nesta dura mais.
 GUARDIAN_FROST,Frost Guardian,Guardião do Gelo
 GUARDIAN_BLOOM,Bloom Guardian,Guardião da Flor
-GUARDIAN_AUTUMN,Autumn Guardian,Guardião do Outono
-GUARDIAN_SUMMER,Summer Guardian,Guardião do Verão
+GUARDIAN_AUTUMN,Leaf Guardian,Guardião da Folha
+GUARDIAN_SUMMER,Sun Guardian,Guardião do Sol
 NOTEBOOK_GUARDIAN_FROST_BODY,"It keeps the winter on an edge of ice. When the colour came back, the water remembered how to stand still.","Guarda o inverno numa borda de gelo. Quando a cor voltou, a água lembrou como parar."
 NOTEBOOK_GUARDIAN_BLOOM_BODY,"A stag of pale wood deep in the woods. When the colour came back, the earth held together again.","Um cervo de madeira clara no fundo da mata. Quando a cor voltou, a terra voltou a se ligar."
-NOTEBOOK_GUARDIAN_AUTUMN_BODY,"It keeps the autumn among the windmills of the orchards.","Guarda o outono entre os moinhos do pomar."
-NOTEBOOK_GUARDIAN_SUMMER_BODY,"It keeps the summer in the heat under the caldera.","Guarda o verão no calor sob a caldeira."
+NOTEBOOK_GUARDIAN_AUTUMN_BODY,"A scarecrow of hollow bone in the orchards. When the colour came back, the leaves could fall.","Um espantalho de osso oco no pomar. Quando a cor voltou, as folhas puderam cair."
+NOTEBOOK_GUARDIAN_SUMMER_BODY,"A lion of holed stone under the caldera. When the colour came back, the sun set at last.","Um leão de pedra furada sob a caldeira. Quando a cor voltou, o sol enfim se pôs."
 NOTEBOOK_GUARDIAN_CORRUPTED,Corrupted,Corrompido
 NOTEBOOK_GUARDIAN_RESTORED,Restored,Restaurado
 NOTEBOOK_GUARDIAN_TAUGHT,Taught:,Ensinou:
@@ -321,3 +321,40 @@ DLG_GUARDIAN_FROST_FIRST_08,Water. Good. Let it run.,Água. Bom. Deixa correr.
 DLG_GUARDIAN_FROST_AGAIN_01,The ice talks at night. I let it.,O gelo fala de noite. Eu deixo.
 DLG_GUARDIAN_FROST_AGAIN_01_V1,Another one woke. The cold knows.,Outro acordou. O frio sabe.
 DLG_GUARDIAN_FROST_AGAIN_01_V2,By the sea there is a tower. Go slow.,Junto ao mar tem uma torre. Vai devagar.
+SPEAKER_GUARDIAN_AUTUMN,Leaf Guardian,Guardião da Folha
+BARK_GUARDIAN_AUTUMN_LUCID_0,…Don't touch them. They're counted.,…Não toca. Estão contadas.
+BARK_GUARDIAN_AUTUMN_LUCID_1,Thirty-one. Thirty… one?,Trinta e uma. Trinta e… uma?
+BARK_GUARDIAN_AUTUMN_LUCID_2,Listen. A tune that opens hands. Take it.,Escuta. Uma música que abre a mão. Pega.
+BARK_GUARDIAN_AUTUMN_RETRY,Again. My fingers ~close~.,De novo. Meus dedos ~fecham~.
+DLG_GUARDIAN_AUTUMN_FIRST_01,They fell. All of them.,Caíram. Todas.
+DLG_GUARDIAN_AUTUMN_FIRST_02,I kept them through the snow. Through the blossom. Through the snow again.,Guardei na neve. Na flor. Na neve de novo.
+DLG_GUARDIAN_AUTUMN_FIRST_03,Why keep them?,Por que guardar?
+DLG_GUARDIAN_AUTUMN_FIRST_04,So the orchard would still look full.,Pro pomar ainda parecer cheio.
+DLG_GUARDIAN_AUTUMN_FIRST_05,Bare is lighter. I can hear the mill again.,Vazio pesa menos. Já ouço o moinho de novo.
+DLG_GUARDIAN_AUTUMN_FIRST_06,The last one. I couldn't. You choose.,A última. Eu não consegui. Escolhe você.
+DLG_CHOICE_GUARDIAN_AUTUMN_KEEP,[Keep the leaf],[Guardar a folha]
+DLG_GUARDIAN_AUTUMN_FIRST_07,Press it flat in a book. That's allowed.,"Guarda num livro, bem lisa. Isso pode."
+DLG_CHOICE_GUARDIAN_AUTUMN_LET,[Let the wind take it],[Deixar o vento levar]
+DLG_GUARDIAN_AUTUMN_FIRST_08,There. …There. That's how it's done.,Pronto. …Pronto. É assim que se faz.
+DLG_GUARDIAN_AUTUMN_AGAIN_01,The wind goes through me now. I don't mind.,O vento passa por mim agora. Não me importo.
+DLG_GUARDIAN_AUTUMN_AGAIN_01_V1,Somewhere a fire woke. The air tastes of smoke.,"Em algum lugar, um fogo acordou. O ar tem gosto de fumaça."
+DLG_GUARDIAN_AUTUMN_AGAIN_01_V2,Something by the sea still won't open its hand.,Alguma coisa junto ao mar ainda não abre a mão.
+SPEAKER_GUARDIAN_SUMMER,Sun Guardian,Guardião do Sol
+BARK_GUARDIAN_SUMMER_LUCID_0,…Who casts a shadow in my noon?,…Quem faz sombra no meu meio-dia?
+BARK_GUARDIAN_SUMMER_LUCID_1,Stand still. Let the sun mark you. Learn this.,Fica parado. Deixa o sol te marcar. Aprende.
+BARK_GUARDIAN_SUMMER_RETRY,Again. The day is long.,De novo. O dia é longo.
+DLG_GUARDIAN_SUMMER_FIRST_01,The sun moved.,O sol andou.
+DLG_GUARDIAN_SUMMER_FIRST_02,"I held it at the top of the sky, so no one I loved would see the evening.","Segurei ele no alto do céu, pra ninguém que eu amava ver a tarde cair."
+DLG_GUARDIAN_SUMMER_FIRST_03,And they stayed?,E eles ficaram?
+DLG_GUARDIAN_SUMMER_FIRST_04,They stood in the light until they were only shadows on the stone.,Ficaram na luz até serem só sombra na pedra.
+DLG_GUARDIAN_SUMMER_FIRST_05,A shadow keeps the shape. That is all it is for.,A sombra guarda a forma. É só pra isso que ela serve.
+DLG_GUARDIAN_SUMMER_FIRST_06,Rest here. Or go on into the sun.,Descansa aqui. Ou segue pro sol.
+DLG_CHOICE_GUARDIAN_SUMMER_SHADE,[Stay in the shade],[Ficar na sombra]
+DLG_GUARDIAN_SUMMER_FIRST_07,Then rest. A little. Not forever.,Então descansa. Um pouco. Não pra sempre.
+DLG_CHOICE_GUARDIAN_SUMMER_SUN,[Walk into the sun],[Andar pro sol]
+DLG_GUARDIAN_SUMMER_FIRST_08,Good. Let it set behind you.,Bom. Deixa ele se pôr atrás de você.
+DLG_GUARDIAN_SUMMER_AGAIN_01,Evening came. It was kind.,A tarde caiu. Foi gentil.
+DLG_GUARDIAN_SUMMER_AGAIN_01_V1,"Far off, someone else let go. The stone cooled.","Longe, mais alguém soltou. A pedra esfriou."
+DLG_GUARDIAN_SUMMER_AGAIN_01_V2,"At the sea, a light still will not set.","No mar, uma luz ainda não quer se pôr."
+SKILL_WALL_CLIMB,Wall climb,Escalar paredes
+NOTEBOOK_LORE_WALL_CLIMB,"I held on to the stone with nothing but my fingers. I used to climb the orchard wall like this, to bring her the highest apples.","Me segurei na pedra só com os dedos. Eu subia assim no muro do pomar, pra trazer pra ela as maçãs mais altas."

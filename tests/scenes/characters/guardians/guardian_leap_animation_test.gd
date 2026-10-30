@@ -6,6 +6,8 @@ class_name GuardianLeapAnimationTest extends GdUnitTestSuite
 const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const BLOOM := preload("res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn")
 const FROST := preload("res://scenes/characters/guardians/frost_guardian/frost_guardian.tscn")
+const SUMMER := preload("res://scenes/characters/guardians/summer_guardian/summer_guardian.tscn")
+const AUTUMN := preload("res://scenes/characters/guardians/autumn_guardian/autumn_guardian.tscn")
 
 ## Top of the test floor.
 const FLOOR_Y := 30.0
@@ -37,6 +39,12 @@ func test_the_bloom_leap_plays_crouch_rise_fall_and_land() -> void:
 
 func test_the_frost_leap_plays_crouch_rise_fall_and_land() -> void:
 	await _assert_leap(FROST)
+
+func test_the_summer_leap_plays_crouch_rise_fall_and_land() -> void:
+	await _assert_leap(SUMMER)
+
+func test_the_autumn_leap_plays_crouch_rise_fall_and_land() -> void:
+	await _assert_leap(AUTUMN)
 
 func _assert_leap(scene: PackedScene) -> void:
 	var guardian := scene.instantiate() as Guardian

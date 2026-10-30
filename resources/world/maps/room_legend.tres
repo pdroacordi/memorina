@@ -467,7 +467,7 @@ ground = 0
 scene = ExtResource("f1_fight_wall")
 required_params = PackedStringArray()
 reach_role = 0
-description = "A wall of stopped grey standing on this cell, cells tall (default 4): solid while a guardian fights Ivo inside its Arena, from when his body is clear of it until the guardian is restored. Put one in every arena exit, the column at the room's edge, the doorway's height (GRD-05)."
+description = "A wall of stopped grey standing on this cell, cells tall (default 4) and across wide (default 1, growing east; a ceiling under a shaft): solid while a guardian fights Ivo inside its Arena, from when his body is clear of it until the guardian is restored. Put one in every arena exit, the column at the room's edge, the doorway's height (GRD-05)."
 
 [resource]
 script = ExtResource("1_legend")

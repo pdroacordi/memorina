@@ -43,6 +43,10 @@ func update(delta: float, axis: float) -> bool:
 
 	return is_sliding
 
+## The body touches a wall it could grip this step; a world edge never counts.
+func touches_wall() -> bool:
+	return _grip_normal() != Vector2.ZERO
+
 ## Ends the slide after a jump or ground contact.
 func stop() -> void:
 	is_sliding = false

@@ -73,6 +73,17 @@ func test_its_body_and_curtain_are_its_cells_tall() -> void:
 	assert_vector(tall.body_rect().size).is_equal(Vector2(32, 96))
 	assert_vector((tall.get_node(^"Curtain") as ColorRect).size).is_equal(Vector2(32, 96))
 
+## A ceiling wall grows east from its cell, one cell tall.
+func test_an_across_wall_grows_east_from_its_cell() -> void:
+	var ceiling := WALL.instantiate() as FightWall
+	ceiling.cells = 1
+	ceiling.across = 8
+	ceiling.position = Vector2(1000, 32)
+	_holder.add_child(ceiling)
+	assert_object(ceiling.body_rect()).is_equal(Rect2(984, 0, 256, 32))
+	var shape := ceiling.get_node(^"CollisionShape2D") as CollisionShape2D
+	assert_vector(shape.position).is_equal(Vector2(112, -16))
+
 func _frames(count: int) -> void:
 	for i: int in count:
 		await get_tree().physics_frame

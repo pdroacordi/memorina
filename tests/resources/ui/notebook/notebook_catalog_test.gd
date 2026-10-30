@@ -73,11 +73,8 @@ func test_entries_keep_story_order() -> void:
 			&"song_root", &"song_rain", &"song_shadow", &"song_solstice"])
 
 func test_every_guardian_has_a_portrait() -> void:
-	# Not built (GRD-04): no fight meets them, so their row stays unknown and shows no portrait. GRD-04 empties this.
-	var unbuilt: Array[int] = [Enums.Guardian.AUTUMN, Enums.Guardian.SUMMER]
 	for entry: NotebookEntry in _catalog().in_section(NotebookEntry.Section.GUARDIANS):
-		if entry.index not in unbuilt:
-			assert_object(entry.art).override_failure_message("%s has no portrait" % entry.id).is_not_null()
+		assert_object(entry.art).override_failure_message("%s has no portrait" % entry.id).is_not_null()
 
 ## The item notice draws each item's icon (systems/notices).
 func test_every_item_has_an_icon() -> void:

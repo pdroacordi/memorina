@@ -87,6 +87,47 @@ func test_a_press_after_a_launch_past_coyote_time_counts() -> void:
 	await _frames(1)
 	assert_array(_recalled).contains_exactly([Enums.PlayerSkill.DOUBLE_JUMP])
 
+## A wall-cued recall waits for Ivo to touch a wall; a press late in the window recalls WALL_CLIMB, jumps, and grips the
+## wall with nothing held, pushed only as GuardianGust pushes (GRD-04, the autumn gust;
+## bugs/the-gust-recall-grip-with-nothing-held-outlives-the-push-and-the-escape-time).
+func test_a_wall_cued_recall_opens_at_the_wall_and_grips_it_with_nothing_held() -> void:
+	var wall := StaticBody2D.new()
+	wall.collision_layer = 2
+	wall.position = Vector2(160, FLOOR_Y - 200.0)
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(32, 400)
+	shape.shape = rect
+	wall.add_child(shape)
+	_ivo.get_parent().add_child(wall)
+	await _land()
+	var source := auto_free(Node2D.new()) as Node2D
+	source.position = Vector2(-400, FLOOR_Y)
+	var gust := load("res://resources/characters/guardians/autumn_guardian/autumn_gust.tres") as GuardianAttack
+	_ivo.begin_recall(gust.recall, 2.4, source)
+	await _frames(2)
+	assert_bool(_recall().is_armed()).override_failure_message("opened away from the wall").is_false()
+	for i: int in 90:
+		_ivo.push(GuardianGust.push_for(gust, true, 1, source.position, _ivo.global_position))
+		await get_tree().physics_frame
+		if _recall().is_armed():
+			break
+	assert_bool(_recall().is_armed()).override_failure_message("never opened at the wall").is_true()
+	# Late in the window: the world is slowed, so most of a real second.
+	for i: int in 50:
+		_ivo.push(GuardianGust.push_for(gust, true, 1, source.position, _ivo.global_position))
+		await get_tree().physics_frame
+	_player_input().jump_pressed.emit()
+	var gripped := false
+	for i: int in 400:
+		_ivo.push(GuardianGust.push_for(gust, true, 1, source.position, _ivo.global_position))
+		await get_tree().physics_frame
+		if _ivo.is_wall_sliding():
+			gripped = true
+			break
+	assert_bool(SaveSystem.has_skill(Enums.PlayerSkill.WALL_CLIMB)).is_true()
+	assert_bool(gripped).override_failure_message("never gripped the wall with nothing held").is_true()
+
 func _player_input() -> PlayerInput:
 	return _ivo.get_node("PlayerInput") as PlayerInput
 

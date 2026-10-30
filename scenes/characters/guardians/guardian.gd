@@ -222,9 +222,7 @@ func is_fighting_at(point: Vector2) -> bool:
 ## How tall the body standing there is, in world pixels: the stage asks, so
 ## a sheet hung above the pair is never hung on a golem's head.
 func body_height() -> float:
-	var collision := $CollisionShape2D as CollisionShape2D
-	var capsule := collision.shape as CapsuleShape2D
-	return capsule.height if capsule != null else 0.0
+	return body_rect().size.y
 
 func is_attacking() -> bool:
 	return _ai.is_attacking()
@@ -242,6 +240,10 @@ func is_swinging() -> bool:
 
 func current_attack() -> GuardianAttack:
 	return _ai.current_attack
+
+## The Ivo this fight began against; null before it begins.
+func fought_player() -> Player:
+	return _player if is_instance_valid(_player) else null
 
 ## Hits counted toward the next lucidity window, 0..1.
 func pressure_progress() -> float:

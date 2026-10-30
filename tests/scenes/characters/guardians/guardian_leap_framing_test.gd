@@ -6,6 +6,8 @@ class_name GuardianLeapFramingTest extends GdUnitTestSuite
 const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const BLOOM := preload("res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn")
 const FROST := preload("res://scenes/characters/guardians/frost_guardian/frost_guardian.tscn")
+const SUMMER := preload("res://scenes/characters/guardians/summer_guardian/summer_guardian.tscn")
+const AUTUMN := preload("res://scenes/characters/guardians/autumn_guardian/autumn_guardian.tscn")
 
 ## Top of the test floor.
 const FLOOR_Y := 30.0
@@ -39,6 +41,12 @@ func test_the_bloom_leap_is_framed_from_take_off_and_lands_in_view() -> void:
 
 func test_the_frost_leap_is_framed_from_take_off_and_lands_in_view() -> void:
 	await _assert_framed_leap(FROST)
+
+func test_the_summer_leap_is_framed_from_take_off_and_lands_in_view() -> void:
+	await _assert_framed_leap(SUMMER)
+
+func test_the_autumn_leap_is_framed_from_take_off_and_lands_in_view() -> void:
+	await _assert_framed_leap(AUTUMN)
 
 func test_a_call_abandoned_mid_leap_releases_the_frame() -> void:
 	var setup := await _set_up(FROST)

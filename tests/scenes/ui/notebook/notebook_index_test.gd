@@ -21,11 +21,11 @@ func test_present_follows_each_save_fact_in_catalog_order() -> void:
 	assert_array(NotebookIndex.present(CATALOG, data)).contains_exactly(
 			[&"lore_roll", &"song_freeze", &"song_root", &"item_memorina", &"guardian_frost"])
 
-## Wall climb is taught by no guardian yet, so it has no diary entry.
-func test_a_skill_without_an_entry_adds_nothing() -> void:
+## Wall climb, recalled from the autumn guardian since GRD-04, has its memory like the other skills.
+func test_wall_climb_brings_its_memory() -> void:
 	var data := _data()
 	data.unlocked_player_skills[Enums.PlayerSkill.WALL_CLIMB] = true
-	assert_array(NotebookIndex.present(CATALOG, data)).is_empty()
+	assert_array(NotebookIndex.present(CATALOG, data)).contains_exactly([&"lore_wall_climb"])
 
 func test_read_entries_are_not_unread() -> void:
 	var data := _data()
