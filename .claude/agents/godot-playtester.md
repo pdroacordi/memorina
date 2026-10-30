@@ -631,6 +631,23 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - The `[spr]` `flip` is not "facing left/right" for every strip. The lucid and leap clips face Ivo with
     `flip=false` when he is to the right. Judge facing from the snout or fists in a crop, not from the flag.
 
+- **Learned 2026-10-30 (GRD-08 + STORY-18 clips and talks)**:
+  - **Use `tools/playtest/scripts/guardian_fight_talk_driver.gd` for anything after RESTORED.** It is the fight bot plus
+    `[bark]` lines (text, rows, box rect, guardian/Ivo screen px, call slot), lesson shots every 1.5 s, and a talk
+    script: it walks into reach, stops when the Talkable's `Prompt` shows, presses Up, logs each `LINE [plate]
+    portrait= 'text'`, picks `BOT_CHOICE` (0 HOLD, 1 LET) and talks twice. `BOT_FAIL=wrong` (2nd note wrong) or
+    `skip` (window lapses) applies to the first window. Raise the timeline's `max_duration` to 260: Frost's lesson is ~98 s.
+  - **Shot budget:** a Frost fight with lucid bursts and lesson shots took 420 shots before the talk. The talk
+    driver's cap is 800.
+  - **An asking line is never logged as a LINE**: `is_choosing()` turns true as soon as the question is typed. Read its
+    text in the `choices` frame. A choice step must not re-arm on its own state (the first version pressed Z twice).
+  - **The driver's screenshot is one frame behind**, so a `prompt` shot taken on the frame the prompt appears never
+    shows it. The driver adds a `prompt_late` shot 0.5 s after.
+  - `[spr]` texture runs prove a clip animates under a pause: count frame changes over the lesson (Bloom 308 in 61 s).
+    Crops by `[shot]` g are wrong during the lesson push-in and after the unpair. Use full frames there.
+  - To time "guardian on screen during X", take the `[shot]` g.x per frame and test `x ± half-width` (Bloom 22,
+    Frost 60) inside 0..640. A 15-line `vis.py` did all four runs at once.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
