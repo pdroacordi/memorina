@@ -73,6 +73,9 @@
 [ext_resource type="Script" path="res://scenes/characters/components/talk_component.gd" id="74_talkco"]
 [ext_resource type="Script" path="res://scenes/characters/components/pickup_component.gd" id="75_pickco"]
 [ext_resource type="Script" path="res://scenes/characters/components/helix_rider_component.gd" id="73_helixrider"]
+[ext_resource type="Script" path="res://scenes/characters/ivo/dissonance/hero_silhouette.gd" id="90_silhouette"]
+[ext_resource type="Shader" path="res://scenes/characters/ivo/dissonance/hero_silhouette.gdshader" id="91_silshader"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/mentor_guardian/mentor_guardian_past_self.png" id="92_pastself"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_climbsensor"]
 size = Vector2(12, 28)
@@ -2385,6 +2388,9 @@ states/wall_slide/node = SubResource("AnimationNodeAnimation_lk6ox")
 states/wall_slide/position = Vector2(704.967, 389)
 graph_offset = Vector2(-165.03302, 191.97491)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_silhouette"]
+shader = ExtResource("91_silshader")
+
 [node name="Ivo" type="CharacterBody2D" unique_id=1573815107]
 collision_layer = 256
 collision_mask = 27
@@ -2551,6 +2557,17 @@ radius = 26.0
 height = 16.0
 feather = 12.0
 amount = 1.0
+
+[node name="HeroSilhouette" type="Node2D" parent="."]
+script = ExtResource("90_silhouette")
+silhouette_material = SubResource("ShaderMaterial_silhouette")
+
+[node name="PastSelf" type="Sprite2D" parent="HeroSilhouette"]
+visible = false
+position = Vector2(0, -96)
+scale = Vector2(2, 2)
+texture = ExtResource("92_pastself")
+hframes = 4
 
 [node name="RecallAura" type="Node2D" parent="."]
 visible = false

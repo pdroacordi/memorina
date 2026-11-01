@@ -9,6 +9,9 @@ signal dissonance_changed(veil: float, revelation: float)
 ## The revelation shattered; every window after it is two-track.
 signal revealed
 
+## The grey veil's share at the revelation's peak; the rest of it is the glitch and the silhouette.
+const REVELATION_VEIL := 0.6
+
 var _guardian: Guardian
 var _stats: FinaleStats
 var _finale: FinaleFight
@@ -16,13 +19,19 @@ var _finale: FinaleFight
 var _revelation_started: int = 0
 var _revelation_notes: int = 0
 
+## Track B's voice, sounding with the guardian's own call (design 02 section 5.3).
+@onready var _call_b: PhraseCall = get_node_or_null(^"../CallB") as PhraseCall
+@onready var _anchor: Node2D = $"../BarkAnchor"
+
 
 func _ready() -> void:
+	dissonance_changed.connect(_show_dissonance)
 	_guardian = get_parent() as Guardian
 	_stats = _guardian.stats.finale
 	assert(_stats != null and _stats.second_song != null, "%s has a Finale child but no FinaleStats" % _guardian.name)
 	_finale = FinaleFight.new(_stats, SaveSystem.is_finale_revealed())
 	set_process(false)
+	_guardian.call_ended.connect(_on_call_ended)
 
 ## Restored when the world is.
 func is_restored() -> bool:
@@ -40,8 +49,10 @@ func open_call(player: Player) -> void:
 			_revelation_notes = 0
 			player.open_call(_guardian.stats.song, 0, fight.cycles(), total, _stats.second_song, false)
 			set_process(true)
+			_sound_track_b()
 		FinaleFight.Stage.DUAL:
 			player.open_call(_guardian.stats.song, _stats.dual_revealed, fight.cycles(), total, _stats.second_song)
+			_sound_track_b()
 	_guardian.call_phrase(_guardian.stats.song)
 
 ## The revelation has no window clock ("sem punição real", design 5.1).
@@ -58,6 +69,7 @@ func answered(song: Song, player: Player) -> bool:
 				return true
 			_finale.choose()
 			dissonance_changed.emit(0.0, 0.0)
+			_bark(&"BARK_MENTOR_FINAL")
 			_call_phrase(player)
 			return true
 		FinaleFight.Stage.FINAL:
@@ -74,7 +86,7 @@ func mixed(player: Player) -> void:
 	match _finale.stage():
 		FinaleFight.Stage.REVELATION:
 			_revelation_notes += 1
-			dissonance_changed.emit(1.0, _revelation_level())
+			dissonance_changed.emit(_revelation_level() * REVELATION_VEIL, _revelation_level())
 			if _revelation_notes >= _stats.revelation_notes:
 				_shatter(player)
 		FinaleFight.Stage.DUAL:
@@ -91,7 +103,7 @@ func _process(_delta: float) -> void:
 	if _finale.stage() != FinaleFight.Stage.REVELATION or _finale.is_revealed():
 		set_process(false)
 		return
-	dissonance_changed.emit(1.0, _revelation_level())
+	dissonance_changed.emit(_revelation_level() * REVELATION_VEIL, _revelation_level())
 	if _revelation_level() >= 1.0:
 		_shatter(_guardian.fought_player())
 
@@ -122,3 +134,29 @@ func _call_phrase(player: Player) -> void:
 	player.close_call(true)
 	player.open_call(phrase, phrase.notes.size(), _guardian.fight().cycles(), _guardian.stats.cycles_to_restore)
 	_guardian.call_phrase(phrase)
+
+func _show_dissonance(veil: float, revelation: float) -> void:
+	var player := _guardian.fought_player()
+	if player != null:
+		player.show_dissonance(veil, revelation)
+
+func _sound_track_b() -> void:
+	if _call_b != null:
+		_call_b.play(_stats.second_song.notes, _guardian.stats.call_lead_in)
+
+func _bark(key: StringName) -> void:
+	var balloon := BarkBalloon.find(get_tree())
+	if balloon == null:
+		return
+	balloon.say(_anchor, String(key), -_guardian.facing, _guardian)
+	# Closed at the next phrase's first note, as the landing barks are (GuardianTalks).
+	_guardian.call_note_sung.connect(_close_bark.unbind(1), CONNECT_ONE_SHOT)
+
+func _close_bark() -> void:
+	var balloon := BarkBalloon.find(get_tree())
+	if balloon != null and balloon.speaker() == _anchor:
+		balloon.close()
+
+func _on_call_ended() -> void:
+	if _call_b != null:
+		_call_b.stop()

@@ -248,3 +248,11 @@ greyhush_black_lift_color={
 "type": "vec3",
 "value": Vector3(0.24, 0.26, 0.32)
 }
+dissonance_veil={
+"type": "float",
+"value": 0.0
+}
+dissonance_revelation={
+"type": "float",
+"value": 0.0
+}

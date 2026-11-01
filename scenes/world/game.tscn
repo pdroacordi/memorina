@@ -56,12 +56,17 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/teacher_balloon/teacher_balloon.tscn" id="56_balloon"]
 [ext_resource type="PackedScene" path="res://scenes/ui/bark_balloon/bark_balloon.tscn" id="57_bark"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_seed.png" id="90_seedicon"]
+[ext_resource type="Script" path="res://scenes/world/memory/dissonance/dissonance_fx.gd" id="91_dissfx"]
+[ext_resource type="Shader" path="res://scenes/world/memory/dissonance/dissonance_veil.gdshader" id="92_dissveil"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_foreground"]
 viewport_path = NodePath("ForegroundPass")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_dissonance"]
+shader = ExtResource("92_dissveil")
 
 [node name="Game" type="Node2D" unique_id=585377483]
 process_mode = 1
@@ -181,6 +186,10 @@ global_name = &"greyhush_foreground_pass"
 [node name="WorldFreeze" type="Node" parent="." unique_id=1632330468]
 script = ExtResource("14_freeze")
 
+[node name="DissonanceFx" type="Node" parent="."]
+script = ExtResource("91_dissfx")
+veil_path = NodePath("../CanvasLayer/DissonanceVeil")
+
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=873140419]
 
 [node name="Control" type="Control" parent="CanvasLayer" unique_id=1191215520]
@@ -226,6 +235,19 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = SubResource("ViewportTexture_foreground")
+
+[node name="DissonanceCopy" type="BackBufferCopy" parent="CanvasLayer"]
+copy_mode = 2
+
+[node name="DissonanceVeil" type="ColorRect" parent="CanvasLayer"]
+visible = false
+material = SubResource("ShaderMaterial_dissonance")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 
 [node name="RegionTitle" parent="CanvasLayer" instance=ExtResource("45_title")]
 
@@ -296,6 +318,7 @@ layer = 3
 [connection signal="hit_landed" from="World/Player" to="World/Camera2D" method="shake" binds= [2.0]]
 [connection signal="hurt" from="World/Player" to="WorldFreeze" method="hit_stop"]
 [connection signal="freeze_frame_requested" from="World/Player" to="WorldFreeze" method="hit_stop"]
+[connection signal="dissonance_changed" from="World/Player" to="DissonanceFx" method="set_dissonance"]
 [connection signal="hurt" from="World/Player" to="World/Camera2D" method="shake" binds= [4.0]]
 [connection signal="lesson_started" from="World/Player" to="CanvasLayer/LessonCinematic" method="on_lesson_started"]
 [connection signal="lesson_started" from="World/Player" to="CanvasLayer/MemorinaHud" method="on_lesson_started"]

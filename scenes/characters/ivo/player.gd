@@ -52,6 +52,8 @@ signal call_committed(song: Song)
 signal call_mixed(note: Enums.Note)
 ## A freeze frame of `seconds` (real) was asked for: the final battle's shatter (GRD-06). game.tscn wires it to WorldFreeze.
 signal freeze_frame_requested(seconds: float)
+## The final battle's dissonance veil and revelation level, 0..1 each; game.tscn wires it to DissonanceFx.
+signal dissonance_changed(veil: float, revelation: float)
 ## A teacher's phrase became the only thing the Memorina plays (systems/teaching-creatures).
 signal echo_opened
 signal echo_closed
@@ -1213,6 +1215,9 @@ func take_dissonance(damage: int) -> void:
 
 func request_freeze_frame(seconds: float) -> void:
 	freeze_frame_requested.emit(seconds)
+
+func show_dissonance(veil: float, revelation: float) -> void:
+	dissonance_changed.emit(veil, revelation)
 
 func _end_recall() -> void:
 	_glow_shield(_resting_shield_amount)
