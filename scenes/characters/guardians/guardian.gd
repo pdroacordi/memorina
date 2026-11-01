@@ -53,6 +53,8 @@ const RELAPSE_HOLD := 0.3
 ## The shape of the guardian's pulse during the lesson: slow and wide, so the
 ## colour spreads from it for as long as the track plays.
 @export var lesson_pulse: PulseStats
+## The id a cutscene places, faces and frames it by; empty keeps it out of cutscenes (systems/cutscenes).
+@export var cutscene_id: StringName = &""
 
 var _fight: GuardianFight
 var _player: Player
@@ -117,6 +119,8 @@ static func fight_at(tree: SceneTree, point: Vector2) -> bool:
 
 func _enter_tree() -> void:
 	add_to_group(GROUP)
+	if cutscene_id != &"":
+		add_to_group(CutsceneCast.BODY_GROUP)
 
 func _ready() -> void:
 	super()
@@ -267,17 +271,22 @@ func seconds_to_leap() -> float:
 func is_sounding() -> bool:
 	return _call.is_calling()
 
-## The lesson its restoration started is in its lead-in or playing its track.
+## The lesson its restoration started is in its lead-in or playing its track; the mentor, while his restoration scene
+## plays.
 func is_teaching() -> bool:
+	if _finale != null:
+		return _finale.is_performing()
 	return _teaching and is_instance_valid(_player) and _player.is_in_lesson()
 
 ## The fight's phase logic, for the Finale (GRD-06).
 func fight() -> GuardianFight:
 	return _fight
 
-## Sings `song`'s phrase after the lead-in.
+## Sings `song`'s phrase after the lead-in; an open window is held until the phrase ends, when the call reopens it.
 func call_phrase(song: Song) -> void:
 	_call.play(song.notes, stats.call_lead_in)
+	if _fight.is_window_open():
+		_fight.open_window(stats.call_lead_in + _call.duration())
 
 ## The AI's moves from now on (the Finale's revealed moves).
 func set_attacks(attacks: Array[GuardianAttack]) -> void:

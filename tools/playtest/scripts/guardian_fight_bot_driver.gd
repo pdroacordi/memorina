@@ -6,7 +6,9 @@ extends SceneTree
 ## Run: "$GODOT_WINDOWED" --path . -s res://tools/playtest/scripts/guardian_fight_bot_driver.gd -- --script=<timeline> --out=<dir>
 ## Env: BOT_GOD=1 tops Ivo up at hp 1; BOT_KEEP=<px> preferred distance (62); BOT_PASSIVE=1 never attacks;
 ## BOT_ANSWER=0 never answers; BOT_RECALL_WAIT=1 waits for the launch before a jump recall's presses;
-## BOT_POKE=1 steps out of ordinary moves and rolls under lunges/leaps; BOT_BOUNCE=1 double-jumps over the guardian and pogoes.
+## BOT_POKE=1 steps out of ordinary moves and rolls under lunges/leaps; BOT_BOUNCE=1 double-jumps over the guardian and pogoes;
+## BOT_RESTORED_MS=<ms> how long the restored burst captures (1800; the mentor's restoration scene wants ~22000);
+## BOT_MAX_SHOTS=<n> the screenshot cap (160).
 ## No autoload or class_name is referenced: a -s script compiles before the autoloads exist.
 const PH := ["DORMANT", "PRESSURE", "LUCIDITY", "RELAPSE", "RESTORED"]
 var _out := ""
@@ -76,7 +78,7 @@ func _move(dir: String) -> void:
 		_act(dir, true)
 
 func _shot(tag: String) -> void:
-	if _out == "" or _shots > 160:
+	if _out == "" or _shots > (int(OS.get_environment("BOT_MAX_SHOTS")) if OS.get_environment("BOT_MAX_SHOTS") != "" else 160):
 		return
 	_shots += 1
 	var img := root.get_viewport().get_texture().get_image()
@@ -100,7 +102,7 @@ func _process(_d: float) -> bool:
 			_act(q[1], q[2])
 			_queue.erase(q)
 	if _burst_until > now and now >= _burst_next:
-		_burst_next = now + (250 if _burst_tag == "lucid" else 120)
+		_burst_next = now + (250 if _burst_tag == "lucid" else 700 if _burst_tag == "restored" and _burst_until - now > 3000 else 120)
 		_shot(_burst_tag)
 	_p = root.find_child("Player", true, false) as Node2D
 	if _p == null or not _p.has_method("is_in_lesson"):
@@ -114,6 +116,8 @@ func _process(_d: float) -> bool:
 		_t0 = now
 		_notes = _g.get("stats").song.notes
 		_p.connect("call_window_opened", _on_window)
+		# The final battle calls a new phrase after each one answered (GRD-06): answer the phrase the call shows.
+		_p.connect("call_opened", func(song: Resource, _r: int, _gs: int, _cd: int, _ct: int, _sd: int, _h: float) -> void: _notes = song.notes)
 		for sig in ["call_opened", "call_closed", "call_answered", "skill_recalled", "skill_recall_missed", "recall_started", "recall_step_taken", "recall_ended", "lesson_started", "sequence_failed", "double_jumped", "jumped", "call_staged", "call_unstaged"]:
 			var argc: int = _p.get_signal_list().filter(func(x: Dictionary) -> bool: return x.name == sig)[0].args.size()
 			var cb: Callable = _on_sig.bind(sig)
@@ -140,7 +144,7 @@ func _observe(hp: int) -> void:
 		if ph == 2:
 			_burst("lucid", 7600)
 		elif ph == 4:
-			_burst("restored", 1800)
+			_burst("restored", int(OS.get_environment("BOT_RESTORED_MS")) if OS.get_environment("BOT_RESTORED_MS") != "" else 1800)
 		elif ph == 3:
 			_burst("relapse", 600)
 		_prev_phase = ph

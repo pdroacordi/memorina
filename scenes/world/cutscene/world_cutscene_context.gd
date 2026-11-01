@@ -199,4 +199,5 @@ func restore(clear_fade: bool, cut: bool = false) -> void:
 func _body(id: StringName) -> Character:
 	if id == CutsceneStep.IVO:
 		return _director.ivo
-	return cast.actor(id)
+	var found: Character = cast.actor(id)
+	return found if found != null else cast.find_body(id)

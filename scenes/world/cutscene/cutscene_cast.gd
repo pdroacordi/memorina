@@ -3,6 +3,9 @@ extends RefCounted
 ## The actors, marks and visuals a cutscene names, found by id inside its host's contents scene (systems/cutscenes).
 ## An actor enters on its first step; `release_all()` hands every entered actor's place back to its staging.
 
+## Bodies that are not actors a scene places, faces and frames, by their `cutscene_id` (the mentor guardian).
+const BODY_GROUP := &"cutscene_bodies"
+
 ## The host's contents scene root: ids resolve under it only, so neighbour rooms' ids stay apart.
 var _scope: Node
 var _entered: Array[StoryActor] = []
@@ -32,6 +35,9 @@ func find_visual(id: StringName) -> CutsceneVisual:
 func find_staging(id: StringName) -> FactStaging:
 	return find_in(_scope, FactStaging.GROUP, &"staging_id", id) as FactStaging
 
+func find_body(id: StringName) -> Character:
+	return find_in(_scope, BODY_GROUP, &"cutscene_id", id) as Character
+
 ## The actor `id`, entered on first use; null when the contents have none.
 func actor(id: StringName) -> StoryActor:
 	var found := find_actor(id)
@@ -40,7 +46,7 @@ func actor(id: StringName) -> StoryActor:
 		_entered.append(found)
 	return found
 
-## Where `id` stands: an entered actor's feet, an actor's rest child before it enters, a mark or a visual.
+## Where `id` stands: an entered actor's feet, an actor's rest child before it enters, a body, a mark or a visual.
 func point_of(id: StringName) -> Vector2:
 	var found := find_actor(id)
 	if found != null:
@@ -48,6 +54,9 @@ func point_of(id: StringName) -> Vector2:
 			return found.global_position
 		var rest := found.rest_child()
 		return rest.global_position if rest != null else found.global_position
+	var body := find_body(id)
+	if body != null:
+		return body.global_position
 	var mark := find_mark(id)
 	if mark != null:
 		return mark.global_position

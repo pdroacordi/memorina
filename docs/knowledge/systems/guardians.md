@@ -6,7 +6,7 @@ status: active
 tags: [guardian, boss, lucidity, recall, qte, ai]
 related: [systems/notebook, architecture/guardian-performance-and-talks, systems/dialogue, architecture/guardian-fight-phase-machine, features/lucidity-leap, features/encounter-sheet-slot, features/recall-in-more-than-one-press, architecture/the-region-owns-its-forgetting]
 created: 2026-10-02
-updated: 2026-10-30
+updated: 2026-11-01
 source_files:
   - scenes/characters/guardians/guardian.gd
   - scenes/characters/guardians/guardian_talks.gd
@@ -167,7 +167,7 @@ Plan: `architecture/grd-06-final-battle` (accepted, the user's decisions there).
 - **Two tracks**: A is `freeze.tres`, B `root.tres` ("Primavera (Recommended)"); `Player.open_call` takes the second song and `MemorinaComponent.set_dual_call` routes the answer to the judge; the call HUD draws B half a slot over in its tint; `CallB` sings it with the guardian's own call.
 - **The revelation** ("Uma vez por save (Recommended)", `PlayerData.finale_revealed`, kept through death): an unsolvable two-track window with no clock; each mixed note raises its level (or `revelation_max_seconds`), the peak is a freeze frame (`WorldFreeze.hit_stop(seconds)` through `Player.freeze_frame_requested`), then `end_lucidity_without_answer` returns the fight to pressure where the bodies stand and the spring move joins the attacks. Effects: `systems/greyhush` "Dissonance".
 - **The final call** is a placeholder (freeze, then bell jar) until the user's own song ("Uma canção que ainda irei criar, especial"): data only, `FinaleStats.final_phrases`.
-- **Not built yet**: the restoration scene (`FinaleStats.restoration_scene`) and standing the mentor away from the hatch for his talk; `guardian_talk_rooms_test` skips him until then.
+- **The restoration scene** (2026-11-01): `GuardianFinale.restored()` writes `restore_world()`, clears the dissonance and plays `FinaleStats.restoration_scene` (`resources/cutscene/story/world_restoration.tres`) through the `CutsceneDirector`, hosted by the guardian. The mentor is no `StoryActor`: his scene instance carries `cutscene_id = &"mentor"`, so a scene places, faces and frames him (`systems/cutscenes` "Bodies"); `is_teaching()` answers `GuardianFinale.is_performing()` (the director plays that scene), so he plays `perform` through it and `perform_end` after. In the dark after the bars he stands on `mentor_home` (his spawn) and Ivo on `ivo_stand` (104 px west of him, outside his talk), so his talk is never near the hatch (`guardian_talk_rooms_test` checks the mentor at his spawn and that a mark stands there). Then his winter song (`resources/story/mentor_winter.tres`, his note voices) while the frame pulls back to the whole lantern at zoom 0.5, the lamp lights (`lamp_staging` stands in `Lit`), the frame returns to the two at zoom 2; about 17 s, skippable. SCENE_SEEN `world_restoration` is the seam to STORY-07. The lamp is a FactStaging, `Lit` on that fact. A `CutsceneTrigger` in the lantern (`when` WORLD_RESTORED) plays the scene on the next entry if it was dropped or its record lost (SCENE_SEEN is live data; `world_restored` is committed at once). The interior's `Mentor` staging shows nothing once the four are restored: he has climbed to the lantern.
 
 ## Current limits (from the old "Known gaps", 2026-10-02)
 

@@ -6,9 +6,46 @@
 [ext_resource type="Resource" path="res://scenes/world/rooms/frost_edge/contents/lighthouse_top.room" id="room_map"]
 [ext_resource type="PackedScene" uid="uid://cmentorguard1" path="res://scenes/characters/guardians/mentor_guardian/mentor_guardian.tscn" id="20_guardian"]
 [ext_resource type="Script" path="res://scenes/world/rooms/arena.gd" id="30_arena"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="40_staging"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="41_stage"]
+[ext_resource type="Resource" path="res://resources/save_facts/seen_world_restoration.tres" id="42_seen"]
+[ext_resource type="Resource" path="res://resources/save_facts/world_restored.tres" id="43_restored"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/lighthouse_lamp.tscn" id="44_lamp"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_mark.gd" id="45_mark"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_trigger.gd" id="46_trigger"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="48_fact"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/frost_edge/lighthouse_lamp_chain.png" id="49_chain"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/world_restoration.tres" id="47_restoration"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_arena"]
 size = Vector2(1280, 768)
+
+[sub_resource type="Resource" id="stage_lit"]
+script = ExtResource("41_stage")
+when = Array[ExtResource("48_fact")]([ExtResource("42_seen")])
+show = &"Lit"
+fade_seconds = 0.0
+
+[sub_resource type="Resource" id="stage_dark"]
+script = ExtResource("41_stage")
+show = &"Dark"
+fade_seconds = 0.0
+
+[sub_resource type="Gradient" id="halo_gradient"]
+interpolation_mode = 1
+offsets = PackedFloat32Array(0, 0.4, 0.65, 0.9)
+colors = PackedColorArray(1, 0.86, 0.5, 0.32, 1, 0.8, 0.42, 0.18, 1, 0.74, 0.36, 0.08, 1, 0.7, 0.3, 0)
+
+[sub_resource type="GradientTexture2D" id="halo_texture"]
+gradient = SubResource("halo_gradient")
+width = 96
+height = 96
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="CanvasItemMaterial" id="halo_material"]
+blend_mode = 1
 
 [node name="Contents" type="Node2D"]
 
@@ -29,6 +66,60 @@ script = ExtResource("30_arena")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Arena"]
 shape = SubResource("RectangleShape2D_arena")
 
+[node name="LampChain" type="Sprite2D" parent="."]
+texture_repeat = 2
+position = Vector2(656, 64)
+texture = ExtResource("49_chain")
+centered = false
+offset = Vector2(-32, 0)
+region_enabled = true
+region_rect = Rect2(0, 0, 64, 50)
+
+[node name="Lamp" type="Node2D" parent="."]
+position = Vector2(656, 114)
+script = ExtResource("40_staging")
+stages = Array[ExtResource("41_stage")]([SubResource("stage_lit"), SubResource("stage_dark")])
+staging_id = &"lamp_staging"
+
+[node name="Dark" parent="Lamp" instance=ExtResource("44_lamp")]
+
+[node name="Lit" type="Node2D" parent="Lamp"]
+
+[node name="Halo" type="Sprite2D" parent="Lamp/Lit"]
+texture_filter = 1
+material = SubResource("halo_material")
+position = Vector2(0, 70)
+scale = Vector2(2, 2)
+texture = SubResource("halo_texture")
+
+[node name="Lens" parent="Lamp/Lit" instance=ExtResource("44_lamp")]
+frame = 1
+
 [node name="MentorGuardian" parent="." instance=ExtResource("20_guardian")]
 position = Vector2(880, 672)
 arena_path = NodePath("../Arena")
+cutscene_id = &"mentor"
+
+[node name="Marks" type="Node2D" parent="."]
+
+[node name="MentorHome" type="Marker2D" parent="Marks"]
+position = Vector2(880, 672)
+script = ExtResource("45_mark")
+mark_id = &"mentor_home"
+
+[node name="IvoStand" type="Marker2D" parent="Marks"]
+position = Vector2(776, 672)
+script = ExtResource("45_mark")
+mark_id = &"ivo_stand"
+
+[node name="LampLight" type="Marker2D" parent="Marks"]
+position = Vector2(656, 400)
+script = ExtResource("45_mark")
+mark_id = &"lamp"
+
+[node name="Triggers" type="Node" parent="."]
+
+[node name="WorldRestoration" type="Node" parent="Triggers"]
+script = ExtResource("46_trigger")
+cutscene = ExtResource("47_restoration")
+when = Array[ExtResource("48_fact")]([ExtResource("43_restored")])

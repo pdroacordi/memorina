@@ -1,0 +1,114 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_scene"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e_bars"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e_fade"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_place.gd" id="e_place"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e_face"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_melody.gd" id="e_melody"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_stage.gd" id="e_stage"]
+[ext_resource type="Resource" path="res://resources/story/mentor_winter.tres" id="r_melody"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_up_g4.mp3" id="a_up"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_down_c4.mp3" id="a_down"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_low_mid_d4.mp3" id="a_left"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="a_right"]
+
+[sub_resource type="Resource" id="bars_2"]
+script = ExtResource("e_bars")
+open = true
+seconds = 0.6
+
+[sub_resource type="Resource" id="fade_3"]
+script = ExtResource("e_fade")
+to_black = true
+seconds = 0.8
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bars_2"), SubResource("fade_3")])
+
+[sub_resource type="Resource" id="wait_4"]
+script = ExtResource("e_wait")
+seconds = 0.4
+
+[sub_resource type="Resource" id="place_5"]
+script = ExtResource("e_place")
+actor = &"mentor"
+mark = &"mentor_home"
+
+[sub_resource type="Resource" id="place_6"]
+script = ExtResource("e_place")
+actor = &"ivo"
+mark = &"ivo_stand"
+
+[sub_resource type="Resource" id="face_7"]
+script = ExtResource("e_face")
+actor = &"ivo"
+toward = &"mentor"
+
+[sub_resource type="Resource" id="face_8"]
+script = ExtResource("e_face")
+actor = &"mentor"
+toward = &"ivo"
+
+[sub_resource type="Resource" id="camera_9"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"mentor", &"ivo"])
+offset = Vector2(0, -56)
+zoom = 2
+seconds = 0.0
+
+[sub_resource type="Resource" id="fade_10"]
+script = ExtResource("e_fade")
+to_black = false
+seconds = 1.2
+
+[sub_resource type="Resource" id="wait_11"]
+script = ExtResource("e_wait")
+seconds = 0.6
+
+[sub_resource type="Resource" id="melody_12"]
+script = ExtResource("e_melody")
+melody = ExtResource("r_melody")
+voices = Array[AudioStream]([ExtResource("a_up"), ExtResource("a_down"), ExtResource("a_left"), ExtResource("a_right")])
+
+[sub_resource type="Resource" id="camera_13"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"lamp"])
+offset = Vector2(0, 0)
+zoom = 0.5
+seconds = 4.5
+
+[sub_resource type="Resource" id="together_14"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("melody_12"), SubResource("camera_13")])
+
+[sub_resource type="Resource" id="stage_15"]
+script = ExtResource("e_stage")
+staging = &"lamp_staging"
+child = &"Lit"
+seconds = 1.6
+
+[sub_resource type="Resource" id="wait_16"]
+script = ExtResource("e_wait")
+seconds = 2.0
+
+[sub_resource type="Resource" id="camera_17"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"mentor", &"ivo"])
+offset = Vector2(0, -56)
+zoom = 2
+seconds = 2.0
+
+[sub_resource type="Resource" id="wait_18"]
+script = ExtResource("e_wait")
+seconds = 1.0
+
+[resource]
+script = ExtResource("e_scene")
+id = &"world_restoration"
+steps = Array[ExtResource("e_step")]([SubResource("together_1"), SubResource("wait_4"), SubResource("place_5"), SubResource("place_6"), SubResource("face_7"), SubResource("face_8"), SubResource("camera_9"), SubResource("fade_10"), SubResource("wait_11"), SubResource("together_14"), SubResource("stage_15"), SubResource("wait_16"), SubResource("camera_17"), SubResource("wait_18")])

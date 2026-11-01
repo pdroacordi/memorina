@@ -6,7 +6,7 @@ status: active
 tags: [glossary, i18n, naming]
 related: []
 created: 2026-10-02
-updated: 2026-10-29
+updated: 2026-11-01
 source_files: []
 ---
 
@@ -28,6 +28,10 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | esconderijo (de sementes) | `CachePickup` in a `RewardSlot.Kind.CACHE`; `SaveFact.Kind.CACHES_TAKEN_AT_LEAST` |
 | vendedor (de maçãs) | the seller: `seller.tres`, `SeedShopBeat`, `SeedShopPanel`, `SeedStock` / `SeedOffer` |
 | mapa regional (comprado) | `SeedOffer.Kind.MAP`, `MapExtras.known_rooms`, `MapCanvas.FAINT_INK` |
+| Batalha Final, guardião-mentor | the finale: `GuardianFinale` (the mentor's `Finale` child), `FinaleFight`, `FinaleStats` (`GuardianStats.finale`) |
+| revelação (fragmento final) | the revelation: `FinaleFight.Stage.REVELATION`, `PlayerData.finale_revealed`, `HeroSilhouette`, `dissonance_revelation` |
+| dissonância, duas trilhas | dissonance, two tracks: `DualCallJudge` (`MIXED`), `Player.call_mixed` / `call_second_track`, `DissonanceFx`, `dissonance_veil` |
+| restauração do mundo | world restored: `PlayerData.world_restored`, `SaveFact.Kind.WORLD_RESTORED`, `SaveSystem.restore_world`, the `world_restoration` cutscene |
 | rumor | rumour: `SeedOffer.Kind.RUMOUR`, `Rumours`, `PlayerData.rumours` |
 | replantio (da vila) | `replant_village` (`SeedOffer.Kind.REPLANT`, `village_replanted.tres`, the `Gardens` staging) |
 | de ouvido (canção adivinhada), o nome que Ivo dá | `learn_song_by_ear`, `guessed_halves`, `Song.ear_title_key` |

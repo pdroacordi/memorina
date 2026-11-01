@@ -25,6 +25,7 @@
 [ext_resource type="Resource" path="res://resources/cutscene/story/mentor_goes_still.tres" id="cs_goes_still"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/mentor_silence.tres" id="cs_silence"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+[ext_resource type="Resource" path="res://resources/save_facts/all_guardians_restored.tres" id="st_all_restored"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/raise.png" id="st_raise"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/play.png" id="st_play"]
 [ext_resource type="Script" path="res://scenes/world/story/staged_strip.gd" id="st_strip"]
@@ -33,6 +34,11 @@
 script = ExtResource("st_fact")
 kind = 7
 id = &"mentor_gift"
+
+[sub_resource type="Resource" id="stage_gone"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([ExtResource("st_all_restored")])
+fade_seconds = 0.0
 
 [sub_resource type="Resource" id="stage_2"]
 script = ExtResource("st_stage")
@@ -147,7 +153,7 @@ z_index = -10
 [node name="Mentor" type="Node2D" parent="Props"]
 script = ExtResource("st_staging")
 staging_id = &"mentor_staging"
-stages = Array[ExtResource("st_stage")]([SubResource("stage_2"), SubResource("stage_3")])
+stages = Array[ExtResource("st_stage")]([SubResource("stage_gone"), SubResource("stage_2"), SubResource("stage_3")])
 
 [node name="Holding" type="Node2D" parent="Props/Mentor"]
 

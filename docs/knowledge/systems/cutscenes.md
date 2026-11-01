@@ -6,7 +6,7 @@ status: active
 tags: [cutscene, story, staging, save-fact, actor, camera, letterbox, dialogue, beat, skip, story-15]
 related: [architecture/cutscenes-are-data-played-between-two-rest-states, bugs/a-cutscene-trigger-in-a-first-visited-room-never-arms, playtests/2026-10-16-story15-cutscenes, systems/story, systems/dialogue, systems/animation, systems/songs-and-the-memorina, systems/guardians, systems/input, systems/life-benches-death, systems/props, systems/screens, gotchas/a-killed-tween-never-emits-finished, gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/an-explicit-process-mode-escapes-a-disabled-ancestor, gotchas/gdunit-await-millis-never-resumes-while-the-tree-is-paused, bugs/the-canvas-passes-draw-one-frame-behind-a-camera-zoom-tween]
 created: 2026-10-16
-updated: 2026-10-16
+updated: 2026-11-01
 source_files:
   - resources/cutscene/
   - resources/cutscene/story/daughter_to_bed.tres
@@ -58,6 +58,7 @@ STORY-15, built 2026-10-16 from the plan `architecture/cutscenes-are-data-played
 - **`CameraRig`**: the Node2D the camera follows during a scene; it moves on `TWEEN_PROCESS_PHYSICS`. The first camera step places it on the shown frame (`GameCamera.rig_point_for(shown_centre())`) before `follow(rig)`, so the take-over does not move the frame.
 - **`CutsceneBeat`** (`extends DialogueBeat`, hold STILL, asserted in `start()` and checked by `cutscene_rooms_test`): its `start()` asks the director to play `cutscene` and `finish()`es on `scene_ended`, so the talk resumes under the start gates. A refused play finishes at once with an error.
 - **`CutsceneTrigger`** (contents scene; `cutscene`, `when`, `unless`, `delay`, `repeat`): `Game.room_changed` → `CutsceneDirector.on_room_changed` arms the room's first trigger whose gates hold and whose scene is unseen, read from `room.contents()` and not the tree's group, because contents made on this visit are added deferred (bugs/a-cutscene-trigger-in-a-first-visited-room-never-arms). Its `delay` counts once it is inside the tree, and it plays once `Player.can_begin_scene()`. Leaving the room disarms it (`cutscene_trigger_test`). Placed: village_house's `Triggers/OpeningMorning` (`from_black`) and `Triggers/HomeReturn` (STORY-16).
+- **Bodies** (GRD-06): a `Character` that is not an actor joins `CutsceneCast.BODY_GROUP` with a `cutscene_id` (only `Guardian` has the export, set on the mentor's instance in the lantern). `CutsceneCast.find_body` / `point_of` resolve it after actors, so `CutscenePlace`, `CutsceneFace` and `CutsceneCamera` work on it; gestures, walks and emotes stay the actors'. It never enters or leaves: it is the same body before and after the scene (`cutscene_rooms_test` counts its id).
 - **`CutsceneMark`** (Marker2D), **`CutsceneVisual`** (hidden at rest; children are its picture; no `PointLight2D`), **`EmoteBubble`** (a word-less bubble drawn in the world at 2x, so it greys with the place; it follows its target on the pausable clock).
 
 ## Actors (`scenes/characters/story_actor/`)

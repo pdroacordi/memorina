@@ -171,7 +171,7 @@ func test_the_bench_is_empty_at_six_tenths() -> void:
 	var elder := _mount(ELDER)
 	assert_str(_shown(elder, "Props/Audience")).is_equal("")
 
-## The gift's beat stands the empty hand in; the talk's end turns him to stasis.
+## The gift's beat stands the empty hand in; the talk's end turns him to stasis; the four restored take him away.
 func test_the_mentor_holds_gives_and_goes_still() -> void:
 	var lighthouse := _mount(LIGHTHOUSE)
 	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("Holding")
@@ -179,7 +179,11 @@ func test_the_mentor_holds_gives_and_goes_still() -> void:
 	assert_str(String(gift.stand_ins.values()[0])).is_equal("EmptyHand")
 	SaveSystem.mark_dialogue_heard(&"mentor_gift")
 	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("Stasis")
-	assert_float((lighthouse.get_node("Props/Mentor") as FactStaging).stages[0].fade_seconds).is_equal(1.5)
+	assert_float((lighthouse.get_node("Props/Mentor") as FactStaging).stages[1].fade_seconds).is_equal(1.5)
+	# GRD-06: with the four restored he has climbed to the lantern.
+	for guardian: Enums.Guardian in Enums.Guardian.values():
+		SaveSystem.restore_guardian(guardian)
+	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("")
 
 ## STORY-11: his phrase stands in the strip that raises the flute and plays it, then gives way to the holding still.
 func test_the_mentor_raises_and_plays_the_flute_during_his_phrase() -> void:

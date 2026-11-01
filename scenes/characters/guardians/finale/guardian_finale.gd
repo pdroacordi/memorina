@@ -94,10 +94,19 @@ func mixed(player: Player) -> void:
 			_guardian.fight().set_drain(_finale.drain())
 			dissonance_changed.emit(_finale.veil(), 0.0)
 
-## The last phrase was answered: the world is restored and the save written at once ("Exceção: salva na hora").
+## The last phrase was answered: the world is restored and the save written at once ("Exceção: salva na hora"), then
+## the restoration scene plays.
 func restored() -> void:
 	SaveSystem.restore_world()
 	dissonance_changed.emit(0.0, 0.0)
+	var director := CutsceneDirector.find(get_tree())
+	if director != null and not director.play(_stats.restoration_scene, _guardian):
+		push_error("%s: the restoration scene could not start" % _guardian.name)
+
+## The restoration scene plays: the guardian performs through it.
+func is_performing() -> bool:
+	var director := CutsceneDirector.find(get_tree())
+	return director != null and _stats.restoration_scene != null and director.playing() == _stats.restoration_scene
 
 func _process(_delta: float) -> void:
 	if _finale.stage() != FinaleFight.Stage.REVELATION or _finale.is_revealed():

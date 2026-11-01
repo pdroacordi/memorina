@@ -26,7 +26,7 @@ func after_test() -> void:
 	SaveSystem.begin("", true)
 
 ## Builds the arena after the save is set, since the Finale reads the revelation from it.
-func _set_up() -> void:
+func _set_up(cutscene_id: StringName = &"") -> void:
 	var holder := auto_free(Node2D.new()) as Node2D
 	add_child(holder)
 	var floor_body := StaticBody2D.new()
@@ -40,6 +40,7 @@ func _set_up() -> void:
 	holder.add_child(floor_body)
 	_mentor = MENTOR.instantiate() as Guardian
 	_mentor.position = Vector2(300, FLOOR_Y)
+	_mentor.cutscene_id = cutscene_id
 	holder.add_child(_mentor)
 	_ivo = IVO.instantiate() as Player
 	_ivo.position = Vector2(0, FLOOR_Y - 30.0)
@@ -92,3 +93,20 @@ func test_dissonance_hurts_from_the_second_mixed_note_and_a_pure_track_starts_th
 	assert_bool(_finale.answered(ROOT, _ivo)).is_true()
 	assert_bool(_finale.answered(FREEZE, _ivo)).is_true()
 	assert_bool(_finale.answered(BELL_JAR, _ivo)).is_false()
+
+func test_a_scene_finds_the_mentor_by_his_cutscene_id_and_he_performs_only_in_his_scene() -> void:
+	_set_up(&"mentor")
+	var cast := CutsceneCast.new(_mentor.get_parent())
+	assert_object(cast.find_body(&"mentor")).is_same(_mentor)
+	assert_vector(cast.point_of(&"mentor")).is_equal(_mentor.global_position)
+	assert_bool(_mentor.is_teaching()).is_false()
+
+## The window a track was chosen in holds while the next phrase is sung, so its clock never runs out before the answer.
+func test_the_final_calls_phrase_is_sung_inside_a_held_window() -> void:
+	SaveSystem.mark_finale_revealed()
+	_set_up()
+	_past_winter()
+	_mentor.fight().open_window(0.0)
+	_mentor.fight().tick(_mentor.fight().window_left() - 0.5)
+	assert_bool(_finale.answered(FREEZE, _ivo)).is_true()
+	assert_float(_mentor.fight().window_left()).is_greater(_mentor.stats.call_lead_in + 2.0)
