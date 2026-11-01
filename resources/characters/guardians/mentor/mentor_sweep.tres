@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+
+[resource]
+script = ExtResource("1_attack")
+duration = 1.0
+telegraph = 0.55
+attack_range = 60.0
+cooldown = 1.8
+weight = 1.5
+knockback_strength = 400.0
+knockback_lift = 120.0

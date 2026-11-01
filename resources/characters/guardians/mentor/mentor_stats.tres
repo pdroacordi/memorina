@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="GuardianStats" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack_script"]
+[ext_resource type="Script" uid="uid://bidtpnbfxl8an" path="res://resources/characters/guardians/guardian_stats.gd" id="1_stats"]
+[ext_resource type="Script" path="res://resources/characters/guardians/finale_stats.gd" id="1_finale"]
+[ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1_song"]
+[ext_resource type="Resource" uid="uid://ba5q1orby23yt" path="res://resources/songs/freeze.tres" id="2_freeze"]
+[ext_resource type="Resource" path="res://resources/songs/root.tres" id="2_root"]
+[ext_resource type="Resource" path="res://resources/songs/bell_jar.tres" id="2_bell_jar"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_sweep.tres" id="3_sweep"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_slam.tres" id="4_slam"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_spring.tres" id="5_spring"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_voice.tres" id="9_voice"]
+
+[sub_resource type="Resource" id="finale"]
+script = ExtResource("1_finale")
+second_song = ExtResource("2_root")
+final_phrases = Array[ExtResource("1_song")]([ExtResource("2_freeze"), ExtResource("2_bell_jar")])
+revealed_attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_sweep"), ExtResource("4_slam"), ExtResource("5_spring")])
+
+[resource]
+script = ExtResource("1_stats")
+song = ExtResource("2_freeze")
+voice = ExtResource("9_voice")
+finale = SubResource("finale")
+attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_sweep"), ExtResource("4_slam")])
+hits_to_open = 8
+cycles_to_restore = 2
+call_lead_in = 2.2
+revealed_notes = 3
+recall_after_attacks = 0
+comfort_distance = 110.0
+give_ground_distance = 40.0
+pace_time = 1.0
+pace_speed = 0.45
+step_out_speed = 1.6

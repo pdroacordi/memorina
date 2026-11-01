@@ -1,0 +1,4 @@
+{"scene": "res://scenes/world/game.tscn", "max_duration": 200, "clock": "real", "locale": "en",
+ "player_position": [11560, -1254], "skills": [0, 1, 2], "restored_guardians": [0, 1, 2, 3],
+ "known_songs": [0, 1, 2, 3, 4, 5, 6, 7],
+ "steps": [{"t": 0.5, "log": "start"}, {"t": 199, "log": "end"}]}

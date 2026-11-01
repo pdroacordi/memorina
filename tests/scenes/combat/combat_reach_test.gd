@@ -21,6 +21,7 @@ const GUARDIAN_SCENES: Array[String] = [
 	"res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn",
 	"res://scenes/characters/guardians/frost_guardian/frost_guardian.tscn",
 	"res://scenes/characters/guardians/summer_guardian/summer_guardian.tscn",
+	"res://scenes/characters/guardians/mentor_guardian/mentor_guardian.tscn",
 ]
 ## Scan limits and step of a reach measurement, in px.
 const SCAN_FROM := -300.0

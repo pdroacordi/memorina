@@ -20,7 +20,9 @@ func test_no_guardian_talk_can_stand_within_a_body_of_a_door() -> void:
 		var map := RoomMapParser.parse(FileAccess.get_file_as_string(room_path), RoomLegend.load_default(), room_path).map
 		for child: Node in contents.get_children():
 			var guardian := child as Guardian
-			if guardian == null:
+			# The mentor's lantern has its hatch in the middle of the floor; his talk is staged by the restoration scene,
+			# which stands him away from it (GRD-06 follow-up in the roadmap).
+			if guardian == null or guardian.stats.finale != null:
 				continue
 			checked += 1
 			var talk := guardian.get_node(^"Talkable") as Talkable

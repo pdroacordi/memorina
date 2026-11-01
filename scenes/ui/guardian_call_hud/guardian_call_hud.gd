@@ -8,12 +8,17 @@ const SLIDE_TIME := 0.35
 ## Glyph sets indexed by Enums.GlyphSet.
 @export var glyph_sets: Array[NoteGlyphSet] = []
 var _slide_tween: Tween
+## The call's revealed count and glyph set, for a second track shown after it (GRD-06).
+var _revealed: int = 6
+var _glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
 ## Guardian side and height used to position the sheet.
 var _guardian_side: int = 1
 var _guardian_height: float = 0.0
 
 @onready var _frame: TextureRect = $Frame
 @onready var _sheet: NoteSheet = $Frame/NoteSheet
+## Track B of a two-track call, half a slot over on the same staff (design 02 section 5.3).
+@onready var _sheet_b: NoteSheet = $Frame/NoteSheetB
 @onready var _message: Label = $Frame/Message
 @onready var _pips: CurePips = $Frame/CurePips
 
@@ -27,6 +32,10 @@ func _ready() -> void:
 func on_call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet, cure_done: int, cure_total: int, side: int, caller_height: float) -> void:
 	_guardian_side = side
 	_guardian_height = caller_height
+	_revealed = revealed
+	_glyph_set = glyph_set
+	_sheet_b.clear()
+	_sheet_b.hide()
 	_frame.modulate = song.tint().lerp(Color.WHITE, 0.45)
 	_sheet.modulate = Color.WHITE
 	_sheet.show_notes(song.notes, glyph_sets[glyph_set], revealed)
@@ -41,9 +50,18 @@ func slot_rect() -> Rect2:
 		return Rect2()
 	return Rect2(Vector2(_sheet.encounter_x(size.x, _guardian_side, _guardian_height), _sheet.encounter_y()), _frame.size)
 
+## The call is two-track: track B in its own tint beside the first.
+func on_call_second_track(song: Song, _solvable: bool) -> void:
+	_sheet_b.modulate = song.tint()
+	_sheet_b.show_notes(song.notes, glyph_sets[_glyph_set], _revealed)
+	_sheet_b.show()
+
 func on_call_note_sounded(index: int) -> void:
 	_sheet.light(index)
 	_sheet.pop(index)
+	if _sheet_b.visible:
+		_sheet_b.light(index)
+		_sheet_b.pop(index)
 
 ## The phrase is over: the sheet goes, and Ivo's takes over.
 func on_call_window_opened() -> void:

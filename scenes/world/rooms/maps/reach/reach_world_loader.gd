@@ -83,14 +83,15 @@ static func _add_room(loaded: Loaded, room: Room, region: Region, legend: RoomLe
 	var problems := add_movers(loaded.grid, map, cell_origin, room.id(), puzzles, loaded.puzzles_met)
 	loaded.problems.append_array(problems)
 
-# Each guardian a room's contents place (an instanced scene whose `stats` is a GuardianStats), keyed by its id.
+# Each guardian a room's contents place (an instanced scene whose `stats` is a GuardianStats), keyed by its id. The
+# mentor (a `finale`) has no id of its own and leads nowhere: it is the end (GRD-06).
 static func _add_guardians(grid: ReachGrid, contents: SceneState, room: StringName) -> void:
 	for j: int in contents.get_node_count():
 		var scene := contents.get_node_instance(j)
 		if scene == null:
 			continue
 		var stats: Variant = _property(contents, j, &"stats", _property(scene.get_state(), 0, &"stats", null))
-		if stats is GuardianStats:
+		if stats is GuardianStats and (stats as GuardianStats).finale == null:
 			grid.guardians[(stats as GuardianStats).id] = room
 
 ## Adds the floors `map`'s movers sweep, its currents' boxes and downwind edges, its stairs' ends and its gates' closed

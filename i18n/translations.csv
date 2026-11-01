@@ -356,5 +356,20 @@ DLG_GUARDIAN_SUMMER_FIRST_08,Good. Let it set behind you.,Bom. Deixa ele se pôr
 DLG_GUARDIAN_SUMMER_AGAIN_01,Evening came. It was kind.,A tarde caiu. Foi gentil.
 DLG_GUARDIAN_SUMMER_AGAIN_01_V1,"Far off, someone else let go. The stone cooled.","Longe, mais alguém soltou. A pedra esfriou."
 DLG_GUARDIAN_SUMMER_AGAIN_01_V2,"At the sea, a light still will not set.","No mar, uma luz ainda não quer se pôr."
+BARK_MENTOR_LUCID_0,…Long way. You ~kept~ it.,…Caminho longo. Você ~guardou~.
+BARK_MENTOR_DUAL,Both. I wanted ~both~.,As duas. Eu quis as ~duas~.
+BARK_MENTOR_RETRY,Again. Not both.,De novo. As duas não.
+BARK_MENTOR_FINAL,Yes. Let the other go.,Isso. Solta a outra.
+DLG_MENTOR_FINAL_FIRST_01,The lamp is lit.,A lâmpada acendeu.
+DLG_MENTOR_FINAL_FIRST_02,I held the cold so the blossom would wait for someone. It waited. Everything waited.,Segurei o frio pra flor esperar alguém. Ela esperou. Tudo esperou.
+DLG_MENTOR_FINAL_FIRST_03,For who?,Por quem?
+DLG_MENTOR_FINAL_FIRST_04,…I don't have it anymore. Good.,…Não tenho mais. Que bom.
+DLG_MENTOR_FINAL_FIRST_05,Your song was never mine to give. You carried it the whole way.,Sua música nunca foi minha pra dar. Você carregou ela o caminho todo.
+DLG_MENTOR_FINAL_FIRST_06,…Go home. Someone left the window open.,…Vai pra casa. Alguém deixou a janela aberta.
+DLG_CHOICE_MENTOR_KEEP,[Keep the flute],[Ficar com a flauta]
+DLG_MENTOR_FINAL_FIRST_07,"Good. Play it at home. Badly, at first.","Bom. Toca em casa. Mal, no começo."
+DLG_CHOICE_MENTOR_GIVE,[Hold it out to him],[Estender a flauta pra ele]
+DLG_MENTOR_FINAL_FIRST_08,Not to me. I only kept it.,Pra mim não. Eu só guardei.
+DLG_MENTOR_FINAL_AGAIN_01,The sea is loud again. I listen to all of it.,O mar está alto de novo. Escuto ele inteiro.
 SKILL_WALL_CLIMB,Wall climb,Escalar paredes
 NOTEBOOK_LORE_WALL_CLIMB,"I held on to the stone with nothing but my fingers. I used to climb the orchard wall like this, to bring her the highest apples.","Me segurei na pedra só com os dedos. Eu subia assim no muro do pomar, pra trazer pra ela as maçãs mais altas."

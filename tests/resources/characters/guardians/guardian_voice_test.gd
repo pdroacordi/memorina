@@ -73,7 +73,11 @@ func test_the_first_talk_opens_on_restoration_and_the_second_after_it() -> void:
 		var data := PlayerData.new()
 		var talks := stats.voice.talks
 		assert_object(talks.current(data)).is_null()
-		data.restored_guardians[stats.id] = true
+		# The mentor's talk opens on the world restored (GRD-06), the others' on their own restoration.
+		if stats.finale != null:
+			data.world_restored = true
+		else:
+			data.restored_guardians[stats.id] = true
 		var first := talks.current(data)
 		assert_object(first).is_not_null()
 		assert_bool(first.once).is_true()
