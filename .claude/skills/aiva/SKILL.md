@@ -51,6 +51,20 @@ AIVA has no API. It is driven in the user's Chrome through the Claude in Chrome 
 
 Create Track from a style, from an influence, chord progression; editing notes or bars; the Style Designer; stems.
 
+## Voices (learned 2026-11-02, the wife's song)
+
+- An unknown track name maps to "Steinway D Piano | Sustain": `v.solo-soprano.nat.slur` is not an AIVA id. Set the voice by hand.
+- Vocals → Solo Singers: Ashley Lawless (Aeh, Ah, Hah, Huh, La, Mmh, Na, Ouh), Kiera Bickerstaff (Aeh, Hah, La, Mmh, Na, Uuh; each with mixes: Default, Stereo, Wide, Processed 1-3, Auto-tune), Masha Mnjoyan (Ah, Hmm, La, Loud Ouh, Oah, Ouh, Ya), Ethnic, Operatic. Also Choirs, Chopped Vocals, Overtone Singing. No child voice.
+- Humming: Ashley "Mmh" → Sustain; Kiera "Mmh" → Default Mix → Legato; Masha "Hmm" → Default Mix → Sustain. The tree has one more level than it looks (syllable → mix → articulation); a click on a non-leaf does nothing, so walk it column by column with screenshots.
+- Comparing patches costs one download in all: change the patch, Save, download again (a composition counts once a month).
+- The Select/Pencil button sits where Save appears (≈ 113, 25 before a change): a click there with nothing to save toggles Pencil mode. Use `find` "green Save button" instead of the coordinate.
+
+## Guitars and downloads (learned 2026-11-02)
+
+- No nylon/classical guitar: Guitars → Acoustic Guitars has Banjo, Fingerstyle Guitar (Close/Room) with Harmonics/Mute/Staccato, Rhythmic Guitar. The wife's song uses Fingerstyle Guitar (Room) | Staccato.
+- Typing in the patch search sometimes does nothing (the tree stays): walk the categories instead.
+- Three downloads in a row can stay as `<uuid>.tmp` in Downloads (Chrome never renames them). The files are complete; copy them by size/time. A quiet piece with long pauses fools the -35 dB end detector: check the per-second loudness before trimming.
+
 ## WAV
 
 The dialog's "WAV" is greyed until "Render Uncompressed WAV (16 bit, 44.1kHz)" has run (a spinner on the row, ~20 s); then "WAV" downloads `<title>.wav`. An unsaved imported piece downloads fine (MP3 rendered on demand).

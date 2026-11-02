@@ -1,4 +1,4 @@
-"""Writes the MIDI sketches AIVA takes as influence: songs, their reduced versions, the wife's song, the final song.
+"""Writes the MIDI sketches AIVA takes as influence: songs, their reduced versions, the final song.
 
 Run: python -I tools/audio/make_aiva_midis.py   (no dependencies; writes tools/audio/midi/, see its README.md)
 Notes follow Enums.Note: 0 UP G4, 1 DOWN C4, 2 LEFT D4, 3 RIGHT E4 (assets/audios/sfx/memorina/).
@@ -196,41 +196,6 @@ def chord_tracks(changes, program_chords, program_bass, style):
     return chords, bass
 
 
-# The wife's song (design 01 sections 4 and 9.1; 05_roteiro scene 5). Bars 1-3 are morning_song.tres exactly.
-WIFE_OPENING = [("E4", 1), ("G4", 1), ("E4", 1.5), ("D4", 0.5), ("C4", 1), ("D4", 1), ("E4", 1), ("C4", 2.5), (None, 2.5)]
-WIFE_ANSWER = [("E4", 1), ("G4", 1), ("A4", 1), ("G4", 1), ("E4", 1), ("D4", 1), ("C4", 1), ("D4", 1),
-               ("E4", 2), ("G4", 2), ("D4", 4)]
-WIFE_BRIDGE = [("A4", 1), ("A4", 1), ("G4", 1), ("E4", 1), ("G4", 1), ("A4", 1), ("G4", 1), ("E4", 1),
-               ("D4", 1), ("E4", 1), ("G4", 1), ("E4", 1), ("D4", 4)]
-WIFE_RETURN = [("E4", 1), ("G4", 1), ("E4", 1.5), ("D4", 0.5), ("C4", 1), ("D4", 1), ("E4", 1), ("C4", 1)]
-# The ending the guitar never reaches: D E D C, then C held.
-WIFE_ENDING = [("D4", 1), ("E4", 1), ("D4", 1), ("C4", 1), ("C4", 4)]
-WIFE_OPENING_CHORDS = [("C", 4), ("Am", 2), ("G", 2), ("C", 4)]
-WIFE_ANSWER_CHORDS = [("Am", 4), ("C", 2), ("G", 2), ("C", 4), ("G", 4)]
-WIFE_BRIDGE_CHORDS = [("Am", 4), ("C", 4), ("G", 2), ("Em", 2), ("G", 4)]
-WIFE_RETURN_CHORDS = [("C", 4), ("Am", 2), ("G", 2)]
-WIFE_ENDING_CHORDS = [("G", 2), ("G", 1), ("C", 1), ("C", 4)]
-
-
-def wife_song():
-    made = []
-    full = WIFE_OPENING + WIFE_ANSWER + WIFE_BRIDGE + WIFE_RETURN + WIFE_ENDING
-    changes = WIFE_OPENING_CHORDS + WIFE_ANSWER_CHORDS + WIFE_BRIDGE_CHORDS + WIFE_RETURN_CHORDS + WIFE_ENDING_CHORDS
-    voice, _ = melody_track("Voz (a esposa)", VOICE, 0, full, 90)
-    guitar, bass = chord_tracks(changes, NYLON, CELLO, "arpeggio")
-    made.append(save("cancao_da_esposa_completa", 76, [voice, guitar, bass]))
-    # Short: the opening, then straight to the return and its ending.
-    short = WIFE_OPENING[:-1] + [(None, 0.5)] + WIFE_RETURN + WIFE_ENDING
-    short_changes = WIFE_OPENING_CHORDS + WIFE_RETURN_CHORDS + WIFE_ENDING_CHORDS
-    voice, _ = melody_track("Voz (a esposa)", VOICE, 0, short, 90)
-    guitar, bass = chord_tracks(short_changes, NYLON, CELLO, "arpeggio")
-    made.append(save("cancao_da_esposa_curta", 76, [voice, guitar, bass]))
-    # Hummed, voice alone, stopping where the daughter stops (05_roteiro scene 5: the first four notes).
-    voice, _ = melody_track("Voz cantarolada", VOICE, 0, WIFE_OPENING[:4] + [(None, 2)], 70)
-    made.append(save("cancao_da_esposa_cantarolada", 76, [voice]))
-    return made
-
-
 def final_song():
     made = []
     a = [("G4", 1), ("E4", 1), ("D4", 1), ("C4", 1), ("D4", 1), ("E4", 2), (None, 1)]
@@ -265,7 +230,7 @@ def main():
             lone.note(NOTE[n], i, 1, 90)
         made.append(save("motivo_" + name, 100, [lone]))
         # Reduced versions are miniatures: make_miniature_midis.py.
-    made += wife_song()
+    # The wife's song: make_wife_song_midis.py.
     made += final_song()
     print("\n".join(sorted(made)))
 

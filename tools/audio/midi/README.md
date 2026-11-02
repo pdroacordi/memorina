@@ -41,21 +41,14 @@ Para combinar com a versão completa que você já tem: se ainda tiver o projeto
 
 ## A canção da esposa
 
-A canção que ela cantava, que Ivo esqueceu e o violão não termina (design 01, seções 4 e 9.1; roteiro, cena 5). 76 BPM.
+Proposta de 2026-11-02, aguardando aprovação; gerada por `tools/audio/make_wife_song_midis.py` (veja `docs/knowledge/music/wifes-song.md`). Semínima = 0,42 s (`morning_song.tres`), 4/4, Dó maior. Importar no editor (as notas precisam ficar exatas); os nomes das faixas de voz e violão não são ids verificados do AIVA: escolher o patch pela busca.
 
-| Arquivo | Uso | Duração | Modo |
+| Arquivo | Uso | Duração | Faixas |
 |---|---|---|---|
-| `cancao_da_esposa_completa.mid` | a canção inteira: memória, flashback, epílogo | ~47 s | Importar no editor; voz + violão + violoncelo |
-| `cancao_da_esposa_curta.mid` | o caderno, um momento curto | ~22 s | Importar no editor |
-| `cancao_da_esposa_cantarolada.mid` | a filha cantarolando as quatro primeiras notas e parando | ~3 s | Importar no editor; só voz |
-
-Forma (A A' B A + final):
-- **A**: Mi Sol Mi. Ré | Dó Ré Mi Dó. É exatamente a canção da manhã do jogo (`morning_song.tres`), a parte que o violão alcança.
-- **A'**: a resposta, que sobe ao Lá e para em Ré, pedindo continuação.
-- **B**: a ponte, Lá Lá Sol Mi.
-- **A** de novo e **o final perdido: Ré Mi Ré Dó**, Dó longo. É o que Ivo esqueceu. O violão nunca chega lá. Na batalha final, a frase dele (Mi Sol Mi Ré Ré Dó) termina em Dó por outro caminho: ele não recupera o final dela, faz o dele.
-
-No AIVA, a faixa "Voz" usa "Voice Oohs". Se o AIVA tiver voz feminina ("Female Choir" / "Solo Soprano"), use-a; uma flauta macia também serve. O violão deve soar simples, um pouco torto (velocidades irregulares ajudam).
+| `esposa_inteira.mid` | flashback 1, Estabelecimento (STORY-05) | ~27 s | voz + violão de Ivo |
+| `esposa_ninar.mid` | flashback 5, a canção de ninar (STORY-05) | ~50 s | só voz, metade do andamento |
+| `esposa_sopro.mid` | o lampejo do mentor (`wife_hum_opening.wav`) | ~2 s | só voz, quatro notas |
+| `esposa_epilogo.mid` | epílogo (STORY-07) | ~15 s | flauta (Memorina) + voz + viola + baixo |
 
 ## A canção final
 

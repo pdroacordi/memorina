@@ -33,6 +33,10 @@ What the pieces share: flute lead (`w.flute2`), a solo viola or violas for harmo
 
 Sombra's old track (`chant_of_the_noon_sun.mp3`, AIVA "Chant of the Waking Sun") played the retired Sol Concentrado's notes (C D E E G A); it was replaced on 2026-11-02 by "Meio-dia sobre Sol" (`docs/knowledge/music/sombra-remake.md`): the flute's motif with a solo cello mirroring it below, one beat late (the shadow), ending suspended on G. 
 
+## The wife's song
+
+`assets/audios/soundtrack/wife_song_{full,lullaby,epilogue}.ogg` (2026-11-02), Ashley Lawless "Ouh" with vibrato, the morning song's first eight notes exactly (`resources/story/morning_song.tres`, 143 BPM), the lost ending rising to A (a note the Memorina lacks). Not wired yet: they wait for the flashbacks (STORY-05) and the epilogue (STORY-07). Sketches `tools/audio/make_wife_song_midis.py`; decisions `docs/knowledge/music/wifes-song.md`.
+
 ## Tools
 
 - `tools/audio/make_aiva_midis.py` writes the MIDI sketches (`tools/audio/midi/`, its README says how each is used in AIVA).
