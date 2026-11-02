@@ -1,6 +1,6 @@
 # Música no AIVA (rascunho, 2026-11-02)
 
-A canção final foi aprovada ("Aprovar a sequência", usuário, 2026-11-02) e está no jogo (`resources/songs/final_phrase_a.tres`, `final_phrase_b.tres`). O resto é guia. Os MIDIs dos motivos estão em `tools/audio/midi/`: flauta, uma nota por vez, já no andamento indicado.
+A canção final foi aprovada ("Aprovar a sequência", usuário, 2026-11-02) e está no jogo (`resources/songs/final_phrase_a.tres`, `final_phrase_b.tres`). O resto é guia. Os MIDIs e o passo a passo arquivo por arquivo estão em `tools/audio/midi/README.md`.
 
 ## A regra que liga tudo
 
@@ -19,7 +19,7 @@ O sentido: ele não recupera o final perdido, mas aceita terminar a música do j
 
 - Nenhuma das duas frases coincide com uma das 8 canções, então não disparam um poder por engano.
 - Andamento: 72 BPM. A frase B tem o ritmo da canção da manhã (Mi Sol Mi. Ré) e termina num Dó longo de 3 tempos.
-- MIDIs: `cancao_final_frase_a.mid`, `cancao_final_frase_b.mid` e `cancao_final_12.mid` (as duas frases juntas).
+- MIDIs: `cancao_final_12.mid`, `batalha_final_esboco.mid`, `restauracao.mid`.
 
 ### A música da batalha final no AIVA
 
@@ -59,7 +59,7 @@ Timbre por estação:
 
 Do roteiro e dos sistemas já construídos (hoje só existem as 4 notas e sons provisórios):
 
-1. **Canção da manhã** (`cancao_da_manha.mid`): a voz da mãe. Duas versões: a cantarolada (só voz, ou flauta macia) e a do violão torto, que **para na lacuna**. O violão é o que o jogador toca; a música de fundo só acompanha e corta.
+1. **Canção da manhã** (`cancao_da_esposa_*.mid`): a voz da mãe. Duas versões: a cantarolada (só voz, ou flauta macia) e a do violão torto, que **para na lacuna**. O violão é o que o jogador toca; a música de fundo só acompanha e corta.
 2. **Abertura** (20 a 40 s): a manhã na casa, piano leve, cita a canção da manhã sem terminá-la.
 3. **Tema da vila** e **tema do mentor** (o motivo de Congelar, solene).
 4. **Regiões**: uma por região, da sua estação (veja a tabela acima), em versão "cor" e versão "cinza". A versão cinza é a mesma peça, só o drone e poucas notas, para os lugares parados no tempo.
