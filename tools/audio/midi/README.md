@@ -13,16 +13,15 @@ O AIVA aceita MIDI de dois jeitos. Use o que o arquivo pede na tabela:
 
 Depois de importar: troque os instrumentos por timbres melhores do AIVA (mantendo a família), ajuste o volume das faixas e exporte em **WAV** (e em **stems**, onde a tabela pede).
 
-**Regra das notas:** nas reduzidas, nas respostas e nas canções do jogo, a melodia precisa tocar exatamente as notas do MIDI, nos mesmos tempos. O jogo acende cada glifo da partitura no momento em que a nota soa (`note_cues`). Pode mudar os timbres, nunca as notas da faixa "Melodia".
+**Regra das notas:** nas reduzidas e nas canções do jogo, a melodia precisa tocar exatamente as notas do MIDI, nos mesmos tempos. O jogo acende cada glifo da partitura no momento em que a nota soa (`note_cues`). Pode mudar os timbres, nunca as notas da faixa "Melodia".
 
-## As 8 canções: versão reduzida e resposta
+## As 8 canções: versão reduzida
 
-As versões completas já existem em `assets/audios/soundtrack/`. Faltam as duas menores de cada canção.
+As versões completas já existem em `assets/audios/soundtrack/`. Falta a reduzida de cada canção. A Sombra já está feita (`sombra_*.mid`, de `tools/audio/make_sombra_midis.py`); ignore `reduzida_sombra.mid`.
 
 | Arquivo | Uso no jogo | Duração | Modo no AIVA |
 |---|---|---|---|
 | `reduzida_<canção>.mid` | o `excerpt`: toca toda vez que o jogador completa a canção no mundo | ~6,6 s | Importar no editor |
-| `resposta_<canção>.mid` | o jingle de aprender a metade, a nota do caderno, o aviso | ~2,5 s | Importar no editor |
 | `motivo_<canção>.mid` | só a melodia, se quiser compor algo novo com a canção (tema de região, luta) | 3,6 s | Influência |
 
 Nas reduzidas, as 6 notas soam em **0,0 / 0,6 / 1,2 / 1,8 / 2,4 / 3,0 s** (100 BPM), e o acorde final segura até ~6,6 s. Não ponha introdução: a primeira nota precisa soar no instante 0.

@@ -266,12 +266,11 @@ def main():
         made.append(save("motivo_" + name, 100, [lone]))
         # Reduced (the excerpt, about 7 s at 100 BPM): the motif, then its closing chord held.
         made.append(motif_piece("reduzida_" + name, notes, season, [1, 1, 1, 1, 1, 2], 4, 100))
-        # Answer (the stinger, about 2.5 s at 120 BPM): the motif in quavers, then the chord.
-        made.append(motif_piece("resposta_" + name, notes, season, [0.5] * 5 + [1.5], 1, 120, False))
     made += wife_song()
     made += final_song()
     print("\n".join(sorted(made)))
     print("cues (s) of a reduced version:", cues([1, 1, 1, 1, 1, 2], 100))
 
 
-main()
+if __name__ == "__main__":
+    main()

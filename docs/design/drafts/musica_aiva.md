@@ -1,6 +1,7 @@
 # Música no AIVA (rascunho, 2026-11-02)
 
 A canção final foi aprovada ("Aprovar a sequência", usuário, 2026-11-02) e está no jogo (`resources/songs/final_phrase_a.tres`, `final_phrase_b.tres`). O resto é guia. Os MIDIs e o passo a passo arquivo por arquivo estão em `tools/audio/midi/README.md`.
+n> Atualizado em 2026-11-02: a versão "resposta" foi descartada ("Descartar (Recommended)"); cada canção tem só a completa e a reduzida. As regras valem em `docs/knowledge/systems/music.md`.
 
 ## A regra que liga tudo
 
@@ -36,15 +37,14 @@ Cada canção precisa de três tamanhos. Gere a peça longa uma vez e corte as o
 
 | Versão | Duração | Uso | Como fazer |
 |---|---|---|---|
-| **Resposta** (stinger) | 1,5 a 3 s | quando a canção é completada (o pulso abre) | Só as 6 notas do motivo, no timbre da estação, com um acorde final. Sem introdução. |
 | **Curta** | 8 a 15 s | lição do guardião, o livro de canções achado, a nota do caderno | O motivo duas vezes: a primeira simples, a segunda harmonizada, cadência em Dó (ou Lá menor). |
 | **Completa** | 1,5 a 3 min, em loop | tema da região ou da luta do guardião daquela estação | "From influence" com o `motivo_<canção>.mid`. Peça loop no fim. |
 
 Dicas:
-- Gere **primeiro a completa**. A curta e a resposta saem dela, então as três ficam com o mesmo timbre e o mesmo acorde.
+- Gere **primeiro a completa**. A reduzida sai dela, então as duas ficam com o mesmo timbre e o mesmo acorde.
 - No AIVA, ponha o motivo no compasso 1 (piano roll) e trave-o. Ao cortar, guarde os compassos 1 e 2 para a curta e só o compasso 1 para a resposta.
 - Exporte em **WAV** e converta para OGG para o Godot (loop: marque "Loop" na importação).
-- As notas soltas da Memorina (`assets/audios/sfx/memorina/`) continuam sendo as que o jogador toca. A resposta entra **depois** da última nota, nunca por cima.
+- As notas soltas da Memorina (`assets/audios/sfx/memorina/`) continuam sendo as que o jogador toca.
 
 Timbre por estação:
 
@@ -68,4 +68,4 @@ Do roteiro e dos sistemas já construídos (hoje só existem as 4 notas e sons p
 7. **Jingles curtos** (1 a 3 s): banco ou salvar, morte, item novo (aviso), título da região, metade de canção aprendida, canção completa aprendida, loja da vendedora.
 8. **Menu / título** e **epílogo** (STORY-07): o epílogo cita a frase B.
 
-Ordem sugerida: a canção final e a restauração primeiro (destravam a GRD-06), depois as 8 respostas, depois os temas longos.
+Ordem sugerida: a canção final e a restauração primeiro (destravam a GRD-06), depois as reduzidas, depois os temas longos.

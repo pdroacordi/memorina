@@ -21,7 +21,7 @@ The feature-loop for music. The orchestrator (you) keeps a RUN-PLAN, hands compo
 | 4 | **Generate.** In AIVA (`aiva` skill): the approved recipe, 2-4 variants. Say the downloads it costs before starting. | aiva | **user approves the spend** |
 | 5 | **Choose.** Download the variants' MP3 (scratchpad) and send them to the user. | you | **user picks one or asks another round** |
 | 6 | **Check.** Download the chosen piece's MIDI; verify against `systems/music`: the motif's six notes in order at beat 0, white keys, length; for an excerpt, the same start as its track. A failure goes back to step 4. | you | |
-| 7 | **Into the game.** WAV → OGG under `assets/audios/soundtrack/`; wire it (`Song.track`, `excerpt`, the cutscene's sound); measure and set `note_cues` from the MIDI's motif onsets; `CREDITS.md`; import; the `verify-gates` skill; a playtest when it plays in a scene the player sees. | you | |
+| 7 | **Into the game.** WAV → OGG under `assets/audios/soundtrack/`; wire it (`Song.track`, `excerpt`, the cutscene's sound); measure and set `note_cues` from the onsets measured in the rendered WAV (AIVA adds a lead-in); trim the excerpt to `excerpt_duration`; no `CREDITS.md` line (full authorship); import; the `verify-gates` skill; a playtest when it plays in a scene the player sees. | you | |
 | 8 | **Record.** `systems/music` (the table, the decision in the user's words with the date), `docs/knowledge/music/` (what was learned), the roadmap row. | you | |
 | 9 | **Commit.** Show the file list and message. | you | **user approves** |
 

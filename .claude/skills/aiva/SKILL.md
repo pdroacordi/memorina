@@ -24,12 +24,33 @@ AIVA has no API. It is driven in the user's Chrome through the Claude in Chrome 
 - Batch clicks with `browser_batch`; a `wait` of 2 s after opening a dialog and 3-6 s after a download is enough.
 - AIVA track names in its MIDI: `w.flute2.nat.slur` (woodwind, articulation), `s.solo-viola.nat.slur` (strings), `k.pop-piano.nat.stac` (keys), `p.taikos.nat.stac` (percussion); the General MIDI program is not reliable (percussion reads as piano).
 
+## Import MIDI (learned 2026-11-02, Sombra)
+
+1. Navigate to `https://creators.aiva.ai/create/Import%20MIDI` (or Create Track → Import MIDI).
+2. `find` "file input for MIDI upload" and `file_upload` the `.mid` to that ref. Never click the drop zone (it opens the native picker).
+3. AIVA reports "There is no first section: A section will be added in the beginning". Harmless: the notes keep their timing. `find` "Confirm button" and click it. Leave "Collapse layers" on.
+4. The piece lands in Compositions as `<file>.mid`, source "Imported", with the tempo but no key. Its length is rounded up to whole sections (a 7 s sketch showed 0:14); the tail is silence, trimmed later.
+5. Instruments are mapped from the General MIDI program: flute 73 → "Flute 1 | Legato", viola 41 → "Violas | Legato (Auto-Staccato)" (an ensemble, not a solo), harp 46 → "Harp 1 | Pizzicato", contrabass 43 → "Basses | Legato (Auto-Staccato)". Check each and fix what is wrong.
+
+## The editor
+
+- Open a piece: row "..." menu (x ≈ 1495, the row's y) → `find` "Open in Editor menu item". The URL is `/editor/<id>/composition`; keep the id in the RUN-PLAN to come back directly.
+- Click a track's lane (x ≈ 1100, y 179/212/245/277 for tracks 1-4) to select it; its instrument shows bottom left. The gear beside a track name is only Rename/Duplicate/Color/Delete; the "Mixing" button at the top shows a tooltip, not a panel.
+- Change an instrument: `find` the bottom-left label (e.g. "Violas Legato") and click it; `find` "patch search textbox", type the patch ("Solo Cello Legato"), click the first result (x ≈ 327, y ≈ 214); close the picker with × (≈ 1314, 174). Clicking the label by coordinate often only shows a tooltip; use the ref.
+- **An edit is not kept until Save.** Save (green, top left, ≈ 113, 25) appears after a change; it asks "Mixing options": choose "Mix & Normalise (recommended)" (`find` the radio and "Save changes"). Leaving the editor without Save loses the change silently (it happened to the first Sombra edit).
+- Solo cello reaches A2; the AIVA "Violas" do not go below C3. Check a line's range against its instrument.
+
+## Downloads
+
+- One download per composition per month, whatever the formats ("Downloading the same composition multiple times will only count as one download"). So take the MP3 to judge, and the WAV/MIDI of the chosen one later at no cost.
+- The file is named `<title>.mp3`, so an imported piece downloads as `sombra_reduzida.mid.mp3`.
+
 ## Not yet learned
 
-Create Track (from a style, from an influence, chord progression), MIDI import into the editor, editing bars, the Style Designer. Record each here the first time it works, with the exact path of clicks and what went wrong.
+Create Track from a style, from an influence, chord progression; editing notes or bars; the Style Designer; rendering WAV and stems. Record each here the first time it works.
 
 ## After a download
 
 1. Move the file; give it the game's snake_case name.
 2. Read the MIDI and check it against the contract in `docs/knowledge/systems/music.md`: the motif's six notes in order at beat 0, white keys, tempo, length.
-3. Audio for the game: WAV from AIVA, converted to OGG (`ffmpeg -i in.wav -c:a libvorbis -q:a 6 out.ogg`), into `assets/audios/soundtrack/`, credited in `CREDITS.md` (AIVA, the plan's licence: "Full Copyright").
+3. Audio for the game: WAV from AIVA, converted to OGG (`ffmpeg -i in.wav -c:a libvorbis -q:a 6 out.ogg`), into `assets/audios/soundtrack/`. No credit: the plan gives the project full authorship ("Eu assinei a versão que nos dá autoria total. Não precisamos dar créditos ao AIVA", user, 2026-11-02).
