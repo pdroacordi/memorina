@@ -264,12 +264,10 @@ def main():
         for i, n in enumerate(notes):
             lone.note(NOTE[n], i, 1, 90)
         made.append(save("motivo_" + name, 100, [lone]))
-        # Reduced (the excerpt, about 7 s at 100 BPM): the motif, then its closing chord held.
-        made.append(motif_piece("reduzida_" + name, notes, season, [1, 1, 1, 1, 1, 2], 4, 100))
+        # Reduced versions are miniatures: make_miniature_midis.py.
     made += wife_song()
     made += final_song()
     print("\n".join(sorted(made)))
-    print("cues (s) of a reduced version:", cues([1, 1, 1, 1, 1, 2], 100))
 
 
 if __name__ == "__main__":

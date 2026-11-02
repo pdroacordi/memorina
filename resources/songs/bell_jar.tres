@@ -5,6 +5,7 @@
 [ext_resource type="Resource" path="res://resources/memory/bell_jar_pulse_stats.tres" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/song_effects/shell/frost_shell.tscn" id="9_effect"]
 [ext_resource type="AudioStream" uid="uid://rolceu7k1oou" path="res://assets/audios/soundtrack/lullaby_under_glass.mp3" id="4"]
+[ext_resource type="AudioStream" uid="uid://2v2y1soii8o8" path="res://assets/audios/soundtrack/lullaby_under_glass_excerpt.ogg" id="6_excerpt"]
 
 [resource]
 script = ExtResource("1")
@@ -17,4 +18,8 @@ name_key = "SONG_BELL_JAR"
 title_key = "SONG_TITLE_BELL_JAR"
 pulse_stats = ExtResource("3")
 track = ExtResource("4")
+excerpt = ExtResource("6_excerpt")
+excerpt_duration = 0.0
+excerpt_fade = 0.0
+note_cues = PackedFloat32Array(0.66, 0.93, 1.2, 1.48, 1.75, 2.02)
 pulse_effect = ExtResource("9_effect")

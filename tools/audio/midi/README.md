@@ -17,14 +17,14 @@ Depois de importar: troque os instrumentos por timbres melhores do AIVA (mantend
 
 ## As 8 canções: versão reduzida
 
-As versões completas já existem em `assets/audios/soundtrack/`. Falta a reduzida de cada canção. A Sombra já está feita (`sombra_*.mid`, de `tools/audio/make_sombra_midis.py`); ignore `reduzida_sombra.mid`.
+As versões completas já existem em `assets/audios/soundtrack/`. Falta a reduzida de cada canção. A Sombra já está feita (`sombra_*.mid`, de `tools/audio/make_sombra_midis.py`); as outras sete são miniaturas (`miniatura_<canção>.mid`).
 
 | Arquivo | Uso no jogo | Duração | Modo no AIVA |
 |---|---|---|---|
-| `reduzida_<canção>.mid` | o `excerpt`: toca toda vez que o jogador completa a canção no mundo | ~6,6 s | Importar no editor |
+| `miniatura_<canção>.mid` | o `excerpt`: toca toda vez que o jogador completa a canção no mundo, com o mundo parado | notas até 7,9-10,9 s; 11-14 s com a cauda de reverb do AIVA | Importar no editor |
 | `motivo_<canção>.mid` | só a melodia, se quiser compor algo novo com a canção (tema de região, luta) | 3,6 s | Influência |
 
-Nas reduzidas, as 6 notas soam em **0,0 / 0,6 / 1,2 / 1,8 / 2,4 / 3,0 s** (100 BPM), e o acorde final segura até ~6,6 s. Não ponha introdução: a primeira nota precisa soar no instante 0.
+As miniaturas vêm de `tools/audio/make_miniature_midis.py`: o motivo com o ritmo e o andamento exatos da abertura da peça completa (os mesmos `note_cues`), uma frase de resposta, uma cadência de verdade no modo da peça com ritardando, e o gesto da estação no acorde final (inverno gelo: notas agudas soltas; outono folhas: um arpejo caindo; primavera gotas: harpa aguda irregular; verão calor: a quarta aumentada tremendo nas violas). As faixas usam os nomes de patch do AIVA da peça completa. Não ponha introdução: a primeira nota precisa soar no instante 0. O total audível (entrada de ~0,57 s do AIVA + notas + cauda de ~2,6 s) fica entre 11 e 14 s.
 
 | Canção | Notas | Estação | Melodia | Acompanhamento |
 |---|---|---|---|---|

@@ -5,6 +5,7 @@
 [ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
 [ext_resource type="AudioStream" uid="uid://dt06jkk12aqwb" path="res://assets/audios/soundtrack/song_of_the_restless_wind.mp3" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/song_effects/gale/gale_field.tscn" id="5_effect"]
+[ext_resource type="AudioStream" uid="uid://cypevgufeyp23" path="res://assets/audios/soundtrack/song_of_the_restless_wind_excerpt.ogg" id="6_excerpt"]
 
 [resource]
 script = ExtResource("1")
@@ -18,6 +19,7 @@ title_key = "SONG_TITLE_GALE"
 pulse_stats = ExtResource("3")
 pulse_effect = ExtResource("5_effect")
 track = ExtResource("4")
-excerpt_duration = 7.0
-excerpt_fade = 0.5
-note_cues = PackedFloat32Array(0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
+excerpt = ExtResource("6_excerpt")
+excerpt_duration = 0.0
+excerpt_fade = 0.0
+note_cues = PackedFloat32Array(0.58, 1.42, 2.25, 3.08, 3.92, 4.75)

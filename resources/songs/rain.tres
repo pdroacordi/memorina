@@ -5,6 +5,7 @@
 [ext_resource type="Resource" uid="uid://toejcuitgqkx" path="res://resources/memory/default_pulse_stats.tres" id="3"]
 [ext_resource type="AudioStream" uid="uid://bj5ni8cktgyhf" path="res://assets/audios/soundtrack/song_of_the_first_rain.mp3" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/song_effects/rain/rain_fall.tscn" id="5_effect"]
+[ext_resource type="AudioStream" uid="uid://c4rmwdcpdljhg" path="res://assets/audios/soundtrack/song_of_the_first_rain_excerpt.ogg" id="6_excerpt"]
 
 [resource]
 script = ExtResource("1")
@@ -17,4 +18,8 @@ name_key = "SONG_RAIN"
 title_key = "SONG_TITLE_RAIN"
 pulse_stats = ExtResource("3")
 track = ExtResource("4")
+excerpt = ExtResource("6_excerpt")
+excerpt_duration = 0.0
+excerpt_fade = 0.0
+note_cues = PackedFloat32Array(0.65, 1.25, 1.85, 3.05, 3.65, 4.25)
 pulse_effect = ExtResource("5_effect")

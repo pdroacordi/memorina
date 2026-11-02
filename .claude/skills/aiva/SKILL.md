@@ -20,6 +20,7 @@ AIVA has no API. It is driven in the user's Chrome through the Claude in Chrome 
 - "Styles" holds the custom style folder "Memorina". "Influences" lists uploaded MIDI influences.
 - **Do not double-click a row**: on a folder it opened a Rename dialog. Single-click opens.
 - Download: each row has a green download icon right of the heart, at x ≈ 1462 in the 1568-wide frame; rows start at y ≈ 125 and step ≈ 36.7. It opens "Download Composition": MP3, Orchestrated MIDI, Reduced MIDI, WAV, Stems, Chords; "Download zip (MP3 + MIDI)", "Render Uncompressed WAV (16 bit, 44.1kHz)", "Render Stems (16 bit WAV)".
+- Imports in a row: after each Confirm, navigate to the Import MIDI URL again, wait ~8 s, `find` the file input (its ref changes: ref_27 or ref_39) and upload; a batch cannot reuse a ref across navigations.
 - Find dialog buttons with `find` ("Orchestrated MIDI button in download dialog") and click the returned ref; the refs change every time the dialog opens.
 - Batch clicks with `browser_batch`; a `wait` of 2 s after opening a dialog and 3-6 s after a download is enough.
 - AIVA track names in its MIDI: `w.flute2.nat.slur` (woodwind, articulation), `s.solo-viola.nat.slur` (strings), `k.pop-piano.nat.stac` (keys), `p.taikos.nat.stac` (percussion); the General MIDI program is not reliable (percussion reads as piano).
@@ -30,7 +31,8 @@ AIVA has no API. It is driven in the user's Chrome through the Claude in Chrome 
 2. `find` "file input for MIDI upload" and `file_upload` the `.mid` to that ref. Never click the drop zone (it opens the native picker).
 3. AIVA reports "There is no first section: A section will be added in the beginning". Harmless: the notes keep their timing. `find` "Confirm button" and click it. Leave "Collapse layers" on.
 4. The piece lands in Compositions as `<file>.mid`, source "Imported", with the tempo but no key. Its length is rounded up to whole sections (a 7 s sketch showed 0:14); the tail is silence, trimmed later.
-5. Instruments are mapped from the General MIDI program: flute 73 → "Flute 1 | Legato", viola 41 → "Violas | Legato (Auto-Staccato)" (an ensemble, not a solo), harp 46 → "Harp 1 | Pizzicato", contrabass 43 → "Basses | Legato (Auto-Staccato)". Check each and fix what is wrong.
+5. A track named with an AIVA patch id (`w.flute2.nat.slur`, `s.solo-viola.nat.slur`, `k.pop-piano.nat.stac`, `s.basses.vib.slur`) is mapped to that patch (Flute 2 Legato, Solo Viola Legato, Pop Piano Sustain, ...): name sketch tracks that way to get a piece's own instruments. Percussion is not: `p.taikos` and `p.orchestral-kit` arrive as "Rock Drumkit 1"; set the kit by patch search ("Epic Taikos Kit", "Orchestral Kit") and check each drum channel's sound (combobox under the kit; "Unassigned" is silent). The September pieces layer an Orchestral Kit whose channel is Unassigned with an Epic Taikos Kit on "Floor Tom 2".
+6. Otherwise instruments are mapped from the General MIDI program: flute 73 → "Flute 1 | Legato", viola 41 → "Violas | Legato (Auto-Staccato)" (an ensemble, not a solo), harp 46 → "Harp 1 | Pizzicato", contrabass 43 → "Basses | Legato (Auto-Staccato)". Check each and fix what is wrong.
 
 ## The editor
 
@@ -47,7 +49,15 @@ AIVA has no API. It is driven in the user's Chrome through the Claude in Chrome 
 
 ## Not yet learned
 
-Create Track from a style, from an influence, chord progression; editing notes or bars; the Style Designer; rendering WAV and stems. Record each here the first time it works.
+Create Track from a style, from an influence, chord progression; editing notes or bars; the Style Designer; stems.
+
+## WAV
+
+The dialog's "WAV" is greyed until "Render Uncompressed WAV (16 bit, 44.1kHz)" has run (a spinner on the row, ~20 s); then "WAV" downloads `<title>.wav`. An unsaved imported piece downloads fine (MP3 rendered on demand).
+
+## The September pieces in the editor
+
+They open with sections (A, A1, Bridge, B) and chord labels, tracks Melody/Chords/Bass/Percussion. Reading one is safe; do not Save. Record each here the first time it works.
 
 ## After a download
 

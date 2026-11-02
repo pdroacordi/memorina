@@ -5,6 +5,7 @@
 [ext_resource type="Resource" path="res://resources/memory/root_pulse_stats.tres" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/world/memory/song_effects/roots/root_grower.tscn" id="9_effect"]
 [ext_resource type="AudioStream" uid="uid://bn033mkk2647j" path="res://assets/audios/soundtrack/song_of_the_green_reaching.mp3" id="4"]
+[ext_resource type="AudioStream" uid="uid://cgennpd8ycqfx" path="res://assets/audios/soundtrack/song_of_the_green_reaching_excerpt.ogg" id="6_excerpt"]
 
 [resource]
 script = ExtResource("1")
@@ -15,7 +16,8 @@ name_key = "SONG_ROOT"
 title_key = "SONG_TITLE_ROOT"
 pulse_stats = ExtResource("3")
 track = ExtResource("4")
-excerpt_duration = 7.0
-excerpt_fade = 0.5
-note_cues = PackedFloat32Array(0.5, 1.5, 2.5, 3.5, 4.5, 5.5)
+excerpt = ExtResource("6_excerpt")
+excerpt_duration = 0.0
+excerpt_fade = 0.0
+note_cues = PackedFloat32Array(0.64, 1.04, 1.43, 1.83, 2.22, 2.61)
 pulse_effect = ExtResource("9_effect")
