@@ -22,7 +22,7 @@ extends Resource
 @export var mixed_drain: float = 0.6
 ## Veil added per mixed input past the window's first, 0..1.
 @export var veil_per_mixed: float = 0.35
-## The final call, phrase by phrase, after a track is chosen; a placeholder until the user's song (GRD-06, Q2).
+## The final call, phrase by phrase, after a track is chosen (design drafts/musica_aiva.md).
 @export var final_phrases: Array[Song] = []
 ## The moves from the revelation on: the winter moves and the second season's.
 @export var revealed_attacks: Array[GuardianAttack] = []

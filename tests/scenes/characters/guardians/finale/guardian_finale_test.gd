@@ -9,6 +9,8 @@ const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const ROOT := preload("res://resources/songs/root.tres")
 const FREEZE := preload("res://resources/songs/freeze.tres")
 const BELL_JAR := preload("res://resources/songs/bell_jar.tres")
+const FINAL_A := preload("res://resources/songs/final_phrase_a.tres")
+const FINAL_B := preload("res://resources/songs/final_phrase_b.tres")
 
 ## Top of the test floor.
 const FLOOR_Y := 30.0
@@ -92,7 +94,9 @@ func test_dissonance_hurts_from_the_second_mixed_note_and_a_pure_track_starts_th
 	assert_int(health.current_hp).is_equal(before - 1)
 	assert_bool(_finale.answered(ROOT, _ivo)).is_true()
 	assert_bool(_finale.answered(FREEZE, _ivo)).is_true()
-	assert_bool(_finale.answered(BELL_JAR, _ivo)).is_false()
+	assert_bool(_finale.answered(BELL_JAR, _ivo)).is_true()
+	assert_bool(_finale.answered(FINAL_A, _ivo)).is_true()
+	assert_bool(_finale.answered(FINAL_B, _ivo)).is_false()
 
 func test_a_scene_finds_the_mentor_by_his_cutscene_id_and_he_performs_only_in_his_scene() -> void:
 	_set_up(&"mentor")

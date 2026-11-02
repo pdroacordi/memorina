@@ -5,8 +5,9 @@
 [ext_resource type="Script" path="res://resources/characters/guardians/finale_stats.gd" id="1_finale"]
 [ext_resource type="Script" uid="uid://dr6wqtsiicev7" path="res://resources/songs/song.gd" id="1_song"]
 [ext_resource type="Resource" uid="uid://ba5q1orby23yt" path="res://resources/songs/freeze.tres" id="2_freeze"]
+[ext_resource type="Resource" path="res://resources/songs/final_phrase_a.tres" id="2_final_a"]
 [ext_resource type="Resource" path="res://resources/songs/root.tres" id="2_root"]
-[ext_resource type="Resource" path="res://resources/songs/bell_jar.tres" id="2_bell_jar"]
+[ext_resource type="Resource" path="res://resources/songs/final_phrase_b.tres" id="2_final_b"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_sweep.tres" id="3_sweep"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_slam.tres" id="4_slam"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_spring.tres" id="5_spring"]
@@ -16,7 +17,7 @@
 [sub_resource type="Resource" id="finale"]
 script = ExtResource("1_finale")
 second_song = ExtResource("2_root")
-final_phrases = Array[ExtResource("1_song")]([ExtResource("2_freeze"), ExtResource("2_bell_jar")])
+final_phrases = Array[ExtResource("1_song")]([ExtResource("2_final_a"), ExtResource("2_final_b")])
 revealed_attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_sweep"), ExtResource("4_slam"), ExtResource("5_spring")])
 restoration_scene = ExtResource("10_restoration")
 
