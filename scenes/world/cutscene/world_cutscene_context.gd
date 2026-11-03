@@ -8,12 +8,16 @@ const ACTOR_BUBBLE_HEIGHT := 50.0
 const IVO_BUBBLE_HEIGHT := 66.0
 ## Scaled seconds the frame takes back to Ivo at the scene's end.
 const RETURN_SECONDS := 0.8
+## Real seconds the scene's music fades over when the scene is skipped.
+const SKIP_MUSIC_FADE := 0.8
 
 var cast: CutsceneCast
 var _director: CutsceneDirector
 var _rig: CameraRig
 var _ivo_controller: ScriptedController
 var _voices: Array[AudioStreamPlayer] = []
+## The scene's music request; restore releases it.
+var _music: MusicRequest
 var _melodies: Array[MelodyPlayer] = []
 var _bubbles: Array[EmoteBubble] = []
 var _visuals: Array[CutsceneVisual] = []
@@ -123,6 +127,7 @@ func talk(set: DialogueSet, at: Vector2) -> CutsceneTask:
 func sound(stream: AudioStream) -> CutsceneTask:
 	var voice := AudioStreamPlayer.new()
 	voice.stream = stream
+	voice.bus = AudioBuses.SFX
 	_director.add_child(voice)
 	voice.play()
 	_voices.append(voice)
@@ -135,6 +140,13 @@ func melody(played: Melody, count: int, voices: Array[AudioStream]) -> CutsceneT
 	player.play(played, count)
 	_melodies.append(player)
 	return CutsceneUntilTask.new(func() -> bool: return not is_instance_valid(player) or not player.is_playing())
+
+func music(cue: MusicCue, fade: float) -> void:
+	if _music != null:
+		Music.release(_music, fade)
+		_music = null
+	if cue != null:
+		_music = Music.request(cue, MusicRequest.Layer.SCENE, _director)
 
 func silence() -> void:
 	for voice: AudioStreamPlayer in _voices:
@@ -180,6 +192,8 @@ func restore(clear_fade: bool, cut: bool = false) -> void:
 			visual.reset()
 	_visuals.clear()
 	silence()
+	# A skip fades the scene's music out; a scene that ended lets a one-shot cue play to its end.
+	music(null, SKIP_MUSIC_FADE if cut else -1.0)
 	for bubble: EmoteBubble in _bubbles:
 		if is_instance_valid(bubble):
 			bubble.queue_free()

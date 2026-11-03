@@ -1272,6 +1272,7 @@ note_streams = Array[AudioStream]([ExtResource("15_note_up"), ExtResource("16_no
 mistake_stream = ExtResource("19_mistake")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Call/Voice" unique_id=1062463141]
+bus = &"Notes"
 pitch_scale = 0.5
 
 [node name="PulseEmitter" type="Node" parent="." unique_id=2060683163]

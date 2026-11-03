@@ -53,5 +53,6 @@ func is_playing() -> bool:
 func _make_player() -> AudioStreamPlayer:
 	var made := AudioStreamPlayer.new()
 	made.max_polyphony = 4
+	made.bus = AudioBuses.NOTES
 	add_child(made)
 	return made

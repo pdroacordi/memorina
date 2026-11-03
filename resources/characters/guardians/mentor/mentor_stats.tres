@@ -13,9 +13,12 @@
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_spring.tres" id="5_spring"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_voice.tres" id="9_voice"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/world_restoration.tres" id="10_restoration"]
+[ext_resource type="Resource" path="res://resources/music/finale_fight.tres" id="11_fight_music"]
+[ext_resource type="Resource" path="res://resources/music/finale_call.tres" id="12_call_music"]
 
 [sub_resource type="Resource" id="finale"]
 script = ExtResource("1_finale")
+call_music = ExtResource("12_call_music")
 second_song = ExtResource("2_root")
 final_phrases = Array[ExtResource("1_song")]([ExtResource("2_final_a"), ExtResource("2_final_b")])
 revealed_attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_sweep"), ExtResource("4_slam"), ExtResource("5_spring")])
@@ -26,6 +29,7 @@ script = ExtResource("1_stats")
 song = ExtResource("2_freeze")
 voice = ExtResource("9_voice")
 finale = SubResource("finale")
+music = ExtResource("11_fight_music")
 attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_sweep"), ExtResource("4_slam")])
 hits_to_open = 8
 cycles_to_restore = 2

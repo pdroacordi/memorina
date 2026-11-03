@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 SaveSystem="*uid://dw2f70jvygvh0"
 InputDevice="*res://globals/input_device.gd"
+Music="*res://globals/music/music.gd"
 
 [display]
 

@@ -79,5 +79,6 @@ func _sound(stream: AudioStream) -> void:
 func _make_voice() -> AudioStreamPlayer:
 	var made := AudioStreamPlayer.new()
 	made.max_polyphony = 4
+	made.bus = AudioBuses.NOTES
 	add_child(made)
 	return made

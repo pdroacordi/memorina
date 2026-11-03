@@ -8,6 +8,12 @@ class_name GuardianFinale extends Node
 signal dissonance_changed(veil: float, revelation: float)
 ## The revelation shattered; every window after it is two-track.
 signal revealed
+## The revelation's call opened: both tracks sound.
+signal revelation_opened
+## A track was chosen; the final call begins.
+signal track_chosen
+## The shatter's freeze frame began; it lasts `seconds` real seconds.
+signal freeze_frame_began(seconds: float)
 
 ## The grey veil's share at the revelation's peak; the rest of it is the glitch and the silhouette.
 const REVELATION_VEIL := 0.6
@@ -50,6 +56,7 @@ func open_call(player: Player) -> void:
 			player.open_call(_guardian.stats.song, 0, fight.cycles(), total, _stats.second_song, false)
 			set_process(true)
 			_sound_track_b()
+			revelation_opened.emit()
 		FinaleFight.Stage.DUAL:
 			player.open_call(_guardian.stats.song, _stats.dual_revealed, fight.cycles(), total, _stats.second_song)
 			_sound_track_b()
@@ -68,6 +75,7 @@ func answered(song: Song, player: Player) -> bool:
 			if song != _guardian.stats.song and song != _stats.second_song:
 				return true
 			_finale.choose()
+			track_chosen.emit()
 			dissonance_changed.emit(0.0, 0.0)
 			_bark(&"BARK_MENTOR_FINAL")
 			_call_phrase(player)
@@ -128,6 +136,7 @@ func _shatter(player: Player) -> void:
 	set_process(false)
 	_finale.reveal()
 	SaveSystem.mark_finale_revealed()
+	freeze_frame_began.emit(_stats.freeze_frame_seconds)
 	_guardian.freeze_frame(_stats.freeze_frame_seconds)
 	_guardian.end_lucidity_without_answer()
 	if not _stats.revealed_attacks.is_empty():

@@ -26,6 +26,10 @@ func before_test() -> void:
 
 func after_test() -> void:
 	SaveSystem.begin("", true)
+	var left := Music.playing()
+	while left != null:
+		Music.release(left, 0.0)
+		left = Music.playing()
 
 ## Builds the arena after the save is set, since the Finale reads the revelation from it.
 func _set_up(cutscene_id: StringName = &"") -> void:
@@ -114,3 +118,30 @@ func test_the_final_calls_phrase_is_sung_inside_a_held_window() -> void:
 	_mentor.fight().tick(_mentor.fight().window_left() - 0.5)
 	assert_bool(_finale.answered(FREEZE, _ivo)).is_true()
 	assert_float(_mentor.fight().window_left()).is_greater(_mentor.stats.call_lead_in + 2.0)
+
+## The fight asks for its music when Ivo enters the arena and lets it go with the guardian (architecture/music-system).
+func test_the_fight_music_starts_with_the_fight_and_drops_with_the_mentor() -> void:
+	_set_up()
+	assert_object(Music.playing()).is_not_null()
+	assert_object(Music.playing().cue).is_same(_mentor.stats.music)
+	assert_float(Music.playing().levels.get(&"spring", 0.0)).is_equal(0.0)
+	_mentor.queue_free()
+	await get_tree().process_frame
+	await get_tree().process_frame
+	assert_object(Music.playing()).is_null()
+
+func test_a_revealed_save_starts_the_fight_two_track() -> void:
+	SaveSystem.mark_finale_revealed()
+	_set_up()
+	_lucid()
+	assert_float(Music.playing().levels.get(&"spring", 0.0)).is_equal(1.0)
+
+func test_choosing_a_track_fades_the_spring_and_crosses_to_the_call_music() -> void:
+	SaveSystem.mark_finale_revealed()
+	_set_up()
+	_past_winter()
+	var fight := Music.playing()
+	_finale.answered(ROOT, _ivo)
+	assert_float(fight.levels.get(&"spring", 1.0)).is_equal(0.0)
+	await await_millis(3200)
+	assert_object(Music.playing().cue).is_same(_mentor.stats.finale.call_music)

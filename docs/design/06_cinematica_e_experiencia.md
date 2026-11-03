@@ -48,7 +48,7 @@ O "mostre, não conte" (`05`, regras 1 a 6) continua valendo, mas mostrar não �
 - Acelerar: "Não, só pular (Recommended)": sem acelerar; o `WorldFreeze` continua o único escritor da escala de tempo.
 - Arte da cena de demonstração: "Desenhar agora (Recommended)": os clipes da filha (andar, baixar os olhos, sentar, deitar virada para a parede) feitos já, com PixelLab.
 - Atores no cinza: "Sim, se movem na cena (Recommended)": durante a cena o personagem anda e gesticula no relógio normal, mesmo onde o lugar está cinza; ao terminar volta a ser cenário e congela como antes.
-- Padrões adotados (recomendados, não perguntados): os balões de emote ficam cinzas com o lugar; um barramento de música e o abafar ficam para quando houver música.
+- Padrões adotados (recomendados, não perguntados): os balões de emote ficam cinzas com o lugar; um barramento de música e o abafar ficam para quando houver música (feitos em 2026-11-02: `systems/music`, "Runtime"; o passo de cena `CutsceneMusic`).
 
 ## 5. Pilar 2: a experiência do jogador
 

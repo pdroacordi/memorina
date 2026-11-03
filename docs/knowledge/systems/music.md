@@ -33,6 +33,16 @@ What the pieces share: flute lead (`w.flute2`), a solo viola or violas for harmo
 
 Sombra's old track (`chant_of_the_noon_sun.mp3`, AIVA "Chant of the Waking Sun") played the retired Sol Concentrado's notes (C D E E G A); it was replaced on 2026-11-02 by "Meio-dia sobre Sol" (`docs/knowledge/music/sombra-remake.md`): the flute's motif with a solo cello mirroring it below, one beat late (the shadow), ending suspended on G. 
 
+## Runtime (SONG-15, 2026-11-02)
+
+- **Buses** (`default_bus_layout.tres`, names in `AudioBuses`): `Music`, `Notes` (every played or sung note: Memorina, performances, calls, teachers, melodies, the guitar), `Sfx` (story sounds). Every scene `AudioStreamPlayer` names one (`audio_buses_test`); a player made in code sets `bus` from `AudioBuses`.
+- **`Music`** (autoload, ALWAYS, `globals/music/music.gd`) plays the top `MusicRequest` (layers REGION < FIGHT < SCENE < MENU, newest wins a tie) on two crossfading decks. A request lives while its owner is in the tree; the same cue on top keeps playing (no restart). It knows no game rules, writes no `WorldFreeze`, reads no input. Paused while `WorldFreeze.is_held()` ("Para junto", user) and while hushed; fades and ducks step on real time.
+- **`MusicCue`** (`resources/music/*.tres`): an `AudioStreamSynchronized` of stems (or one stream), stem names, starting levels, bpm, loop, fades. Stem volumes are set on a per-play copy. A looping cue's stems are OGGs with loop on, one length, a whole number of bars (`music_cue_test`); `tools/audio/build_stems.py` cuts them from an AIVA stems zip (lead-in cut, tail folded onto the start).
+- **Ducks** are named and only touch Music; the deepest wins (`MusicMix`). The call duck is -6 dB; the final call's underscore is never ducked.
+- **Fights:** `GuardianStats.music` and a `GuardianMusic` child: the cue starts when the fight leaves DORMANT, the `lead` stem leaves and the bus ducks while a call is open; on the mentor the `spring` stem rises at the revelation, the freeze frame hushes, a chosen track fades spring and crosses to `FinaleStats.call_music` on the next bar. A death frees the request: the cue fades over its `fade_out` (1 s).
+- **Cutscenes:** `CutsceneMusic` (non-blocking) asks at SCENE layer; the scene's end lets a one-shot ring out, a skip fades over 0.8 s. `world_restoration` plays `finale_restoration` beside the mentor's melody.
+- Not yet: region themes, menu, the other guardians' fight music (next in this run).
+
 ## The wife's song
 
 `assets/audios/soundtrack/wife_song_{full,lullaby,epilogue}.ogg` (2026-11-02), Ashley Lawless "Ouh" with vibrato, the morning song's first eight notes exactly (`resources/story/morning_song.tres`, 143 BPM), the lost ending rising to A (a note the Memorina lacks). Not wired yet: they wait for the flashbacks (STORY-05) and the epilogue (STORY-07). Sketches `tools/audio/make_wife_song_midis.py`; decisions `docs/knowledge/music/wifes-song.md`.
@@ -54,3 +64,4 @@ Sombra's old track (`chant_of_the_noon_sun.mp3`, AIVA "Chant of the Waking Sun")
 - The reduced versions: the first cut-and-fade versions were refused ("Elas estão apenas iguais as versões normais, porém cortadas e com um fade", user, 2026-11-02); the miniature form was approved ("Sim, faça as 7"), "10 a 14 s", "Um por estação"; the ending silence must go ("todas tem um tempo longo de silêncio ao final... devemos cortar para não afetar a gameplay"); Vendaval rewritten ("Vendaval ainda tem o fade final") and approved ("Aprovar e pôr no jogo"), all 2026-11-02.
 - `note_cues` of the 7 songs are measured: the AIVA MIDI's flute onsets through its tempo map, offset by the track's measured first onset (closes SONG-10 for them).
 - The final song: G E D C D E, then E G E D D C ("Aprovar a sequência", user, 2026-11-02; `systems/guardians`).
+- All the game's music next, in this session (user, 2026-11-02): "Façamos todas as músicas do jogo: Menu, Regiões, Bosses". Regions with the most care: "O cinza é vazio. Precisamos ter muito cuidado para não acabar com a sensação de vazio. A música tem que ser suave e, quanto mais cinza, mais vazio deve ser. Não podemos tirar esse clima mais introspectivo e reflexivo do jogo." Bosses: "acho que deve ser mais agitada, concorda?"

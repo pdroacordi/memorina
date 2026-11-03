@@ -27,5 +27,7 @@ extends Resource
 ## The moves from the revelation on: the winter moves and the second season's.
 @export var revealed_attacks: Array[GuardianAttack] = []
 @export var dissonance_color: Color = Color(0.62, 0.46, 0.78)
+## The music under the final call, after a track is chosen; it plays at its written level, never ducked.
+@export var call_music: MusicCue
 ## Played when the last phrase is answered; its SCENE_SEEN is the seam to the epilogue (STORY-07).
 @export var restoration_scene: Cutscene

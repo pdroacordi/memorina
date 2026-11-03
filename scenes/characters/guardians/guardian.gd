@@ -11,6 +11,8 @@ signal lucid_landed(cycle: int, after_failure: bool)
 signal call_note_sung(index: int)
 ## The call closed: answered, failed, abandoned or restored.
 signal call_ended
+## The fight's phase moved; re-emitted from GuardianFight for listeners outside the guardian (GuardianMusic).
+signal phase_changed(from: GuardianFight.Phase, to: GuardianFight.Phase)
 
 ## Guardians group used for encounter queries.
 const GROUP := &"guardians"
@@ -572,6 +574,7 @@ func _abandon_call() -> void:
 ## The fight's own transitions, as opposed to the ones this node drives: the
 ## relapse begins at an answer and ends on its own clock.
 func _on_phase_changed(from: GuardianFight.Phase, to: GuardianFight.Phase) -> void:
+	phase_changed.emit(from, to)
 	match to:
 		GuardianFight.Phase.RELAPSE:
 			_begin_relapse()

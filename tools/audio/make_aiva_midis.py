@@ -205,18 +205,7 @@ def final_song():
     flute, _ = melody_track("Flauta (frase A, o mentor; frase B, Ivo)", FLUTE, 0, a + b, 92)
     strings, bass = chord_tracks(a_chords + b_chords, STRINGS, CONTRABASS, "hold")
     made.append(save("cancao_final_12", 72, [flute, strings, bass]))
-    # The battle sketch: winter (Freeze) twice, the two tracks at once, then the final call.
-    winter = [("G4", 1), ("E4", 1), ("D4", 1), ("C4", 1), ("C4", 1), ("C4", 3)]
-    spring = [("C5", 1), ("D5", 1), ("C5", 1), ("E5", 1), ("C5", 1), ("G5", 3)]  # Enraizar an octave up
-    lead, _ = melody_track("Flauta (inverno, depois o chamado final)", FLUTE, 0, winter * 3 + a + b, 92)
-    second, _ = melody_track("Harpa (primavera, só na revelação)", HARP, 1, [(None, 16)] + spring, 70)
-    changes = [("C", 2), ("G", 2), ("C", 4)] * 3 + a_chords + b_chords
-    strings, bass = chord_tracks(changes, STRINGS, CONTRABASS, "hold")
-    made.append(save("batalha_final_esboco", 72, [lead, second, strings, bass]))
-    # The restoration (the lamp scene, about 14 s): phrase B slowly over piano, opening on C.
-    piano, _ = melody_track("Piano (frase B)", PIANO, 0, [(None, 2)] + b + [(None, 2)], 80)
-    strings, bass = chord_tracks([("Am", 2)] + b_chords + [("C", 2)], SLOW_STRINGS, CELLO, "hold")
-    made.append(save("restauracao", 60, [piano, strings, bass]))
+    # The battle and the restoration: make_finale_midis.py.
     return made
 
 

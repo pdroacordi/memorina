@@ -203,6 +203,7 @@ note_streams = Array[AudioStream]([ExtResource("8_note_up"), ExtResource("9_note
 mistake_stream = ExtResource("12_mistake")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Call/Voice"]
+bus = &"Notes"
 pitch_scale = 2.0
 
 [node name="Duet" type="Node" parent="."]
@@ -214,3 +215,4 @@ note_streams = Array[AudioStream]([ExtResource("8_note_up"), ExtResource("9_note
 mistake_stream = ExtResource("12_mistake")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Duet/Voice"]
+bus = &"Notes"

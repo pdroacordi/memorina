@@ -44,6 +44,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/talkable/talkable.tscn" id="93_talkable"]
 [ext_resource type="Script" path="res://scenes/characters/guardians/guardian_talks.gd" id="94_talks"]
 [ext_resource type="Script" path="res://scenes/characters/guardians/finale/guardian_finale.gd" id="95_finale"]
+[ext_resource type="Script" path="res://scenes/characters/guardians/guardian_music.gd" id="96_music"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 18.0
@@ -1161,6 +1162,7 @@ states/perform/position = Vector2(520, 380)
 states/perform_end/node = SubResource("AnimationNodeAnimation_perform_end")
 states/perform_end/position = Vector2(660, 380)
 
+
 [node name="MentorGuardian" type="CharacterBody2D"]
 collision_layer = 65536
 script = ExtResource("1_guardian")
@@ -1273,6 +1275,7 @@ note_streams = Array[AudioStream]([ExtResource("15_note_up"), ExtResource("16_no
 mistake_stream = ExtResource("19_mistake")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Call/Voice"]
+bus = &"Notes"
 pitch_scale = 0.5
 
 [node name="CallB" type="Node" parent="."]
@@ -1284,6 +1287,7 @@ note_streams = Array[AudioStream]([ExtResource("15_note_up"), ExtResource("16_no
 mistake_stream = ExtResource("19_mistake")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="CallB/Voice"]
+bus = &"Notes"
 pitch_scale = 0.75
 
 [node name="PulseEmitter" type="Node" parent="."]
@@ -1317,6 +1321,9 @@ script = ExtResource("94_talks")
 
 [node name="Finale" type="Node" parent="."]
 script = ExtResource("95_finale")
+
+[node name="GuardianMusic" type="Node" parent="."]
+script = ExtResource("96_music")
 
 [connection signal="facing_changed" from="." to="Hitbox" method="_on_character_facing_changed"]
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]

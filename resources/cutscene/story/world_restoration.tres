@@ -16,6 +16,8 @@
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_down_c4.mp3" id="a_down"]
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_low_mid_d4.mp3" id="a_left"]
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="a_right"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_music.gd" id="e_music"]
+[ext_resource type="Resource" path="res://resources/music/finale_restoration.tres" id="m_restoration"]
 
 [sub_resource type="Resource" id="bars_2"]
 script = ExtResource("e_bars")
@@ -83,9 +85,13 @@ offset = Vector2(0, 0)
 zoom = 0.5
 seconds = 4.5
 
+[sub_resource type="Resource" id="music_19"]
+script = ExtResource("e_music")
+cue = ExtResource("m_restoration")
+
 [sub_resource type="Resource" id="together_14"]
 script = ExtResource("e_together")
-steps = Array[ExtResource("e_step")]([SubResource("melody_12"), SubResource("camera_13")])
+steps = Array[ExtResource("e_step")]([SubResource("melody_12"), SubResource("camera_13"), SubResource("music_19")])
 
 [sub_resource type="Resource" id="stage_15"]
 script = ExtResource("e_stage")

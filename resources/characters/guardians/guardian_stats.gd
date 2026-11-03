@@ -8,6 +8,8 @@ extends Resource
 @export var attacks: Array[GuardianAttack] = []
 ## Its words: barks in the fight, talks after restoration (guardian_voice_test).
 @export var voice: GuardianVoice
+## The fight's music; stems `bed` and `lead` (and `spring` on the mentor), see architecture/music-system.
+@export var music: MusicCue
 ## The final battle's tuning; set only on the mentor, whose scene then has a Finale child (GRD-06).
 @export var finale: FinaleStats
 

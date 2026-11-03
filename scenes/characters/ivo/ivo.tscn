@@ -2539,12 +2539,14 @@ note_streams = Array[AudioStream]([ExtResource("43_note_up"), ExtResource("44_no
 mistake_stream = ExtResource("47_mistake")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="MemorinaVoice"]
+bus = &"Notes"
 
 [node name="SongPerformance" type="Node" parent="."]
 process_mode = 3
 script = ExtResource("48_perf")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="SongPerformance"]
+bus = &"Notes"
 
 [node name="PulseEmitter" type="Node" parent="." unique_id=1260112730]
 script = ExtResource("39_pulsem")

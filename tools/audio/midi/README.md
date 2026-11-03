@@ -55,10 +55,11 @@ Proposta de 2026-11-02, aguardando aprovação; gerada por `tools/audio/make_wif
 | Arquivo | Uso | Duração | Modo |
 |---|---|---|---|
 | `cancao_final_12.mid` | as 12 notas harmonizadas (frase A e frase B) | ~13 s | Influência para a batalha; importar no editor para ouvir |
-| `batalha_final_esboco.mid` | esboço da luta: o inverno três vezes, a harpa da primavera entrando por cima (a revelação), depois o chamado final | ~33 s | Influência; peça 3 a 4 min e **stems** |
-| `restauracao.mid` | a cena da lâmpada: a frase B ao piano, cordas lentas, terminando em Dó | ~12 s | Importar no editor |
+| `finale_luta.mid` | a luta (GRD-06), loop de 16 compassos: inverno (flauta, viola, baixos, piano, taiko) + camada de primavera (harpa, clarinete) | 48 s | Importar no editor; exportar **stems** (`make_finale_midis.py`) |
+| `finale_chamado.mid` | fundo do chamado final, loop de 4 compassos, nada entre C4 e G4 | 16 s | Importar no editor |
+| `finale_restauracao.mid` | a cena da lâmpada: pedal em Dó sob a voz do mentor, depois a frase B na flauta | ~11.4 s | Importar no editor |
 
-Na batalha, peça **stems** separados: a harpa da primavera precisa ser uma faixa própria, porque o jogo a cala quando o jogador escolhe uma trilha.
+Na batalha, peça **stems**: cada faixa marcada `(primavera)` precisa sair separada, porque o jogo a cala quando o jogador escolhe uma trilha.
 
 ## Quando os WAVs estiverem prontos
 

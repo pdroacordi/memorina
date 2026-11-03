@@ -71,6 +71,7 @@ func _pulse_point() -> Vector2:
 
 func _make_voice() -> AudioStreamPlayer:
 	var made := AudioStreamPlayer.new()
+	made.bus = AudioBuses.SFX
 	add_child(made)
 	return made
 

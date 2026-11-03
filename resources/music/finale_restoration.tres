@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MusicCue" format=3]
+
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="1_cue"]
+[ext_resource type="AudioStream" uid="uid://dlvw7xesyefmw" path="res://assets/audios/music/finale_restoration.ogg" id="2_cue"]
+
+[resource]
+script = ExtResource("1_cue")
+id = &"finale_restoration"
+stream = ExtResource("2_cue")
+stems = Array[StringName]([&"all"])
+bpm = 100.0
+beats_per_bar = 4
+loops = false
+fade_in = 0.0
+fade_out = 0.8

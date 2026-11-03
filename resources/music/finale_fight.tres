@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="MusicCue" format=3]
+
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="1_cue"]
+[ext_resource type="AudioStream" uid="uid://ca36s1r85vflr" path="res://assets/audios/music/finale_fight_bed.ogg" id="2_bed"]
+[ext_resource type="AudioStream" uid="uid://cp08ex82aq5vm" path="res://assets/audios/music/finale_fight_lead.ogg" id="3_lead"]
+[ext_resource type="AudioStream" uid="uid://clfuhaeokhrud" path="res://assets/audios/music/finale_fight_spring.ogg" id="4_spring"]
+
+[sub_resource type="AudioStreamSynchronized" id="stems"]
+stream_count = 3
+stream_0/stream = ExtResource("2_bed")
+stream_0/volume = 0.0
+stream_1/stream = ExtResource("3_lead")
+stream_1/volume = 0.0
+stream_2/stream = ExtResource("4_spring")
+stream_2/volume = 0.0
+
+[resource]
+script = ExtResource("1_cue")
+id = &"finale_fight"
+stream = SubResource("stems")
+stems = Array[StringName]([&"bed", &"lead", &"spring"])
+levels = Dictionary[StringName, float]({
+&"spring": 0.0
+})
+bpm = 80.0
+beats_per_bar = 4
+loops = true
+fade_in = 1.0
+fade_out = 1.0

@@ -53,6 +53,10 @@ func melody(_melody: Melody, _count: int, _voices: Array[AudioStream]) -> Cutsce
 func silence() -> void:
 	pass
 
+## Background music for the rest of the scene; a null `cue` releases it over `fade` real seconds.
+func music(_cue: MusicCue, _fade: float) -> void:
+	pass
+
 func fade(_to_black: bool, _seconds: float) -> void:
 	pass
 
