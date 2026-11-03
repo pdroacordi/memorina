@@ -18,8 +18,8 @@
 [ext_resource type="Resource" path="res://resources/music/region_frozen_lake.tres" id="99_music"]
 
 [node name="FrozenLake" type="Node2D"]
-music = ExtResource("99_music")
 script = ExtResource("1_region")
+music = ExtResource("99_music")
 name_key = "REGION_FROZEN_LAKE"
 epithet_key = "REGION_FROZEN_LAKE_EPITHET"
 season = 0

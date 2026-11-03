@@ -19,8 +19,8 @@
 [ext_resource type="Resource" path="res://resources/music/region_home_village.tres" id="99_music"]
 
 [node name="HomeVillage" type="Node2D"]
-music = ExtResource("99_music")
 script = ExtResource("1_region")
+music = ExtResource("99_music")
 name_key = "REGION_HOME_VILLAGE"
 epithet_key = "REGION_HOME_VILLAGE_EPITHET"
 shows_title = false

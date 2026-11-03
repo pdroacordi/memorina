@@ -86,3 +86,42 @@ func test_a_stem_level_reaches_the_playing_copy_not_the_cue() -> void:
 	await get_tree().process_frame
 	assert_float(copy.get_sync_stream_volume(1)).is_equal_approx(0.0, 0.01)
 	assert_float((cue.stream as AudioStreamSynchronized).get_sync_stream_volume(1)).is_equal(-30.0)
+
+func _playing_lengths() -> Array[float]:
+	var lengths: Array[float] = []
+	for player: Node in Music.get_children():
+		var deck := player as AudioStreamPlayer
+		if deck.playing:
+			lengths.append(deck.stream.get_length())
+	return lengths
+
+func test_a_displaced_request_still_fades_over_the_release_it_was_given() -> void:
+	var fight := _cue(&"fight")
+	fight.fade_out = 1.0
+	var first := Music.request(fight, MusicRequest.Layer.FIGHT, _holder())
+	await get_tree().process_frame
+	Music.request(_cue(&"call"), MusicRequest.Layer.FIGHT, _holder())
+	Music.release(first, 3.0)
+	await get_tree().create_timer(1.5, true, false, true).timeout
+	# The cue's own 1 s fade would have stopped it; the 3 s release keeps it sounding.
+	assert_int(_playing_lengths().size()).is_equal(2)
+
+func test_a_ringing_one_shot_survives_two_cue_changes() -> void:
+	# The previous test's decks stop on the next processed frame.
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var shot := MusicCue.new()
+	shot.id = &"restoration"
+	shot.stream = _tone(3.0)
+	shot.stems = [&"all"]
+	shot.loops = false
+	shot.fade_in = 0.0
+	var ring := Music.request(shot, MusicRequest.Layer.SCENE, _holder())
+	await get_tree().process_frame
+	Music.release(ring)
+	assert_array(_playing_lengths()).contains([3.0])
+	Music.request(_cue(&"region_a"), MusicRequest.Layer.REGION, _holder())
+	await get_tree().process_frame
+	Music.request(_cue(&"region_b"), MusicRequest.Layer.REGION, _holder())
+	await get_tree().process_frame
+	assert_array(_playing_lengths()).contains([3.0])

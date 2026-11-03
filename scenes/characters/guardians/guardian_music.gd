@@ -70,7 +70,8 @@ func _on_track_chosen() -> void:
 		return
 	var cue := _guardian.stats.music
 	await get_tree().create_timer(BarClock.next_bar(Music.position(), cue.bpm, cue.beats_per_bar), true, false, true).timeout
-	if not is_inside_tree():
+	# Restored during the wait: the fight is over and nothing follows it.
+	if not is_inside_tree() or _fight_request == null:
 		return
 	_call_request = Music.request(call_music, MusicRequest.Layer.FIGHT, self)
 	Music.release(_fight_request, BarClock.bar_seconds(cue.bpm, cue.beats_per_bar))

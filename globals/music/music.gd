@@ -3,6 +3,8 @@ extends Node
 
 ## A deck at or below this gain is stopped, linear.
 const SILENT_GAIN := 0.001
+## The live deck, one fading out and one released one-shot ringing to its end.
+const DECKS := 3
 
 var _requests := MusicRequests.new()
 var _mix := MusicMix.new()
@@ -15,7 +17,7 @@ var _last_usec: int = 0
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
-	for i: int in 2:
+	for i: int in DECKS:
 		var deck := Deck.new()
 		deck.player = AudioStreamPlayer.new()
 		deck.player.bus = AudioBuses.MUSIC
@@ -38,6 +40,11 @@ func release(request: MusicRequest, fade: float = -1.0) -> void:
 	if _live != null and _live.request == request:
 		_retire(_live, fade)
 		_live = null
+	else:
+		# Already displaced by a newer request: the fade asked here still applies.
+		for deck: Deck in _decks:
+			if deck != _live and deck.request == request:
+				_retire(deck, fade)
 	_refresh()
 
 ## Moves a stem of `request` to `level` (0..1) over `seconds` real seconds.
@@ -132,11 +139,12 @@ func _free_deck() -> Deck:
 	for deck: Deck in _decks:
 		if deck != _live and not deck.player.playing:
 			return deck
-	# Both busy: cut the one fading out.
-	for deck: Deck in _decks:
-		if deck != _live:
-			deck.player.stop()
-			return deck
+	# All busy: cut a fading deck before a ringing one-shot.
+	for ringing_too: bool in [false, true]:
+		for deck: Deck in _decks:
+			if deck != _live and deck.ringing == ringing_too:
+				deck.player.stop()
+				return deck
 	return _decks[0]
 
 func _apply(deck: Deck) -> void:

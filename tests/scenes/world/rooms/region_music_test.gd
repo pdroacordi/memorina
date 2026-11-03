@@ -88,3 +88,10 @@ func test_every_region_cue_names_base_and_memory() -> void:
 		var cue := load("res://resources/music/" + path) as MusicCue
 		assert_array(Array(cue.validate())).is_empty()
 		assert_array(cue.stems).is_equal([&"base", &"memory"])
+
+func test_every_themed_region_scene_loads_its_cue() -> void:
+	for id: String in ["home_village", "threshold", "spring_woods", "frozen_lake", "wind_orchards", "summer_caldera"]:
+		var scene := load("res://scenes/world/rooms/%s.tscn" % id) as PackedScene
+		var region := auto_free(scene.instantiate()) as Region
+		assert_object(region.music).is_not_null()
+		assert_str(String(region.music.id)).is_equal("region_" + id)

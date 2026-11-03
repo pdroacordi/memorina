@@ -648,6 +648,22 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - To time "guardian on screen during X", take the `[shot]` g.x per frame and test `x ± half-width` (Bloom 22,
     Frost 60) inside 0..640. A 15-line `vis.py` did all four runs at once.
 
+- **Learned 2026-11-03 (music levels and sync)**: sound is measured, not heard.
+  - `tools/playtest/scripts/audio_probe.gd` is a dev-only node a driver adds to the root. It prints `[aud]` every 0.1 s
+    (per-bus peak dB, the max over the window and of L/R, for Master/Music/Notes/Sfx, then both Music decks: cue, playing,
+    `stream_paused`, position, `volume_db`, gain, live stems, duck, open requests, the region and its memory), `[perf]` per
+    frame while a performance plays, `[cue]` per lit glyph (raw and latency-corrected position) and `[call]` per guardian
+    call note (frame, the voice's stream, bus and position).
+  - Drivers: `audio_probe_driver.gd` (the runner, or the title with `AUDIO_TITLE=1 ... -- --title`; `AUDIO_KEYS="8:Enter"`
+    raw keys at real s, `AUDIO_QUIT=<s>`) and `audio_fight_driver.gd` (the fight talk bot plus the probe). Probe env:
+    `AUDIO_RESTORE="<s>:<guardian>"`, `AUDIO_FIX_REGION=1`.
+  - Use `$GODOT` (console exe) for these runs: the windowed exe prints nothing to a redirected stdout.
+  - A bus peak meter is smoothed, so it cannot time a legato note's onset to better than ~50-150 ms. It times glyph-vs-cue
+    exactly, and attacks only for staccato samples.
+  - The probe's `t` starts ~3 s before the runner's `t`, and the bot's `t` starts at its hook. Align by events, not clocks.
+  - A `.tscn` property written above `script =` is silently dropped; probe live values (`node.get(prop)`) before trusting
+    a scene file (`bugs/region-scenes-set-music-before-their-script-so-no-region-plays-a-theme`).
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

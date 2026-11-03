@@ -19,8 +19,8 @@
 [ext_resource type="Resource" path="res://resources/music/region_wind_orchards.tres" id="99_music"]
 
 [node name="WindOrchards" type="Node2D"]
-music = ExtResource("99_music")
 script = ExtResource("1_region")
+music = ExtResource("99_music")
 name_key = "REGION_WIND_ORCHARDS"
 epithet_key = "REGION_WIND_ORCHARDS_EPITHET"
 season = 2

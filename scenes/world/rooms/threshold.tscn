@@ -12,8 +12,8 @@
 [ext_resource type="Resource" path="res://resources/music/region_threshold.tres" id="99_music"]
 
 [node name="Threshold" type="Node2D"]
-music = ExtResource("99_music")
 script = ExtResource("1_region")
+music = ExtResource("99_music")
 name_key = "REGION_THRESHOLD"
 epithet_key = "REGION_THRESHOLD_EPITHET"
 season = 0
