@@ -43,6 +43,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_perform_end.png" id="tex_perform_end"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/talkable/talkable.tscn" id="93_talkable"]
 [ext_resource type="Script" path="res://scenes/characters/guardians/guardian_talks.gd" id="94_talks"]
+[ext_resource type="Script" path="res://scenes/characters/guardians/guardian_music.gd" id="96_music"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 34.0
@@ -1304,6 +1305,9 @@ position = Vector2(0, -168)
 
 [node name="GuardianTalks" type="Node" parent="."]
 script = ExtResource("94_talks")
+
+[node name="GuardianMusic" type="Node" parent="."]
+script = ExtResource("96_music")
 
 [connection signal="facing_changed" from="." to="Hitbox" method="_on_character_facing_changed"]
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]

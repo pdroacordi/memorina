@@ -7,9 +7,11 @@
 [ext_resource type="Resource" uid="uid://bq0bloombrst" path="res://resources/characters/guardians/bloom_guardian/bloom_burst.tres" id="4_burst"]
 [ext_resource type="Resource" uid="uid://brabloompnc" path="res://resources/characters/guardians/bloom_guardian/bloom_pounce.tres" id="5_pounce"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_guardian_voice.tres" id="9_voice"]
+[ext_resource type="Resource" path="res://resources/music/fight_bloom.tres" id="90_fight_music"]
 
 [resource]
 script = ExtResource("1_stats")
+music = ExtResource("90_fight_music")
 id = 1
 song = ExtResource("2_song")
 voice = ExtResource("9_voice")

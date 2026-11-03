@@ -7,9 +7,11 @@
 [ext_resource type="Resource" uid="uid://bq4frostchar" path="res://resources/characters/guardians/frost_guardian/frost_charge.tres" id="4_charge"]
 [ext_resource type="Resource" uid="uid://bq6frostslam" path="res://resources/characters/guardians/frost_guardian/frost_slam.tres" id="5_slam"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/frost_guardian/frost_guardian_voice.tres" id="9_voice"]
+[ext_resource type="Resource" path="res://resources/music/fight_frost.tres" id="90_fight_music"]
 
 [resource]
 script = ExtResource("1_stats")
+music = ExtResource("90_fight_music")
 song = ExtResource("2_song")
 voice = ExtResource("9_voice")
 attacks = Array[ExtResource("1_7xvuc")]([ExtResource("3_swipe"), ExtResource("4_charge"), ExtResource("5_slam")])

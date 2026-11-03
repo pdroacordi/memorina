@@ -7,9 +7,11 @@
 [ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_gust.tres" id="4_a2"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_hop.tres" id="5_a3"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_guardian_voice.tres" id="9_voice"]
+[ext_resource type="Resource" path="res://resources/music/fight_autumn.tres" id="90_fight_music"]
 
 [resource]
 script = ExtResource("1_stats")
+music = ExtResource("90_fight_music")
 id = 2
 song = ExtResource("2_song")
 voice = ExtResource("9_voice")

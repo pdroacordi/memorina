@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="MusicCue" format=3]
+
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="1_cue"]
+[ext_resource type="AudioStream" path="res://assets/audios/music/fight_autumn_bed.ogg" id="2_bed"]
+[ext_resource type="AudioStream" path="res://assets/audios/music/fight_autumn_lead.ogg" id="3_lead"]
+
+[sub_resource type="AudioStreamSynchronized" id="stems"]
+stream_count = 2
+stream_0/stream = ExtResource("2_bed")
+stream_0/volume = 0.0
+stream_1/stream = ExtResource("3_lead")
+stream_1/volume = 0.0
+
+[resource]
+script = ExtResource("1_cue")
+id = &"fight_autumn"
+stream = SubResource("stems")
+stems = Array[StringName]([&"bed", &"lead"])
+bpm = 156.0
+beats_per_bar = 3
+loops = true
+fade_in = 1.0
+fade_out = 1.0
