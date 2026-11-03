@@ -4,12 +4,15 @@ extends Control
 
 ## Loaded at swap time: the game exports this scene, so a PackedScene export would be a cycle.
 @export_file("*.tscn") var game_scene: String = ""
+## The title's theme, asked at MENU layer while the title is in the tree (music/menu-theme).
+@export var music: MusicCue
 
 var _saves: Array[PlayerData] = []
 ## The main entry the slot screen returns focus to.
 var _opened_by: Button
 ## Set once a slot is chosen; every later press, key or click, is ignored.
 var _leaving: bool = false
+var _music_request: MusicRequest
 
 @onready var _main: Control = %Main
 @onready var _new_game: Button = %NewGame
@@ -33,6 +36,8 @@ func _ready() -> void:
 	# Esc is `pause` and B is `ui_cancel`; on the title both only step back.
 	_menu_input.pause_pressed.connect(_step_back)
 	_menu_input.back_pressed.connect(_step_back)
+	if music != null:
+		_music_request = Music.request(music, MusicRequest.Layer.MENU, self)
 	_slot_screen.close()
 	show_saves(SaveSystem.read_slots())
 	_focus_main()
@@ -113,6 +118,7 @@ func _play(slot: int, fresh: bool) -> void:
 	_fade.mouse_filter = Control.MOUSE_FILTER_STOP
 	get_viewport().gui_release_focus()
 	SaveSystem.begin_slot(slot, fresh)
+	Music.release(_music_request, Fade.DURATION)
 	await _fade.to_black()
 	_swap_to_game.call_deferred()
 

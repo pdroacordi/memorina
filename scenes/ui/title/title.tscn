@@ -14,6 +14,7 @@
 [ext_resource type="Script" uid="uid://be0v2br7tupo7" path="res://scenes/world/fade.gd" id="14_fade"]
 [ext_resource type="Shader" path="res://scenes/ui/title/flute_pulse.gdshader" id="15_pulse_shader"]
 [ext_resource type="Script" path="res://scenes/ui/title/flute_pulse.gd" id="16_pulse"]
+[ext_resource type="Resource" path="res://resources/music/menu_title.tres" id="90_music"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pulse"]
 shader = ExtResource("15_pulse_shader")
@@ -28,6 +29,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_title")
+music = ExtResource("90_music")
 game_scene = "res://scenes/world/game.tscn"
 
 [node name="MenuInput" type="Node" parent="."]

@@ -68,6 +68,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | SONG-15 | Background music system: buses, the `Music` autoload, stems, ducking, the final battle and restoration cues | 06 | `[x]` | GRD-06 | 2026-11-02 | Plan `architecture/music-system` ("Sistema de música geral (Recommended)", "Aprovo o plano (Recommended)", user, 2026-11-02). Pieces `docs/knowledge/music/final-battle.md`. |
 | SONG-16 | Region themes: a `base` and a `memory` stem per region, the memory stem following the region's memory | 03 | `[x]` | SONG-15 | 2026-11-03 | "O cinza é vazio. [...] quanto mais cinza, mais vazio deve ser." (user, 2026-11-02). Frost edge silent until the finale. `systems/music` (Runtime), `music/region-themes`. |
 | SONG-17 | Guardian fight music: a `bed` and a `lead` stem per guardian, the lead leaving in lucidity | 02 | `[x]` | SONG-15 | 2026-11-03 | "A dos bosses (batalhas) acho que deve ser mais agitada" (user, 2026-11-02). `systems/music` (Runtime), `music/guardian-fights`. Calls on each guardian's own flute still to do. |
+| SONG-18 | Title theme: a solo flute through the four seasons' modes, at MENU layer | 06 | `[x]` | SONG-15 | 2026-11-03 | "Façamos todas as músicas do jogo: Menu, Regiões, Bosses" (user, 2026-11-02). `systems/music` (Runtime), `music/menu-theme`. |
 
 ## Puzzles
 

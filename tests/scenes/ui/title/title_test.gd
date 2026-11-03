@@ -18,6 +18,12 @@ func before_test() -> void:
 	add_child(_title)
 	_menu_input = _title.get_node("MenuInput") as MenuInput
 
+func after_test() -> void:
+	var left := Music.playing()
+	while left != null:
+		Music.release(left, 0.0)
+		left = Music.playing()
+
 func test_the_main_column_is_new_game_continue_quit() -> void:
 	var names: Array[String] = []
 	for entry: Node in _title.find_child("Entries").get_children():
@@ -108,3 +114,9 @@ func _slot_screen() -> SlotScreen:
 func _focused() -> String:
 	var owner := get_viewport().gui_get_focus_owner()
 	return owner.name if owner != null else ""
+
+func test_the_title_asks_for_its_theme_at_menu_layer() -> void:
+	var playing := Music.playing()
+	assert_object(playing).is_not_null()
+	assert_int(playing.layer).is_equal(MusicRequest.Layer.MENU)
+	assert_object(playing.cue).is_same(_title.music)

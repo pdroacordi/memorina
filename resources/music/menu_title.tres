@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MusicCue" format=3]
+
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="1_cue"]
+[ext_resource type="AudioStream" path="res://assets/audios/music/menu_title.ogg" id="2_title"]
+
+[resource]
+script = ExtResource("1_cue")
+id = &"menu_title"
+stream = ExtResource("2_title")
+stems = Array[StringName]([&"title"])
+bpm = 56.0
+beats_per_bar = 4
+loops = true
+fade_in = 2.0
+fade_out = 1.0
