@@ -38,7 +38,8 @@ def main():
     frames = int(round(loop * rate))
     os.makedirs(out, exist_ok=True)
     for group, data in mixed.items():
-        body = data[start:start + frames].copy()
+        # AIVA ends the render at the last sound, so trailing rest bars come back as padding.
+        body = np.pad(data[start:start + frames], ((0, max(0, start + frames - len(data))), (0, 0)))
         tail = data[start + frames:]
         body[:min(len(tail), frames)] += tail[:frames]
         path = os.path.join(out, f"{name}_{group}.ogg")

@@ -16,8 +16,10 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_ridge.tscn" id="r11"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards/orchard_summit.tscn" id="r12"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/wind_orchards.tres" id="bd_region_set"]
+[ext_resource type="Resource" path="res://resources/music/region_wind_orchards.tres" id="99_music"]
 
 [node name="WindOrchards" type="Node2D"]
+music = ExtResource("99_music")
 script = ExtResource("1_region")
 name_key = "REGION_WIND_ORCHARDS"
 epithet_key = "REGION_WIND_ORCHARDS_EPITHET"

@@ -22,6 +22,8 @@ signal memory_changed(level: float)
 @export var horizon_y: float = 0.0
 ## Ivo cannot swing the sword in this region's interiors (STORY-14: the village's houses).
 @export var calm_interiors: bool = false
+## The region's theme, stems `base` and `memory`; null is silence (music/region-themes).
+@export var music: MusicCue
 
 @onready var _memory: RegionMemory = $Memory
 

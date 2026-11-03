@@ -12,8 +12,10 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/woods_hollow_tree.tscn" id="r7"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/spring_woods/woods_crown.tscn" id="r8"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/spring_woods.tres" id="bd_region_set"]
+[ext_resource type="Resource" path="res://resources/music/region_spring_woods.tres" id="99_music"]
 
 [node name="SpringWoods" type="Node2D"]
+music = ExtResource("99_music")
 script = ExtResource("1_region")
 name_key = "REGION_SPRING_WOODS"
 epithet_key = "REGION_SPRING_WOODS_EPITHET"

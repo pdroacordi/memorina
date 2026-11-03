@@ -58,6 +58,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/items/item_icon_seed.png" id="90_seedicon"]
 [ext_resource type="Script" path="res://scenes/world/memory/dissonance/dissonance_fx.gd" id="91_dissfx"]
 [ext_resource type="Shader" path="res://scenes/world/memory/dissonance/dissonance_veil.gdshader" id="92_dissveil"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_music.gd" id="99_regionmusic"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -137,6 +138,9 @@ subject = NodePath("../Player")
 
 [node name="RegionTitleWatcher" type="Node" parent="World"]
 script = ExtResource("44_titlewatch")
+
+[node name="RegionMusic" type="Node" parent="World"]
+script = ExtResource("99_regionmusic")
 
 [node name="DialogueDirector" type="Node" parent="World" node_paths=PackedStringArray("listener")]
 script = ExtResource("46_director")
@@ -361,6 +365,7 @@ layer = 3
 [connection signal="room_changed" from="." to="World/MapRevealer" method="on_room_changed"]
 [connection signal="room_changed" from="." to="World/RegionWeather" method="on_room_changed"]
 [connection signal="room_changed" from="." to="World/RegionTitleWatcher" method="on_room_changed"]
+[connection signal="room_changed" from="." to="World/RegionMusic" method="on_room_changed"]
 [connection signal="announced" from="World/RegionTitleWatcher" to="CanvasLayer/RegionTitle" method="show_title"]
 [connection signal="talk_started" from="World/Player" to="World/DialogueDirector" method="start"]
 [connection signal="pickup_talk_started" from="World/Player" to="World/DialogueDirector" method="start_dialogue"]

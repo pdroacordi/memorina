@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="MusicCue" format=3]
+
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="1_cue"]
+[ext_resource type="AudioStream" path="res://assets/audios/music/region_home_village_base.ogg" id="2_base"]
+[ext_resource type="AudioStream" path="res://assets/audios/music/region_home_village_memory.ogg" id="3_memory"]
+
+[sub_resource type="AudioStreamSynchronized" id="stems"]
+stream_count = 2
+stream_0/stream = ExtResource("2_base")
+stream_0/volume = 0.0
+stream_1/stream = ExtResource("3_memory")
+stream_1/volume = 0.0
+
+[resource]
+script = ExtResource("1_cue")
+id = &"region_home_village"
+stream = SubResource("stems")
+stems = Array[StringName]([&"base", &"memory"])
+levels = Dictionary[StringName, float]({
+&"memory": 0.0
+})
+bpm = 66.0
+beats_per_bar = 3
+loops = true
+fade_in = 3.0
+fade_out = 3.0

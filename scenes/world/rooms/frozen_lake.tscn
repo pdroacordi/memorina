@@ -15,8 +15,10 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_glacier.tscn" id="r9"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake/lake_icefall.tscn" id="r10"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/frozen_lake.tres" id="bd_region_set"]
+[ext_resource type="Resource" path="res://resources/music/region_frozen_lake.tres" id="99_music"]
 
 [node name="FrozenLake" type="Node2D"]
+music = ExtResource("99_music")
 script = ExtResource("1_region")
 name_key = "REGION_FROZEN_LAKE"
 epithet_key = "REGION_FROZEN_LAKE_EPITHET"

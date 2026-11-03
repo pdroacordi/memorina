@@ -16,8 +16,10 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_mill_house.tscn" id="r12"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/home_village/village_notes_house.tscn" id="r13"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
+[ext_resource type="Resource" path="res://resources/music/region_home_village.tres" id="99_music"]
 
 [node name="HomeVillage" type="Node2D"]
+music = ExtResource("99_music")
 script = ExtResource("1_region")
 name_key = "REGION_HOME_VILLAGE"
 epithet_key = "REGION_HOME_VILLAGE_EPITHET"

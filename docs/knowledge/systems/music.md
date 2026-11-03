@@ -41,7 +41,8 @@ Sombra's old track (`chant_of_the_noon_sun.mp3`, AIVA "Chant of the Waking Sun")
 - **Ducks** are named and only touch Music; the deepest wins (`MusicMix`). The call duck is -6 dB; the final call's underscore is never ducked.
 - **Fights:** `GuardianStats.music` and a `GuardianMusic` child: the cue starts when the fight leaves DORMANT, the `lead` stem leaves and the bus ducks while a call is open; on the mentor the `spring` stem rises at the revelation, the freeze frame hushes, a chosen track fades spring and crosses to `FinaleStats.call_music` on the next bar. A death frees the request: the cue fades over its `fade_out` (1 s).
 - **Cutscenes:** `CutsceneMusic` (non-blocking) asks at SCENE layer; the scene's end lets a one-shot ring out, a skip fades over 0.8 s. `world_restoration` plays `finale_restoration` beside the mentor's melody.
-- Not yet: region themes, menu, the other guardians' fight music (next in this run).
+- **Regions** (SONG-16, 2026-11-03): `Region.music` (stems `base`, `memory`) and `RegionMusic` in `game.tscn`, on `Game.room_changed`. Entering a region requests its cue at REGION layer, owned by the region; its other rooms keep the request; another region crossfades (3 s). The `memory` stem is the region's memory squared, following it over 4 real seconds, so colour returning lifts it without a restart. A region without a cue (frost edge, "Silêncio total até a batalha final", user, 2026-11-03; the trials) is silence. Six themes, `region_<id>.tres`; pieces `docs/knowledge/music/region-themes.md`.
+- Not yet: menu, the other guardians' fight music (next in this run).
 
 ## The wife's song
 

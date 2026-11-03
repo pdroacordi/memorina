@@ -9,8 +9,10 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_ravine_cave.tscn" id="r4"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_icefall_foot.tscn" id="r5"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/threshold.tres" id="bd_region_set"]
+[ext_resource type="Resource" path="res://resources/music/region_threshold.tres" id="99_music"]
 
 [node name="Threshold" type="Node2D"]
+music = ExtResource("99_music")
 script = ExtResource("1_region")
 name_key = "REGION_THRESHOLD"
 epithet_key = "REGION_THRESHOLD_EPITHET"
