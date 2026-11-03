@@ -1,6 +1,6 @@
 class_name GuardianFightMusicTest extends GdUnitTestSuite
 
-## Every guardian fights to its own cue, stems `bed` and `lead`, through a GuardianMusic child (music/guardian-fights).
+## Every guardian fights to its own cue (stems `bed`, `lead`) through a GuardianMusic child, and calls in its own flute.
 
 const GUARDIANS: Array[String] = ["frost", "bloom", "summer", "autumn"]
 
@@ -17,3 +17,13 @@ func test_every_guardian_scene_has_a_guardian_music_child() -> void:
 		var scene := load("res://scenes/characters/guardians/%s_guardian/%s_guardian.tscn" % [g, g]) as PackedScene
 		var guardian: Node = auto_free(scene.instantiate())
 		assert_object(guardian.get_node_or_null(^"GuardianMusic")).is_instanceof(GuardianMusic)
+
+func test_every_guardian_calls_in_its_own_flute_at_written_pitch() -> void:
+	for g: String in GUARDIANS:
+		var scene := load("res://scenes/characters/guardians/%s_guardian/%s_guardian.tscn" % [g, g]) as PackedScene
+		var guardian: Node = auto_free(scene.instantiate())
+		var voice := guardian.get_node(^"Call/Voice") as MemorinaVoice
+		for stream: AudioStream in voice.note_streams:
+			assert_str(stream.resource_path).starts_with("res://assets/audios/sfx/guardian_calls/call_%s_" % g)
+		var player := voice.get_node(^"AudioStreamPlayer") as AudioStreamPlayer
+		assert_float(player.pitch_scale).is_equal(1.0)

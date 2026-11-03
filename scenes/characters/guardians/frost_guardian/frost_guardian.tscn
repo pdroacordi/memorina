@@ -21,11 +21,11 @@
 [ext_resource type="Script" uid="uid://cujp8nhl6kwel" path="res://scenes/characters/guardians/guardian_ai.gd" id="12_ai"]
 [ext_resource type="Script" uid="uid://cranij1o3nhbn" path="res://scenes/characters/components/phrase_call.gd" id="13_call"]
 [ext_resource type="Script" uid="uid://bnttag3vs2ax6" path="res://scenes/characters/ivo/abilities/memorina_voice.gd" id="14_voice"]
-[ext_resource type="AudioStream" uid="uid://c8aq76pxwx3ne" path="res://assets/audios/sfx/memorina/note_up_g4.mp3" id="15_note_up"]
-[ext_resource type="AudioStream" uid="uid://d08lps65r0y32" path="res://assets/audios/sfx/memorina/note_down_c4.mp3" id="16_note_down"]
-[ext_resource type="AudioStream" uid="uid://dptbpb61tc207" path="res://assets/audios/sfx/memorina/note_low_mid_d4.mp3" id="17_note_left"]
-[ext_resource type="AudioStream" uid="uid://4ci6801k1fq0" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="18_note_right"]
-[ext_resource type="AudioStream" uid="uid://dukqiaa0dgpkr" path="res://assets/audios/sfx/memorina/mistake.mp3" id="19_mistake"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/guardian_calls/call_frost_up_g.ogg" id="15_note_up"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/guardian_calls/call_frost_down_c.ogg" id="16_note_down"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/guardian_calls/call_frost_left_d.ogg" id="17_note_left"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/guardian_calls/call_frost_right_e.ogg" id="18_note_right"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/guardian_calls/mistake_low.ogg" id="19_mistake"]
 [ext_resource type="Script" uid="uid://bxrbxt0jji8yt" path="res://scenes/world/memory/greyhush_shield.gd" id="20_shield"]
 [ext_resource type="Resource" uid="uid://bq5froststat" path="res://resources/characters/guardians/frost_guardian/frost_guardian_stats.tres" id="21_stats"]
 [ext_resource type="Script" uid="uid://bhuyfpecwqve" path="res://scenes/world/memory/color_pulse/pulse_emitter.gd" id="22_pulsem"]
@@ -1274,7 +1274,6 @@ mistake_stream = ExtResource("19_mistake")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Call/Voice"]
 bus = &"Notes"
-pitch_scale = 0.5
 
 [node name="PulseEmitter" type="Node" parent="."]
 script = ExtResource("22_pulsem")
