@@ -13,8 +13,6 @@ const LINGER_TIME := 0.6
 const LESSON_SHEET_HOLD := 1.4
 const LESSON_SHEET_FADE := 0.6
 
-## Indexed by Enums.GlyphSet: which textures each input device draws with.
-@export var glyph_sets: Array[NoteGlyphSet] = []
 ## Horizontal gap from screen center to the frame's near edge, in px.
 @export var frame_gap: float = 16.0
 ## Screen y coordinate of the frame center, in px.
@@ -31,7 +29,7 @@ var _call_notes: Array[Enums.Note] = []
 ## Encounter placement chosen for the guardian sheet.
 var _call_side: int = 1
 var _call_height: float = 0.0
-var _call_glyphs: NoteGlyphSet
+var _call_glyph_set: Enums.GlyphSet = Enums.GlyphSet.KEYBOARD_ARROWS
 ## True while the answer window is open.
 var _answering: bool = false
 var _drawn: bool = false
@@ -48,11 +46,6 @@ var _bar_width: float = 0.0
 @onready var _key: KeyGlyph = $Frame/KeyPrompt
 
 func _ready() -> void:
-	assert(glyph_sets.size() == Enums.GlyphSet.size(),
-		"MemorinaHud has %d glyph sets for %d members of Enums.GlyphSet." % [glyph_sets.size(), Enums.GlyphSet.size()])
-	if OS.is_debug_build():
-		for glyphs: NoteGlyphSet in glyph_sets:
-			glyphs.validate()
 	_bar_width = _bar.size.x
 	hide()
 
@@ -108,12 +101,12 @@ func on_note_played(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
 	# Answer notes are lit by call progress.
 	if _answering:
 		return
-	_sheet.push_note(note, glyph_sets[glyph_set])
+	_sheet.push_note(note, glyph_set)
 
 func on_note_rejected(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
 	if _answering:
 		return
-	_sheet.push_note(note, glyph_sets[glyph_set])
+	_sheet.push_note(note, glyph_set)
 
 func on_sequence_failed() -> void:
 	_sheet.flash()
@@ -134,7 +127,7 @@ func on_lesson_started(song: Song, glyph_set: Enums.GlyphSet) -> void:
 	_leave_answer()
 	modulate = Color.WHITE
 	_lesson_notes = song.notes.size()
-	_sheet.show_notes(song.notes, glyph_sets[glyph_set])
+	_sheet.show_notes(song.notes, glyph_set)
 	show()
 	_show_in_slot()
 
@@ -146,7 +139,7 @@ func on_song_half_learned(song: Song, half: Enums.SongHalf, glyph_set: Enums.Gly
 	var known: Array[bool] = []
 	for i: int in song.notes.size():
 		known.append((i < SongHalves.HALF_LENGTH) == (half == Enums.SongHalf.FIRST))
-	_sheet.show_notes(song.notes, glyph_sets[glyph_set], -1, known)
+	_sheet.show_notes(song.notes, glyph_set, -1, known)
 	show()
 	_frame.position = Vector2(_sheet.encounter_x(size.x, _call_side, _call_height), _sheet.encounter_y())
 	_frame.modulate.a = 0.0
@@ -178,7 +171,7 @@ func on_call_unstaged() -> void:
 ## Stores the call phrase and placement while the guardian sings.
 func on_call_opened(song: Song, _revealed: int, glyph_set: Enums.GlyphSet, _cure_done: int, _cure_total: int, side: int, caller_height: float) -> void:
 	_call_notes = song.notes
-	_call_glyphs = glyph_sets[glyph_set]
+	_call_glyph_set = glyph_set
 	_call_side = side
 	_call_height = caller_height
 	_stop_linger()
@@ -190,7 +183,7 @@ func on_call_window_opened() -> void:
 	_stop_linger()
 	_answering = true
 	_sheet.modulate = Color.WHITE
-	_sheet.show_notes(_call_notes, _call_glyphs)
+	_sheet.show_notes(_call_notes, _call_glyph_set)
 	_sheet.dim_all()
 	_bar.size.x = _bar_width
 	_bar.color = BAR_COLOR

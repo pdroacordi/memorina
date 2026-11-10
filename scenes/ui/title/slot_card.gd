@@ -25,10 +25,13 @@ var _used: bool = false
 
 
 func _ready() -> void:
-	_erase.text = tr("TITLE_ERASE")
-	_empty.text = tr("TITLE_EMPTY_SLOT")
+	_retranslate()
 	_card.pressed.connect(picked.emit)
 	_erase.pressed.connect(erase_pressed.emit)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
+		_retranslate()
 
 ## Shows the slot's save; null shows an empty slot.
 func show_save(data: PlayerData) -> void:
@@ -65,3 +68,7 @@ func focus_card() -> void:
 
 func focus_erase() -> void:
 	_erase.grab_focus()
+
+func _retranslate() -> void:
+	_erase.text = tr("TITLE_ERASE")
+	_empty.text = tr("TITLE_EMPTY_SLOT")

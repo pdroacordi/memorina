@@ -38,7 +38,8 @@ func test_every_scene_player_sends_to_a_named_bus() -> void:
 		var root := (load(path) as PackedScene).instantiate()
 		for player: AudioStreamPlayer in _players(root):
 			checked += 1
-			if not [AudioBuses.MUSIC, AudioBuses.NOTES, AudioBuses.SFX].has(player.bus):
+			# Master only for the Settings screen's preview of its own volume.
+			if not [AudioBuses.MASTER, AudioBuses.MUSIC, AudioBuses.NOTES, AudioBuses.SFX].has(player.bus):
 				problems.append("%s: %s on bus '%s'" % [path.get_file(), root.get_path_to(player), player.bus])
 		root.free()
 	assert_array(Array(problems)).is_empty()

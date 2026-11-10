@@ -1,0 +1,2147 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "max_duration": 51.35000000000008,
+ "player_position": [
+  160,
+  5960
+ ],
+ "locale": "en",
+ "skills": [
+  2
+ ],
+ "steps": [
+  {
+   "t": 1.5,
+   "log": "start"
+  },
+  {
+   "t": 2.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 2.13,
+   "log": "after_Escape"
+  },
+  {
+   "t": 2.5,
+   "screenshot": "a01_pause"
+  },
+  {
+   "t": 2.5,
+   "log": "a01_pause"
+  },
+  {
+   "t": 2.55,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 2.6,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 2.68,
+   "log": "after_Down"
+  },
+  {
+   "t": 3.05,
+   "screenshot": "a02_settings_entry"
+  },
+  {
+   "t": 3.05,
+   "log": "a02_settings_entry"
+  },
+  {
+   "t": 3.1,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 3.15,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 3.23,
+   "log": "after_Enter"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "a03_sound_tab"
+  },
+  {
+   "t": 3.6,
+   "log": "a03_sound_tab"
+  },
+  {
+   "t": 3.65,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 3.7,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 3.78,
+   "log": "after_Down"
+  },
+  {
+   "t": 4.15,
+   "screenshot": "a04_master_focused"
+  },
+  {
+   "t": 4.15,
+   "log": "a04_master_focused"
+  },
+  {
+   "t": 4.2,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 4.25,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 4.33,
+   "log": "after_Left"
+  },
+  {
+   "t": 4.55,
+   "screenshot": "a05_master_9"
+  },
+  {
+   "t": 4.55,
+   "log": "a05_master_9"
+  },
+  {
+   "t": 4.6,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 4.73,
+   "log": "after_Left"
+  },
+  {
+   "t": 4.95,
+   "screenshot": "a06_master_8"
+  },
+  {
+   "t": 4.95,
+   "log": "a06_master_8"
+  },
+  {
+   "t": 5.0,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 5.05,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 5.13,
+   "log": "after_Right"
+  },
+  {
+   "t": 5.35,
+   "screenshot": "a07_master_9b"
+  },
+  {
+   "t": 5.35,
+   "log": "a07_master_9b"
+  },
+  {
+   "t": 5.4,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 5.45,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 5.53,
+   "log": "after_Down"
+  },
+  {
+   "t": 5.65,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 5.7,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 5.78,
+   "log": "after_Left"
+  },
+  {
+   "t": 5.9,
+   "log": "music_preview_0"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "a08_music_9"
+  },
+  {
+   "t": 6.0,
+   "log": "a08_music_9"
+  },
+  {
+   "t": 6.3,
+   "log": "music_p1"
+  },
+  {
+   "t": 6.9,
+   "log": "music_p2"
+  },
+  {
+   "t": 7.5,
+   "log": "music_p3"
+  },
+  {
+   "t": 7.65,
+   "log": "music_after"
+  },
+  {
+   "t": 7.65,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 7.7,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 7.78,
+   "log": "after_Down"
+  },
+  {
+   "t": 7.9,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 7.95,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 8.03,
+   "log": "after_Left"
+  },
+  {
+   "t": 8.25,
+   "screenshot": "a09_notes_9"
+  },
+  {
+   "t": 8.25,
+   "log": "a09_notes_9"
+  },
+  {
+   "t": 8.3,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 8.35,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 8.43,
+   "log": "after_Down"
+  },
+  {
+   "t": 8.55,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 8.6,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 8.68,
+   "log": "after_Left"
+  },
+  {
+   "t": 8.8,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 8.85,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 8.93,
+   "log": "after_Right"
+  },
+  {
+   "t": 9.05,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 9.1,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 9.18,
+   "log": "after_Right"
+  },
+  {
+   "t": 9.4,
+   "screenshot": "a10_effects_clamped"
+  },
+  {
+   "t": 9.4,
+   "log": "a10_effects_clamped"
+  },
+  {
+   "t": 9.45,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 9.5,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 9.65,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 9.7,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 9.85,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 9.9,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 10.05,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 10.1,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 10.25,
+   "log": "after_4xUp"
+  },
+  {
+   "t": 10.35,
+   "screenshot": "a11_sound_tab_back"
+  },
+  {
+   "t": 10.35,
+   "log": "a11_sound_tab_back"
+  },
+  {
+   "t": 10.4,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 10.45,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 10.53,
+   "log": "after_Right"
+  },
+  {
+   "t": 10.9,
+   "screenshot": "a12_general_tab"
+  },
+  {
+   "t": 10.9,
+   "log": "a12_general_tab"
+  },
+  {
+   "t": 10.95,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 11.0,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 11.08,
+   "log": "after_Down"
+  },
+  {
+   "t": 11.45,
+   "screenshot": "a13_language_focused"
+  },
+  {
+   "t": 11.45,
+   "log": "a13_language_focused"
+  },
+  {
+   "t": 11.5,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 11.55,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 11.63,
+   "log": "after_Down"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "a14_fullscreen_focused"
+  },
+  {
+   "t": 12.0,
+   "log": "a14_fullscreen_focused"
+  },
+  {
+   "t": 12.05,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 12.1,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 12.18,
+   "log": "after_Down"
+  },
+  {
+   "t": 12.55,
+   "screenshot": "a15_window_focused"
+  },
+  {
+   "t": 12.55,
+   "log": "a15_window_focused"
+  },
+  {
+   "t": 12.6,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 12.65,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 12.8,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 12.85,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 13.0,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 13.05,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 13.2,
+   "log": "after_3xUp"
+  },
+  {
+   "t": 13.2,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 13.25,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 13.33,
+   "log": "after_Right"
+  },
+  {
+   "t": 13.7,
+   "screenshot": "a16_keyboard_tab"
+  },
+  {
+   "t": 13.7,
+   "log": "a16_keyboard_tab"
+  },
+  {
+   "t": 13.75,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 13.8,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 13.88,
+   "log": "after_Right"
+  },
+  {
+   "t": 14.25,
+   "screenshot": "a17_pad_tab"
+  },
+  {
+   "t": 14.25,
+   "log": "a17_pad_tab"
+  },
+  {
+   "t": 14.3,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 14.35,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 14.43,
+   "log": "after_Left"
+  },
+  {
+   "t": 14.55,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 14.6,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 14.68,
+   "log": "after_Down"
+  },
+  {
+   "t": 15.05,
+   "screenshot": "a18_jump_focused"
+  },
+  {
+   "t": 15.05,
+   "log": "a18_jump_focused"
+  },
+  {
+   "t": 15.1,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 15.15,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 15.23,
+   "log": "after_Enter"
+  },
+  {
+   "t": 15.6,
+   "screenshot": "a19_capture_prompt"
+  },
+  {
+   "t": 15.6,
+   "log": "a19_capture_prompt"
+  },
+  {
+   "t": 15.65,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 15.7,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 15.78,
+   "log": "after_Down"
+  },
+  {
+   "t": 16.15,
+   "screenshot": "a20_reserved_status"
+  },
+  {
+   "t": 16.15,
+   "log": "a20_reserved_status"
+  },
+  {
+   "t": 16.2,
+   "key": "Space",
+   "pressed": true
+  },
+  {
+   "t": 16.25,
+   "key": "Space",
+   "pressed": false
+  },
+  {
+   "t": 16.33,
+   "log": "after_Space"
+  },
+  {
+   "t": 16.7,
+   "screenshot": "a21_jump_space"
+  },
+  {
+   "t": 16.7,
+   "log": "a21_jump_space"
+  },
+  {
+   "t": 16.75,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 16.8,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 16.95,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 17.0,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 17.15,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 17.2,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 17.35,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 17.4,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 17.55,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 17.6,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 17.75,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 17.8,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 17.95,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 18.0,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 18.15,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 18.2,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 18.35,
+   "log": "after_8xDown"
+  },
+  {
+   "t": 18.45,
+   "screenshot": "a22_map_focused"
+  },
+  {
+   "t": 18.45,
+   "log": "a22_map_focused"
+  },
+  {
+   "t": 18.5,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 18.55,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 18.63,
+   "log": "after_Enter"
+  },
+  {
+   "t": 19.0,
+   "screenshot": "a23_map_capture"
+  },
+  {
+   "t": 19.0,
+   "log": "a23_map_capture"
+  },
+  {
+   "t": 19.05,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 19.1,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 19.18,
+   "log": "after_Z"
+  },
+  {
+   "t": 19.55,
+   "screenshot": "a24_refused_z"
+  },
+  {
+   "t": 19.55,
+   "log": "a24_refused_z"
+  },
+  {
+   "t": 19.6,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 19.65,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 19.73,
+   "log": "after_Enter"
+  },
+  {
+   "t": 20.1,
+   "screenshot": "a25_refused_enter"
+  },
+  {
+   "t": 20.1,
+   "log": "a25_refused_enter"
+  },
+  {
+   "t": 20.15,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 20.2,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 20.28,
+   "log": "after_Escape"
+  },
+  {
+   "t": 20.65,
+   "screenshot": "a26_capture_cancelled"
+  },
+  {
+   "t": 20.65,
+   "log": "a26_capture_cancelled"
+  },
+  {
+   "t": 20.7,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 20.75,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 20.83,
+   "log": "after_Escape"
+  },
+  {
+   "t": 21.2,
+   "screenshot": "a27_back_to_pause"
+  },
+  {
+   "t": 21.2,
+   "log": "a27_back_to_pause"
+  },
+  {
+   "t": 21.25,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 21.3,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 21.38,
+   "log": "after_Up"
+  },
+  {
+   "t": 21.5,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 21.55,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 21.63,
+   "log": "after_Enter"
+  },
+  {
+   "t": 21.95,
+   "screenshot": "a28_resumed"
+  },
+  {
+   "t": 21.95,
+   "log": "a28_resumed"
+  },
+  {
+   "t": 22.4,
+   "log": "space_0"
+  },
+  {
+   "t": 22.4,
+   "key": "Space",
+   "pressed": true
+  },
+  {
+   "t": 22.5,
+   "log": "space_1"
+  },
+  {
+   "t": 22.6,
+   "log": "space_2"
+  },
+  {
+   "t": 22.7,
+   "log": "space_3"
+  },
+  {
+   "t": 22.7,
+   "key": "Space",
+   "pressed": false
+  },
+  {
+   "t": 22.75,
+   "screenshot": "a29_space_jump"
+  },
+  {
+   "t": 22.75,
+   "log": "a29_space_jump"
+  },
+  {
+   "t": 22.78,
+   "log": "after_Space"
+  },
+  {
+   "t": 22.8,
+   "log": "space_4"
+  },
+  {
+   "t": 22.9,
+   "log": "space_5"
+  },
+  {
+   "t": 23.0,
+   "log": "space_6"
+  },
+  {
+   "t": 23.1,
+   "log": "space_7"
+  },
+  {
+   "t": 24.0,
+   "log": "z_0"
+  },
+  {
+   "t": 24.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 24.1,
+   "log": "z_1"
+  },
+  {
+   "t": 24.2,
+   "log": "z_2"
+  },
+  {
+   "t": 24.3,
+   "log": "z_3"
+  },
+  {
+   "t": 24.3,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 24.35,
+   "screenshot": "a30_z_no_jump"
+  },
+  {
+   "t": 24.35,
+   "log": "a30_z_no_jump"
+  },
+  {
+   "t": 24.38,
+   "log": "after_Z"
+  },
+  {
+   "t": 24.4,
+   "log": "z_4"
+  },
+  {
+   "t": 24.5,
+   "log": "z_5"
+  },
+  {
+   "t": 24.6,
+   "log": "z_6"
+  },
+  {
+   "t": 24.7,
+   "log": "z_7"
+  },
+  {
+   "t": 25.6,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 25.65,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 25.73,
+   "log": "after_Escape"
+  },
+  {
+   "t": 25.85,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 25.9,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 25.98,
+   "log": "after_Down"
+  },
+  {
+   "t": 26.1,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 26.15,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 26.23,
+   "log": "after_Enter"
+  },
+  {
+   "t": 26.35,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 26.4,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 26.48,
+   "log": "after_Right"
+  },
+  {
+   "t": 26.6,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 26.65,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 26.73,
+   "log": "after_Right"
+  },
+  {
+   "t": 26.85,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 26.9,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 26.98,
+   "log": "after_Down"
+  },
+  {
+   "t": 27.35,
+   "screenshot": "a31_keyboard_rebound"
+  },
+  {
+   "t": 27.35,
+   "log": "a31_keyboard_rebound"
+  },
+  {
+   "t": 27.4,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 27.45,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 27.53,
+   "log": "after_Up"
+  },
+  {
+   "t": 27.65,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 27.7,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 27.85,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 27.9,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 28.05,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 28.1,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 28.25,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 28.3,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 28.45,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 28.5,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 28.65,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 28.7,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 28.85,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 28.9,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 29.05,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 29.1,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 29.25,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 29.3,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 29.45,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 29.5,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 29.65,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 29.7,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 29.85,
+   "log": "after_11xDown"
+  },
+  {
+   "t": 29.95,
+   "screenshot": "a32_reset_focused"
+  },
+  {
+   "t": 29.95,
+   "log": "a32_reset_focused"
+  },
+  {
+   "t": 30.0,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 30.05,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 30.13,
+   "log": "after_Enter"
+  },
+  {
+   "t": 30.5,
+   "screenshot": "a33_reset_ask"
+  },
+  {
+   "t": 30.5,
+   "log": "a33_reset_ask"
+  },
+  {
+   "t": 30.55,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 30.6,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 30.68,
+   "log": "after_Escape"
+  },
+  {
+   "t": 31.05,
+   "screenshot": "a34_reset_back"
+  },
+  {
+   "t": 31.05,
+   "log": "a34_reset_back"
+  },
+  {
+   "t": 31.1,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 31.15,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 31.23,
+   "log": "after_Enter"
+  },
+  {
+   "t": 31.35,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 31.4,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 31.48,
+   "log": "after_Left"
+  },
+  {
+   "t": 31.7,
+   "screenshot": "a35_reset_yes_focus"
+  },
+  {
+   "t": 31.7,
+   "log": "a35_reset_yes_focus"
+  },
+  {
+   "t": 31.75,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 31.8,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 31.88,
+   "log": "after_Enter"
+  },
+  {
+   "t": 32.25,
+   "screenshot": "a36_reset_done"
+  },
+  {
+   "t": 32.25,
+   "log": "a36_reset_done"
+  },
+  {
+   "t": 32.3,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 32.35,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 32.5,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 32.55,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 32.7,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 32.75,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 32.9,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 32.95,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 33.1,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 33.15,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 33.3,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 33.35,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 33.5,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 33.55,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 33.7,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 33.75,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 33.9,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 33.95,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 34.1,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 34.15,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 34.3,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 34.35,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 34.5,
+   "log": "after_11xUp"
+  },
+  {
+   "t": 34.5,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 34.55,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 34.63,
+   "log": "after_Left"
+  },
+  {
+   "t": 34.75,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 34.8,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 34.88,
+   "log": "after_Down"
+  },
+  {
+   "t": 35.0,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 35.05,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 35.13,
+   "log": "after_Enter"
+  },
+  {
+   "t": 35.5,
+   "screenshot": "b01_general_pt"
+  },
+  {
+   "t": 35.5,
+   "log": "b01_general_pt"
+  },
+  {
+   "t": 35.55,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 35.6,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 35.68,
+   "log": "after_Up"
+  },
+  {
+   "t": 35.8,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 35.85,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 35.93,
+   "log": "after_Left"
+  },
+  {
+   "t": 36.3,
+   "screenshot": "b02_sound_pt"
+  },
+  {
+   "t": 36.3,
+   "log": "b02_sound_pt"
+  },
+  {
+   "t": 36.35,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 36.4,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 36.48,
+   "log": "after_Down"
+  },
+  {
+   "t": 36.85,
+   "screenshot": "b03_master_pt"
+  },
+  {
+   "t": 36.85,
+   "log": "b03_master_pt"
+  },
+  {
+   "t": 36.9,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 36.95,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 37.03,
+   "log": "after_Up"
+  },
+  {
+   "t": 37.15,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 37.2,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 37.28,
+   "log": "after_Right"
+  },
+  {
+   "t": 37.4,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 37.45,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 37.53,
+   "log": "after_Right"
+  },
+  {
+   "t": 37.9,
+   "screenshot": "b04_keyboard_pt"
+  },
+  {
+   "t": 37.9,
+   "log": "b04_keyboard_pt"
+  },
+  {
+   "t": 37.95,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 38.0,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 38.08,
+   "log": "after_Right"
+  },
+  {
+   "t": 38.45,
+   "screenshot": "b05_pad_pt"
+  },
+  {
+   "t": 38.45,
+   "log": "b05_pad_pt"
+  },
+  {
+   "t": 38.5,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 38.55,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 38.63,
+   "log": "after_Down"
+  },
+  {
+   "t": 38.75,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 38.8,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 38.88,
+   "log": "after_Enter"
+  },
+  {
+   "t": 39.25,
+   "screenshot": "b06_pad_capture_pt"
+  },
+  {
+   "t": 39.25,
+   "log": "b06_pad_capture_pt"
+  },
+  {
+   "t": 39.3,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 39.35,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 39.43,
+   "log": "after_Escape"
+  },
+  {
+   "t": 39.55,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 39.6,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 39.75,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 39.8,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 39.95,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 40.0,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 40.15,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 40.2,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 40.35,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 40.4,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 40.55,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 40.6,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 40.75,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 40.8,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 40.95,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 41.0,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 41.15,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 41.2,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 41.35,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 41.4,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 41.55,
+   "log": "after_10xDown"
+  },
+  {
+   "t": 41.55,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 41.6,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 41.68,
+   "log": "after_Enter"
+  },
+  {
+   "t": 42.05,
+   "screenshot": "b07_reset_pad_ask_pt"
+  },
+  {
+   "t": 42.05,
+   "log": "b07_reset_pad_ask_pt"
+  },
+  {
+   "t": 42.1,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 42.15,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 42.23,
+   "log": "after_Escape"
+  },
+  {
+   "t": 42.35,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 42.4,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 42.55,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 42.6,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 42.75,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 42.8,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 42.95,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 43.0,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 43.15,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 43.2,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 43.35,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 43.4,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 43.55,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 43.6,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 43.75,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 43.8,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 43.95,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 44.0,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 44.15,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 44.2,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 44.35,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 44.4,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 44.55,
+   "log": "after_11xUp"
+  },
+  {
+   "t": 44.55,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 44.6,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 44.68,
+   "log": "after_Left"
+  },
+  {
+   "t": 44.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 44.85,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 45.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 45.05,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 45.2,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 45.25,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 45.4,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 45.45,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 45.6,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 45.65,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 45.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 45.85,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 46.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 46.05,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 46.2,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 46.25,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 46.4,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 46.45,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 46.6,
+   "log": "after_9xDown"
+  },
+  {
+   "t": 46.6,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 46.65,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 46.73,
+   "log": "after_Enter"
+  },
+  {
+   "t": 46.85,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 46.9,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 46.98,
+   "log": "after_Z"
+  },
+  {
+   "t": 47.35,
+   "screenshot": "b08_refused_pt"
+  },
+  {
+   "t": 47.35,
+   "log": "b08_refused_pt"
+  },
+  {
+   "t": 47.4,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 47.45,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 47.53,
+   "log": "after_Down"
+  },
+  {
+   "t": 47.9,
+   "screenshot": "b08b_reserved_pt"
+  },
+  {
+   "t": 47.9,
+   "log": "b08b_reserved_pt"
+  },
+  {
+   "t": 47.95,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 48.0,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 48.08,
+   "log": "after_Escape"
+  },
+  {
+   "t": 48.2,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 48.25,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 48.33,
+   "log": "after_Escape"
+  },
+  {
+   "t": 48.7,
+   "screenshot": "b09_pause_pt"
+  },
+  {
+   "t": 48.7,
+   "log": "b09_pause_pt"
+  },
+  {
+   "t": 48.75,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 48.8,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 48.88,
+   "log": "after_Escape"
+  },
+  {
+   "t": 49.3,
+   "screenshot": "b10_resumed_pt"
+  },
+  {
+   "t": 49.3,
+   "log": "b10_resumed_pt"
+  }
+ ]
+}

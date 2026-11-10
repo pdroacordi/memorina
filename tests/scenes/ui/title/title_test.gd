@@ -24,11 +24,22 @@ func after_test() -> void:
 		Music.release(left, 0.0)
 		left = Music.playing()
 
-func test_the_main_column_is_new_game_continue_quit() -> void:
+func test_the_main_column_is_new_game_continue_settings_quit() -> void:
 	var names: Array[String] = []
 	for entry: Node in _title.find_child("Entries").get_children():
 		names.append(entry.name)
-	assert_array(names).contains_exactly(["NewGame", "Continue", "QuitGame"])
+	assert_array(names).contains_exactly(["NewGame", "Continue", "Settings", "QuitGame"])
+
+## Settings hides the main column; Esc and B both close it back onto its entry.
+func test_settings_opens_and_back_returns_to_its_entry() -> void:
+	for back: Callable in [_menu_input.back_pressed.emit, _menu_input.pause_pressed.emit]:
+		_entry("Settings").pressed.emit()
+		assert_bool(_title.is_showing_settings()).is_true()
+		assert_bool((_title.find_child("Main") as Control).visible).is_false()
+		back.call()
+		assert_bool(_title.is_showing_settings()).is_false()
+		assert_bool((_title.find_child("Main") as Control).visible).is_true()
+		assert_str(_focused()).is_equal("Settings")
 
 ## A headless run has no disk, so there is no save to continue.
 func test_with_no_save_continue_is_greyed_and_new_game_is_focused() -> void:
@@ -89,9 +100,13 @@ func test_buttons_pressed_while_leaving_erase_and_overwrite_nothing() -> void:
 func test_every_label_is_translated() -> void:
 	assert_str(_entry("NewGame").text).is_equal(tr("TITLE_NEW_GAME"))
 	assert_str(_entry("Continue").text).is_equal(tr("TITLE_CONTINUE"))
+	assert_str(_entry("Settings").text).is_equal(tr("TITLE_SETTINGS"))
 	assert_str(_entry("QuitGame").text).is_equal(tr("TITLE_QUIT_GAME"))
 
 ## The title starts on a running clock and must not inherit ALWAYS from a parent such as the playtest runner.
+func test_the_titles_settings_plays_no_music_sample() -> void:
+	assert_bool((_title.find_child("SettingsScreen") as SettingsScreen).music_preview).is_false()
+
 func test_the_title_is_pausable() -> void:
 	assert_int(_title.process_mode).is_equal(Node.PROCESS_MODE_PAUSABLE)
 

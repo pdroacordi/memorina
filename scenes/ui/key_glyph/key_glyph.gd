@@ -24,6 +24,7 @@ var _glyph: ButtonGlyph
 
 func _ready() -> void:
 	InputDevice.device_changed.connect(_on_device_changed)
+	Settings.bindings_changed.connect(_on_bindings_changed)
 	set_look(Look.NORMAL)
 	set_process(false)
 
@@ -34,6 +35,11 @@ func _process(delta: float) -> void:
 		_blink = 0.0
 		_blink_on = not _blink_on
 		set_look(Look.SELECTED if _blink_on else Look.NORMAL)
+
+# A pad button's name is translated.
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
+		_on_bindings_changed()
 
 func show_action(action: StringName) -> void:
 	_action = action
@@ -50,14 +56,21 @@ func set_look(look: Look) -> void:
 			texture = _glyph.normal if _glyph else key_normal
 
 func _on_device_changed(_glyph_set: Enums.GlyphSet) -> void:
+	_on_bindings_changed()
+
+func _on_bindings_changed() -> void:
 	if _action != &"":
 		_refresh()
+
+## The name on the blank key, or empty while a glyph draws the binding.
+func label_text() -> String:
+	return _label.text if _label.visible else ""
 
 func _refresh() -> void:
 	var event := InputDevice.event_for(_action)
 	_glyph = glyphs.glyph_for(event, InputDevice.glyph_set) if event != null and glyphs != null else null
 	_label.visible = _glyph == null
-	_label.text = "" if _glyph else key_name(_action)
+	_label.text = "" if _glyph else BindingNames.event_text(event, InputDevice.glyph_set)
 	set_look(_look)
 
 func start_blink() -> void:
@@ -71,11 +84,3 @@ func stop_blink(look: Look = Look.NORMAL) -> void:
 	_blinking = false
 	set_process(false)
 	set_look(look)
-
-## OS display name of the first keyboard event bound to `action`.
-static func key_name(action: StringName) -> String:
-	for event: InputEvent in InputMap.action_get_events(action):
-		if event is InputEventKey:
-			return (event as InputEventKey).as_text_physical_keycode()
-	# Nothing bound: better an empty key than an internal action id on screen.
-	return ""

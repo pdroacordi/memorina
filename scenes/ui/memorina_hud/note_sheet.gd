@@ -29,41 +29,50 @@ const POP_TIME := 0.18
 @export var slot_count: int = Song.NOTE_COUNT
 ## A note of a half-known song not known yet (tools/art/prompts/note_blank.md).
 @export var blank_texture: Texture2D
+@export var glyphs: NoteGlyphs = preload(NoteGlyphs.DEFAULT_PATH)
 
-var _slots: Array[TextureRect] = []
+var _slots: Array[NoteGlyph] = []
 ## What each filled slot shows, so light() can fetch the lit texture.
 var _notes: Array[Enums.Note] = []
-var _glyphs: Array[NoteGlyphSet] = []
+var _glyph_sets: Array[Enums.GlyphSet] = []
+## Whether each filled slot is lit, so a rebinding redraws it as it was.
+var _lit: Array[bool] = []
 ## False where a slot shows a blank instead of its note; empty means every note is known.
 var _known: Array[bool] = []
 var _flash_tween: Tween
 
 func _ready() -> void:
 	for i: int in slot_count:
-		var slot := TextureRect.new()
+		var slot := NoteGlyph.new()
 		slot.stretch_mode = TextureRect.STRETCH_SCALE
 		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.hide()
 		add_child(slot)
 		_slots.append(slot)
 	resized.connect(_layout)
+	Settings.bindings_changed.connect(_redraw)
 	_layout()
 
-func push_note(note: Enums.Note, glyphs: NoteGlyphSet) -> void:
+func push_note(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
 	var index := _notes.size()
 	if index >= _slots.size():
 		return
 	_notes.append(note)
-	_glyphs.append(glyphs)
+	_glyph_sets.append(glyph_set)
+	_lit.append(false)
 	_show(index, false)
 
 ## `known` blanks the notes flagged false (a half-known song); empty shows every note.
-func show_notes(notes: Array[Enums.Note], glyphs: NoteGlyphSet, count: int = -1, known: Array[bool] = []) -> void:
+func show_notes(notes: Array[Enums.Note], glyph_set: Enums.GlyphSet, count: int = -1, known: Array[bool] = []) -> void:
 	clear()
 	_known = known
 	var shown := notes.size() if count < 0 else mini(count, notes.size())
 	for i: int in shown:
-		push_note(notes[i], glyphs)
+		push_note(notes[i], glyph_set)
+
+## The name the slot's blank key shows; empty while a glyph draws it.
+func label_at(index: int) -> String:
+	return _slots[index].label_text() if index < _notes.size() else ""
 
 func light(index: int) -> void:
 	if index < _notes.size():
@@ -91,16 +100,25 @@ func flash() -> void:
 
 func clear() -> void:
 	_notes.clear()
-	_glyphs.clear()
+	_glyph_sets.clear()
+	_lit.clear()
 	_known = []
-	for slot: TextureRect in _slots:
+	for slot: NoteGlyph in _slots:
 		slot.hide()
 
 func _show(index: int, lit: bool) -> void:
 	var slot := _slots[index]
-	slot.texture = _glyphs[index].texture(_notes[index], lit) if _is_known(index) else blank_texture
+	_lit[index] = lit
+	if _is_known(index):
+		slot.show_note(glyphs, _notes[index], _glyph_sets[index], lit)
+	else:
+		slot.show_texture(blank_texture)
 	slot.position.y = _slot_y_at(index)
 	slot.show()
+
+func _redraw() -> void:
+	for i: int in _notes.size():
+		_show(i, _lit[i])
 
 func _is_known(index: int) -> bool:
 	return _known.is_empty() or _known[index]

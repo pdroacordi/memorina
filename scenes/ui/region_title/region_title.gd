@@ -21,6 +21,9 @@ const RULE_Y := 50.0
 @export var rise: float = 3.0
 
 var _tween: Tween
+## The keys last shown, so a language change rewrites them.
+var _name_key: String = ""
+var _epithet_key: String = ""
 
 @onready var _art: Control = $Art
 @onready var _card: Control = $Art/Card
@@ -32,6 +35,10 @@ var _tween: Tween
 func _ready() -> void:
 	_art.modulate.a = 0.0
 	_art.visible = false
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready() and not _name_key.is_empty():
+		_set_text(_name_key, _epithet_key)
 
 ## Fades the title in, holds it and fades it out; a title still showing fades out first.
 ## Pausable and scaled, so it stops under a performance freeze and a menu hold and resumes where it was.
@@ -67,6 +74,8 @@ func alpha() -> float:
 	return _art.modulate.a if _art.visible else 0.0
 
 func _set_text(name_key: String, epithet_key: String) -> void:
+	_name_key = name_key
+	_epithet_key = epithet_key
 	_name.text = tr(name_key)
 	_epithet.text = tr(epithet_key) if not epithet_key.is_empty() else ""
 	var font := _name.get_theme_font(&"font")

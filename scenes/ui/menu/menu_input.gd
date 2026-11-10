@@ -10,10 +10,23 @@ signal zoom_pressed(direction: int)
 signal back_pressed
 ## +1 is the next page (right), -1 the previous (left).
 signal page_pressed(direction: int)
+## While capturing: a key (physical keycode) or pad button was pressed for a binding (systems/settings).
+signal bind_pressed(device: KeyBindings.Device, code: int)
+## While capturing: `pause` (Esc, Start) gave the capture up.
+signal capture_cancelled
 
 ## Map pan intent, -1..1 per axis.
 var pan: Vector2:
 	get: return Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+
+## While true only `bind_pressed` and `capture_cancelled` are emitted, and every key and pad event is consumed.
+var capturing: bool = false:
+	set(value):
+		if capturing and not value:
+			# A direction held through the capture is not a new page edge.
+			_left_held = Input.is_action_pressed("ui_left")
+			_right_held = Input.is_action_pressed("ui_right")
+		capturing = value
 
 ## Whether left or right was held as of the last event about it; a stick reports pressed on every motion.
 var _left_held: bool = false
@@ -22,6 +35,9 @@ var _right_held: bool = false
 
 ## At most one signal per event, toggles before back: Esc is both `pause` and `ui_cancel`.
 func _input(event: InputEvent) -> void:
+	if capturing:
+		_capture(event)
+		return
 	var page := _page_edge(event)
 	if event.is_action_pressed("pause"):
 		pause_pressed.emit()
@@ -52,3 +68,16 @@ func _page_edge(event: InputEvent) -> int:
 			edge = 1
 		_right_held = held
 	return edge
+
+## Consumed first: a handler may end the capture, and the press must still reach nothing else.
+func _capture(event: InputEvent) -> void:
+	if not (event is InputEventKey or event is InputEventJoypadButton or event is InputEventJoypadMotion):
+		return
+	if is_inside_tree():
+		get_viewport().set_input_as_handled()
+	if event.is_action_pressed("pause"):
+		capture_cancelled.emit()
+	elif event is InputEventKey and event.is_pressed() and not event.is_echo():
+		bind_pressed.emit(KeyBindings.Device.KEYBOARD, KeyBindings.code_of(event, KeyBindings.Device.KEYBOARD))
+	elif event is InputEventJoypadButton and event.is_pressed():
+		bind_pressed.emit(KeyBindings.Device.PAD, (event as InputEventJoypadButton).button_index)

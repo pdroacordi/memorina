@@ -1,0 +1,271 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "max_duration": 11.250000000000002,
+ "player_position": [
+  160,
+  5960
+ ],
+ "locale": "en",
+ "skills": [
+  2
+ ],
+ "steps": [
+  {
+   "t": 1.5,
+   "log": "start"
+  },
+  {
+   "t": 2.0,
+   "joy_button": 6,
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "joy_button": 6,
+   "pressed": false
+  },
+  {
+   "t": 2.13,
+   "log": "after_J6"
+  },
+  {
+   "t": 2.25,
+   "joy_button": 1,
+   "pressed": true
+  },
+  {
+   "t": 2.3,
+   "joy_button": 1,
+   "pressed": false
+  },
+  {
+   "t": 2.38,
+   "log": "after_J1"
+  },
+  {
+   "t": 2.7,
+   "screenshot": "d01_b_closed"
+  },
+  {
+   "t": 2.7,
+   "log": "d01_b_closed"
+  },
+  {
+   "t": 3.55,
+   "joy_button": 1,
+   "pressed": true
+  },
+  {
+   "t": 3.6,
+   "joy_button": 1,
+   "pressed": false
+  },
+  {
+   "t": 3.68,
+   "log": "after_J1"
+  },
+  {
+   "t": 3.95,
+   "screenshot": "d02_b_unpaused_roll"
+  },
+  {
+   "t": 3.95,
+   "log": "d02_b_unpaused_roll"
+  },
+  {
+   "t": 4.0,
+   "log": "roll_0"
+  },
+  {
+   "t": 4.1,
+   "log": "roll_1"
+  },
+  {
+   "t": 4.2,
+   "log": "roll_2"
+  },
+  {
+   "t": 4.3,
+   "log": "roll_3"
+  },
+  {
+   "t": 4.4,
+   "log": "roll_4"
+  },
+  {
+   "t": 4.5,
+   "log": "roll_5"
+  },
+  {
+   "t": 5.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 5.05,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 5.13,
+   "log": "after_Escape"
+  },
+  {
+   "t": 5.25,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 5.3,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 5.38,
+   "log": "after_Down"
+  },
+  {
+   "t": 5.5,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 5.55,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 5.63,
+   "log": "after_Enter"
+  },
+  {
+   "t": 5.75,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 5.8,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 5.88,
+   "log": "after_Right"
+  },
+  {
+   "t": 6.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 6.05,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 6.2,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 6.25,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 6.4,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 6.45,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 6.6,
+   "log": "after_3xDown"
+  },
+  {
+   "t": 6.6,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 6.65,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 6.73,
+   "log": "after_Left"
+  },
+  {
+   "t": 7.45,
+   "screenshot": "d03_window_1x"
+  },
+  {
+   "t": 7.45,
+   "log": "d03_window_1x"
+  },
+  {
+   "t": 7.5,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 7.55,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 7.63,
+   "log": "after_Right"
+  },
+  {
+   "t": 8.35,
+   "screenshot": "d04_window_2x"
+  },
+  {
+   "t": 8.35,
+   "log": "d04_window_2x"
+  },
+  {
+   "t": 8.4,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 8.45,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 8.53,
+   "log": "after_Escape"
+  },
+  {
+   "t": 8.65,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 8.7,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 8.78,
+   "log": "after_Escape"
+  },
+  {
+   "t": 9.2,
+   "screenshot": "d05_resumed"
+  },
+  {
+   "t": 9.2,
+   "log": "d05_resumed"
+  }
+ ]
+}

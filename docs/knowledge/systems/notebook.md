@@ -87,7 +87,7 @@ LORE entry `lore_seeds` (after `lore_double_jump`), present from the first cache
   - A 106 px `Tail` under `Rows` lets any row's top reach the list's top, so the scroll is never clamped into an empty top line.
   - The framing reruns on every `Rows.sort_children` from the same base, because autowrapped rows settle over several sorts (`gotchas/autowrapped-rows-settle-over-several-sorts`).
 - **Read:** an entry is marked read when it leaves the right page (focus moves, a page turns, the book closes). The row mark and the tab marks update then.
-- **Song page:** `SONG_TITLE_*`, the six notes in `NoteGlyphSet` glyphs for `InputDevice.glyph_set` (redrawn on `device_changed`), the season and material line, and the body.
+- **Song page:** `SONG_TITLE_*`, the six notes in `NoteGlyphs` glyphs for `InputDevice.glyph_set` (`NoteGlyph` slots; redrawn on `device_changed` and `Settings.bindings_changed`, `systems/settings`), the season and material line, and the body.
   - The glyphs are 16x16 pack px, 2x like the rest of the book, the approved mockup's size (measured there: 1 texel per pack px, 14 px pitch).
   - `Notes` (a 16 px tall Control) sets them at x -3 + 14 i. The pack glyphs' ink is x 3..11, so the 3 px transparent margin falls outside the page and the ink spans x 0..79 of 81: six fit on one line.
   - `notebook_text_fit_test` checks each glyph's ink rect (`get_used_rect`) in all four glyph sets.

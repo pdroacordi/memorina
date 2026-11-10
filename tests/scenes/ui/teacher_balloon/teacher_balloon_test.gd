@@ -26,8 +26,8 @@ func _phrase() -> Array[Enums.Note]:
 func _glyph(index: int) -> TextureRect:
 	return _balloon.get_node("Box/Glyph%d" % index) as TextureRect
 
-func _glyphs_of(glyph_set: Enums.GlyphSet) -> NoteGlyphSet:
-	return _balloon.glyph_sets[glyph_set]
+func _texture(glyph_set: Enums.GlyphSet, note: Enums.Note, lit: bool) -> Texture2D:
+	return _balloon.glyphs.texture(note, glyph_set, lit)
 
 func test_it_opens_with_three_hidden_glyphs_of_the_device_set() -> void:
 	_balloon.show_for(_anchor, _phrase())
@@ -37,21 +37,21 @@ func test_it_opens_with_three_hidden_glyphs_of_the_device_set() -> void:
 		assert_bool(_glyph(i).visible).is_false()
 	_balloon.reveal(1)
 	assert_bool(_glyph(1).visible).is_true()
-	assert_object(_glyph(1).texture).is_same(_glyphs_of(InputDevice.glyph_set).texture(Enums.Note.RIGHT, false))
+	assert_object(_glyph(1).texture).is_same(_texture(InputDevice.glyph_set, Enums.Note.RIGHT, false))
 
 func test_light_reveals_all_and_uses_the_selected_glyphs() -> void:
 	_balloon.show_for(_anchor, _phrase())
 	_balloon.light(2)
-	var glyphs := _glyphs_of(InputDevice.glyph_set)
-	assert_object(_glyph(0).texture).is_same(glyphs.texture(Enums.Note.LEFT, true))
-	assert_object(_glyph(1).texture).is_same(glyphs.texture(Enums.Note.RIGHT, true))
-	assert_object(_glyph(2).texture).is_same(glyphs.texture(Enums.Note.LEFT, false))
+	var glyphs := InputDevice.glyph_set
+	assert_object(_glyph(0).texture).is_same(_texture(glyphs, Enums.Note.LEFT, true))
+	assert_object(_glyph(1).texture).is_same(_texture(glyphs, Enums.Note.RIGHT, true))
+	assert_object(_glyph(2).texture).is_same(_texture(glyphs, Enums.Note.LEFT, false))
 	assert_bool(_glyph(2).visible).is_true()
 
 func test_lit_as_sung_lights_each_revealed_glyph() -> void:
 	_balloon.show_for(_anchor, _phrase(), true)
 	_balloon.reveal(0)
-	assert_object(_glyph(0).texture).is_same(_glyphs_of(InputDevice.glyph_set).texture(Enums.Note.LEFT, true))
+	assert_object(_glyph(0).texture).is_same(_texture(InputDevice.glyph_set, Enums.Note.LEFT, true))
 
 func test_a_device_change_retextures() -> void:
 	InputDevice.glyph_set = Enums.GlyphSet.KEYBOARD_ARROWS
@@ -59,7 +59,7 @@ func test_a_device_change_retextures() -> void:
 	_balloon.reveal_all()
 	InputDevice.glyph_set = Enums.GlyphSet.XBOX
 	InputDevice.device_changed.emit(Enums.GlyphSet.XBOX)
-	assert_object(_glyph(0).texture).is_same(_glyphs_of(Enums.GlyphSet.XBOX).texture(Enums.Note.LEFT, false))
+	assert_object(_glyph(0).texture).is_same(_texture(Enums.GlyphSet.XBOX, Enums.Note.LEFT, false))
 
 func test_a_shake_returns_home() -> void:
 	_balloon.show_for(_anchor, _phrase())

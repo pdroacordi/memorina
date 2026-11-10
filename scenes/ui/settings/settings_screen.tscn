@@ -1,0 +1,188 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/settings/settings_screen.gd" id="1_screen"]
+[ext_resource type="Theme" path="res://scenes/ui/menu/menu_theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://c1s18whd352pq" path="res://assets/sprites/hud/menu/bg_box_wood.png" id="3_box"]
+[ext_resource type="Script" path="res://scenes/ui/menu/menu_entry.gd" id="4_entry"]
+[ext_resource type="PackedScene" path="res://scenes/ui/menu/confirm_panel.tscn" id="5_confirm"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_up_g4.mp3" id="6_note"]
+[ext_resource type="AudioStream" path="res://assets/audios/music/menu_title.ogg" id="7_music"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/gate_bolt.wav" id="8_bolt"]
+
+[node name="SettingsScreen" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 320.0
+offset_bottom = 180.0
+mouse_filter = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_screen")
+
+[node name="Sheet" type="Control" parent="."]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Frame" type="NinePatchRect" parent="Sheet"]
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+mouse_filter = 2
+texture = ExtResource("3_box")
+patch_margin_left = 12
+patch_margin_top = 14
+patch_margin_right = 12
+patch_margin_bottom = 12
+
+[node name="Tabs" type="Control" parent="Sheet"]
+layout_mode = 0
+mouse_filter = 2
+
+[node name="SoundTab" type="Button" parent="Sheet/Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 16)
+layout_mode = 0
+offset_left = 26.0
+offset_top = 12.0
+offset_right = 90.0
+offset_bottom = 28.0
+script = ExtResource("4_entry")
+
+[node name="GeneralTab" type="Button" parent="Sheet/Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 16)
+layout_mode = 0
+offset_left = 94.0
+offset_top = 12.0
+offset_right = 158.0
+offset_bottom = 28.0
+script = ExtResource("4_entry")
+
+[node name="KeyboardTab" type="Button" parent="Sheet/Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 16)
+layout_mode = 0
+offset_left = 162.0
+offset_top = 12.0
+offset_right = 226.0
+offset_bottom = 28.0
+script = ExtResource("4_entry")
+
+[node name="PadTab" type="Button" parent="Sheet/Tabs"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 16)
+layout_mode = 0
+offset_left = 230.0
+offset_top = 12.0
+offset_right = 294.0
+offset_bottom = 28.0
+script = ExtResource("4_entry")
+
+[node name="Pages" type="Control" parent="Sheet"]
+layout_mode = 0
+mouse_filter = 2
+
+[node name="SoundPage" type="VBoxContainer" parent="Sheet/Pages"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 24.0
+offset_top = 31.0
+offset_right = 296.0
+offset_bottom = 152.0
+theme_override_constants/separation = 0
+
+[node name="GeneralPage" type="VBoxContainer" parent="Sheet/Pages"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 24.0
+offset_top = 31.0
+offset_right = 296.0
+offset_bottom = 152.0
+theme_override_constants/separation = 0
+
+[node name="KeyboardPage" type="VBoxContainer" parent="Sheet/Pages"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 24.0
+offset_top = 31.0
+offset_right = 296.0
+offset_bottom = 152.0
+theme_override_constants/separation = 0
+
+[node name="PadPage" type="VBoxContainer" parent="Sheet/Pages"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 24.0
+offset_top = 31.0
+offset_right = 296.0
+offset_bottom = 152.0
+theme_override_constants/separation = 0
+
+[node name="Status" type="Label" parent="Sheet"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 24.0
+offset_top = 154.0
+offset_right = 296.0
+offset_bottom = 164.0
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ConfirmResetKeyboard" parent="." instance=ExtResource("5_confirm")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 92.0
+offset_top = 52.0
+offset_right = 228.0
+offset_bottom = 128.0
+body_key = "CONFIRM_RESET_KEYBOARD"
+
+[node name="ConfirmResetPad" parent="." instance=ExtResource("5_confirm")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+offset_left = 92.0
+offset_top = 52.0
+offset_right = 228.0
+offset_bottom = 128.0
+body_key = "CONFIRM_RESET_PAD"
+
+[node name="CaptureShield" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MasterPreview" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+process_mode = 3
+stream = ExtResource("6_note")
+bus = &"Master"
+
+[node name="MusicPreview" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+process_mode = 3
+stream = ExtResource("7_music")
+bus = &"Music"
+
+[node name="NotesPreview" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+process_mode = 3
+stream = ExtResource("6_note")
+bus = &"Notes"
+
+[node name="SfxPreview" type="AudioStreamPlayer" parent="."]
+unique_name_in_owner = true
+process_mode = 3
+stream = ExtResource("8_bolt")
+bus = &"Sfx"

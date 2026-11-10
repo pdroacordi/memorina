@@ -664,6 +664,18 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - A `.tscn` property written above `script =` is silently dropped; probe live values (`node.get(prop)`) before trusting
     a scene file (`bugs/region-scenes-set-music-before-their-script-so-no-region-plays-a-theme`).
 
+- **Learned 2026-11-10 (UI-07 settings)**:
+  - **`tools/playtest/scripts/ui07_settings_probe_driver.gd`** prints Settings state the runner's `log` lacks: focus as
+    parent/name('text'), Settings page, status text, capturing, playing preview players (bus, volume_db), each bus's step and
+    dB, the locale, `has_disk()`, and the InputMap events of jump/zoom/map/attack/ui_accept. With `PROBE_TITLE=1` it boots
+    the title and plays a `[{t, key|joy_button|screenshot|quit}]` json in real seconds.
+  - **The title is a disk session** (NONE): its Settings writes `settings_debug.cfg` on close. Redirect `APPDATA`, as for slots.
+    The runner is MEMORY. Confirm with the probe's `disk=false` and an empty scratch dir.
+  - The OS locale boots a title in pt_BR: a title run without a language switch is Portuguese.
+  - A Settings row's real height is the button's own minimum, not `HEIGHT`. Measure the row pitch in pixels or log `size.y`.
+    Hidden pages report `position.y = 0` (not laid out), so log heights only.
+  - The Settings panel fills the window, so a 0.5-scale contact sheet is enough for flow, but read text fit at full resolution.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

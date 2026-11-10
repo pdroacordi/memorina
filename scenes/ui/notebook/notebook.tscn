@@ -6,10 +6,6 @@
 [ext_resource type="Resource" path="res://resources/songs/song_catalog.tres" id="4_songs"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/frost_guardian/frost_guardian_stats.tres" id="5_frost"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_guardian_stats.tres" id="6_bloom"]
-[ext_resource type="Resource" path="res://resources/ui/memorina/glyphs_keyboard_arrows.tres" id="7_arrows"]
-[ext_resource type="Resource" path="res://resources/ui/memorina/glyphs_keyboard_wasd.tres" id="8_wasd"]
-[ext_resource type="Resource" path="res://resources/ui/memorina/glyphs_xbox.tres" id="9_xbox"]
-[ext_resource type="Resource" path="res://resources/ui/memorina/glyphs_playstation.tres" id="10_ps"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/spellbook.png" id="11_book"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/spellbook_opening.png" id="12_open"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/notebook/spellbook_next_page.png" id="13_next"]
@@ -32,10 +28,10 @@
 [ext_resource type="Shader" path="res://scenes/ui/notebook/notebook_forgotten.gdshader" id="15_shader"]
 [ext_resource type="PackedScene" path="res://scenes/ui/notebook/notebook_mark.tscn" id="16_mark"]
 [ext_resource type="Script" path="res://resources/characters/guardians/guardian_stats.gd" id="17_stats"]
-[ext_resource type="Script" path="res://resources/ui/memorina/note_glyph_set.gd" id="18_glyphs"]
 [ext_resource type="Script" path="res://scenes/ui/notebook/notebook_cue.gd" id="19_cue"]
 [ext_resource type="Script" path="res://scenes/ui/notebook/struck_label.gd" id="90_struck"]
 [ext_resource type="Texture2D" path="res://assets/sprites/hud/memorina/note_blank.png" id="91_blank"]
+[ext_resource type="Script" path="res://scenes/ui/memorina_hud/note_glyph.gd" id="92_note_glyph"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_forgotten"]
 shader = ExtResource("15_shader")
@@ -52,7 +48,6 @@ script = ExtResource("1_script")
 catalog = ExtResource("3_catalog")
 songs = ExtResource("4_songs")
 guardians = Array[ExtResource("17_stats")]([ExtResource("5_frost"), ExtResource("6_bloom")])
-glyph_sets = Array[ExtResource("18_glyphs")]([ExtResource("7_arrows"), ExtResource("8_wasd"), ExtResource("9_xbox"), ExtResource("10_ps")])
 opening_strip = ExtResource("12_open")
 next_page_strip = ExtResource("13_next")
 previous_page_strip = ExtResource("14_prev")
@@ -222,6 +217,7 @@ offset_left = -3.0
 offset_right = 13.0
 offset_bottom = 16.0
 mouse_filter = 2
+script = ExtResource("92_note_glyph")
 
 [node name="Note2" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
 layout_mode = 0
@@ -229,6 +225,7 @@ offset_left = 11.0
 offset_right = 27.0
 offset_bottom = 16.0
 mouse_filter = 2
+script = ExtResource("92_note_glyph")
 
 [node name="Note3" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
 layout_mode = 0
@@ -236,6 +233,7 @@ offset_left = 25.0
 offset_right = 41.0
 offset_bottom = 16.0
 mouse_filter = 2
+script = ExtResource("92_note_glyph")
 
 [node name="Note4" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
 layout_mode = 0
@@ -243,6 +241,7 @@ offset_left = 39.0
 offset_right = 55.0
 offset_bottom = 16.0
 mouse_filter = 2
+script = ExtResource("92_note_glyph")
 
 [node name="Note5" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
 layout_mode = 0
@@ -250,6 +249,7 @@ offset_left = 53.0
 offset_right = 69.0
 offset_bottom = 16.0
 mouse_filter = 2
+script = ExtResource("92_note_glyph")
 
 [node name="Note6" type="TextureRect" parent="Art/Pages/RightPage/Detail/Notes"]
 layout_mode = 0
@@ -257,6 +257,7 @@ offset_left = 67.0
 offset_right = 83.0
 offset_bottom = 16.0
 mouse_filter = 2
+script = ExtResource("92_note_glyph")
 
 [node name="Line" type="Label" parent="Art/Pages/RightPage/Detail"]
 unique_name_in_owner = true

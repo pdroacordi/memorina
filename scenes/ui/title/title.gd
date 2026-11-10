@@ -1,6 +1,6 @@
 class_name Title
 extends Control
-## The title: New game, Continue and Quit game, and the slot screen behind them. It owns the saves list and every SaveSystem call.
+## The title: New game, Continue, Settings and Quit game, and the slot and Settings screens behind them. It owns the saves list and every SaveSystem call.
 
 ## Loaded at swap time: the game exports this scene, so a PackedScene export would be a cycle.
 @export_file("*.tscn") var game_scene: String = ""
@@ -17,18 +17,19 @@ var _music_request: MusicRequest
 @onready var _main: Control = %Main
 @onready var _new_game: Button = %NewGame
 @onready var _continue: Button = %Continue
+@onready var _settings: Button = %Settings
 @onready var _quit_game: Button = %QuitGame
 @onready var _slot_screen: SlotScreen = %SlotScreen
+@onready var _settings_screen: SettingsScreen = %SettingsScreen
 @onready var _fade: Fade = %Fade
 @onready var _menu_input: MenuInput = $MenuInput
 
 
 func _ready() -> void:
-	_new_game.text = tr("TITLE_NEW_GAME")
-	_continue.text = tr("TITLE_CONTINUE")
-	_quit_game.text = tr("TITLE_QUIT_GAME")
+	_retranslate()
 	_new_game.pressed.connect(_on_new_game)
 	_continue.pressed.connect(_open_slots.bind(SlotScreen.Purpose.LOAD, _continue))
+	_settings.pressed.connect(_open_settings)
 	_quit_game.pressed.connect(_quit)
 	_slot_screen.chosen.connect(_on_chosen)
 	_slot_screen.erase_confirmed.connect(_on_erase_confirmed)
@@ -36,12 +37,18 @@ func _ready() -> void:
 	# Esc is `pause` and B is `ui_cancel`; on the title both only step back.
 	_menu_input.pause_pressed.connect(_step_back)
 	_menu_input.back_pressed.connect(_step_back)
+	_menu_input.page_pressed.connect(_on_page)
+	_settings_screen.menu_input = _menu_input
 	if music != null:
 		_music_request = Music.request(music, MusicRequest.Layer.MENU, self)
 	_slot_screen.close()
 	show_saves(SaveSystem.read_slots())
 	_focus_main()
 	_fade.to_clear()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
+		_retranslate()
 
 ## Takes the slots' saves in slot order (null is empty); Continue is greyed when there is none.
 func show_saves(saves: Array[PlayerData]) -> void:
@@ -55,6 +62,26 @@ func is_showing_slots() -> bool:
 
 func is_leaving() -> bool:
 	return _leaving
+
+func is_showing_settings() -> bool:
+	return _settings_screen.visible
+
+func _retranslate() -> void:
+	_new_game.text = tr("TITLE_NEW_GAME")
+	_continue.text = tr("TITLE_CONTINUE")
+	_settings.text = tr("TITLE_SETTINGS")
+	_quit_game.text = tr("TITLE_QUIT_GAME")
+
+func _open_settings() -> void:
+	if _leaving:
+		return
+	_main.hide()
+	_settings_screen.open()
+
+## Left and right step a Settings value; consumed only when one took it.
+func _on_page(direction: int) -> void:
+	if not _leaving and _settings_screen.visible and _settings_screen.step(direction):
+		get_viewport().set_input_as_handled()
 
 func _on_new_game() -> void:
 	var slot := SaveSlots.first_empty(_saves)
@@ -105,7 +132,15 @@ func _focus_main() -> void:
 		_continue.grab_focus()
 
 func _step_back() -> void:
-	if _leaving or not _slot_screen.visible:
+	if _leaving:
+		return
+	if _settings_screen.visible:
+		if not _settings_screen.step_back():
+			_settings_screen.close()
+			_main.show()
+			_settings.grab_focus()
+		return
+	if not _slot_screen.visible:
 		return
 	if not _slot_screen.step_back():
 		_show_main()

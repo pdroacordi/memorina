@@ -4,9 +4,9 @@ type: system
 title: Screens: the menu system (pause, the notebook, the map and the title)
 status: active
 tags: [menu, pause, screens, ui, focus, theme, hold, i18n]
-related: [systems/notices, systems/dialogue, systems/map, systems/notebook, systems/region-title, architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/notebook-entries-are-derived-from-the-save, architecture/map-reveal-seen-cells-per-room, systems/input, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/time-scale-zero-stops-delta-particles-and-time, playtests/2026-10-02-pause-menu, playtests/2026-10-02-title-and-slots, bugs/a-click-during-a-leave-fade-still-reaches-the-menu-buttons, bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight]
+related: [systems/settings, systems/notices, systems/dialogue, systems/map, systems/notebook, systems/region-title, architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/notebook-entries-are-derived-from-the-save, architecture/map-reveal-seen-cells-per-room, systems/input, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/time-scale-zero-stops-delta-particles-and-time, playtests/2026-10-02-pause-menu, playtests/2026-10-02-title-and-slots, bugs/a-click-during-a-leave-fade-still-reaches-the-menu-buttons, bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight]
 created: 2026-10-02
-updated: 2026-10-16
+updated: 2026-11-10
 source_files:
   - scenes/ui/screens/screens.gd
   - scenes/ui/screens/screen_router.gd
@@ -21,6 +21,7 @@ source_files:
   - scenes/ui/title/slot_screen.gd
   - scenes/ui/title/slot_card.gd
   - scenes/ui/title/flute_pulse.gd
+  - scenes/ui/settings/settings_screen.gd
   - scenes/ui/title/title_grey.gdshader
   - scenes/world/game.tscn
   - tools/fonts/patch_tilde.py
@@ -63,7 +64,7 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 - **`Screens._on_press`** applies the decision:
   - A kind whose `MenuScreen.can_open()` answers false stays shut. A refused press is not consumed, so it reaches the world.
   - A press that closes a screen first offers `step_back()`, so an inner panel closes before the screen does. A screen may also use it to play its own way out: the notebook plays the book shut, then emits `close_requested`, and `Screens` closes and releases. The world stays held until the book is shut, and Esc on the notebook never opens the pause.
-  - `page_pressed` (left / right) goes to the notebook and is consumed only while the notebook is open.
+  - `page_pressed` (left / right) goes to the notebook and is consumed only while the notebook is open; while the pause is open it goes to `PauseMenu.step_setting`, consumed only when a Settings value row took it (`systems/settings`).
   - Any press it acts on is consumed with `set_input_as_handled()`. B is both back and roll: unconsumed, the B that resumes would also roll.
   - Esc and Start close the map without opening the pause (the router's "pause closes an open screen"); a second Esc pauses.
   - `zoom_pressed` goes to the map and is consumed only while the map is open: Z / X and pad A / X are also jump and attack.
@@ -77,9 +78,10 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 - **Adding a screen:** a `MenuScreen` scene (`can_open() -> bool`, `open()`, `close()`, `step_back() -> bool`) as a child of `Screens`, one entry in `_screens`, and its kind in `HOLDING` if it holds or `BLOCKING` if it only stops Ivo.
 - **`MapScreen`:** see `systems/map`. It has no entries and takes no focus; its pan, zoom and refusals are there.
 - **`Notebook`:** see `systems/notebook`. It holds the world; its rows take focus after the opening animation, and its open, close and page-turn strips are real-time tweens.
-- **`PauseMenu`:** Resume, Skip scene, Quit to title, Quit game. Opening focuses Resume.
+- **`PauseMenu`:** Resume, Skip scene, Settings, Quit to title, Quit game. Opening focuses Resume.
+  - **Settings** (UI-07, `systems/settings`): hides the box and the intent line and opens the `SettingsScreen` child of `Art`. Back (B, Esc) reaches `PauseMenu.step_back`, which offers `SettingsScreen.step_back` first (a reset question), then closes Settings onto its entry. Settings adds no hold of its own; closing the pause closes Settings too, which commits. Screens hands it its `MenuInput` through `PauseMenu.set_menu_input` for the capture. Text `PAUSE_SETTINGS`.
   - **Skip scene** (STORY-15, `systems/cutscenes`; "Pelo menu de pausa (Recommended)", user, 2026-10-16): hidden unless `PauseMenu.can_skip` (set by `Game._ready` through `Screens.set_scene_skip(CutsceneDirector.can_skip)`) answers true when the menu opens; then the panel and the entries grow by 20 art px. Pressing it emits `Screens.skip_scene_requested` (→ `World/CutsceneDirector.request_skip`) and closes the menu; the scene lands on its next unpaused tick. Text `PAUSE_SKIP_SCENE`.
-  - **The current intent** (UI-11, `systems/notices`): a line under the panel (6 art px below its bottom, art x 10 to 310, centred; y 148, or 168 with Skip scene), cream with a dark outline, asked as the menu opens through `PauseMenu.intent` (set by `Game._ready` through `Screens.set_intent(NoticeWatcher.intent_key)`). It is the intent last told, not the live one, so it changes when the intent's notice shows: "default, 2026-10-16" (the coordinator's call, from design 06 §5). Hidden when there is none. Design 06 §5: the intent "fica no menu de pausa". The 96 px panel cannot hold the longest intent, so the line sits under the box.
+  - **The current intent** (UI-11, `systems/notices`): a line under the panel (6 art px below its bottom, art x 10 to 310, centred; y 148, or 168 with Skip scene, ending by 180), cream with a dark outline, asked as the menu opens through `PauseMenu.intent` (set by `Game._ready` through `Screens.set_intent(NoticeWatcher.intent_key)`). It is the intent last told, not the live one, so it changes when the intent's notice shows: "default, 2026-10-16" (the coordinator's call, from design 06 §5). Hidden when there is none. Design 06 §5: the intent "fica no menu de pausa". The 96 px panel cannot hold the longest intent, so the line sits under the box.
   - Quit to title and Quit game each hide the box and open their own confirmation (`ConfirmQuitToTitle`, `ConfirmQuit`) with No focused.
   - Back or No returns to the box with the entry that asked focused (`_asked_by`). Yes emits `quit_to_title_requested` / `quit_game_requested`.
 - **Leaving for the title** (`Screens._leave_for_title`): the world stays held.
@@ -99,10 +101,10 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 
 - **The 2x rule:** each screen's art lives under ONE root Control of 320x180 with `scale = 2`, authored in pack pixels. Nothing below it is scaled again. The HUD stays 1x. The map's canvas under its root is a Node2D (`gotchas/a-control-is-culled-by-its-own-rect`).
 - **Entries are 16 pack px tall** (user decision 2026-10-06, "Taller entries"). At 14 px the 8 px font's accents (í, the patched tilde) fell on the Selected style's top highlight row (`bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight`). Every `MenuEntry` is 16 px: pause, title column, confirmation Yes/No, Erase.
-- **Pause layout (pack px):**
-  - panel `BGbox_05A`: 96x92 at (112, 50), 9-slice margins 12/14/12/12;
-  - banner `BannerMedium_04A`: 80x32 at (120, 38), straddling the panel top, margins 10/13/10/15;
-  - entries: 72x16, 4 px apart, from (124, 72) to (196, 128);
+- **Pause layout (pack px, since UI-07):**
+  - panel `BGbox_05A`: 96x112 at (112, 30) (132 tall with Skip scene), 9-slice margins 12/14/12/12;
+  - banner `BannerMedium_04A`: 80x32 at (120, 18), straddling the panel top, margins 10/13/10/15;
+  - entries: 72x16, 4 px apart, from (124, 52) to (196, 128) (148 with Skip scene);
   - confirmation: 136x76 at (92, 52), Yes/No 48x16 at y 46 inside it.
 - **`menu_theme.tres`:**
   - text font `memorina_text_font_size_8.ttf` at 8;
@@ -123,11 +125,11 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 
 ## Text
 
-`PAUSE_TITLE`, `PAUSE_RESUME`, `PAUSE_SKIP_SCENE`, `INTENT_*` (the intent line, `systems/notices`), `PAUSE_QUIT_TO_TITLE`, `PAUSE_QUIT_GAME`, `CONFIRM_QUIT_TO_TITLE`, `CONFIRM_QUIT_GAME`, `CONFIRM_YES`, `CONFIRM_NO`; the title's `TITLE_NEW_GAME`, `TITLE_CONTINUE`, `TITLE_QUIT_GAME`, `TITLE_ERASE`, `TITLE_EMPTY_SLOT`, `TITLE_PLAY_TIME` (`%dh %02dm`: keep both placeholders), `CONFIRM_ERASE`, `CONFIRM_OVERWRITE`; and the place names `REGION_*` / `BENCH_*`, all in `i18n/translations.csv`, set through `tr()` in `_ready`. A `\n` in the CSV becomes a newline. `CONFIRM_QUIT_GAME` puts the question on its own line; the body Label uses `line_spacing = 0` to fit three lines in the panel.
+`PAUSE_TITLE`, `PAUSE_RESUME`, `PAUSE_SKIP_SCENE`, `PAUSE_SETTINGS`, `TITLE_SETTINGS`, `INTENT_*` (the intent line, `systems/notices`), `PAUSE_QUIT_TO_TITLE`, `PAUSE_QUIT_GAME`, `CONFIRM_QUIT_TO_TITLE`, `CONFIRM_QUIT_GAME`, `CONFIRM_YES`, `CONFIRM_NO`; the title's `TITLE_NEW_GAME`, `TITLE_CONTINUE`, `TITLE_QUIT_GAME`, `TITLE_ERASE`, `TITLE_EMPTY_SLOT`, `TITLE_PLAY_TIME` (`%dh %02dm`: keep both placeholders), `CONFIRM_ERASE`, `CONFIRM_OVERWRITE`; and the place names `REGION_*` / `BENCH_*`, all in `i18n/translations.csv`, set through `tr()` in each script's `_retranslate()` (called from `_ready` and on `NOTIFICATION_TRANSLATION_CHANGED`, so a language change in Settings rewrites an open menu; `systems/settings`). A `\n` in the CSV becomes a newline. `CONFIRM_QUIT_GAME` puts the question on its own line; the body Label uses `line_spacing = 0` to fit three lines in the panel.
 
 ## User decisions, 2026-10-02
 
-- Entries: "Resume, Settings, Quit to title, Quit game". Quit to title is built (UI-05); Settings arrives with UI-07.
+- Entries: "Resume, Settings, Quit to title, Quit game". Quit to title is built (UI-05); Settings is built (UI-07, 2026-11-10).
 - Style "A wood": `BGbox_05A` + `BannerMedium_04A` + `Button_01A`.
 - Behind the menu: "Dim, Ivo stops". Revised by "Stop everything" (`systems/songs-and-the-memorina`, Freeze and hold).
 - Art scale: "2x for menus".
@@ -145,7 +147,8 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 - **Flute pulse:** behind the logo, `FlutePulse` (96x36 at (110, 24), under the pipes at logo x 38..117, y 24..47) breathes the four season colours, winter to summer left to right.
   - It is a dithered ellipse in pack pixels. Its reach and its alpha (peak 0.45, the user's "Stronger (~0.45)", 2026-10-06) follow a 4 s real-time breath set from script; the shader reads neither `TIME` nor `FRAGCOORD`.
   - The four colours are the season palettes' tints, summer included (gold): the user's "Palette gold", 2026-10-06.
-- **Main screen:** a column of 72x16 entries at (124, 92): New game, Continue, Quit game. Settings will be one more entry between Continue and Quit game.
+- **Main screen:** a column of 72x16 entries at (124, 92) to y 168: New game, Continue, Settings, Quit game.
+  - **Settings** (UI-07, `systems/settings`) hides `%Main` and opens the `SettingsScreen` child of `Art`; Esc and B step back out of it onto its entry (`Title._step_back`), and `Title._on_page` routes left / right to its value rows.
   - With no used slot, Continue is disabled with `focus_mode` NONE; its text uses `font_disabled_color` (cream at 0.4).
   - Opening focuses Continue when it is enabled, else New game.
   - Quit game quits without asking: nothing is unsaved at the title.
@@ -196,4 +199,4 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 
 ## Tests
 
-`tests/scenes/ui/screens/screen_router_test.gd`, `screens_test.gd` (with buttons pressed while leaving), `screens_map_test.gd` (the map with a real Ivo), `screens_notebook_test.gd`, `tests/scenes/ui/menu/menu_input_test.gd`, `tests/scenes/world/world_freeze_test.gd`, `tests/scenes/ui/title/title_test.gd`, `slot_screen_test.gd`.
+`tests/scenes/ui/screens/screen_router_test.gd`, `screens_test.gd` (with buttons pressed while leaving), `screens_map_test.gd` (the map with a real Ivo), `screens_notebook_test.gd`, `tests/scenes/ui/menu/menu_input_test.gd`, `tests/scenes/world/world_freeze_test.gd`, `tests/scenes/ui/title/title_test.gd`, `slot_screen_test.gd`, `tests/scenes/ui/settings/` (`systems/settings`).

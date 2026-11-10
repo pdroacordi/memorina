@@ -20,6 +20,10 @@ const DISABLED_INK := Color(0.32, 0.2, 0.25, 0.4)
 
 ## The offer id of each row, in row order.
 var _row_ids: Array[StringName] = []
+## What the panel shows, so a language change can show it again.
+var _offers: Array[SeedOffer] = []
+var _held_count: int = 0
+var _said_keys: PackedStringArray = PackedStringArray()
 
 @onready var _held: Label = %Held
 @onready var _icon: TextureRect = %Icon
@@ -37,17 +41,22 @@ func _ready() -> void:
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_UNPAUSED and visible:
 		_focus_first()
+	elif what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready() and visible:
+		_retranslate()
 
 ## Opens on `offers` with `held` seeds, the said line empty and the first row the player can afford focused.
 func open(offers: Array[SeedOffer], held: int) -> void:
 	show()
 	_said.text = ""
+	_said_keys = PackedStringArray()
 	show_offers(offers, held)
 	_focus_first()
 
 ## Rebuilds the rows for `offers` and `held`, keeping focus near the row it was on; the said line stays.
 func show_offers(offers: Array[SeedOffer], held: int) -> void:
 	var focused := _focused_index()
+	_offers = offers
+	_held_count = held
 	_held.text = tr("SHOP_SEEDS_HELD") % held
 	for row: Node in _rows.get_children():
 		if row != _leave:
@@ -65,6 +74,7 @@ func show_offers(offers: Array[SeedOffer], held: int) -> void:
 
 ## Shows `text_key` under the rows; a text with a `%s` takes tr(`arg_key`).
 func say(text_key: String, arg_key: String = "") -> void:
+	_said_keys = PackedStringArray([text_key, arg_key])
 	var text := tr(text_key)
 	_said.text = text % tr(arg_key) if text.contains("%s") else text
 
@@ -183,3 +193,11 @@ func _focus_near(index: int) -> void:
 
 func _on_row_pressed(offer_id: StringName) -> void:
 	chosen.emit(offer_id)
+
+## Rewrites the shown texts in place, so focus and the rows stay.
+func _retranslate() -> void:
+	_held.text = tr("SHOP_SEEDS_HELD") % _held_count
+	for i: int in _row_ids.size():
+		(_rows.get_child(i) as Button).text = row_text(_offers[i])
+	if not _said_keys.is_empty():
+		say(_said_keys[0], _said_keys[1])

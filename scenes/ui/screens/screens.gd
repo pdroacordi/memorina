@@ -37,6 +37,7 @@ func _ready() -> void:
 	_screens[ScreenRouter.Kind.MAP] = _map
 	_screens[ScreenRouter.Kind.NOTEBOOK] = _notebook
 	_map.menu_input = _menu_input
+	_pause_menu.set_menu_input(_menu_input)
 	_menu_input.pause_pressed.connect(_on_press.bind(ScreenRouter.Press.PAUSE))
 	_menu_input.notebook_pressed.connect(_on_press.bind(ScreenRouter.Press.NOTEBOOK))
 	_menu_input.map_pressed.connect(_on_press.bind(ScreenRouter.Press.MAP))
@@ -114,9 +115,15 @@ func _on_zoom(direction: int) -> void:
 	get_viewport().set_input_as_handled()
 	_map.zoom(direction)
 
-## Left and right turn the notebook's pages; consumed only while it is open.
+## Left and right turn the notebook's pages and step a Settings value; consumed only then.
 func _on_page(direction: int) -> void:
-	if _leaving or _open != ScreenRouter.Kind.NOTEBOOK:
+	if _leaving:
+		return
+	if _open == ScreenRouter.Kind.PAUSE:
+		if _pause_menu.step_setting(direction):
+			get_viewport().set_input_as_handled()
+		return
+	if _open != ScreenRouter.Kind.NOTEBOOK:
 		return
 	get_viewport().set_input_as_handled()
 	_notebook.turn(direction)

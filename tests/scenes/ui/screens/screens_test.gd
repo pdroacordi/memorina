@@ -114,11 +114,11 @@ func test_every_label_is_translated() -> void:
 	assert_str((_pause_menu.find_child("Resume") as Button).text).is_not_equal("PAUSE_RESUME").is_not_empty()
 	assert_str((_pause_menu.find_child("Body") as Label).text).is_not_equal("CONFIRM_QUIT_GAME").is_not_empty()
 
-func test_quit_to_title_sits_between_resume_and_quit_game() -> void:
+func test_settings_and_quit_to_title_sit_between_resume_and_quit_game() -> void:
 	var names: Array[String] = []
 	for entry: Node in _pause_menu.find_child("Entries").get_children():
 		names.append(entry.name)
-	assert_array(names).contains_exactly(["Resume", "SkipScene", "QuitToTitle", "QuitGame"])
+	assert_array(names).contains_exactly(["Resume", "SkipScene", "Settings", "QuitToTitle", "QuitGame"])
 
 ## "Skip scene" shows only while a scene can be skipped; pressing it asks for the skip and resumes (systems/cutscenes).
 func test_skip_scene_shows_only_while_a_scene_can_be_skipped() -> void:
@@ -217,3 +217,38 @@ func _escape() -> InputEventKey:
 	event.physical_keycode = KEY_ESCAPE
 	event.pressed = true
 	return event
+
+## Settings opens from its entry over the held world; Esc closes it onto its entry, then the pause, with one hold.
+func test_settings_opens_from_its_entry_and_back_closes_it_then_the_pause() -> void:
+	_menu_input.pause_pressed.emit()
+	(_pause_menu.find_child("Settings") as Button).pressed.emit()
+	assert_bool(_pause_menu.is_showing_settings()).is_true()
+	assert_bool((_pause_menu.find_child("Box") as Control).visible).is_false()
+	assert_str(_focused()).is_equal("SoundTab")
+	_menu_input._input(_escape())
+	assert_bool(_pause_menu.is_showing_settings()).is_false()
+	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.PAUSE)
+	assert_str(_focused()).is_equal("Settings")
+	_menu_input._input(_escape())
+	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.NONE)
+	assert_array(_requests).contains_exactly(["hold", "release"])
+
+## Right on a volume row steps it and is consumed; on a tab it is left to focus.
+func test_a_page_press_steps_a_settings_value_only_on_a_value_row() -> void:
+	_menu_input.pause_pressed.emit()
+	(_pause_menu.find_child("Settings") as Button).pressed.emit()
+	assert_bool(_pause_menu.step_setting(1)).is_false()
+	var master := _pause_menu.find_child("SettingsVolumeMaster", true, false) as Button
+	master.grab_focus()
+	assert_bool(_pause_menu.step_setting(-1)).is_true()
+	assert_int(Settings.volume(AudioBuses.MASTER)).is_equal(9)
+	Settings.set_volume(AudioBuses.MASTER, SettingsMath.VOLUME_STEPS)
+
+func test_settings_is_ignored_while_leaving_for_the_title() -> void:
+	_menu_input.pause_pressed.emit()
+	(_pause_menu.find_child("QuitToTitle") as Button).pressed.emit()
+	(_confirm_quit_to_title().find_child("Yes") as Button).pressed.emit()
+	_menu_input.page_pressed.emit(1)
+	_menu_input.back_pressed.emit()
+	assert_int(_screens.showing()).is_equal(ScreenRouter.Kind.PAUSE)
+	assert_array(_requests).contains_exactly(["hold"])

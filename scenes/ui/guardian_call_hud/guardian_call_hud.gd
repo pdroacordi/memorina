@@ -5,8 +5,6 @@ class_name GuardianCallHud extends Control
 const LISTEN_KEY := "GUARDIAN_CALL_LISTEN"
 const SLIDE_TIME := 0.35
 
-## Glyph sets indexed by Enums.GlyphSet.
-@export var glyph_sets: Array[NoteGlyphSet] = []
 var _slide_tween: Tween
 ## The call's revealed count and glyph set, for a second track shown after it (GRD-06).
 var _revealed: int = 6
@@ -23,8 +21,6 @@ var _guardian_height: float = 0.0
 @onready var _pips: CurePips = $Frame/CurePips
 
 func _ready() -> void:
-	assert(glyph_sets.size() == Enums.GlyphSet.size(),
-		"GuardianCallHud has %d glyph sets for %d members of Enums.GlyphSet." % [glyph_sets.size(), Enums.GlyphSet.size()])
 	_message.text = LISTEN_KEY
 	hide()
 
@@ -38,7 +34,7 @@ func on_call_opened(song: Song, revealed: int, glyph_set: Enums.GlyphSet, cure_d
 	_sheet_b.hide()
 	_frame.modulate = song.tint().lerp(Color.WHITE, 0.45)
 	_sheet.modulate = Color.WHITE
-	_sheet.show_notes(song.notes, glyph_sets[glyph_set], revealed)
+	_sheet.show_notes(song.notes, glyph_set, revealed)
 	_pips.show_cure(cure_done, cure_total, song.tint())
 	modulate = Color.WHITE
 	show()
@@ -53,7 +49,7 @@ func slot_rect() -> Rect2:
 ## The call is two-track: track B in its own tint beside the first.
 func on_call_second_track(song: Song, _solvable: bool) -> void:
 	_sheet_b.modulate = song.tint()
-	_sheet_b.show_notes(song.notes, glyph_sets[_glyph_set], _revealed)
+	_sheet_b.show_notes(song.notes, _glyph_set, _revealed)
 	_sheet_b.show()
 
 func on_call_note_sounded(index: int) -> void:

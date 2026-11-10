@@ -14,11 +14,13 @@ signal cancelled
 
 
 func _ready() -> void:
-	_body.text = tr(body_key)
-	_yes.text = tr("CONFIRM_YES")
-	_no.text = tr("CONFIRM_NO")
+	_retranslate()
 	_yes.pressed.connect(confirmed.emit)
 	_no.pressed.connect(cancelled.emit)
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_TRANSLATION_CHANGED and is_node_ready():
+		_retranslate()
 
 func open() -> void:
 	show()
@@ -26,3 +28,8 @@ func open() -> void:
 
 func close() -> void:
 	hide()
+
+func _retranslate() -> void:
+	_body.text = tr(body_key)
+	_yes.text = tr("CONFIRM_YES")
+	_no.text = tr("CONFIRM_NO")

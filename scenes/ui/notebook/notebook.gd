@@ -30,7 +30,7 @@ const ROW := preload("res://scenes/ui/notebook/notebook_row.tscn")
 ## Every guardian's stats: a guardian page reads the song and the recalled skills it taught.
 @export var guardians: Array[GuardianStats] = []
 ## Indexed by Enums.GlyphSet.
-@export var glyph_sets: Array[NoteGlyphSet] = []
+@export var glyphs: NoteGlyphs = preload(NoteGlyphs.DEFAULT_PATH)
 @export var opening_strip: Texture2D
 @export var next_page_strip: Texture2D
 @export var previous_page_strip: Texture2D
@@ -100,11 +100,10 @@ static func skill_key(skill: Enums.PlayerSkill) -> String:
 func _ready() -> void:
 	var problems := catalog.validate()
 	assert(problems.is_empty(), "NotebookCatalog: %s" % ", ".join(problems))
-	assert(glyph_sets.size() == Enums.GlyphSet.size(),
-		"Notebook has %d glyph sets for %d members of Enums.GlyphSet." % [glyph_sets.size(), Enums.GlyphSet.size()])
 	for section: NotebookEntry.Section in SECTION_KEYS:
 		_tab(section).pressed.connect(turn_to.bind(section))
 	InputDevice.device_changed.connect(_on_device_changed)
+	Settings.bindings_changed.connect(_on_bindings_changed)
 	# Autowrapped rows settle over several sorts; the window is kept on the final layout.
 	_rows.sort_children.connect(func() -> void: _reframe.call_deferred())
 	_shut()
@@ -240,13 +239,19 @@ func _show_notes(entry: NotebookEntry, data: PlayerData) -> void:
 	var notes := songs.get_song(entry.index as Enums.Song).notes
 	var known := SongHalves.known_mask(data, entry.index)
 	var guessed := SongHalves.guessed_mask(data, entry.index)
-	var glyphs := glyph_sets[InputDevice.glyph_set]
 	for i: int in _notes.get_child_count():
-		var slot := _notes.get_child(i) as TextureRect
+		var slot := _notes.get_child(i) as NoteGlyph
 		slot.visible = i < notes.size()
-		if slot.visible:
-			slot.texture = glyphs.texture(notes[i], false) if known[i] else blank_texture
-			slot.modulate = IVO_INK if guessed[i] else Color.WHITE
+		if not slot.visible:
+			continue
+		if known[i]:
+			slot.show_note(glyphs, notes[i], InputDevice.glyph_set, false)
+		else:
+			slot.show_texture(blank_texture)
+		slot.modulate = IVO_INK if guessed[i] else Color.WHITE
+
+func _on_bindings_changed() -> void:
+	_on_device_changed(InputDevice.glyph_set)
 
 func _on_device_changed(_glyph_set: Enums.GlyphSet) -> void:
 	if _showing != null and _showing.section == NotebookEntry.Section.SONGS:

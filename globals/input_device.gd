@@ -35,22 +35,7 @@ func event_for(action: StringName) -> InputEvent:
 
 ## Pure over the InputMap, for tests.
 static func binding_for(action: StringName, for_set: Enums.GlyphSet) -> InputEvent:
-	if not InputMap.has_action(action):
-		return null
-	var pad := for_set in [Enums.GlyphSet.XBOX, Enums.GlyphSet.PLAYSTATION]
-	var fallback: InputEvent = null
-	for event: InputEvent in InputMap.action_get_events(action):
-		if pad:
-			if event is InputEventJoypadButton:
-				return event
-			if event is InputEventJoypadMotion and fallback == null:
-				fallback = event
-		elif event is InputEventKey:
-			if PlayerInput.glyph_set_for(event, "") == for_set:
-				return event
-			if fallback == null:
-				fallback = event
-	return fallback
+	return PlayerInput.binding_for(action, for_set)
 
 static func _is_deliberate(event: InputEvent) -> bool:
 	if event is InputEventKey or event is InputEventJoypadButton:

@@ -137,3 +137,4 @@ res://scenes/world/creatures/kestrel/kestrel.tscn
 res://scenes/world/creatures/lizard/lizard.tscn
 res://scenes/ui/teacher_balloon/teacher_balloon.tscn
 res://scenes/ui/bark_balloon/bark_balloon.tscn
+res://scenes/ui/settings/settings_screen.tscn

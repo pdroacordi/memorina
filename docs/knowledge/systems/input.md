@@ -1,22 +1,26 @@
 ---
 id: systems/input
 type: system
-title: Input: actions, gamepad layout, the three event readers and device glyphs
+title: Input: actions, gamepad layout, the three event readers, rebinding and device glyphs
 status: active
 tags: [input, gamepad, glyphs, keybindings, menu, pause]
-related: [systems/dialogue, systems/map, systems/notebook, architecture/character-controller-input-split, architecture/pause-menu-worldfreeze-reuse, systems/screens, gotchas/a-stick-is-pressed-on-every-motion-event, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-menu-press-reaches-the-last-node-first, bugs/player-input-edge-state-goes-stale-across-a-pause-menu]
+related: [systems/settings, systems/dialogue, systems/map, systems/notebook, architecture/character-controller-input-split, architecture/pause-menu-worldfreeze-reuse, systems/screens, gotchas/a-stick-is-pressed-on-every-motion-event, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-menu-press-reaches-the-last-node-first, bugs/player-input-edge-state-goes-stale-across-a-pause-menu]
 created: 2026-10-02
-updated: 2026-10-15
+updated: 2026-11-10
 source_files:
   - scenes/characters/ivo/player_input.gd
   - scenes/ui/menu/menu_input.gd
   - globals/input_device.gd
+  - globals/settings/settings.gd
+  - scenes/ui/key_glyph/binding_names.gd
   - project.godot
 ---
 
 # Input: actions, gamepad layout, the three event readers and device glyphs
 
 ## Actions (`project.godot`)
+
+The table is the project default. The rebindable actions (jump, attack, roll, draw_memorina, the four notes, map, notebook) can be moved on either device in Settings (UI-07, `systems/settings`); `Settings` is the only runtime writer of their InputMap events and of the zooms, which follow jump and attack. A note keeps its arrow; its letter key is the managed one.
 
 | Action | Keyboard | Pad | Deadzone |
 |---|---|---|---|
@@ -52,10 +56,11 @@ Only these three nodes read `InputEvent`s; the `verify-gates` input scan exclude
    - **`notes_only`** (set by `Player.pause_talk` while a beat holds NOTES, the guitar, `systems/story`): `_input` emits only `note_pressed` and every axis reads 0. Clearing it resyncs the held jump, down and up.
    - **`blocked`** (written only by `Player._refresh_block()` since STORY-15: in a talk, the talk's listening or the map; else in a cutscene, blocked; else the map; `block_input` / `unblock_input` set the map's part, `begin_talk` / `pause_talk` / `end_talk` the talk's, `begin_scene` / `end_scene` the scene's; `systems/cutscenes`): the node is DISABLED, so `_input` does not run, and `direction` and `look_direction` read 0. Clearing it re-enables the node, which resyncs. `Player.block_input` also drops the jump, roll, attack (including a combo press) and draw buffers and any pending sit or stand, so a press made just before the open never acts under the map.
 2. **`MenuInput`** (`scenes/ui/menu/menu_input.gd`, under the ALWAYS `Screens` root):
+   - **Capture mode** (`capturing`, set by `SettingsScreen`): every key and pad event is marked handled (press, release, motion) and only `capture_cancelled` (a `pause` press) or `bind_pressed(device, code)` (a non-echo key press as its physical keycode, a pad button press) is emitted. Leaving it re-reads `_left_held` / `_right_held` from `Input`. No live `InputEvent` leaves the reader: codes are ints.
    - Emits at most one signal per event, in precedence `pause_pressed` > `notebook_pressed` > `map_pressed` > `zoom_pressed(direction)` > `back_pressed` (`ui_cancel`) > `page_pressed(direction)`. Esc is both `pause` and `ui_cancel`, so Esc is only `pause_pressed`.
    - `page_pressed` is the edge of `ui_left` / `ui_right` (`_left_held` / `_right_held`); the notebook turns its pages on it. `pan: Vector2` is polled from `Input.get_vector` over `ui_*`.
    - The arrows and the left stick are both `ui_*` and movement. The map therefore ignores each pan axis already held when it opens until that axis reads zero (`MapScreen.pan_held`, `bugs/a-direction-held-when-the-map-opens-pans-it-off-ivo`).
-3. **`InputDevice`** (autoload): remembers the last device as an `Enums.GlyphSet`, using `PlayerInput.glyph_set_for`.
+3. **`InputDevice`** (autoload): remembers the last device as an `Enums.GlyphSet`, using `PlayerInput.glyph_set_for`. The letter set is derived: a key is `KEYBOARD_WASD` when `PlayerInput.is_letter_note_key` (bound to a note action, not an arrow), so a rebound note key switches to the letter prompts and the old W does not. `binding_for` lives in `PlayerInput`, a class a `-s` tool script can compile (`gotchas/a-script-run-with-s-cannot-compile-classes-that-name-autoloads`); `InputDevice.binding_for` delegates to it.
    - It listens on `get_tree().root.window_input`, which fires before dispatch. So a press a menu marks handled (Esc, Start, B) and a press made while paused still switch the prompts.
    - A stick counts only past `STICK_THRESHOLD` (0.5), so drift never flips the prompts. A motion event is the pad as much as a button is.
 
@@ -72,4 +77,8 @@ The title has its own `MenuInput` (`scenes/ui/title/title.tscn`). Esc arrives as
 
 ## Prompts
 
-`KeyGlyph` draws an action's binding for the current device from `InputGlyphs` (`resources/ui/input/`, built by `tools/ui/build_input_glyphs.gd` from `assets/sprites/hud/input/`). A key with no symbol of its own (Z, Shift, C) is the blank key with its name.
+`KeyGlyph` draws an action's binding for the current device from `InputGlyphs` (`resources/ui/input/`, built by `tools/ui/build_input_glyphs.gd` from `assets/sprites/hud/input/`). A key with no symbol of its own (Z, Shift, C) is the blank key with its name: the name of the event shown (`BindingNames`: the OS layout's label for a key, a `PAD_*` key per family for a pad button, so Back, L3 and R3 are named). Every prompt redraws on `InputDevice.device_changed` and `Settings.bindings_changed`; the note HUDs draw from `NoteGlyphs` the same way (`systems/settings`).
+
+## User decisions, 2026-11-10 (UI-07)
+
+"Teclado e controle (Recommended)": gameplay actions rebindable on both devices, `ui_accept` / `ui_cancel` fixed, Reset to defaults. "Qualquer tecla (Recommended)": notes take any key or button. Pad Back/L3/R3 shown by name on the blank key; triggers not bindable (coordinator defaults). The share table and the capture: `systems/settings`.

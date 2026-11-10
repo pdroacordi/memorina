@@ -15,6 +15,7 @@
 [ext_resource type="Shader" path="res://scenes/ui/title/flute_pulse.gdshader" id="15_pulse_shader"]
 [ext_resource type="Script" path="res://scenes/ui/title/flute_pulse.gd" id="16_pulse"]
 [ext_resource type="Resource" path="res://resources/music/menu_title.tres" id="90_music"]
+[ext_resource type="PackedScene" path="res://scenes/ui/settings/settings_screen.tscn" id="91_settings"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pulse"]
 shader = ExtResource("15_pulse_shader")
@@ -128,7 +129,7 @@ layout_mode = 0
 offset_left = 124.0
 offset_top = 92.0
 offset_right = 196.0
-offset_bottom = 148.0
+offset_bottom = 168.0
 theme_override_constants/separation = 4
 
 [node name="NewGame" type="Button" parent="Art/Main/Entries"]
@@ -138,6 +139,12 @@ layout_mode = 2
 script = ExtResource("12_entry")
 
 [node name="Continue" type="Button" parent="Art/Main/Entries"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 16)
+layout_mode = 2
+script = ExtResource("12_entry")
+
+[node name="Settings" type="Button" parent="Art/Main/Entries"]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(72, 16)
 layout_mode = 2
@@ -153,6 +160,12 @@ script = ExtResource("12_entry")
 unique_name_in_owner = true
 visible = false
 layout_mode = 0
+
+[node name="SettingsScreen" parent="Art" instance=ExtResource("91_settings")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 0
+music_preview = false
 
 [node name="Fade" type="ColorRect" parent="."]
 unique_name_in_owner = true

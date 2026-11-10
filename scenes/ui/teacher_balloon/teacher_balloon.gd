@@ -17,15 +17,14 @@ const UNLIT := Color(1.0, 1.0, 1.0, 0.4)
 ## Px the box keeps from the screen's edges.
 const MARGIN := 2.0
 
-## Indexed by Enums.GlyphSet.
-@export var glyph_sets: Array[NoteGlyphSet] = []
+@export var glyphs: NoteGlyphs = preload(NoteGlyphs.DEFAULT_PATH)
 
 var _anchor: Node2D
 var _notes: Array[Enums.Note] = []
 var _revealed: Array[bool] = []
 var _lit_count: int = 0
 var _lit_as_sung: bool = false
-var _glyphs: Array[TextureRect] = []
+var _glyphs: Array[NoteGlyph] = []
 var _shake: float = 0.0
 ## Px from the box's left edge to the tail's tip; the tail points at the anchor when the box is clamped.
 var _tail_x: float = 0.0
@@ -40,10 +39,9 @@ static func find(tree: SceneTree) -> TeacherBalloon:
 
 func _ready() -> void:
 	add_to_group(GROUP)
-	assert(glyph_sets.size() == Enums.GlyphSet.size(),
-		"TeacherBalloon has %d glyph sets for %d members of Enums.GlyphSet." % [glyph_sets.size(), Enums.GlyphSet.size()])
 	_box.draw.connect(_draw_box)
 	InputDevice.device_changed.connect(_on_device_changed.unbind(1))
+	Settings.bindings_changed.connect(_on_device_changed)
 	hide()
 
 func _process(_delta: float) -> void:
@@ -120,7 +118,7 @@ func is_lit(index: int) -> bool:
 
 func _build_glyphs() -> void:
 	while _glyphs.size() < _notes.size():
-		var glyph := TextureRect.new()
+		var glyph := NoteGlyph.new()
 		glyph.name = "Glyph%d" % _glyphs.size()
 		glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		glyph.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
@@ -136,12 +134,11 @@ func _build_glyphs() -> void:
 	_box.queue_redraw()
 
 func _refresh() -> void:
-	var glyphs := glyph_sets[InputDevice.glyph_set]
 	for i: int in _glyphs.size():
 		var glyph := _glyphs[i]
 		glyph.visible = i < _notes.size() and _revealed[i]
 		if i < _notes.size():
-			glyph.texture = glyphs.texture(_notes[i], is_lit(i))
+			glyph.show_note(glyphs, _notes[i], InputDevice.glyph_set, is_lit(i))
 			glyph.modulate = Color.WHITE if is_lit(i) else UNLIT
 
 func _follow() -> void:

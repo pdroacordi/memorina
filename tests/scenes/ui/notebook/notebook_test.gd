@@ -143,10 +143,10 @@ func test_a_song_shows_its_notes_in_the_current_device_glyphs() -> void:
 	await _open()
 	var song := _notebook.songs.get_song(Enums.Song.FREEZE)
 	var first := _notebook.find_child("Notes").get_child(0) as TextureRect
-	assert_object(first.texture).is_equal(_notebook.glyph_sets[InputDevice.glyph_set].texture(song.notes[0], false))
+	assert_object(first.texture).is_equal(_notebook.glyphs.texture(song.notes[0], InputDevice.glyph_set, false))
 	InputDevice.glyph_set = Enums.GlyphSet.XBOX
 	InputDevice.device_changed.emit(Enums.GlyphSet.XBOX)
-	assert_object(first.texture).is_equal(_notebook.glyph_sets[Enums.GlyphSet.XBOX].texture(song.notes[0], false))
+	assert_object(first.texture).is_equal(_notebook.glyphs.texture(song.notes[0], Enums.GlyphSet.XBOX, false))
 	InputDevice.glyph_set = was
 
 ## Grey while corrupted, colour once restored; what it taught shows only once held.

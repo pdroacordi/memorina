@@ -373,3 +373,57 @@ DLG_MENTOR_FINAL_FIRST_08,Not to me. I only kept it.,Pra mim não. Eu só guarde
 DLG_MENTOR_FINAL_AGAIN_01,The sea is loud again. I listen to all of it.,O mar está alto de novo. Escuto ele inteiro.
 SKILL_WALL_CLIMB,Wall climb,Escalar paredes
 NOTEBOOK_LORE_WALL_CLIMB,"I held on to the stone with nothing but my fingers. I used to climb the orchard wall like this, to bring her the highest apples.","Me segurei na pedra só com os dedos. Eu subia assim no muro do pomar, pra trazer pra ela as maçãs mais altas."
+PAUSE_SETTINGS,Settings,Opções
+TITLE_SETTINGS,Settings,Opções
+SETTINGS_TAB_SOUND,Sound,Som
+SETTINGS_TAB_GENERAL,General,Geral
+SETTINGS_TAB_KEYBOARD,Keyboard,Teclado
+SETTINGS_TAB_PAD,Gamepad,Controle
+SETTINGS_VOLUME_MASTER,Master volume,Volume geral
+SETTINGS_VOLUME_MUSIC,Music,Música
+SETTINGS_VOLUME_NOTES,Notes,Notas
+SETTINGS_VOLUME_EFFECTS,Effects,Efeitos
+SETTINGS_LANGUAGE,Language,Idioma
+SETTINGS_FULLSCREEN,Fullscreen,Tela cheia
+SETTINGS_WINDOW_SIZE,Window size,Tamanho da janela
+SETTINGS_WINDOW_SCALE,%dx (%d x %d),%dx (%d x %d)
+SETTINGS_ON,On,Ligada
+SETTINGS_OFF,Off,Desligada
+LANGUAGE_EN,English,English
+LANGUAGE_PT_BR,Português (Brasil),Português (Brasil)
+ACTION_JUMP,Jump,Pular
+ACTION_ATTACK,Attack,Atacar
+ACTION_ROLL,Roll,Rolar
+ACTION_DRAW_MEMORINA,Draw the Memorina,Sacar a Memorina
+ACTION_NOTE_UP,Note up,Nota de cima
+ACTION_NOTE_DOWN,Note down,Nota de baixo
+ACTION_NOTE_LEFT,Note left,Nota da esquerda
+ACTION_NOTE_RIGHT,Note right,Nota da direita
+ACTION_MAP,Map,Mapa
+ACTION_NOTEBOOK,Notebook,Caderno
+SETTINGS_RESET_BINDINGS,Reset to defaults,Restaurar o padrão
+CONFIRM_RESET_KEYBOARD,Reset the keyboard\nto its defaults?,Restaurar o teclado\nao padrão?
+CONFIRM_RESET_PAD,Reset the gamepad\nto its defaults?,Restaurar o controle\nao padrão?
+SETTINGS_PRESS_KEY,Press a key,Aperte uma tecla
+SETTINGS_PRESS_BUTTON,Press a button,Aperte um botão
+SETTINGS_BIND_RESERVED,This one is reserved,Essa é reservada
+SETTINGS_BIND_TAKEN,Used by %s,Já usada em %s
+SETTINGS_BIND_SWAPPED,Swapped with %s,Trocada com %s
+PAD_XBOX_A,A,A
+PAD_XBOX_B,B,B
+PAD_XBOX_X,X,X
+PAD_XBOX_Y,Y,Y
+PAD_XBOX_LB,LB,LB
+PAD_XBOX_RB,RB,RB
+PAD_XBOX_VIEW,View,View
+PAD_PS_CROSS,Cross,Xis
+PAD_PS_CIRCLE,Circle,Bola
+PAD_PS_SQUARE,Square,Quadrado
+PAD_PS_TRIANGLE,Triangle,Triângulo
+PAD_PS_L1,L1,L1
+PAD_PS_R1,R1,R1
+PAD_PS_CREATE,Create,Create
+PAD_L3,L3,L3
+PAD_R3,R3,R3
+ACTION_UI_ACCEPT,Confirm,Confirmar
+ACTION_UI_CANCEL,Back,Voltar

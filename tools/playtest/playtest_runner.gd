@@ -57,6 +57,7 @@ func _ready() -> void:
 
 	# Keep runs isolated from disk saves and commit setup so deaths rewind to this timeline's start.
 	SaveSystem.use_memory_only()
+	Settings.use_memory_only()
 	SaveSystem.begin("", true)
 	for song_id: Variant in timeline.get("known_songs", []):
 		SaveSystem.learn_song(int(song_id) as Enums.Song)

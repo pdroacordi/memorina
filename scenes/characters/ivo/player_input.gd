@@ -25,8 +25,6 @@ const NOTE_ACTIONS: Dictionary = {
 	&"note_right": Enums.Note.RIGHT,
 }
 
-## The keyboard has two sets of note keys; any of these means the WASD set.
-const WASD_KEYS: Array[Key] = [KEY_W, KEY_A, KEY_S, KEY_D]
 ## Substrings of joypad names that mean a PlayStation layout. Lower-case.
 const PLAYSTATION_NAME_FRAGMENTS: Array[String] = [
 	"ps3", "ps4", "ps5", "playstation", "dualsense", "dualshock", "sony",
@@ -70,9 +68,39 @@ static func glyph_set_for(event: InputEvent, joy_name: String) -> Enums.GlyphSet
 	# A stick is the pad as much as a button is.
 	if event is InputEventJoypadButton or event is InputEventJoypadMotion:
 		return Enums.GlyphSet.PLAYSTATION if is_playstation_name(joy_name) else Enums.GlyphSet.XBOX
-	if event is InputEventKey and WASD_KEYS.has((event as InputEventKey).physical_keycode):
+	if event is InputEventKey and is_letter_note_key(KeyBindings.code_of(event, KeyBindings.Device.KEYBOARD)):
 		return Enums.GlyphSet.KEYBOARD_WASD
 	return Enums.GlyphSet.KEYBOARD_ARROWS
+
+## Whether `code` is a note's own key (W A S D unless rebound): bound to a note action and not an arrow. The letter set's
+## prompts are KEYBOARD_WASD.
+static func is_letter_note_key(code: int) -> bool:
+	if KeyBindings.ARROW_KEYS.has(code):
+		return false
+	for action: StringName in NOTE_ACTIONS:
+		if KeyBindings.managed_code(action, KeyBindings.Device.KEYBOARD) == code:
+			return true
+	return false
+
+## The event of `action` a `for_set` device shows: the pad's button (else its stick), or the key of that keyboard
+## set (else the first key); null with none. Pure over the InputMap.
+static func binding_for(action: StringName, for_set: Enums.GlyphSet) -> InputEvent:
+	if not InputMap.has_action(action):
+		return null
+	var pad := for_set in [Enums.GlyphSet.XBOX, Enums.GlyphSet.PLAYSTATION]
+	var fallback: InputEvent = null
+	for event: InputEvent in InputMap.action_get_events(action):
+		if pad:
+			if event is InputEventJoypadButton:
+				return event
+			if event is InputEventJoypadMotion and fallback == null:
+				fallback = event
+		elif event is InputEventKey:
+			if glyph_set_for(event, "") == for_set:
+				return event
+			if fallback == null:
+				fallback = event
+	return fallback
 
 static func is_playstation_name(joy_name: String) -> bool:
 	var lowered := joy_name.to_lower().strip_edges()

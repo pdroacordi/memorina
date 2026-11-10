@@ -2,6 +2,10 @@ class_name PlayerInputTest extends GdUnitTestSuite
 
 ## Tests device classification without requiring an Input singleton or scene tree.
 
+
+func after_test() -> void:
+	Settings.reset_bindings(KeyBindings.Device.KEYBOARD)
+
 func _key(keycode: Key) -> InputEventKey:
 	var event := InputEventKey.new()
 	event.physical_keycode = keycode
@@ -154,3 +158,12 @@ func test_up_held_through_a_notes_beat_is_not_a_new_press() -> void:
 	_act(&"look_up", false)
 	await await_idle_frame()
 	assert_int(ups[0]).is_equal(0)
+
+## The letter set follows the note bindings: a rebound note key draws letter glyphs and its old W draws arrows.
+func test_a_rebound_note_key_is_the_letter_set_and_the_old_one_is_not() -> void:
+	Settings.bind(KeyBindings.Device.KEYBOARD, &"note_up", KEY_Q)
+	assert_int(PlayerInput.glyph_set_for(_key(KEY_Q), "")).is_equal(Enums.GlyphSet.KEYBOARD_WASD)
+	assert_int(PlayerInput.glyph_set_for(_key(KEY_W), "")).is_equal(Enums.GlyphSet.KEYBOARD_ARROWS)
+	var shown := InputDevice.binding_for(&"note_up", Enums.GlyphSet.KEYBOARD_WASD) as InputEventKey
+	assert_int(shown.physical_keycode).is_equal(KEY_Q)
+	assert_int((InputDevice.binding_for(&"note_up", Enums.GlyphSet.KEYBOARD_ARROWS) as InputEventKey).physical_keycode) 			.is_equal(KEY_UP)
