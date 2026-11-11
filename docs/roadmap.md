@@ -59,7 +59,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | SONG-06 | Soltar (RELEASE) | 02 §7.1 | `[x]` | | 2026-10-02 | |
 | SONG-07 | Enraizar (ROOT) | 02 §7.1 | `[x]` | | 2026-10-02 | `systems/roots-and-climbing` |
 | SONG-08 | Vendaval (GALE) and Chuva (RAIN) | 02 §7.1 | `[x]` | | 2026-10-02 | |
-| SONG-09 | A reduced excerpt per song | 02 §7 | `[ ]` | | 2026-10-02 | `Song.excerpt` is null everywhere; the track is cut at 7 s. |
+| SONG-09 | A reduced excerpt per song | 02 §7 | `[x]` | | 2026-11-11 | Built 2026-11-02 (commits fa988ed2, f5d591fb) with SONG-10's run and left `[ ]` here: every song's `excerpt` is set; seven are composed miniatures, Sombra's is its track's 7 s opening. `systems/music` (Contract), `music/reduced-versions`. |
 | SONG-10 | Tune `note_cues` against each track | | `[x]` | | 2026-11-02 | Measured for all 8 songs: the AIVA MIDI flute onsets through the tempo map plus the track's measured lead-in; each excerpt aligned to its track. `systems/music`. |
 | SONG-11 | Effect durations calibrated | 02 §9 | `[ ]` | | 2026-10-02 | `IceProfile` and other timings are first guesses. |
 | SONG-12 | Root bridge strands meet level | | `[ ]` | | 2026-10-07 | The two strands meet 4 px apart in height: `bugs/root-bridge-strands-meet-at-a-step`. |
