@@ -238,7 +238,7 @@ ground = 0
 scene = ExtResource("i14_load")
 required_params = PackedStringArray()
 reach_role = 1
-description = "A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back."
+description = "A heavy ripe fruit on its stalk, hang_height above this floor, under the bough of a tree prop placed in the room (WORLD-42): Soltar lets it drop, it falls, weighs a plate, rides Vendaval, and returns to its stalk when the grey comes back."
 
 [sub_resource type="Resource" id="cover"]
 script = ExtResource("2_entry")

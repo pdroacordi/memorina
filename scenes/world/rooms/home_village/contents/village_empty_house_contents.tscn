@@ -16,6 +16,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/empty_house/sheeted_stool.tscn" id="pi_empty_house_sheeted_stool"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/empty_house/dusty_bookshelf.tscn" id="pi_empty_house_dusty_bookshelf"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/empty_house/sheeted_cabinet.tscn" id="pi_empty_house_sheeted_cabinet"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/empty_house/pear_tree_indoor.tscn" id="pi_empty_house_pear_tree_indoor"]
 
 [node name="Contents" type="Node2D"]
 
@@ -33,10 +34,10 @@ position = Vector2(46, 186)
 position = Vector2(330, 288)
 
 [node name="FallenChair2" parent="Props" instance=ExtResource("pi_empty_house_fallen_chair")]
-position = Vector2(470, 288)
+position = Vector2(455, 288)
 
 [node name="ToyHorse3" parent="Props" instance=ExtResource("pi_empty_house_toy_horse")]
-position = Vector2(516, 288)
+position = Vector2(600, 288)
 
 [node name="BoardedWindow4" parent="Props" instance=ExtResource("pi_empty_house_boarded_window")]
 position = Vector2(640, 220)
@@ -69,6 +70,9 @@ flip_h = true
 
 [node name="ChairOldA13" parent="Props" instance=ExtResource("pi_empty_house_chair_old_a")]
 position = Vector2(300, 128)
+
+[node name="PearTreeIndoor14" parent="Props" instance=ExtResource("pi_empty_house_pear_tree_indoor")]
+position = Vector2(520, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

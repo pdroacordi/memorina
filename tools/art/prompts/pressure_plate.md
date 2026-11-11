@@ -7,10 +7,8 @@ frames: 2
 view: side
 direction: west
 no_background: true
-outline: single color black outline
-shading: basic shading
-detail: low detail
-source: codex
+source: procedural: tools/art/draw_pressure_plate.py
 ---
-A square slab of worn grey stone set flush into dark soil, a floor pressure plate seen from the side, two states side by side: raised a few pixels on the left, pressed down flush on the right, a thin carved spiral groove on its face.
-Negative: person, hand, foot, lever, button, chain
+A slab of dark porous basalt with a sandstone sun inlay on its top face. A floor pressure plate (`scenes/world/interactables/pressure_plate/pressure_plate.tscn`) in the Summer Caldera (the scene's default; also the song trials) look (WORLD-42; "Per-region variants", user, 2026-11-11). Two frames: raised (frame 0), a slab 3 art px tall on a 1 px socket; pressed (frame 1, `PressurePlate` sets it while the weight holds), the slab sunk to 1 art px. Measured: the frame is 32x12, its bottom row the floor line (Sprite2D at 0,-6); the sensor (28x20 at 0,-10) is unchanged. Drawn at 16x6 art px per frame and scaled 2x.
+Drawn by `python -I tools/art/draw_pressure_plate.py caldera assets/sprites/world/props/pressure_plate/pressure_plate.png`, in the colours of the region's tiles and gate. Orchestrator call, 2026-11-11: Codex cuts of the plate (on the gate's board, tools/art/sources/puzzles/gate_plate_caldera_codex.png) turned to mush at 16x4 art px; precedent `draw_street_grate.py`. Approved: "Approve all (Recommended)" (user, 2026-11-11).
+Negative: outlines, black contour, moss, speckle, scenery, text

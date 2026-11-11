@@ -1,7 +1,7 @@
 """Cut one magenta-keyed Codex drawing into a 2x-density prop PNG, in the colours of props we already have.
 
 python -I tools/art/cut_single_prop.py <raw.png> <out.png> --width=ART_PX --palette=a.png,b.png,...
-        [--height=ART_PX] [--parts] [--colors=N] [--flat=N] [--box=x0,y0,x1,y1]
+        [--height=ART_PX] [--parts] [--colors=N] [--flat=N] [--resnap=a.png,...] [--box=x0,y0,x1,y1]
     The subject is the drawing's largest non-magenta part, cropped to its bounds and reduced to ART_PX art px wide
     (its height follows its aspect) by each block's most common colour, snapped to the colours the given props use and
     written at 2x. Prints the sheet's size, game px.
@@ -9,7 +9,8 @@ python -I tools/art/cut_single_prop.py <raw.png> <out.png> --width=ART_PX --pale
     of the largest (a tangle drawn in pieces); --colors reduces the snapped art to N colours (a busy drawing that
     would read as speckle at its size); --box cuts one piece of a board first (raw px); --width=0 with --height lets
     the width follow the aspect (portraits sharing one height); --palette= (empty) keeps the drawing's own colours,
-    for a subject whose colours no prop has yet; --flat=N reduces to N colours and repaints specks (cut_props.flatten).
+    for a subject whose colours no prop has yet; --flat=N reduces to N colours and repaints specks (cut_props.flatten);
+    --resnap=a.png,... snaps the flattened colours to those PNGs' colours (flatten in the drawing's own colours, then snap).
 """
 import os
 import sys
@@ -23,7 +24,7 @@ from cut_facades import keyed, palette_of, reduce, save_2x, snap_to  # noqa: E40
 
 
 def main(raw: str, out: str, width: int, palette_paths: list[str], height: int = 0, parts: bool = False,
-        colors: int = 0, box: list[int] | None = None, flat: int = 0) -> None:
+        colors: int = 0, box: list[int] | None = None, flat: int = 0, resnap: list[str] | None = None) -> None:
     rgb, solid = keyed(raw)
     if box:
         rgb, solid = rgb[box[1]:box[3], box[0]:box[2]], solid[box[1]:box[3], box[0]:box[2]]
@@ -47,6 +48,8 @@ def main(raw: str, out: str, width: int, palette_paths: list[str], height: int =
     if flat > 0:
         from cut_props import flatten
         flatten(art, flat)
+    if resnap:
+        snap_to([art], palette_of(resnap))
     image = save_2x(art, out)
     print(out, image.width, image.height)
 
@@ -63,4 +66,5 @@ if __name__ == "__main__":
     opts = dict(a[2:].split("=", 1) for a in sys.argv[3:] if a.startswith("--") and "=" in a)
     main(sys.argv[1], sys.argv[2], int(opts["width"]), [p for p in opts.get("palette", "").split(",") if p], int(opts.get("height", 0)),
          "--parts" in sys.argv[3:], int(opts.get("colors", 0)),
-         [int(v) for v in opts["box"].split(",")] if "box" in opts else None, int(opts.get("flat", 0)))
+         [int(v) for v in opts["box"].split(",")] if "box" in opts else None, int(opts.get("flat", 0)),
+         [p for p in opts.get("resnap", "").split(",") if p])

@@ -6,7 +6,7 @@ status: active
 tags: [props, ambient, memory-clock, greyhush, inhabitants, region-presence]
 related: [architecture/props-and-ambient-life, systems/greyhush, systems/backdrops, systems/foreground, systems/world]
 created: 2026-10-09
-updated: 2026-10-15
+updated: 2026-11-11
 source_files:
   - scenes/world/environment/props/ambient_math.gd
   - scenes/world/environment/props/ambient_motion.gd
@@ -41,4 +41,5 @@ Design 04 sections 5-6, WORLD-08 (WORLD-10's villagers and animals are props of 
 - **Inhabitants under a staging** (STORY-12): the daughter's Standing and HoldingOut strips in village_house reuse the Inhabitants pattern (a `Sprite2D` strip with `AmbientMotion` at 6 fps) as children of a `FactStaging`, which alone sets their visibility (`systems/story`).
 - **Not ambient motion:** a `StagedStrip` under a room's `Props` (the mentor's Playing, `systems/story`) is stood in by a beat and runs on scaled, pausable time by design, as beats do; it is not ambient motion and the `AmbientMotion` rule does not cover it.
 - **Garden beds** (LIFE-04, `systems/seeds-and-the-seller`): `props/village/garden_bed_bare.tscn` (one band) and `garden_bed_planted.tscn` (three season bands, `prop_seasonal_material.tres`), 48 px wide, drawn by `tools/art/draw_seed_art.py`; a `Gardens` FactStaging in each street room shows one by `village_replanted.tres`.
+- **Puzzle trees** (WORLD-42, 2026-11-11): every hanging load is a ripe pear, and every room that hangs one has the tree it hangs from, a prop under `Props`: `props/wind_orchards/pear_tree.tscn` (orchard_windy_gap, standing on the shelf), `pear_limb.tscn` (orchard_counterweights: roots on the shaft floor, trunk up the west wall, one limb across the shaft holding both pears) and `props/interiors/empty_house/pear_tree_indoor.tscn` (village_empty_house: grown up through the floorboards, crown under the ceiling, one band like every interior prop). The orchard trees wear three season bands. The fruit's `Line2D` is its stalk, and each entity's `rope_length` is the measured gap from the fruit's top to the bough, so a tree that moves means new `rope_length`s (contracts `orchard_pear_tree`, `orchard_pear_limb`, `interior_empty_house_pear_tree_indoor`). "as frutas não podem ser simplesmente penduradas no teto. Devem ter contexto. Uma árvore ou algo assim." (user, 2026-11-11). The song trials hang pears with no tree: they are test beds.
 - **Shared stop threshold** (2026-10-10): `AmbientMath.STOP_THRESHOLD` (0.2) is the one constant props (`AmbientMotion.stop_threshold`) and grass (`systems/grass`) stop below.

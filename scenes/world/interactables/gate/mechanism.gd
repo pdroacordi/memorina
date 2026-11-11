@@ -13,6 +13,8 @@ class_name Mechanism extends AnimatableBody2D
 @export var move_time := 0.6
 ## Start triggered (a drawbridge that is already down, a lift already up).
 @export var start_moved := false
+## Replaces the Sprite2D's texture with a region's look (WORLD-42); null keeps the scene's.
+@export var art: Texture2D
 
 var _rest := Vector2.ZERO
 var _progress := 0.0
@@ -25,6 +27,9 @@ func _ready() -> void:
 	# Moving mechanisms are not valid return locations.
 	add_to_group(SafeGroundTracker.UNSAFE)
 	sync_to_physics = true
+	var sprite := get_node_or_null(^"Sprite2D") as Sprite2D
+	if art != null and sprite != null:
+		sprite.texture = art
 	_rest = position
 	var trigger := get_node_or_null(trigger_path)
 	var second := get_node_or_null(second_trigger_path)

@@ -127,6 +127,10 @@ Orchestrator call (2026-10-15), next to those words: a sized zone entity (`n`, a
     - orchard_terraces 11,9, 5 wide and 3 tall, on the row-10 terrace under orchard_summit's 480 px drop shaft.
     - Both land at 930-980 px/s, and Ivo moves on the next input (`playtests/2026-10-15-world35-step4`).
 
+## Region looks of shared entities (WORLD-42)
+
+- A pressure plate (`P`) or gate (`G`) placed in several regions takes the region's look through its `art` param (a `Texture2D` path; `PressurePlate.art`, `Mechanism.art`, which a lift `L` shares though it has one look today), as `X` does: the scene keeps the look of the region with the most rooms (the Caldera's basalt and sandstone), and `village_empty_house`, `orchard_counterweights` and `orchard_windy_gap` name `pressure_plate_village/_orchard.png` and `stone_gate_village/_orchard.png`. A new room in another region names its own, or adds one with a contract (`systems/art-pipeline`, Puzzle parts). "Per-region variants" (user, 2026-11-11).
+
 ## Fact grate (WORLD-35)
 
 User, 2026-10-14: "Grate in the village road (Recommended)" ("The stair ends under a grate in village_gate_east's street: a hatch in the flat street, so the village stays one street (your 'village is not for exploring' rule).") and "When the guardian is restored (Recommended)" ("The grate opens once the summer guardian is restored; it reuses the existing fence logic, no new code.").

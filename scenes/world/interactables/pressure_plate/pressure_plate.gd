@@ -7,6 +7,8 @@ signal deactivated
 
 ## Required mass, in Ivos.
 @export var required_mass := 1.0
+## Replaces the sprite strip with a region's look (WORLD-42); null keeps the scene's.
+@export var art: Texture2D
 
 var _active := false
 
@@ -14,6 +16,8 @@ var _active := false
 @onready var _sprite: Sprite2D = $Sprite2D
 
 func _ready() -> void:
+	if art != null:
+		_sprite.texture = art
 	_sensor.load_changed.connect(_on_load_changed)
 
 func is_active() -> bool:

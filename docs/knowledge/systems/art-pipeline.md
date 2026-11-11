@@ -6,7 +6,7 @@ status: active
 tags: [art, pipeline, codex, pixellab, palette]
 related: []
 created: 2026-10-02
-updated: 2026-10-30
+updated: 2026-11-11
 source_files:
   - tools/art/compose_strip.py
   - tools/art/process_image.gd
@@ -14,6 +14,8 @@ source_files:
   - tools/art/cut_tile_bodies.py
   - tools/art/paint_tile_bodies.py
   - tools/art/cut_backdrop.py
+  - tools/art/draw_pressure_plate.py
+  - tools/art/draw_puzzle_strips.py
 ---
 
 # Art pipeline: contracts, generation and processing
@@ -51,3 +53,12 @@ Art the game needs is a **contract** before it is a picture: `tools/art/prompts/
 - `tools/art/despeckle.py <strip> <frame width> [--min=6]` clears the loose specks a cut leaves (a dashed whip needs `--min=4`). `tools/art/lean_frames.py` makes a recoil from one still by leaning it back above a pivot row, where every generated recoil carried an effect.
 - **GRD-08 (2026-10-30): a prop the still lacks comes from a one-shot that adds it.** animate-with-text-v3 drew the flute when asked to "lift a flute to its mouth" from the restored still, and that raise played backwards is `perform_end`; its last frame is the playing still every flute clip animates from. A one-shot that must land on another clip is composed by `tools/art/compose_strip.py` with that clip's frame 0 as its last frame. Effects in the body's colours came back again (the Frost relapse threw ice flecks, cleared by `--despeckle`; a second Bloom play loop dropped the antler blossoms on half its frames, re-rolled). The beat is procedural: `--grow` opens the Bloom blossoms, `--lift` brightens the Frost crystals one step up the still's own ice ramp.
 - The lucidity leap has its own strip (`<name>_leap.png`, 8 frames: crouch, launch, flight, land, stand), feet on the floor row like every other clip, since the arc is the guardian's own motion. The flight lasts about 1.67 s, so the clip holds or loops its flight frames until the landing.
+
+## Puzzle parts (WORLD-42; 2026-11-11)
+
+- The nine puzzle sprites drawn on 2026-09-30 (black outlines, 1x) were redrawn at 2x: "All nine (Recommended)", "Per-region variants", "Plate+gate, then lift+cocoon, then rest (Recommended)" (user, 2026-11-11). A part placed in several regions has one PNG per region; the scene's own texture is the region with the most rooms (the gate and plate: the Caldera), and a `.room` entity picks another with its `art` param, as `FactBarrier` does. A part placed in one region has one look.
+- **A Codex cut shrunk to a few art px is mush; flatten in the drawing's own colours, then snap.** `cut_single_prop.py --palette= --flat=N` keeps the gates' blocks and carvings that `--palette=<tiles>` (snap first) merged; the Caldera gate adds `--resnap=<pngs>`, which snaps the flat colours to the region's tiles (the village and orchard gates keep their own flat colours).
+- **Anything at 6 art px or less, and anything that repeats, is drawn by a script:** `draw_pressure_plate.py <region>` (16x6 art px per frame; the Codex plate cuts were mush at 16x4) and `draw_puzzle_strips.py` (the drawbridge plank, the seesaw plank and pivot, the root strand), each strip's period its width so `TEXTURE_REPEAT` shows no seam.
+- **A part must make sense for the song that moves it.** Soltar is the autumn letting go, so the hanging load is a ripe fruit on its stalk under a tree prop's bough, never a sack on a rope from the ceiling: "na minha opiniao nao faz sentido os sprites desenhados pro contexto da habilidade. a habilidade faz isso aí cair por ser outono né. No caso ou a habilidade ou o sprite nao fazem sentido", "A ripe fruit on its stalk (Recommended)", and "as frutas não podem ser simplesmente penduradas no teto. Devem ter contexto. Uma árvore ou algo assim." (user, 2026-11-11); then "qual o sentido de uma fruta dentro de casa? e na segunda imagem, o galho está flutuando", "A tree grown into the house (Recommended)", "Trunk rooted on the floor (Recommended)" (user, 2026-11-11). One pear everywhere; each room has its tree (`systems/props`, Puzzle trees). The drawbridge and the lowering platform stay mechanical ("Keep them mechanical (Recommended)").
+- **Size a context prop from the room, not the picture.** A tree's bough must clear the fruit's top (`hang_height` + 48 over the floor) under the room's ceiling: measure both, then cut the tree to the height that puts the bough there, and set `rope_length` to the gap. A tree may run behind ceiling or wall tiles (they draw over props at z -10) to fit.
+- **Parallel Codex image runs copy each other's picture.** Three runs started together each copied the newest file in `~/.codex/generated_images/` into their `raw.png`, so two got the same image. Run them one after another and copy the newest session folder's file after each.

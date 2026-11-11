@@ -25,7 +25,7 @@ tileset = wind_orchards
 ################....................####
 
 [entities]
-2,8 = {"id": "alcove_gate", "trigger_path": "plate_gate"}
-6,4 = {"id": "cocoon", "hang_height": 16.0}
-10,4 = {"id": "plate_gate"}
+2,8 = {"id": "alcove_gate", "trigger_path": "plate_gate", "art": "res://assets/sprites/world/props/stone_gate/stone_gate_orchard.png"}
+6,4 = {"id": "cocoon", "hang_height": 16.0, "rope_length": 16.0}
+10,4 = {"id": "plate_gate", "art": "res://assets/sprites/world/props/pressure_plate/pressure_plate_orchard.png"}
 26,8 = {"size": [768, 224], "direction": [-1, 0], "speed": 90}

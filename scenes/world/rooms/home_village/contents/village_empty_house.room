@@ -23,9 +23,9 @@ ________________________________________
 ________________________________________
 
 [entities]
-1,8 = {"id": "plate_shadow"}
-4,3 = {"id": "house_door", "trigger_path": "plate_shadow", "second_trigger_path": "plate_load"}
+1,8 = {"id": "plate_shadow", "art": "res://assets/sprites/world/props/pressure_plate/pressure_plate_village.png"}
+4,3 = {"id": "house_door", "trigger_path": "plate_shadow", "second_trigger_path": "plate_load", "art": "res://assets/sprites/world/props/stone_gate/stone_gate_village.png"}
 4,8 = {"link": "village_empty_house_door", "to_room": "village_lane_west", "arrive_facing": 1}
-12,7 = {"id": "house_load", "hang_height": 32.0, "rope_length": 32.0}
-12,8 = {"id": "plate_load"}
+12,7 = {"id": "house_load", "hang_height": 32.0, "rope_length": 2.0}
+12,8 = {"id": "plate_load", "art": "res://assets/sprites/world/props/pressure_plate/pressure_plate_village.png"}
 2,3 = {"slot_id": "village_empty_house_reward", "kind": 0}

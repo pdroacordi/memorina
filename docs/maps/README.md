@@ -200,7 +200,7 @@ else in the code knows what a character means.
 | `G` | `[grid]` | entity | - | - | gate | A stone gate standing on this cell that slides up while its trigger_path (a plate) holds, and its second_trigger_path too when set. Any Mechanism: travel, move_time, start_moved. |
 | `L` | `[grid]` | entity | - | - | mover | A lift platform that rises by travel while its trigger_path holds and sinks back when it lets go; while its lock_path holds (a counterweight on the wrong plate) it is jammed down. |
 | `T` | `[grid]` | entity | - | - | mover | A seesaw on its pivot, leaning toward the heavier side by torque (mass times distance) - a shadow on one end raises the other. |
-| `H` | `[grid]` | entity | - | - | content | A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back. |
+| `H` | `[grid]` | entity | - | - | content | A heavy ripe fruit on its stalk, hang_height above this floor, under the bough of a tree prop placed in the room (WORLD-42): Soltar lets it drop, it falls, weighs a plate, rides Vendaval, and returns to its stalk when the grey comes back. |
 | `F` | `[grid]` | entity | - | - | gate | A curtain of dry leaves blocking a passage (size in px, standing on this cell): Soltar drops it, the grey grows it back - not while someone stands inside. |
 | `D` | `[grid]` | entity | - | - | mover | A drawbridge hinged at the bottom centre of this cell, held up: Soltar lets it fall across length_cells toward side (1 right, -1 left); the grey hauls it back up. |
 | `r` | `[water]` | water | - | - | ice | Where Chuva brings the water: paint it above ~ or f water in the same pit and that pool rests at its painted water and rises to here while a Chuva pulse covers it. Painted alone it is a dry basin that fills, and freezes like f (Chuva then Congelar: ice where there was no water). Never over a lake. |
@@ -378,6 +378,7 @@ Scene `res://scenes/world/interactables/pressure_plate/pressure_plate.tscn`, anc
 |---|---|---|
 | `id` | String | none - names the node so other entities can link to it |
 | `required_mass` | float | `1.0` |
+| `art` | Texture2D | `null` |
 
 #### `G` - Gate
 
@@ -392,6 +393,7 @@ Scene `res://scenes/world/interactables/gate/gate.tscn`, anchored at its cell's 
 | `travel` | Vector2 | `Vector2(0, -96)` |
 | `move_time` | float | `0.6` |
 | `start_moved` | bool | `false` |
+| `art` | Texture2D | `null` |
 
 #### `L` - Lift
 
@@ -406,6 +408,7 @@ Scene `res://scenes/world/interactables/lift/lift.tscn`, anchored at its cell's 
 | `travel` | Vector2 | `Vector2(0, -128)` |
 | `move_time` | float | `1.4` |
 | `start_moved` | bool | `false` |
+| `art` | Texture2D | `null` |
 
 #### `T` - Seesaw
 
@@ -422,7 +425,7 @@ Scene `res://scenes/world/interactables/seesaw/seesaw.tscn`, anchored at its cel
 
 #### `H` - HangingLoad
 
-Scene `res://scenes/world/interactables/hanging_load/hanging_load.tscn`, anchored at its cell's bottom centre (standing on the cell below). A heavy cocoon on a rope, hang_height above this floor: Soltar cuts the rope, it falls, weighs a plate, rides Vendaval, and returns to its rope when the grey comes back.
+Scene `res://scenes/world/interactables/hanging_load/hanging_load.tscn`, anchored at its cell's bottom centre (standing on the cell below). A heavy ripe fruit on its stalk, hang_height above this floor, under the bough of a tree prop placed in the room (WORLD-42): Soltar lets it drop, it falls, weighs a plate, rides Vendaval, and returns to its stalk when the grey comes back.
 
 | Param | Type | Default |
 |---|---|---|

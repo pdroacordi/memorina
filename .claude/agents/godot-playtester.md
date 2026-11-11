@@ -719,6 +719,18 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - A shot name built with `%05.1f` collides for steps 0.05 s apart (28.05 and 28.1 both become `028.1`), and the later
     shot overwrites the earlier one. Use `%06.2f` for bursts.
 
+- **Learned 2026-11-11 (WORLD-42 puzzle parts)**:
+  - A log-parsing regex for `pos=` must not match `voice_pos=`: use `(?<![_a-z])pos=`. Without it every position read as
+    the voice clip's position.
+  - **Measure a hanging load's stalk gap from geometry, then confirm it in pixels.** Floor point = room origin + (32 * col
+    + 16, 32 * (row + 1)). Pear top = floor - `hang_height` - 44 (the shape is 44 tall; the stalk starts there). Stalk top
+    = pear top - `rope_length`. Compare that with the tree sprite's lowest opaque row at that x (prop position + offset).
+    A column scan of the window (`col.py`: runs of equal colour, top to bottom) gives the same gap on screen.
+  - Positions: windy gap shelf (-7520, -1762), Soltar there drops the pear; the shelf's west end, x -7583.5, is inside
+    the gate's column (a rising gate lifts Ivo). Counterweights (-5950, -1642) is col 14, beside the right pear, 400 px from
+    the left one. The old `world42_counterweights.json` spawn (-6200) falls into the pit under the lift. Empty house: from
+    (8336, 12280), `move_left` 1.8 s with a jump at +0.05 lands on the col 1 plate at x 8043.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

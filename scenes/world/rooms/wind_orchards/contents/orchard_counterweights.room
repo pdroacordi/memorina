@@ -63,8 +63,8 @@ SSSSSS........SSSSSS
 ......SSSSSSSS......
 
 [entities]
-2,19 = {"id": "weight_wrong", "hang_height": 32.0}
-2,20 = {"id": "plate_jam"}
+2,19 = {"id": "weight_wrong", "hang_height": 32.0, "rope_length": 8.0}
+2,20 = {"id": "plate_jam", "art": "res://assets/sprites/world/props/pressure_plate/pressure_plate_orchard.png"}
 10,20 = {"id": "lift", "trigger_path": "plate_lift", "lock_path": "plate_jam", "travel": [0, -448], "move_time": 3.5}
-15,19 = {"id": "weight_right", "hang_height": 32.0}
-15,20 = {"id": "plate_lift"}
+15,19 = {"id": "weight_right", "hang_height": 32.0, "rope_length": 16.0}
+15,20 = {"id": "plate_lift", "art": "res://assets/sprites/world/props/pressure_plate/pressure_plate_orchard.png"}
