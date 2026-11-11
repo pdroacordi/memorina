@@ -47,6 +47,7 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 - [glossary](glossary.md) — design term to code identifier, and retired terms.
 
 ## Architecture
+- [release-build](architecture/release-build.md) — 2026-11-11 (TECH-04): one Windows Desktop preset (x86_64, PCK embedded, tests/tools/docs/gdUnit4 excluded) to builds/windows/memorina.exe; templates 4.7.2 installed (Windows only); how to export and run it with a scratch APPDATA.
 
 - [settings-screen](architecture/settings-screen.md) — BUILT (2026-11-10; UI-07, contract in systems/settings): a thin first autoload Settings over pure GameSettings, SettingsMath, KeyBindings and BindingRules; user://settings.cfg, skipped in BootPolicy MEMORY sessions; one SettingsScreen (tabs Sound/General/Keyboard/Pad) in the pause menu and the title; values step on MenuInput.page_pressed; capture through a MenuInput capture mode; zooms follow jump and attack; refuse or exchange by a share table; live language through _retranslate(); NoteGlyphs replaces the four NoteGlyphSets.
 - [music-system](architecture/music-system.md) — PLAN (2026-11-02; "Sistema de música geral (Recommended)", "Abafa ~6 dB"): a thin ALWAYS `Music` autoload plays the highest-priority owned request (REGION < FIGHT < SCENE < MENU) on two decks; `MusicCue` Resources of `AudioStreamSynchronized` stems; pure `MusicRequests`, `MusicMix` and `BarClock`; buses Master <- Music/Notes/Sfx; `GuardianMusic` and finale signals drive the final battle; a non-blocking `CutsceneMusic` step plays the restoration cue.
