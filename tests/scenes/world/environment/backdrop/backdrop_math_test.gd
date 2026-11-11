@@ -302,3 +302,51 @@ func test_a_repeating_axis_is_placed_from_world_zero() -> void:
 	assert_vector(BackdropMath.layer_anchor(Vector2(1920, 235), true, false)).is_equal(Vector2(0, 235))
 	assert_vector(BackdropMath.layer_anchor(Vector2(1920, 235), true, true)).is_equal(Vector2.ZERO)
 	assert_vector(BackdropMath.layer_anchor(Vector2(1920, 235), false, false)).is_equal(Vector2(1920, 235))
+
+# Rooms at 1/16 scale (40x24, ring 10), so every pixel of each ring can be judged.
+const SMALL_RING := 10.0
+
+func _assert_cells_hold_what_each_room_keeps(rooms: Array[Rect2]) -> void:
+	for own: Rect2 in rooms:
+		var others: Array[Rect2] = rooms.filter(func(other: Rect2) -> bool: return other != own)
+		var parts := [BackdropMath.drawn_cells(own, others, SMALL_RING, 0), BackdropMath.drawn_cells(own, others, SMALL_RING, 1),
+			BackdropMath.drawn_cells(own, others, SMALL_RING, 2)]
+		var area := own.grow(SMALL_RING + 2.0)
+		for y: int in range(int(area.position.y), int(area.end.y)):
+			for x: int in range(int(area.position.x), int(area.end.x)):
+				var p := Vector2(x + 0.5, y + 0.5)
+				if not BackdropMath.keeps(p, own, others, SMALL_RING):
+					continue
+				var part := 2 if BackdropMath.over_top(p, own) else 1
+				for k: int in [0, part]:
+					var cells: Array[Rect2] = parts[k]
+					assert_bool(cells.any(func(cell: Rect2) -> bool: return cell.has_point(p))) \
+						.override_failure_message("%s keeps %s (part %d) outside its cells %s" % [own, p, k, cells]).is_true()
+
+func test_drawn_cells_hold_every_kept_pixel_side_by_side() -> void:
+	_assert_cells_hold_what_each_room_keeps([Rect2(0, 0, 40, 24), Rect2(40, 0, 40, 24)] as Array[Rect2])
+
+func test_drawn_cells_hold_every_kept_pixel_at_a_four_room_corner() -> void:
+	_assert_cells_hold_what_each_room_keeps([Rect2(0, 0, 40, 24), Rect2(40, 0, 40, 24), Rect2(0, 24, 40, 24),
+		Rect2(40, 24, 40, 24)] as Array[Rect2])
+
+func test_drawn_cells_hold_every_kept_pixel_beside_a_taller_and_offset_rooms() -> void:
+	_assert_cells_hold_what_each_room_keeps([Rect2(0, 0, 40, 24), Rect2(40, -24, 40, 72), Rect2(-20, 24, 40, 24),
+		Rect2(-60, -10, 40, 24)] as Array[Rect2])
+
+func test_drawn_cells_hold_every_kept_pixel_over_a_narrower_room() -> void:
+	_assert_cells_hold_what_each_room_keeps([Rect2(0, 0, 120, 24), Rect2(40, 24, 40, 24), Rect2(80, 24, 40, 48)] as Array[Rect2])
+
+func test_drawn_cells_of_a_lone_room_are_its_ring() -> void:
+	var own := Rect2(0, 0, 40, 24)
+	var none: Array[Rect2] = []
+	assert_object(BackdropMath.bounding(BackdropMath.drawn_cells(own, none, SMALL_RING))).is_equal(own.grow(SMALL_RING))
+	assert_object(BackdropMath.bounding(BackdropMath.drawn_cells(own, none, SMALL_RING, 2))) \
+		.is_equal(Rect2(-10, -10, 60, 10))
+
+## A neighbour beside the room takes the ring on that side whole: the room's cells stop at the seam.
+func test_drawn_cells_stop_at_a_neighbour_beside_the_room() -> void:
+	var own := Rect2(0, 0, 40, 24)
+	var others: Array[Rect2] = [Rect2(40, 0, 40, 24)]
+	var box := BackdropMath.bounding(BackdropMath.drawn_cells(own, others, SMALL_RING))
+	assert_float(box.end.x).is_equal(40.0)

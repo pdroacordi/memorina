@@ -676,6 +676,30 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     Hidden pages report `position.y = 0` (not laid out), so log heights only.
   - The Settings panel fills the window, so a 0.5-scale contact sheet is enough for flow, but read text fit at full resolution.
 
+- **Learned 2026-11-11 (TECH-12 room loading)**:
+  - **`tools/playtest/scripts/room_residency_probe_driver.gd`** proves "nothing drew half-built" for every frame, not just
+    the screenshots. It is a `-s` driver that loads the runner and hooks `RenderingServer.frame_pre_draw` (after
+    `Game._process`, before the draw). It logs each room's BUILD/WAKE/IDLE/EVICT with the frame dt, `VIOLATION` (a
+    waiting or pending room's `shown_cells()` meet the drawn view, or an unbuilt room's bounds do, while the fade is
+    not opaque), `NEAR`, `HITCH` (dt > 20 ms) and `SUMMARY`/`WAITSUM`. `T12_DISS=1` forces the dissonance veil and
+    revelation. It tolerates a HEAD tree without the TECH-12 API, but there its "fade opaque" always reads false.
+  - **Python `glob` on Windows returns backslash paths (`dir\file`) even for a `C:/` pattern.** My first A/B script's
+    `f.replace('_main/', '_head/')` did nothing, so every frame was compared with itself and reported 0 differing
+    pixels. Normalise with `f.replace(chr(92), '/')` before building the twin path. Sanity-check a diff tool on a pair
+    that must differ, such as the 0.6 s fade frame.
+  - **A timeline ends at its last step**, not at `max_duration`. A no-screenshot variant made by stripping the
+    screenshots ended at its last action, 6-12 s early. Add a final `log` step near `max_duration`.
+  - **Screenshot runs hitch ~37 ms at every capture.** Time frames only in runs with no screenshot steps.
+  - **dt between `frame_pre_draw`s includes the render and the vblank wait** (p50 5.6 ms on the 180 Hz screen).
+    It is not the baseline probe's figure, so compare main against a HEAD export measured the same way.
+  - **A new game ignores input for its opening** (village_house, ~4 s fade, Ivo does not move). For a door, use
+    orchard_mill_town's inn: spawn (-6660, -1260), `move_left` 1.0-1.25 s (stops at -6703.5, in reach), Up at
+    1.45. The return Up at 5.0 lands at (-6704, -1248). The old `o2b` timeline no longer matches the geometry.
+  - Room rects come from the region `.tscn`s plus each room's shape. Split the file on `[node ` rather than using
+    one regex for the whole block: a scratch `world.py` lists them in a second.
+  - Woods: a plain walk left from (-1100, 280) stops at x -1685 in woods_edge. Jump every 0.9 s while holding left
+    to reach woods_deep, which you enter at x -2560 around 7 s after the start.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

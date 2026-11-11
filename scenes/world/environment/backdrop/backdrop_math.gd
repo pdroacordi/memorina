@@ -1,7 +1,7 @@
 class_name BackdropMath
 extends RefCounted
 ## Where a backdrop layer draws, which texel a pixel shows, and which room draws a pixel (systems/backdrops).
-## art_row, art_col, pixel_centre, keeps, void_owner, over_top and rect_distance must match backdrop_layer.gdshader
+## art_row, art_col, pixel_centre, keeps, void_owner, hold, over_top and rect_distance must match backdrop_layer.gdshader
 ## (gotchas/glsl-gdscript-math-must-be-duplicated).
 
 ## How a room holds a void pixel, highest first: over its top, beside it (its rows), under its floor, past a corner, so the
@@ -12,6 +12,9 @@ const BELOW := 1
 const CORNER := 0
 ## World px a room rect is grown (own) or shrunk (neighbour) by, so float noise makes two rooms draw a pixel, never neither.
 const SEAM_EPSILON := 0.01
+
+## `drawn_cells` by [own, neighbours, ring, part].
+static var _drawn_memo: Dictionary = {}
 
 
 ## The camera centre at which the anchor's horizon sits at `horizon_screen_y`: every layer's authored pose.
@@ -132,24 +135,108 @@ static func void_owner(point: Vector2, rooms: Array[Rect2], ring: float) -> int:
 		var rect := rooms[i]
 		if rect_distance(rect, point) > ring:
 			continue
-		var rank := ABOVE
+		var rank := hold(rect, point)
 		var gap: float
-		if point.x >= rect.position.x and point.x < rect.end.x:
-			gap = maxf(maxf(rect.position.y - point.y, point.y - rect.end.y), 0.0)
-			if point.y >= rect.end.y:
-				rank = BELOW
-		elif point.y >= rect.position.y and point.y < rect.end.y:
-			gap = maxf(maxf(rect.position.x - point.x, point.x - rect.end.x), 0.0)
-			rank = BESIDE
-		else:
-			gap = rect_distance(rect, point)
-			rank = CORNER
+		match rank:
+			ABOVE, BELOW:
+				gap = maxf(maxf(rect.position.y - point.y, point.y - rect.end.y), 0.0)
+			BESIDE:
+				gap = maxf(maxf(rect.position.x - point.x, point.x - rect.end.x), 0.0)
+			_:
+				gap = rect_distance(rect, point)
 		if best < 0 or rank > best_rank or (rank == best_rank and (gap < best_gap \
 				or gap == best_gap and _before(rect, rooms[best]))):
 			best = i
 			best_gap = gap
 			best_rank = rank
 	return best
+
+## How `rect` holds the void pixel at `point`: ABOVE or BELOW in its columns, BESIDE in its rows, else CORNER.
+static func hold(rect: Rect2, point: Vector2) -> int:
+	if point.x >= rect.position.x and point.x < rect.end.x:
+		return BELOW if point.y >= rect.end.y else ABOVE
+	if point.y >= rect.position.y and point.y < rect.end.y:
+		return BESIDE
+	return CORNER
+
+## World rects holding every pixel `own` keeps among `neighbours` (`keeps`) in `part` (Backdrop.Part: 0 all, 1 under its
+## top, 2 over it). A superset: the grid runs on every room edge and ring line, so a hold is constant per cell, and a cell
+## where two holds tie is kept. Memoised: rooms never move (systems/backdrops, "Clipped quads").
+static func drawn_cells(own: Rect2, neighbours: Array[Rect2], ring: float, part: int = 0) -> Array[Rect2]:
+	var key := [own, neighbours, ring, part]
+	if _drawn_memo.has(key):
+		return _drawn_memo[key]
+	var xs := _grid_lines(own, neighbours, ring, 0)
+	var ys := _grid_lines(own, neighbours, ring, 1)
+	var runs: Array[Rect2] = []
+	for j: int in ys.size() - 1:
+		var start := -1
+		for i: int in xs.size():
+			var kept := i < xs.size() - 1 and _keeps_cell(Vector2((xs[i] + xs[i + 1]) * 0.5, (ys[j] + ys[j + 1]) * 0.5),
+					own, neighbours, ring, part)
+			if kept and start < 0:
+				start = i
+			elif not kept and start >= 0:
+				runs.append(Rect2(xs[start], ys[j], xs[i] - xs[start], ys[j + 1] - ys[j]))
+				start = -1
+	var cells := _merge_runs(runs)
+	_drawn_memo[key] = cells
+	return cells
+
+## The bounding rect of `rects`; empty for none.
+static func bounding(rects: Array[Rect2]) -> Rect2:
+	if rects.is_empty():
+		return Rect2()
+	var box := rects[0]
+	for rect: Rect2 in rects:
+		box = box.merge(rect)
+	return box
+
+# Every edge and ring line of the rooms along `axis`, inside own's ring, sorted and unique.
+static func _grid_lines(own: Rect2, neighbours: Array[Rect2], ring: float, axis: int) -> PackedFloat64Array:
+	var low := own.position[axis] - ring
+	var high := own.end[axis] + ring
+	var lines := PackedFloat64Array([low, high])
+	var rooms: Array[Rect2] = [own]
+	rooms.append_array(neighbours)
+	for rect: Rect2 in rooms:
+		for line: float in [rect.position[axis], rect.end[axis], rect.position[axis] - ring, rect.end[axis] + ring]:
+			if line > low and line < high and not line in lines:
+				lines.append(line)
+	lines.sort()
+	return lines
+
+# Whether `own` may keep the pixels of the grid cell centred at `centre`: `keeps` without its gap tie-breaks.
+static func _keeps_cell(centre: Vector2, own: Rect2, neighbours: Array[Rect2], ring: float, part: int) -> bool:
+	if (part == 1 and over_top(centre, own)) or (part == 2 and not over_top(centre, own)):
+		return false
+	if own.grow(SEAM_EPSILON).has_point(centre):
+		return true
+	for other: Rect2 in neighbours:
+		if other.grow(-SEAM_EPSILON).has_point(centre):
+			return false
+	if rect_distance(own, centre) > ring:
+		return false
+	var mine := hold(own, centre)
+	for other: Rect2 in neighbours:
+		if rect_distance(other, centre) <= ring and hold(other, centre) > mine:
+			return false
+	return true
+
+# Row runs merged downward where a run below spans the same columns.
+static func _merge_runs(runs: Array[Rect2]) -> Array[Rect2]:
+	var merged: Array[Rect2] = []
+	for run: Rect2 in runs:
+		var joined := false
+		for i: int in merged.size():
+			var above := merged[i]
+			if above.position.x == run.position.x and above.size.x == run.size.x and above.end.y == run.position.y:
+				merged[i] = above.merge(run)
+				joined = true
+				break
+		if not joined:
+			merged.append(run)
+	return merged
 
 ## Whether the pixel centred at `point` lies over the top of `own`: there a room shows its region's open set, not its own
 ## override (systems/backdrops).

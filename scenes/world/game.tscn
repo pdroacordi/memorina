@@ -193,6 +193,7 @@ script = ExtResource("14_freeze")
 [node name="DissonanceFx" type="Node" parent="."]
 script = ExtResource("91_dissfx")
 veil_path = NodePath("../CanvasLayer/DissonanceVeil")
+copy_path = NodePath("../CanvasLayer/DissonanceCopy")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=873140419]
 
@@ -241,6 +242,7 @@ mouse_filter = 2
 texture = SubResource("ViewportTexture_foreground")
 
 [node name="DissonanceCopy" type="BackBufferCopy" parent="CanvasLayer"]
+visible = false
 copy_mode = 2
 
 [node name="DissonanceVeil" type="ColorRect" parent="CanvasLayer"]

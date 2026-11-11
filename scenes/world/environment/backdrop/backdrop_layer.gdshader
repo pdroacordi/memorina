@@ -3,7 +3,7 @@ shader_type canvas_item;
 // One backdrop layer drawn on a quad: each pixel picks its art texel from its layer-local
 // position, so fills past the strip are row arithmetic, not texture wrap
 // (architecture/vertical-backdrops). A pixel is drawn by exactly one room: a seam is a hard cut (architecture/backdrop-seams).
-// Must match BackdropMath.art_row, art_col, pixel_centre, keeps, void_owner, over_top and rect_distance.
+// Must match BackdropMath.art_row, art_col, pixel_centre, keeps, void_owner, hold (owner_gap's z), over_top and rect_distance.
 #include "res://scenes/world/memory/seasonal/seasonal_common.gdshaderinc"
 
 uniform sampler2D sheet : filter_nearest, repeat_disable;

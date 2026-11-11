@@ -36,6 +36,8 @@ var _residency := RoomResidency.new()
 ## Rooms a running glide keeps resident: the neighbours of every room it left.
 var _glide_keep: Array[Room] = []
 var _baseline_tween: Tween
+## A room was entered since the last _process: that frame builds only the waiting rooms that are due.
+var _entered: bool = false
 
 func _ready() -> void:
 	assert(SaveSystem.has_session(), "The game runs on a session that Boot or the title began")
@@ -60,6 +62,13 @@ func _ready() -> void:
 		var region := room.get_region()
 		if not region.memory_changed.is_connected(_on_region_memory_changed):
 			region.memory_changed.connect(_on_region_memory_changed.bind(region))
+
+# After the camera's physics step and before the frame draws: a waiting neighbour is built before the view meets it
+# (systems/rooms, "Staggered builds").
+func _process(_delta: float) -> void:
+	if _current_room != null and _residency.is_waiting():
+		_residency.build_due(_shown_rect(), _player.body_rect(), _fade.is_opaque(), _entered)
+	_entered = false
 
 ## Quits without saving: only benches save.
 func quit_game() -> void:
@@ -113,6 +122,7 @@ func _on_room_entered(room: Room) -> void:
 	_player.set_deferred(&"process_mode", Node.PROCESS_MODE_DISABLED)
 	_enter_room(room)
 	room_changed.emit(room)
+	await _build_neighbours()
 	await _fade.to_clear()
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
@@ -129,6 +139,7 @@ func _enter_room(room: Room, glide: bool = false) -> void:
 	else:
 		_glide_keep.clear()
 	_current_room = room
+	_entered = true
 	_player.calm = room.is_calm()
 	_residency.settle(room, rooms, _glide_keep)
 	# The greyhush is a regional property, so it follows the room the player is
@@ -147,6 +158,17 @@ func _on_camera_glide_finished() -> void:
 		return
 	_glide_keep.clear()
 	_residency.settle(_current_room, get_tree().get_nodes_in_group(Room.GROUP))
+
+## The frame at zoom 1 around the camera's centre: a zoom easing out this frame shows no more.
+func _shown_rect() -> Rect2:
+	var view := _camera.view_rect()
+	var size := view.size.max(get_viewport_rect().size)
+	return Rect2(view.get_center() - size * 0.5, size)
+
+## Waits, behind the black, until every neighbour of the current room is built (one per frame).
+func _build_neighbours() -> void:
+	while _residency.is_waiting():
+		await get_tree().process_frame
 
 ## Sets where the camera may yield around the current room this step; returns the rooms touching it.
 func _set_camera_reach(body: Rect2) -> Array[Room]:
@@ -212,6 +234,7 @@ func _on_player_fell_into_hazard() -> void:
 			_enter_room(room)
 			room_changed.emit(room)
 		_camera.snap()
+		await _build_neighbours()
 	await _fade.to_clear()
 
 ## Enters the saved bench room and waits for deferred contents before finding its seat.
@@ -244,6 +267,7 @@ func _land_in(room: Room, place: Callable) -> void:
 	_camera.snap()
 	# Not at _enter_room: a physics step can run before the placing, framing the old spot (bugs/a-debug-boot-reveals-map-cells-ivo-never-saw).
 	room_changed.emit(room)
+	await _build_neighbours()
 
 ## Carries Ivo through `door` to its partner (architecture/doors-and-interiors).
 func _on_player_entered_door(door: Door) -> void:

@@ -4,14 +4,15 @@ type: system
 title: The greyhush: the memory field and its renderer
 status: active
 tags: [greyhush, memory-field, shader, dither]
-related: [architecture/memory-field-cpu-gpu-split, gotchas/glsl-gdscript-math-must-be-duplicated]
+related: [performance/2026-11-11-tech12-baseline, architecture/memory-field-cpu-gpu-split, gotchas/glsl-gdscript-math-must-be-duplicated]
 created: 2026-10-02
-updated: 2026-10-29
+updated: 2026-11-11
 source_files:
   - scenes/world/memory/memory_field.gd
   - scenes/world/memory/greyhush_renderer.gd
   - scenes/world/memory/greyhush_common.gdshaderinc
   - scenes/world/memory/unshielded_mark.gdshaderinc
+  - scenes/world/memory/dissonance/dissonance_fx.gd
 ---
 
 # The greyhush: the memory field and its renderer
@@ -42,4 +43,5 @@ The world's state at any point is a memory value from 0 to 1 (`docs/design/03_mu
 
 - Two `[shader_globals]`, `dissonance_veil` and `dissonance_revelation` (0..1), written only by `DissonanceFx` (`game.tscn`), which zeroes them on entering and leaving: globals outlive a death's scene swap. `Player.dissonance_changed` feeds it, relayed from the mentor's `GuardianFinale`.
 - `DissonanceVeil` (`scenes/world/memory/dissonance/`): a full-screen `ColorRect` in `CanvasLayer` after `Foreground`, behind a `BackBufferCopy` (`gotchas/screen-texture-copy-scope`: without it the screen copy predates the creature composite and the characters vanish). At the revelation, bands of rows slide by whole game pixels and the dissonance colour is dithered in; under mixed notes, an unstable grey with static. Game pixels from `UV * game_size`, animated from `greyhush_time`, so the freeze frame stills it. Rendering only: `MemoryFieldMath` has no twin.
+- **The veil's screen copy hides with the veil** (TECH-12, 2026-11-11; the user chose "Desligar cópia do véu (Recommended)", 2026-11-11). `DissonanceCopy` (copy mode viewport) copies the whole screen every frame it is visible, which cost 0.04-0.08 ms at 1080p while the veil was hidden (`performance/2026-11-11-tech12-baseline`). `DissonanceFx` shows and hides it with the veil (`copy_path`), and `game.tscn` starts it hidden; `dissonance_fx_test` checks both.
 - `HeroSilhouette` (an Ivo child): borrows Ivo's `Sprite2D.material` while the revelation is above zero (a flat dissonance-colour silhouette, `hero_silhouette.gdshader`) and alternates with `PastSelf` (the mentor's `past_self` strip, in colour), faster as the revelation rises, fused at its peak; it gives the material back at zero and asserts the sprite had none.

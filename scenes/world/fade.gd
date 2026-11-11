@@ -25,6 +25,10 @@ func to_clear(seconds: float = DURATION) -> Signal:
 func is_black() -> bool:
 	return color.a > 0.0
 
+## Whether the fade hides the world completely.
+func is_opaque() -> bool:
+	return color.a >= 1.0
+
 func _tween_color(final_color: Color, seconds: float) -> Signal:
 	if _tween:
 		_tween.kill()

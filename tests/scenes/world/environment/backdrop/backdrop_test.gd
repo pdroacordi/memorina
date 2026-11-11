@@ -117,6 +117,23 @@ func test_a_room_draws_its_ring() -> void:
 	# A seam is a hard cut: no band.
 	assert_that(material.get_shader_parameter(&"seam_band")).is_null()
 
+## The layers are scissored to the cells the room keeps: its bounds and the ring around them, its sky over its top.
+func test_a_room_scissors_its_layers_to_its_drawn_cells() -> void:
+	var region := _region_at(Vector2.ZERO, 235.0)
+	var room := _room_in(region, Vector2.ZERO)
+	var cave := _backdrop_in(_room_in(region, Vector2(1920.0, 0.0)), CAVES)
+	var plain := _backdrop_in(room)
+	plain.refresh()
+	cave.refresh()
+	# Beside the cave room the ring is the cave's: the open room's clip stops at their seam.
+	assert_object(plain.clip_of(plain)).is_equal(Rect2(-160.0, -160.0, 2080.0, 1088.0))
+	assert_bool(plain.get_node_or_null("Sky") == null).is_true()
+	var sky := cave.get_node("Sky") as Node2D
+	assert_object(cave.clip_of(sky)).is_equal(Rect2(1920.0, -160.0, 2080.0, 160.0))
+	assert_object(cave.clip_of(cave)).is_equal(Rect2(1920.0, -160.0, 2080.0, 1088.0))
+	# The layers refresh() replaced are freed at the frame's end.
+	await _frames(1)
+
 func _material_of(backdrop: Backdrop) -> ShaderMaterial:
 	var quad := backdrop.get_child(0).get_node("Art") as MeshInstance2D
 	return quad.material as ShaderMaterial
@@ -126,7 +143,8 @@ func test_setting_the_set_again_rebuilds_once() -> void:
 	backdrop.backdrop_set = CAVES
 	backdrop.backdrop_set = CAVES
 	await _frames(1)
-	assert_int(backdrop.get_child_count()).is_equal(CAVES.layers.size() + SET.layers.size())
+	assert_int(backdrop.get_child_count()).is_equal(CAVES.layers.size() + 1)
+	assert_int(backdrop.get_node("Sky").get_child_count()).is_equal(SET.layers.size())
 
 ## With no override a room shows its region's set; an override wins.
 func test_the_region_set_shows_unless_overridden() -> void:
@@ -134,10 +152,12 @@ func test_the_region_set_shows_unless_overridden() -> void:
 	var plain := _backdrop_in(_room_in(region, Vector2.ZERO))
 	assert_int(plain.get_child_count()).is_equal(SET.layers.size())
 	var cave := _backdrop_in(_room_in(region, Vector2(1920.0, 0.0)), CAVES)
-	# The override draws under the room's top, the region's set over it.
-	assert_int(cave.get_child_count()).is_equal(CAVES.layers.size() + SET.layers.size())
+	# The override draws under the room's top, the region's set over it, in its own clip.
+	assert_int(cave.get_child_count()).is_equal(CAVES.layers.size() + 1)
+	var layers: Array[Node] = cave.get_children().filter(func(child: Node) -> bool: return child is Parallax2D)
+	layers.append_array(cave.get_node("Sky").get_children())
 	var parts: Array = []
-	for child: Node in cave.get_children():
+	for child: Node in layers:
 		parts.append(((child.get_node("Art") as MeshInstance2D).material as ShaderMaterial).get_shader_parameter(&"part"))
 	assert_array(parts).is_equal([Backdrop.Part.UNDER_TOP, Backdrop.Part.OVER_TOP, Backdrop.Part.OVER_TOP, Backdrop.Part.OVER_TOP, Backdrop.Part.OVER_TOP])
 	assert_that(_material_of(plain).get_shader_parameter(&"part")).is_equal(Backdrop.Part.ALL)

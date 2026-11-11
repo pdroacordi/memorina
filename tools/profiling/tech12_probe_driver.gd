@@ -33,6 +33,8 @@ var _walk := false
 var _vsync := false
 var _room_events: Array = []
 var _t0 := 0
+## Visibility before `_vis` hid a node, by instance id.
+var _was_visible: Dictionary = {}
 
 
 func _initialize() -> void:
@@ -394,9 +396,15 @@ func _toggle(name: String, off: bool, saved: Dictionary) -> Dictionary:
 	return out
 
 
+## Hides `n` (`off`) or gives it back the visibility it had: the dissonance copy starts hidden since TECH-12's fix.
 func _vis(n: Node, off: bool, out: Dictionary) -> void:
 	if n is CanvasItem:
-		(n as CanvasItem).visible = not off
+		var item := n as CanvasItem
+		if off:
+			_was_visible[item.get_instance_id()] = item.visible
+			item.visible = false
+		else:
+			item.visible = _was_visible.get(item.get_instance_id(), true)
 		out.count += 1
 
 

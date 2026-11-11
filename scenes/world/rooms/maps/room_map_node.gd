@@ -22,6 +22,11 @@ const SECRET_FRONT_Z := -1
 		if is_inside_tree():
 			_build()
 
+## Tile data by [map, layer name] and grass runs by map: both derive from the map alone, so a session builds each once
+## (systems/rooms, "Staggered builds"). Never in the editor, where a map is reimported in place.
+static var _tile_memo: Dictionary = {}
+static var _grass_memo: Dictionary = {}
+
 ## Cell-aligned, hidden, and the only collision: the art is offset half a cell on the dual grid.
 var _solid: TileMapLayer
 
@@ -68,9 +73,9 @@ func _build() -> void:
 		var back_material := _clipped(BACK_MATERIAL)
 		# Sorted: look order is draw order, so a later look's layer is added over an earlier one's.
 		for look: int in _sorted(map.back_layers):
-			_adopt(_display_layer("Back_%s" % _look_name(look), look, map.back_layers[look], back_material, BACK_Z))
+			_adopt(_display_layer("Back_%s" % _look_name(look), look, map.back_layers[look], back_material, BACK_Z, true))
 		for look: int in _sorted(map.ground_layers):
-			_adopt(_display_layer("Ground_%s" % _look_name(look), look, map.ground_layers[look], ground_material, 0))
+			_adopt(_display_layer("Ground_%s" % _look_name(look), look, map.ground_layers[look], ground_material, 0, true))
 		if not map.ledge_layers.is_empty():
 			_adopt(_ledge_layer())
 		if not Engine.is_editor_hint() and not _indoors():
@@ -105,26 +110,45 @@ func _build() -> void:
 		mask.setup(map)
 		_adopt(mask)
 
-## One look's dual-grid tiles, half a cell up and left, so each display cell sits on a cell corner.
-func _display_layer(layer_name: String, look: int, cells: PackedByteArray, material_used: Material, z: int) -> TileMapLayer:
+## One look's dual-grid tiles, half a cell up and left, so each display cell sits on a cell corner; `memo` when the
+## layer name alone names its cells.
+func _display_layer(layer_name: String, look: int, cells: PackedByteArray, material_used: Material, z: int,
+		memo: bool = false) -> TileMapLayer:
 	var layer := TileMapLayer.new()
 	layer.name = layer_name
 	layer.tile_set = map.biome.tile_set()
 	layer.material = material_used
 	layer.z_index = z
 	layer.position = -Vector2(RoomMap.CELL_PX, RoomMap.CELL_PX) * 0.5
-	var display := map.display_size()
-	var variants := map.biome.variants(look)
-	for j: int in display.y:
-		for i: int in display.x:
-			var packed := cells[j * display.x + i]
-			var mask := packed & 0xf
-			if mask == 0:
-				continue
-			var variant := GroundAutotile.drawn_variant(packed >> 4, variants)
-			var coords := GroundAutotile.varied_coords(mask, variant) if variant > 0 else GroundAutotile.wang_coords(mask)
-			layer.set_cell(map.origin + Vector2i(i, j), look, coords)
+	var paint := func(into: TileMapLayer) -> void:
+		var display := map.display_size()
+		var variants := map.biome.variants(look)
+		for j: int in display.y:
+			for i: int in display.x:
+				var packed := cells[j * display.x + i]
+				var mask := packed & 0xf
+				if mask == 0:
+					continue
+				var variant := GroundAutotile.drawn_variant(packed >> 4, variants)
+				var coords := GroundAutotile.varied_coords(mask, variant) if variant > 0 else GroundAutotile.wang_coords(mask)
+				into.set_cell(map.origin + Vector2i(i, j), look, coords)
+	if memo:
+		_fill(layer, paint)
+	else:
+		paint.call(layer)
 	return layer
+
+# Paints `layer` by `paint` once per map and layer name, then copies the memoised tile data.
+func _fill(layer: TileMapLayer, paint: Callable) -> void:
+	if Engine.is_editor_hint():
+		paint.call(layer)
+		return
+	var key := [map, layer.name]
+	if _tile_memo.has(key):
+		layer.tile_map_data = _tile_memo[key]
+		return
+	paint.call(layer)
+	_tile_memo[key] = layer.tile_map_data
 
 ## Generated grass on every grassy top, when the biome grows any (architecture/generated-grass); a runtime-only node.
 # Grass needs open sky: an interior grows none, whatever its floor (systems/grass).
@@ -134,7 +158,12 @@ func _indoors() -> bool:
 
 func _grow_grass() -> void:
 	var biome := map.biome
-	var runs := GrassPlacement.runs(map, func(look: int) -> bool: return biome.grass(look) != null)
+	var runs: Array[GrassRun] = []
+	if _grass_memo.has(map) and not Engine.is_editor_hint():
+		runs = _grass_memo[map]
+	else:
+		runs = GrassPlacement.runs(map, func(look: int) -> bool: return biome.grass(look) != null)
+		_grass_memo[map] = runs
 	if runs.is_empty():
 		return
 	var looks: Array[GrassLook] = []
@@ -206,13 +235,14 @@ func _ledge_layer() -> TileMapLayer:
 	layer.name = "Ledges"
 	layer.tile_set = map.biome.tile_set()
 	layer.material = _seasoned_ground()
-	for look: int in map.ledge_layers:
-		var cells: PackedByteArray = map.ledge_layers[look]
-		for y: int in map.size.y:
-			for x: int in map.size.x:
-				var piece := cells[y * map.size.x + x]
-				if piece > 0:
-					layer.set_cell(map.origin + Vector2i(x, y), look, Vector2i(piece - 1, GroundAutotile.LEDGE_ROW))
+	_fill(layer, func(into: TileMapLayer) -> void:
+		for look: int in map.ledge_layers:
+			var cells: PackedByteArray = map.ledge_layers[look]
+			for y: int in map.size.y:
+				for x: int in map.size.x:
+					var piece := cells[y * map.size.x + x]
+					if piece > 0:
+						into.set_cell(map.origin + Vector2i(x, y), look, Vector2i(piece - 1, GroundAutotile.LEDGE_ROW)))
 	return layer
 
 ## Hidden by `visible`, never `enabled`, which would also stop its collision (gotchas/tilemaplayer-enabled-does-not-hide-children).
@@ -221,12 +251,13 @@ func _solid_layer() -> TileMapLayer:
 	layer.name = "Solid"
 	layer.tile_set = GroundCollision.tile_set()
 	layer.visible = false
-	for y: int in map.size.y:
-		for x: int in map.size.x:
-			var cell := map.origin + Vector2i(x, y)
-			var ground := map.ground_at(cell)
-			if ground != Enums.Ground.NONE:
-				layer.set_cell(cell, GroundCollision.SOURCE_ID, GroundCollision.coords(ground), GroundCollision.ONE_WAY if map.is_platform(cell) else 0)
+	_fill(layer, func(into: TileMapLayer) -> void:
+		for y: int in map.size.y:
+			for x: int in map.size.x:
+				var cell := map.origin + Vector2i(x, y)
+				var ground := map.ground_at(cell)
+				if ground != Enums.Ground.NONE:
+					into.set_cell(cell, GroundCollision.SOURCE_ID, GroundCollision.coords(ground), GroundCollision.ONE_WAY if map.is_platform(cell) else 0))
 	return layer
 
 ## `base` limited to the map's world rect: the dual grid draws half a tile past every edge, and the rooms beside run.

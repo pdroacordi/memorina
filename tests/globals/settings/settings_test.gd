@@ -17,12 +17,24 @@ func _codes(action: StringName, device: KeyBindings.Device) -> Array[int]:
 			found.append(code)
 	return found
 
+## A headless run shares the player's user://, where a played debug session leaves settings_debug.cfg: the run must leave
+## any such file as it found it, never require it absent (bugs/settings-test-fails-when-the-players-debug-settings-file-exists).
 func test_a_headless_run_has_no_disk_and_writes_no_file() -> void:
 	assert_bool(Settings.has_disk()).is_false()
+	assert_str((Settings.get(&"_file") as SettingsFile).path()).is_empty()
+	var before := _settings_files()
 	Settings.set_volume(AudioBuses.MUSIC, 3)
 	Settings.commit()
+	assert_dict(_settings_files()).is_equal(before)
+
+# Whether each user://settings*.cfg exists, and its modified time when it does: read by stat only, never opened.
+func _settings_files() -> Dictionary:
+	var found := {}
 	for debug: bool in [true, false]:
-		assert_bool(FileAccess.file_exists(Settings.PATH.path_join(SettingsFile.file_name(debug)))).is_false()
+		var path := Settings.PATH.path_join(SettingsFile.file_name(debug))
+		var exists := FileAccess.file_exists(path)
+		found[path] = [exists, FileAccess.get_modified_time(path) if exists else 0]
+	return found
 
 func test_a_volume_step_sets_its_bus() -> void:
 	Settings.set_volume(AudioBuses.MUSIC, 5)

@@ -4,12 +4,15 @@ type: measurement
 title: TECH-12 baseline - frame cost per region, per pass and per room load, on the RTX 3060 desktop, scaled to an Iris Xe
 status: active
 tags: [performance, profiling, tech-12, gpu, backdrops, room-load, greyhush]
-related: [architecture/release-build, systems/backdrops, systems/greyhush, systems/grass, systems/water, systems/world, systems/rooms, systems/foreground, gotchas/fullscreen-does-nothing-in-an-editor-run]
+related: [gotchas/showing-a-canvas-item-drops-its-rendering-server-clip, architecture/release-build, systems/backdrops, systems/greyhush, systems/grass, systems/water, systems/world, systems/rooms, systems/foreground, gotchas/fullscreen-does-nothing-in-an-editor-run]
 created: 2026-11-11
 updated: 2026-11-11
 source_files:
   - tools/profiling/tech12_probe_driver.gd
   - tools/profiling/tech12_timeline.json
+  - scenes/world/rooms/room_residency.gd
+  - scenes/world/environment/backdrop/backdrop.gd
+  - scenes/world/memory/dissonance/dissonance_fx.gd
 ---
 
 # TECH-12 baseline (2026-11-11)
@@ -205,3 +208,98 @@ Assumptions, not measured:
   - many creatures at once;
   - larger rooms such as woods_deep.
 - **A real Intel GPU.** Every notebook figure above is scaled. A run of the probe on the notebook itself (debug export or editor build) would replace the assumptions.
+
+## After the fixes (2026-11-11)
+
+The user chose three fixes on 2026-11-11: "Carregar salas aos poucos (Recommended)", "Fundo sem sobreposição (Recommended)" and "Desligar cópia do véu (Recommended)". Rendering the world at 640x360 was not chosen, so the stretch mode is unchanged. The user had felt the slowdowns "Rodando pelo editor" and "Ao trocar de sala".
+
+- **Room loads** (`systems/rooms`, "Staggered builds"). A neighbour that needs a build waits and is built one per frame, or in the same frame once the view or Ivo reaches it. A door, a bench, a death or a hazard respawn builds the waiting rooms behind the black before fading in. `RoomMapNode` memoises each map's tile data and grass runs.
+- **Backdrop overdraw** (`systems/backdrops`, "Clipped quads"). Each Backdrop is scissored to the bounding rect of `BackdropMath.drawn_cells`, a superset of the pixels it keeps.
+- **Dissonance copy** (`systems/greyhush`). `DissonanceCopy` is visible only while the veil is.
+- **Probe fix.** `_vis` in the probe now restores the visibility a node had, so toggling the dissonance copy no longer turns it on for good.
+
+### Same machine, same session
+
+Run with the method above, `--attrib=none --walk`, at 1280x720 and 1920x1080 with vsync off. "HEAD" is a clean checkout of the commit before the fixes, measured in the same session. It runs 5-15% below the first table above, so compare each "after" with HEAD, not with the first table.
+
+GPU total ms (base sample mean):
+
+| Room | 1080p HEAD | 1080p after | 720p HEAD | 720p after |
+|---|---|---|---|---|
+| orchard_mill_town | 1.24 | 0.64 | 0.59 | 0.33 |
+| woods_edge | 1.11 | 0.66 | 0.54 | 0.34 |
+| lake_fishing_village | 1.04 | 0.72 | 0.50 | 0.36 |
+| village_mill | 1.03 | 0.69 | 0.51 | 0.35 |
+| threshold_fields | 0.94 | 0.59 | 0.45 | 0.29 |
+| frost_shore | 0.92 | 0.68 | 0.45 | 0.34 |
+| caldera_open_crater | 0.89 | 0.67 | 0.43 | 0.33 |
+| village_house | 0.53 | 0.38 | 0.26 | 0.20 |
+
+- Draw calls fell from 55 to 32 in orchard_mill_town and from 43 to 31 in woods_edge (1080p), because off-screen clips cull their layers.
+- **Frame dt mean at 1080p** fell from 1.29-1.53 ms (HEAD) to 0.60-1.01 ms.
+- **Attribution at 1080p** (orchard_mill_town, woods_edge, lake_fishing_village; base and base_after now agree within 0.001 ms):
+  - backdrops: -0.29 to -0.30 ms (before -0.63 to -0.99 ms);
+  - neighbours: within noise (before -0.26 to -0.73 ms);
+  - dissonance copy: 0 (before -0.04 to -0.08 ms);
+  - all five full-screen passes: -0.18 to -0.25 ms (before -0.33 to -0.39 ms).
+
+Room loads, worst frame in ms:
+
+| Event | 1080p HEAD | 1080p after | 720p HEAD | 720p after |
+|---|---|---|---|---|
+| teleport into orchard_mill_town | 51.8 | 17.5 | 57.3 | 16.9 |
+| teleport into woods_edge | 55.9 | 16.4 | 44.1 | 21.5 |
+| teleport into lake_fishing_village | 38.4 | 19.5 | 43.5 | 19.3 |
+| teleport into the other five rooms | 10.8-37.2 | 8.6-19.4 | 8.9-33.3 | 9.3-24.3 |
+| frames over 33 ms, all eight teleports | 4 | 0 | 4 | 0 |
+| warm revisit orchard_mill_town / village_mill | 48.9 / 28.3 | 16.3 / 12.5 | 50.1 / 26.6 | 15.1 / 11.2 |
+| walk village_square to village_mill (x 1934) | 17.1 | 6.4 | 13.9 | 5.4 |
+| walk village_mill to village_gate_east (x 3214) | 13.8 | 6.0 | 13.0 | 4.8 |
+
+- A teleport's worst frame is now the arrival frame. It builds the current room plus the nearest waiting one (the room under or beside the view, if the view meets it). The next one to three frames each build one more room, at 4-16 ms on the desktop.
+- **Two one-off steady frames.** The 720p base samples had a 17.0 ms frame (frost_shore) and a 19.4 ms frame (lake_fishing_village). Neither repeated at 1080p (worst steady frame 8.6 ms). Like village_house's spike in the first run, the cause was not found.
+- **Warm build cost** (enter tree plus `_ready`): 0.9-3.9 ms, down from 2.8-5.0. The memo saves the tile and grass loops on a revisit or a death's rebuild. A first visit in a session still pays them.
+
+### Scaled to the Iris Xe
+
+The assumptions are unchanged from "Scaling to the target notebook": GPU about 7x (range 6-10), CPU about 2x.
+
+| Case | Desktop after | Notebook estimate after | Notebook estimate before | Target |
+|---|---|---|---|---|
+| GPU, worst region (orchard_mill_town) 1080p | 0.64 ms | ~4.5 ms (3.8-6.4) | ~10 ms (9-15) | 16.6 ms, fits with margin |
+| GPU, worst region 720p | 0.33-0.36 ms | ~2.5 ms (2-3.6) | ~4.5 ms | fits |
+| walk across a room boundary | 4.8-6.4 ms | ~10-13 ms | ~26-31 ms | under 16.6 ms |
+| teleport arrival | 8.6-24.3 ms | ~17-49 ms | ~50-100 ms | room load (allowed) |
+| door, bench or death arrival | one build per frame behind the black (4-16 ms each) | ~8-32 ms per black frame | one 50-100 ms frame | room load (allowed) |
+
+- **Against the target.** Steady 60 fps now has about 3.5x headroom on the GPU estimate at 1080p, and no measured frame outside a room load passes 33 ms even scaled (worst steady desktop frame 19.4 ms, about 39 ms scaled, a one-off). A walked boundary, the case the user felt ("Ao trocar de sala"), now fits a 60 Hz frame on the estimate.
+- **Still open.**
+  - A teleport's arrival frame can still reach about 49 ms on the notebook estimate. Doors fade, so it shows only on F10 and cutscene teleports.
+  - The editor run ("Rodando pelo editor", TECH-11) was not measured again.
+  - The estimates remain estimates until the probe runs on the notebook itself.
+
+### Proof that the backdrop pixels did not change
+
+- `backdrop_clip_test` checks every room the game and DebugTrials place (keeps implies within the cells, per part; no cell inside a neighbour). `backdrop_math_test` checks four small layouts pixel by pixel. `backdrop_seams_test` is unchanged and green.
+- Screenshots were taken of only the backdrops: everything else hidden, Ivo and the camera's script stopped, the tree paused. Nine frames per room (the resting centre and the eight frames at the ring limit), each captured with the clip on, lifted, and on again. They are bit-identical in 71 of 81 frames:
+  - village_house, village_mill, village_square, lake_chasm and frost_cliffs (both with a split `Sky`), lake_fishing_village, threshold_fields: 9 of 9 each;
+  - woods_edge: 8 of 9;
+  - orchard_mill_town: 0 of 9.
+- **The orchard and the one woods_edge frame are not evidence against the clip.** In each of them the two captures with the clip on also differed from each other (a shift of the whole picture while paused), so they measure the scene moving, not the clip. The orchard's proof rests on `backdrop_clip_test`.
+
+### Fix round: no extra build in the frame a room is entered (2026-11-11)
+
+- **Finding.** The playtest (`playtests/2026-11-11-tech12-room-loading`, finding 1) found that the frame Ivo enters a room also built one waiting room. On a first visit that frame cost 16-20 ms (lake_waterfall_path when entering village_mill: 19.4-19.7 ms).
+- **Change.** `Game` now passes `entered` to `RoomResidency.build_due`, so that frame builds only the due rooms, the ones the view or Ivo reaches.
+- **Measure.** Re-measured like the playtest: `tools/playtest/scripts/room_residency_probe_driver.gd`, windowed with vsync on (180 Hz), dt between `frame_pre_draw`s, first visit in a fresh session, three runs each. The timelines are `tech12_village_ns` and `tech12_lane_woods_ns` (new: spawn (-1000, 280) and hold left).
+
+| Crossing | Entry frame, playtest | Entry frame now | Frames after (one build each) |
+|---|---|---|---|
+| village_square -> village_mill | 19.4 / 19.7 | 7.0 / 7.0 / 7.5 | lake_waterfall_path 15.2-17.1, then village_gate_east 7.9-8.1 |
+| village_mill -> village_gate_east | 15.7 / 16.5 / 18.0 | 7.2 / 7.6 / 7.6 | caldera_sun_stair 13.7-14.4, then threshold_fields 10.8-12.5 |
+| village_lane_west -> woods_edge | 11.8 / 16.7 / 14.2 | 8.3 / 8.3 / 13.1 | woods_crown 6.3-16.1, woods_deep 16.1-16.8, woods_root_caves 14.9-15.1 (one run: 40.4 and 38.7) |
+
+- **What moved.** The entry frame now costs 7-13 ms. The first-visit build of a large neighbour moved to the next frame, where it alone costs 14-17 ms. So the worst frame of a crossing fell only from about 19.7 to 17.1 ms (square -> mill) and from 18.0 to 14.4 ms (mill -> gate_east).
+- **The outlier.** One lane_west -> woods_edge run spent 40 ms each building woods_deep and woods_root_caves. The other two runs spent about 16 ms on the same rooms, so the cost depends on the run, not on the code path; that run was likely loading the woods' assets for the first time in the session. The cause was not isolated.
+- **Scaled to the Iris Xe** (CPU about 2x): a crossing's worst frame is about 28-34 ms on a first visit, and about 12-16 ms once the room has been built in the session (the tile and grass memo). It stays over 16.6 ms on the notebook for the first build of a large room.
+- **The next lever.** Split a large room's build across frames (the RoomMap layers, then the entities), or prebuild the tile data at import. Not done here.
