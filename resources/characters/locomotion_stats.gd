@@ -16,5 +16,7 @@ extends Resource
 ## Ground wind deadzone in px/s; see design 03 section 5.4.
 @export var wind_deadzone: float = 90.0
 @export var wind_grip   : float = 0.4
+## Fraction of move speed a headwind takes at `wind_deadzone`, 0..1, scaled down linearly below it (MEM-16; Ivo only).
+@export_range(0.0, 1.0) var headwind_slow: float = 0.0
 ## Vertical acceleration per px/s of airborne wind.
 @export var wind_lift   : float = 1.5

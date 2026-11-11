@@ -102,6 +102,10 @@ const AIR_ATTACK_CONTEXTS: Array[StringName] = [CTX_JUMP, CTX_FALL, CTX_POGO]
 
 ## Horizontal speed below this threshold counts as standing still.
 const STILL_SPEED_EPSILON := 1.0
+## Px above and below the feet a standing slide looks for ground before the wind may move him on.
+const LIP_PROBE := 4.0
+## Game px from Ivo's x back to the heel of the rear boot in `brace_stand`; ivo_sheet_test pins it to the art.
+const BRACE_HEEL := 28.0
 ## Seconds after recall when a directionless dodge or wall grip goes away from its source; past a jump's apex (0.67 s).
 const RECALL_ESCAPE_TIME := 0.9
 ## Seconds an Up press waits for a door, a Talkable or an item to come in reach ("Buffer it ~0.1 s", user, 2026-10-08).
@@ -170,6 +174,8 @@ enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 var _states: CharacterStateMachine
 ## Attack context selected at sequence start; empty while not attacking.
 var _attack_context: StringName = &""
+## The physics frame `_hold_the_lip` last stopped a wind slide; -2 for never.
+var _lip_held_frame: int = -2
 ## In a calm room the sword does not swing; Game sets it on each room change (Room.is_calm).
 var calm: bool = false
 ## A double jump has no lasting gameplay state of its own — afterwards Ivo is
@@ -484,10 +490,15 @@ func just_double_jumped() -> bool:
 func is_memorina_drawn() -> bool:
 	return _memorina.is_drawn()
 
-## Walking into a wind hard enough to lean into (the resolver's brace pose).
+## Leaning into a wind hard enough (the resolver's brace pose): walking into it, or standing facing it.
 func is_bracing() -> bool:
+	if not is_on_floor() or absf(carry().x) < brace_wind:
+		return false
 	var axis := move_axis()
-	return is_on_floor() and not is_zero_approx(axis) and signf(carry().x) == -signf(axis) and absf(carry().x) >= brace_wind
+	var into := -signf(carry().x)
+	if is_zero_approx(axis):
+		return not is_memorina_drawn() and facing == int(into)
+	return signf(axis) == into
 
 ## The song precondition is firm ground and near-zero horizontal speed (design 02, section 6.2).
 func is_still() -> bool:
@@ -496,6 +507,9 @@ func is_still() -> bool:
 	if is_rolling() or is_attacking() or is_recovering() or is_in_knockback() or is_wall_sliding():
 		return false
 	if wants_to_move():
+		return false
+	# A wind slide parked at a lip is still being pushed: a gust breaks a song there too.
+	if _lip_held_frame >= Engine.get_physics_frames() - 1:
 		return false
 	return absf(velocity.x) < STILL_SPEED_EPSILON
 
@@ -571,6 +585,27 @@ func _roll_motion(delta: float) -> void:
 
 func _ground_motion(delta: float) -> void:
 	_locomotion.ground_update(delta, move_axis(), carry().x)
+	_hold_the_lip(delta)
+
+# Wind never slides a standing Ivo off a ledge; walking off, or the wind in the air, still carries him (MEM-16).
+func _hold_the_lip(delta: float) -> void:
+	if not is_zero_approx(move_axis()) or is_zero_approx(velocity.x) or is_zero_approx(carry().x):
+		return
+	if signf(velocity.x) != signf(carry().x):
+		return
+	# A ray under the body's downwind edge: he stops with both boots on the stone (the capsule's round bottom would
+	# still touch a lip's corner long after the feet are past it).
+	var feet := body_rect()
+	var edge := feet.end.x if velocity.x > 0.0 else feet.position.x
+	# Braced, the rear boot reaches past the capsule, downwind.
+	if is_bracing():
+		edge = global_position.x + signf(velocity.x) * maxf(BRACE_HEEL, absf(edge - global_position.x))
+	var x := edge + velocity.x * delta
+	var query := PhysicsRayQueryParameters2D.create(Vector2(x, feet.end.y - LIP_PROBE), Vector2(x, feet.end.y + LIP_PROBE),
+			collision_mask, [get_rid()])
+	if get_world_2d().direct_space_state.intersect_ray(query).is_empty():
+		velocity.x = 0.0
+		_lip_held_frame = Engine.get_physics_frames()
 
 # Up grabs a climbable surface only when Ivo is not rolling, hurt, or playing.
 func _try_climb() -> void:

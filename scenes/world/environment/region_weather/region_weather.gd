@@ -4,6 +4,8 @@ class_name RegionWeather extends Node2D
 
 ## Seconds the sky takes to fade out or in on entering or leaving a room without sky.
 const SKY_FADE := 0.5
+## The gust layer's z: between RoomMapNode.BACK_Z (-20) and the ground layers (0).
+const GUST_Z := -10
 
 ## Particle count multiplier.
 @export_range(0.1, 2.0) var density: float = 1.0
@@ -114,4 +116,6 @@ func _mount_gusts(profile: WeatherProfile) -> void:
 	_gust_layer.initial_velocity_min = profile.speed * 0.9
 	_gust_layer.initial_velocity_max = profile.speed * 1.1
 	_gust_layer.modulate.a = 0.0
+	# Behind the ground (z 0), in front of back walls and backdrops: the gust blows through the air, not over earth.
+	_gust_layer.z_index = GUST_Z
 	add_child(_gust_layer)

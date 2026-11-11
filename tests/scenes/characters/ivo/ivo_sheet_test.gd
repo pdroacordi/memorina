@@ -22,7 +22,7 @@ const CENTRE_TOLERANCE := 4.0
 ## Game px (2 art px): how far an attack's body may move between two frames, so a swing never slides or pops.
 const STEADY_TOLERANCE := 4.0
 const GROUNDED: Array[StringName] = [
-	&"idle", &"run", &"brace", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle", &"memorina_lower",
+	&"idle", &"run", &"brace", &"brace_stand", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle", &"memorina_lower",
 	&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in", &"run_attack_swing_out",
 	&"guitar_hold", &"guitar_strum",
 ]
@@ -31,7 +31,7 @@ const FLIGHT := {&"run": [3, 4, 7], &"run_attack_swing_in": [3, 4], &"run_attack
 ## Game px: how far a flight frame's lowest row may sit above the feet row.
 const FLIGHT_LIFT := Vector2i(2, 6)
 const CENTRED: Array[StringName] = [
-	&"idle", &"run", &"brace", &"jump_start", &"jump_idle", &"fall_start", &"fall_idle", &"air_spin", &"land",
+	&"idle", &"run", &"brace", &"brace_stand", &"jump_start", &"jump_idle", &"fall_start", &"fall_idle", &"air_spin", &"land",
 	&"hurt", &"roll", &"sit", &"climb", &"climb_back", &"death",
 ]
 ## Measured on the feet (rows 80-95), where no blade or trail passes; the running attacks are measured on the torso (their legs are the run's stride).
@@ -56,7 +56,7 @@ const WALL: Array[StringName] = [&"wall_landing", &"wall_slide"]
 const STEEL: Array[Color] = [Color8(98, 106, 112), Color8(150, 160, 166), Color8(200, 208, 210), Color8(234, 240, 240)]
 ## Seconds; the 2x sheets kept every clip's timing but the Memorina's, redrawn in STORY-11.
 const LENGTHS := {
-	&"idle": 0.8333333, &"run": 0.6666667, &"brace": 1.0, &"jump_start": 0.25, &"jump_idle": 0.083333336,
+	&"idle": 0.8333333, &"run": 0.6666667, &"brace": 1.0, &"brace_stand": 0.1, &"jump_start": 0.25, &"jump_idle": 0.083333336,
 	&"fall_start": 0.25, &"fall_idle": 0.083333336, &"air_spin": 0.5, &"land": 0.75, &"wall_landing": 0.5,
 	&"wall_slide": 1.0, &"roll": 0.5833333, &"hurt": 0.33333334, &"death": 0.8333333, &"sit": 1.0,
 	&"climb": 0.6, &"climb_hold": 0.1, &"climb_back": 0.6, &"climb_back_hold": 0.1, &"memorina_draw": 0.33333334,
@@ -117,6 +117,12 @@ func test_grounded_clips_stand_on_the_floor_line() -> void:
 			if (flying and (lift < FLIGHT_LIFT.x or lift > FLIGHT_LIFT.y)) or (not flying and lift != 0):
 				problems.append("%s frame %d: lowest row %d" % [clip, frame, FEET_ROW - lift])
 	assert_array(Array(problems)).is_empty()
+
+## Player.BRACE_HEEL is where the lip hold looks for ground while he braces standing: the rear boot's heel.
+func test_the_standing_brace_heel_is_where_the_lip_hold_looks() -> void:
+	for frame: int in _frames(&"brace_stand"):
+		var feet := _image(&"brace_stand").get_region(Rect2i(frame * FRAME, 80, FRAME, 16)).get_used_rect()
+		assert_float(FLIP_AXIS - (feet.position.x - 0.5)).is_equal_approx(Player.BRACE_HEEL, 1.0)
 
 func test_body_clips_are_centred() -> void:
 	var problems := PackedStringArray()

@@ -5,6 +5,8 @@ const IDLE := &"idle"
 const RUN := &"run"
 const WALK := &"walk"
 const BRACE := &"brace"
+## One push frame held: standing, feet planted, leaning into the wind (MEM-16).
+const BRACE_STAND := &"brace_stand"
 const JUMP_START := &"jump_start"
 const JUMP_IDLE := &"jump_idle"
 const AIR_SPIN := &"air_spin"
@@ -110,6 +112,8 @@ func resolve() -> StringName:
 	# Puts the instrument away after playing it; any movement cuts it.
 	if driver.current == MEMORINA_IDLE or driver.holding(MEMORINA_LOWER):
 		return MEMORINA_LOWER
+	if _player.is_bracing():
+		return BRACE_STAND
 	return IDLE
 
 func is_death_finished() -> bool:

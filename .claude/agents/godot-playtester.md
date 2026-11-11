@@ -731,6 +731,19 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     the left one. The old `world42_counterweights.json` spawn (-6200) falls into the pit under the lift. Empty house: from
     (8336, 12280), `move_left` 1.8 s with a jump at +0.05 lands on the col 1 plate at x 8043.
 
+- **Learned 2026-11-11 (MEM-16 gust feel)**:
+  - **`Character.carry()` and `Player.is_bracing()` read 0/false from a `-s` driver's `_process`.** The carry is
+    accumulated and spent inside the physics frame. Log the AnimationTree state (`parameters/playback`
+    `get_current_node()`) for the pose, and `air=`/`str=` for the wind.
+  - **When a log contradicts the code you read** (here `is_still()` false with vel 0 and every gate false), re-read the
+    function before probing further: moved line numbers meant a sibling had added a gate 4 min earlier. Print each gate
+    of a compound predicate in the driver: one run separates "my timeline" from "the code changed".
+  - **A particle layer's z order from pixels:** a stationary Ivo, 3 calm frames and ~20 peak frames 0.25 s apart, then
+    paint red every pixel at least 25 brighter (L) in any gust frame than in the calm frame. Dashes behind the ground stop
+    flush at tile edges. Falling snow shows as vertical dotted trails, so tell the two layers apart by shape.
+  - Positions: threshold_bridge east lip x 7136 (floor y 160), west deck lip x 6720. Forced memory 1 from (7180, 150):
+    the gust parks Ivo at the lip at ~t 7.9, and its peak runs ~7.6-9.6. Ravine floor y 351.9.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
