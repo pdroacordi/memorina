@@ -120,6 +120,7 @@ The current contract of each system (moved out of `CLAUDE.md` on 2026-10-02). Re
 - [every-guardian-guards-a-way-on](features/every-guardian-guards-a-way-on.md) — WORLD-35, closed 2026-10-15. Each arena leads on: hollow tree, glacier and icefall, crag and ridge, sun stair and grate. Seven loops (A-G) end at a bench or in the village. 10 new world rooms and 1 interior (54 rooms, 15 interiors), 2 new benches (9), 30 reward slots (18 collectibles, 12 caches), 8 secrets, soft landings under the long drops. The kit check keeps 0 traps across 11 kits.
 
 ## Bugs
+- [the-notice-slide-out-tests-miss-a-window-shorter-than-a-frame](bugs/the-notice-slide-out-tests-miss-a-window-shorter-than-a-frame.md): RESOLVED 2026-11-11, low: two notice_watcher tests polled a 0.02 s toast window per frame; a slow frame under load skipped it. They wait on `shown` now.
 
 - [a-raised-gate-draws-over-the-solid-above-it](bugs/a-raised-gate-draws-over-the-solid-above-it.md) — The gate's fixed 96 px rise slides it into the solid above, drawn over the tiles: in orchard_windy_gap it stands 64 px above the shelf, in front of the WORLD-42 pear tree, and lifts an Ivo standing in its column; in village_empty_house the oak door shows over the ceiling planks (open, medium).
 - [pear-stalks-stop-short-of-the-bough](bugs/pear-stalks-stop-short-of-the-bough.md) — WORLD-42: `HangingLoad` draws the stalk from the shape's top, and the `rope_length`s are 3-4 px short of the bough (windy gap 4 px over sky, counterweights 3 px each, house 1 px), so the pear hangs from nothing (open, low).

@@ -189,7 +189,7 @@ func test_a_held_queue_keeps_every_notice_for_later() -> void:
 	assert_array(_keys()).contains_exactly(["ITEM_SWORD", "ITEM_MEMORINA"])
 
 
-## A real toast wired to the watcher with long slide-out and gap windows, showing the bread.
+## A real toast wired to the watcher with long slide-out and gap windows, once the bread was shown.
 func _shown_with_toast() -> NoticeToast:
 	var ivo := _ivo()
 	_watch()
@@ -205,7 +205,8 @@ func _shown_with_toast() -> NoticeToast:
 	toast.leaving.connect(_watcher.on_notice_leaving)
 	toast.finished.connect(_watcher.on_notice_finished)
 	SaveSystem.set_item_owned(Enums.PlayerItem.BREAD, true)
-	await _until(func() -> bool: return _watcher.is_showing())
+	# Waits for the signal, not is_showing(): one slow frame can carry the toast past its 0.02 s slide-in and hold.
+	await _until(func() -> bool: return not _shown.is_empty())
 	return toast
 
 func _hold_and_release() -> void:
