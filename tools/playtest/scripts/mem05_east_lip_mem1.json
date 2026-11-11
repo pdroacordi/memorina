@@ -1,0 +1,83 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 14,
+ "player_position": [
+  7180,
+  150
+ ],
+ "locale": "en",
+ "steps": [
+  {
+   "t": 5.0,
+   "screenshot": "e_005.0"
+  },
+  {
+   "t": 5.5,
+   "screenshot": "e_005.5"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "e_006.0"
+  },
+  {
+   "t": 6.5,
+   "screenshot": "e_006.5"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "e_007.0"
+  },
+  {
+   "t": 7.5,
+   "screenshot": "e_007.5"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "e_008.0"
+  },
+  {
+   "t": 8.5,
+   "screenshot": "e_008.5"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "e_009.0"
+  },
+  {
+   "t": 9.5,
+   "screenshot": "e_009.5"
+  },
+  {
+   "t": 10.0,
+   "screenshot": "e_010.0"
+  },
+  {
+   "t": 10.5,
+   "screenshot": "e_010.5"
+  },
+  {
+   "t": 11.0,
+   "screenshot": "e_011.0"
+  },
+  {
+   "t": 11.5,
+   "screenshot": "e_011.5"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "e_012.0"
+  },
+  {
+   "t": 12.5,
+   "screenshot": "e_012.5"
+  },
+  {
+   "t": 13.0,
+   "screenshot": "e_013.0"
+  },
+  {
+   "t": 13.5,
+   "log": "end"
+  }
+ ]
+}

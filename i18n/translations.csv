@@ -387,6 +387,8 @@ SETTINGS_LANGUAGE,Language,Idioma
 SETTINGS_FULLSCREEN,Fullscreen,Tela cheia
 SETTINGS_WINDOW_SIZE,Window size,Tamanho da janela
 SETTINGS_WINDOW_SCALE,%dx (%d x %d),%dx (%d x %d)
+SETTINGS_WEATHER,Weather intensity,Intensidade do clima
+SETTINGS_PERCENT,%d%%,%d%%
 SETTINGS_ON,On,Ligada
 SETTINGS_OFF,Off,Desligada
 LANGUAGE_EN,English,English

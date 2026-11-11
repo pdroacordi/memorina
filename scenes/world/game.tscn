@@ -59,6 +59,7 @@
 [ext_resource type="Script" path="res://scenes/world/memory/dissonance/dissonance_fx.gd" id="91_dissfx"]
 [ext_resource type="Shader" path="res://scenes/world/memory/dissonance/dissonance_veil.gdshader" id="92_dissveil"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region_music.gd" id="99_regionmusic"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/weather/region_wind.tscn" id="100_regionwind"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -102,7 +103,8 @@ regions = Array[PackedScene]([ExtResource("30_trials_winter"), ExtResource("31_t
 world_path = NodePath("../World")
 camera_path = NodePath("../World/Camera2D")
 
-[node name="RegionWeather" parent="World" unique_id=1176217791 instance=ExtResource("20_weather")]
+[node name="RegionWeather" parent="World" unique_id=1176217791 node_paths=PackedStringArray("wind") instance=ExtResource("20_weather")]
+wind = NodePath("../RegionWind")
 
 [node name="Player" parent="World" unique_id=1573815107 instance=ExtResource("1_e2o6t")]
 unique_name_in_owner = true
@@ -161,6 +163,9 @@ script = ExtResource("2_hqfqh")
 
 [node name="Airflow" type="Node" parent="World"]
 script = ExtResource("35_airflow")
+
+[node name="RegionWind" parent="World" node_paths=PackedStringArray("subject") instance=ExtResource("100_regionwind")]
+subject = NodePath("../Player")
 
 [node name="MemoryField" type="Node" parent="World" unique_id=1572119968]
 unique_name_in_owner = true
@@ -368,6 +373,8 @@ layer = 3
 [connection signal="room_changed" from="." to="World/RegionWeather" method="on_room_changed"]
 [connection signal="room_changed" from="." to="World/RegionTitleWatcher" method="on_room_changed"]
 [connection signal="room_changed" from="." to="World/RegionMusic" method="on_room_changed"]
+[connection signal="room_changed" from="." to="World/RegionWind" method="on_room_changed"]
+[connection signal="hazard_respawned" from="." to="World/RegionWind" method="on_hazard_respawned"]
 [connection signal="announced" from="World/RegionTitleWatcher" to="CanvasLayer/RegionTitle" method="show_title"]
 [connection signal="talk_started" from="World/Player" to="World/DialogueDirector" method="start"]
 [connection signal="pickup_talk_started" from="World/Player" to="World/DialogueDirector" method="start_dialogue"]

@@ -36,6 +36,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/creatures/kestrel/kestrel.tscn" id="t3_kestrel"]
 [ext_resource type="PackedScene" path="res://scenes/world/creatures/lizard/lizard.tscn" id="t4_lizard"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/fight_wall/fight_wall.tscn" id="f1_fight_wall"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/weather/weather_shelter.tscn" id="w1_shelter"]
 
 [sub_resource type="Resource" id="earth"]
 script = ExtResource("2_entry")
@@ -469,6 +470,16 @@ required_params = PackedStringArray()
 reach_role = 0
 description = "A wall of stopped grey standing on this cell, cells tall (default 4) and across wide (default 1, growing east; a ceiling under a shaft): solid while a guardian fights Ivo inside its Arena, from when his body is clear of it until the guardian is restored. Put one in every arena exit, the column at the room's edge, the doorway's height (GRD-05)."
 
+[sub_resource type="Resource" id="weather_shelter"]
+script = ExtResource("2_entry")
+symbol = "l"
+kind = 3
+ground = 0
+scene = ExtResource("w1_shelter")
+required_params = PackedStringArray()
+reach_role = 0
+description = "A lee: a box standing on this cell (width_cells wide, default 3, centred; height_cells tall, default 3) where the region's weather does not push and draws nothing. Only the region's weather: a current and the Vendaval still blow here. Put one in an open-sky room of a region with weather, against solid ground just upwind of its lower two rows (a rock, a wall)."
+
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("boar"), SubResource("scorpion"), SubResource("crab"), SubResource("hornet"), SubResource("bat"), SubResource("spider"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing"), SubResource("grate"), SubResource("talkable"), SubResource("item_pickup"), SubResource("teacher_snail"), SubResource("teacher_thrush"), SubResource("teacher_kestrel"), SubResource("teacher_lizard"), SubResource("fight_wall")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("boar"), SubResource("scorpion"), SubResource("crab"), SubResource("hornet"), SubResource("bat"), SubResource("spider"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing"), SubResource("grate"), SubResource("talkable"), SubResource("item_pickup"), SubResource("teacher_snail"), SubResource("teacher_thrush"), SubResource("teacher_kestrel"), SubResource("teacher_lizard"), SubResource("fight_wall"), SubResource("weather_shelter")])

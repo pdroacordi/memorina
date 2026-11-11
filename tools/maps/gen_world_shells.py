@@ -363,6 +363,9 @@ def room_trigger(room):
     rel = "res://scenes/world/rooms/%s/contents/%s_contents.tscn" % (room.region, room.id)
     w, h = room.w * 32, room.h * 32
     interior = "interior = true\n" if room.interior else ""
+    # The same ceiling rule as Room._shell and the backdrop override: no sky, so no weather (Room.has_sky).
+    if not room.surface or room.id in ROCK_SETS or room.id in ROOM_SETS:
+        interior += "covered = true\n"
     return """[gd_scene format=3]
 
 [ext_resource type="Script" uid="uid://bpd45kolxse8x" path="res://scenes/world/rooms/room.gd" id="1_room"]

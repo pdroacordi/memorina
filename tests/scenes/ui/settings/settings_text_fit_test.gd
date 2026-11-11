@@ -9,6 +9,7 @@ const ENTRY := 64.0
 const TAB := 56.0
 const SETTING_NAME := SettingRow.VALUE_LEFT - 4.0
 const SETTING_VALUE := 272.0 - SettingRow.VALUE_LEFT - 4.0
+const PERCENT_VALUE := 272.0 - SettingRow.PERCENT_LEFT - 4.0
 const BINDING_NAME := BindingRow.VALUE_LEFT - 4.0
 const BINDING_VALUE := 272.0 - BindingRow.VALUE_LEFT - 4.0
 const STATUS := 272.0
@@ -39,12 +40,13 @@ func test_every_settings_text_fits_its_box() -> void:
 			_fits(key, tr(key), ENTRY, locale)
 		for key: String in SettingsScreen.TAB_KEYS.values():
 			_fits(key, tr(key), TAB, locale)
-		var names: Array[String] = ["SETTINGS_LANGUAGE", "SETTINGS_FULLSCREEN", "SETTINGS_WINDOW_SIZE"]
+		var names: Array[String] = ["SETTINGS_LANGUAGE", "SETTINGS_FULLSCREEN", "SETTINGS_WINDOW_SIZE", "SETTINGS_WEATHER"]
 		names.append_array(SettingsScreen.VOLUME_KEYS.values())
 		for key: String in names:
 			_fits(key, tr(key), SETTING_NAME, locale)
 		for key: String in ["SETTINGS_ON", "SETTINGS_OFF", "LANGUAGE_EN", "LANGUAGE_PT_BR"]:
 			_fits(key, "< %s >" % tr(key), SETTING_VALUE, locale)
+		_fits("SETTINGS_PERCENT", "< %s >" % (tr("SETTINGS_PERCENT") % 100), PERCENT_VALUE, locale)
 		_fits("SETTINGS_WINDOW_SCALE", "< %s >" % (tr("SETTINGS_WINDOW_SCALE") % [3, 1920, 1080]), SETTING_VALUE, locale)
 		for action: StringName in KeyBindings.REBINDABLE:
 			var key := BindingRow.action_key(action)
@@ -61,6 +63,10 @@ func test_every_settings_text_fits_its_box() -> void:
 		for family: Dictionary[int, String] in [BindingNames.XBOX_KEYS, BindingNames.PLAYSTATION_KEYS]:
 			for key: String in family.values():
 				_fits(key, tr(key), BINDING_VALUE, locale)
+
+## The weather row's bar starts at VALUE_LEFT and ends before its percentage's box.
+func test_the_weather_bar_ends_before_its_percentage() -> void:
+	assert_float(SettingRow.VALUE_LEFT + StepBar.width()).is_less_equal(SettingRow.PERCENT_LEFT)
 
 func test_every_reset_question_fits_its_panel() -> void:
 	for locale: String in LOCALES:

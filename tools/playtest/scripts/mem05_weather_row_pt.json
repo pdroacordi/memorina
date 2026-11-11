@@ -1,0 +1,244 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 48,
+ "player_position": [
+  6800,
+  150
+ ],
+ "locale": "pt_BR",
+ "clock": "real",
+ "steps": [
+  {
+   "t": 2.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 2.06,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 2.56,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 3.0,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 3.06,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 3.5,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 3.56,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 4.06,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 4.3,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 4.36,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 4.66,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 4.9,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 4.96,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 5.2,
+   "screenshot": "w_row_100"
+  },
+  {
+   "t": 5.2,
+   "log": "row100"
+  },
+  {
+   "t": 5.4,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 5.46,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 5.65,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 5.71,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 5.9,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 5.96,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 6.15,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 6.21,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 6.4,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 6.46,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 6.8,
+   "screenshot": "w_row_50"
+  },
+  {
+   "t": 6.8,
+   "log": "row50"
+  },
+  {
+   "t": 7.0,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 7.06,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 7.25,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 7.31,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 7.5,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 7.56,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 7.75,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 7.81,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 8.06,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 8.25,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 8.31,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 8.7,
+   "screenshot": "w_row_0"
+  },
+  {
+   "t": 8.7,
+   "log": "row0"
+  },
+  {
+   "t": 8.9,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 8.96,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 9.2,
+   "screenshot": "w_row_0_clamp"
+  },
+  {
+   "t": 9.7,
+   "log": "end"
+  }
+ ]
+}

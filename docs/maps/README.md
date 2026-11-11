@@ -224,6 +224,7 @@ else in the code knows what a character means.
 | `K` | `[grid]` | entity | - | - | content | Kestrel teacher (Wind Orchards): sings Vendaval's first half (R R L) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures). |
 | `Q` | `[grid]` | entity | - | - | content | Lizard teacher (Summer Caldera): sings Solsticio's first half (R D U) for Ivo to echo. Once in the world, on a floor cell, with no song puzzle within 4 cells either side and 3 rows (systems/teaching-creatures). |
 | `I` | `[grid]` | entity | - | - | - | A wall of stopped grey standing on this cell, cells tall (default 4) and across wide (default 1, growing east; a ceiling under a shaft): solid while a guardian fights Ivo inside its Arena, from when his body is clear of it until the guardian is restored. Put one in every arena exit, the column at the room's edge, the doorway's height (GRD-05). |
+| `l` | `[grid]` | entity | - | - | - | A lee: a box standing on this cell (width_cells wide, default 3, centred; height_cells tall, default 3) where the region's weather does not push and draws nothing. Only the region's weather: a current and the Vendaval still blow here. Put one in an open-sky room of a region with weather, against solid ground just upwind of its lower two rows (a rock, a wall). |
 <!-- /generated:legend -->
 
 ## Entity params
@@ -641,6 +642,16 @@ Scene `res://scenes/world/interactables/fight_wall/fight_wall.tscn`, anchored at
 | `id` | String | none - names the node so other entities can link to it |
 | `cells` | int | `4` |
 | `across` | int | `1` |
+
+#### `l` - WeatherShelter
+
+Scene `res://scenes/world/environment/weather/weather_shelter.tscn`, anchored at its cell's bottom centre (standing on the cell below). A lee: a box standing on this cell (width_cells wide, default 3, centred; height_cells tall, default 3) where the region's weather does not push and draws nothing. Only the region's weather: a current and the Vendaval still blow here. Put one in an open-sky room of a region with weather, against solid ground just upwind of its lower two rows (a rock, a wall).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `width_cells` | int | `3` |
+| `height_cells` | int | `3` |
 <!-- /generated:entities -->
 
 ## Sizing gaps: what Ivo can reach

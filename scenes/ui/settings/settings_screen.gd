@@ -40,6 +40,7 @@ var _volume_rows: Array[SettingRow] = []
 var _language_row: SettingRow
 var _fullscreen_row: SettingRow
 var _window_row: SettingRow
+var _weather_row: SettingRow
 var _binding_rows: Array[BindingRow] = []
 var _reset_rows: Dictionary[KeyBindings.Device, Button] = {}
 ## The row waiting for a press; null when not capturing.
@@ -140,7 +141,8 @@ func _build_rows() -> void:
 	_language_row = SettingRow.make(SettingRow.Kind.LANGUAGE, "SETTINGS_LANGUAGE")
 	_fullscreen_row = SettingRow.make(SettingRow.Kind.FULLSCREEN, "SETTINGS_FULLSCREEN")
 	_window_row = SettingRow.make(SettingRow.Kind.WINDOW, "SETTINGS_WINDOW_SIZE")
-	for row: SettingRow in [_language_row, _fullscreen_row, _window_row]:
+	_weather_row = SettingRow.make(SettingRow.Kind.WEATHER, "SETTINGS_WEATHER")
+	for row: SettingRow in [_language_row, _fullscreen_row, _window_row, _weather_row]:
 		_add_row(Page.GENERAL, row)
 	for device: KeyBindings.Device in [KeyBindings.Device.KEYBOARD, KeyBindings.Device.PAD]:
 		var page := Page.KEYBOARD if device == KeyBindings.Device.KEYBOARD else Page.PAD
@@ -219,7 +221,7 @@ func _link_focus() -> void:
 		row.focus_neighbor_left = row.get_path_to(row)
 		row.focus_neighbor_right = row.get_path_to(row)
 
-## Accept advances a list row and wraps; left and right step it and clamp. A volume only steps.
+## Accept advances a list row and wraps; left and right step it and clamp. A volume or the weather only steps.
 func _step_row(row: SettingRow, direction: int, wrap: bool) -> void:
 	match row.kind:
 		SettingRow.Kind.VOLUME:
@@ -239,6 +241,9 @@ func _step_row(row: SettingRow, direction: int, wrap: bool) -> void:
 			var on := not Settings.fullscreen() if wrap else direction > 0
 			if on != Settings.fullscreen():
 				Settings.set_fullscreen(on)
+		SettingRow.Kind.WEATHER:
+			if not wrap:
+				Settings.set_weather(Settings.weather() + direction)
 		SettingRow.Kind.WINDOW:
 			var usable := Settings.usable_screen()
 			var next := SettingsMath.step_scale(Settings.window_scale(), direction, usable)
@@ -254,6 +259,7 @@ func _refresh_values() -> void:
 		row.show_value(str(step), step)
 	_language_row.show_value(tr(LANGUAGE_KEYS.get(Settings.current_language(), "LANGUAGE_EN")))
 	_fullscreen_row.show_value(tr("SETTINGS_ON" if Settings.fullscreen() else "SETTINGS_OFF"))
+	_weather_row.show_value(tr("SETTINGS_PERCENT") % roundi(Settings.weather_intensity() * 100.0), Settings.weather())
 	var scale := Settings.window_scale()
 	var size_px := SettingsMath.window_size(scale)
 	_window_row.show_value(tr("SETTINGS_WINDOW_SCALE") % [scale, size_px.x, size_px.y])

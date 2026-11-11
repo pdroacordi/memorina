@@ -700,6 +700,25 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - Woods: a plain walk left from (-1100, 280) stops at x -1685 in woods_edge. Jump every 0.9 s while holding left
     to reach woods_deep, which you enter at x -2560 around 7 s after the start.
 
+- **Learned 2026-11-11 (MEM-05 regional weather)**:
+  - **`tools/playtest/scripts/mem05_weather_probe_driver.gd`** logs what `log` lacks for weather. It is a `-s` driver that
+    loads the runner and prints `[wx]` every `WX_MS` real ms: the gust clock `gt`, strength, fight level, `drive`,
+    `wind_at(feet)` (before memory), the summed `Airflow` at the feet (after memory), memory, intensity, `RegionWeather`
+    visible/sky level and gust-layer alpha. It also prints `[sig]` for the Memorina signals.
+  - **Forcing memory:** `WX_MEMORY=1` writes `MemoryField.baseline` every frame. `Game` writes it only on a region change,
+    so the override holds. Label such runs "forced". For a natural memory 1, `"restored_guardians": [0]` restores
+    frozen_lake; any song's pulse also lifts Ivo's spot to 1 for ~16 s (FREEZE: attack 2 s, sustain 10 s, contract 4 s).
+  - **Winter weather timing at 0.3:** the calm runs 0-20 s from any restart (a world build, a cave or door exit), the
+    peak t 25.4-31.5, the end ~36.7. Inside a pulse (memory 1): calm 6 s, peak +7.5-9.5 s. Below `wind_deadzone` 90
+    nothing on the ground moves, so at 0.3 only jumps show the push.
+  - Positions: bridge west deck (6800, 150), ravine floor (6880, 340) (walk left 0.55 s to drop through the secret
+    wall into threshold_ravine_cave's ledge). Out: walk right 0.25 s, jump at +0.4 s, right from +0.6 s. Farmhouse door
+    (5772, 270) then Up. lake_shore pool lip x -224 (spawn (-150, -1650)). Bridge boar x 7408: stay west of ~7180.
+  - **`rtk proxy grep` on a Godot log prints the whole log**, and plain `grep "\[sig\]"` output gets condensed. Filter
+    logs with a small Python script (`summ.py`: skip `paused=true` lines, one line per N s).
+  - A shot name built with `%05.1f` collides for steps 0.05 s apart (28.05 and 28.1 both become `028.1`), and the later
+    shot overwrites the earlier one. Use `%06.2f` for bursts.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

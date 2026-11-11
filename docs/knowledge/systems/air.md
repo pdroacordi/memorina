@@ -4,9 +4,9 @@ type: system
 title: Air: one physical channel for wind, currents and the gale
 status: active
 tags: [air, wind, gale, airflow]
-related: [architecture/one-air-channel]
+related: [architecture/one-air-channel, architecture/regional-weather-push]
 created: 2026-10-02
-updated: 2026-10-07
+updated: 2026-11-11
 source_files: []
 ---
 
@@ -24,3 +24,14 @@ Design 03 sections 5.3-5.4 and 6.1: wind, a current, a song's gale and the weath
 - **Wind piles water**: a pool's `WindCrest` (pure, tested; `architecture/wind-piles-a-bounded-crest`) reads the mean air over its columns and builds one signed crest against the downwind bank at the pool's memory (`WaterProfile` Crest group: 160 px at most, half the pool's width, a 256 px wedge, 15 s to build under 150 px/s or more, 4 s to settle), added to the springs' target like the swell, so splashes ride on it and it holds still in the grey. Congelar pins it into a ramp (design 02 §8.4, A Onda Parada: the water trial's frozen wave). It reads the wind and never pushes a body. Before it, `WaterBody._blow` dragged the surface about 1 px - and toward the upwind bank.
 - **Weather in a grey place is weak and slow**: a `WindZone`'s push and its clock both scale with the memory over it, so a puzzle that needs its wind outside a pulse must stand in a remembered spot. The winter trial's squall has its own `MemorySource` (`SquallMemory`, strength 1) for that; at the trials' 0.35 its gusts never broke a song (`bugs/the-winter-squall-never-breaks-a-song-at-the-trials-memory`).
 - **Puzzles are sized by `JumpReach` with the same wind** (`JumpReach.wind`, steered exactly as `air_update` does); `tests/scenes/world/rooms/trials/autumn_trial_test.gd` proves the autumn chasm beats a jump, the current alone and the gale alone, and yields to the gale played into the current.
+
+## Regional weather (MEM-05, `architecture/regional-weather-push`)
+
+- **`RegionWind`** (`scenes/world/environment/weather/`, `World/RegionWind`, PAUSABLE, physics priority -2, before `AirflowBody` at -1) is the one regional `AirflowSource`. `Game.room_changed` hands it the current room's `Region.weather` (`WeatherProfile`: `speed` px/s at full gust and memory 1, `gusts: WindProfile`, `fight_scale`, `fight_ease`, `gust_particles`) and `Region.weather_wind` (-1 west, 1 east). A null profile is no push.
+- **Only open sky of the current region blows**: `wind_at` is zero outside the region's rooms with `Room.has_sky()` (not interior, not `covered`) and their sky bands (`RoomEdges.bands`), and inside a `WeatherShelter` (legend `l`, a lee that stills regional air only; currents and the gale still blow in it). Horizontal only, so no jump height changes. Benches stay full `AirflowShelter`s.
+- **One clock, `WeatherGust`** (pure, tested): it advances by the memory sampled at Ivo, so grey weather stops and a pulse wakes the cycle locally (`Airflow` still scales the size by local memory). It **restarts at calm** whenever Ivo enters weather from no weather: a walk-in from a covered room, a door out, a bench or death build, a region cut (design 03 §5.5). In a guardian fight it eases to `fight_scale` and restarts at calm when the fight ends.
+- **Calm air is still air** (`calm_strength` 0): the reachability audit stays exact in a calm and a gust is a timing obstacle. `winter_weather_bounds_test` holds the bound with `JumpReach.wind`: calm headwind <= 3 px/s, `calm_time` >= a song plus a jump's airtime, the peak breaks a drawn song at memory 1, the fight peak stays under `wind_deadzone`. **No puzzle may depend on the regional wind**: the player can turn it to 0.
+- **The snow reads the same gust**: `RegionWind.drive()` (signed strength x fight x intensity) drives `RegionWeather`'s gust layer sideways; no sideways snow is the calm. Weather never makes a colour pulse: `region_wind.tscn` holds no `MemorySource`.
+- **Intensity**: `Settings.weather_intensity()` (0..1, `systems/settings`) scales the regional push and every ambient weather layer, never a `WindZone`, the gale or a guardian's gust.
+- Today: `winter_blizzard.tres` (speed 220, `blizzard_gusts.tres` calm 6 / rise 1.5 / gust 2 / fall 1.5 s, calm strength 0, fight 0.1 over 1 s) on threshold, frost_edge and frozen_lake, all west. First guesses; at today's memory 0.3 the peak is 66 px/s and a calm lasts ~20 real s.
+- User decisions, 2026-11-11: "Winter only (Recommended)" (other seasons are MEM-06, data only); "Fixed per region (Recommended)"; "All west (Recommended)"; "Yes, a slider (Recommended)"; "Yes, every region (Recommended)" (no falling weather under rock); village weather "Later item (Recommended)"; gust sound "Later (Recommended)". Orchestrator calls: the slider scales regional weather only; a gust may start while Ivo is airborne (the rise is the warning).

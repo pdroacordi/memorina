@@ -95,6 +95,17 @@ func set_language(locale: String) -> void:
 	_settings.language = locale
 	TranslationServer.set_locale(locale)
 
+## Regional weather intensity in steps, 0..10.
+func weather() -> int:
+	return _settings.weather
+
+func set_weather(step: int) -> void:
+	_settings.weather = clampi(step, 0, GameSettings.WEATHER_STEPS)
+
+## How much regional weather shows and pushes, 0..1; never a current, the gale or a guardian's gust.
+func weather_intensity() -> float:
+	return float(_settings.weather) / GameSettings.WEATHER_STEPS
+
 ## The table in use on `device`; a copy, so a caller cannot edit it.
 func bindings(device: KeyBindings.Device) -> KeyBindings:
 	return _settings.bindings(device).copy()

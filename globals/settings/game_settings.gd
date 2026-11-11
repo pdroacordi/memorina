@@ -13,6 +13,8 @@ const BUS_KEYS: Dictionary[StringName, String] = {
 	AudioBuses.SFX: "effects",
 }
 const DEFAULT_SCALE := 2
+## Regional weather intensity steps; the top step is full weather.
+const WEATHER_STEPS := 10
 const DEVICE_SECTIONS: Dictionary[KeyBindings.Device, String] = {
 	KeyBindings.Device.KEYBOARD: "keyboard",
 	KeyBindings.Device.PAD: "pad",
@@ -25,6 +27,8 @@ var fullscreen: bool = false
 var window_scale: int = DEFAULT_SCALE
 ## A shipped locale once the player picked one; empty follows the OS at each boot.
 var language: String = ""
+## Regional weather intensity in steps, 0..10 (systems/settings).
+var weather: int = WEATHER_STEPS
 var keyboard: KeyBindings
 var pad: KeyBindings
 
@@ -53,6 +57,9 @@ static func from_config(cfg: ConfigFile, defaults: GameSettings) -> GameSettings
 	var locale: Variant = cfg.get_value("general", "language", "")
 	if locale is String and SettingsMath.LANGUAGES.has(locale):
 		made.language = locale
+	var weather_step: Variant = cfg.get_value("general", "weather", WEATHER_STEPS)
+	if weather_step is int or weather_step is float:
+		made.weather = clampi(int(weather_step), 0, WEATHER_STEPS)
 	for device: KeyBindings.Device in DEVICE_SECTIONS:
 		made.set_bindings(device, _read_bindings(cfg, DEVICE_SECTIONS[device], defaults.bindings(device)))
 	return made
@@ -79,6 +86,7 @@ func to_config(cfg: ConfigFile, defaults: GameSettings) -> void:
 	cfg.set_value("display", "window_scale", window_scale)
 	if not language.is_empty():
 		cfg.set_value("general", "language", language)
+	cfg.set_value("general", "weather", weather)
 	for device: KeyBindings.Device in DEVICE_SECTIONS:
 		var table := bindings(device)
 		var base := defaults.bindings(device)
@@ -101,4 +109,5 @@ func copy() -> GameSettings:
 	made.fullscreen = fullscreen
 	made.window_scale = window_scale
 	made.language = language
+	made.weather = weather
 	return made

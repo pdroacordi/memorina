@@ -1,0 +1,70 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 16,
+ "player_position": [
+  -150,
+  -1650
+ ],
+ "locale": "en",
+ "restored_guardians": [
+  0
+ ],
+ "steps": [
+  {
+   "t": 6.4,
+   "screenshot": "p_006.4"
+  },
+  {
+   "t": 6.8,
+   "screenshot": "p_006.8"
+  },
+  {
+   "t": 7.2,
+   "screenshot": "p_007.2"
+  },
+  {
+   "t": 7.6,
+   "screenshot": "p_007.6"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "p_008.0"
+  },
+  {
+   "t": 8.4,
+   "screenshot": "p_008.4"
+  },
+  {
+   "t": 8.8,
+   "screenshot": "p_008.8"
+  },
+  {
+   "t": 9.2,
+   "screenshot": "p_009.2"
+  },
+  {
+   "t": 9.6,
+   "screenshot": "p_009.6"
+  },
+  {
+   "t": 10.0,
+   "screenshot": "p_010.0"
+  },
+  {
+   "t": 10.4,
+   "screenshot": "p_010.4"
+  },
+  {
+   "t": 10.8,
+   "screenshot": "p_010.8"
+  },
+  {
+   "t": 11.2,
+   "screenshot": "p_011.2"
+  },
+  {
+   "t": 15.5,
+   "log": "end"
+  }
+ ]
+}

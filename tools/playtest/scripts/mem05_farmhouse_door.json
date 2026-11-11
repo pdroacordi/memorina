@@ -1,0 +1,71 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 36,
+ "player_position": [
+  5772,
+  270
+ ],
+ "locale": "en",
+ "steps": [
+  {
+   "t": 25.5,
+   "log": "before_door"
+  },
+  {
+   "t": 25.8,
+   "screenshot": "d_fields_gust"
+  },
+  {
+   "t": 26.0,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 26.15,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 27.5,
+   "log": "inside"
+  },
+  {
+   "t": 27.5,
+   "screenshot": "d_inside"
+  },
+  {
+   "t": 29.0,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 29.15,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 30.2,
+   "screenshot": "d_out_030.2"
+  },
+  {
+   "t": 30.5,
+   "log": "outside"
+  },
+  {
+   "t": 30.6,
+   "screenshot": "d_out_030.6"
+  },
+  {
+   "t": 31.0,
+   "screenshot": "d_out_031.0"
+  },
+  {
+   "t": 31.4,
+   "screenshot": "d_out_031.4"
+  },
+  {
+   "t": 35.5,
+   "log": "end"
+  }
+ ]
+}

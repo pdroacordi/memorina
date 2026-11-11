@@ -24,6 +24,10 @@ signal memory_changed(level: float)
 @export var calm_interiors: bool = false
 ## The region's theme, stems `base` and `memory`; null is silence (music/region-themes).
 @export var music: MusicCue
+## The weather that pushes Ivo in this region's open rooms; null blows nothing (architecture/regional-weather-push).
+@export var weather: WeatherProfile
+## The one way the region's weather blows.
+@export_enum("West:-1", "East:1") var weather_wind: int = 1
 
 @onready var _memory: RegionMemory = $Memory
 

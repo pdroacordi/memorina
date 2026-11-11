@@ -1,0 +1,231 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 50,
+ "player_position": [
+  6800,
+  150
+ ],
+ "locale": "en",
+ "steps": [
+  {
+   "t": 1,
+   "screenshot": "s_001.0"
+  },
+  {
+   "t": 2.5,
+   "screenshot": "s_002.5"
+  },
+  {
+   "t": 4.0,
+   "screenshot": "s_004.0"
+  },
+  {
+   "t": 5.5,
+   "screenshot": "s_005.5"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "s_007.0"
+  },
+  {
+   "t": 8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 8.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.45,
+   "screenshot": "hop_08.0"
+  },
+  {
+   "t": 8.5,
+   "screenshot": "s_008.5"
+  },
+  {
+   "t": 10.0,
+   "screenshot": "s_010.0"
+  },
+  {
+   "t": 11.5,
+   "screenshot": "s_011.5"
+  },
+  {
+   "t": 12,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 12.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 12.45,
+   "screenshot": "hop_12.0"
+  },
+  {
+   "t": 13.0,
+   "screenshot": "s_013.0"
+  },
+  {
+   "t": 14.5,
+   "screenshot": "s_014.5"
+  },
+  {
+   "t": 16.0,
+   "screenshot": "s_016.0"
+  },
+  {
+   "t": 17.5,
+   "screenshot": "s_017.5"
+  },
+  {
+   "t": 19.0,
+   "screenshot": "s_019.0"
+  },
+  {
+   "t": 20.5,
+   "screenshot": "s_020.5"
+  },
+  {
+   "t": 22.0,
+   "screenshot": "s_022.0"
+  },
+  {
+   "t": 23.5,
+   "screenshot": "s_023.5"
+  },
+  {
+   "t": 25.0,
+   "screenshot": "s_025.0"
+  },
+  {
+   "t": 26,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 26.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 26.45,
+   "screenshot": "hop_26.0"
+  },
+  {
+   "t": 26.5,
+   "screenshot": "s_026.5"
+  },
+  {
+   "t": 28.0,
+   "screenshot": "s_028.0"
+  },
+  {
+   "t": 28,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 28.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 28.45,
+   "screenshot": "hop_28.0"
+  },
+  {
+   "t": 29.5,
+   "screenshot": "s_029.5"
+  },
+  {
+   "t": 30,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 30.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 30.45,
+   "screenshot": "hop_30.0"
+  },
+  {
+   "t": 31.0,
+   "screenshot": "s_031.0"
+  },
+  {
+   "t": 32.5,
+   "screenshot": "s_032.5"
+  },
+  {
+   "t": 33,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 33.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 33.45,
+   "screenshot": "hop_33.0"
+  },
+  {
+   "t": 34.0,
+   "screenshot": "s_034.0"
+  },
+  {
+   "t": 35.5,
+   "screenshot": "s_035.5"
+  },
+  {
+   "t": 37.0,
+   "screenshot": "s_037.0"
+  },
+  {
+   "t": 38.5,
+   "screenshot": "s_038.5"
+  },
+  {
+   "t": 40.0,
+   "screenshot": "s_040.0"
+  },
+  {
+   "t": 41.5,
+   "screenshot": "s_041.5"
+  },
+  {
+   "t": 43.0,
+   "screenshot": "s_043.0"
+  },
+  {
+   "t": 44.5,
+   "screenshot": "s_044.5"
+  },
+  {
+   "t": 46.0,
+   "screenshot": "s_046.0"
+  },
+  {
+   "t": 47.5,
+   "screenshot": "s_047.5"
+  },
+  {
+   "t": 49.0,
+   "screenshot": "s_049.0"
+  },
+  {
+   "t": 49.5,
+   "log": "end"
+  }
+ ]
+}

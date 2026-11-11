@@ -1,0 +1,161 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 37,
+ "player_position": [
+  6880,
+  340
+ ],
+ "locale": "en",
+ "steps": [
+  {
+   "t": 25.8,
+   "screenshot": "c_ravine_gust"
+  },
+  {
+   "t": 26.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 26.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 26.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 26.55,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 26.6,
+   "screenshot": "c_in_026.6"
+  },
+  {
+   "t": 26.8,
+   "screenshot": "c_in_026.8"
+  },
+  {
+   "t": 27.0,
+   "screenshot": "c_in_027.0"
+  },
+  {
+   "t": 27.2,
+   "screenshot": "c_in_027.2"
+  },
+  {
+   "t": 27.4,
+   "screenshot": "c_in_027.4"
+  },
+  {
+   "t": 27.6,
+   "screenshot": "c_in_027.6"
+  },
+  {
+   "t": 27.8,
+   "screenshot": "c_in_027.8"
+  },
+  {
+   "t": 28.0,
+   "screenshot": "c_in_028.0"
+  },
+  {
+   "t": 29.5,
+   "screenshot": "c_cave"
+  },
+  {
+   "t": 29.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 29.85,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 30.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 30.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 30.3,
+   "screenshot": "c_out_030.3"
+  },
+  {
+   "t": 30.45,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 30.45,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 30.6,
+   "screenshot": "c_out_030.6"
+  },
+  {
+   "t": 30.7,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 30.9,
+   "screenshot": "c_out_030.9"
+  },
+  {
+   "t": 30.95,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 31.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 31.2,
+   "screenshot": "c_out_031.2"
+  },
+  {
+   "t": 31.4,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 31.5,
+   "screenshot": "c_out_031.5"
+  },
+  {
+   "t": 31.8,
+   "screenshot": "c_out_031.8"
+  },
+  {
+   "t": 32.1,
+   "screenshot": "c_out_032.1"
+  },
+  {
+   "t": 34.0,
+   "screenshot": "c_after"
+  },
+  {
+   "t": 36.0,
+   "screenshot": "c_after2"
+  },
+  {
+   "t": 36.5,
+   "log": "end"
+  }
+ ]
+}

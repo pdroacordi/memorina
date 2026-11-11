@@ -1,0 +1,165 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 31,
+ "player_position": [
+  6740,
+  150
+ ],
+ "locale": "en",
+ "steps": [
+  {
+   "t": 26.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 26.05,
+   "log": "walk_e"
+  },
+  {
+   "t": 26.15,
+   "log": "walk_e"
+  },
+  {
+   "t": 26.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 26.25,
+   "log": "walk_e"
+  },
+  {
+   "t": 26.35,
+   "log": "walk_e"
+  },
+  {
+   "t": 26.45,
+   "log": "walk_e"
+  },
+  {
+   "t": 26.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 26.5,
+   "screenshot": "brace"
+  },
+  {
+   "t": 26.55,
+   "log": "walk_e"
+  },
+  {
+   "t": 26.65,
+   "log": "walk_e"
+  },
+  {
+   "t": 26.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 26.75,
+   "log": "walk_e"
+  },
+  {
+   "t": 26.85,
+   "log": "walk_e"
+  },
+  {
+   "t": 26.9,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 28.0,
+   "screenshot": "b_028.0"
+  },
+  {
+   "t": 28.05,
+   "screenshot": "b_028.1"
+  },
+  {
+   "t": 28.1,
+   "screenshot": "b_028.1"
+  },
+  {
+   "t": 28.15,
+   "screenshot": "b_028.2"
+  },
+  {
+   "t": 28.2,
+   "screenshot": "b_028.2"
+  },
+  {
+   "t": 28.25,
+   "screenshot": "b_028.3"
+  },
+  {
+   "t": 28.3,
+   "screenshot": "b_028.3"
+  },
+  {
+   "t": 29.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 29.05,
+   "log": "walk_w"
+  },
+  {
+   "t": 29.15,
+   "log": "walk_w"
+  },
+  {
+   "t": 29.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 29.25,
+   "log": "walk_w"
+  },
+  {
+   "t": 29.35,
+   "log": "walk_w"
+  },
+  {
+   "t": 29.45,
+   "log": "walk_w"
+  },
+  {
+   "t": 29.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 29.55,
+   "log": "walk_w"
+  },
+  {
+   "t": 29.65,
+   "log": "walk_w"
+  },
+  {
+   "t": 29.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 29.75,
+   "log": "walk_w"
+  },
+  {
+   "t": 29.8,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 30.5,
+   "log": "end"
+  }
+ ]
+}

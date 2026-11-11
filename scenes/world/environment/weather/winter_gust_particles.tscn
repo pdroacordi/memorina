@@ -1,0 +1,44 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://scenes/world/memory/seasonal/seasonal_particles.gdshader" id="1_shader"]
+
+[sub_resource type="ShaderMaterial" id="material"]
+shader = ExtResource("1_shader")
+shader_parameter/season = 0
+shader_parameter/ambient = true
+
+[sub_resource type="Gradient" id="streak_gradient"]
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture2D" id="streak"]
+gradient = SubResource("streak_gradient")
+width = 6
+height = 1
+
+[sub_resource type="Gradient" id="fade"]
+offsets = PackedFloat32Array(0, 0.2, 0.75, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Gradient" id="colors"]
+offsets = PackedFloat32Array(0, 1)
+colors = PackedColorArray(0.93, 0.97, 1, 1, 0.78, 0.88, 0.98, 1)
+
+[node name="WinterGustParticles" type="CPUParticles2D"]
+texture_filter = 1
+material = SubResource("material")
+amount = 80
+lifetime = 1.2
+preprocess = 1.2
+randomness = 0.5
+local_coords = false
+texture = SubResource("streak")
+emission_shape = 3
+emission_rect_extents = Vector2(340, 190)
+direction = Vector2(-1, 0.12)
+spread = 6.0
+gravity = Vector2(0, 20)
+initial_velocity_min = 198.0
+initial_velocity_max = 242.0
+color_ramp = SubResource("fade")
+color_initial_ramp = SubResource("colors")

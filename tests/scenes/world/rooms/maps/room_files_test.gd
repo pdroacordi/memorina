@@ -406,6 +406,67 @@ func test_an_empty_required_param_is_refused() -> void:
 	var result := RoomMapValidator.validate(text, RoomLegend.load_default(), "inline.room")
 	assert_str("\n".join(result.errors)).contains("needs a 'bench_id' param")
 
+## A lee (`l`) lies in an open-sky room of a region with weather, with solid ground in the column just upwind of its
+## box over its lower two rows (architecture/regional-weather-push).
+func test_every_weather_shelter_stands_in_the_lee_of_ground() -> void:
+	var legend := RoomLegend.load_default()
+	var problems := PackedStringArray()
+	for path: String in _room_files(ROOMS_DIR):
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path).map
+		if not map.entities.any(func(placed: Dictionary) -> bool: return placed.symbol == "l"):
+			continue
+		var rooms := path.get_base_dir().get_base_dir()
+		var trigger := _root_values(rooms.path_join(path.get_file().get_basename() + ".tscn"))
+		var region := _root_values(rooms + ".tscn")
+		var has_sky: bool = not trigger.get(&"interior", false) and not trigger.get(&"covered", false)
+		var wind := int(region.get(&"weather_wind", 1)) if region.get(&"weather") != null else 0
+		for problem: String in _lee_problems(map, has_sky, wind):
+			problems.append("%s: %s" % [path, problem])
+	assert_array(Array(problems)).is_empty()
+
+func test_a_lee_needs_ground_upwind_and_weather_overhead() -> void:
+	var legend := RoomLegend.load_default()
+	var sheltered := "[room]\norigin = 0, 0\ntileset = legacy\n\n[grid]\n.....\n....#\n..l.#\n#####\n"
+	var map := RoomMapParser.parse(sheltered, legend, "inline.room").map
+	assert_array(Array(_lee_problems(map, true, -1))).is_empty()
+	assert_array(Array(_lee_problems(map, true, 1))).override_failure_message("the ground is downwind").is_not_empty()
+	assert_array(Array(_lee_problems(map, false, -1))).override_failure_message("no sky").is_not_empty()
+	assert_array(Array(_lee_problems(map, true, 0))).override_failure_message("no weather").is_not_empty()
+
+## What is wrong with each lee in `map`, in a room with or without sky whose region's weather blows `wind` (0: none).
+func _lee_problems(map: RoomMap, has_sky: bool, wind: int) -> PackedStringArray:
+	var defaults := WeatherShelter.new()
+	var problems := PackedStringArray()
+	for placed: Dictionary in map.entities:
+		if placed.symbol != "l":
+			continue
+		var cell: Vector2i = placed.cell
+		var at := cell - map.origin
+		if not has_sky:
+			problems.append("lee at %s is in a room without sky" % at)
+		if wind == 0:
+			problems.append("lee at %s is in a region without weather" % at)
+			continue
+		var width := int((placed.params as Dictionary).get("width_cells", defaults.width_cells))
+		var left := cell.x + 0.5 - width * 0.5
+		var right := cell.x + 0.5 + width * 0.5
+		var column := floori(right) if wind < 0 else ceili(left) - 1
+		for row: int in [cell.y, cell.y - 1]:
+			if not map.is_solid(Vector2i(column, row)):
+				problems.append("lee at %s has no ground upwind at row %d" % [at, row - map.origin.y])
+	defaults.free()
+	return problems
+
+## The properties a scene file sets on its root node.
+func _root_values(scene_path: String) -> Dictionary[StringName, Variant]:
+	var values: Dictionary[StringName, Variant] = {}
+	if not ResourceLoader.exists(scene_path):
+		return values
+	var state := (load(scene_path) as PackedScene).get_state()
+	for i: int in state.get_node_property_count(0):
+		values[state.get_node_property_name(0, i)] = state.get_node_property_value(0, i)
+	return values
+
 func test_the_legend_is_sound() -> void:
 	assert_array(Array(RoomLegend.load_default().problems())).is_empty()
 

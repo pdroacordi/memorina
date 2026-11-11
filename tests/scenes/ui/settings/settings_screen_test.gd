@@ -22,6 +22,7 @@ func after_test() -> void:
 	Settings.reset_bindings(KeyBindings.Device.KEYBOARD)
 	Settings.reset_bindings(KeyBindings.Device.PAD)
 	Settings.set_fullscreen(false)
+	Settings.set_weather(GameSettings.WEATHER_STEPS)
 	for bus: StringName in GameSettings.VOLUME_BUSES:
 		Settings.set_volume(bus, SettingsMath.VOLUME_STEPS)
 
@@ -55,6 +56,26 @@ func test_a_step_on_a_volume_row_changes_it_and_on_a_tab_it_is_refused() -> void
 	for i: int in 3:
 		_screen.step(1)
 	assert_int(Settings.volume(AudioBuses.MUSIC)).override_failure_message("a step clamps at 10").is_equal(10)
+
+func test_the_weather_row_steps_and_shows_a_percentage() -> void:
+	(_screen.find_child("GeneralTab") as Button).grab_focus()
+	var row := _row("GeneralPage", "SettingsWeather") as SettingRow
+	row.grab_focus()
+	assert_bool(_screen.step(-1)).is_true()
+	assert_bool(_screen.step(-1)).is_true()
+	assert_int(Settings.weather()).is_equal(8)
+	assert_str(row.value_text()).is_equal(tr("SETTINGS_PERCENT") % 80)
+	row.pressed.emit()
+	assert_int(Settings.weather()).override_failure_message("accept does not step it").is_equal(8)
+	for i: int in 3:
+		_screen.step(1)
+	assert_int(Settings.weather()).override_failure_message("a step clamps at 10").is_equal(10)
+
+func test_the_weather_row_follows_the_window_size() -> void:
+	var window := _row("GeneralPage", "SettingsWindowSize")
+	var weather := _row("GeneralPage", "SettingsWeather")
+	(_screen.find_child("GeneralTab") as Button).grab_focus()
+	assert_object(window.get_node(window.focus_neighbor_bottom)).is_same(weather)
 
 func test_accept_toggles_fullscreen_and_greys_the_window_size() -> void:
 	(_screen.find_child("GeneralTab") as Button).grab_focus()

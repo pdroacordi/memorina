@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WeatherProfile" format=3]
+
+[ext_resource type="Script" path="res://resources/world/weather/weather_profile.gd" id="1_profile"]
+[ext_resource type="Resource" path="res://resources/world/weather/blizzard_gusts.tres" id="2_gusts"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/weather/winter_gust_particles.tscn" id="3_particles"]
+
+[resource]
+script = ExtResource("1_profile")
+speed = 220.0
+gusts = ExtResource("2_gusts")
+fight_scale = 0.1
+fight_ease = 1.0
+gust_particles = ExtResource("3_particles")

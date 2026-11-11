@@ -1,14 +1,16 @@
 class_name SettingRow
 extends Button
-## A row that holds a value: its name, the value (with a StepBar for a volume), and `< value >` while focused.
+## A row that holds a value: its name, the value (with a StepBar for a volume or the weather), and `< value >` while focused.
 
-enum Kind { VOLUME, LANGUAGE, FULLSCREEN, WINDOW }
+enum Kind { VOLUME, LANGUAGE, FULLSCREEN, WINDOW, WEATHER }
 
 const HEIGHT := 11.0
 ## Px inside the row: the bar's left edge and the value's box.
 const BAR_X := 136.0
 const VALUE_LEFT := 132.0
 const NUMBER_LEFT := 248.0
+## A percentage is wider than a volume's number, so its bar starts at VALUE_LEFT and ends before this.
+const PERCENT_LEFT := 240.0
 const INK := Color(0.32, 0.2, 0.25, 1)
 const FOCUS_INK := Color(0.72, 0.24, 0.16, 1)
 
@@ -56,14 +58,14 @@ func _ready() -> void:
 	_value.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	_value.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	_value.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
-	_value.offset_left = -(272.0 - (NUMBER_LEFT if kind == Kind.VOLUME else VALUE_LEFT))
+	_value.offset_left = -(272.0 - _value_left())
 	_value.offset_right = -4.0
 	add_child(_value)
-	if kind == Kind.VOLUME:
+	if kind == Kind.VOLUME or kind == Kind.WEATHER:
 		_bar = StepBar.new()
 		_bar.name = "Bar"
 		_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		_bar.position = Vector2(BAR_X, roundf((HEIGHT - StepBar.CELL.y) / 2.0))
+		_bar.position = Vector2(BAR_X if kind == Kind.VOLUME else VALUE_LEFT, roundf((HEIGHT - StepBar.CELL.y) / 2.0))
 		_bar.size = Vector2(StepBar.width(), StepBar.CELL.y)
 		add_child(_bar)
 	focus_entered.connect(_restyle)
@@ -85,6 +87,15 @@ func show_value(value_text: String, step: int = -1) -> void:
 ## The value as written, without the focus marks.
 func value_text() -> String:
 	return _value_text
+
+## Px inside the row where the value's box starts.
+func _value_left() -> float:
+	match kind:
+		Kind.VOLUME:
+			return NUMBER_LEFT
+		Kind.WEATHER:
+			return PERCENT_LEFT
+	return VALUE_LEFT
 
 func _retranslate() -> void:
 	text = tr(label_key)

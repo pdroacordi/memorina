@@ -1,0 +1,174 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 32,
+ "player_position": [
+  6800,
+  150
+ ],
+ "locale": "en",
+ "known_songs": [
+  0
+ ],
+ "steps": [
+  {
+   "t": 2.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 2.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 2.3,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 2.35,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 2.57,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 2.62,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 2.84,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 2.89,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 2.975,
+   "screenshot": "calm_mid"
+  },
+  {
+   "t": 3.11,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.16,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.38,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.43,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.65,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 3.7,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 3.75,
+   "screenshot": "calm_end"
+  },
+  {
+   "t": 26.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 26.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 26.3,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 26.35,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 26.57,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 26.62,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 26.84,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 26.89,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 26.975,
+   "screenshot": "gust_mid"
+  },
+  {
+   "t": 27.11,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 27.16,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 27.38,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 27.43,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 27.65,
+   "action": "note_down",
+   "pressed": true
+  },
+  {
+   "t": 27.7,
+   "action": "note_down",
+   "pressed": false
+  },
+  {
+   "t": 27.75,
+   "screenshot": "gust_end"
+  },
+  {
+   "t": 31.5,
+   "log": "end"
+  }
+ ]
+}

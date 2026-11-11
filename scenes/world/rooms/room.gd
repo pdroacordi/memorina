@@ -12,6 +12,8 @@ const ANYWHERE := Rect2(-1e9, -1e9, 2e9, 2e9)
 @export var contents_scene : PackedScene
 ## Reached through a door: off the map and out of the weather (design 04 section 4).
 @export var interior: bool = false
+## Under rock or a drawn ceiling, so no sky (written by tools/maps/gen_world_shells.py).
+@export var covered: bool = false
 @onready var _shape_node: CollisionShape2D = $CollisionShape2D
 var _contents_node: Node2D
 var _map: RoomMap
@@ -126,6 +128,10 @@ func id() -> StringName:
 ## No sword here: an interior of a region with calm interiors. On the Region, since Room triggers regenerate.
 func is_calm() -> bool:
 	return interior and get_region().calm_interiors
+
+## Open to the sky: weather falls and blows here.
+func has_sky() -> bool:
+	return not interior and not covered
 
 func get_region() -> Region:
 	var region := get_parent() as Region

@@ -2,6 +2,8 @@ extends Node2D
 
 ## The camera frames a new current room; the map reveals it from here. Emitted after an arrival's seat and snap.
 signal room_changed(room: Room)
+## Ivo was put back on firm ground after a hazard, behind the black.
+signal hazard_respawned
 
 ## Palette lookup by region season.
 @export var song_catalog: SongCatalog
@@ -234,6 +236,7 @@ func _on_player_fell_into_hazard() -> void:
 			_enter_room(room)
 			room_changed.emit(room)
 		_camera.snap()
+		hazard_respawned.emit()
 		await _build_neighbours()
 	await _fade.to_clear()
 

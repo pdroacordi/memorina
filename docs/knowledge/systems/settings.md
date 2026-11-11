@@ -124,7 +124,11 @@ The plan and the options weighed are `architecture/settings-screen`; this entry 
 
 ## Text
 
-`PAUSE_SETTINGS`, `TITLE_SETTINGS` ("Opções" / "Settings"); `SETTINGS_TAB_*`, `SETTINGS_VOLUME_*`, `SETTINGS_LANGUAGE`, `SETTINGS_FULLSCREEN`, `SETTINGS_WINDOW_SIZE`, `SETTINGS_WINDOW_SCALE` (keep three placeholders), `SETTINGS_ON`, `SETTINGS_OFF`, `LANGUAGE_EN`, `LANGUAGE_PT_BR`, `ACTION_*` (one per rebindable action), `SETTINGS_RESET_BINDINGS`, `CONFIRM_RESET_KEYBOARD`, `CONFIRM_RESET_PAD`, `SETTINGS_PRESS_KEY`, `SETTINGS_PRESS_BUTTON`, `SETTINGS_BIND_RESERVED`, `SETTINGS_BIND_TAKEN` / `_SWAPPED` (`%s`), `ACTION_UI_ACCEPT`, `ACTION_UI_CANCEL` (the fixed holders a refusal names), `PAD_XBOX_*`, `PAD_PS_*`, `PAD_L3`, `PAD_R3`. `settings_text_fit_test` measures every one against its box in en and pt_BR.
+`PAUSE_SETTINGS`, `TITLE_SETTINGS` ("Opções" / "Settings"); `SETTINGS_TAB_*`, `SETTINGS_VOLUME_*`, `SETTINGS_LANGUAGE`, `SETTINGS_FULLSCREEN`, `SETTINGS_WINDOW_SIZE`, `SETTINGS_WINDOW_SCALE` (keep three placeholders), `SETTINGS_ON`, `SETTINGS_OFF`, `SETTINGS_WEATHER` ("Intensidade do clima" / "Weather intensity"), `SETTINGS_PERCENT` (`%d%%`), `LANGUAGE_EN`, `LANGUAGE_PT_BR`, `ACTION_*` (one per rebindable action), `SETTINGS_RESET_BINDINGS`, `CONFIRM_RESET_KEYBOARD`, `CONFIRM_RESET_PAD`, `SETTINGS_PRESS_KEY`, `SETTINGS_PRESS_BUTTON`, `SETTINGS_BIND_RESERVED`, `SETTINGS_BIND_TAKEN` / `_SWAPPED` (`%s`), `ACTION_UI_ACCEPT`, `ACTION_UI_CANCEL` (the fixed holders a refusal names), `PAD_XBOX_*`, `PAD_PS_*`, `PAD_L3`, `PAD_R3`. `settings_text_fit_test` measures every one against its box in en and pt_BR.
+
+## Weather intensity (MEM-05)
+
+`GameSettings.weather` (`[general] weather`, 0..10 steps, default 10), read as `Settings.weather_intensity()` (0..1), a row on General after Window size showing a percentage. It scales the regional weather push and every ambient weather layer's alpha, never a `WindZone`, the gale or a guardian's gust (`systems/air`, Regional weather).
 
 ## Adding a setting
 

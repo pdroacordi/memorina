@@ -8,6 +8,7 @@ func after_test() -> void:
 	Settings.reset_bindings(KeyBindings.Device.KEYBOARD)
 	Settings.reset_bindings(KeyBindings.Device.PAD)
 	Settings.set_volume(AudioBuses.MUSIC, SettingsMath.VOLUME_STEPS)
+	Settings.set_weather(GameSettings.WEATHER_STEPS)
 
 func _codes(action: StringName, device: KeyBindings.Device) -> Array[int]:
 	var found: Array[int] = []
@@ -35,6 +36,15 @@ func _settings_files() -> Dictionary:
 		var exists := FileAccess.file_exists(path)
 		found[path] = [exists, FileAccess.get_modified_time(path) if exists else 0]
 	return found
+
+## A MEMORY session reads no file, so regional weather starts at its full 10 steps.
+func test_a_memory_session_keeps_full_weather() -> void:
+	assert_int(Settings.weather()).is_equal(GameSettings.WEATHER_STEPS)
+	assert_float(Settings.weather_intensity()).is_equal(1.0)
+	Settings.set_weather(13)
+	assert_int(Settings.weather()).override_failure_message("a step clamps at 10").is_equal(10)
+	Settings.set_weather(3)
+	assert_float(Settings.weather_intensity()).is_equal_approx(0.3, 0.0001)
 
 func test_a_volume_step_sets_its_bus() -> void:
 	Settings.set_volume(AudioBuses.MUSIC, 5)

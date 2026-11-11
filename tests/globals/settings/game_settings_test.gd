@@ -17,6 +17,7 @@ func test_the_defaults() -> void:
 	assert_bool(made.fullscreen).is_false()
 	assert_int(made.window_scale).is_equal(2)
 	assert_str(made.language).is_empty()
+	assert_int(made.weather).is_equal(10)
 
 func test_values_out_of_range_clamp_or_fall_back() -> void:
 	var cfg := ConfigFile.new()
@@ -25,12 +26,18 @@ func test_values_out_of_range_clamp_or_fall_back() -> void:
 	cfg.set_value("audio", "notes", "loud")
 	cfg.set_value("display", "window_scale", 5)
 	cfg.set_value("general", "language", "fr")
+	cfg.set_value("general", "weather", 12)
 	var made := GameSettings.from_config(cfg, _defaults)
 	assert_int(made.volumes[AudioBuses.MASTER]).is_equal(10)
 	assert_int(made.volumes[AudioBuses.MUSIC]).is_equal(0)
 	assert_int(made.volumes[AudioBuses.NOTES]).is_equal(10)
 	assert_int(made.window_scale).is_equal(GameSettings.DEFAULT_SCALE)
 	assert_str(made.language).is_empty()
+	assert_int(made.weather).is_equal(10)
+	cfg.set_value("general", "weather", -3)
+	assert_int(GameSettings.from_config(cfg, _defaults).weather).is_equal(0)
+	cfg.set_value("general", "weather", "strong")
+	assert_int(GameSettings.from_config(cfg, _defaults).weather).is_equal(10)
 
 func test_a_round_trip_keeps_every_value() -> void:
 	var made := _defaults.copy()
@@ -38,6 +45,7 @@ func test_a_round_trip_keeps_every_value() -> void:
 	made.fullscreen = true
 	made.window_scale = 1
 	made.language = "pt_BR"
+	made.weather = 4
 	made.keyboard.codes[&"jump"] = KEY_SPACE
 	made.pad.codes[&"roll"] = JOY_BUTTON_LEFT_STICK
 	var cfg := ConfigFile.new()
@@ -47,6 +55,7 @@ func test_a_round_trip_keeps_every_value() -> void:
 	assert_bool(back.fullscreen).is_true()
 	assert_int(back.window_scale).is_equal(1)
 	assert_str(back.language).is_equal("pt_BR")
+	assert_int(back.weather).is_equal(4)
 	assert_int(back.keyboard.code(&"jump")).is_equal(KEY_SPACE)
 	assert_int(back.pad.code(&"roll")).is_equal(JOY_BUTTON_LEFT_STICK)
 
