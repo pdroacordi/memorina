@@ -1,0 +1,7 @@
+{
+	"scene": "res://scenes/world/game.tscn",
+	"max_duration": 3000,
+	"steps": [
+		{ "t": 2990, "log": "tech12 probe timeline end" }
+	]
+}
