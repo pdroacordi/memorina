@@ -35,7 +35,7 @@
 [CmdletBinding()]
 param(
   [Parameter(Position = 0, Mandatory = $true)]
-  [ValidateSet("balance", "generate", "animate", "animate3", "tileset", "tiles")]
+  [ValidateSet("balance", "generate", "animate", "animate3", "fetch", "tileset", "tiles")]
   [string]$Command,
 
   [string]$Description = "",
@@ -61,6 +61,8 @@ param(
   [int]$Seed = 0,
   [string]$Name = "",
   [string]$Out = "",
+  # fetch: a finished animate3 background job, re-downloaded without a new generation.
+  [string]$JobId = "",
   # An entry of the art prompt library (tools/art/prompts/<id>.md): fills in the
   # description, negative, size, frames, view, direction, styles and reference
   # from the entry and the shared tools/art/prompts/style.md preamble. Explicit
@@ -113,8 +115,19 @@ function Write-Base64Png($image, [string]$path) {
   Write-Host "wrote $path"
 }
 
+function Save-JobFrames($job, [string]$dir, [string]$stem) {
+  $k = 0
+  foreach ($img in $job.last_response.images) {
+    $path = Join-Path $dir ("{0}_{1}.png" -f $stem, $k)
+    if ($img.base64) { Write-Base64Png $img $path } else { Invoke-WebRequest -Uri $img.url -OutFile $path -UseBasicParsing; Write-Host "wrote $path" }
+    $k++
+  }
+}
+
 function Ensure-OutDir {
   if ([string]::IsNullOrWhiteSpace($script:Out)) { $script:Out = Join-Path ([IO.Path]::GetTempPath()) "pixellab" }
+  # .NET resolves a relative path against the process directory, not PowerShell's location.
+  $script:Out = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath($script:Out)
   New-Item -ItemType Directory -Force $script:Out | Out-Null
   return $script:Out
 }
@@ -270,18 +283,22 @@ switch ($Command) {
       # A poll that fails prints why (a 401 or 402 is not "busy") and keeps trying until the timeout.
       try { $g = Invoke-PixelLab GET "/background-jobs/$id" $null $BaseUrlV2 } catch { Write-Host "poll ${i}: $($_.Exception.Message)"; continue }
       if ($g.status -eq "completed") {
-        $k = 0
-        foreach ($img in $g.last_response.images) {
-          $path = Join-Path $dir ("{0}_{1}.png" -f $stem, $k)
-          if ($img.base64) { Write-Base64Png $img $path } else { Invoke-WebRequest -Uri $img.url -OutFile $path -UseBasicParsing; Write-Host "wrote $path" }
-          $k++
-        }
+        Save-JobFrames $g $dir $stem
         if ($g.last_response.usage) { Show-Usage $g.last_response } else { Show-Usage $r }
         return
       }
       if ($g.status -eq "failed") { throw "PixelLab animation $id failed: $($g.last_response | ConvertTo-Json -Compress -Depth 4)" }
     }
-    throw "PixelLab animation $id did not finish in 600 s"
+    throw "PixelLab animation $id did not finish in 600 s (fetch it later with: fetch -JobId $id -Name $stem -Out <dir>)"
+  }
+
+  "fetch" {
+    if (-not $JobId -or -not $Name) { throw "fetch needs -JobId and -Name." }
+    $dir = Join-Path (Ensure-OutDir) $Name
+    New-Item -ItemType Directory -Force $dir | Out-Null
+    $g = Invoke-PixelLab GET "/background-jobs/$JobId" $null $BaseUrlV2
+    if ($g.status -ne "completed") { throw "PixelLab job $JobId is $($g.status)." }
+    Save-JobFrames $g $dir $Name
   }
 
   "tileset" {
