@@ -118,6 +118,23 @@ func test_snap_lands_a_released_talk() -> void:
 	await get_tree().physics_frame
 	assert_float(_centre().x).is_equal_approx(_camera.centre_for(_subject).x, 1.0)
 
+## Dialogue.cut (flashback 4's "Por você."): the talk's pair and zoom land at once, with no ease.
+func test_a_cut_talk_frames_at_once() -> void:
+	var ivo := IVO.instantiate() as Player
+	ivo.position = Vector2(600, 330.0)
+	add_child(ivo)
+	auto_free(ivo)
+	_floor(Vector2(0.0, 330.0), 2000.0)
+	_camera.set_bounds(Rect2(-4000, -4000, 8000, 8000))
+	_camera.follow(ivo)
+	for i: int in 3:
+		await get_tree().physics_frame
+	var at := Vector2(ivo.global_position.x - 40.0, 330.0)
+	_camera.frame_talk(at, 3.0, true)
+	assert_vector(_camera.zoom).is_equal(Vector2.ONE * 3.0)
+	await get_tree().physics_frame
+	assert_float(_centre().x).is_equal_approx(ivo.global_position.x - 20.0, 1.0)
+
 ## bugs/a-hop-below-a-seam-flips-the-room-twice: astride a room's top edge the body stays in frame.
 func test_the_clamp_yields_to_keep_the_body_in_frame() -> void:
 	var body := auto_free(BodySubject.new()) as BodySubject

@@ -1,0 +1,30 @@
+[gd_resource type="Resource" script_class="Flashback" format=3]
+
+[ext_resource type="Script" path="res://resources/story/flashbacks/flashback.gd" id="1_flashback"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_4_crossing.tres" id="2_crossing"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_4_opening.tres" id="3_opening"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_4.tres" id="4_leaving"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_4_returning.tres" id="5_returning"]
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="6_cue"]
+
+[sub_resource type="Resource" id="night"]
+script = ExtResource("6_cue")
+id = &"flashback_4_night"
+fade_in = 0.0
+fade_out = 0.0
+
+[resource]
+script = ExtResource("1_flashback")
+number = 4
+crossing = ExtResource("2_crossing")
+opening = ExtResource("3_opening")
+leaving = ExtResource("4_leaving")
+returning = ExtResource("5_returning")
+music = SubResource("night")
+entry_mark = 0.0
+entry_fade = 0.0
+entry_colour = Color(0, 0, 0, 1)
+bars_thin = 12.0
+past_room = &"garden_past"
+arrival = Vector2(1230, 288)
+arrival_facing = -1

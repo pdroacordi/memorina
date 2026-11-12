@@ -143,6 +143,7 @@ No story text is approved yet (STORY-03 drafts the opening), so the only talk is
 - A silent ask (no text, no speaker, no variants) is valid: a gesture; the box opens on its choices alone.
 - A grant on a cue-only line is valid and lands as its CUE starts (also with no beat).
 - `talk_paused(hold, pose, at)`: the beat's `Hold` (FREE, STILL, NOTES, HELD_UP), `Pose` (NONE, GUITAR, MEMORINA, and the flashbacks') and the point it faces. `Player.pause_talk` applies them; a STILL beat's own block does not refuse the resume.
+- **A cut frame** (STORY-05): `Dialogue.cut` with `zoom` set makes `talk_framed(at, zoom, cut)` land the pair and the zoom at once (`GameCamera.frame_talk` then `snap()`), for flashback 4's "Por você.", the one hard cut inside a memory (`camera_test.test_a_cut_talk_frames_at_once`).
 - **An abandoned beat** (STORY-05): `DialogueBeat.abandon()` emits `abandoned`; the director ends the talk unheard, as an interrupt does (box already closed, unframed, `talk_ended`), and the talk can be started again. The swing's `SwingRaiseBeat` gives up this way (`dialogue_director_test.test_an_abandoned_beat_ends_the_talk_unheard`).
 - `DialogueDirector.hear_note` passes Ivo's notes to a NOTES beat. `phrase_shown` / `phrase_lit` / `phrase_closed` are relayed to `CanvasLayer/PhraseSheet`.
 - `~word~` in a text is a brief stutter (`StutterText`); the box shows the text without the marks.

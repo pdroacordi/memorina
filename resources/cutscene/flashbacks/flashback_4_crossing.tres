@@ -1,0 +1,73 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e_bars"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e_face"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e_fade"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_muffle.gd" id="e_muffle"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_pose.gd" id="e_pose"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_stage.gd" id="e_stage"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_walk.gd" id="e_walk"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[sub_resource type="Resource" id="bars_2"]
+script = ExtResource("e_bars")
+open = true
+seconds = 1.0
+
+[sub_resource type="Resource" id="camera_3"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"ribbon"])
+offset = Vector2(0, 40)
+zoom = 2.0
+seconds = 1.4
+
+[sub_resource type="Resource" id="muffle_4"]
+script = ExtResource("e_muffle")
+amount = 1.0
+
+[sub_resource type="Resource" id="walk_5"]
+script = ExtResource("e_walk")
+actor = &"ivo"
+mark = &"under_ribbon"
+pace = 0.5
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bars_2"), SubResource("camera_3"), SubResource("muffle_4"), SubResource("walk_5")])
+
+[sub_resource type="Resource" id="face_6"]
+script = ExtResource("e_face")
+actor = &"ivo"
+toward = &"ribbon"
+
+[sub_resource type="Resource" id="pose_8"]
+script = ExtResource("e_pose")
+pose = 7
+
+[sub_resource type="Resource" id="stage_9"]
+script = ExtResource("e_stage")
+staging = &"ribbon_staging"
+child = &""
+seconds = 0.4
+
+[sub_resource type="Resource" id="together_7"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("pose_8"), SubResource("stage_9")])
+
+[sub_resource type="Resource" id="wait_10"]
+script = ExtResource("e_wait")
+seconds = 1.2
+
+[sub_resource type="Resource" id="fade_11"]
+script = ExtResource("e_fade")
+to_black = true
+seconds = 0.3
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_4_crossing"
+steps = Array[ExtResource("e_step")]([SubResource("together_1"), SubResource("face_6"), SubResource("together_7"), SubResource("wait_10"), SubResource("fade_11")])

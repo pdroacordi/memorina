@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e_face"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_walk.gd" id="e_walk"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[sub_resource type="Resource" id="walk_1"]
+script = ExtResource("e_walk")
+actor = &"ivo"
+mark = &"behind_her"
+pace = 0.4
+
+[sub_resource type="Resource" id="face_2"]
+script = ExtResource("e_face")
+actor = &"ivo"
+toward = &"alba"
+
+[sub_resource type="Resource" id="wait_3"]
+script = ExtResource("e_wait")
+seconds = 0.8
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_4_near"
+steps = Array[ExtResource("e_step")]([SubResource("walk_1"), SubResource("face_2"), SubResource("wait_3")])

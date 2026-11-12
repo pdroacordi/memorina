@@ -12,6 +12,8 @@ python -I tools/audio/synth_story_placeholders.py [out_dir] [name ...]
     morning_room.wav  (STORY-16) the opening's morning: a soft room tone with faint, far, high chirps;
     gate_bolt.wav  (STORY-16) the village's east gate unbolted, heard from indoors: a wooden bolt sliding, then a clack.
     rope_creak.wav  (STORY-05) the fallen swing's call: a rope creaking on a branch out and back, as if someone swung.
+    waterfall_night.wav  (STORY-05) flashback 4's garden at night: a small waterfall into a pool, a seamless 6 s loop
+        (written without the room; its import loops it forward).
     The morning song is E G E D | C D E C, beats 1 1 1.5 0.5 1 1 1 2.5 at 0.42 s ("Approve melody (Recommended)",
     user, 2026-10-15). A real recording replaces a file of the same name.
 """
@@ -201,6 +203,35 @@ def rope_creak() -> np.ndarray:
     return signal.lfilter(*signal.butter(2, 4000 / (SR / 2)), body)
 
 
+def waterfall_night(dur: float = 6.0) -> np.ndarray:
+    """Falling water: band-passed noise with a slow swell and soft low splashes, its tail cross-faded into its head."""
+    rng = np.random.default_rng(41)
+    fade = int(SR * 0.5)
+    length = int(SR * dur) + fade
+    t = np.arange(length) / SR
+    rush = signal.lfilter(*signal.butter(2, [350 / (SR / 2), 2600 / (SR / 2)], btype="band"), rng.normal(0, 1, length))
+    hiss = signal.lfilter(*signal.butter(2, 5200 / (SR / 2), btype="high"), rng.normal(0, 1, length)) * 0.08
+    low = signal.lfilter(*signal.butter(2, 260 / (SR / 2)), rng.normal(0, 1, length)) * 2.5
+    swell = 1.0 + 0.12 * np.sin(2 * np.pi * t / dur) + 0.06 * np.sin(2 * np.pi * 3 * t / dur)
+    y = (rush + hiss + low) * swell
+    head, tail = y[:fade], y[-fade:]
+    ramp = np.linspace(0, 1, fade)
+    y = y[:-fade].copy()
+    y[:fade] = head * ramp + tail * (1 - ramp)
+    return y
+
+
+def write_loop(path: str, sound: np.ndarray) -> None:
+    """Normalized, 16-bit mono, with no room tail, so the last sample runs into the first."""
+    sound = sound / np.max(np.abs(sound)) * 0.6
+    with wave.open(path, "wb") as file:
+        file.setnchannels(1)
+        file.setsampwidth(2)
+        file.setframerate(SR)
+        file.writeframes((sound * 32767).astype(np.int16).tobytes())
+    print(path)
+
+
 def write(path: str, sound: np.ndarray) -> None:
     """Normalized, through a small room, 16-bit mono."""
     sound = sound / np.max(np.abs(sound))
@@ -230,10 +261,12 @@ def main(out_dir: str, names: list[str]) -> None:
         "morning_room": morning_room,
         "gate_bolt": gate_bolt,
         "rope_creak": rope_creak,
+        "waterfall_night": waterfall_night,
     })
+    loops = {"waterfall_night"}
     for name, make in sounds.items():
         if not names or name in names:
-            write(os.path.join(out_dir, name + ".wav"), make())
+            (write_loop if name in loops else write)(os.path.join(out_dir, name + ".wav"), make())
 
 
 if __name__ == "__main__":

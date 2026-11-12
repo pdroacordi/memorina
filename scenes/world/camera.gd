@@ -223,7 +223,7 @@ func unfocus() -> void:
 	_tween_zoom(Vector2.ONE * _rest_zoom)
 
 ## A talk frames its speaker at `at` with Ivo at `zoom_level` until `release_talk()` (Dialogue.zoom, STORY-16).
-func frame_talk(at: Vector2, zoom_level: float) -> void:
+func frame_talk(at: Vector2, zoom_level: float, cut: bool = false) -> void:
 	if _talk_point == null:
 		_talk_point = Node2D.new()
 		_talk_point.top_level = true
@@ -232,6 +232,8 @@ func frame_talk(at: Vector2, zoom_level: float) -> void:
 	_rest_zoom = zoom_level
 	frame_pair(_talk_point)
 	_tween_zoom(Vector2.ONE * zoom_level, pair_duration)
+	if cut:
+		snap()
 
 func release_talk() -> void:
 	_rest_zoom = 1.0

@@ -45,6 +45,14 @@
 [ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_3_push.tres" id="tk_push_3"]
 [ext_resource type="Script" path="res://scenes/world/story/flashback/swing_push_beat.gd" id="st_push_beat"]
 [ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_3.tres" id="cs_leaving_3"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_4_alba.tres" id="tk_alba_4"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_4_for_you.tres" id="tk_for_you_4"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_4_near.tres" id="cs_near_4"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_4_silence.tres" id="cs_silence_4"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_4_turn.tres" id="cs_turn_4"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_4.tres" id="cs_leaving_4"]
+[ext_resource type="Script" path="res://scenes/world/story/flashback/flashback_lure.gd" id="st_lure"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/waterfall_night.wav" id="st_water"]
 
 [sub_resource type="Resource" id="due_1"]
 script = ExtResource("st_fact")
@@ -162,6 +170,45 @@ script = ExtResource("st_stage")
 when = Array[ExtResource("st_fact")]([SubResource("due_3")])
 show = &"LateAfternoon"
 
+[sub_resource type="Resource" id="due_4"]
+script = ExtResource("st_fact")
+kind = 15
+index = 4
+
+[sub_resource type="Resource" id="turn_seen"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"flashback_4_turn"
+
+[sub_resource type="Resource" id="alba_turned"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_4"), SubResource("turn_seen")])
+show = &"Turned"
+
+[sub_resource type="Resource" id="alba_pool_back"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_4")])
+show = &"PoolBack"
+
+[sub_resource type="Resource" id="light_night"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_4")])
+show = &"Night"
+
+[sub_resource type="Resource" id="talk_4_heard"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"flashback_4_alba"
+
+[sub_resource type="Gradient" id="moon_gradient"]
+colors = PackedColorArray(0.62, 0.74, 1, 0.22, 0.62, 0.74, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="moon_glow"]
+gradient = SubResource("moon_gradient")
+fill = 1
+fill_from = Vector2(0.78, 0.05)
+fill_to = Vector2(0.3, 0.75)
+
 [sub_resource type="CanvasItemMaterial" id="light_multiply"]
 blend_mode = 3
 
@@ -278,7 +325,7 @@ z_index = -10
 [node name="Alba" type="Node2D" parent="Stagings"]
 script = ExtResource("st_staging")
 staging_id = &"alba_staging"
-stages = Array[ExtResource("st_stage")]([SubResource("alba_stone"), SubResource("alba_holding_out"), SubResource("alba_risen"), SubResource("alba_flowers"), SubResource("alba_swing")])
+stages = Array[ExtResource("st_stage")]([SubResource("alba_stone"), SubResource("alba_holding_out"), SubResource("alba_risen"), SubResource("alba_flowers"), SubResource("alba_swing"), SubResource("alba_turned"), SubResource("alba_pool_back")])
 
 [node name="Stone" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
 position = Vector2(816, 270)
@@ -300,6 +347,16 @@ loop = &"holding_out"
 
 [node name="Swing" parent="Stagings/Alba" instance=ExtResource("st_swing_ride")]
 position = Vector2(312, 192)
+
+[node name="PoolBack" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
+position = Vector2(1076, 288)
+flip_h = true
+loop = &"pool_back"
+
+[node name="Turned" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
+position = Vector2(1076, 288)
+flip_h = true
+loop = &"turned"
 
 [node name="AlbaLaugh" type="Node2D" parent="Stagings"]
 script = ExtResource("st_staging")
@@ -349,7 +406,7 @@ texture = ExtResource("st_yellow")
 z_index = 100
 script = ExtResource("st_staging")
 staging_id = &"light_staging"
-stages = Array[ExtResource("st_stage")]([SubResource("light_late_afternoon")])
+stages = Array[ExtResource("st_stage")]([SubResource("light_late_afternoon"), SubResource("light_night")])
 
 [node name="LateAfternoon" type="Node2D" parent="Stagings/Light"]
 
@@ -370,6 +427,27 @@ offset_right = 1440.0
 offset_bottom = 640.0
 mouse_filter = 2
 texture = SubResource("sun_glow")
+expand_mode = 1
+
+[node name="Night" type="Node2D" parent="Stagings/Light"]
+
+[node name="Moonlight" type="ColorRect" parent="Stagings/Light/Night"]
+material = SubResource("light_multiply")
+offset_left = -160.0
+offset_top = -480.0
+offset_right = 1440.0
+offset_bottom = 640.0
+mouse_filter = 2
+color = Color(0.52, 0.58, 0.8, 1)
+
+[node name="Moon" type="TextureRect" parent="Stagings/Light/Night"]
+material = SubResource("light_add")
+offset_left = -160.0
+offset_top = -480.0
+offset_right = 1440.0
+offset_bottom = 640.0
+mouse_filter = 2
+texture = SubResource("moon_glow")
 expand_mode = 1
 
 [node name="Cast" type="Node2D" parent="."]
@@ -404,6 +482,11 @@ mark_id = &"flower_3"
 position = Vector2(1170, 288)
 script = ExtResource("cs_mark")
 mark_id = &"far_side"
+
+[node name="BehindHer" type="Marker2D" parent="SceneMarks"]
+position = Vector2(1116, 288)
+script = ExtResource("cs_mark")
+mark_id = &"behind_her"
 
 [node name="Talkables" type="Node2D" parent="."]
 
@@ -441,6 +524,21 @@ position = Vector2(1170, 288)
 talk = ExtResource("tk_flower_3")
 reach_west = 20.0
 reach_east = 20.0
+
+[node name="Alba4" parent="Talkables" instance=ExtResource("tk_talkable")]
+position = Vector2(1076, 288)
+talk = ExtResource("tk_alba_4")
+reach_west = 24.0
+reach_east = 56.0
+
+[node name="ForYou4" parent="Talkables" instance=ExtResource("tk_talkable")]
+position = Vector2(1076, 288)
+talk = ExtResource("tk_for_you_4")
+auto_start = true
+reach_west = 40.0
+reach_east = 120.0
+auto_delay = 0.1
+speaker_offset = -40.0
 
 [node name="Beats" type="Node2D" parent="."]
 
@@ -513,6 +611,38 @@ script = ExtResource("cs_beat")
 cue = &"flashback_3_leaving"
 face = NodePath("../../Marks/Swing")
 cutscene = ExtResource("cs_leaving_3")
+
+[node name="Near4" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_4_near"
+cutscene = ExtResource("cs_near_4")
+
+[node name="Silence4" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_4_silence"
+face = NodePath("../../Stagings/Alba/PoolBack")
+cutscene = ExtResource("cs_silence_4")
+
+[node name="Turn4" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_4_turn"
+face = NodePath("../../Stagings/Alba/PoolBack")
+cutscene = ExtResource("cs_turn_4")
+
+[node name="Leaving4" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_4_leaving"
+face = NodePath("../../Stagings/Alba/Turned")
+cutscene = ExtResource("cs_leaving_4")
+
+[node name="Water4" type="Node2D" parent="."]
+position = Vector2(952, 260)
+script = ExtResource("st_lure")
+when = Array[ExtResource("st_fact")]([SubResource("due_4")])
+unless = Array[ExtResource("st_fact")]([SubResource("talk_4_heard")])
+stream = ExtResource("st_water")
+gap = 0.0
+duck_db = 0.0
 
 [node name="PastGrey" type="Node2D" parent="."]
 position = Vector2(640, 192)

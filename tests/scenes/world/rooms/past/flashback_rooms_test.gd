@@ -179,9 +179,9 @@ func test_a_ribbon_waits_in_each_restored_guardians_exit_room() -> void:
 	var flashback := load("res://resources/story/flashbacks/flashback_2.tres") as Flashback
 	for guardian: int in RIBBON_ROOMS:
 		var contents := (load(RIBBON_ROOMS[guardian]) as PackedScene).instantiate()
-		var staging := _first(contents, FactStaging) as FactStaging
-		var talk := _first(contents, Talkable) as Talkable
-		var beat := _first(contents, CutsceneBeat) as CutsceneBeat
+		var staging := contents.get_node("Flashbacks/Ribbon") as FactStaging
+		var talk := contents.get_node("Flashbacks/RibbonTalk") as Talkable
+		var beat := contents.get_node("Flashbacks/Crossing2") as CutsceneBeat
 		assert_str(String(staging.staging_id)).is_equal("ribbon_staging")
 		assert_object(beat.cutscene).is_same(flashback.crossing)
 		for restored: int in Enums.Guardian.values():
@@ -202,7 +202,7 @@ func test_a_ribbon_waits_in_each_restored_guardians_exit_room() -> void:
 func test_a_grey_pocket_surrounds_the_ribbon_exactly_while_it_shows() -> void:
 	for guardian: int in RIBBON_ROOMS:
 		var contents := (load(RIBBON_ROOMS[guardian]) as PackedScene).instantiate()
-		var staging := _first(contents, FactStaging) as FactStaging
+		var staging := contents.get_node("Flashbacks/Ribbon") as FactStaging
 		var well := _first(contents, FactWell) as FactWell
 		var mark := contents.get_node("Flashbacks/RibbonMark") as Node2D
 		var file := String(RIBBON_ROOMS[guardian]).get_file()
@@ -217,6 +217,10 @@ func test_a_grey_pocket_surrounds_the_ribbon_exactly_while_it_shows() -> void:
 		seen.scenes_seen.append(FlashbackSchedule.id(2))
 		states.append(seen)
 		states.append(PlayerData.new())
+		states.append(_flashback_4_due_with(guardian))
+		var seen_4 := _flashback_4_due_with(guardian)
+		seen_4.scenes_seen.append(FlashbackSchedule.id(4))
+		states.append(seen_4)
 		for data: PlayerData in states:
 			var shown := FactStaging.pick(staging.stages, data) >= 0
 			var strength := FactWell.strength_for(well.levels, data)
@@ -301,3 +305,99 @@ func test_the_past_swing_holds_her_and_four_pushes() -> void:
 	assert_int((cues[&"flashback_3_push"] as SwingPushBeat).pose).is_equal(DialogueBeat.Pose.PUSH_SWING)
 	assert_object((cues[&"flashback_3_push"] as SwingPushBeat).sway).is_same(alba.get_node("Swing"))
 	contents.free()
+
+## Flashback 4 is due with three guardians restored, `guardian` among them.
+func _flashback_4_due_with(guardian: int) -> PlayerData:
+	var data := PlayerData.new()
+	data.owned_items[Enums.PlayerItem.MEMORINA] = true
+	var count := 1
+	data.restored_guardians[guardian] = true
+	for other: int in Enums.Guardian.values():
+		if count < 3 and other != guardian:
+			data.restored_guardians[other] = true
+			count += 1
+	for n: int in range(1, 4):
+		data.scenes_seen.append(FlashbackSchedule.id(n))
+	return data
+
+## The ribbon again (design drafts/camada_pessoal.md §2, "4."): while flashback 4 is due it hangs still in each restored
+## guardian's exit room, its own talk offers the shared crossing, and flashback 2's talk stays shut.
+func test_the_ribbon_hangs_still_for_flashback_4() -> void:
+	var flashback := load("res://resources/story/flashbacks/flashback_4.tres") as Flashback
+	for guardian: int in RIBBON_ROOMS:
+		var file := String(RIBBON_ROOMS[guardian]).get_file()
+		var contents := (load(RIBBON_ROOMS[guardian]) as PackedScene).instantiate()
+		var staging := contents.get_node("Flashbacks/Ribbon") as FactStaging
+		var talk := contents.get_node("Flashbacks/RibbonTalk4") as Talkable
+		var talk_2 := contents.get_node("Flashbacks/RibbonTalk") as Talkable
+		var beat := contents.get_node("Flashbacks/Crossing4") as CutsceneBeat
+		assert_object(beat.cutscene).is_same(flashback.crossing)
+		var due := _flashback_4_due_with(guardian)
+		assert_int(FlashbackSchedule.due(due)).is_equal(4)
+		assert_str(String(staging.stages[FactStaging.pick(staging.stages, due)].show)).override_failure_message(file) 				.is_equal("Still")
+		assert_float((staging.get_node("Still") as AnimatedSprite2D).speed_scale).is_equal(0.0)
+		assert_str(String(talk.current(due).lines[0].cue)).is_equal(String(beat.cue))
+		assert_object(talk_2.current(due)).is_null()
+		var other := _flashback_4_due_with(guardian)
+		other.restored_guardians[guardian] = false
+		for g: int in Enums.Guardian.values():
+			if g != guardian and not other.restored_guardians[g]:
+				other.restored_guardians[g] = true
+				break
+		assert_int(FactStaging.pick(staging.stages, other)).override_failure_message(file).is_equal(-1)
+		assert_object(talk.current(other)).is_null()
+		var seen := _flashback_4_due_with(guardian)
+		seen.scenes_seen.append(FlashbackSchedule.id(4))
+		assert_int(FactStaging.pick(staging.stages, seen)).is_equal(-1)
+		assert_object(talk.current(seen)).is_null()
+		contents.free()
+
+## The past at night: moonlight, Alba at the pool's edge with her back turned until her turn is seen, the water until
+## the first talk is heard, then the close talk, cut, whose beat is the leaving.
+func test_the_night_by_the_pool_for_flashback_4() -> void:
+	var flashback := load("res://resources/story/flashbacks/flashback_4.tres") as Flashback
+	var contents := (load(PAST_GARDEN_CONTENTS) as PackedScene).instantiate()
+	var due := _flashback_4_due_with(Enums.Guardian.FROST)
+	var alba := contents.get_node("Stagings/Alba") as FactStaging
+	assert_str(String(alba.stages[FactStaging.pick(alba.stages, due)].show)).is_equal("PoolBack")
+	var light := contents.get_node("Stagings/Light") as FactStaging
+	assert_str(String(light.stages[FactStaging.pick(light.stages, due)].show)).is_equal("Night")
+	var water := contents.get_node("Water4") as FlashbackLure
+	assert_bool(SaveFact.gates_pass(water.when, water.unless, due)).is_true()
+	assert_object(water.zone).is_null()
+	var cues := {}
+	for beat: Node in contents.get_node("Beats").get_children():
+		if beat is DialogueBeat:
+			cues[(beat as DialogueBeat).cue] = beat
+	var first := (contents.get_node("Talkables/Alba4") as Talkable).current(due)
+	assert_str(String(first.id)).is_equal("flashback_4_alba")
+	assert_float(first.zoom).is_equal(0.0)
+	for line: DialogueLine in first.lines:
+		if line.cue != &"":
+			assert_bool(cues.has(line.cue)).override_failure_message(String(line.cue)).is_true()
+	var close := contents.get_node("Talkables/ForYou4") as Talkable
+	assert_object(close.current(due)).is_null()
+	due.dialogues_heard.append(first.id)
+	due.scenes_seen.append(&"flashback_4_turn")
+	assert_str(String(alba.stages[FactStaging.pick(alba.stages, due)].show)).is_equal("Turned")
+	assert_bool(SaveFact.gates_pass(water.when, water.unless, due)).is_false()
+	var last := close.current(due)
+	assert_str(String(last.id)).is_equal("flashback_4_for_you")
+	assert_bool(last.cut).is_true()
+	assert_bool(close.auto_start).is_true()
+	# The pair frames the midpoint of Ivo (at behind_her) and the speaker point: that midpoint is her.
+	var behind := contents.get_node("SceneMarks/BehindHer") as Node2D
+	var her := alba.get_node("Turned") as Node2D
+	assert_float((behind.position.x + close.speaker_position().x) / 2.0).is_equal_approx(her.position.x, 0.5)
+	assert_object((cues[last.lines[0].cue] as CutsceneBeat).cutscene).is_same(flashback.leaving)
+	contents.free()
+
+## Her edge frays once in all the flashbacks: only flashback 4's leaving holds a CutsceneFray, and only one.
+func test_only_flashback_4_frays_her_once() -> void:
+	var catalog := load("res://resources/cutscene/cutscene_catalog.tres") as CutsceneCatalog
+	var frays: Array[StringName] = []
+	for scene: Cutscene in catalog.scenes:
+		for leaf: CutsceneStep in CutsceneCatalog.leaves(scene.steps):
+			if leaf is CutsceneFray and (leaf as CutsceneFray).actor == &"alba":
+				frays.append(scene.id)
+	assert_array(frays).is_equal([FlashbackSchedule.id(4)])

@@ -1,0 +1,343 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 49.5,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2
+ ],
+ "scenes_seen": [
+  "flashback_1",
+  "flashback_2",
+  "flashback_3"
+ ],
+ "player_position": [
+  5800,
+  -1650
+ ],
+ "steps": [
+  {
+   "t": 0.2,
+   "screenshot": "00_ribbon_still"
+  },
+  {
+   "t": 0.25,
+   "log": "start"
+  },
+  {
+   "t": 1.0,
+   "screenshot": "01_ribbon_still"
+  },
+  {
+   "t": 2.0,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 2.08,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 2.8,
+   "screenshot": "c00_crossing"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "c01_crossing"
+  },
+  {
+   "t": 4.4,
+   "screenshot": "c02_crossing"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "c03_crossing"
+  },
+  {
+   "t": 5.5,
+   "screenshot": "c04_crossing"
+  },
+  {
+   "t": 6.0,
+   "log": "crossing_end"
+  },
+  {
+   "t": 6.5,
+   "screenshot": "o00_opening"
+  },
+  {
+   "t": 7.7,
+   "screenshot": "o01_opening"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "o02_opening"
+  },
+  {
+   "t": 10.4,
+   "screenshot": "o03_opening"
+  },
+  {
+   "t": 11.8,
+   "screenshot": "o04_opening"
+  },
+  {
+   "t": 12.8,
+   "screenshot": "o05_opening"
+  },
+  {
+   "t": 13.4,
+   "log": "opening_end"
+  },
+  {
+   "t": 13.6,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 13.9,
+   "screenshot": "w00_walk"
+  },
+  {
+   "t": 14.22,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 14.8,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 14.88,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 14.9,
+   "log": "talk_a"
+  },
+  {
+   "t": 16.2,
+   "screenshot": "t1_line1"
+  },
+  {
+   "t": 18.3,
+   "screenshot": "t1_typed"
+  },
+  {
+   "t": 18.4,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 18.48,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 20.0,
+   "screenshot": "t1_silence"
+  },
+  {
+   "t": 22.0,
+   "screenshot": "t2_line2"
+  },
+  {
+   "t": 24.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 24.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 24.9,
+   "screenshot": "t2_turn"
+  },
+  {
+   "t": 26.6,
+   "screenshot": "t2_look"
+  },
+  {
+   "t": 28.6,
+   "screenshot": "t3_line3"
+  },
+  {
+   "t": 30.1,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 30.18,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 30.25,
+   "screenshot": "t3_after"
+  },
+  {
+   "t": 30.6,
+   "screenshot": "t4_for_you"
+  },
+  {
+   "t": 30.65,
+   "log": "for_you"
+  },
+  {
+   "t": 32.0,
+   "screenshot": "t4_typed"
+  },
+  {
+   "t": 32.1,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 32.12,
+   "screenshot": "f00_fray"
+  },
+  {
+   "t": 32.15,
+   "log": "leaving"
+  },
+  {
+   "t": 32.16,
+   "screenshot": "f01_fray"
+  },
+  {
+   "t": 32.18,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 32.2,
+   "screenshot": "f02_fray"
+  },
+  {
+   "t": 32.24,
+   "screenshot": "f03_fray"
+  },
+  {
+   "t": 32.28,
+   "screenshot": "f04_fray"
+  },
+  {
+   "t": 32.32,
+   "screenshot": "f05_fray"
+  },
+  {
+   "t": 32.36,
+   "screenshot": "f06_fray"
+  },
+  {
+   "t": 32.4,
+   "screenshot": "f07_fray"
+  },
+  {
+   "t": 32.44,
+   "screenshot": "f08_fray"
+  },
+  {
+   "t": 32.48,
+   "screenshot": "f09_fray"
+  },
+  {
+   "t": 32.52,
+   "screenshot": "f10_fray"
+  },
+  {
+   "t": 32.56,
+   "screenshot": "f11_fray"
+  },
+  {
+   "t": 32.6,
+   "screenshot": "f12_fray"
+  },
+  {
+   "t": 32.64,
+   "screenshot": "f13_fray"
+  },
+  {
+   "t": 32.68,
+   "screenshot": "f14_fray"
+  },
+  {
+   "t": 32.72,
+   "screenshot": "f15_fray"
+  },
+  {
+   "t": 33.3,
+   "screenshot": "l00_leaving"
+  },
+  {
+   "t": 34.3,
+   "screenshot": "l01_leaving"
+  },
+  {
+   "t": 35.3,
+   "screenshot": "l02_leaving"
+  },
+  {
+   "t": 36.3,
+   "screenshot": "l03_leaving"
+  },
+  {
+   "t": 37.3,
+   "screenshot": "l04_leaving"
+  },
+  {
+   "t": 38.3,
+   "screenshot": "l05_leaving"
+  },
+  {
+   "t": 39.3,
+   "screenshot": "l06_leaving"
+  },
+  {
+   "t": 40.3,
+   "screenshot": "l07_leaving"
+  },
+  {
+   "t": 41.5,
+   "log": "returned"
+  },
+  {
+   "t": 41.7,
+   "screenshot": "b00_return"
+  },
+  {
+   "t": 42.7,
+   "screenshot": "b01_return"
+  },
+  {
+   "t": 43.9,
+   "screenshot": "b02_return"
+  },
+  {
+   "t": 45.1,
+   "screenshot": "b03_return"
+  },
+  {
+   "t": 46.3,
+   "screenshot": "b04_return"
+  },
+  {
+   "t": 47.5,
+   "screenshot": "b05_return"
+  },
+  {
+   "t": 48.7,
+   "screenshot": "b06_return"
+  }
+ ]
+}

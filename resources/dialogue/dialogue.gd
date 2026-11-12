@@ -11,6 +11,8 @@ extends Resource
 @export var lines: Array[DialogueLine] = []
 ## The camera frames the speaker and Ivo at this zoom while the talk runs (STORY-16); 0 leaves the frame alone.
 @export var zoom: float = 0.0
+## The frame cuts to the talk's pair and zoom instead of easing there; read only when `zoom` is set.
+@export var cut: bool = false
 
 
 ## Its gates hold, and it is not a heard `once` dialogue.

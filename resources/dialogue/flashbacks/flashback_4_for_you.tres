@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="DialogueSet" format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/alba.tres" id="s_alba"]
+
+[sub_resource type="Resource" id="line_1"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_alba")
+text_key = "DLG_FLASHBACK_4_04"
+cue = &"flashback_4_leaving"
+
+[sub_resource type="Resource" id="fact_2"]
+script = ExtResource("f_fact")
+kind = 15
+index = 4
+
+[sub_resource type="Resource" id="fact_3"]
+script = ExtResource("f_fact")
+kind = 7
+id = &"flashback_4_alba"
+
+[sub_resource type="Resource" id="dialogue_flashback_4_for_you"]
+script = ExtResource("f_dialogue")
+id = &"flashback_4_for_you"
+once = true
+when = Array[ExtResource("f_fact")]([SubResource("fact_2"), SubResource("fact_3")])
+lines = Array[ExtResource("f_line")]([SubResource("line_1")])
+zoom = 2.0
+cut = true
+
+[resource]
+script = ExtResource("f_set")
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_flashback_4_for_you")])

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_gesture.gd" id="e_gesture"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[sub_resource type="Resource" id="gesture_1"]
+script = ExtResource("e_gesture")
+actor = &"alba"
+clip = &"turn"
+
+[sub_resource type="Resource" id="wait_2"]
+script = ExtResource("e_wait")
+seconds = 3.0
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_4_turn"
+steps = Array[ExtResource("e_step")]([SubResource("gesture_1"), SubResource("wait_2")])

@@ -125,7 +125,7 @@ func _travel_in() -> void:
 	_return = TravelPoint.new(_room, ivo.global_position, ivo.facing)
 	_stage = Stage.TRAVELLING_IN
 	var feet := past.get_bounds().position + _visit.arrival
-	travel_requested.emit(TravelPoint.new(past, feet, _visit.arrival_facing), Color.WHITE, _visit.entry_fade)
+	travel_requested.emit(TravelPoint.new(past, feet, _visit.arrival_facing), _visit.entry_colour, _visit.entry_fade)
 
 ## Plays `scene` on the current room's contents, so its ids resolve there; false when it cannot play.
 func _play(scene: Cutscene) -> bool:

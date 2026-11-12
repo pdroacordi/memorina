@@ -14,8 +14,10 @@
 [ext_resource type="Script" path="res://scenes/world/memory/memory_bloom.gd" id="fb_bloom"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/talkable/talkable.tscn" id="fb_talkable"]
 [ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_2_ribbon_bloom.tres" id="fb_talk"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_4_ribbon_bloom.tres" id="fb_talk_4"]
 [ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="fb_beat"]
 [ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2_crossing.tres" id="fb_crossing"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_4_crossing.tres" id="fb_crossing_4"]
 [ext_resource type="Script" path="res://scenes/world/memory/memory_source.gd" id="fb_source"]
 [ext_resource type="Script" path="res://scenes/world/memory/fact_well.gd" id="fb_well"]
 [ext_resource type="Script" path="res://resources/save_facts/fact_level.gd" id="fb_level"]
@@ -30,6 +32,16 @@ script = ExtResource("fb_fact")
 kind = 4
 index = 1
 
+[sub_resource type="Resource" id="due_4"]
+script = ExtResource("fb_fact")
+kind = 15
+index = 4
+
+[sub_resource type="Resource" id="ribbon_still"]
+script = ExtResource("fb_stage")
+when = Array[ExtResource("fb_fact")]([SubResource("due_4"), SubResource("guardian_restored")])
+show = &"Still"
+
 [sub_resource type="Resource" id="ribbon_shown"]
 script = ExtResource("fb_stage")
 when = Array[ExtResource("fb_fact")]([SubResource("due_2"), SubResource("guardian_restored")])
@@ -38,6 +50,11 @@ show = &"Fluttering"
 [sub_resource type="Resource" id="pocket_level"]
 script = ExtResource("fb_level")
 when = Array[ExtResource("fb_fact")]([SubResource("due_2"), SubResource("guardian_restored")])
+strength = -1.0
+
+[sub_resource type="Resource" id="pocket_level_4"]
+script = ExtResource("fb_level")
+when = Array[ExtResource("fb_fact")]([SubResource("due_4"), SubResource("guardian_restored")])
 strength = -1.0
 
 [node name="Contents" type="Node2D"]
@@ -62,16 +79,21 @@ strength = 0.0
 [node name="GreyPocketWell" type="Node" parent="Flashbacks" node_paths=PackedStringArray("source")]
 script = ExtResource("fb_well")
 source = NodePath("../GreyPocket")
-levels = Array[ExtResource("fb_level")]([SubResource("pocket_level")])
+levels = Array[ExtResource("fb_level")]([SubResource("pocket_level"), SubResource("pocket_level_4")])
 
 [node name="Ribbon" type="Node2D" parent="Flashbacks"]
 script = ExtResource("fb_staging")
 staging_id = &"ribbon_staging"
-stages = Array[ExtResource("fb_stage")]([SubResource("ribbon_shown")])
+stages = Array[ExtResource("fb_stage")]([SubResource("ribbon_shown"), SubResource("ribbon_still")])
 
 [node name="Fluttering" parent="Flashbacks/Ribbon" instance=ExtResource("fb_flutter")]
 position = Vector2(628, 1306)
 scale = Vector2(-1, 1)
+
+[node name="Still" parent="Flashbacks/Ribbon" instance=ExtResource("fb_flutter")]
+position = Vector2(628, 1306)
+scale = Vector2(-1, 1)
+speed_scale = 0.0
 
 [node name="RibbonMark" type="Marker2D" parent="Flashbacks"]
 position = Vector2(597, 1317)
@@ -111,3 +133,14 @@ reach_east = 32.0
 script = ExtResource("fb_beat")
 cue = &"flashback_2_ribbon_bloom"
 cutscene = ExtResource("fb_crossing")
+
+[node name="RibbonTalk4" parent="Flashbacks" instance=ExtResource("fb_talkable")]
+position = Vector2(573, 1440)
+talk = ExtResource("fb_talk_4")
+reach_west = 32.0
+reach_east = 32.0
+
+[node name="Crossing4" type="Node" parent="Flashbacks"]
+script = ExtResource("fb_beat")
+cue = &"flashback_4_ribbon_bloom"
+cutscene = ExtResource("fb_crossing_4")

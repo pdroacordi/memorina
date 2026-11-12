@@ -145,6 +145,13 @@ func _cross() -> void:
 	assert_bool(await _until_playing(_flashback.opening)).is_true()
 	await _until_idle()
 
+## Flashback 4 cuts to night: the travel in is covered in the flashback's own colour.
+func test_the_travel_in_takes_the_flashbacks_colour() -> void:
+	_flashback.entry_colour = Color.BLACK
+	await _settle()
+	await _cross()
+	assert_that(_travels[0][1]).is_equal(Color.BLACK)
+
 func test_there_and_back_to_the_same_step_and_facing() -> void:
 	await _settle()
 	_ivo.face_towards(-1)

@@ -213,7 +213,9 @@ Draft 3 of design 05, Atos 1 to 4 ("Aprovar (Recommended)", user, 2026-10-16; "F
 - `memorina_flat.wav` ("[Play it again]");
 - `morning_room.wav` (STORY-16: the opening's morning, a soft room tone with faint far chirps; no cart);
 - `gate_bolt.wav` (STORY-16: the east gate unbolted, heard from the elder's house: a slide, then a clack);
-- `rope_creak.wav` (STORY-05: the fallen swing's call, a rope creaking on its branch out and back, 2 s). Its names after
+- `rope_creak.wav` (STORY-05: the fallen swing's call, a rope creaking on its branch out and back, 2 s);
+- `waterfall_night.wav` (STORY-05: flashback 4's water, a 6 s seamless loop written without the room tail; its import
+  loops it forward). Its names after
   the out dir write only those files.
 
 `guitar_beat.tscn` maps the strings UP G, DOWN C, LEFT D, RIGHT E.

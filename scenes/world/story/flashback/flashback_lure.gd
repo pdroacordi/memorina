@@ -1,7 +1,8 @@
 class_name FlashbackLure
 extends Node2D
-## A flashback's call in the present (design drafts/camada_pessoal.md §2, "O chamado"): while its gates hold it sounds
-## `voice` again and again from where it stands and ducks the music while Ivo is inside `zone`.
+## A flashback's call in the present (design drafts/camada_pessoal.md §2, "O chamado"), or a sound of the past (flashback
+## 4's water): while its gates hold it sounds `stream` again and again from where it stands and ducks the music while Ivo
+## is inside `zone`.
 
 ## The duck's name in Music.
 const DUCK := &"flashback_lure"
@@ -14,7 +15,7 @@ const DUCK := &"flashback_lure"
 @export var gap: float = 3.0
 ## dB the music sits at while Ivo is inside `zone`.
 @export var duck_db: float = -40.0
-## Where Ivo hears the place go quiet; its mask must hold Ivo's layer (256).
+## Where Ivo hears the place go quiet; its mask must hold Ivo's layer (256); null never ducks.
 @export var zone: Area2D
 
 var _active: bool = false

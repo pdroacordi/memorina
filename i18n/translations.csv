@@ -244,6 +244,12 @@ DLG_FLASHBACK_3_05,I have a bad feeling about that road. I can't explain it.,Eu 
 DLG_FLASHBACK_3_06,Stay. We'll stay. I'll get better here.,Fica. A gente fica. Aqui eu melhoro.
 NOTEBOOK_LORE_FLASHBACK_3_TITLE,The swing,O balanço
 NOTEBOOK_LORE_FLASHBACK_3,"She asked me to stay, and I stopped pushing. I said nothing. The swing stopped on its own.","Ela pediu que eu ficasse, e eu parei de empurrar. Não respondi. O balanço parou sozinho."
+DLG_FLASHBACK_4_01,The cart leaves before sunrise. I've already spoken to the carter.,A carroça sai antes do sol. Eu já falei com o carroceiro.
+DLG_FLASHBACK_4_02,I'm not going to stand by and watch.,Eu não vou ficar parado vendo.
+DLG_FLASHBACK_4_03,All right.,Está bem.
+DLG_FLASHBACK_4_04,For you.,Por você.
+NOTEBOOK_LORE_FLASHBACK_4_TITLE,Before sunrise,Antes do sol
+NOTEBOOK_LORE_FLASHBACK_4,"I had spoken to the carter before I asked her. She said yes for me, and tied her ribbon on my wrist.","Eu já tinha falado com o carroceiro antes de perguntar. Ela disse que sim por mim, e amarrou a fita no meu pulso."
 DLG_DAUGHTER_ERRAND_02,Is it? Says who?,É? Quem disse?
 DLG_DAUGHTER_ERRAND_03,Mama always…,A mamãe sempre…
 DLG_DAUGHTER_ERRAND_04,…the round one.,…o redondo.

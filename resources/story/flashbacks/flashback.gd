@@ -17,8 +17,10 @@ extends Resource
 @export var music: MusicCue
 ## Seconds into `music` the travel into the past waits for.
 @export var entry_mark: float = 0.0
-## Seconds of the white cover before the travel into the past; 0 cuts.
+## Seconds of the cover before the travel into the past; 0 cuts.
 @export var entry_fade: float = 0.5
+## The cover's colour: the crossing's own (white, black for flashback 4's cut to night).
+@export var entry_colour: Color = Color.WHITE
 ## Px of each letterbox bar while Ivo is in the past, 0..Letterbox.bar_height.
 @export var bars_thin: float = 0.0
 ## The past room's id (Room.id(), its scene file name).

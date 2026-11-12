@@ -19,7 +19,7 @@ source_files:
 
 # STORY-05: five playable flashbacks (plan)
 
-**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-9 (2026-11-12).
+**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-10 (2026-11-12).
 
 ## Context
 
@@ -119,6 +119,10 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 - Corrections: a beat ends a talk unheard through a new `DialogueBeat.abandon()` (the director refuses `interrupt()` while a beat runs). The raise's last cue plays the crossing as a `CutsceneBeat`, as the ribbon's does; the swing's rise is three stand-in frames (`swing_rise.png`) and a `SwingSway` at the top. In the past, Alba's `Swing` child carries the swing itself (a `SwingSway` with her figure on the seat), so the past's prop swing is a staging that hides while flashback 3 is due. The push talks are one set on one Talkable (`once`, each gated on the previous heard), one shared push beat; the fourth adds a let-go beat before the leaving. The light is a `Light` FactStaging (multiply and add overlays), not a `CutsceneVisual`: it lasts through free play. The leaving releases the visit's music to a stream-less cue, so the stop is silent.
 - Two camera fixes found by the playtest (`bugs/a-flashback-return-glides-the-frame-from-the-past`): an end under an opaque fade cuts the frame back, and `GameCamera.snap()` lands a running zoom or pair ease.
 - Stand-ins: her hands on the rope, Ivo's hoist, the creak (synthesized), the music; the shawl is not drawn.
+
+### Flashback 4 (step 10, built 2026-11-12; `systems/cutscenes`, "Flashback 4")
+- Corrections: the crossing ends black and `Flashback.entry_colour` (white by default) lets the travel cut to night under black. The music is a stream-less cue, so nothing plays; the water is a `FlashbackLure` with no zone in the past, silenced when the first talk is heard. The close on "Por você." is a second talk, auto-started, framed with a new `Dialogue.cut` (the frame lands at once): a beat's scene cannot hold the frame after it ends, and cannot hold a talk. The fray plays as that line's box closes, in the leaving scene. Her back is `PoolBack` (flipped `standing`), her turn a beat scene whose SCENE_SEEN stages `Turned`.
+- Stand-ins: the water (synthesized), the ribbon on the wrist (in his hand), her untying (the `ribbon` clip).
 
 ### Alba
 - A `Speaker` `alba` (`SPEAKER_ALBA`, portrait).
