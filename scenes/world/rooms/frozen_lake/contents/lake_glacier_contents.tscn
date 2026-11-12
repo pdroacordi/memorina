@@ -73,7 +73,7 @@ stages = Array[ExtResource("fb_stage")]([SubResource("ribbon_shown")])
 position = Vector2(20, 154)
 
 [node name="RibbonMark" type="Marker2D" parent="Flashbacks"]
-position = Vector2(55, 167)
+position = Vector2(51, 165)
 script = ExtResource("fb_mark")
 mark_id = &"ribbon"
 

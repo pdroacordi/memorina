@@ -239,27 +239,28 @@ def _bow(px, size, kx: int, ky: int, f: int, frames: int, tail: int, loop: tuple
 	_put(px, size, kx + 1, ky, RIBBON)
 
 
-def _twig(px) -> None:
-	"""A dead twig from the frame's top left corner (it roots in rock or bark there) to the knot, two leaves on it."""
-	for x in range(0, 17):
-		y = x * 5 // 17
+def _twig(px, kx: int, ky: int) -> None:
+	"""A dead twig from the frame's top left corner (it roots in rock or bark there) to the knot at (kx, ky), two leaves on it."""
+	for x in range(0, kx + 1):
+		y = x * ky // kx
 		px[x, y] = BARK
 		px[x, y + 1] = BARK_DARK
-		if x < 6:
+		if x < kx // 3:
 			px[x, y + 2] = BARK_DARK
-	for (x, y), colour in {(4, 3): LEAF_SHADE, (5, 4): LEAF_DARK, (9, 0): LEAF, (10, 0): LEAF_HI, (11, 1): LEAF_SHADE}.items():
+	for (x, y), colour in {(3, 2): LEAF_SHADE, (4, 3): LEAF_DARK, (7, 0): LEAF, (8, 0): LEAF_HI, (9, 1): LEAF_SHADE}.items():
 		px[x, y] = colour
 
 
 def ribbon_branch(frames: int = 4) -> Image.Image:
 	"""Alba's ribbon tied in a bow round a twig end; the twig leaves the frame's top left; two long ends wave."""
-	w, h = 36, 36
+	# 24 art px (48 game px) per frame: at 72 game px it read larger than Ivo's torso (systems/cutscenes, "The ribbon's art").
+	w, h = 24, 24
 	sheet = Image.new("RGBA", (w * frames, h), CLEAR)
 	for f in range(frames):
 		art = Image.new("RGBA", (w, h), CLEAR)
 		px = art.load()
-		_twig(px)
-		_bow(px, (w, h), 16, 5, f, frames, 26, (5.5, 3.5), 3.0)
+		_twig(px, 14, 4)
+		_bow(px, (w, h), 14, 4, f, frames, 16, (4.0, 3.0), 2.0)
 		sheet.paste(art, (f * w, 0))
 	return sheet
 

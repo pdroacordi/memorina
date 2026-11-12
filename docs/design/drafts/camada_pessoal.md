@@ -57,12 +57,13 @@ O que cada um faz de diferente está no item **Cinema** de cada flashback.
 - **Quando:** com a Memorina. **Onde:** no jardim, na primeira vez que Ivo entra.
 - **Gatilho:** Ivo chega à beira do poço parado e ouve o cantarolar dela vindo de dentro da cachoeira congelada (`wife_hum_opening.wav`, as quatro notas). Fica parado (o jogador não escolhe nada), e a cor se espalha a partir da água.
 - **Jogo:** ela está sentada na pedra lisa, cantarolando (`wife_song_full`). O violão está encostado na árvore. Up pega o violão, e Ivo a acompanha numa batida de violão livre: qualquer nota vale, e as notas saem tortas. Ela ri na terceira nota errada.
-- **Falas:**
-  - **Alba:** Você corre quando erra.
-  - **Ivo:** Eu corro sempre.
-  - **Alba:** Eu sei. Eu espero. (continua cantando)
-  - (ele toca; erra; ela não para de cantar)
-  - **Alba:** Assim. Torto, mas junto.
+- **Falas** ("Eu gostaria de dar uma mudada no diálogo dessa cena, pq tá muito estranho. nada natural"; "A única que sei inteira (Recommended)", usuário, 2026-11-12):
+  - **Ivo:** De novo essa?
+  - **Alba:** É a única que eu sei inteira.
+  - **Ivo:** Eu nunca acerto o meio.
+  - **Alba:** Então toca o começo comigo. O meio eu canto.
+  - (ele toca; erra a terceira; ela ri sem parar de cantar)
+  - **Alba:** Viu? Ninguém percebeu.
 - **Fim:** ela continua cantando enquanto a cor falha pelas bordas. A canção é cortada antes do fim, e o fim perdido nunca é ouvido aqui.
 - **Cinema:** o chamado é o mais longo de todos, porque o jogador ainda não sabe o que é: a cachoeira parada no ar, uma nota dela de dentro da água, silêncio, outra nota. A travessia nasce da água: a queda volta a correr de cima para baixo e a cor desce com ela. A memória abre na água caindo e recua até Alba na pedra, de costas, cantando. Na volta, a voz dela continua um instante depois que a imagem já é cinza.
 

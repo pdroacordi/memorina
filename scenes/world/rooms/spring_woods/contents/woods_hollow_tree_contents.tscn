@@ -74,7 +74,7 @@ position = Vector2(628, 1306)
 scale = Vector2(-1, 1)
 
 [node name="RibbonMark" type="Marker2D" parent="Flashbacks"]
-position = Vector2(593, 1319)
+position = Vector2(597, 1317)
 script = ExtResource("fb_mark")
 mark_id = &"ribbon"
 

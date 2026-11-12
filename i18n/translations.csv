@@ -222,10 +222,11 @@ DLG_ELDER_EMPTY_01,"…and the keeper climbed the stairs every night, and—","�
 SPEAKER_IVO,Ivo,Ivo
 SPEAKER_GIRL,Girl,Menina
 SPEAKER_ALBA,Alba,Alba
-DLG_FLASHBACK_1_01,You rush when you miss.,Você corre quando erra.
-DLG_FLASHBACK_1_02,I always rush.,Eu corro sempre.
-DLG_FLASHBACK_1_03,I know. I wait.,Eu sei. Eu espero.
-DLG_FLASHBACK_1_04,"There. Crooked, but together.","Assim. Torto, mas junto."
+DLG_FLASHBACK_1_01,This one again?,De novo essa?
+DLG_FLASHBACK_1_02,It's the only one I know all the way through.,É a única que eu sei inteira.
+DLG_FLASHBACK_1_03,I never get the middle right.,Eu nunca acerto o meio.
+DLG_FLASHBACK_1_04,Then play the start with me. I'll sing the middle.,Então toca o começo comigo. O meio eu canto.
+DLG_FLASHBACK_1_05,See? Nobody noticed.,Viu? Ninguém percebeu.
 NOTEBOOK_LORE_FLASHBACK_1_TITLE,"Crooked, but together","Torto, mas junto"
 NOTEBOOK_LORE_FLASHBACK_1,She sang without waiting for me. I always came in late on the note.,Ela cantava sem esperar por mim. Eu sempre chegava atrasado na nota.
 DLG_FLASHBACK_2_01,"Not those, the yellow ones. The ones nobody picks.","Essas não, as amarelas. As que ninguém colhe."

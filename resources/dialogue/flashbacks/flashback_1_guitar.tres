@@ -13,24 +13,29 @@ cue = &"flashback_1_take"
 
 [sub_resource type="Resource" id="line_1"]
 script = ExtResource("f_line")
-speaker = ExtResource("s_alba")
+speaker = ExtResource("s_ivo")
 text_key = "DLG_FLASHBACK_1_01"
 
 [sub_resource type="Resource" id="line_2"]
 script = ExtResource("f_line")
-speaker = ExtResource("s_ivo")
+speaker = ExtResource("s_alba")
 text_key = "DLG_FLASHBACK_1_02"
 
 [sub_resource type="Resource" id="line_3"]
 script = ExtResource("f_line")
-speaker = ExtResource("s_alba")
+speaker = ExtResource("s_ivo")
 text_key = "DLG_FLASHBACK_1_03"
-cue = &"flashback_1_jam"
 
 [sub_resource type="Resource" id="line_4"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_alba")
 text_key = "DLG_FLASHBACK_1_04"
+cue = &"flashback_1_jam"
+
+[sub_resource type="Resource" id="line_5"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_alba")
+text_key = "DLG_FLASHBACK_1_05"
 cue = &"flashback_1_leaving"
 
 [sub_resource type="Resource" id="due_1"]
@@ -43,7 +48,7 @@ script = ExtResource("f_dialogue")
 id = &"flashback_1_guitar"
 once = true
 when = Array[ExtResource("f_fact")]([SubResource("due_1")])
-lines = Array[ExtResource("f_line")]([SubResource("line_take"), SubResource("line_1"), SubResource("line_2"), SubResource("line_3"), SubResource("line_4")])
+lines = Array[ExtResource("f_line")]([SubResource("line_take"), SubResource("line_1"), SubResource("line_2"), SubResource("line_3"), SubResource("line_4"), SubResource("line_5")])
 
 [resource]
 script = ExtResource("f_set")

@@ -6,19 +6,19 @@
 
 [sub_resource type="AtlasTexture" id="f_0"]
 atlas = ExtResource("t_strip")
-region = Rect2(0, 0, 72, 72)
+region = Rect2(0, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="f_1"]
 atlas = ExtResource("t_strip")
-region = Rect2(72, 0, 72, 72)
+region = Rect2(48, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="f_2"]
 atlas = ExtResource("t_strip")
-region = Rect2(144, 0, 72, 72)
+region = Rect2(96, 0, 48, 48)
 
 [sub_resource type="AtlasTexture" id="f_3"]
 atlas = ExtResource("t_strip")
-region = Rect2(216, 0, 72, 72)
+region = Rect2(144, 0, 48, 48)
 
 [sub_resource type="SpriteFrames" id="frames"]
 animations = [{
@@ -48,9 +48,9 @@ script = ExtResource("s_strip")
 loop = &"flutter"
 
 [node name="GreyhushShield" type="Node2D" parent="."]
-position = Vector2(35, 38)
+position = Vector2(31, 27)
 script = ExtResource("s_shield")
 shape = 1
-rect_size = Vector2(56, 68)
+rect_size = Vector2(38, 44)
 feather = 4.0
 amount = 1.0
