@@ -45,6 +45,8 @@ ROOM_LIST = [
     ("home_village", "village_square", 0, 2, 0, 0, True),
     ("home_village", "village_mill", 3, 4, 0, 0, True),
     ("home_village", "village_gate_east", 5, 6, 0, 0, True),
+    # Up the river trail, one screen clear of the street's sky band (architecture/story-05-playable-flashbacks).
+    ("home_village", "village_garden", 2, 3, -2, -2, True),
     ("threshold", "threshold_fields", 7, 9, 0, 0, True),
     ("threshold", "threshold_bridge", 10, 11, 0, 0, True),
     ("threshold", "threshold_wayshrine", 12, 12, 0, 0, True),
@@ -108,7 +110,7 @@ H_LINKS = [
     ("threshold_bridge", "threshold_wayshrine", 0), ("threshold_wayshrine", "frost_shore", 0),
     ("frost_shore", "frost_cliffs", 0), ("frost_cliffs", "lighthouse_base", -3),
     ("lake_shore", "lake_fishing_village", -5), ("lake_fishing_village", "lake_waterfall_path", -5),
-    ("lake_waterfall_path", "lake_ice_caves", -5), ("lake_ice_caves", "lake_frost_arena", -5),
+    ("lake_waterfall_path", "lake_ice_caves", -5), ("village_garden", "lake_waterfall_path", -2), ("lake_ice_caves", "lake_frost_arena", -5),
     ("lake_high_wall", "lake_shore", -5), ("lake_chasm", "lake_high_wall", -5),
     ("orchard_chasm_bridge", "lake_chasm", -6),
     ("orchard_cliff_chimney", "orchard_arena", -4), ("orchard_arena", "orchard_leaf_path", -4),

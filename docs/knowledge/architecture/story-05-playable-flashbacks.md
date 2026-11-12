@@ -19,7 +19,7 @@ source_files:
 
 # STORY-05: five playable flashbacks (plan)
 
-**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Nothing built.
+**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-2 (2026-11-12).
 
 ## Context
 
@@ -48,7 +48,7 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
   - Levels: WORLD_RESTORED 0 (hidden); seen 5 +0.3; seen 4 +0.1; seen 3 -0.1; seen 2 -0.3; seen 1 -0.5; else -0.8. These are starting numbers for the playtest.
   - It snaps at `_ready` and tweens on `progress_changed` (pausable, scaled).
   - The value is derived from SCENE_SEEN, never recorded.
-- Waterfall and flowers are props with `AmbientMotion`, so they stop below 0.2 and run when remembered. `garden_memory_test` pins that the waterfall's cell reaches >= 0.2 only from seen 4.
+- Waterfall and flowers are props with `AmbientMotion`, so they stop below 0.2 and run when remembered. `garden_memory_test` pins that the waterfall's cell reaches >= 0.2 only from seen 4. Correction (step 2): the field is the region's baseline plus the well (`MemoryFieldMath.combine`), so at these levels the garden is 0 with none seen and 0.3 (village 0.8, flashback 1 seen) already from seen 1; `garden_memory_test` pins 0 with none seen, a rise with every one seen at every restored count, and 1.0 with the world restored. Moving the 0.2 crossing to seen 4 needs new levels (the playtest's call).
 - **Twin rule:** `garden_past.room` has the same ground grid as `village_garden.room`. The two Backdrops place every layer at the same room-relative pixel: pick the past x so each repeating layer's phase matches. `garden_twin_test` checks both rules.
 
 ### The past: region `past`, room `garden_past`

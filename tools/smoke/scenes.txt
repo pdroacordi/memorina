@@ -7,6 +7,7 @@ res://scenes/world/rooms/home_village/contents/village_bell_tower_contents.tscn
 res://scenes/world/rooms/summer_caldera/contents/caldera_cistern_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_mill_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_gate_east_contents.tscn
+res://scenes/world/rooms/home_village/contents/village_garden_contents.tscn
 res://scenes/world/rooms/threshold/contents/threshold_fields_contents.tscn
 res://scenes/world/rooms/threshold/contents/threshold_bridge_contents.tscn
 res://scenes/world/rooms/threshold/contents/threshold_wayshrine_contents.tscn

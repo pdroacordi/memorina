@@ -40,6 +40,8 @@ const ALLOWED := {
 	"lake_waterfall_path|village_mill ring: y -160, x 2400..2560": RING_LIMIT,
 	"lake_waterfall_path|village_gate_east ring: y -160, x 3200..3360": RING_LIMIT,
 	"lake_fishing_village|lake_waterfall_path ring: x 2400, y -1536..-1376": UNDER_FLOOR,
+	"lake_waterfall_path|village_garden ring: x 2400, y -384..-224": UNDER_FLOOR_REGION,
+	"lake_waterfall_path|village_garden ring: y -928, x 2400..2560": RING_LIMIT,
 	"lake_fishing_village|lake_well ring: x 1120, y -1536..-1376": DOOR_PAIR,
 	"lake_fishing_village|lake_well ring: x 2080, y -1536..-1376": DOOR_PAIR,
 	"lake_high_wall|lake_shore ring: y -2080, x -1280..-1120": RING_LIMIT,

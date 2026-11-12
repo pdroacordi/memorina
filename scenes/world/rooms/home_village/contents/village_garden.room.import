@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://sbj18aauoffq"
+path="res://.godot/imported/village_garden.room-e15a6a09c4fad7f0d33512f9bbe44da6.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/home_village/contents/village_garden.room"
+dest_files=["res://.godot/imported/village_garden.room-e15a6a09c4fad7f0d33512f9bbe44da6.res"]
+
+[params]
+
