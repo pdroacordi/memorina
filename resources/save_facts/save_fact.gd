@@ -29,11 +29,13 @@ enum Kind {
 	OFFER_BOUGHT,
 	## The mentor is restored and the world with him (GRD-06).
 	WORLD_RESTORED,
+	## Flashback `index` is the one due (FlashbackSchedule.due).
+	FLASHBACK_DUE,
 }
 
 @export var kind: Kind = Kind.ITEM
 ## Index into the PlayerData flag array `kind` names (an Enums.PlayerSkill, Song, PlayerItem or Guardian; SONG_PART_KNOWN a Song), or the count
-## GUARDIANS_RESTORED_AT_LEAST or CACHES_TAKEN_AT_LEAST needs; the other kinds ignore it.
+## GUARDIANS_RESTORED_AT_LEAST or CACHES_TAKEN_AT_LEAST needs, or the flashback number (FLASHBACK_DUE); the other kinds ignore it.
 @export var index: int = 0
 ## A dialogue id (DIALOGUE_HEARD), a choice id (RESPONSE_CHOSEN), a cutscene id (SCENE_SEEN), a slot id (PIECE_FOUND) or an
 ## offer id (OFFER_BOUGHT); the other kinds ignore it.
@@ -88,4 +90,6 @@ static func check(fact_kind: Kind, fact_index: int, data: PlayerData, fact_id: S
 			return data.offers_bought.has(fact_id)
 		Kind.WORLD_RESTORED:
 			return data.world_restored
+		Kind.FLASHBACK_DUE:
+			return FlashbackSchedule.due(data) == fact_index
 	return false

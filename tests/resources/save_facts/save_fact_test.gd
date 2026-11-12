@@ -1,6 +1,6 @@
 class_name SaveFactTest extends GdUnitTestSuite
 
-## SaveFact reads one flag of the save, all guardians at once, a count of them, or a dialogue heard or answered.
+## SaveFact reads one flag of the save, all guardians at once, a count of them, a dialogue heard or answered, or the flashback due.
 
 
 func _fact(kind: SaveFact.Kind, index: int, id: StringName = &"") -> SaveFact:
@@ -121,3 +121,15 @@ func test_world_restored_follows_its_flag() -> void:
 	assert_bool(SaveFact.check(SaveFact.Kind.WORLD_RESTORED, 0, data)).is_false()
 	data.world_restored = true
 	assert_bool(SaveFact.check(SaveFact.Kind.WORLD_RESTORED, 0, data)).is_true()
+
+func test_flashback_due_names_the_one_due() -> void:
+	var data := PlayerData.new()
+	assert_bool(SaveFact.check(SaveFact.Kind.FLASHBACK_DUE, 1, data)).is_false()
+	assert_bool(SaveFact.check(SaveFact.Kind.FLASHBACK_DUE, 0, data)).is_true()
+	data.owned_items[Enums.PlayerItem.MEMORINA] = true
+	assert_bool(SaveFact.check(SaveFact.Kind.FLASHBACK_DUE, 1, data)).is_true()
+	data.restored_guardians[Enums.Guardian.FROST] = true
+	assert_bool(SaveFact.check(SaveFact.Kind.FLASHBACK_DUE, 2, data)).is_false()
+	data.scenes_seen.append(&"flashback_1")
+	assert_bool(SaveFact.check(SaveFact.Kind.FLASHBACK_DUE, 1, data)).is_false()
+	assert_bool(SaveFact.check(SaveFact.Kind.FLASHBACK_DUE, 2, data)).is_true()
