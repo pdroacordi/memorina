@@ -57,3 +57,7 @@ What does not read:
 - fun 0: not judgeable from frames; the beat asks for no skill by design.
 - fluidity 3: every hand-off ran in order on both runs (trigger, travel, opening, talk, beat, leaving, travel, returning), and Ivo returned to the same place and facing. The take's 3.8 s walk across the garden is long.
 - aesthetics 3: the colour against the grey works, and the leaving reads. The missing waterfall and stone weaken the first and last images the Cinema line names.
+
+## Revisited
+
+The garden was rebuilt the same day (a bank over a lake, the fall at the right, a sky per flashback): `playtests/2026-11-12-story05-garden-rebuilt`. The timeline was moved to the new room; the positions above are the old room's.

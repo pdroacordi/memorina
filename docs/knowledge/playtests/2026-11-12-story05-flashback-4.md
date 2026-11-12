@@ -56,3 +56,7 @@ What does not read:
 - fun 0: not judgeable from frames.
 - fluidity 3: every hand-off ran in order on the last runs (ribbon talk, crossing beat, travel, opening, talk with three beats, auto-started close talk, leaving beat, travel, returning), and Ivo came back to the same ledge, facing west.
 - aesthetics 3: the still ribbon, the night, the wide talk and the single cut and fray read; the wrist and the sound are stand-ins.
+
+## Revisited
+
+The garden was rebuilt the same day (a bank over a lake, the fall at the right, a sky per flashback): `playtests/2026-11-12-story05-garden-rebuilt`. The timeline was moved to the new room; the positions above are the old room's.

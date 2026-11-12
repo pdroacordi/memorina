@@ -57,3 +57,7 @@ Fixed during the runs (`bugs/a-flashback-return-glides-the-frame-from-the-past`)
 - fun 0: not judgeable from frames; the hold-to-raise read as an action in the log and frames (it recedes on release).
 - fluidity 3: every hand-off ran in order on all runs (talk, HELD_UP beat, crossing beat, travel, opening, four push talks, let-go beat, leaving, travel, returning), and Ivo returned to the same step and facing.
 - aesthetics 3: the rope of colour, the warm afternoon, the pushes and the stop read; the hands and the hoist are stand-ins.
+
+## Revisited
+
+The garden was rebuilt the same day (a bank over a lake, the fall at the right, a sky per flashback): `playtests/2026-11-12-story05-garden-rebuilt`. The timeline was moved to the new room; the positions above are the old room's.

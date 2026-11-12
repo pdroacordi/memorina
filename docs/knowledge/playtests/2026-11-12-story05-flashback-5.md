@@ -62,3 +62,7 @@ running (the director waits for the floor; a run through it is untested), the lu
 - The waterfall's splash and pool frames jump at the swap (each room's memory clock).
 - The crossing bloom's leading ring draws two broken vertical lines while the strip is narrow (`c00`).
 - The lures' voice restarts the song at the garden (a different cue, cross-faded), not one take from the mill.
+
+## Revisited
+
+The garden was rebuilt the same day (a bank over a lake, the fall at the right, a sky per flashback): `playtests/2026-11-12-story05-garden-rebuilt`. The timeline was moved to the new room; the positions above are the old room's.
