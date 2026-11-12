@@ -45,8 +45,7 @@ func enter() -> void:
 	var child := rest_child()
 	if child != null:
 		teleport(child.global_position)
-		var sprite := child as Sprite2D
-		face_towards(float(drawn_facing * (-1 if sprite != null and sprite.flip_h else 1)))
+		face_towards(float(drawn_facing * (-1 if _flipped(child) else 1)))
 		_clip = StringName(String(child.name).to_snake_case())
 		assert(_resolver.has_clip(_clip), "%s has no clip for its rest child '%s'" % [actor_id, child.name])
 	if staging() != null:
@@ -103,3 +102,11 @@ func _process_motion(delta: float) -> void:
 	_locomotion.ground_update(delta, _controller.direction)
 	if not is_on_floor():
 		velocity.y += base_gravity() * delta
+
+## A rest child is a still (`Sprite2D`) or a figure with loops (`AnimatedSprite2D`, a `StagedStrip`).
+func _flipped(child: Node2D) -> bool:
+	if child is Sprite2D:
+		return (child as Sprite2D).flip_h
+	if child is AnimatedSprite2D:
+		return (child as AnimatedSprite2D).flip_h
+	return false

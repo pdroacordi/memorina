@@ -110,6 +110,7 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 - A `Speaker` `alba` (`SPEAKER_ALBA`, portrait).
 - A `StoryActor` `alba_actor.tscn` with `AlbaAnimationResolver` (clip consts), used only in scenes, covering the `Alba` staging. Free play shows the staging's figures.
 - No `GreyhushShield`, no `AmbientMotion` on the actor.
+- Built (step 6, 2026-11-12; `systems/cutscenes`, "Alba"), from the approved art, not placeholders. Corrections: the free-play figure is `alba_figure.tscn`, a `StagedStrip` holding every actor clip, which staging children instance with `loop` set to their own name; `StoryActor.enter` read `flip_h` only from a `Sprite2D`, so it now reads an `AnimatedSprite2D` child's too. The rest clips `stone`, `flowers`, `swing`, `pool_back` and `tree_with_daughter` reuse the strips (`sit_sing`, `pick` looped, `sit`'s last frame, `standing`, `lullaby`); the art has no swinging or back-turned strip.
 
 ### Notebook
 - Memories entries `lore_flashback_<n>`: requirement `SCENE_SEEN`, `fact_id` `flashback_<n>`. `NotebookCatalog.validate` gains a check that a SCENE_SEEN `fact_id` is in the cutscene catalog. Texts to be approved.

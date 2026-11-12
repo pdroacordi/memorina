@@ -67,7 +67,7 @@ STORY-15, built 2026-10-16 from the plan `architecture/cutscenes-are-data-played
 
 ## Actors (`scenes/characters/story_actor/`)
 
-- `StoryActor extends Character`: collision layer 0, mask ground; an inert `Hurtbox` (layer 0) and `Health`; `Controller` (`ScriptedController`) and `Locomotion`. Hidden and DISABLED at rest. `enter()` teleports onto its staging's shown child, faces the child's `flip_h`, asks the clip named like the child (`Standing` → `standing`), covers the staging and shows itself; `leave()` hides it and disables it deferred.
+- `StoryActor extends Character`: collision layer 0, mask ground; an inert `Hurtbox` (layer 0) and `Health`; `Controller` (`ScriptedController`) and `Locomotion`. Hidden and DISABLED at rest. `enter()` teleports onto its staging's shown child, faces the child's `flip_h` (a `Sprite2D` still or an `AnimatedSprite2D` figure, STORY-05), asks the clip named like the child (`Standing` → `standing`), covers the staging and shows itself; `leave()` hides it and disables it deferred.
 - **`StoryAnimationResolver`**: the walk clip while walking; else the clip asked, held on its settle clip once a one-shot ends (`settles()`); `is_settled()`. A walk asks the idle clip, so a one-shot never replays after it. Each actor's subclass owns its clip consts (`systems/animation`).
 - **`ScriptedController`** + pure **`ArriveMath`**: brake when the braking distance plus one step reaches the gap; within `SETTLE_PX` (2) the walk is over and the body teleports onto the mark. `arrive_math_test` walks Ivo's and the daughter's locomotion from 3 to 400 px at three paces: never more than 1 px past.
 - Actors are in the root canvas (no `GreyhushShield`), greyed like the props they stand for, and animate on the scaled clock even where the place is grey (user, below); the rest pose after the scene is a prop again and follows the memory clock.
@@ -140,6 +140,17 @@ The vocabulary of `architecture/story-05-playable-flashbacks` ("Cutscene vocabul
 - Hosts are the rooms' contents roots, so ids resolve in the past room (opening) and the return room (returning). `cutscene_rooms_test` counts a flashback's opening and returning as started.
 - `_exit_tree` forgets the visit and writes nothing; the music request dies with its owner. Nothing is saved inside, so a quit leaves the flashback due.
 - `flashback_director_test` (a fake travel in Game's order): there and back to the same step and facing, a dropped crossing stays, an open talk is waited out, the music lives the visit, leaving the tree mid-visit writes nothing, and game.tscn wires it; `flashback_catalog_test`.
+
+## Alba (STORY-05 step 6, 2026-11-12)
+
+- **Speaker** `resources/dialogue/speakers/alba.tres` (`SPEAKER_ALBA`, "Alba" in en and pt_BR; portrait `assets/sprites/hud/portraits/alba.png`, 84x96).
+- **The actor** `scenes/characters/story_actor/alba/alba_actor.tscn` (`actor_id` `alba`, drawn facing east, `resources/characters/story/alba_locomotion_stats.tres`: 64 px/s like the daughter's). `AlbaAnimationResolver` clips, cut from her strips (64x64, feet on row 61; `lullaby.png` 96x64), each keying texture, hframes, frame, offset (-w/2, -62) and position; RESET is `standing`:
+  - loops: `standing` (6 frames, 6 fps), `walk` (6, 8 fps), `sit_sing` (6, 6 fps), `lullaby` (8, 4 fps, with the daughter asleep under a quilt);
+  - one-shots and the frame each is held on: `sit` (6, 8 fps) → `seated`, `pick` (8, 8 fps) → `picked`, `chest` (9, 8 fps) → `risen`, `turn` (7, 6 fps; ends facing the other way) → `turned`, `ribbon` (9, 6 fps) → `holding_out`;
+  - rest clips named like the past garden's `Alba` staging children (`RESTS`): `stone` (= `sit_sing`), `flowers` (`pick` looped at 6 fps), `swing` (= `seated`), `pool_back` (= `standing`), `tree_with_daughter` (= `lullaby`).
+- **Her edge**: a `CorruptionEdge` with `creature_pass` false and `rest_fray` 0, `frame_size` (64, 64) (the lullaby's 96 px frame is never frayed: only flashback 4 frays her). Plain art at rest; the edge material only while `CutsceneFray` agitates it.
+- **Her figure** `scenes/characters/story_actor/alba/alba_figure.tscn`: a `StagedStrip` whose `SpriteFrames` hold every actor clip with the same frames, pace and loop (`centered`, offset (0, -30), so a 64 and a 96 px frame both stand on the node). A staging child instances it, sets `loop` to its own snake name and `flip_h` for her facing; the actor entering on it is a cut.
+- `alba_actor_test`: every clip whole from a strip, rests loop and one-shots settle on loops, the figure matches every clip, entering a flipped figure faces west in its rest clip, a turn settles, the edge material only while agitated.
 
 ## User decisions (2026-10-16), in their words
 
