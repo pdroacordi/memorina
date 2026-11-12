@@ -2,7 +2,7 @@ class_name CutsceneDirectorTest extends GdUnitTestSuite
 
 ## The director plays one scene at a time: its end records SCENE_SEEN and uncovers the staging on its new rest in the
 ## same frame, a skip lands and records, a drop restores the rest shown before unrecorded, a director swapped out writes
-## nothing, and a hold stops its clock.
+## nothing, a hold stops its clock, and a bloom or a fray ends with the scene.
 
 const C := preload("res://tests/resources/cutscene/cutscene_fixture.gd")
 const D := preload("res://tests/resources/dialogue/dialogue_fixture.gd")
@@ -91,10 +91,14 @@ func _build_contents() -> Node2D:
 	mark.mark_id = &"bed_edge"
 	mark.position = Vector2(58, FLOOR_Y)
 	root.add_child(mark)
+	var bloom := MemoryBloom.new()
+	bloom.name = "Bloom"
+	bloom.bloom_id = &"bloom"
+	root.add_child(bloom)
 	var host := Node.new()
 	host.name = "Host"
 	root.add_child(host)
-	for node: Node in [staging, cast, actor, mark, host]:
+	for node: Node in [staging, cast, actor, mark, bloom, host]:
 		node.owner = root
 	return root
 
@@ -199,3 +203,30 @@ func test_a_hold_stops_the_clock() -> void:
 	assert_bool(_director.is_playing()).is_false()
 	remove_child(freeze)
 	freeze.free()
+
+## A bloom and a fray are scene state: the scene's end, a drop included, hides the bloom and calms the edge.
+func test_a_bloom_and_a_fray_end_with_the_scene() -> void:
+	var edge := CorruptionEdge.new()
+	edge.creature_pass = false
+	edge.sprite = _actor.get_node("Sprite2D") as Sprite2D
+	edge.sprite.material = ShaderMaterial.new()
+	edge.health = _actor.get_node("Health") as Health
+	_actor.add_child(edge)
+	var bloom := CutsceneBloom.new()
+	bloom.bloom_id = &"bloom"
+	bloom.at = &"bed_edge"
+	bloom.radius = 64.0
+	bloom.seconds = 0.0
+	var fray := CutsceneFray.new()
+	fray.actor = &"daughter"
+	fray.seconds = 30.0
+	_director.play(_scene([bloom, fray]), _host)
+	await get_tree().physics_frame
+	var shown := _contents.get_node("Bloom") as MemoryBloom
+	assert_bool(shown.is_blooming()).is_true()
+	assert_vector(shown.source().global_position).is_equal(Vector2(58, FLOOR_Y))
+	assert_float(shown.source().radius).is_equal(64.0)
+	assert_object(edge.sprite.material).is_not_null()
+	_director.interrupt()
+	assert_bool(shown.is_blooming()).is_false()
+	assert_object(edge.sprite.material).is_null()

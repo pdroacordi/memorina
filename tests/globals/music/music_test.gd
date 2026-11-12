@@ -125,3 +125,24 @@ func test_a_ringing_one_shot_survives_two_cue_changes() -> void:
 	Music.request(_cue(&"region_b"), MusicRequest.Layer.REGION, _holder())
 	await get_tree().process_frame
 	assert_array(_playing_lengths()).contains([3.0])
+
+## A muffle turns on the Music bus's low-pass and an unmuffle turns it off again; the bus volume is Settings', untouched.
+func test_a_muffle_low_passes_the_music_bus_only() -> void:
+	var bus := AudioServer.get_bus_index(AudioBuses.MUSIC)
+	var volume := AudioServer.get_bus_volume_db(bus)
+	var index := -1
+	for i: int in AudioServer.get_bus_effect_count(bus):
+		if AudioServer.get_bus_effect(bus, i) is AudioEffectLowPassFilter:
+			index = i
+	assert_int(index).is_greater_equal(0)
+	assert_bool(AudioServer.is_bus_effect_enabled(bus, index)).is_false()
+	Music.muffle(&"test", 1.0)
+	await await_millis(700)
+	assert_bool(AudioServer.is_bus_effect_enabled(bus, index)).is_true()
+	assert_float(Music.muffled()).is_equal(1.0)
+	var low_pass := AudioServer.get_bus_effect(bus, index) as AudioEffectLowPassFilter
+	assert_float(low_pass.cutoff_hz).is_equal_approx(MusicMix.MUFFLED_HZ, 1.0)
+	Music.unmuffle(&"test")
+	await await_millis(700)
+	assert_bool(AudioServer.is_bus_effect_enabled(bus, index)).is_false()
+	assert_float(AudioServer.get_bus_volume_db(bus)).is_equal(volume)

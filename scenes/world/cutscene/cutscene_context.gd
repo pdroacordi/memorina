@@ -1,7 +1,7 @@
 class_name CutsceneContext
 extends RefCounted
 ## The services a step acts through (systems/cutscenes). WorldCutsceneContext acts on the world; a test's fake records.
-## Ids name actors, marks and visuals in the host's contents, or `&"ivo"`.
+## Ids name actors, marks, visuals and blooms in the host's contents, or `&"ivo"`.
 
 
 ## An actor's or Ivo's feet, or a mark's or visual's point, in world px.
@@ -57,11 +57,24 @@ func silence() -> void:
 func music(_cue: MusicCue, _fade: float) -> void:
 	pass
 
-func fade(_to_black: bool, _seconds: float) -> void:
+## Seconds into the playing music; negative when none plays.
+func music_position() -> float:
+	return -1.0
+
+## Covers the screen in `colour` (`to_black`) or clears it.
+func fade(_to_black: bool, _seconds: float, _colour: Color = Color.BLACK) -> void:
 	pass
 
 ## `alpha` 0..1.
 func show_visual(_id: StringName, _alpha: float, _seconds: float) -> void:
+	pass
+
+## Moves the MemoryBloom `step.bloom_id` to `step`'s shape, size and strength, centred on `centre` (world px).
+func bloom(_step: CutsceneBloom, _centre: Vector2, _seconds: float) -> void:
+	pass
+
+## Agitates the actor's CorruptionEdge, or calms it.
+func fray(_id: StringName, _on: bool) -> void:
 	pass
 
 ## The FactStaging `staging_id` stands in `child` (empty: nothing) over `seconds`.

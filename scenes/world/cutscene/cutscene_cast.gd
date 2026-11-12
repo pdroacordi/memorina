@@ -1,6 +1,6 @@
 class_name CutsceneCast
 extends RefCounted
-## The actors, marks and visuals a cutscene names, found by id inside its host's contents scene (systems/cutscenes).
+## The actors, marks, visuals and blooms a cutscene names, found by id inside its host's contents scene (systems/cutscenes).
 ## An actor enters on its first step; `release_all()` hands every entered actor's place back to its staging.
 
 ## Bodies that are not actors a scene places, faces and frames, by their `cutscene_id` (the mentor guardian).
@@ -35,6 +35,9 @@ func find_visual(id: StringName) -> CutsceneVisual:
 func find_staging(id: StringName) -> FactStaging:
 	return find_in(_scope, FactStaging.GROUP, &"staging_id", id) as FactStaging
 
+func find_bloom(id: StringName) -> MemoryBloom:
+	return find_in(_scope, MemoryBloom.GROUP, &"bloom_id", id) as MemoryBloom
+
 func find_body(id: StringName) -> Character:
 	return find_in(_scope, BODY_GROUP, &"cutscene_id", id) as Character
 
@@ -46,7 +49,8 @@ func actor(id: StringName) -> StoryActor:
 		_entered.append(found)
 	return found
 
-## Where `id` stands: an entered actor's feet, an actor's rest child before it enters, a body, a mark or a visual.
+## Where `id` stands: an entered actor's feet, an actor's rest child before it enters, a body, a mark, a visual or a
+## bloom's node.
 func point_of(id: StringName) -> Vector2:
 	var found := find_actor(id)
 	if found != null:
@@ -63,7 +67,10 @@ func point_of(id: StringName) -> Vector2:
 	var visual := find_visual(id)
 	if visual != null:
 		return visual.global_position
-	push_error("Cutscene: no actor, mark or visual '%s' in %s" % [id, _scope.name if _scope != null else "nothing"])
+	var bloom := find_bloom(id)
+	if bloom != null:
+		return bloom.global_position
+	push_error("Cutscene: no actor, mark, visual or bloom '%s' in %s" % [id, _scope.name if _scope != null else "nothing"])
 	return Vector2.ZERO
 
 func entered() -> Array[StoryActor]:

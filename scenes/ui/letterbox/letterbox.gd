@@ -6,8 +6,14 @@ extends Control
 ## Px of each bar.
 @export var bar_height: float = 36.0
 
+## Px of each bar at rest, 0..bar_height: close() returns to it. Written only through rest_at().
+var rest_thickness: float:
+	get:
+		return _rest
+
 var _tween: Tween
 var _open: bool = false
+var _rest: float = 0.0
 
 @onready var _top: ColorRect = $TopBar
 @onready var _bottom: ColorRect = $BottomBar
@@ -22,10 +28,16 @@ func open(seconds: float) -> void:
 	_open = true
 	_slide(1.0, seconds, Tween.EASE_OUT)
 
-## Slides the bars out over `seconds`; 0 cuts.
+## Slides the bars out to their rest thickness over `seconds`; 0 cuts.
 func close(seconds: float) -> void:
 	_open = false
-	_slide(0.0, seconds, Tween.EASE_IN)
+	_slide(_rest / bar_height, seconds, Tween.EASE_IN)
+
+## Sets the rest thickness to `px`; closed bars slide to it over `seconds`. One writer: the FlashbackDirector.
+func rest_at(px: float, seconds: float) -> void:
+	_rest = clampf(px, 0.0, bar_height)
+	if not _open:
+		_slide(_rest / bar_height, seconds, Tween.EASE_IN_OUT)
 
 func is_open() -> bool:
 	return _open

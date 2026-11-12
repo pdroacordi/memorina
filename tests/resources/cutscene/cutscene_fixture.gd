@@ -68,6 +68,8 @@ class Recorder:
 
 	var calls: PackedStringArray = PackedStringArray()
 	var points: Dictionary[StringName, Vector2] = {}
+	## What music_position answers; negative is no music.
+	var music_at: float = -1.0
 
 	func point_of(id: StringName) -> Vector2:
 		return points.get(id, Vector2.ZERO)
@@ -117,8 +119,18 @@ class Recorder:
 	func silence() -> void:
 		calls.append("silence")
 
-	func fade(to_black: bool, seconds: float) -> void:
-		calls.append("fade:%s:%.1f" % [to_black, seconds])
+	func music_position() -> float:
+		return music_at
+
+	func fade(to_black: bool, seconds: float, colour: Color = Color.BLACK) -> void:
+		var hue := "" if colour == Color.BLACK else ":" + colour.to_html(false)
+		calls.append("fade:%s:%.1f%s" % [to_black, seconds, hue])
+
+	func bloom(step: CutsceneBloom, centre: Vector2, seconds: float) -> void:
+		calls.append("bloom:%s:%d,%d:%.1f:%.1f" % [step.bloom_id, int(centre.x), int(centre.y), step.strength, seconds])
+
+	func fray(id: StringName, on: bool) -> void:
+		calls.append("fray:%s:%s" % [id, on])
 
 	func show_visual(id: StringName, alpha: float, seconds: float) -> void:
 		calls.append("show:%s:%.1f:%.1f" % [id, alpha, seconds])

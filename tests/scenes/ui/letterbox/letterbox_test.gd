@@ -63,3 +63,19 @@ func test_a_lesson_opens_and_closes_the_letterbox() -> void:
 	cinematic.on_lesson_finished()
 	assert_bool(_letterbox.is_open()).is_false()
 	cinematic.queue_free()
+
+## A rest thickness keeps thin bars between opens: close() returns to it, and a rest of 0 hides them again.
+func test_close_returns_to_the_rest_thickness() -> void:
+	_letterbox.rest_at(9.0, 0.0)
+	assert_float(_letterbox.rest_thickness).is_equal(9.0)
+	assert_bool(_letterbox.visible).is_true()
+	assert_float(_letterbox.shown()).is_equal_approx(9.0 / _letterbox.bar_height, 0.001)
+	assert_bool(_letterbox.is_open()).is_false()
+	_letterbox.open(0.0)
+	assert_float(_letterbox.shown()).is_equal(1.0)
+	_letterbox.close(0.0)
+	assert_float(_letterbox.shown()).is_equal_approx(9.0 / _letterbox.bar_height, 0.001)
+	assert_bool(_letterbox.visible).is_true()
+	_letterbox.rest_at(0.0, 0.0)
+	assert_float(_letterbox.shown()).is_equal(0.0)
+	assert_bool(_letterbox.visible).is_false()

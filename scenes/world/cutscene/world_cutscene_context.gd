@@ -21,6 +21,8 @@ var _music: MusicRequest
 var _melodies: Array[MelodyPlayer] = []
 var _bubbles: Array[EmoteBubble] = []
 var _visuals: Array[CutsceneVisual] = []
+var _blooms: Array[MemoryBloom] = []
+var _frayed: Array[StoryActor] = []
 var _rig_used: bool = false
 var _driving_ivo: bool = false
 var _posed: bool = false
@@ -159,11 +161,14 @@ func silence() -> void:
 			player.queue_free()
 	_melodies.clear()
 
-func fade(to_black: bool, seconds: float) -> void:
+func music_position() -> float:
+	return Music.position() if Music.playing() != null else -1.0
+
+func fade(to_black: bool, seconds: float, colour: Color = Color.BLACK) -> void:
 	if _director.fade == null:
 		return
 	if to_black:
-		_director.fade.to_black(seconds)
+		_director.fade.to_colour(colour, seconds)
 	else:
 		_director.fade.to_clear(seconds)
 
@@ -174,6 +179,24 @@ func show_visual(id: StringName, alpha: float, seconds: float) -> void:
 	visual.fade_to(alpha, seconds)
 	if not _visuals.has(visual):
 		_visuals.append(visual)
+
+func bloom(step: CutsceneBloom, centre: Vector2, seconds: float) -> void:
+	var found := cast.find_bloom(step.bloom_id)
+	if found == null:
+		return
+	found.bloom_to(step.shape, step.rect_size, step.radius, centre, step.strength, step.ring, seconds)
+	if not _blooms.has(found):
+		_blooms.append(found)
+
+func fray(id: StringName, on: bool) -> void:
+	var found := cast.actor(id)
+	if found == null:
+		return
+	for child: Node in found.get_children():
+		if child is CorruptionEdge:
+			(child as CorruptionEdge).agitate(on)
+	if on and not _frayed.has(found):
+		_frayed.append(found)
 
 func stage(staging_id: StringName, child: StringName, seconds: float) -> void:
 	var staging := cast.find_staging(staging_id)
@@ -186,7 +209,15 @@ func took_camera() -> bool:
 
 ## Ends all the scene started but the record, the bars at once when `cut`; `clear_fade` also clears a fade it left black.
 func restore(clear_fade: bool, cut: bool = false) -> void:
+	for found: StoryActor in _frayed:
+		if is_instance_valid(found):
+			fray(found.actor_id, false)
+	_frayed.clear()
 	cast.release_all()
+	for found: MemoryBloom in _blooms:
+		if is_instance_valid(found):
+			found.reset()
+	_blooms.clear()
 	for visual: CutsceneVisual in _visuals:
 		if is_instance_valid(visual):
 			visual.reset()

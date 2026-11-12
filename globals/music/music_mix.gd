@@ -1,11 +1,16 @@
 class_name MusicMix
 extends RefCounted
-## Stem levels moving toward their targets and the named ducks of the Music bus, stepped on real time.
+## Stem levels moving toward their targets, and the named ducks and muffles of the Music bus, stepped on real time.
 
 ## Volume of a silent stem, dB.
 const SILENT_DB := -80.0
 ## How fast a duck moves, dB per real second.
 const DUCK_RATE := 30.0
+## How fast a muffle moves, amount (0..1) per real second.
+const MUFFLE_RATE := 2.0
+## The low-pass cutoff with no muffle and at a full one, Hz.
+const OPEN_HZ := 20000.0
+const MUFFLED_HZ := 400.0
 
 ## stem -> current level, 0..1.
 var _level: Dictionary[StringName, float] = {}
@@ -16,6 +21,9 @@ var _rate: Dictionary[StringName, float] = {}
 ## duck id -> dB, 0 or below.
 var _ducks: Dictionary[StringName, float] = {}
 var _duck_db: float = 0.0
+## muffle id -> amount, 0..1.
+var _muffles: Dictionary[StringName, float] = {}
+var _muffle: float = 0.0
 
 
 ## Starts a cue's stems at their starting levels.
@@ -45,6 +53,28 @@ func duck(id: StringName, db: float) -> void:
 func unduck(id: StringName) -> void:
 	_ducks.erase(id)
 
+## Low-passes the bus by `amount` (0..1) while `id` is open; the strongest open muffle wins.
+func muffle(id: StringName, amount: float) -> void:
+	_muffles[id] = clampf(amount, 0.0, 1.0)
+
+func unmuffle(id: StringName) -> void:
+	_muffles.erase(id)
+
+## The amount the open muffles ask for, 0..1.
+func muffle_target() -> float:
+	var strongest := 0.0
+	for amount: float in _muffles.values():
+		strongest = maxf(strongest, amount)
+	return strongest
+
+## The current muffle, 0..1.
+func muffle_amount() -> float:
+	return _muffle
+
+## The low-pass cutoff for the current muffle, Hz: even steps in pitch from OPEN_HZ to MUFFLED_HZ.
+func cutoff_hz() -> float:
+	return OPEN_HZ * pow(MUFFLED_HZ / OPEN_HZ, _muffle)
+
 ## The dB the open ducks ask for.
 func duck_target() -> float:
 	var deepest := 0.0
@@ -52,13 +82,14 @@ func duck_target() -> float:
 		deepest = minf(deepest, db)
 	return deepest
 
-## Advances the stem fades and the duck by `delta` real seconds.
+## Advances the stem fades, the duck and the muffle by `delta` real seconds.
 func step(delta: float) -> void:
 	for stem: StringName in _rate.keys():
 		_level[stem] = move_toward(_level[stem], _target[stem], _rate[stem] * delta)
 		if is_equal_approx(_level[stem], _target[stem]):
 			_rate.erase(stem)
 	_duck_db = move_toward(_duck_db, duck_target(), DUCK_RATE * delta)
+	_muffle = move_toward(_muffle, muffle_target(), MUFFLE_RATE * delta)
 
 func level(stem: StringName) -> float:
 	return _level.get(stem, 0.0)

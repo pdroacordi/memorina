@@ -28,6 +28,7 @@ func validate() -> PackedStringArray:
 	for scene: Cutscene in scenes:
 		if scene != null:
 			_check(scene.steps, scene, false, true, ids, problems)
+			_check_marks(scene, problems)
 	return problems
 
 ## Every leaf step under `steps`, branches' cases included.
@@ -71,6 +72,21 @@ func _check(steps: Array[CutsceneStep], scene: Cutscene, together: bool, at_end:
 				if subjects.has(subject):
 					problems.append("%s: two steps of one together move '%s'" % [scene.id, subject])
 				subjects.append(subject)
+
+## A music mark must be reachable in every cue its own scene asks for; a cue asked elsewhere (a flashback's visit) is
+## checked by its owner.
+func _check_marks(scene: Cutscene, problems: PackedStringArray) -> void:
+	var found := leaves(scene.steps)
+	for mark: CutsceneStep in found:
+		if not (mark is CutsceneMusicMark):
+			continue
+		var seconds := (mark as CutsceneMusicMark).seconds
+		if seconds < 0.0:
+			problems.append("%s: a music mark at %.2f s" % [scene.id, seconds])
+		for music: CutsceneStep in found:
+			var cue := (music as CutsceneMusic).cue if music is CutsceneMusic else null
+			if cue != null and not (mark as CutsceneMusicMark).fits(cue):
+				problems.append("%s: a music mark at %.2f s is past the end of '%s'" % [scene.id, seconds, cue.id])
 
 func _check_facts(facts: Array[SaveFact], scene: Cutscene, ids: Array[StringName], problems: PackedStringArray) -> void:
 	for fact: SaveFact in facts:

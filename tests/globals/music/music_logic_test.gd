@@ -86,3 +86,22 @@ func test_a_cue_names_one_stem_per_stream() -> void:
 	cue.stems = [&"bed", &"lead"]
 	cue.levels = {&"spring": 0.0}
 	assert_array(Array(cue.validate())).is_not_empty()
+
+## A muffle eases on real time, the strongest wins, and the cutoff falls from open to under water.
+func test_the_strongest_muffle_wins_and_eases_the_cutoff() -> void:
+	var mix := MusicMix.new()
+	assert_float(mix.cutoff_hz()).is_equal_approx(MusicMix.OPEN_HZ, 0.01)
+	mix.muffle(&"leaving", 1.0)
+	mix.muffle(&"talk", 0.3)
+	assert_float(mix.muffle_target()).is_equal(1.0)
+	mix.step(0.25)
+	assert_float(mix.muffle_amount()).is_equal_approx(0.5, 0.001)
+	assert_float(mix.cutoff_hz()).is_between(MusicMix.MUFFLED_HZ, MusicMix.OPEN_HZ)
+	mix.step(1.0)
+	assert_float(mix.cutoff_hz()).is_equal_approx(MusicMix.MUFFLED_HZ, 0.01)
+	mix.unmuffle(&"leaving")
+	mix.step(1.0)
+	assert_float(mix.muffle_amount()).is_equal_approx(0.3, 0.001)
+	mix.unmuffle(&"talk")
+	mix.step(1.0)
+	assert_float(mix.muffle_amount()).is_equal(0.0)

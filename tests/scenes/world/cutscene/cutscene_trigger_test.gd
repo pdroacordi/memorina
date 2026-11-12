@@ -2,7 +2,8 @@ class_name CutsceneTriggerTest extends GdUnitTestSuite
 
 ## A CutsceneTrigger plays its scene once its room is current, after its delay, when Ivo can begin a scene: in a room whose
 ## contents are added deferred on this visit (the new game's start, a respawn into an evicted room), after a door's
-## arrival and in a room already resident. A seen scene does not replay, and leaving the room drops or disarms it
+## arrival and in a room already resident, and with a zone only once Ivo is inside it. A seen scene does not replay, and
+## leaving the room drops or disarms it
 ## (bugs/a-cutscene-trigger-in-a-first-visited-room-never-arms).
 
 const C := preload("res://tests/resources/cutscene/cutscene_fixture.gd")
@@ -52,6 +53,33 @@ func _contents_with_trigger(id: StringName, delay: float = 0.0, from_black: bool
 	trigger.from_black = from_black
 	root.add_child(trigger)
 	trigger.owner = root
+	var packed := PackedScene.new()
+	packed.pack(root)
+	root.free()
+	return packed
+
+## A contents scene whose trigger plays only inside a zone 64 px wide centred on `x`.
+func _contents_with_zone(id: StringName, x: float) -> PackedScene:
+	var root := Node2D.new()
+	root.name = "Contents"
+	var zone := Area2D.new()
+	zone.name = "Zone"
+	zone.collision_layer = 0
+	zone.collision_mask = 256
+	zone.position = Vector2(x, FLOOR_Y - 32.0)
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = Vector2(64, 64)
+	shape.shape = rect
+	zone.add_child(shape)
+	root.add_child(zone)
+	var trigger := CutsceneTrigger.new()
+	trigger.name = "Trigger"
+	trigger.cutscene = C.scene(id, [C.wait(0.1)])
+	trigger.zone = zone
+	root.add_child(trigger)
+	for node: Node in [zone, shape, trigger]:
+		node.owner = root
 	var packed := PackedScene.new()
 	packed.pack(root)
 	root.free()
@@ -197,3 +225,13 @@ func test_a_scene_from_black_does_not_wait_for_ivo() -> void:
 	_director.on_room_changed(room)
 	assert_bool(await _until_playing(10)).is_true()
 	_ivo.unblock_input()
+
+## A trigger with a zone waits for Ivo's body inside it (the pool's edge), then plays.
+func test_a_zone_waits_for_ivo_inside_it() -> void:
+	await _land()
+	var room := _room(_contents_with_zone(&"pool", 400.0), Vector2.ZERO)
+	room.activate()
+	_director.on_room_changed(room)
+	assert_bool(await _until_playing(20)).is_false()
+	_ivo.teleport(Vector2(400, FLOOR_Y - 1.0))
+	assert_bool(await _until_playing(10)).is_true()

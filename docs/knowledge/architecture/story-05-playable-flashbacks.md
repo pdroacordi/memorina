@@ -19,7 +19,7 @@ source_files:
 
 # STORY-05: five playable flashbacks (plan)
 
-**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-3 (2026-11-12).
+**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-4 (2026-11-12).
 
 ## Context
 
@@ -75,12 +75,12 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 - Quit mid-visit: nothing written (only benches save), so the bench reload shows the flashback still due. Death inside: impossible. `_exit_tree` writes nothing.
 
 ### Cutscene vocabulary added (each with a `cutscene_steps_test` case)
-- `MemoryBloom` (Node2D owning one hidden `MemorySource`, the bench `Bloom` pattern) + step `CutsceneBloom` (`bloom_id`, shape, rect/radius, offset, strength, ring, seconds). The cutscene's `restore` hides it.
+- `MemoryBloom` (Node2D owning one hidden `MemorySource`, the bench `Bloom` pattern) + step `CutsceneBloom` (`bloom_id`, `at`, shape, rect/radius, offset, strength, ring, seconds). The cutscene's `restore` hides it.
   - Crossing: a positive bloom grows from the trigger. For flashback 1 it is a RECT from the waterfall's top downward.
   - Collapse: a -1 room RECT plus a +1 RECT the size of the view, centred on Alba's actor and shrunk to 0, so grey eats in from the edges and she goes last. Flashback 5 does this in 0 s.
 - `CutsceneFade.colour` (white).
-- `CutsceneMusicMark` (waits for `Music.position() >= seconds`): the cut lands before the lacuna. `validate` checks it is earlier than the cue's `gap_at`.
-- `CutsceneFray` (actor, seconds): calls the actor's `CorruptionEdge.agitate(true/false)`. Alba's sprite carries a `CorruptionEdge` with `rest_fray` 0, so it stays the only writer of the edge uniforms.
+- `CutsceneMusicMark` (waits for `Music.position() >= seconds`): the cut lands before the lacuna. `MusicCue` has no `gap_at` (built, step 4): `CutsceneCatalog.validate` checks a mark against its own scene's cues (before the stream's end); `FlashbackCatalog` must check `entry_mark` and the leaving scene's marks against `Flashback.music` with `CutsceneMusicMark.fits`.
+- `CutsceneFray` (actor, seconds): calls the actor's `CorruptionEdge.agitate(true/false)`. Alba's sprite carries a `CorruptionEdge` with `rest_fray` 0 and `creature_pass` false (built, step 4: it stays in the root canvas and carries the edge material only while agitated), so it stays the only writer of the edge uniforms.
 - `CutsceneTrigger.zone` (an Area2D path): plays when Ivo's body is inside, for the pool edge.
 - `Letterbox.rest_thickness` (one writer: `FlashbackDirector`): `close()` returns to it.
 - `Music.muffle(id, amount)`: a low-pass on the Music bus that only `Music` toggles; volume stays `Settings`'.
@@ -125,7 +125,7 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 - **"O tempo desacelera"** (crossing). WorldFreeze is the only time-scale writer, and a director never asks it. The plan stages stillness instead (Ivo held, sound drops, a slow bloom ring); real slow motion would need a user decision.
 - **Flashback 5 "sem corte"** needs the hidden swap. Its conditions: the twin room, backdrop phase, the tree half off-frame, and the camera snap matching. If the playtest shows the seam, fall back to a soft white.
 - **The free guitar** must not finish the morning song. `GuitarJam` never yields PLAYED; its test runs every press sequence, the melody included.
-- **`CorruptionEdge` on a root-canvas actor** writes alpha 253 (the unshielded mark). Check it composites invisibly, or swap the material only for the glitch.
+- **`CorruptionEdge` on a root-canvas actor** writes alpha 253 (the unshielded mark) and would also move the actor onto the creature pass. Resolved (step 4): `creature_pass = false` swaps the material in only for the glitch (`systems/cutscenes`, "Added for the flashbacks").
 - **"Mais devagar"** (flashback 1) needs a slower take of the hum. `Music` cannot change tempo.
 
 ## Tests

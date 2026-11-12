@@ -24,6 +24,9 @@ const HIT_SPIKE_TIME := 0.3
 @export var appear_time: float = 0.5
 ## Dissolving at death, s (scaled, pausable).
 @export var vanish_time: float = 0.6
+## False on a StoryActor: it stays in the root canvas and its sprite carries the edge material only while agitated, so
+## at rest it draws as plain art with no unshielded mark (systems/cutscenes, "CutsceneFray").
+@export var creature_pass: bool = true
 
 var _dissolve: float = 0.0
 var _agitated: bool = false
@@ -36,8 +39,11 @@ var _material: ShaderMaterial
 
 
 func _ready() -> void:
-	CanvasPass.join_layer(get_parent() as CanvasItem, CanvasPass.CREATURES)
 	_material = sprite.material as ShaderMaterial
+	if creature_pass:
+		CanvasPass.join_layer(get_parent() as CanvasItem, CanvasPass.CREATURES)
+	else:
+		sprite.material = null
 	health.damaged.connect(_on_health_damaged)
 	_uniform(&"seed", float(get_instance_id() % 1009))
 	_uniform(&"frame_size", frame_size)
@@ -69,6 +75,9 @@ func vanish() -> void:
 
 func agitate(on: bool) -> void:
 	_agitated = on
+	if not creature_pass:
+		sprite.material = _material if on else null
+	_write()
 
 func is_appearing() -> bool:
 	return _appearing

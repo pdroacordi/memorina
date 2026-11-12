@@ -223,7 +223,7 @@ func _tick_trigger(delta: float) -> void:
 	if not _armed.is_inside_tree():
 		return
 	_armed_left = maxf(_armed_left - delta, 0.0)
-	if _armed_left > 0.0 or ivo == null or not (_armed.from_black or ivo.can_begin_scene()):
+	if _armed_left > 0.0 or ivo == null or not (_armed.from_black or ivo.can_begin_scene()) or not _armed.holds(ivo):
 		return
 	var trigger := _armed
 	_armed = null

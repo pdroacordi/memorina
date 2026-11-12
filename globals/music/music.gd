@@ -13,6 +13,10 @@ var _decks: Array[Deck] = []
 var _live: Deck
 var _hushed: bool = false
 var _last_usec: int = 0
+## The Music bus's low-pass (default_bus_layout.tres); only muffle() turns it on.
+var _bus: int = -1
+var _low_pass: AudioEffectLowPassFilter
+var _low_pass_index: int = -1
 
 
 func _ready() -> void:
@@ -25,6 +29,7 @@ func _ready() -> void:
 		deck.player.finished.connect(_on_finished.bind(deck))
 		_decks.append(deck)
 	_last_usec = Time.get_ticks_usec()
+	_find_low_pass()
 
 ## Asks for `cue` at `layer` for as long as `owner` stays in the tree.
 func request(cue: MusicCue, layer: MusicRequest.Layer, owner: Node) -> MusicRequest:
@@ -62,6 +67,18 @@ func duck(id: StringName, db: float) -> void:
 func unduck(id: StringName) -> void:
 	_mix.unduck(id)
 
+## Low-passes the Music bus by `amount` (0..1, 1 as under water) while `id` is open; the strongest wins. Volume stays
+## Settings'.
+func muffle(id: StringName, amount: float) -> void:
+	_mix.muffle(id, amount)
+
+func unmuffle(id: StringName) -> void:
+	_mix.unmuffle(id)
+
+## The muffle the bus has reached, 0..1.
+func muffled() -> float:
+	return _mix.muffle_amount()
+
 ## Pauses every deck where it stands (the freeze frame); unhush resumes from the same sample.
 func hush() -> void:
 	_hushed = true
@@ -92,6 +109,7 @@ func _process(_delta: float) -> void:
 			_live = null
 		_refresh()
 	_mix.step(real)
+	_apply_muffle()
 	for deck: Deck in _decks:
 		deck.step(real)
 		_apply(deck)
@@ -160,6 +178,25 @@ func _apply(deck: Deck) -> void:
 	if deck.gain <= SILENT_GAIN and deck.target <= 0.0 and not deck.ringing:
 		deck.player.stop()
 		deck.request = null
+
+func _find_low_pass() -> void:
+	_bus = AudioServer.get_bus_index(AudioBuses.MUSIC)
+	if _bus < 0:
+		return
+	for i: int in AudioServer.get_bus_effect_count(_bus):
+		var effect := AudioServer.get_bus_effect(_bus, i)
+		if effect is AudioEffectLowPassFilter:
+			_low_pass = effect as AudioEffectLowPassFilter
+			_low_pass_index = i
+			return
+
+func _apply_muffle() -> void:
+	if _low_pass == null:
+		return
+	var on := _mix.muffle_amount() > 0.0
+	if AudioServer.is_bus_effect_enabled(_bus, _low_pass_index) != on:
+		AudioServer.set_bus_effect_enabled(_bus, _low_pass_index, on)
+	_low_pass.cutoff_hz = _mix.cutoff_hz()
 
 func _on_finished(deck: Deck) -> void:
 	if deck != _live:

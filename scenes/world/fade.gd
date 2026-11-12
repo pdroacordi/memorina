@@ -4,7 +4,6 @@ extends ColorRect
 ## Emitted when a fade reaches its target; a replacement fade completes interrupted awaiters.
 signal faded
 
-const CLEAR    : Color = Color(0,0,0,0)
 const DURATION : float = 0.5
 
 ## Fades in real seconds; true for a fade shown under a menu hold, where the time scale is 0.
@@ -17,11 +16,20 @@ func _ready() -> void:
 
 ## `seconds` of fade; 0 cuts.
 func to_black(seconds: float = DURATION) -> Signal:
-	return _tween_color(Color.BLACK, seconds)
+	return to_colour(Color.BLACK, seconds)
 
+## Covers the screen in `colour` (white for a flashback's crossing) over `seconds`; 0 cuts.
+func to_colour(colour: Color, seconds: float = DURATION) -> Signal:
+	# From clear, start in the cover's own hue so a white fade never passes through grey.
+	if color.a <= 0.0:
+		color = Color(colour, 0.0)
+	return _tween_color(Color(colour, 1.0), seconds)
+
+## Uncovers the screen, keeping the cover's hue as it thins.
 func to_clear(seconds: float = DURATION) -> Signal:
-	return _tween_color(CLEAR, seconds)
+	return _tween_color(Color(color, 0.0), seconds)
 
+## Whether any cover shows, black or not.
 func is_black() -> bool:
 	return color.a > 0.0
 

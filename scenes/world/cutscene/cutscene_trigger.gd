@@ -15,6 +15,8 @@ const GROUP := &"cutscene_triggers"
 ## The room opens on this scene in black (the new game's start): it plays as soon as its contents are in the world,
 ## without waiting for Ivo's gates, and its first step owns the fade.
 @export var from_black: bool = false
+## When set, it plays only while Ivo's body is inside this area (the pool's edge); its mask must hold Ivo's layer.
+@export var zone: Area2D
 
 
 func _enter_tree() -> void:
@@ -25,3 +27,7 @@ func wants(data: PlayerData) -> bool:
 	if cutscene == null or (not repeat and data.scenes_seen.has(cutscene.id)):
 		return false
 	return SaveFact.gates_pass(when, unless, data)
+
+## Whether `body` is where the trigger plays: anywhere in the room, or inside its zone.
+func holds(body: Node2D) -> bool:
+	return zone == null or (zone.is_inside_tree() and zone.overlaps_body(body))

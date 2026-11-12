@@ -93,3 +93,66 @@ func test_a_stage_stands_a_staging_in_and_lands_at_once() -> void:
 	assert_bool(step.begin(_context).tick(0.0)).is_false()
 	step.land(_context)
 	assert_array(_calls()).is_equal(["stage:guitar_staging::0.5", "stage:guitar_staging::0.0"])
+
+func test_a_fade_covers_in_its_colour() -> void:
+	var fade := CutsceneFade.new()
+	fade.colour = Color.WHITE
+	fade.seconds = 0.8
+	assert_bool(fade.begin(_context).tick(0.5)).is_false()
+	fade.land(_context)
+	assert_array(_calls()).is_equal(["fade:true:0.8:ffffff", "fade:true:0.0:ffffff"])
+
+func test_a_bloom_centres_on_itself_or_on_an_id_and_lands_at_once() -> void:
+	_context.points[&"well"] = Vector2(300, 100)
+	var step := CutsceneBloom.new()
+	step.bloom_id = &"well"
+	step.offset = Vector2(0, 40)
+	step.strength = -1.0
+	step.seconds = 2.0
+	var task := step.begin(_context)
+	assert_bool(task.tick(1.0)).is_false()
+	assert_bool(task.tick(1.0)).is_true()
+	step.at = &"girl"
+	step.land(_context)
+	assert_array(_calls()).is_equal(["bloom:well:300,140:-1.0:2.0", "bloom:well:90,328:-1.0:0.0"])
+	assert_array(step.names()).is_equal([&"well", &"girl"])
+
+func test_a_music_mark_waits_for_the_position_or_for_no_music() -> void:
+	var step := CutsceneMusicMark.new()
+	step.seconds = 12.0
+	_context.music_at = 3.0
+	var task := step.begin(_context)
+	assert_bool(task.tick(1.0)).is_false()
+	_context.music_at = 12.0
+	assert_bool(task.tick(0.0)).is_true()
+	_context.music_at = -1.0
+	assert_bool(step.begin(_context).tick(0.0)).is_true()
+
+func test_a_music_mark_fits_before_the_end_of_its_cue() -> void:
+	var step := CutsceneMusicMark.new()
+	step.seconds = 1.0
+	var cue := MusicCue.new()
+	var wav := AudioStreamWAV.new()
+	wav.format = AudioStreamWAV.FORMAT_8_BITS
+	wav.mix_rate = 8000
+	var data := PackedByteArray()
+	data.resize(16000)
+	wav.data = data
+	cue.stream = wav
+	assert_bool(step.fits(cue)).is_true()
+	step.seconds = 4.0
+	assert_bool(step.fits(cue)).is_false()
+
+func test_a_fray_agitates_for_its_seconds_then_calms() -> void:
+	var step := CutsceneFray.new()
+	step.actor = &"girl"
+	step.seconds = 0.5
+	var task := step.begin(_context)
+	assert_bool(task.tick(0.3)).is_false()
+	assert_bool(task.tick(0.3)).is_true()
+	assert_bool(task.tick(0.3)).is_true()
+	var stopped := step.begin(_context)
+	stopped.stop()
+	step.land(_context)
+	assert_array(_calls()).is_equal(["fray:girl:true", "fray:girl:false", "fray:girl:true", "fray:girl:false",
+			"fray:girl:false"])

@@ -39,6 +39,8 @@ func test_every_scene_names_ids_its_contents_hold() -> void:
 				ids.append((node as CutsceneMark).mark_id)
 			elif node is CutsceneVisual:
 				ids.append((node as CutsceneVisual).visual_id)
+			elif node is MemoryBloom:
+				ids.append((node as MemoryBloom).bloom_id)
 			elif node is FactStaging and (node as FactStaging).staging_id != &"":
 				ids.append((node as FactStaging).staging_id)
 			elif node is Guardian and (node as Guardian).cutscene_id != &"":
