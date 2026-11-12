@@ -1,0 +1,93 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e_bars"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bloom.gd" id="e_bloom"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sequence.gd" id="e_sequence"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_muffle.gd" id="e_muffle"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_music_mark.gd" id="e_music_mark"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e_fade"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[sub_resource type="Resource" id="bars_2"]
+script = ExtResource("e_bars")
+open = true
+seconds = 1.0
+
+[sub_resource type="Resource" id="camera_3"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"alba"])
+offset = Vector2(0, -40)
+zoom = 2.0
+seconds = 2.5
+
+[sub_resource type="Resource" id="bloom_4"]
+script = ExtResource("e_bloom")
+bloom_id = &"past_grey"
+shape = 1
+rect_size = Vector2(1408, 512)
+strength = -1.0
+seconds = 0.0
+
+[sub_resource type="Resource" id="bloom_5"]
+script = ExtResource("e_bloom")
+bloom_id = &"past_keep"
+at = &"alba"
+offset = Vector2(0, -30)
+shape = 0
+radius = 420.0
+strength = 1.0
+seconds = 0.0
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bars_2"), SubResource("camera_3"), SubResource("bloom_4"), SubResource("bloom_5")])
+
+[sub_resource type="Resource" id="bloom_7"]
+script = ExtResource("e_bloom")
+bloom_id = &"past_keep"
+at = &"alba"
+offset = Vector2(0, -30)
+shape = 0
+radius = 0.0
+strength = 1.0
+ring = 0.4
+seconds = 5.0
+
+[sub_resource type="Resource" id="wait_9"]
+script = ExtResource("e_wait")
+seconds = 2.0
+
+[sub_resource type="Resource" id="muffle_10"]
+script = ExtResource("e_muffle")
+amount = 0.85
+
+[sub_resource type="Resource" id="sequence_8"]
+script = ExtResource("e_sequence")
+steps = Array[ExtResource("e_step")]([SubResource("wait_9"), SubResource("muffle_10")])
+
+[sub_resource type="Resource" id="together_6"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bloom_7"), SubResource("sequence_8")])
+
+[sub_resource type="Resource" id="wait_11"]
+script = ExtResource("e_wait")
+seconds = 0.6
+
+[sub_resource type="Resource" id="music_mark_12"]
+script = ExtResource("e_music_mark")
+seconds = 0.555
+every = 1.68
+
+[sub_resource type="Resource" id="fade_13"]
+script = ExtResource("e_fade")
+to_black = true
+seconds = 0.0
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_2"
+steps = Array[ExtResource("e_step")]([SubResource("together_1"), SubResource("together_6"), SubResource("wait_11"), SubResource("music_mark_12"), SubResource("fade_13")])

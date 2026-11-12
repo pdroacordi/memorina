@@ -68,6 +68,10 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_sit.png" id="70_sit"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_walk.png" id="71_walk"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_stand_up.png" id="72_stand_up"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_kneel.png" id="73_kneel"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_sit_ground.png" id="73_sit_ground"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_push_swing.png" id="73_push_swing"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_ribbon.png" id="73_ribbon"]
 [ext_resource type="Script" path="res://scenes/characters/components/sit_component.gd" id="71_sitco"]
 [ext_resource type="Script" path="res://scenes/characters/components/door_component.gd" id="72_doorco"]
 [ext_resource type="Script" path="res://scenes/characters/components/talk_component.gd" id="74_talkco"]
@@ -2222,6 +2226,171 @@ tracks/2/keys = {
 "values": [0, 1, 2, 3, 4, 5]
 }
 
+[sub_resource type="Animation" id="Animation_kneel"]
+resource_name = "kneel"
+length = 1.5
+step = 0.1666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("73_kneel")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [9]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.0, 0.1666667, 0.3333333, 0.5, 0.6666667, 0.8333333, 1.0, 1.1666667, 1.3333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+}
+
+[sub_resource type="Animation" id="Animation_sit_ground"]
+resource_name = "sit_ground"
+length = 1.5
+step = 0.1666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("73_sit_ground")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [9]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.0, 0.1666667, 0.3333333, 0.5, 0.6666667, 0.8333333, 1.0, 1.1666667, 1.3333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+}
+
+[sub_resource type="Animation" id="Animation_push_swing"]
+resource_name = "push_swing"
+length = 0.875
+loop_mode = 1
+step = 0.125
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("73_push_swing")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [7]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6]
+}
+
+[sub_resource type="Animation" id="Animation_ribbon"]
+resource_name = "ribbon"
+length = 1.5
+step = 0.1666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("73_ribbon")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [9]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0.0, 0.1666667, 0.3333333, 0.5, 0.6666667, 0.8333333, 1.0, 1.1666667, 1.3333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ra23q"]
 _data = {
 &"brace": SubResource("Animation_brace"),
@@ -2231,6 +2400,10 @@ _data = {
 &"sit": SubResource("Animation_sit"),
 &"walk": SubResource("Animation_walk"),
 &"stand_up": SubResource("Animation_stand_up"),
+&"kneel": SubResource("Animation_kneel"),
+&"sit_ground": SubResource("Animation_sit_ground"),
+&"push_swing": SubResource("Animation_push_swing"),
+&"ribbon": SubResource("Animation_ribbon"),
 &"climb_back": SubResource("Animation_climb_back"),
 &"climb_back_hold": SubResource("Animation_climb_back_hold"),
 &"RESET": SubResource("Animation_knqxj"),
@@ -2357,6 +2530,18 @@ animation = &"walk"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sit"]
 animation = &"sit"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_kneel"]
+animation = &"kneel"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_sit_ground"]
+animation = &"sit_ground"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_push_swing"]
+animation = &"push_swing"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ribbon"]
+animation = &"ribbon"
+
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_climb_back"]
 animation = &"climb_back"
 
@@ -2424,6 +2609,14 @@ states/walk/node = SubResource("AnimationNodeAnimation_walk")
 states/walk/position = Vector2(526, 160)
 states/stand_up/node = SubResource("AnimationNodeAnimation_stand_up")
 states/stand_up/position = Vector2(1026, 160)
+states/kneel/node = SubResource("AnimationNodeAnimation_kneel")
+states/kneel/position = Vector2(1126, 20)
+states/sit_ground/node = SubResource("AnimationNodeAnimation_sit_ground")
+states/sit_ground/position = Vector2(1126, 90)
+states/push_swing/node = SubResource("AnimationNodeAnimation_push_swing")
+states/push_swing/position = Vector2(1126, 160)
+states/ribbon/node = SubResource("AnimationNodeAnimation_ribbon")
+states/ribbon/position = Vector2(1126, 230)
 states/climb_back/node = SubResource("AnimationNodeAnimation_climb_back")
 states/climb_back/position = Vector2(826, 20)
 states/climb_back_hold/node = SubResource("AnimationNodeAnimation_climb_back_hold")

@@ -36,6 +36,12 @@ const HURT := &"hurt"
 const DEATH := &"death"
 const SIT := &"sit"
 const STAND_UP := &"stand_up"
+## One-shots held on their last frame (STORY-05): drops to one knee; sits on the ground; lifts the ribbon.
+const KNEEL := &"kneel"
+const SIT_GROUND := &"sit_ground"
+const RIBBON := &"ribbon"
+## A loop: pushes the swing.
+const PUSH_SWING := &"push_swing"
 
 ## These transitions start mid-motion, so jump and fall intro clips are skipped.
 const INTRO_SKIPPING_CLIPS: Array[StringName] = [AIR_SPIN, ATTACK_JUMP, ATTACK_FALL, ATTACK_POGO, HURT]
@@ -94,6 +100,14 @@ func resolve() -> StringName:
 			return driver.sequence(MEMORINA_DRAW, MEMORINA_IDLE)
 		DialogueBeat.Pose.SEATED:
 			return SIT
+		DialogueBeat.Pose.KNEEL:
+			return KNEEL
+		DialogueBeat.Pose.SIT_GROUND:
+			return SIT_GROUND
+		DialogueBeat.Pose.PUSH_SWING:
+			return PUSH_SWING
+		DialogueBeat.Pose.RIBBON:
+			return RIBBON
 
 	# Rising from a scene's seat; any move cuts it.
 	if (_player.just_rose() or driver.holding(STAND_UP)) and not _player.wants_to_move():

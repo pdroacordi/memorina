@@ -112,6 +112,8 @@ const RECALL_ESCAPE_TIME := 0.9
 const UP_BUFFER := 0.1
 ## A cutscene walk under this pace (0..1 of his run) shows the walk clip, not the run (STORY-16).
 const STROLL_PACE := 0.75
+## Story poses he holds on the ground; leaving one for any other plays the stand-up clip.
+const GROUND_POSES: Array[int] = [DialogueBeat.Pose.SEATED, DialogueBeat.Pose.KNEEL, DialogueBeat.Pose.SIT_GROUND]
 
 enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 
@@ -1492,9 +1494,10 @@ func drive(controller: ScriptedController) -> void:
 		_driver.stop()
 	_driver = controller
 
-## What a beat or a scene has him hold (DialogueBeat.Pose); leaving SEATED stands him up (the stand-up clip).
+## What a beat or a scene has him hold (DialogueBeat.Pose); leaving a pose on the ground for one off it stands him up
+## (the stand-up clip).
 func stage_pose(pose: int) -> void:
-	if _pose == DialogueBeat.Pose.SEATED and pose != DialogueBeat.Pose.SEATED:
+	if _pose in GROUND_POSES and pose not in GROUND_POSES:
 		_rise_pending = true
 	_pose = pose
 

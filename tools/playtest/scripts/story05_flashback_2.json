@@ -1,0 +1,319 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 76.0,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0
+ ],
+ "scenes_seen": [
+  "flashback_1"
+ ],
+ "player_position": [
+  5800,
+  -1650
+ ],
+ "steps": [
+  {
+   "t": 0.2,
+   "screenshot": "00_ribbon"
+  },
+  {
+   "t": 0.25,
+   "log": "start"
+  },
+  {
+   "t": 2.0,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 2.08,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 3.1,
+   "screenshot": "c00_crossing"
+  },
+  {
+   "t": 4.6,
+   "screenshot": "c01_crossing"
+  },
+  {
+   "t": 6.1,
+   "screenshot": "c02_crossing"
+  },
+  {
+   "t": 7.6,
+   "screenshot": "c03_crossing"
+  },
+  {
+   "t": 9.1,
+   "screenshot": "c04_crossing"
+  },
+  {
+   "t": 10.1,
+   "screenshot": "c05_crossing"
+  },
+  {
+   "t": 11.1,
+   "screenshot": "c06_crossing"
+  },
+  {
+   "t": 11.6,
+   "log": "crossing_end"
+  },
+  {
+   "t": 12.6,
+   "screenshot": "o00_opening"
+  },
+  {
+   "t": 13.6,
+   "screenshot": "o01_opening"
+  },
+  {
+   "t": 15.1,
+   "screenshot": "o02_opening"
+  },
+  {
+   "t": 17.1,
+   "screenshot": "o03_opening"
+  },
+  {
+   "t": 19.1,
+   "screenshot": "o04_opening"
+  },
+  {
+   "t": 21.1,
+   "screenshot": "o05_opening"
+  },
+  {
+   "t": 22.6,
+   "log": "opening_end"
+  },
+  {
+   "t": 24.1,
+   "screenshot": "a00_ask"
+  },
+  {
+   "t": 25.1,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 25.18,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 26.6,
+   "teleport": [
+    104770,
+    12270
+   ]
+  },
+  {
+   "t": 27.2,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 27.28,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 27.9,
+   "screenshot": "p1_pick"
+  },
+  {
+   "t": 29.6,
+   "teleport": [
+    104810,
+    12270
+   ]
+  },
+  {
+   "t": 30.2,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 30.28,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 30.9,
+   "screenshot": "p2_pick"
+  },
+  {
+   "t": 32.6,
+   "teleport": [
+    104850,
+    12270
+   ]
+  },
+  {
+   "t": 33.2,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 33.28,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 33.9,
+   "screenshot": "p3_pick"
+  },
+  {
+   "t": 35.1,
+   "screenshot": "h00_chest"
+  },
+  {
+   "t": 36.6,
+   "screenshot": "h01_chest"
+  },
+  {
+   "t": 38.1,
+   "screenshot": "h02_chest"
+  },
+  {
+   "t": 39.6,
+   "screenshot": "h03_chest"
+  },
+  {
+   "t": 41.1,
+   "screenshot": "h04_chest"
+  },
+  {
+   "t": 42.6,
+   "log": "chest_end"
+  },
+  {
+   "t": 43.6,
+   "teleport": [
+    104400,
+    12270
+   ]
+  },
+  {
+   "t": 45.4,
+   "screenshot": "t00_pale"
+  },
+  {
+   "t": 46.1,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 46.18,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 47.2,
+   "screenshot": "t01_line3"
+  },
+  {
+   "t": 47.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 47.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 48.8,
+   "screenshot": "t02_line4"
+  },
+  {
+   "t": 49.4,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 49.48,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 50.6,
+   "screenshot": "t03_tie"
+  },
+  {
+   "t": 52.1,
+   "screenshot": "t04_tie"
+  },
+  {
+   "t": 53.1,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 53.18,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 53.2,
+   "log": "leaving"
+  },
+  {
+   "t": 54.6,
+   "screenshot": "l00_leaving"
+  },
+  {
+   "t": 56.6,
+   "screenshot": "l01_leaving"
+  },
+  {
+   "t": 58.6,
+   "screenshot": "l02_leaving"
+  },
+  {
+   "t": 60.6,
+   "screenshot": "l03_leaving"
+  },
+  {
+   "t": 62.6,
+   "screenshot": "l04_leaving"
+  },
+  {
+   "t": 64.6,
+   "log": "returning"
+  },
+  {
+   "t": 65.1,
+   "screenshot": "r00_return"
+  },
+  {
+   "t": 66.6,
+   "screenshot": "r01_return"
+  },
+  {
+   "t": 68.1,
+   "screenshot": "r02_return"
+  },
+  {
+   "t": 69.6,
+   "screenshot": "r03_return"
+  },
+  {
+   "t": 71.6,
+   "screenshot": "r04_return"
+  },
+  {
+   "t": 73.6,
+   "log": "end"
+  }
+ ]
+}

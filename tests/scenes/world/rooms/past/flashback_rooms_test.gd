@@ -147,3 +147,52 @@ func test_every_opening_names_ids_of_its_past_room() -> void:
 		contents.free()
 	for room: Room in rooms:
 		room.free()
+
+## The arena exit rooms that hold flashback 2's ribbon, by the guardian whose region it is in (user, 2026-11-11:
+## "Em toda região restaurada").
+const RIBBON_ROOMS := {
+	Enums.Guardian.FROST: "res://scenes/world/rooms/frozen_lake/contents/lake_glacier_contents.tscn",
+	Enums.Guardian.BLOOM: "res://scenes/world/rooms/spring_woods/contents/woods_hollow_tree_contents.tscn",
+	Enums.Guardian.AUTUMN: "res://scenes/world/rooms/wind_orchards/contents/orchard_cliff_chimney_contents.tscn",
+	Enums.Guardian.SUMMER: "res://scenes/world/rooms/summer_caldera/contents/caldera_sun_stair_contents.tscn",
+}
+
+func _first(root: Node, script_class: Variant) -> Node:
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if is_instance_of(node, script_class):
+			return node
+		stack.append_array(node.get_children())
+	return null
+
+func _flashback_2_due_with(restored: int) -> PlayerData:
+	var data := PlayerData.new()
+	data.owned_items[Enums.PlayerItem.MEMORINA] = true
+	data.restored_guardians[restored] = true
+	data.scenes_seen.append(FlashbackSchedule.id(1))
+	return data
+
+## Each exit room shows its ribbon and offers its talk only while flashback 2 is due and its own guardian is restored,
+## and its talk's beat plays the one shared crossing.
+func test_a_ribbon_waits_in_each_restored_guardians_exit_room() -> void:
+	var flashback := load("res://resources/story/flashbacks/flashback_2.tres") as Flashback
+	for guardian: int in RIBBON_ROOMS:
+		var contents := (load(RIBBON_ROOMS[guardian]) as PackedScene).instantiate()
+		var staging := _first(contents, FactStaging) as FactStaging
+		var talk := _first(contents, Talkable) as Talkable
+		var beat := _first(contents, CutsceneBeat) as CutsceneBeat
+		assert_str(String(staging.staging_id)).is_equal("ribbon_staging")
+		assert_object(beat.cutscene).is_same(flashback.crossing)
+		for restored: int in Enums.Guardian.values():
+			var data := _flashback_2_due_with(restored)
+			assert_int(FlashbackSchedule.due(data)).is_equal(2)
+			var mine := restored == guardian
+			assert_bool(FactStaging.pick(staging.stages, data) >= 0).override_failure_message(
+					"%s with guardian %d restored" % [RIBBON_ROOMS[guardian].get_file(), restored]).is_equal(mine)
+			assert_bool(talk.current(data) != null).is_equal(mine)
+		var seen := _flashback_2_due_with(guardian)
+		seen.scenes_seen.append(FlashbackSchedule.id(2))
+		assert_int(FactStaging.pick(staging.stages, seen)).is_equal(-1)
+		assert_object(talk.current(seen)).is_null()
+		contents.free()

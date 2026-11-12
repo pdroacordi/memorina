@@ -1,0 +1,143 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e_bars"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_muffle.gd" id="e_muffle"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_walk.gd" id="e_walk"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e_face"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_pose.gd" id="e_pose"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_stage.gd" id="e_stage"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_show.gd" id="e_show"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bloom.gd" id="e_bloom"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sequence.gd" id="e_sequence"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e_fade"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[sub_resource type="Resource" id="bars_2"]
+script = ExtResource("e_bars")
+open = true
+seconds = 1.2
+
+[sub_resource type="Resource" id="camera_3"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"ribbon"])
+offset = Vector2(0, 40)
+zoom = 2.0
+seconds = 1.6
+
+[sub_resource type="Resource" id="muffle_4"]
+script = ExtResource("e_muffle")
+amount = 0.9
+
+[sub_resource type="Resource" id="walk_5"]
+script = ExtResource("e_walk")
+actor = &"ivo"
+mark = &"under_ribbon"
+pace = 0.5
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bars_2"), SubResource("camera_3"), SubResource("muffle_4"), SubResource("walk_5")])
+
+[sub_resource type="Resource" id="face_6"]
+script = ExtResource("e_face")
+actor = &"ivo"
+toward = &"ribbon"
+
+[sub_resource type="Resource" id="pose_8"]
+script = ExtResource("e_pose")
+pose = 7
+
+[sub_resource type="Resource" id="stage_9"]
+script = ExtResource("e_stage")
+staging = &"ribbon_staging"
+child = &""
+seconds = 0.4
+
+[sub_resource type="Resource" id="together_7"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("pose_8"), SubResource("stage_9")])
+
+[sub_resource type="Resource" id="wait_10"]
+script = ExtResource("e_wait")
+seconds = 1.2
+
+[sub_resource type="Resource" id="pose_12"]
+script = ExtResource("e_pose")
+pose = 0
+
+[sub_resource type="Resource" id="show_13"]
+script = ExtResource("e_show")
+visual = &"ribbon_flight"
+alpha = 1.0
+seconds = 0.0
+
+[sub_resource type="Resource" id="bloom_14"]
+script = ExtResource("e_bloom")
+bloom_id = &"ribbon_bloom"
+at = &"ribbon_flight"
+shape = 0
+radius = 10.0
+strength = 1.0
+seconds = 0.0
+
+[sub_resource type="Resource" id="together_11"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("pose_12"), SubResource("show_13"), SubResource("bloom_14")])
+
+[sub_resource type="Resource" id="bloom_16"]
+script = ExtResource("e_bloom")
+bloom_id = &"ribbon_bloom"
+at = &"ribbon_sky"
+shape = 0
+radius = 80.0
+strength = 1.0
+ring = 0.7
+seconds = 2.4
+
+[sub_resource type="Resource" id="camera_17"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"ribbon_sky"])
+offset = Vector2(0, 40)
+zoom = 2.0
+seconds = 2.4
+
+[sub_resource type="Resource" id="together_15"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bloom_16"), SubResource("camera_17")])
+
+[sub_resource type="Resource" id="bloom_19"]
+script = ExtResource("e_bloom")
+bloom_id = &"ribbon_bloom"
+at = &"ribbon_sky"
+shape = 0
+radius = 900.0
+strength = 1.0
+ring = 0.8
+seconds = 3.0
+
+[sub_resource type="Resource" id="wait_21"]
+script = ExtResource("e_wait")
+seconds = 1.4
+
+[sub_resource type="Resource" id="fade_22"]
+script = ExtResource("e_fade")
+to_black = true
+colour = Color(1, 1, 1, 1)
+seconds = 1.4
+
+[sub_resource type="Resource" id="sequence_20"]
+script = ExtResource("e_sequence")
+steps = Array[ExtResource("e_step")]([SubResource("wait_21"), SubResource("fade_22")])
+
+[sub_resource type="Resource" id="together_18"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bloom_19"), SubResource("sequence_20")])
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_2_crossing"
+steps = Array[ExtResource("e_step")]([SubResource("together_1"), SubResource("face_6"), SubResource("together_7"), SubResource("wait_10"), SubResource("together_11"), SubResource("together_15"), SubResource("together_18")])

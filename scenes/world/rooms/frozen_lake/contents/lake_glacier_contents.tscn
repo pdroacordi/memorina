@@ -4,6 +4,33 @@
 [ext_resource type="Resource" path="res://resources/world/backdrops/ice_caves.tres" id="bd_set"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/frozen_lake/contents/lake_glacier.room" id="room_map"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="fb_staging"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="fb_stage"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="fb_fact"]
+[ext_resource type="PackedScene" path="res://scenes/world/story/flashback/ribbon/ribbon_flutter.tscn" id="fb_flutter"]
+[ext_resource type="PackedScene" path="res://scenes/world/story/flashback/ribbon/ribbon_flight.tscn" id="fb_flight"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_mark.gd" id="fb_mark"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_visual.gd" id="fb_visual"]
+[ext_resource type="Script" path="res://scenes/world/memory/memory_bloom.gd" id="fb_bloom"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/talkable/talkable.tscn" id="fb_talkable"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_2_ribbon_frost.tres" id="fb_talk"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="fb_beat"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2_crossing.tres" id="fb_crossing"]
+
+[sub_resource type="Resource" id="due_2"]
+script = ExtResource("fb_fact")
+kind = 15
+index = 2
+
+[sub_resource type="Resource" id="guardian_restored"]
+script = ExtResource("fb_fact")
+kind = 4
+index = 0
+
+[sub_resource type="Resource" id="ribbon_shown"]
+script = ExtResource("fb_stage")
+when = Array[ExtResource("fb_fact")]([SubResource("due_2"), SubResource("guardian_restored")])
+show = &"Fluttering"
 
 [node name="Contents" type="Node2D"]
 
@@ -14,3 +41,51 @@ backdrop_set = ExtResource("bd_set")
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
+
+[node name="Flashbacks" type="Node2D" parent="."]
+
+[node name="Ribbon" type="Node2D" parent="Flashbacks"]
+script = ExtResource("fb_staging")
+staging_id = &"ribbon_staging"
+stages = Array[ExtResource("fb_stage")]([SubResource("ribbon_shown")])
+
+[node name="Fluttering" parent="Flashbacks/Ribbon" instance=ExtResource("fb_flutter")]
+position = Vector2(24, 188)
+
+[node name="RibbonMark" type="Marker2D" parent="Flashbacks"]
+position = Vector2(24, 188)
+script = ExtResource("fb_mark")
+mark_id = &"ribbon"
+
+[node name="UnderRibbon" type="Marker2D" parent="Flashbacks"]
+position = Vector2(52, 288)
+script = ExtResource("fb_mark")
+mark_id = &"under_ribbon"
+
+[node name="RibbonSky" type="Marker2D" parent="Flashbacks"]
+position = Vector2(80, 38)
+script = ExtResource("fb_mark")
+mark_id = &"ribbon_sky"
+
+[node name="RibbonFlight" type="Node2D" parent="Flashbacks"]
+position = Vector2(33, 238)
+script = ExtResource("fb_visual")
+visual_id = &"ribbon_flight"
+
+[node name="Flight" parent="Flashbacks/RibbonFlight" instance=ExtResource("fb_flight")]
+
+[node name="RibbonBloom" type="Node2D" parent="Flashbacks"]
+position = Vector2(33, 238)
+script = ExtResource("fb_bloom")
+bloom_id = &"ribbon_bloom"
+
+[node name="RibbonTalk" parent="Flashbacks" instance=ExtResource("fb_talkable")]
+position = Vector2(52, 288)
+talk = ExtResource("fb_talk")
+reach_west = 32.0
+reach_east = 32.0
+
+[node name="Crossing2" type="Node" parent="Flashbacks"]
+script = ExtResource("fb_beat")
+cue = &"flashback_2_ribbon_frost"
+cutscene = ExtResource("fb_crossing")

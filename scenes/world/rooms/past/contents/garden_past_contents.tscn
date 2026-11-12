@@ -22,6 +22,17 @@
 [ext_resource type="PackedScene" path="res://scenes/world/story/guitar_jam_beat.tscn" id="st_jam_beat"]
 [ext_resource type="Resource" path="res://resources/story/flashback_1_jam.tres" id="st_jam_1"]
 [ext_resource type="Script" path="res://scenes/world/memory/memory_bloom.gd" id="cs_bloom"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/flashback/yellow_flower.png" id="st_yellow"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_2_alba.tres" id="tk_alba_2"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_2_flower_1.tres" id="tk_flower_1"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_2_flower_2.tres" id="tk_flower_2"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_2_flower_3.tres" id="tk_flower_3"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2_pick_1.tres" id="cs_pick_1"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2_pick_2.tres" id="cs_pick_2"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2_pick_3.tres" id="cs_pick_3"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2_chest.tres" id="cs_chest_2"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2_tie.tres" id="cs_tie_2"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2.tres" id="cs_leaving_2"]
 
 [sub_resource type="Resource" id="due_1"]
 script = ExtResource("st_fact")
@@ -37,6 +48,84 @@ show = &"Stone"
 script = ExtResource("st_stage")
 when = Array[ExtResource("st_fact")]([SubResource("due_1")])
 show = &"AtTree"
+
+[sub_resource type="Resource" id="due_2"]
+script = ExtResource("st_fact")
+kind = 15
+index = 2
+
+[sub_resource type="Resource" id="chest_seen"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"flashback_2_chest"
+
+[sub_resource type="Resource" id="tie_seen"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"flashback_2_tie"
+
+[sub_resource type="Resource" id="alba_holding_out"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_2"), SubResource("tie_seen")])
+show = &"HoldingOut"
+
+[sub_resource type="Resource" id="alba_risen"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_2"), SubResource("chest_seen")])
+show = &"Risen"
+
+[sub_resource type="Resource" id="alba_flowers"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_2")])
+show = &"Flowers"
+
+[sub_resource type="Resource" id="flower_1_heard"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"flashback_2_flower_1"
+
+[sub_resource type="Resource" id="flower_1_last_heard"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"flashback_2_flower_1_last"
+
+[sub_resource type="Resource" id="flower_1_yellow"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_2")])
+unless = Array[ExtResource("st_fact")]([SubResource("flower_1_heard"), SubResource("flower_1_last_heard")])
+show = &"Yellow"
+
+[sub_resource type="Resource" id="flower_2_heard"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"flashback_2_flower_2"
+
+[sub_resource type="Resource" id="flower_2_last_heard"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"flashback_2_flower_2_last"
+
+[sub_resource type="Resource" id="flower_2_yellow"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_2")])
+unless = Array[ExtResource("st_fact")]([SubResource("flower_2_heard"), SubResource("flower_2_last_heard")])
+show = &"Yellow"
+
+[sub_resource type="Resource" id="flower_3_heard"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"flashback_2_flower_3"
+
+[sub_resource type="Resource" id="flower_3_last_heard"]
+script = ExtResource("st_fact")
+kind = 7
+id = &"flashback_2_flower_3_last"
+
+[sub_resource type="Resource" id="flower_3_yellow"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_2")])
+unless = Array[ExtResource("st_fact")]([SubResource("flower_3_heard"), SubResource("flower_3_last_heard")])
+show = &"Yellow"
 
 [node name="Contents" type="Node2D"]
 
@@ -117,12 +206,25 @@ z_index = -10
 [node name="Alba" type="Node2D" parent="Stagings"]
 script = ExtResource("st_staging")
 staging_id = &"alba_staging"
-stages = Array[ExtResource("st_stage")]([SubResource("alba_stone")])
+stages = Array[ExtResource("st_stage")]([SubResource("alba_stone"), SubResource("alba_holding_out"), SubResource("alba_risen"), SubResource("alba_flowers")])
 
 [node name="Stone" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
 position = Vector2(816, 288)
 flip_h = true
 loop = &"stone"
+
+[node name="Flowers" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
+position = Vector2(640, 288)
+flip_h = true
+loop = &"flowers"
+
+[node name="Risen" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
+position = Vector2(640, 288)
+loop = &"risen"
+
+[node name="HoldingOut" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
+position = Vector2(640, 288)
+loop = &"holding_out"
 
 [node name="AlbaLaugh" type="Node2D" parent="Stagings"]
 script = ExtResource("st_staging")
@@ -141,6 +243,33 @@ stages = Array[ExtResource("st_stage")]([SubResource("guitar_at_tree")])
 [node name="AtTree" parent="Stagings/Guitar" instance=ExtResource("st_guitar")]
 position = Vector2(228, 288)
 
+[node name="Flower1" type="Node2D" parent="Stagings"]
+script = ExtResource("st_staging")
+staging_id = &"flower_1_staging"
+stages = Array[ExtResource("st_stage")]([SubResource("flower_1_yellow")])
+
+[node name="Yellow" type="Sprite2D" parent="Stagings/Flower1"]
+position = Vector2(1090, 280)
+texture = ExtResource("st_yellow")
+
+[node name="Flower2" type="Node2D" parent="Stagings"]
+script = ExtResource("st_staging")
+staging_id = &"flower_2_staging"
+stages = Array[ExtResource("st_stage")]([SubResource("flower_2_yellow")])
+
+[node name="Yellow" type="Sprite2D" parent="Stagings/Flower2"]
+position = Vector2(1130, 280)
+texture = ExtResource("st_yellow")
+
+[node name="Flower3" type="Node2D" parent="Stagings"]
+script = ExtResource("st_staging")
+staging_id = &"flower_3_staging"
+stages = Array[ExtResource("st_stage")]([SubResource("flower_3_yellow")])
+
+[node name="Yellow" type="Sprite2D" parent="Stagings/Flower3"]
+position = Vector2(1170, 280)
+texture = ExtResource("st_yellow")
+
 [node name="Cast" type="Node2D" parent="."]
 z_index = -10
 
@@ -154,11 +283,56 @@ position = Vector2(760, 288)
 script = ExtResource("cs_mark")
 mark_id = &"by_the_stone"
 
+[node name="Flower1" type="Marker2D" parent="SceneMarks"]
+position = Vector2(1090, 288)
+script = ExtResource("cs_mark")
+mark_id = &"flower_1"
+
+[node name="Flower2" type="Marker2D" parent="SceneMarks"]
+position = Vector2(1130, 288)
+script = ExtResource("cs_mark")
+mark_id = &"flower_2"
+
+[node name="Flower3" type="Marker2D" parent="SceneMarks"]
+position = Vector2(1170, 288)
+script = ExtResource("cs_mark")
+mark_id = &"flower_3"
+
+[node name="FarSide" type="Marker2D" parent="SceneMarks"]
+position = Vector2(1170, 288)
+script = ExtResource("cs_mark")
+mark_id = &"far_side"
+
 [node name="Talkables" type="Node2D" parent="."]
 
 [node name="Guitar1" parent="Talkables" instance=ExtResource("tk_talkable")]
 position = Vector2(228, 288)
 talk = ExtResource("tk_guitar_1")
+
+[node name="Alba2" parent="Talkables" instance=ExtResource("tk_talkable")]
+position = Vector2(640, 288)
+talk = ExtResource("tk_alba_2")
+auto_start = true
+reach_east = 200.0
+auto_delay = 0.6
+
+[node name="Flower1" parent="Talkables" instance=ExtResource("tk_talkable")]
+position = Vector2(1090, 288)
+talk = ExtResource("tk_flower_1")
+reach_west = 20.0
+reach_east = 20.0
+
+[node name="Flower2" parent="Talkables" instance=ExtResource("tk_talkable")]
+position = Vector2(1130, 288)
+talk = ExtResource("tk_flower_2")
+reach_west = 20.0
+reach_east = 20.0
+
+[node name="Flower3" parent="Talkables" instance=ExtResource("tk_talkable")]
+position = Vector2(1170, 288)
+talk = ExtResource("tk_flower_3")
+reach_west = 20.0
+reach_east = 20.0
 
 [node name="Beats" type="Node2D" parent="."]
 
@@ -180,6 +354,37 @@ pose = 1
 face = NodePath("../../Stagings/Alba/Stone")
 cutscene = ExtResource("cs_leaving_1")
 
+[node name="Pick1" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_2_pick_1"
+cutscene = ExtResource("cs_pick_1")
+
+[node name="Pick2" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_2_pick_2"
+cutscene = ExtResource("cs_pick_2")
+
+[node name="Pick3" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_2_pick_3"
+cutscene = ExtResource("cs_pick_3")
+
+[node name="Chest2" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_2_chest"
+cutscene = ExtResource("cs_chest_2")
+
+[node name="Tie2" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_2_tie"
+cutscene = ExtResource("cs_tie_2")
+
+[node name="Leaving2" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_2_leaving"
+face = NodePath("../../Stagings/Alba/HoldingOut")
+cutscene = ExtResource("cs_leaving_2")
+
 [node name="PastGrey" type="Node2D" parent="."]
 position = Vector2(640, 192)
 script = ExtResource("cs_bloom")
@@ -189,3 +394,4 @@ bloom_id = &"past_grey"
 position = Vector2(816, 258)
 script = ExtResource("cs_bloom")
 bloom_id = &"past_keep"
+feather = 64.0

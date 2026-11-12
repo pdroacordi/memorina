@@ -9,6 +9,7 @@ const HELD_PROPS := {
 	"ivo_guitar.png": "res://assets/sprites/world/props/interiors/ivo_house/guitar.png",
 	"ivo_memorina_play.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
 	"ivo_memorina_lower.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
+	"ivo_ribbon.png": "res://assets/sprites/world/story/alba/ribbon.png",
 }
 const FRAME := 128
 ## Game px: the feet end on the row above the floor line (row 96).
@@ -24,7 +25,7 @@ const STEADY_TOLERANCE := 4.0
 const GROUNDED: Array[StringName] = [
 	&"idle", &"run", &"brace", &"brace_stand", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle", &"memorina_lower",
 	&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in", &"run_attack_swing_out",
-	&"guitar_hold", &"guitar_strum",
+	&"guitar_hold", &"guitar_strum", &"kneel", &"sit_ground", &"push_swing", &"ribbon",
 ]
 ## Sheet frames in flight, both boots off the floor 1-3 art px; the running attack keeps the run's legs.
 const FLIGHT := {&"run": [3, 4, 7], &"run_attack_swing_in": [3, 4], &"run_attack_swing_out": [7]}

@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e_face"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_pose.gd" id="e_pose"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_stage.gd" id="e_stage"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[sub_resource type="Resource" id="face_1"]
+script = ExtResource("e_face")
+actor = &"ivo"
+toward = &"flower_2"
+
+[sub_resource type="Resource" id="pose_2"]
+script = ExtResource("e_pose")
+pose = 4
+
+[sub_resource type="Resource" id="wait_3"]
+script = ExtResource("e_wait")
+seconds = 0.5
+
+[sub_resource type="Resource" id="stage_4"]
+script = ExtResource("e_stage")
+staging = &"flower_2_staging"
+child = &""
+seconds = 0.2
+
+[sub_resource type="Resource" id="pose_5"]
+script = ExtResource("e_pose")
+pose = 0
+
+[sub_resource type="Resource" id="wait_6"]
+script = ExtResource("e_wait")
+seconds = 0.7
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_2_pick_2"
+steps = Array[ExtResource("e_step")]([SubResource("face_1"), SubResource("pose_2"), SubResource("wait_3"), SubResource("stage_4"), SubResource("pose_5"), SubResource("wait_6")])

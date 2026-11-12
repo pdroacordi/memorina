@@ -19,7 +19,7 @@ source_files:
 
 # STORY-05: five playable flashbacks (plan)
 
-**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-7 (2026-11-12).
+**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-8 (2026-11-12).
 
 ## Context
 
@@ -109,6 +109,10 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 ### Flashback 1 (step 7, built 2026-11-12; `systems/cutscenes`, "Flashback 1")
 - Corrections: the guitar's talk opens with a cue-only `flashback_1_take` (Ivo walks from the tree to her, 3.8 s) so the lines and the jam play beside her; the Talkable sits in the contents scene, not the `.room` (twin grids). The leaving is a beat of that talk, so the director waits for the talk to end under the black (`LEAVING_TALK`) before the travel back, cuts the visit's music at the leaving's end and holds a stream-less SCENE cue through the returning scene (the 1 s of silence). `Game.travel` emits `travelled` before the fade clears. `CutsceneMusicMark.every` (bar lines) and `CutsceneMuffle` were added. `wife_song_full` loops on beats before the lost ending (`systems/music`), so a long visit never reaches it and the leaving's mark lands on the next bar line.
 - The laugh is a stand-in (her `sit_sing` loop at 2.5x, no laugh sound). The kneel is the bench's `sit` loop.
+
+### Flashback 2 (step 8, built 2026-11-12; `systems/cutscenes`, "Flashback 2")
+- Corrections: the exit rooms are lake_glacier, woods_hollow_tree, orchard_cliff_chimney and caldera_sun_stair; the ribbon's nodes sit in their contents scenes, not the `.room`, and each region's talk has its own cue (`DialogueBeat.find` is tree-wide). A scene cannot walk Ivo back to her: the pool is a one-row dip he must jump. So the third flower plays the chest scene where he stands (the far frame), and her next talk (`flashback_2_pale`, gated on `SCENE_SEEN flashback_2_chest`) auto-starts when he comes back. Alba's poses are stagings on the SCENE_SEEN of the chest and tie scenes, not stand-ins.
+- Stand-ins: `wife_song_full` as the music, placeholder ribbon and flower art.
 
 ### Alba
 - A `Speaker` `alba` (`SPEAKER_ALBA`, portrait).

@@ -137,3 +137,27 @@ func test_a_scene_seats_him_and_strolls_him() -> void:
 		await get_tree().physics_frame
 	assert_str(String(driver.current)).is_equal(String(PlayerAnimationResolver.RUN))
 	_ivo.end_scene()
+
+## STORY-05: each flashback pose plays its clip, and leaving a pose on the ground stands him up.
+func test_the_flashback_poses_play_their_clips_and_he_rises_from_the_ground() -> void:
+	await _land()
+	var driver := _ivo.get_node("AnimationDriver") as AnimationDriver
+	_ivo.begin_scene()
+	var clips := {
+		DialogueBeat.Pose.KNEEL: PlayerAnimationResolver.KNEEL,
+		DialogueBeat.Pose.SIT_GROUND: PlayerAnimationResolver.SIT_GROUND,
+		DialogueBeat.Pose.PUSH_SWING: PlayerAnimationResolver.PUSH_SWING,
+		DialogueBeat.Pose.RIBBON: PlayerAnimationResolver.RIBBON,
+	}
+	for pose: int in clips:
+		_ivo.stage_pose(pose)
+		await get_tree().physics_frame
+		await get_tree().physics_frame
+		assert_str(String(driver.current)).is_equal(String(clips[pose]))
+	_ivo.stage_pose(DialogueBeat.Pose.KNEEL)
+	await get_tree().physics_frame
+	_ivo.stage_pose(DialogueBeat.Pose.NONE)
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_str(String(driver.current)).is_equal(String(PlayerAnimationResolver.STAND_UP))
+	_ivo.end_scene()

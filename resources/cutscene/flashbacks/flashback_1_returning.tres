@@ -7,11 +7,11 @@
 
 [sub_resource type="Resource" id="pose_1"]
 script = ExtResource("e1")
-pose = 3
+pose = 4
 
 [sub_resource type="Resource" id="wait_2"]
 script = ExtResource("e2")
-seconds = 1.4
+seconds = 2.0
 
 [sub_resource type="Resource" id="pose_3"]
 script = ExtResource("e1")

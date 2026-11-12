@@ -1,0 +1,113 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/story/staged_strip.gd" id="s_strip"]
+[ext_resource type="Script" path="res://scenes/world/memory/greyhush_shield.gd" id="s_shield"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/ribbon/ribbon_flight.png" id="t_strip"]
+
+[sub_resource type="AtlasTexture" id="f_0"]
+atlas = ExtResource("t_strip")
+region = Rect2(0, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_1"]
+atlas = ExtResource("t_strip")
+region = Rect2(64, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_2"]
+atlas = ExtResource("t_strip")
+region = Rect2(128, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_3"]
+atlas = ExtResource("t_strip")
+region = Rect2(192, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_4"]
+atlas = ExtResource("t_strip")
+region = Rect2(256, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_5"]
+atlas = ExtResource("t_strip")
+region = Rect2(320, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_6"]
+atlas = ExtResource("t_strip")
+region = Rect2(384, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_7"]
+atlas = ExtResource("t_strip")
+region = Rect2(448, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_8"]
+atlas = ExtResource("t_strip")
+region = Rect2(512, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_9"]
+atlas = ExtResource("t_strip")
+region = Rect2(576, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_10"]
+atlas = ExtResource("t_strip")
+region = Rect2(640, 0, 64, 192)
+
+[sub_resource type="AtlasTexture" id="f_11"]
+atlas = ExtResource("t_strip")
+region = Rect2(704, 0, 64, 192)
+
+[sub_resource type="SpriteFrames" id="frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("f_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_5")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_6")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_7")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_8")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_9")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_10")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_11")
+}],
+"loop": false,
+"name": &"flight",
+"speed": 5.0
+}]
+
+[node name="RibbonFlight" type="AnimatedSprite2D"]
+sprite_frames = SubResource("frames")
+animation = &"flight"
+centered = false
+offset = Vector2(-8, -188)
+script = ExtResource("s_strip")
+intro = &"flight"
+
+[node name="GreyhushShield" type="Node2D" parent="."]
+position = Vector2(24, -92)
+script = ExtResource("s_shield")
+shape = 1
+rect_size = Vector2(64, 192)
+feather = 4.0
+amount = 1.0

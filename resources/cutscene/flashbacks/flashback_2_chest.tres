@@ -1,0 +1,69 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e_bars"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e_face"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_gesture.gd" id="e_gesture"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[sub_resource type="Resource" id="bars_2"]
+script = ExtResource("e_bars")
+open = true
+seconds = 0.8
+
+[sub_resource type="Resource" id="camera_3"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"alba", &"far_side"])
+offset = Vector2(0, -56)
+zoom = 1.0
+seconds = 1.6
+
+[sub_resource type="Resource" id="face_4"]
+script = ExtResource("e_face")
+actor = &"ivo"
+toward = &"alba"
+away = true
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bars_2"), SubResource("camera_3"), SubResource("face_4")])
+
+[sub_resource type="Resource" id="gesture_5"]
+script = ExtResource("e_gesture")
+actor = &"alba"
+clip = &"sit"
+
+[sub_resource type="Resource" id="wait_6"]
+script = ExtResource("e_wait")
+seconds = 1.4
+
+[sub_resource type="Resource" id="gesture_7"]
+script = ExtResource("e_gesture")
+actor = &"alba"
+clip = &"chest"
+
+[sub_resource type="Resource" id="face_8"]
+script = ExtResource("e_face")
+actor = &"alba"
+toward = &"ivo"
+
+[sub_resource type="Resource" id="wait_9"]
+script = ExtResource("e_wait")
+seconds = 0.5
+
+[sub_resource type="Resource" id="face_10"]
+script = ExtResource("e_face")
+actor = &"ivo"
+toward = &"alba"
+
+[sub_resource type="Resource" id="wait_11"]
+script = ExtResource("e_wait")
+seconds = 1.2
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_2_chest"
+steps = Array[ExtResource("e_step")]([SubResource("together_1"), SubResource("gesture_5"), SubResource("wait_6"), SubResource("gesture_7"), SubResource("face_8"), SubResource("wait_9"), SubResource("face_10"), SubResource("wait_11")])

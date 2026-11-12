@@ -18,8 +18,8 @@ const GROUP := &"dialogue_beats"
 ## FREE: Ivo moves. STILL: he hears nothing. NOTES: only the four note inputs reach the beat.
 enum Hold { FREE, STILL, NOTES }
 ## What Ivo holds from the beat's start until the next beat or the talk's end; SEATED (STORY-16) sits him where he
-## stands, the bench's clip. Append only: scenes store these as ints.
-enum Pose { NONE, GUITAR, MEMORINA, SEATED }
+## stands, the bench's clip; the last four are the flashbacks' (STORY-05). Append only: scenes store these as ints.
+enum Pose { NONE, GUITAR, MEMORINA, SEATED, KNEEL, SIT_GROUND, PUSH_SWING, RIBBON }
 
 ## Matches a DialogueLine's `cue`.
 @export var cue: StringName = &""

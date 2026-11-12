@@ -1,0 +1,71 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/story/staged_strip.gd" id="s_strip"]
+[ext_resource type="Script" path="res://scenes/world/memory/greyhush_shield.gd" id="s_shield"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/ribbon/ribbon_flutter.png" id="t_strip"]
+
+[sub_resource type="AtlasTexture" id="f_0"]
+atlas = ExtResource("t_strip")
+region = Rect2(0, 0, 24, 40)
+
+[sub_resource type="AtlasTexture" id="f_1"]
+atlas = ExtResource("t_strip")
+region = Rect2(24, 0, 24, 40)
+
+[sub_resource type="AtlasTexture" id="f_2"]
+atlas = ExtResource("t_strip")
+region = Rect2(48, 0, 24, 40)
+
+[sub_resource type="AtlasTexture" id="f_3"]
+atlas = ExtResource("t_strip")
+region = Rect2(72, 0, 24, 40)
+
+[sub_resource type="AtlasTexture" id="f_4"]
+atlas = ExtResource("t_strip")
+region = Rect2(96, 0, 24, 40)
+
+[sub_resource type="AtlasTexture" id="f_5"]
+atlas = ExtResource("t_strip")
+region = Rect2(120, 0, 24, 40)
+
+[sub_resource type="SpriteFrames" id="frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("f_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("f_5")
+}],
+"loop": true,
+"name": &"flutter",
+"speed": 6.0
+}]
+
+[node name="RibbonFlutter" type="AnimatedSprite2D"]
+sprite_frames = SubResource("frames")
+animation = &"flutter"
+centered = false
+offset = Vector2(-12, -2)
+script = ExtResource("s_strip")
+loop = &"flutter"
+
+[node name="GreyhushShield" type="Node2D" parent="."]
+position = Vector2(0, 18)
+script = ExtResource("s_shield")
+shape = 1
+rect_size = Vector2(24, 40)
+feather = 4.0
+amount = 1.0
