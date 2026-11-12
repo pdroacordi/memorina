@@ -161,6 +161,10 @@ func _run_step(step: Dictionary) -> void:
 		_send(motion)
 	if step.has("teleport"):
 		_place_player(step["teleport"])
+	if step.has("zoom"):
+		var camera := get_viewport().get_camera_2d()
+		if camera != null and camera.has_method("zoom_to"):
+			camera.call("zoom_to", float(step["zoom"]), 0.0)
 	if step.has("log"):
 		_log_state(String(step["log"]))
 	if step.has("trace"):

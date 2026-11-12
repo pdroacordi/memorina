@@ -1,6 +1,6 @@
 {
  "scene": "res://scenes/world/game.tscn",
- "max_duration": 7.0,
+ "max_duration": 8.0,
  "locale": "en",
  "owned_items": [
   0,
@@ -72,6 +72,25 @@
   {
    "t": 5.6,
    "screenshot": "present2_falls"
+  },
+  {
+   "t": 5.8,
+   "teleport": [
+    106240,
+    12640
+   ]
+  },
+  {
+   "t": 6.6,
+   "zoom": 0.5
+  },
+  {
+   "t": 7.2,
+   "screenshot": "past2_wide"
+  },
+  {
+   "t": 7.4,
+   "zoom": 1.0
   }
  ]
 }

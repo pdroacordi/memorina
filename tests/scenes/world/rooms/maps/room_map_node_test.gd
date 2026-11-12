@@ -59,6 +59,42 @@ func test_a_pool_with_a_reach_rests_at_its_water() -> void:
 	var water := pool.get_node("Water") as WaterBody
 	assert_float(water.rest_depth).is_equal(32.0)
 
+const LAKE := """[room]
+origin = 0, 0
+tileset = legacy
+
+[grid]
+......
+######
+......
+......
+
+[water]
+......
+......
+wwwwww
+wwwwww
+"""
+
+## A lake_rise lifts a lake's waterline over its painted top onto the bank, mirroring at the waterline, and deepens it.
+func test_a_risen_lake_lies_over_the_bank() -> void:
+	var result := RoomMapParser.parse(LAKE, RoomLegend.load_default())
+	assert_bool(result.ok()).override_failure_message(str(result.errors)).is_true()
+	var flat := RoomMapNode.new()
+	flat.map = result.map
+	add_child(flat)
+	auto_free(flat)
+	var risen := RoomMapNode.new()
+	risen.lake_rise = 22
+	risen.map = result.map
+	add_child(risen)
+	auto_free(risen)
+	var low := flat.get_node("Water_w").get_child(0) as WaterBody
+	var high := risen.get_node("Water_w").get_child(0) as WaterBody
+	assert_float(high.position.y).is_equal(low.position.y - 22.0)
+	assert_int(high.size.y).is_equal(low.size.y + 22)
+	assert_int(high.mirror_axis_offset).is_equal(0)
+
 ## Back walls, ground per look, ledges, the hidden Solid layer, water, then entities.
 func test_it_builds_its_layers_in_order() -> void:
 	var result := RoomMapParser.parse("[room]\ntileset = legacy\n[grid]\n.==..\n..SS.\n#####\n[back]\n%%...\n.....\n.....\n", RoomLegend.load_default())

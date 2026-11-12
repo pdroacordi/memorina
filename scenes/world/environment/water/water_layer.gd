@@ -11,7 +11,8 @@ const SHELL_REACH_ALTERNATIVE := 2
 @export var body_scene: PackedScene
 ## Scene for a basin painted with a reach above its rest (a RainBasin); null when this kind never rises.
 @export var rising_body_scene: PackedScene
-## Dry gap from painted top to waterline, in world pixels.
+## Dry gap from painted top to waterline, in world pixels; a lake's may be negative, its waterline then lies over the
+## bank above it (`RoomMapNode.lake_rise`).
 @export var surface_inset := 8
 ## Water under the ground fills a passage (a covered column); false for a lake, seen from above.
 @export var covers_passages := true
@@ -30,8 +31,8 @@ static func _water_body_of(instance: Node) -> WaterBody:
 func _ready() -> void:
 	assert(body_scene != null, "%s needs a body_scene" % name)
 	assert(tile_set != null, "%s needs the water tile set" % name)
-	assert(surface_inset >= 0 and surface_inset < tile_set.tile_size.y,
-		"%s: the waterline must sit inside the top row of cells" % name)
+	assert(surface_inset < tile_set.tile_size.y and (surface_inset >= 0 or not covers_passages),
+		"%s: the waterline must sit inside the top row of cells (or, a lake's, over it)" % name)
 	enabled = false
 	var cells: Array[Vector2i] = []
 	var reach: Array[Vector2i] = []
@@ -77,7 +78,8 @@ func _pour(basin: WaterBasins.Basin) -> Node2D:
 			ceiling = -ceiling
 		ceilings.append(ceiling)
 	body.set_ceiling(cell.x, ceilings)
-	body.mirror_axis_offset = -floori(surface_inset / 2.0)
+	# A raised lake mirrors at its waterline.
+	body.mirror_axis_offset = -floori(maxi(surface_inset, 0) / 2.0)
 	# Place the body origin at the waterline center.
 	instance.position = Vector2(
 		(basin.left + basin.width() * 0.5) * cell.x,

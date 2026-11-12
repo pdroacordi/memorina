@@ -144,6 +144,8 @@ func _add_layer(parent: Node2D, layer_name: String, layer: BackdropLayer, part: 
 			parallax.screen_offset = camera.get_screen_center_position() - HALF_VIEW
 	var quad := MeshInstance2D.new()
 	quad.name = "Art"
+	# Far away: no Light2D reaches a backdrop (the garden lantern, systems/backdrops).
+	quad.light_mask = 0
 	var mesh := QuadMesh.new()
 	mesh.size = Vector2(cover.size)
 	quad.mesh = mesh

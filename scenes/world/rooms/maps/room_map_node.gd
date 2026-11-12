@@ -22,6 +22,10 @@ const SECRET_FRONT_Z := -1
 		if is_inside_tree():
 			_build()
 
+## px a lake's waterline lies over its painted top, drawn over the ground row above it, so the bank shows less earth;
+## collision and the map are unchanged (the waterfall garden, systems/water).
+@export_range(0, 31) var lake_rise: int = 0
+
 ## Tile data by [map, layer name] and grass runs by map: both derive from the map alone, so a session builds each once
 ## (systems/rooms, "Staggered builds"). Never in the editor, where a map is reimported in place.
 static var _tile_memo: Dictionary = {}
@@ -288,6 +292,8 @@ func _look_name(look: int) -> String:
 func _pour(entry: RoomLegendEntry, cells: PackedVector2Array, reach: PackedVector2Array, shell_reach: PackedVector2Array) -> void:
 	var layer := entry.water_layer.instantiate() as WaterLayer
 	assert(layer != null, "legend '%s': water_layer must be a WaterLayer preset" % entry.symbol)
+	if lake_rise > 0 and not layer.covers_passages:
+		layer.surface_inset = -lake_rise
 	_paint(layer, cells, 0)
 	_paint(layer, reach, WaterLayer.REACH_ALTERNATIVE)
 	_paint(layer, shell_reach, WaterLayer.SHELL_REACH_ALTERNATIVE)

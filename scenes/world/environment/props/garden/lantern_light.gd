@@ -7,7 +7,7 @@ extends PointLight2D
 ## The sprite whose frame the light follows.
 @export var flame: Sprite2D
 ## Energy per sprite frame; a frame past the end gives the last.
-@export var energies: PackedFloat32Array = PackedFloat32Array([0.0, 0.85, 1.0, 0.92])
+@export var energies: PackedFloat32Array = PackedFloat32Array([0.0, 2.6, 3.0, 2.8])
 ## 0..1 scale on every energy: low while the day is still bright.
 @export_range(0.0, 1.0) var strength: float = 1.0
 

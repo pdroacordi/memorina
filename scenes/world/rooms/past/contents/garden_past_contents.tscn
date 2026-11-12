@@ -181,6 +181,7 @@ show = &"Hanging"
 script = ExtResource("st_stage")
 when = Array[ExtResource("st_fact")]([SubResource("due_3")])
 show = &"LateAfternoon"
+fade_seconds = 0.0
 
 [sub_resource type="Resource" id="due_4"]
 script = ExtResource("st_fact")
@@ -206,6 +207,7 @@ show = &"PoolBack"
 script = ExtResource("st_stage")
 when = Array[ExtResource("st_fact")]([SubResource("due_4")])
 show = &"Night"
+fade_seconds = 0.0
 
 [sub_resource type="Resource" id="talk_4_heard"]
 script = ExtResource("st_fact")
@@ -226,6 +228,7 @@ show = &"TreeWithDaughter"
 script = ExtResource("st_stage")
 when = Array[ExtResource("st_fact")]([SubResource("due_5")])
 show = &"Twilight"
+fade_seconds = 0.0
 
 [sub_resource type="Gradient" id="dusk_gradient"]
 colors = PackedColorArray(1, 0.5, 0.3, 0.4, 0.5, 0.3, 0.6, 0)
@@ -292,14 +295,11 @@ script = ExtResource("st_stage")
 show = &"Unlit"
 fade_seconds = 0.0
 
-[sub_resource type="CanvasItemMaterial" id="light_multiply"]
-blend_mode = 3
-
 [sub_resource type="CanvasItemMaterial" id="light_add"]
 blend_mode = 1
 
 [sub_resource type="Gradient" id="sun_gradient"]
-colors = PackedColorArray(1, 0.44, 0.1, 0.36, 1, 0.44, 0.1, 0.12)
+colors = PackedColorArray(1, 0.5, 0.16, 0.12, 1, 0.5, 0.16, 0.03)
 
 [sub_resource type="GradientTexture2D" id="sun_glow"]
 gradient = SubResource("sun_gradient")
@@ -364,7 +364,8 @@ stages = Array[ExtResource("st_stage")]([SubResource("lantern_lit_3"), SubResour
 visible = false
 
 [node name="Light" parent="Props/Lantern/LitDusk"]
-strength = 0.3
+texture_scale = 1.0
+strength = 0.12
 
 [node name="Lit" parent="Props/Lantern" instance=ExtResource("p_lantern_lit")]
 visible = false
@@ -407,7 +408,7 @@ script = ExtResource("cs_mark")
 mark_id = &"waterfall_top"
 
 [node name="WaterfallFoot" type="Marker2D" parent="Marks"]
-position = Vector2(1216, 672)
+position = Vector2(1216, 650)
 script = ExtResource("cs_mark")
 mark_id = &"waterfall_foot"
 
@@ -422,14 +423,15 @@ position = Vector2(1280, 768)
 
 [node name="Falls" parent="Falls" instance=ExtResource("p_falls")]
 position = Vector2(1216, 44)
-region_rect = Rect2(0, 0, 624, 630)
+region_rect = Rect2(0, 0, 624, 608)
 
 [node name="FallsFoam" parent="Falls" instance=ExtResource("p_foam")]
-position = Vector2(1216, 672)
+position = Vector2(1216, 650)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
+lake_rise = 22
 
 [node name="Stagings" type="Node2D" parent="."]
 z_index = -10
@@ -524,16 +526,11 @@ stages = Array[ExtResource("st_stage")]([SubResource("light_late_afternoon"), Su
 
 [node name="LateAfternoon" type="Node2D" parent="Stagings/Light"]
 
-[node name="Warm" type="ColorRect" parent="Stagings/Light/LateAfternoon"]
-material = SubResource("light_multiply")
-offset_left = -160.0
-offset_top = -480.0
-offset_right = 1440.0
-offset_bottom = 1120.0
-mouse_filter = 2
-color = Color(1, 0.88, 0.72, 1)
+[node name="Warm" type="CanvasModulate" parent="Stagings/Light/LateAfternoon"]
+color = Color(1, 0.96, 0.9, 1)
 
 [node name="Sun" type="TextureRect" parent="Stagings/Light/LateAfternoon"]
+light_mask = 0
 material = SubResource("light_add")
 offset_left = -160.0
 offset_top = -480.0
@@ -545,16 +542,11 @@ expand_mode = 1
 
 [node name="Night" type="Node2D" parent="Stagings/Light"]
 
-[node name="Moonlight" type="ColorRect" parent="Stagings/Light/Night"]
-material = SubResource("light_multiply")
-offset_left = -160.0
-offset_top = -480.0
-offset_right = 1440.0
-offset_bottom = 1120.0
-mouse_filter = 2
-color = Color(0.52, 0.58, 0.8, 1)
+[node name="Moonlight" type="CanvasModulate" parent="Stagings/Light/Night"]
+color = Color(0.72, 0.76, 0.9, 1)
 
 [node name="Moon" type="TextureRect" parent="Stagings/Light/Night"]
+light_mask = 0
 material = SubResource("light_add")
 offset_left = -160.0
 offset_top = -480.0
@@ -566,16 +558,11 @@ expand_mode = 1
 
 [node name="Twilight" type="Node2D" parent="Stagings/Light"]
 
-[node name="Dusk" type="ColorRect" parent="Stagings/Light/Twilight"]
-material = SubResource("light_multiply")
-offset_left = -160.0
-offset_top = -480.0
-offset_right = 1440.0
-offset_bottom = 1120.0
-mouse_filter = 2
+[node name="Dusk" type="CanvasModulate" parent="Stagings/Light/Twilight"]
 
 [node name="Afterglow" type="TextureRect" parent="Stagings/Light/Twilight"]
 modulate = Color(0, 0, 0, 1)
+light_mask = 0
 material = SubResource("light_add")
 offset_left = -160.0
 offset_top = -480.0
@@ -801,6 +788,7 @@ when = Array[ExtResource("st_fact")]([SubResource("due_5")])
 [node name="Dusk" type="Node" parent="Lullaby5" node_paths=PackedStringArray("target")]
 script = ExtResource("st_song_tint")
 target = NodePath("../../Stagings/Light/Twilight/Dusk")
+property = &"color"
 song = ExtResource("st_lullaby")
 from = 6.5
 to = 40.7

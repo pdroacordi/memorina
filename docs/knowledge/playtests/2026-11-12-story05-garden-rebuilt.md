@@ -61,6 +61,8 @@ Read against the approved board (`tools/art/references/regions/garden_concept_v2
 - Sound is not judged from frames.
 - The timeline's walk to flashback 5's seat stopped at different places run to run (the release of a held key), so the timeline teleports Ivo beside the seat before Down.
 
+Fixed after the user's review (the mountain at zoom 0.5, the lantern's rings, the afternoon's grade, Alba at night, the bank): `playtests/2026-11-12-story05-garden-fixes`.
+
 ## Verdict
 
 The garden now reads as the board: the water in front, the fall close, the bank thin; every flashback plays through in it.

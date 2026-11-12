@@ -12,6 +12,10 @@ const CAMERAS: Array[Vector2] = [Vector2(320, 180), Vector2(960, 588), Vector2(6
 const PIXELS: Array[Vector2] = [Vector2(0, 0), Vector2(17, 767), Vector2(641, 200), Vector2(1279, -150), Vector2(905, 477)]
 ## World px two positions may differ by and still pick the same texel (float32 at x 1e5).
 const TOLERANCE := 0.05
+## The room-relative camera centre on the bank at zoom 1 (the view's bottom on the room's bottom), px.
+const BANK_CAMERA := Vector2(640, 588)
+## px the near layer stands under its authored pose at the bank camera (waterfall_garden_*.tres).
+const NEAR_DROP := 62.0
 
 var _present: Region
 var _past: Region
@@ -111,3 +115,30 @@ func test_the_grass_and_the_grade_are_the_same() -> void:
 	var bloom := contents.get_node("Flashbacks/Bloom5") as MemoryBloom
 	assert_that(bloom.tint).is_equal(catalog.palette_for(_present.season).tint)
 	contents.free()
+
+## The lake's waterline lies the same px over its painted top in both gardens, so the bank shows one thin earth line.
+func test_the_lake_rises_the_same_over_the_bank() -> void:
+	var present := _room(_present, "VillageGarden").contents_scene.instantiate() as Node2D
+	var past := _room(_past, "GardenPast").contents_scene.instantiate() as Node2D
+	var rise := (present.get_node("RoomMap") as RoomMapNode).lake_rise
+	assert_int(rise).is_greater(0)
+	assert_int((past.get_node("RoomMap") as RoomMapNode).lake_rise).is_equal(rise)
+	present.free()
+	past.free()
+
+## At the bank camera every garden layer stands in its authored pose against the sky, the near layer NEAR_DROP px lower
+## so only its crowns show over the bank: no layer's flat fill shows between the mesas and the bank, at zoom 1 or in
+## flashback 5's widest frame (playtests/2026-11-12-story05-garden-fixes).
+func test_the_garden_layers_stand_in_their_pose_at_the_bank() -> void:
+	var room := _room(_present, "VillageGarden")
+	var anchor := Vector2(room.position.x, _present.position.y + _present.horizon_y)
+	for time: String in ["morning", "day", "afternoon", "night", "twilight"]:
+		var shown := load("res://resources/world/backdrops/waterfall_garden_%s.tres" % time) as BackdropSet
+		var tops := PackedFloat32Array()
+		for layer: BackdropLayer in shown.layers:
+			var ref := BackdropMath.reference_centre(anchor, shown.horizon_screen_y, Backdrop.HALF_VIEW)
+			var at := BackdropMath.anchor_position(anchor, ref, room.position + BANK_CAMERA, layer.scroll_scale)
+			tops.append(at.y - layer.horizon_row)
+		var expected := [0.0, 0.0, 0.0, NEAR_DROP]
+		for i: int in tops.size():
+			assert_float(tops[i] - tops[0]).override_failure_message("%s layer %d: art row 0 at %.1f px from the sky's" % [time, i, tops[i] - tops[0]]).is_equal_approx(expected[i], 1.0)

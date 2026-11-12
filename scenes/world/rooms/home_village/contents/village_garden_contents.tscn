@@ -220,7 +220,7 @@ script = ExtResource("cs_mark")
 mark_id = &"waterfall_top"
 
 [node name="WaterfallFoot" type="Marker2D" parent="Marks"]
-position = Vector2(1216, 672)
+position = Vector2(1216, 650)
 script = ExtResource("cs_mark")
 mark_id = &"waterfall_foot"
 
@@ -235,14 +235,15 @@ position = Vector2(1280, 768)
 
 [node name="Falls" parent="Falls" instance=ExtResource("p_falls")]
 position = Vector2(1216, 44)
-region_rect = Rect2(0, 0, 624, 630)
+region_rect = Rect2(0, 0, 624, 608)
 
 [node name="FallsFoam" parent="Falls" instance=ExtResource("p_foam")]
-position = Vector2(1216, 672)
+position = Vector2(1216, 650)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
+lake_rise = 22
 
 [node name="Flashbacks" type="Node2D" parent="."]
 

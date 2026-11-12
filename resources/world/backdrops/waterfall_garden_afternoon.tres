@@ -19,21 +19,21 @@ distance = 1.0
 script = ExtResource("2_layer")
 texture = ExtResource("4_far")
 scroll_scale = Vector2(0.12, 0.07)
-horizon_row = 229
+horizon_row = 284
 distance = 0.8
 
 [sub_resource type="Resource" id="mid"]
 script = ExtResource("2_layer")
 texture = ExtResource("5_mid")
 scroll_scale = Vector2(0.3, 0.18)
-horizon_row = 229
+horizon_row = 371
 distance = 0.5
 
 [sub_resource type="Resource" id="near"]
 script = ExtResource("2_layer")
 texture = ExtResource("6_near")
 scroll_scale = Vector2(0.55, 0.32)
-horizon_row = 229
+horizon_row = 419
 distance = 0.2
 
 [resource]

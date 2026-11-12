@@ -99,8 +99,9 @@ which is how the village loses people at 0.6.
 - **Revision (STORY-05, 2026-11-12):** the waterfall garden's lantern has a `PointLight2D`
   (`LanternLight`), at the user's request ("a lâmpada pode ter iluminação dinâmica"). The rule
   above holds for it: its energy is the memory at the lantern times its flame frame, so a
-  forgotten lantern sheds no light, and its rings are stepped, not a smooth gradient
-  (`architecture/story-05-playable-flashbacks`, "The garden rebuilt"). Windows stay sprites.
+  forgotten lantern sheds no light. Since 2026-11-12's fixes its falloff is a smooth radial
+  gradient sampled in 2 px texels (the stepped rings read as hard bands), and no backdrop takes
+  its light (`architecture/story-05-playable-flashbacks`, "The garden fixed"). Windows stay sprites.
 
 **Villagers and animals.**
 - `Character` subclasses: physics bodies, gravity, health, the creature pass. A `Character` never

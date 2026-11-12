@@ -59,6 +59,8 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
 - **Teleport.** `"teleport": [x, y]` moves Ivo mid-run with `Character.teleport`, as `player_position` does at the
   start, so one timeline can visit several rooms (the opening's errand, `systems/story`). The game enters the room under
   him with a cut.
+- **Zoom.** `"zoom": <value>` sets the camera's zoom at once (`zoom_to(value, 0)`), so a timeline can look at a room the
+  way a cutscene's widest frame does (the waterfall garden at 0.5, `story05_garden_look_<n>.json`).
 - **`debug_trials` presses.** Every F10 (`debug_trials`) the runner sees prints a `[playtest] debug_trials` line: the time, the event's text, class and device, whether the timeline sent it, and whether the window had focus (an unexplained F10 once moved Ivo to the song trials: `playtests/2026-10-16-story15-cutscenes`).
 - **Per-frame trace.** `"trace": true` prints one `[playtest] trace` line every physics frame until a
   `"trace": false` step: Ivo's position, velocity, floor, helix ride and progress `u`, the camera's centre and hp.
