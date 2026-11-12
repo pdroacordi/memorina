@@ -91,10 +91,14 @@ func _actor(actors: Array[StoryActor], id: StringName) -> StoryActor:
 			return actor
 	return null
 
-## Every catalog scene is started somewhere, and every started scene is in the catalog.
+## Every catalog scene is started somewhere (a room, or FlashbackDirector: a flashback's opening and returning), and every
+## started scene is in the catalog.
 func test_the_catalog_and_the_rooms_agree() -> void:
 	var catalog := load("res://resources/cutscene/cutscene_catalog.tres") as CutsceneCatalog
 	var started: Array[StringName] = []
+	var flashbacks := load("res://resources/story/flashbacks/flashback_catalog.tres") as FlashbackCatalog
+	for flashback: Flashback in flashbacks.flashbacks:
+		started.append_array([flashback.opening.id, flashback.returning.id])
 	for path: String in _contents(ROOMS):
 		var root := (load(path) as PackedScene).instantiate()
 		for node: Node in _descendants(root):

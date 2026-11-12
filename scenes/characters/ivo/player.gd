@@ -1541,13 +1541,17 @@ func is_talking() -> bool:
 ## Puts him at `door` after a trip through its partner, facing its
 ## `arrive_facing`, with no press of the trip still pending.
 func arrive_at(door: Door) -> void:
+	arrive(door.global_position, door.arrive_facing)
+
+## Puts his feet at `feet` facing `side` after a trip (a door, a flashback's travel), with no press of it pending.
+func arrive(feet: Vector2, side: int) -> void:
 	_sit.stand()
 	_wall_mobility.stop()
 	clear_knockback()
 	_landing.cancel_recovery()
-	teleport(door.global_position)
+	teleport(feet)
 	velocity = Vector2.ZERO
-	face_towards(door.arrive_facing)
+	face_towards(side)
 	# The buffers did not tick under the fade (bugs/presses-made-while-sinking-fire-on-respawn).
 	_drop_buffers()
 

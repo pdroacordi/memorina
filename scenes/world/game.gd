@@ -4,6 +4,8 @@ extends Node2D
 signal room_changed(room: Room)
 ## Ivo was put back on firm ground after a hazard, behind the black.
 signal hazard_respawned
+## A travel asked by `travel` ended: Ivo stands at its point (true), or it was refused (false).
+signal travelled(arrived: bool)
 
 ## Palette lookup by region season.
 @export var song_catalog: SongCatalog
@@ -295,6 +297,22 @@ func _on_player_entered_door(door: Door) -> void:
 	await _fade.to_clear()
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
+
+## Carries Ivo to `point` under a `colour` cover of `seconds` (0 cuts), with the door path's guards: a FlashbackDirector's
+## way into the past and back (architecture/story-05-playable-flashbacks).
+func travel(point: TravelPoint, colour: Color, seconds: float) -> void:
+	if _is_transitioning or _dying or _lost or _current_room == null or point == null or point.room == null:
+		travelled.emit(false)
+		return
+	_is_transitioning = true
+	# Deferred: the ask can arrive inside a physics step (gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move).
+	_player.set_deferred(&"process_mode", Node.PROCESS_MODE_DISABLED)
+	await _fade.to_colour(colour, seconds)
+	await _land_in(point.room, point.place.bind(_player))
+	await _fade.to_clear()
+	_player.process_mode = Node.PROCESS_MODE_INHERIT
+	_is_transitioning = false
+	travelled.emit(true)
 
 func _arrive_through(room: Room, link: StringName) -> void:
 	var arrival := Door.find(get_tree(), room, link)

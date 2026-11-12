@@ -19,7 +19,7 @@ source_files:
 
 # STORY-05: five playable flashbacks (plan)
 
-**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-4 (2026-11-12).
+**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-5 (2026-11-12).
 
 ## Context
 
@@ -73,6 +73,7 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 - Then the director plays `opening` on the past host (`CutsceneDirector.play`).
 - End: the leaving scene ends on a 0 s cut to black and must not clear it at `restore`. The director travels back, plays `returning` (kneel, silence 1 s or 5 s) and releases the music.
 - Quit mid-visit: nothing written (only benches save), so the bench reload shows the flashback still due. Death inside: impossible. `_exit_tree` writes nothing.
+- Built (step 5, 2026-11-12; `systems/cutscenes`, "The visit"). Corrections to the plan: the travel is `FlashbackDirector.travel_requested(point, colour, seconds)` → `Game.travel()`, answered by `Game.travelled(arrived)` (Game cannot be asked by a signal of its own). `Flashback` also needs `past_room`, `arrival`/`arrival_facing` (where Ivo lands) and `entry_fade` (flashback 5 travels in 0 s). The director does not play `leaving`: the past's contents start it (a beat); the director waits for its recorded end. The host of opening and returning is the room's contents root, so "hosts resolve" became: a returning scene names only `ivo`, and the opening's ids resolve in the past room (checked when step 7 ships one). Music is asked after the talk ends, not at the crossing's end. The "due" check (`FlashbackSchedule.due == number`) also gates the start, so a replayed old crossing never travels.
 
 ### Cutscene vocabulary added (each with a `cutscene_steps_test` case)
 - `MemoryBloom` (Node2D owning one hidden `MemorySource`, the bench `Bloom` pattern) + step `CutsceneBloom` (`bloom_id`, `at`, shape, rect/radius, offset, strength, ring, seconds). The cutscene's `restore` hides it.

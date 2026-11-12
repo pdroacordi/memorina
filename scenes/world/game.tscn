@@ -61,6 +61,8 @@
 [ext_resource type="Shader" path="res://scenes/world/memory/dissonance/dissonance_veil.gdshader" id="92_dissveil"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region_music.gd" id="99_regionmusic"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/weather/region_wind.tscn" id="100_regionwind"]
+[ext_resource type="Script" path="res://scenes/world/story/flashback/flashback_director.gd" id="101_flashbacks"]
+[ext_resource type="Resource" path="res://resources/story/flashbacks/flashback_catalog.tres" id="102_flashback_catalog"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -160,6 +162,14 @@ camera = NodePath("../Camera2D")
 letterbox = NodePath("../../CanvasLayer/Letterbox")
 fade = NodePath("../../CanvasLayer/Fade")
 dialogue = NodePath("../DialogueDirector")
+
+[node name="FlashbackDirector" type="Node" parent="World" node_paths=PackedStringArray("cutscenes", "dialogue", "ivo", "letterbox")]
+script = ExtResource("101_flashbacks")
+catalog = ExtResource("102_flashback_catalog")
+cutscenes = NodePath("../CutsceneDirector")
+dialogue = NodePath("../DialogueDirector")
+ivo = NodePath("../Player")
+letterbox = NodePath("../../CanvasLayer/Letterbox")
 
 [node name="Spawner" type="Node2D" parent="World" unique_id=1572119967]
 script = ExtResource("2_hqfqh")
@@ -408,6 +418,9 @@ layer = 3
 [connection signal="hurt" from="World/Player" to="World/CutsceneDirector" method="interrupt"]
 [connection signal="fell_into_hazard" from="World/Player" to="World/CutsceneDirector" method="interrupt"]
 [connection signal="room_changed" from="." to="World/CutsceneDirector" method="on_room_changed"]
+[connection signal="room_changed" from="." to="World/FlashbackDirector" method="on_room_changed"]
+[connection signal="travelled" from="." to="World/FlashbackDirector" method="on_travelled"]
+[connection signal="travel_requested" from="World/FlashbackDirector" to="." method="travel"]
 [connection signal="skip_scene_requested" from="ScreenLayer/Screens" to="World/CutsceneDirector" method="request_skip"]
 [connection signal="shown" from="World/NoticeWatcher" to="CanvasLayer/NoticeToast" method="show_notice"]
 [connection signal="withdrawn" from="World/NoticeWatcher" to="CanvasLayer/NoticeToast" method="withdraw"]

@@ -20,6 +20,8 @@ source_files:
   - scenes/world/camera.gd
   - scenes/world/fade.gd
   - scenes/world/memory/memory_bloom.gd
+  - scenes/world/story/flashback/flashback_director.gd
+  - resources/story/flashbacks/
   - scenes/characters/components/corruption/corruption_edge.gd
   - scenes/ui/letterbox/
   - scenes/ui/lesson_cinematic/lesson_cinematic.gd
@@ -130,6 +132,14 @@ The vocabulary of `architecture/story-05-playable-flashbacks` ("Cutscene vocabul
 - **`CutsceneFray`** (`actor`, `seconds`): agitates every `CorruptionEdge` child of the actor (it enters); the wait's `on_end` calms it, and `land` and `restore` calm it too. `CorruptionEdge` stays the only writer of the edge uniforms. A creature's edge puts its body on the creature pass and writes alpha 253 (the unshielded mark) on every pixel, which would take an actor out of the root canvas and its draw order among the props. So an actor's edge has `creature_pass` false: the actor stays in the root canvas and its sprite carries the edge material only while agitated. At rest it draws as plain art; during the glitch the 253 alpha draws 99 % opaque and no composite reads the mark (`corruption_edge_test`; the plan's "swap the material only for the glitch").
 - **`CutsceneTrigger.zone`** (an `Area2D`; its mask must hold Ivo's layer, 256): the armed trigger plays only while `zone.overlaps_body(ivo)`, after its delay and Ivo's gates (`cutscene_trigger_test.test_a_zone_waits_for_ivo_inside_it`).
 - **`Letterbox.rest_thickness`** (px, 0..`bar_height`, read-only; set by `rest_at(px, seconds)`, whose one writer is the `FlashbackDirector`, step 5): closed bars slide to it and `close()` returns to it, so the bars stay thin while Ivo walks the past and thicken for talks (`letterbox_test`).
+
+## The visit: FlashbackDirector (STORY-05 step 5, 2026-11-12)
+
+- **`Flashback`** (`resources/story/flashbacks/flashback.gd`): `number`, `crossing`, `opening`, `leaving` (id `flashback_<n>`), `returning`, `music`, `entry_mark` (s into `music`), `entry_fade` (s of white; 0 cuts), `bars_thin` (px), `past_room` (Room id, `garden_past`), `arrival` (feet, px from the past room's top-left) and `arrival_facing`. **`FlashbackCatalog`** (`flashback_catalog.tres`, empty until step 7): `by_crossing(scene)`, `validate(cutscenes)` names a number outside 1..5 or listed twice, a missing scene or one not in the cutscene catalog, a leaving id that is not `flashback_<n>`, a returning scene naming anything but `ivo` (its host is wherever Ivo stood), no music, and an entry mark or an opening/leaving `CutsceneMusicMark` that does not `fit` the music. The director asserts it in debug builds.
+- **`FlashbackDirector`** (`World/FlashbackDirector`, INHERIT, group `flashback_directors`; exports `catalog`, `cutscenes`, `dialogue`, `ivo`, `letterbox`). On `scene_ended` of a catalog crossing that is recorded and whose flashback is due, it waits until no talk is open, asks `Music` for the visit's cue (SCENE layer, owned by itself: it covers the past region's silence), waits for `entry_mark`, keeps the return point (room, feet, facing) in memory and emits `travel_requested(point, WHITE, entry_fade)` → `Game.travel`. On `Game.travelled` it sets `Letterbox.rest_at(bars_thin, 0)` and plays `opening` on the past room's contents. The `leaving` scene is started by the past's contents (a beat); its recorded end sets the bars to 0 and travels back under a 0 s black (the scene left the screen black: a recorded end never clears a fade). There it plays `returning` on the return room's contents, and at its end releases the music.
+- Hosts are the rooms' contents roots, so ids resolve in the past room (opening) and the return room (returning). `cutscene_rooms_test` counts a flashback's opening and returning as started.
+- `_exit_tree` forgets the visit and writes nothing; the music request dies with its owner. Nothing is saved inside, so a quit leaves the flashback due.
+- `flashback_director_test` (a fake travel in Game's order): there and back to the same step and facing, a dropped crossing stays, an open talk is waited out, the music lives the visit, leaving the tree mid-visit writes nothing, and game.tscn wires it; `flashback_catalog_test`.
 
 ## User decisions (2026-10-16), in their words
 
