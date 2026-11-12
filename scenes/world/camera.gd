@@ -317,6 +317,9 @@ func snap(keep_fall_lead: bool = false) -> void:
 	_stop_glide()
 	if gliding:
 		glide_finished.emit()
+	# A cut lands a running zoom or pair ease too, so the frame uncovered after a travel does not settle in view.
+	_land(_focus_tween)
+	_land(_pair_tween)
 	reset_smoothing()
 
 ## A decaying random offset; a stronger call while one runs replaces it.
@@ -340,6 +343,10 @@ func _stop_glide() -> void:
 		_glide_tween.kill()
 	_glide_weight = 0.0
 	_glide_from = Vector2.ZERO
+
+func _land(tween: Tween) -> void:
+	if tween != null and tween.is_valid() and tween.is_running():
+		tween.custom_step(1.0e6)
 
 func _tween_pair(target: float) -> void:
 	if _pair_tween:

@@ -167,3 +167,45 @@ func test_a_rebound_note_key_is_the_letter_set_and_the_old_one_is_not() -> void:
 	var shown := InputDevice.binding_for(&"note_up", Enums.GlyphSet.KEYBOARD_WASD) as InputEventKey
 	assert_int(shown.physical_keycode).is_equal(KEY_Q)
 	assert_int((InputDevice.binding_for(&"note_up", Enums.GlyphSet.KEYBOARD_ARROWS) as InputEventKey).physical_keycode) 			.is_equal(KEY_UP)
+
+## While a HELD_UP beat holds him only whether Up is held reads (flashback 3): no press is emitted, every axis reads 0,
+## and Up held through it is not a new press once it ends.
+func test_up_only_reads_up_held_and_emits_nothing() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	add_child(input)
+	var heard: Array[int] = [0]
+	input.look_up_pressed.connect(func() -> void: heard[0] += 1)
+	input.jump_pressed.connect(func() -> void: heard[0] += 1)
+	input.note_pressed.connect(func(_n: Enums.Note, _g: Enums.GlyphSet) -> void: heard[0] += 1)
+	input.up_only = true
+	_act(&"look_up", true)
+	_act(&"note_up", true)
+	_act(&"jump", true)
+	_act(&"move_right", true)
+	await await_idle_frame()
+	assert_bool(input.holding_up).is_true()
+	assert_float(input.direction).is_equal(0.0)
+	assert_float(input.look_direction).is_equal(0.0)
+	_act(&"jump", false)
+	_act(&"note_up", false)
+	_act(&"move_right", false)
+	await await_idle_frame()
+	input.up_only = false
+	_act(&"look_up", true)
+	await await_idle_frame()
+	_act(&"look_up", false)
+	await await_idle_frame()
+	assert_bool(input.holding_up).is_false()
+	assert_int(heard[0]).is_equal(0)
+
+func test_up_held_reads_false_while_blocked() -> void:
+	var input: PlayerInput = auto_free(PlayerInput.new())
+	add_child(input)
+	_act(&"look_up", true)
+	await await_idle_frame()
+	input.blocked = true
+	assert_bool(input.holding_up).is_false()
+	input.blocked = false
+	assert_bool(input.holding_up).is_true()
+	_act(&"look_up", false)
+	await await_idle_frame()

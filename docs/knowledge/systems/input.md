@@ -6,7 +6,7 @@ status: active
 tags: [input, gamepad, glyphs, keybindings, menu, pause]
 related: [systems/settings, systems/dialogue, systems/map, systems/notebook, architecture/character-controller-input-split, architecture/pause-menu-worldfreeze-reuse, systems/screens, gotchas/a-stick-is-pressed-on-every-motion-event, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-menu-press-reaches-the-last-node-first, bugs/player-input-edge-state-goes-stale-across-a-pause-menu]
 created: 2026-10-02
-updated: 2026-11-10
+updated: 2026-11-12
 source_files:
   - scenes/characters/ivo/player_input.gd
   - scenes/ui/menu/menu_input.gd
@@ -54,6 +54,7 @@ Only these three nodes read `InputEvent`s; the `verify-gates` input scan exclude
    - `_jump_held` tracks the jump for the cut.
    - **Resync.** On `NOTIFICATION_UNPAUSED` and `NOTIFICATION_ENABLED`, `resync(jump_held, down_held, up_held)` re-reads all three from `Input`: a jump released while it received no events emits `jump_canceled`, and down or up held through a menu or a door's fade is not a new press (`bugs/player-input-edge-state-goes-stale-across-a-pause-menu`). `look_up_pressed` is the up edge a door, a Talkable or an item pickup hears (in that order, `systems/pickups`), read like `look_down_pressed` (`architecture/doors-and-interiors`, `systems/dialogue`).
    - **`notes_only`** (set by `Player.pause_talk` while a beat holds NOTES, the guitar, `systems/story`): `_input` emits only `note_pressed` and every axis reads 0. Clearing it resyncs the held jump, down and up.
+   - **`up_only`** (STORY-05, its twin: set by `Player.pause_talk` while a beat holds `HELD_UP`, flashback 3's swing): `_input` emits nothing and every axis reads 0; only the property **`holding_up`** (`Input.is_action_pressed("look_up")`, false while `blocked`) reads, sampled on read by the beat through `Player.up_held()`, never a per-frame signal. Clearing it resyncs like `notes_only`, so Up held through the beat is not a new press (`player_input_test`, `player_beat_test`).
    - **`blocked`** (written only by `Player._refresh_block()` since STORY-15: in a talk, the talk's listening or the map; else in a cutscene, blocked; else the map; `block_input` / `unblock_input` set the map's part, `begin_talk` / `pause_talk` / `end_talk` the talk's, `begin_scene` / `end_scene` the scene's; `systems/cutscenes`): the node is DISABLED, so `_input` does not run, and `direction` and `look_direction` read 0. Clearing it re-enables the node, which resyncs. `Player.block_input` also drops the jump, roll, attack (including a combo press) and draw buffers and any pending sit or stand, so a press made just before the open never acts under the map.
 2. **`MenuInput`** (`scenes/ui/menu/menu_input.gd`, under the ALWAYS `Screens` root):
    - **Capture mode** (`capturing`, set by `SettingsScreen`): every key and pad event is marked handled (press, release, motion) and only `capture_cancelled` (a `pause` press) or `bind_pressed(device, code)` (a non-echo key press as its physical keycode, a pad button press) is emitted. Leaving it re-reads `_left_held` / `_right_held` from `Input`. No live `InputEvent` leaves the reader: codes are ints.

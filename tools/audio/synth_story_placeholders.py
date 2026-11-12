@@ -1,7 +1,7 @@
 """Synthesize the stand-in sounds of the opening (STORY-03) until the user's recordings replace them.
 
-python -I tools/audio/synth_story_placeholders.py [out_dir]
-    out_dir defaults to assets/audios/sfx/story. Writes:
+python -I tools/audio/synth_story_placeholders.py [out_dir] [name ...]
+    out_dir defaults to assets/audios/sfx/story; names (file stems) limit what is written. Writes:
     guitar_c.wav, guitar_d.wav, guitar_e.wav, guitar_g.wav  one nylon-string pluck each, an octave under the
         Memorina's C4 D4 E4 G4, so the guitar beat reads the same four note inputs;
     wife_hum_opening.wav  the morning song's first four notes hummed by a woman in one breath (the mentor's flicker);
@@ -11,6 +11,7 @@ python -I tools/audio/synth_story_placeholders.py [out_dir]
     memorina_flat.wav  one flat, breathy note on the pipes, a little under pitch: "[Play it again]" in the lighthouse;
     morning_room.wav  (STORY-16) the opening's morning: a soft room tone with faint, far, high chirps;
     gate_bolt.wav  (STORY-16) the village's east gate unbolted, heard from indoors: a wooden bolt sliding, then a clack.
+    rope_creak.wav  (STORY-05) the fallen swing's call: a rope creaking on a branch out and back, as if someone swung.
     The morning song is E G E D | C D E C, beats 1 1 1.5 0.5 1 1 1 2.5 at 0.42 s ("Approve melody (Recommended)",
     user, 2026-10-15). A real recording replaces a file of the same name.
 """
@@ -179,6 +180,27 @@ def gate_bolt() -> np.ndarray:
     return signal.lfilter(*signal.butter(2, 3000 / (SR / 2)), y) * np.minimum(1, t / 0.01)
 
 
+def rope_creak() -> np.ndarray:
+    """Rope rubbing on bark, out and back: two stick-slip trains of clicks through woody resonances, 1.2 s apart."""
+    rng = np.random.default_rng(31)
+    length = int(SR * 2.0)
+    y = np.zeros(length)
+    for start, dur, rate in [(0.0, 0.5, (55, 95)), (1.2, 0.42, (70, 45))]:
+        at = start
+        end = start + dur
+        while at < end:
+            u = (at - start) / dur
+            k = int(at * SR)
+            if k < length:
+                y[k] += np.sin(np.pi * u) * rng.uniform(0.6, 1.0)
+            at += 1.0 / (rate[0] + (rate[1] - rate[0]) * u) * rng.uniform(0.85, 1.15)
+    body = np.zeros_like(y)
+    for fc in (330, 380, 820, 940, 1700):
+        body += signal.lfilter(*signal.iirpeak(fc / (SR / 2), 14), y)
+    body += 0.3 * signal.lfilter(*signal.butter(2, [900 / (SR / 2), 3200 / (SR / 2)], btype="band"), y)
+    return signal.lfilter(*signal.butter(2, 4000 / (SR / 2)), body)
+
+
 def write(path: str, sound: np.ndarray) -> None:
     """Normalized, through a small room, 16-bit mono."""
     sound = sound / np.max(np.abs(sound))
@@ -196,18 +218,23 @@ def write(path: str, sound: np.ndarray) -> None:
     print(path)
 
 
-def main(out_dir: str) -> None:
+def main(out_dir: str, names: list[str]) -> None:
     os.makedirs(out_dir, exist_ok=True)
-    for i, note in enumerate(PITCH):
-        write(os.path.join(out_dir, "guitar_%s.wav" % note), guitar(PITCH[note] / 2, seed=i))
-    write(os.path.join(out_dir, "wife_hum_opening.wav"), hum(MELODY[:4], BEATS[:4]))
-    write(os.path.join(out_dir, "daughter_hum_four.wav"), child_hum(MELODY[:4], BEATS[:4], seed=4))
-    write(os.path.join(out_dir, "daughter_hum_five.wav"), child_hum(MELODY[:5], BEATS[:5], seed=5))
-    write(os.path.join(out_dir, "guitar_muted.wav"), muted_string(PITCH["c"] / 2))
-    write(os.path.join(out_dir, "memorina_flat.wav"), flat_pipe(PITCH["e"]))
-    write(os.path.join(out_dir, "morning_room.wav"), morning_room())
-    write(os.path.join(out_dir, "gate_bolt.wav"), gate_bolt())
+    sounds = {"guitar_%s" % note: (lambda n=note, i=i: guitar(PITCH[n] / 2, seed=i)) for i, note in enumerate(PITCH)}
+    sounds.update({
+        "wife_hum_opening": lambda: hum(MELODY[:4], BEATS[:4]),
+        "daughter_hum_four": lambda: child_hum(MELODY[:4], BEATS[:4], seed=4),
+        "daughter_hum_five": lambda: child_hum(MELODY[:5], BEATS[:5], seed=5),
+        "guitar_muted": lambda: muted_string(PITCH["c"] / 2),
+        "memorina_flat": lambda: flat_pipe(PITCH["e"]),
+        "morning_room": morning_room,
+        "gate_bolt": gate_bolt,
+        "rope_creak": rope_creak,
+    })
+    for name, make in sounds.items():
+        if not names or name in names:
+            write(os.path.join(out_dir, name + ".wav"), make())
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "assets/audios/sfx/story")
+    main(sys.argv[1] if len(sys.argv) > 1 else "assets/audios/sfx/story", sys.argv[2:])

@@ -41,6 +41,10 @@
 [ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2_chest.tres" id="cs_chest_2"]
 [ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2_tie.tres" id="cs_tie_2"]
 [ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2.tres" id="cs_leaving_2"]
+[ext_resource type="PackedScene" path="res://scenes/world/story/flashback/swing/swing_ride.tscn" id="st_swing_ride"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_3_push.tres" id="tk_push_3"]
+[ext_resource type="Script" path="res://scenes/world/story/flashback/swing_push_beat.gd" id="st_push_beat"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_3.tres" id="cs_leaving_3"]
 
 [sub_resource type="Resource" id="due_1"]
 script = ExtResource("st_fact")
@@ -135,6 +139,43 @@ when = Array[ExtResource("st_fact")]([SubResource("due_2")])
 unless = Array[ExtResource("st_fact")]([SubResource("flower_3_heard"), SubResource("flower_3_last_heard")])
 show = &"Yellow"
 
+[sub_resource type="Resource" id="due_3"]
+script = ExtResource("st_fact")
+kind = 15
+index = 3
+
+[sub_resource type="Resource" id="alba_swing"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_3")])
+show = &"Swing"
+
+[sub_resource type="Resource" id="past_swing_empty"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_3")])
+
+[sub_resource type="Resource" id="past_swing_hanging"]
+script = ExtResource("st_stage")
+show = &"Hanging"
+
+[sub_resource type="Resource" id="light_late_afternoon"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_3")])
+show = &"LateAfternoon"
+
+[sub_resource type="CanvasItemMaterial" id="light_multiply"]
+blend_mode = 3
+
+[sub_resource type="CanvasItemMaterial" id="light_add"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="sun_gradient"]
+colors = PackedColorArray(1, 0.44, 0.1, 0.36, 1, 0.44, 0.1, 0.12)
+
+[sub_resource type="GradientTexture2D" id="sun_glow"]
+gradient = SubResource("sun_gradient")
+fill_from = Vector2(0, 0.2)
+fill_to = Vector2(0.75, 0.2)
+
 [node name="Contents" type="Node2D"]
 
 [node name="Backdrop" type="Node2D" parent="."]
@@ -147,8 +188,13 @@ z_index = -10
 [node name="OldTree" parent="Props" instance=ExtResource("p_tree")]
 position = Vector2(250, 288)
 
-[node name="Swing" parent="Props" instance=ExtResource("p_swing")]
+[node name="Swing" type="Node2D" parent="Props"]
 position = Vector2(312, 288)
+script = ExtResource("st_staging")
+staging_id = &"past_swing_staging"
+stages = Array[ExtResource("st_stage")]([SubResource("past_swing_empty"), SubResource("past_swing_hanging")])
+
+[node name="Hanging" parent="Props/Swing" instance=ExtResource("p_swing")]
 
 [node name="Bush" parent="Props" instance=ExtResource("p_bush")]
 position = Vector2(92, 288)
@@ -232,7 +278,7 @@ z_index = -10
 [node name="Alba" type="Node2D" parent="Stagings"]
 script = ExtResource("st_staging")
 staging_id = &"alba_staging"
-stages = Array[ExtResource("st_stage")]([SubResource("alba_stone"), SubResource("alba_holding_out"), SubResource("alba_risen"), SubResource("alba_flowers")])
+stages = Array[ExtResource("st_stage")]([SubResource("alba_stone"), SubResource("alba_holding_out"), SubResource("alba_risen"), SubResource("alba_flowers"), SubResource("alba_swing")])
 
 [node name="Stone" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
 position = Vector2(816, 270)
@@ -251,6 +297,9 @@ loop = &"risen"
 [node name="HoldingOut" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
 position = Vector2(640, 288)
 loop = &"holding_out"
+
+[node name="Swing" parent="Stagings/Alba" instance=ExtResource("st_swing_ride")]
+position = Vector2(312, 192)
 
 [node name="AlbaLaugh" type="Node2D" parent="Stagings"]
 script = ExtResource("st_staging")
@@ -296,6 +345,33 @@ stages = Array[ExtResource("st_stage")]([SubResource("flower_3_yellow")])
 position = Vector2(1170, 280)
 texture = ExtResource("st_yellow")
 
+[node name="Light" type="Node2D" parent="Stagings"]
+z_index = 100
+script = ExtResource("st_staging")
+staging_id = &"light_staging"
+stages = Array[ExtResource("st_stage")]([SubResource("light_late_afternoon")])
+
+[node name="LateAfternoon" type="Node2D" parent="Stagings/Light"]
+
+[node name="Warm" type="ColorRect" parent="Stagings/Light/LateAfternoon"]
+material = SubResource("light_multiply")
+offset_left = -160.0
+offset_top = -480.0
+offset_right = 1440.0
+offset_bottom = 640.0
+mouse_filter = 2
+color = Color(1, 0.88, 0.72, 1)
+
+[node name="Sun" type="TextureRect" parent="Stagings/Light/LateAfternoon"]
+material = SubResource("light_add")
+offset_left = -160.0
+offset_top = -480.0
+offset_right = 1440.0
+offset_bottom = 640.0
+mouse_filter = 2
+texture = SubResource("sun_glow")
+expand_mode = 1
+
 [node name="Cast" type="Node2D" parent="."]
 z_index = -10
 
@@ -330,6 +406,12 @@ script = ExtResource("cs_mark")
 mark_id = &"far_side"
 
 [node name="Talkables" type="Node2D" parent="."]
+
+[node name="Swing3" parent="Talkables" instance=ExtResource("tk_talkable")]
+position = Vector2(312, 288)
+talk = ExtResource("tk_push_3")
+reach_west = 56.0
+reach_east = 24.0
 
 [node name="Guitar1" parent="Talkables" instance=ExtResource("tk_talkable")]
 position = Vector2(228, 288)
@@ -410,6 +492,27 @@ script = ExtResource("cs_beat")
 cue = &"flashback_2_leaving"
 face = NodePath("../../Stagings/Alba/HoldingOut")
 cutscene = ExtResource("cs_leaving_2")
+
+[node name="Push3" type="Node" parent="Beats" node_paths=PackedStringArray("sway")]
+script = ExtResource("st_push_beat")
+cue = &"flashback_3_push"
+pose = 6
+face = NodePath("../../Marks/Swing")
+sway = NodePath("../../Stagings/Alba/Swing")
+
+[node name="LetGo3" type="Node" parent="Beats" node_paths=PackedStringArray("sway")]
+script = ExtResource("st_push_beat")
+cue = &"flashback_3_let_go"
+face = NodePath("../../Marks/Swing")
+kind = 1
+sway = NodePath("../../Stagings/Alba/Swing")
+seconds = 0.1
+
+[node name="Leaving3" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_3_leaving"
+face = NodePath("../../Marks/Swing")
+cutscene = ExtResource("cs_leaving_3")
 
 [node name="PastGrey" type="Node2D" parent="."]
 position = Vector2(640, 192)

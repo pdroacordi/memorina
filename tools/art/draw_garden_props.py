@@ -1,7 +1,7 @@
 """Draw the waterfall garden's small and repeating props pixel by pixel (STORY-05, design drafts/camada_pessoal.md section 1).
 
 Usage: python -I tools/art/draw_garden_props.py <kind> <out.png>
-    kind: swing | swing_fallen | waterfall_fall | waterfall_splash | ribbon_branch | ribbon_hand | ribbon_flight
+    kind: swing | swing_fallen | swing_rise | waterfall_fall | waterfall_splash | ribbon_branch | ribbon_hand | ribbon_flight
           | flower_bed_yellow | flower_bed_white | flower_bed_mixed
        python -I tools/art/draw_garden_props.py ivo_ribbon <clean sheet.png> <out.png>
 
@@ -103,6 +103,41 @@ def swing_fallen() -> Image.Image:
 		px[x, y] = ROPE if x % 2 else ROPE_HI
 	px[w - 1, h - 2] = ROPE_SHADE
 	return art
+
+
+def swing_rise(frames: int = 3) -> Image.Image:
+	"""The fallen swing raised by a held Up (flashback 3): frame k (of `frames`) is step k + 1 of frames + 1. The seat lifts
+	from the ground to its hanging row and the two ropes climb from it towards the branch, their loose ends frayed. 18x49 art
+	px per frame, the ground under row 48; the hanging swing's rows are 0-42 of the same frame."""
+	w, h, hang_top = 18, 49, 39
+	sheet = Image.new("RGBA", (w * frames, h), CLEAR)
+	for f in range(frames):
+		t = (f + 1) / (frames + 1)
+		art = Image.new("RGBA", (w, h), CLEAR)
+		px = art.load()
+		seat = round(46 + (hang_top - 46) * t)
+		rope_top = round(seat - (seat - 3) * t)
+		for rx in (2, 15):
+			for y in range(rope_top, seat):
+				px[rx, y] = ROPE if (y // 2) % 2 else ROPE_HI
+				if y % 4 == 1:
+					px[rx, y] = ROPE_SHADE
+			# The loose end, bent and frayed.
+			px[rx + (1 if rx == 2 else -1), rope_top] = ROPE_SHADE
+			px[rx, rope_top] = ROPE_HI
+		for x in range(w):
+			px[x, seat] = WOOD_HI
+			px[x, seat + 1] = WOOD
+			px[x, seat + 2] = WOOD_SHADE
+		for rx in (2, 15):
+			px[rx, seat] = ROPE
+			px[rx, seat + 1] = ROPE_SHADE
+			if seat + 3 < h:
+				px[rx, seat + 3] = ROPE_SHADE
+		px[0, seat + 2] = WOOD_DARK
+		px[w - 1, seat + 2] = WOOD_DARK
+		sheet.paste(art, (f * w, 0))
+	return sheet
 
 
 def waterfall_fall(frames: int = 4) -> Image.Image:
@@ -361,6 +396,7 @@ def main(kind: str, out: str, clean: str = "") -> None:
 	art = {
 		"swing": swing,
 		"swing_fallen": swing_fallen,
+		"swing_rise": swing_rise,
 		"waterfall_fall": waterfall_fall,
 		"waterfall_splash": waterfall_splash,
 		"ribbon_branch": ribbon_branch,

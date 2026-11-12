@@ -102,6 +102,22 @@ func test_snap_ends_a_glide() -> void:
 	await get_tree().physics_frame
 	assert_float(_centre().x).is_equal_approx(ROOM_B.position.x + _half_width(), 0.5)
 
+## A talk released just before a travel (a flashback's leaving): the snap behind the cover lands the zoom and the pair
+## ease, so the uncovered frame is already on Ivo at rest.
+func test_snap_lands_a_released_talk() -> void:
+	_subject.global_position = Vector2(600, 300)
+	_camera.set_bounds(Rect2(-4000, -4000, 8000, 8000))
+	_camera.frame_talk(Vector2(900, 300), 2.0)
+	for i: int in 60:
+		await get_tree().physics_frame
+	_camera.release_talk()
+	await get_tree().physics_frame
+	_subject.global_position = Vector2(-2000, 300)
+	_camera.snap()
+	assert_vector(_camera.zoom).is_equal(Vector2.ONE)
+	await get_tree().physics_frame
+	assert_float(_centre().x).is_equal_approx(_camera.centre_for(_subject).x, 1.0)
+
 ## bugs/a-hop-below-a-seam-flips-the-room-twice: astride a room's top edge the body stays in frame.
 func test_the_clamp_yields_to_keep_the_body_in_frame() -> void:
 	var body := auto_free(BodySubject.new()) as BodySubject

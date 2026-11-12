@@ -226,3 +226,78 @@ func test_a_grey_pocket_surrounds_the_ribbon_exactly_while_it_shows() -> void:
 				# A restored region rests at 1: the pocket's core takes it to 0.
 				assert_float(strength).is_equal(-1.0)
 		contents.free()
+
+const PRESENT_GARDEN_CONTENTS := "res://scenes/world/rooms/home_village/contents/village_garden_contents.tscn"
+const PAST_GARDEN_CONTENTS := "res://scenes/world/rooms/past/contents/garden_past_contents.tscn"
+
+func _flashback_3_due() -> PlayerData:
+	var data := PlayerData.new()
+	data.owned_items[Enums.PlayerItem.MEMORINA] = true
+	data.restored_guardians[Enums.Guardian.FROST] = true
+	data.restored_guardians[Enums.Guardian.BLOOM] = true
+	data.scenes_seen.append(FlashbackSchedule.id(1))
+	data.scenes_seen.append(FlashbackSchedule.id(2))
+	return data
+
+## The fallen swing calls while flashback 3 is due: its talk holds Up to raise it, then plays the crossing; it lies
+## fallen until the flashback is seen, then hangs.
+func test_the_fallen_swing_raises_into_flashback_3() -> void:
+	var flashback := load("res://resources/story/flashbacks/flashback_3.tres") as Flashback
+	var contents := (load(PRESENT_GARDEN_CONTENTS) as PackedScene).instantiate()
+	var due := _flashback_3_due()
+	assert_int(FlashbackSchedule.due(due)).is_equal(3)
+	var talk := contents.get_node("Flashbacks/Swing3") as Talkable
+	assert_str(String(talk.current(due).id)).is_equal("flashback_3_swing")
+	var raise := contents.get_node("Flashbacks/Raise3") as SwingRaiseBeat
+	assert_int(raise.hold).is_equal(DialogueBeat.Hold.HELD_UP)
+	assert_object(raise.swing).is_same(contents.get_node("Props/Swing"))
+	for child: StringName in raise.rising + [raise.raised]:
+		assert_object(raise.swing.get_node_or_null(NodePath(child))).override_failure_message(child).is_not_null()
+	var crossing := contents.get_node("Flashbacks/Crossing3") as CutsceneBeat
+	assert_object(crossing.cutscene).is_same(flashback.crossing)
+	var lines := talk.current(due).lines
+	assert_str(String(lines[0].cue)).is_equal(String(raise.cue))
+	assert_str(String(lines[lines.size() - 1].cue)).is_equal(String(crossing.cue))
+	var swing := raise.swing
+	assert_str(String(swing.stages[FactStaging.pick(swing.stages, due)].show)).is_equal("Fallen")
+	var seen := _flashback_3_due()
+	seen.scenes_seen.append(FlashbackSchedule.id(3))
+	assert_str(String(swing.stages[FactStaging.pick(swing.stages, seen)].show)).is_equal("Hanging")
+	assert_object(talk.current(seen)).is_null()
+	contents.free()
+
+## The past at late afternoon: Alba on the swing in its place, the warm light, and four pushes, each heard only after
+## the one before; the last lets go and leaves.
+func test_the_past_swing_holds_her_and_four_pushes() -> void:
+	var flashback := load("res://resources/story/flashbacks/flashback_3.tres") as Flashback
+	var contents := (load(PAST_GARDEN_CONTENTS) as PackedScene).instantiate()
+	var due := _flashback_3_due()
+	var alba := contents.get_node("Stagings/Alba") as FactStaging
+	assert_str(String(alba.stages[FactStaging.pick(alba.stages, due)].show)).is_equal("Swing")
+	var prop := contents.get_node("Props/Swing") as FactStaging
+	assert_str(String(prop.stages[FactStaging.pick(prop.stages, due)].show)).is_empty()
+	var light := contents.get_node("Stagings/Light") as FactStaging
+	assert_str(String(light.stages[FactStaging.pick(light.stages, due)].show)).is_equal("LateAfternoon")
+	var before := _flashback_3_due()
+	before.scenes_seen.erase(FlashbackSchedule.id(2))
+	assert_str(String(prop.stages[FactStaging.pick(prop.stages, before)].show)).is_equal("Hanging")
+	assert_int(FactStaging.pick(light.stages, before)).is_equal(-1)
+	var talk := contents.get_node("Talkables/Swing3") as Talkable
+	var cues := {}
+	for beat: Node in contents.get_node("Beats").get_children():
+		if beat is DialogueBeat:
+			cues[(beat as DialogueBeat).cue] = beat
+	for n: int in range(1, 5):
+		var dialogue := talk.current(due)
+		assert_str(String(dialogue.id)).is_equal("flashback_3_push_%d" % n)
+		assert_str(String(dialogue.lines[0].cue)).is_equal("flashback_3_push")
+		for line: DialogueLine in dialogue.lines:
+			if line.cue != &"":
+				assert_bool(cues.has(line.cue)).override_failure_message(String(line.cue)).is_true()
+		due.dialogues_heard.append(dialogue.id)
+	assert_object(talk.current(due)).is_null()
+	assert_object((cues[&"flashback_3_leaving"] as CutsceneBeat).cutscene).is_same(flashback.leaving)
+	assert_int((cues[&"flashback_3_let_go"] as SwingPushBeat).kind).is_equal(SwingPushBeat.Kind.LET_GO)
+	assert_int((cues[&"flashback_3_push"] as SwingPushBeat).pose).is_equal(DialogueBeat.Pose.PUSH_SWING)
+	assert_object((cues[&"flashback_3_push"] as SwingPushBeat).sway).is_same(alba.get_node("Swing"))
+	contents.free()

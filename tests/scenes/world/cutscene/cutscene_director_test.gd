@@ -241,3 +241,27 @@ func test_a_muffle_ends_with_the_scene() -> void:
 	_director.interrupt()
 	await get_tree().create_timer(0.8).timeout
 	assert_float(Music.muffled()).is_equal(0.0)
+
+## A scene that ends under an opaque fade (a flashback's leaving, before its travel back) hands the frame straight back
+## to Ivo: an ease behind the cover would be stretched across the world by the travel.
+func test_an_end_under_an_opaque_fade_cuts_the_frame_back() -> void:
+	var camera := GameCamera.new()
+	_world.add_child(camera)
+	camera.set_bounds(Rect2(-4000, -4000, 8000, 8000))
+	camera.follow(_ivo)
+	var layer := CanvasLayer.new()
+	_world.add_child(layer)
+	var fade := Fade.new()
+	layer.add_child(fade)
+	_director.camera = camera
+	_director.fade = fade
+	var black := CutsceneFade.new()
+	black.seconds = 0.0
+	_director.play(_scene([C.camera([&"bed_edge"], 2.0, 0.0), C.wait(0.1), black]), _host)
+	for i: int in 30:
+		await get_tree().physics_frame
+	assert_bool(_director.is_playing()).is_false()
+	_ivo.teleport(Vector2(1800, FLOOR_Y))
+	await get_tree().physics_frame
+	await get_tree().physics_frame
+	assert_float(camera.shown_centre().distance_to(camera.centre_for(_ivo))).is_less(2.0)

@@ -19,7 +19,7 @@ source_files:
 
 # STORY-05: five playable flashbacks (plan)
 
-**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-8 (2026-11-12).
+**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-9 (2026-11-12).
 
 ## Context
 
@@ -114,6 +114,11 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 ### Flashback 2 (step 8, built 2026-11-12; `systems/cutscenes`, "Flashback 2")
 - Corrections: the exit rooms are lake_glacier, woods_hollow_tree, orchard_cliff_chimney and caldera_sun_stair; the ribbon's nodes sit in their contents scenes, not the `.room`, and each region's talk has its own cue (`DialogueBeat.find` is tree-wide). A scene cannot walk Ivo back to her: the pool is a one-row dip he must jump. So the third flower plays the chest scene where he stands (the far frame), and her next talk (`flashback_2_pale`, gated on `SCENE_SEEN flashback_2_chest`) auto-starts when he comes back. Alba's poses are stagings on the SCENE_SEEN of the chest and tie scenes, not stand-ins.
 - Stand-ins: `wife_song_full` as the music and the yellow flowers. The garden's art, the ribbon on its twig and the grey pocket around it landed 2026-11-12 (`systems/props`, "The waterfall garden"; `systems/cutscenes`, "The ribbon's art", "The grey pocket").
+
+### Flashback 3 (step 9, built 2026-11-12; `systems/cutscenes`, "Flashback 3")
+- Corrections: a beat ends a talk unheard through a new `DialogueBeat.abandon()` (the director refuses `interrupt()` while a beat runs). The raise's last cue plays the crossing as a `CutsceneBeat`, as the ribbon's does; the swing's rise is three stand-in frames (`swing_rise.png`) and a `SwingSway` at the top. In the past, Alba's `Swing` child carries the swing itself (a `SwingSway` with her figure on the seat), so the past's prop swing is a staging that hides while flashback 3 is due. The push talks are one set on one Talkable (`once`, each gated on the previous heard), one shared push beat; the fourth adds a let-go beat before the leaving. The light is a `Light` FactStaging (multiply and add overlays), not a `CutsceneVisual`: it lasts through free play. The leaving releases the visit's music to a stream-less cue, so the stop is silent.
+- Two camera fixes found by the playtest (`bugs/a-flashback-return-glides-the-frame-from-the-past`): an end under an opaque fade cuts the frame back, and `GameCamera.snap()` lands a running zoom or pair ease.
+- Stand-ins: her hands on the rope, Ivo's hoist, the creak (synthesized), the music; the shawl is not drawn.
 
 ### Alba
 - A `Speaker` `alba` (`SPEAKER_ALBA`, portrait).

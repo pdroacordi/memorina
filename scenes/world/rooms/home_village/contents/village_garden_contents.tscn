@@ -23,6 +23,14 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/waterfall_splash.tscn" id="p_splash"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/waterfall_ledge.tscn" id="p_ledge"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bush.tscn" id="p_bush"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/swing_rise.tscn" id="p_swing_rise"]
+[ext_resource type="PackedScene" path="res://scenes/world/story/flashback/swing/swing_sway.tscn" id="p_swing_sway"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/rope_creak.wav" id="fb_creak"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/talkable/talkable.tscn" id="tk_talkable"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_3_swing.tres" id="tk_swing_3"]
+[ext_resource type="Script" path="res://scenes/world/story/flashback/swing_raise_beat.gd" id="fb_raise"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="cs_beat"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_3_crossing.tres" id="cs_crossing_3"]
 
 [sub_resource type="Resource" id="due_1"]
 script = ExtResource("st_fact")
@@ -47,6 +55,16 @@ show = &"Hanging"
 [sub_resource type="Resource" id="swing_fallen"]
 script = ExtResource("st_stage")
 show = &"Fallen"
+
+[sub_resource type="Resource" id="due_3"]
+script = ExtResource("st_fact")
+kind = 15
+index = 3
+
+[sub_resource type="Resource" id="crossing_3_seen"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"flashback_3_crossing"
 
 [sub_resource type="RectangleShape2D" id="garden_rect"]
 size = Vector2(1280, 384)
@@ -74,6 +92,23 @@ stages = Array[ExtResource("st_stage")]([SubResource("swing_hanging"), SubResour
 [node name="Hanging" parent="Props/Swing" instance=ExtResource("p_swing")]
 
 [node name="Fallen" parent="Props/Swing" instance=ExtResource("p_swing_fallen")]
+
+[node name="Rise1" parent="Props/Swing" instance=ExtResource("p_swing_rise")]
+visible = false
+
+[node name="Rise2" parent="Props/Swing" instance=ExtResource("p_swing_rise")]
+visible = false
+frame = 1
+
+[node name="Rise3" parent="Props/Swing" instance=ExtResource("p_swing_rise")]
+visible = false
+frame = 2
+
+[node name="Raised" parent="Props/Swing" instance=ExtResource("p_swing_sway")]
+visible = false
+position = Vector2(0, -96)
+kick_degrees = 9.0
+decay = 1.2
 
 [node name="Bush" parent="Props" instance=ExtResource("p_bush")]
 position = Vector2(92, 288)
@@ -190,3 +225,40 @@ zone = NodePath("../PoolEdge")
 position = Vector2(952, 192)
 script = ExtResource("cs_bloom")
 bloom_id = &"crossing_bloom"
+
+[node name="Creak3" type="Node2D" parent="Flashbacks"]
+position = Vector2(312, 200)
+script = ExtResource("fb_lure")
+when = Array[ExtResource("st_fact")]([SubResource("due_3")])
+unless = Array[ExtResource("st_fact")]([SubResource("crossing_3_seen")])
+stream = ExtResource("fb_creak")
+gap = 0.4
+zone = NodePath("../GardenZone")
+
+[node name="Swing3" parent="Flashbacks" instance=ExtResource("tk_talkable")]
+position = Vector2(312, 288)
+talk = ExtResource("tk_swing_3")
+
+[node name="RopeBloom" type="Node2D" parent="Flashbacks"]
+position = Vector2(312, 288)
+script = ExtResource("cs_bloom")
+bloom_id = &"rope_bloom"
+feather = 28.0
+
+[node name="Raise3" type="Node" parent="Flashbacks" node_paths=PackedStringArray("swing", "raised_sway", "bloom")]
+script = ExtResource("fb_raise")
+cue = &"flashback_3_raise"
+hold = 3
+face = NodePath("../Swing3")
+swing = NodePath("../../Props/Swing")
+rising = Array[StringName]([&"Rise1", &"Rise2", &"Rise3"])
+raised = &"Raised"
+raised_sway = NodePath("../../Props/Swing/Raised")
+bloom = NodePath("../RopeBloom")
+bloom_width = 40.0
+
+[node name="Crossing3" type="Node" parent="Flashbacks"]
+script = ExtResource("cs_beat")
+cue = &"flashback_3_crossing"
+face = NodePath("../Swing3")
+cutscene = ExtResource("cs_crossing_3")

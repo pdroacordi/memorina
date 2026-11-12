@@ -1441,20 +1441,26 @@ func begin_talk(at: Vector2) -> void:
 	_in_talk = true
 	_beat_hold = -1
 	_input.notes_only = false
+	_input.up_only = false
 	_listening = true
 	_refresh_block()
 	face_towards(signf(at.x - global_position.x))
 
-## A beat has the talk (systems/story): STILL keeps him blocked, NOTES lets only the four notes through, FREE frees him;
-## he holds `pose` and faces `at`, and stays in the talk.
+## A beat has the talk (systems/story): STILL keeps him blocked, NOTES lets only the four notes through, HELD_UP only
+## whether Up is held, FREE frees him; he holds `pose` and faces `at`, and stays in the talk.
 func pause_talk(hold: int = DialogueBeat.Hold.FREE, pose: int = DialogueBeat.Pose.NONE, at: Vector2 = Vector2.INF) -> void:
 	_beat_hold = hold
 	_pose = pose
 	_listening = hold == DialogueBeat.Hold.STILL
 	_refresh_block()
 	_input.notes_only = hold == DialogueBeat.Hold.NOTES
+	_input.up_only = hold == DialogueBeat.Hold.HELD_UP
 	if at != Vector2.INF:
 		face_towards(signf(at.x - global_position.x))
+
+## Whether Up is held now, sampled by a HELD_UP beat; false while his input is blocked.
+func up_held() -> bool:
+	return _input.holding_up
 
 ## The beat is over; `talk_resumed` follows once he is free on the floor.
 func request_talk_resume() -> void:

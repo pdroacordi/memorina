@@ -1,0 +1,65 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e_bars"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bloom.gd" id="e_bloom"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sequence.gd" id="e_sequence"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e_fade"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[sub_resource type="Resource" id="bars_2"]
+script = ExtResource("e_bars")
+open = true
+seconds = 1.0
+
+[sub_resource type="Resource" id="camera_3"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"swing_branch"])
+offset = Vector2(0, 40)
+zoom = 2.0
+seconds = 1.2
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bars_2"), SubResource("camera_3")])
+
+[sub_resource type="Resource" id="wait_4"]
+script = ExtResource("e_wait")
+seconds = 1.6
+
+[sub_resource type="Resource" id="bloom_6"]
+script = ExtResource("e_bloom")
+bloom_id = &"rope_bloom"
+at = &"swing"
+offset = Vector2(0, -40)
+shape = 1
+rect_size = Vector2(1440, 800)
+strength = 1.0
+ring = 0.8
+seconds = 3.2
+
+[sub_resource type="Resource" id="wait_8"]
+script = ExtResource("e_wait")
+seconds = 1.6
+
+[sub_resource type="Resource" id="fade_9"]
+script = ExtResource("e_fade")
+to_black = true
+colour = Color(1, 1, 1, 1)
+seconds = 1.4
+
+[sub_resource type="Resource" id="sequence_7"]
+script = ExtResource("e_sequence")
+steps = Array[ExtResource("e_step")]([SubResource("wait_8"), SubResource("fade_9")])
+
+[sub_resource type="Resource" id="together_5"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bloom_6"), SubResource("sequence_7")])
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_3_crossing"
+steps = Array[ExtResource("e_step")]([SubResource("together_1"), SubResource("wait_4"), SubResource("together_5")])

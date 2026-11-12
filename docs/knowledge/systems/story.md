@@ -6,7 +6,7 @@ status: active
 tags: [story, staging, save-fact, beat, guitar, melody, dialogue, opening]
 related: [systems/notices, architecture/the-opening-is-staged-by-save-facts, playtests/2026-10-15-story03-opening, systems/dialogue, systems/props, systems/input, systems/notebook, systems/life-benches-death, systems/pickups, gotchas/a-killed-tween-never-emits-finished, gotchas/a-removed-subtree-emits-tree-exiting-later-siblings-first, gotchas/json-numbers-are-floats-so-array-has-an-int-misses-them, gotchas/a-preloaded-resources-typed-enum-array-reads-as-array-int]
 created: 2026-10-15
-updated: 2026-10-16
+updated: 2026-11-12
 source_files:
   - resources/save_facts/fact_stage.gd
   - scenes/world/environment/props/fact_staging.gd
@@ -54,7 +54,8 @@ STORY-03: the mechanisms (phase A) and the opening's content (phase B), both bui
 ## Beats
 
 - `DialogueBeat` (`systems/dialogue`) gains:
-  - `hold` (`Hold { FREE, STILL, NOTES }`, STILL by default): FREE lets Ivo move; STILL keeps the talk's block; NOTES lets only the four note inputs through.
+  - `hold` (`Hold { FREE, STILL, NOTES, HELD_UP }`, STILL by default; append only): FREE lets Ivo move; STILL keeps the talk's block; NOTES lets only the four note inputs through; HELD_UP (STORY-05) lets only whether Up is held through, read by the beat from `Player.up_held()`.
+  - `abandon()` → `abandoned`: the talk ends unheard (`systems/dialogue`).
   - `pose` (`Pose { NONE, GUITAR, MEMORINA }`): held from the beat's start until the next beat or the talk's end.
   - `face` (a NodePath; empty keeps the speaker): Ivo turns to it as the beat starts.
   - `receive_note(note, glyph_set)` → `note_received`; `phrase_shown(notes, count, glyph_set)`, `phrase_lit(index)`, `phrase_closed`, which the director relays to the `PhraseSheet` (and closes when the beat ends).
@@ -121,7 +122,13 @@ Script: `docs/design/05_roteiro.md`, Acts 1, 3 and 4, its wording kept in both l
 - `Player.pause_talk(hold, pose, at)`, wired from `DialogueDirector.talk_paused(hold, pose, at)`:
   - STILL keeps (or takes) the talk's block;
   - NOTES sets `PlayerInput.notes_only`: only `note_pressed` is emitted and every axis reads 0, so no reader is added. `Player` sends the note to `beat_note_pressed`, not to `MemorinaComponent`, and `DialogueDirector.hear_note` passes it to the beat;
+  - HELD_UP sets `PlayerInput.up_only` (`systems/input`): nothing is emitted, every axis reads 0, and `Player.up_held()` reads Up;
   - FREE frees him.
+- **The swing (flashback 3, STORY-05; `systems/cutscenes`, "Flashback 3"):**
+  - **`HoldRise`** (`scenes/world/story/flashback/hold_rise.gd`, pure): `tick(delta, held)`; every `step_seconds` (0.5) held is a step, letting go recedes at the same pace, `steps` (4, so 2 s) finish it, and a full recede left idle `idle_seconds` (1.5) gives it up; `level()`, `is_finished()`, `is_abandoned()` (`hold_rise_test`).
+  - **`SwingRaiseBeat`** (HELD_UP): samples `up_held` (a Callable; empty at start asks `CutsceneDirector.ivo.up_held`) into a `HoldRise` each frame; each step stands in `rising[level - 1]` on `swing` (a FactStaging) and moves `bloom` (a `MemoryBloom`, RECT `bloom_width` wide from its node up `rope_height * level / steps`, strength 1, `bloom_seconds`); at the top it stands in `raised`, pushes `raised_sway` once and finishes; given up it releases the stand-in, resets the bloom and abandons (`swing_beats_test`).
+  - **`SwingSway`** (Node2D at the branch): `push()` adds `kick_degrees` (max `max_degrees`) to a swing of `period` s that decays with `decay` s; `let_go()` switches to `let_go_decay`; it rests under `rest_degrees` near the bottom and when hidden. It writes only its own rotation, on the pausable, scaled clock; a push swings the seat east.
+  - **`SwingPushBeat`** (STILL; `kind` PUSH or LET_GO, `sway`, `seconds`): a push swings `sway` while the beat's pose (PUSH_SWING, set in the scene) plays, and at its end stands Ivo (`stage_pose(NONE)`) so the clip does not loop through her line; LET_GO lets the swing die down.
 - **The resume rule:** `_try_talk` resumes a talk under the start gates, but a block the STILL beat itself holds is the talk's own and does not refuse it.
 - **Poses:** `held_pose()` and `just_strummed()` are read by `PlayerAnimationResolver`: GUITAR loops `guitar_hold`, and plays `guitar_strum` once on each note (a note mid-strum restarts it), then the hold again; MEMORINA plays `memorina_draw` then `memorina_idle` without drawing the instrument (the component stays sheathed). The pose drops at `end_talk`, and he lowers the flute (`memorina_lower`).
 - **Clips (STORY-10):** both run the six frames of `assets/sprites/characters/ivo/ivo_guitar.png` (128x128, a strumming loop: PixelLab frames 0,1,2,3,2,1; contract `tools/art/prompts/ivo_guitar.md`). `guitar_hold` loops them at 6 fps (1 s) so he is never still holding the guitar; `guitar_strum` plays them once at 12 fps (0.5 s). The user: "the sprite for playing the guitar is very wrong. Not the style of Ivo character. Better redo it. Also, transform it into animation, not static. Simple animation" (2026-10-15). `ivo_sheet_test` holds them to the floor line and lets the sheet use the guitar prop's own colours (`HELD_PROPS`); `player_beat_test` checks the loop moves, a note strums and a second note restarts it (`playtests/2026-10-15-story10-guitar`).
@@ -205,7 +212,9 @@ Draft 3 of design 05, Atos 1 to 4 ("Aprovar (Recommended)", user, 2026-10-16; "F
 - `daughter_hum_four.wav` and `daughter_hum_five.wav` (a child's hum, thinner and less steady);
 - `memorina_flat.wav` ("[Play it again]");
 - `morning_room.wav` (STORY-16: the opening's morning, a soft room tone with faint far chirps; no cart);
-- `gate_bolt.wav` (STORY-16: the east gate unbolted, heard from the elder's house: a slide, then a clack).
+- `gate_bolt.wav` (STORY-16: the east gate unbolted, heard from the elder's house: a slide, then a clack);
+- `rope_creak.wav` (STORY-05: the fallen swing's call, a rope creaking on its branch out and back, 2 s). Its names after
+  the out dir write only those files.
 
 `guitar_beat.tscn` maps the strings UP G, DOWN C, LEFT D, RIGHT E.
 

@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/world/story/flashback/swing/swing_sway.tscn" id="1_sway"]
+[ext_resource type="PackedScene" path="res://scenes/characters/story_actor/alba/alba_figure.tscn" id="2_alba"]
+
+[node name="SwingRide" instance=ExtResource("1_sway")]
+
+[node name="Alba" parent="." instance=ExtResource("2_alba")]
+position = Vector2(0, 81)
+loop = &"swing"

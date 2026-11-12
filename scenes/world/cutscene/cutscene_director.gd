@@ -177,7 +177,8 @@ func _skip() -> void:
 		_end(true, true)
 
 ## The scene is over (`record`) or dropped: SCENE_SEEN first, so the stagings re-pick their new rest before they are
-## uncovered in the same frame. A skip's end cuts the frame and the bars back at once (`cut`): the skip is a cut already.
+## uncovered in the same frame. A skip's end cuts the frame and the bars back at once (`cut`): the skip is a cut already;
+## an end under an opaque fade cuts the frame back too.
 func _end(record: bool, cut: bool = false) -> void:
 	var scene := _scene
 	for task: CutsceneTask in _tasks.values():
@@ -187,7 +188,8 @@ func _end(record: bool, cut: bool = false) -> void:
 		SaveSystem.mark_scene_seen(scene.id)
 	_context.restore(not record, cut)
 	if _context.took_camera() and camera != null:
-		if cut:
+		# Under an opaque cover the ease back is unseen, and a travel behind it would stretch it across the world.
+		if cut or (fade != null and fade.is_opaque()):
 			camera.zoom_to(camera.rest_zoom(), 0.0)
 			camera.follow(ivo)
 			camera.snap()

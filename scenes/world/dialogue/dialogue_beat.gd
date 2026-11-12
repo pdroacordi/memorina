@@ -12,11 +12,14 @@ signal phrase_shown(notes: Array[Enums.Note], count: int, glyph_set: Enums.Glyph
 ## Note `index` of the shown phrase sounded.
 signal phrase_lit(index: int)
 signal phrase_closed
+## The beat gave up before its end: the talk ends unheard (a swing let fall, flashback 3).
+signal abandoned
 
 const GROUP := &"dialogue_beats"
 
-## FREE: Ivo moves. STILL: he hears nothing. NOTES: only the four note inputs reach the beat.
-enum Hold { FREE, STILL, NOTES }
+## FREE: Ivo moves. STILL: he hears nothing. NOTES: only the four note inputs reach the beat. HELD_UP: only whether Up is
+## held reaches it, read through `Player.up_held()`. Append only: scenes store these as ints.
+enum Hold { FREE, STILL, NOTES, HELD_UP }
 ## What Ivo holds from the beat's start until the next beat or the talk's end; SEATED (STORY-16) sits him where he
 ## stands, the bench's clip; the last four are the flashbacks' (STORY-05). Append only: scenes store these as ints.
 enum Pose { NONE, GUITAR, MEMORINA, SEATED, KNEEL, SIT_GROUND, PUSH_SWING, RIBBON }
@@ -58,3 +61,6 @@ func receive_note(note: Enums.Note, glyph_set: Enums.GlyphSet) -> void:
 
 func finish() -> void:
 	finished.emit()
+
+func abandon() -> void:
+	abandoned.emit()

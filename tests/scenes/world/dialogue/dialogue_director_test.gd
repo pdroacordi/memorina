@@ -2,7 +2,7 @@ class_name DialogueDirectorTest extends GdUnitTestSuite
 
 ## The director marks a dialogue heard only at its end, records answers, grants items, hands a cue to its beat and
 ## resumes when Ivo answers, writes nothing once the world is swapped out under a beat, places the box opposite the
-## speakers, and an interrupt ends the talk unheard.
+## speakers, and an interrupt or an abandoned beat ends the talk unheard.
 
 const F := preload("res://tests/resources/dialogue/dialogue_fixture.gd")
 const TALKABLE := preload("res://scenes/world/interactables/talkable/talkable.tscn")
@@ -100,6 +100,24 @@ func test_a_cue_hands_off_to_its_beat_and_resumes_when_ivo_answers() -> void:
 	assert_array(Array(_log)).is_equal(["began", "line:A", "closed", "paused", "wanted", "began", "line:B"])
 	_director.advance()
 	assert_bool(SaveSystem.is_dialogue_heard(&"talk")).is_true()
+
+## A beat that gives up (the swing let fall, flashback 3) ends the talk unheard, and it can be started again.
+func test_an_abandoned_beat_ends_the_talk_unheard() -> void:
+	var beat := auto_free(DialogueBeat.new()) as DialogueBeat
+	beat.cue = &"swing"
+	add_child(beat)
+	var cued := F.line("A")
+	cued.cue = &"swing"
+	_talk([cued, F.line("B")])
+	_director.advance()
+	beat.abandon()
+	assert_bool(_director.is_talking()).is_false()
+	assert_bool(SaveSystem.is_dialogue_heard(&"talk")).is_false()
+	assert_array(Array(_log)).is_equal(["began", "line:A", "closed", "paused", "ended"])
+	beat.finish()
+	assert_int(_log.size()).is_equal(5)
+	_director.start(_talkable)
+	assert_bool(_director.is_talking()).is_true()
 
 func test_a_beat_freed_with_its_room_waits_for_ivo_then_resumes() -> void:
 	var beat := DialogueBeat.new()

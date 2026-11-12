@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_pose.gd" id="e_pose"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[sub_resource type="Resource" id="pose_1"]
+script = ExtResource("e_pose")
+pose = 4
+
+[sub_resource type="Resource" id="wait_2"]
+script = ExtResource("e_wait")
+seconds = 2.0
+
+[sub_resource type="Resource" id="pose_3"]
+script = ExtResource("e_pose")
+pose = 0
+
+[sub_resource type="Resource" id="wait_4"]
+script = ExtResource("e_wait")
+seconds = 0.8
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_3_returning"
+steps = Array[ExtResource("e_step")]([SubResource("pose_1"), SubResource("wait_2"), SubResource("pose_3"), SubResource("wait_4")])

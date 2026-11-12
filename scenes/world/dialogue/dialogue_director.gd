@@ -157,6 +157,7 @@ func _play(cue: StringName) -> void:
 	box_closed.emit()
 	_beat = beat
 	beat.finished.connect(_on_beat_over)
+	beat.abandoned.connect(_on_beat_abandoned)
 	# A beat freed with its room must not leave the talk waiting for ever.
 	beat.tree_exiting.connect(_on_beat_over)
 	beat.phrase_shown.connect(phrase_shown.emit)
@@ -175,13 +176,7 @@ func _on_beat_over() -> void:
 	if _beat == null:
 		return
 	_facing = _beat.face_after(_facing)
-	_beat.finished.disconnect(_on_beat_over)
-	_beat.tree_exiting.disconnect(_on_beat_over)
-	_beat.phrase_shown.disconnect(phrase_shown.emit)
-	_beat.phrase_lit.disconnect(phrase_lit.emit)
-	_beat.phrase_closed.disconnect(phrase_closed.emit)
-	phrase_closed.emit()
-	_beat = null
+	_release_beat()
 	# The world is being swapped out (a death or quit): the save is already rewound, so the talk writes nothing more
 	# (gotchas/a-removed-subtree-emits-tree-exiting-later-siblings-first).
 	if not is_inside_tree():
@@ -189,6 +184,25 @@ func _on_beat_over() -> void:
 		return
 	_waiting = true
 	resume_wanted.emit()
+
+## The beat gave up: the talk ends unheard, as an interrupt ends it.
+func _on_beat_abandoned() -> void:
+	if _beat == null:
+		return
+	_release_beat()
+	_drop()
+	_unframe()
+	talk_ended.emit()
+
+func _release_beat() -> void:
+	_beat.finished.disconnect(_on_beat_over)
+	_beat.abandoned.disconnect(_on_beat_abandoned)
+	_beat.tree_exiting.disconnect(_on_beat_over)
+	_beat.phrase_shown.disconnect(phrase_shown.emit)
+	_beat.phrase_lit.disconnect(phrase_lit.emit)
+	_beat.phrase_closed.disconnect(phrase_closed.emit)
+	phrase_closed.emit()
+	_beat = null
 
 func _unframe() -> void:
 	if _framed:

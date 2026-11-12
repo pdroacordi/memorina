@@ -241,3 +241,26 @@ func test_the_draw_ends_before_the_earliest_freeze() -> void:
 	var gap := (_ivo.get_node("MemorinaVoice") as MemorinaVoice).min_note_gap
 	assert_float(draw.length).is_less(_ivo.lesson_lead_in)
 	assert_float(draw.length).is_less((shortest - 1) * gap)
+
+## A HELD_UP beat (the swing, flashback 3) lets only whether Up is held through: Player.up_held() reads it, he neither
+## moves nor jumps, and the talk's end clears it.
+func test_a_held_up_beat_reads_only_up() -> void:
+	await _land()
+	_ivo.begin_talk(Vector2(100, FLOOR_Y))
+	_ivo.pause_talk(DialogueBeat.Hold.HELD_UP, DialogueBeat.Pose.NONE, Vector2(100, FLOOR_Y))
+	assert_bool(_player_input().up_only).is_true()
+	assert_bool(_player_input().blocked).is_false()
+	_action(&"look_up", true)
+	_action(&"move_right", true)
+	_action(&"jump", true)
+	await _frames(10)
+	assert_bool(_ivo.up_held()).is_true()
+	assert_bool(_ivo.is_jumping()).is_false()
+	assert_float(absf(_ivo.velocity.x)).is_less(1.0)
+	_action(&"look_up", false)
+	_action(&"jump", false)
+	_action(&"move_right", false)
+	await _frames(1)
+	assert_bool(_ivo.up_held()).is_false()
+	_ivo.end_talk()
+	assert_bool(_player_input().up_only).is_false()

@@ -46,7 +46,16 @@ var notes_only: bool = false:
 		var was := notes_only
 		notes_only = value
 		if was and not value:
-			resync(Input.is_action_pressed("jump"), Input.is_action_pressed("look_down"), Input.is_action_pressed("look_up"))
+			_resync_held()
+
+## While true, nothing is emitted and every axis reads 0; only `holding_up` reads: a beat holds Ivo to holding Up (the
+## swing, flashback 3). Clearing it resyncs like `notes_only`.
+var up_only: bool = false:
+	set(value):
+		var was := up_only
+		up_only = value
+		if was and not value:
+			_resync_held()
 
 ## Whether down was held as of the last event about it - any motion on its
 ## axis says, either way, so the opposite direction lets go of it too.
@@ -59,7 +68,11 @@ var _jump_held: bool = false
 # Camera-peek intent, deliberately player-only: enemies have no camera, so
 # this stays an inline getter on PlayerInput rather than moving to the base.
 var look_direction: float:
-	get: return 0.0 if blocked or notes_only else Input.get_axis("look_up", "look_down")
+	get: return 0.0 if blocked or notes_only or up_only else Input.get_axis("look_up", "look_down")
+
+## Whether Up is held now; false while blocked.
+var holding_up: bool:
+	get: return not blocked and Input.is_action_pressed("look_up")
 
 ## Which icons `event` should be drawn with. Pure so it can be tested with a
 ## constructed event and a made-up joypad name; `_input` supplies the real
@@ -115,9 +128,11 @@ static func is_playstation_name(joy_name: String) -> bool:
 # See docs/knowledge/bugs/player-input-edge-state-goes-stale-across-a-pause-menu.md.
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_UNPAUSED or what == NOTIFICATION_ENABLED:
-		resync(Input.is_action_pressed("jump"), Input.is_action_pressed("look_down"), Input.is_action_pressed("look_up"))
+		_resync_held()
 
 func _input(event: InputEvent) -> void:
+	if up_only:
+		return
 	if notes_only:
 		_emit_notes(event)
 		return
@@ -159,10 +174,13 @@ func resync(jump_held: bool, down_held: bool, up_held: bool = false) -> void:
 	_down_held = down_held
 	_up_held = up_held
 
+func _resync_held() -> void:
+	resync(Input.is_action_pressed("jump"), Input.is_action_pressed("look_down"), Input.is_action_pressed("look_up"))
+
 func _emit_notes(event: InputEvent) -> void:
 	for action: StringName in NOTE_ACTIONS:
 		if event.is_action_pressed(action):
 			note_pressed.emit(NOTE_ACTIONS[action], glyph_set_for(event, Input.get_joy_name(event.device)))
 
 func _get_direction() -> float:
-	return 0.0 if blocked or notes_only else Input.get_axis("move_left", "move_right")
+	return 0.0 if blocked or notes_only or up_only else Input.get_axis("move_left", "move_right")
