@@ -9,7 +9,7 @@ const HELD_PROPS := {
 	"ivo_guitar.png": "res://assets/sprites/world/props/interiors/ivo_house/guitar.png",
 	"ivo_memorina_play.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
 	"ivo_memorina_lower.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
-	"ivo_ribbon.png": "res://assets/sprites/world/story/alba/ribbon.png",
+	"ivo_ribbon.png": "res://assets/sprites/world/props/garden/ribbon_hand.png",
 }
 const FRAME := 128
 ## Game px: the feet end on the row above the floor line (row 96).

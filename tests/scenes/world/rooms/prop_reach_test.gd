@@ -80,9 +80,10 @@ func _drawn(node: Node) -> Rect2:
 		var sprite := node as Sprite2D
 		if sprite.texture == null:
 			return Rect2()
-		var size := sprite.texture.get_size() / Vector2(sprite.hframes, sprite.vframes)
+		var size := sprite.texture.get_size()
 		if sprite.region_enabled:
 			size = sprite.region_rect.size
+		size /= Vector2(sprite.hframes, sprite.vframes)
 		return Rect2((-size * 0.5 if sprite.centered else Vector2.ZERO) + sprite.offset, size)
 	if node is AnimatedSprite2D:
 		var animated := node as AnimatedSprite2D

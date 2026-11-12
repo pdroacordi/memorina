@@ -16,6 +16,9 @@
 [ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_2_ribbon_autumn.tres" id="fb_talk"]
 [ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="fb_beat"]
 [ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_2_crossing.tres" id="fb_crossing"]
+[ext_resource type="Script" path="res://scenes/world/memory/memory_source.gd" id="fb_source"]
+[ext_resource type="Script" path="res://scenes/world/memory/fact_well.gd" id="fb_well"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_level.gd" id="fb_level"]
 
 [sub_resource type="Resource" id="due_2"]
 script = ExtResource("fb_fact")
@@ -32,6 +35,11 @@ script = ExtResource("fb_stage")
 when = Array[ExtResource("fb_fact")]([SubResource("due_2"), SubResource("guardian_restored")])
 show = &"Fluttering"
 
+[sub_resource type="Resource" id="pocket_level"]
+script = ExtResource("fb_level")
+when = Array[ExtResource("fb_fact")]([SubResource("due_2"), SubResource("guardian_restored")])
+strength = -1.0
+
 [node name="Contents" type="Node2D"]
 
 [node name="Backdrop" type="Node2D" parent="."]
@@ -44,43 +52,57 @@ map = ExtResource("room_map")
 
 [node name="Flashbacks" type="Node2D" parent="."]
 
+[node name="GreyPocket" type="Node2D" parent="Flashbacks"]
+position = Vector2(593, 217)
+script = ExtResource("fb_source")
+radius = 80.0
+feather = 48.0
+strength = 0.0
+
+[node name="GreyPocketWell" type="Node" parent="Flashbacks" node_paths=PackedStringArray("source")]
+script = ExtResource("fb_well")
+source = NodePath("../GreyPocket")
+levels = Array[ExtResource("fb_level")]([SubResource("pocket_level")])
+
 [node name="Ribbon" type="Node2D" parent="Flashbacks"]
 script = ExtResource("fb_staging")
 staging_id = &"ribbon_staging"
 stages = Array[ExtResource("fb_stage")]([SubResource("ribbon_shown")])
 
 [node name="Fluttering" parent="Flashbacks/Ribbon" instance=ExtResource("fb_flutter")]
-position = Vector2(600, 188)
+position = Vector2(628, 154)
+scale = Vector2(-1, 1)
 
 [node name="RibbonMark" type="Marker2D" parent="Flashbacks"]
-position = Vector2(600, 188)
+position = Vector2(593, 167)
 script = ExtResource("fb_mark")
 mark_id = &"ribbon"
 
 [node name="UnderRibbon" type="Marker2D" parent="Flashbacks"]
-position = Vector2(572, 288)
+position = Vector2(573, 288)
 script = ExtResource("fb_mark")
 mark_id = &"under_ribbon"
 
 [node name="RibbonSky" type="Marker2D" parent="Flashbacks"]
-position = Vector2(632, 38)
+position = Vector2(549, 38)
 script = ExtResource("fb_mark")
 mark_id = &"ribbon_sky"
 
 [node name="RibbonFlight" type="Node2D" parent="Flashbacks"]
-position = Vector2(591, 238)
+position = Vector2(596, 238)
 script = ExtResource("fb_visual")
 visual_id = &"ribbon_flight"
 
 [node name="Flight" parent="Flashbacks/RibbonFlight" instance=ExtResource("fb_flight")]
+scale = Vector2(-1, 1)
 
 [node name="RibbonBloom" type="Node2D" parent="Flashbacks"]
-position = Vector2(591, 238)
+position = Vector2(596, 238)
 script = ExtResource("fb_bloom")
 bloom_id = &"ribbon_bloom"
 
 [node name="RibbonTalk" parent="Flashbacks" instance=ExtResource("fb_talkable")]
-position = Vector2(572, 288)
+position = Vector2(573, 288)
 talk = ExtResource("fb_talk")
 reach_west = 32.0
 reach_east = 32.0

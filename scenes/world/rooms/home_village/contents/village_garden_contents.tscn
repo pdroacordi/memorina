@@ -9,9 +9,19 @@
 [ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_1_crossing.tres" id="cs_crossing_1"]
 [ext_resource type="Script" path="res://scenes/world/memory/memory_bloom.gd" id="cs_bloom"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="st_staging"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/home_village/contents/village_garden.room" id="room_map"]
-[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/village_tree.tscn" id="p_tree"]
-[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/garden_bed_planted.tscn" id="p_bed"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/old_tree.tscn" id="p_tree"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/swing.tscn" id="p_swing"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/swing_fallen.tscn" id="p_swing_fallen"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/flat_stone.tscn" id="p_stone"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/flower_bed_yellow.tscn" id="p_bed_yellow"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/flower_bed_white.tscn" id="p_bed_white"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/flower_bed_mixed.tscn" id="p_bed_mixed"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/waterfall_fall.tscn" id="p_fall"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/waterfall_splash.tscn" id="p_splash"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/waterfall_ledge.tscn" id="p_ledge"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bush.tscn" id="p_bush"]
 
 [sub_resource type="Resource" id="due_1"]
@@ -23,6 +33,20 @@ index = 1
 script = ExtResource("st_fact")
 kind = 9
 id = &"flashback_1_crossing"
+
+[sub_resource type="Resource" id="swing_seen_3"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"flashback_3"
+
+[sub_resource type="Resource" id="swing_hanging"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("swing_seen_3")])
+show = &"Hanging"
+
+[sub_resource type="Resource" id="swing_fallen"]
+script = ExtResource("st_stage")
+show = &"Fallen"
 
 [sub_resource type="RectangleShape2D" id="garden_rect"]
 size = Vector2(1280, 384)
@@ -38,23 +62,48 @@ script = ExtResource("bd_script")
 [node name="Props" type="Node2D" parent="."]
 z_index = -10
 
+[node name="OldTree" parent="Props" instance=ExtResource("p_tree")]
+position = Vector2(250, 288)
+
+[node name="Swing" type="Node2D" parent="Props"]
+position = Vector2(312, 288)
+script = ExtResource("st_staging")
+staging_id = &"garden_swing_staging"
+stages = Array[ExtResource("st_stage")]([SubResource("swing_hanging"), SubResource("swing_fallen")])
+
+[node name="Hanging" parent="Props/Swing" instance=ExtResource("p_swing")]
+
+[node name="Fallen" parent="Props/Swing" instance=ExtResource("p_swing_fallen")]
+
 [node name="Bush" parent="Props" instance=ExtResource("p_bush")]
 position = Vector2(92, 288)
 
-[node name="OldTree" parent="Props" instance=ExtResource("p_tree")]
-position = Vector2(200, 288)
+[node name="FlowerBedTree" parent="Props" instance=ExtResource("p_bed_white")]
+position = Vector2(132, 288)
 
-[node name="FlowerBedA" parent="Props" instance=ExtResource("p_bed")]
-position = Vector2(432, 288)
+[node name="FlowerBedA" parent="Props" instance=ExtResource("p_bed_mixed")]
+position = Vector2(440, 288)
 
-[node name="FlowerBedB" parent="Props" instance=ExtResource("p_bed")]
-position = Vector2(496, 288)
+[node name="FlowerBedB" parent="Props" instance=ExtResource("p_bed_yellow")]
+position = Vector2(520, 288)
 
-[node name="FlowerBedC" parent="Props" instance=ExtResource("p_bed")]
-position = Vector2(624, 288)
+[node name="FlowerBedC" parent="Props" instance=ExtResource("p_bed_white")]
+position = Vector2(616, 288)
 
 [node name="Bush2" parent="Props" instance=ExtResource("p_bush")]
 position = Vector2(712, 288)
+
+[node name="FlatStone" parent="Props" instance=ExtResource("p_stone")]
+position = Vector2(816, 288)
+
+[node name="WaterfallFall" parent="Props" instance=ExtResource("p_fall")]
+position = Vector2(952, 92)
+
+[node name="WaterfallSplash" parent="Props" instance=ExtResource("p_splash")]
+position = Vector2(952, 296)
+
+[node name="WaterfallLedge" parent="Props" instance=ExtResource("p_ledge")]
+position = Vector2(952, 96)
 
 [node name="Marks" type="Node2D" parent="."]
 

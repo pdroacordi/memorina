@@ -27,6 +27,12 @@ screenshots:
   - screenshots/2026-11-12-story05-flashback-2/l03_leaving.png
   - screenshots/2026-11-12-story05-flashback-2/r00_return.png
   - screenshots/2026-11-12-story05-flashback-2/r02_return.png
+  - screenshots/2026-11-12-story05-flashback-2/g1_garden_grey.png
+  - screenshots/2026-11-12-story05-flashback-2/g2_garden_tree.png
+  - screenshots/2026-11-12-story05-flashback-2/g3_garden_fall.png
+  - screenshots/2026-11-12-story05-flashback-2/g4_past_stone.png
+  - screenshots/2026-11-12-story05-flashback-2/k1_pocket.png
+  - screenshots/2026-11-12-story05-flashback-2/k2_pocket_crossing.png
 ---
 
 ## What was tested
@@ -59,3 +65,11 @@ What does not read:
 - fun 0: not judgeable from frames.
 - fluidity 3: every hand-off ran in order on all runs (talk, beat, crossing, travel, opening, auto talks, picks, chest, tie, leaving, travel, returning), and Ivo returned to the same place and facing.
 - aesthetics 2: the structure and the leaving read; the placeholder ribbon and flowers, and the colour of the restored region, weaken the two images the Cinema line rests on (the blue alone in the grey, the bouquet).
+
+## Follow-up: the garden art and the grey pocket (2026-11-12)
+
+Three runs of `game.tscn` with ad hoc timelines (not kept): village_garden then garden_past with flashback 1 due; village_garden with four guardians restored and flashbacks 1-4 seen; lake_glacier with Frost restored, flashback 1 seen, Up at the ribbon.
+
+- **The garden reads.** At memory 0 the old tree, the fallen swing, the beds and the fall stand grey and still (`g1_garden_grey`); with flashback 3 seen the swing hangs from the branch (`g2_garden_tree`). The fall pours from the ledge's notch into the shallow pool, the splash on the waterline, the ledge's right edge inside the rock (`g3_garden_fall`). In the past Alba sits on the flat stone by the coloured fall (`g4_past_stone`).
+- **The pocket works.** In restored lake_glacier a grey disc surrounds the ribbon, which is the one colour in it; the bow and its two ends read at a glance, about Ivo's height (`k1_pocket`). In the crossing the bloom carries colour out of the pocket with the flying ribbon (`k2_pocket_crossing`), then the room is in colour under the white.
+- **Not judged:** the waterfall's and flowers' motion (frames only), and the pocket's 3 s fade on the return (the run ended under the white). The twig is small against the rock over the doorway; the yellow flowers across the pool are still the placeholder.

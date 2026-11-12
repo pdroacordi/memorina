@@ -112,7 +112,7 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 
 ### Flashback 2 (step 8, built 2026-11-12; `systems/cutscenes`, "Flashback 2")
 - Corrections: the exit rooms are lake_glacier, woods_hollow_tree, orchard_cliff_chimney and caldera_sun_stair; the ribbon's nodes sit in their contents scenes, not the `.room`, and each region's talk has its own cue (`DialogueBeat.find` is tree-wide). A scene cannot walk Ivo back to her: the pool is a one-row dip he must jump. So the third flower plays the chest scene where he stands (the far frame), and her next talk (`flashback_2_pale`, gated on `SCENE_SEEN flashback_2_chest`) auto-starts when he comes back. Alba's poses are stagings on the SCENE_SEEN of the chest and tie scenes, not stand-ins.
-- Stand-ins: `wife_song_full` as the music, placeholder ribbon and flower art.
+- Stand-ins: `wife_song_full` as the music and the yellow flowers. The garden's art, the ribbon on its twig and the grey pocket around it landed 2026-11-12 (`systems/props`, "The waterfall garden"; `systems/cutscenes`, "The ribbon's art", "The grey pocket").
 
 ### Alba
 - A `Speaker` `alba` (`SPEAKER_ALBA`, portrait).
@@ -177,7 +177,7 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 - A second "visit elsewhere and come back" (the epilogue's, the bearer fragments' engraving) reuses `FlashbackDirector`'s travel and return point, never the save.
 - Every past pose is derived; the past room is never a save place.
 - The new region is the eighth; interiors of the seven keep their x.
-- Art not in this plan: Ivo kneeling (flashback 1's returning stands in the `sit` loop), Ivo seated on the ground, the push gesture, the ribbon in hand, Ivo walking with the guitar, Alba laughing (a sound and a clip), the garden's waterfall and its flat stone (no prop yet; flashback 1's crossing and opening show the pool and a colour column in their place).
+- Art not in this plan: Ivo kneeling (flashback 1's returning stands in the `sit` loop), Ivo seated on the ground, the push gesture, the ribbon in hand, Ivo walking with the guitar, Alba laughing (a sound and a clip), the garden's waterfall and its flat stone (drawn 2026-11-12, `systems/props`).
 
 ## Decisions (user, 2026-11-11)
 

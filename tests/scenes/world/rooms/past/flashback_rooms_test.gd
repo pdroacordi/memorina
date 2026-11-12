@@ -196,3 +196,33 @@ func test_a_ribbon_waits_in_each_restored_guardians_exit_room() -> void:
 		assert_int(FactStaging.pick(staging.stages, seen)).is_equal(-1)
 		assert_object(talk.current(seen)).is_null()
 		contents.free()
+
+## A grey pocket keeps the ribbon the one colour in its restored region ("Um bolsão cinza em volta (Recommended)", user,
+## 2026-11-12): a FactWell takes the memory around it to 0 exactly while the ribbon shows.
+func test_a_grey_pocket_surrounds_the_ribbon_exactly_while_it_shows() -> void:
+	for guardian: int in RIBBON_ROOMS:
+		var contents := (load(RIBBON_ROOMS[guardian]) as PackedScene).instantiate()
+		var staging := _first(contents, FactStaging) as FactStaging
+		var well := _first(contents, FactWell) as FactWell
+		var mark := contents.get_node("Flashbacks/RibbonMark") as Node2D
+		var file := String(RIBBON_ROOMS[guardian]).get_file()
+		assert_object(well).override_failure_message("%s has no grey pocket" % file).is_not_null()
+		var source := well.source
+		assert_int(source.shape).is_equal(MemoryFieldMath.Shape.CIRCLE)
+		assert_bool(source.position.distance_to(mark.position) < source.radius).override_failure_message(file).is_true()
+		var states: Array[PlayerData] = []
+		for restored: int in Enums.Guardian.values():
+			states.append(_flashback_2_due_with(restored))
+		var seen := _flashback_2_due_with(guardian)
+		seen.scenes_seen.append(FlashbackSchedule.id(2))
+		states.append(seen)
+		states.append(PlayerData.new())
+		for data: PlayerData in states:
+			var shown := FactStaging.pick(staging.stages, data) >= 0
+			var strength := FactWell.strength_for(well.levels, data)
+			assert_bool(strength < 0.0).override_failure_message("%s: pocket %f, ribbon shown %s" % [file, strength,
+					shown]).is_equal(shown)
+			if shown:
+				# A restored region rests at 1: the pocket's core takes it to 0.
+				assert_float(strength).is_equal(-1.0)
+		contents.free()
