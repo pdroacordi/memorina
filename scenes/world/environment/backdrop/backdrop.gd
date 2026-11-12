@@ -36,6 +36,9 @@ var _clips: Dictionary = {}
 		if is_node_ready():
 			refresh()
 
+## The smallest camera zoom any frame of this room uses (a cutscene's widest shot); the layers cover that view.
+@export_range(0.25, 1.0) var widest_zoom: float = 1.0
+
 
 ## The set a Backdrop with override `own` draws in `region`: the override, else the region's (null without either).
 static func shown_set(own: BackdropSet, region: Region) -> BackdropSet:
@@ -125,7 +128,7 @@ func _add_layer(parent: Node2D, layer_name: String, layer: BackdropLayer, part: 
 		ref: Vector2, camera: Camera2D, clip: bool, neighbours: Array[Rect2]) -> void:
 	# Under a Room the camera may show the ring too (RoomRing.reach).
 	var shown := RoomRing.reach(bounds) if clip else bounds
-	var cover := BackdropMath.cover_rect(shown, anchor, ref, layer.scroll_scale, HALF_VIEW, MARGIN)
+	var cover := BackdropMath.cover_rect(shown, anchor, ref, layer.scroll_scale, HALF_VIEW / widest_zoom, MARGIN)
 	cover = BackdropMath.clip_to_fills(cover, layer.strip_size(), layer.horizon_row, layer.fill_above, layer.fill_below, layer.repeat_x)
 	if cover.size == Vector2i.ZERO:
 		return

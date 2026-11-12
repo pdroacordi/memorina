@@ -33,7 +33,7 @@ script = ExtResource("room_map_node")
 map = ExtResource("room_map")
 
 [node name="Lure5" type="Node2D" parent="." node_paths=PackedStringArray("zone")]
-position = Vector2(0, 1376)
+position = Vector2(640, 1376)
 script = ExtResource("l5_lure")
 when = Array[ExtResource("l5_fact")]([SubResource("l5_due_5")])
 unless = Array[ExtResource("l5_fact")]([SubResource("l5_crossing_5_seen")])

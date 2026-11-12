@@ -8,8 +8,8 @@ const PAST_REGION := "res://scenes/world/rooms/past.tscn"
 const PRESENT_MAP := "res://scenes/world/rooms/home_village/contents/village_garden.room"
 const PAST_MAP := "res://scenes/world/rooms/past/contents/garden_past.room"
 ## Room-relative camera centres and pixels sampled, px: the corners of the view's travel and a few odd points.
-const CAMERAS: Array[Vector2] = [Vector2(320, 180), Vector2(960, 204), Vector2(637, 51), Vector2(333, -97)]
-const PIXELS: Array[Vector2] = [Vector2(0, 0), Vector2(17, 383), Vector2(641, 200), Vector2(1279, -150), Vector2(905, 77)]
+const CAMERAS: Array[Vector2] = [Vector2(320, 180), Vector2(960, 588), Vector2(640, 384), Vector2(333, -97)]
+const PIXELS: Array[Vector2] = [Vector2(0, 0), Vector2(17, 767), Vector2(641, 200), Vector2(1279, -150), Vector2(905, 477)]
 ## World px two positions may differ by and still pick the same texel (float32 at x 1e5).
 const TOLERANCE := 0.05
 
@@ -54,7 +54,7 @@ func test_the_rooms_are_the_same_size() -> void:
 func test_the_dressing_stands_in_the_same_place() -> void:
 	var present := _room(_present, "VillageGarden").contents_scene.instantiate() as Node2D
 	var past := _room(_past, "GardenPast").contents_scene.instantiate() as Node2D
-	for group: String in ["Props", "Marks"]:
+	for group: String in ["Props", "Marks", "Falls"]:
 		var placed := {}
 		for child: Node in present.get_node(group).get_children():
 			placed[child.name] = (child as Node2D).position

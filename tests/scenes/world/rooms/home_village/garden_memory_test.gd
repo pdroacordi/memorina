@@ -66,7 +66,7 @@ func test_the_well_sits_beside_memory_not_under_it() -> void:
 
 func test_the_well_covers_the_gardens_air() -> void:
 	var garden := _region.get_node("VillageGarden") as Node2D
-	var air := Rect2(garden.position + Vector2(32, 0), Vector2(1216, 288))
+	var air := Rect2(garden.position + Vector2(32, 0), Vector2(1216, 640))
 	var half := _source().rect_size * 0.5
 	var core := Rect2(_source().position - half, half * 2.0)
 	assert_bool(core.encloses(air)).override_failure_message("%s does not enclose %s" % [core, air]).is_true()

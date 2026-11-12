@@ -19,5 +19,5 @@ entry_mark = 1.0
 entry_fade = 0.0
 bars_thin = 12.0
 past_room = &"garden_past"
-arrival = Vector2(276, 288)
+arrival = Vector2(276, 640)
 arrival_facing = 1

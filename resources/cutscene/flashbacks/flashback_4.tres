@@ -46,7 +46,7 @@ steps = Array[ExtResource("e_step")]([SubResource("pose_6"), SubResource("wait_7
 script = ExtResource("e_bloom")
 bloom_id = &"past_grey"
 shape = 1
-rect_size = Vector2(1408, 512)
+rect_size = Vector2(1408, 896)
 strength = -1.0
 seconds = 0.0
 

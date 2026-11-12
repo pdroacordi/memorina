@@ -25,7 +25,7 @@ seconds = 4.0
 script = ExtResource("e_camera")
 targets = Array[StringName]([&"alba", &"ivo"])
 offset = Vector2(0, -120)
-zoom = 1.0
+zoom = 0.5
 seconds = 14.0
 
 [sub_resource type="Resource" id="mark_2"]

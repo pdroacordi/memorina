@@ -19,10 +19,16 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/flower_bed_yellow.tscn" id="p_bed_yellow"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/flower_bed_white.tscn" id="p_bed_white"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/flower_bed_mixed.tscn" id="p_bed_mixed"]
-[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/waterfall_fall.tscn" id="p_fall"]
-[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/waterfall_splash.tscn" id="p_splash"]
-[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/waterfall_ledge.tscn" id="p_ledge"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bush.tscn" id="p_bush"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/lantern.tscn" id="p_lantern"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/lantern_lit.tscn" id="p_lantern_lit"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/falls_cliff.tscn" id="p_cliff"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/falls.tscn" id="p_falls"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/falls_foam.tscn" id="p_foam"]
+[ext_resource type="Script" path="res://scenes/world/environment/backdrop/fact_backdrop.gd" id="bd_fact"]
+[ext_resource type="Script" path="res://resources/world/backdrops/fact_backdrop_set.gd" id="bd_fact_set"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/waterfall_garden_day.tres" id="bd_day"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/waterfall_garden_twilight.tres" id="bd_twilight"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/swing_rise.tscn" id="p_swing_rise"]
 [ext_resource type="PackedScene" path="res://scenes/world/story/flashback/swing/swing_sway.tscn" id="p_swing_sway"]
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/story/rope_creak.wav" id="fb_creak"]
@@ -75,28 +81,51 @@ script = ExtResource("st_fact")
 kind = 15
 index = 5
 
+[sub_resource type="Resource" id="lantern_lit_5"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_5")])
+show = &"Lit"
+fade_seconds = 0.0
+
+[sub_resource type="Resource" id="lantern_unlit"]
+script = ExtResource("st_stage")
+show = &"Unlit"
+fade_seconds = 0.0
+
+[sub_resource type="Resource" id="sky_twilight"]
+script = ExtResource("bd_fact_set")
+when = Array[ExtResource("st_fact")]([SubResource("due_5")])
+backdrop_set = ExtResource("bd_twilight")
+
 [sub_resource type="RectangleShape2D" id="swap_rect"]
-size = Vector2(590, 384)
+size = Vector2(472, 768)
 
 [sub_resource type="RectangleShape2D" id="garden_rect"]
-size = Vector2(1280, 384)
+size = Vector2(1280, 768)
 
 [sub_resource type="RectangleShape2D" id="pool_edge_rect"]
-size = Vector2(80, 64)
+size = Vector2(88, 64)
 
 [node name="Contents" type="Node2D"]
 
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
+backdrop_set = ExtResource("bd_day")
+widest_zoom = 0.5
+
+[node name="Sky" type="Node" parent="." node_paths=PackedStringArray("backdrop")]
+script = ExtResource("bd_fact")
+backdrop = NodePath("../Backdrop")
+sets = Array[ExtResource("bd_fact_set")]([SubResource("sky_twilight")])
 
 [node name="Props" type="Node2D" parent="."]
 z_index = -10
 
 [node name="OldTree" parent="Props" instance=ExtResource("p_tree")]
-position = Vector2(250, 288)
+position = Vector2(250, 640)
 
 [node name="Swing" type="Node2D" parent="Props"]
-position = Vector2(312, 288)
+position = Vector2(312, 640)
 script = ExtResource("st_staging")
 staging_id = &"garden_swing_staging"
 stages = Array[ExtResource("st_stage")]([SubResource("swing_hanging"), SubResource("swing_fallen")])
@@ -123,76 +152,93 @@ kick_degrees = 9.0
 decay = 1.2
 
 [node name="Bush" parent="Props" instance=ExtResource("p_bush")]
-position = Vector2(92, 288)
+position = Vector2(92, 640)
 
 [node name="FlowerBedTree" parent="Props" instance=ExtResource("p_bed_white")]
-position = Vector2(132, 288)
+position = Vector2(132, 640)
 
 [node name="FlowerBedA" parent="Props" instance=ExtResource("p_bed_mixed")]
-position = Vector2(440, 288)
+position = Vector2(440, 640)
 
 [node name="FlowerBedB" parent="Props" instance=ExtResource("p_bed_yellow")]
-position = Vector2(520, 288)
+position = Vector2(520, 640)
 
 [node name="FlowerBedC" parent="Props" instance=ExtResource("p_bed_white")]
-position = Vector2(616, 288)
+position = Vector2(616, 640)
 
 [node name="Bush2" parent="Props" instance=ExtResource("p_bush")]
-position = Vector2(712, 288)
+position = Vector2(712, 640)
 
 [node name="FlatStone" parent="Props" instance=ExtResource("p_stone")]
-position = Vector2(816, 288)
+position = Vector2(816, 640)
 
-[node name="WaterfallFall" parent="Props" instance=ExtResource("p_fall")]
-position = Vector2(952, 92)
+[node name="Lantern" type="Node2D" parent="Props"]
+position = Vector2(880, 640)
+script = ExtResource("st_staging")
+stages = Array[ExtResource("st_stage")]([SubResource("lantern_lit_5"), SubResource("lantern_unlit")])
 
-[node name="WaterfallSplash" parent="Props" instance=ExtResource("p_splash")]
-position = Vector2(952, 296)
+[node name="Unlit" parent="Props/Lantern" instance=ExtResource("p_lantern")]
 
-[node name="WaterfallLedge" parent="Props" instance=ExtResource("p_ledge")]
-position = Vector2(952, 96)
+[node name="Lit" parent="Props/Lantern" instance=ExtResource("p_lantern_lit")]
+visible = false
 
 [node name="Marks" type="Node2D" parent="."]
 
 [node name="OldTree" type="Marker2D" parent="Marks"]
-position = Vector2(200, 288)
+position = Vector2(200, 640)
 script = ExtResource("cs_mark")
 mark_id = &"old_tree"
 
 [node name="SwingBranch" type="Marker2D" parent="Marks"]
-position = Vector2(312, 184)
+position = Vector2(312, 536)
 script = ExtResource("cs_mark")
 mark_id = &"swing_branch"
 
 [node name="Swing" type="Marker2D" parent="Marks"]
-position = Vector2(312, 270)
+position = Vector2(312, 622)
 script = ExtResource("cs_mark")
 mark_id = &"swing"
 
 [node name="FlowerBedA" type="Marker2D" parent="Marks"]
-position = Vector2(464, 288)
+position = Vector2(464, 640)
 script = ExtResource("cs_mark")
 mark_id = &"flower_bed_a"
 
 [node name="FlowerBedB" type="Marker2D" parent="Marks"]
-position = Vector2(624, 288)
+position = Vector2(624, 640)
 script = ExtResource("cs_mark")
 mark_id = &"flower_bed_b"
 
 [node name="FlatStone" type="Marker2D" parent="Marks"]
-position = Vector2(816, 288)
+position = Vector2(816, 640)
 script = ExtResource("cs_mark")
 mark_id = &"flat_stone"
 
 [node name="WaterfallTop" type="Marker2D" parent="Marks"]
-position = Vector2(952, 96)
+position = Vector2(1216, 50)
 script = ExtResource("cs_mark")
 mark_id = &"waterfall_top"
 
 [node name="WaterfallFoot" type="Marker2D" parent="Marks"]
-position = Vector2(952, 288)
+position = Vector2(1216, 672)
 script = ExtResource("cs_mark")
 mark_id = &"waterfall_foot"
+
+[node name="Falls" type="Node2D" parent="."]
+z_index = 10
+
+[node name="FallsCliffHigh" parent="Falls" instance=ExtResource("p_cliff")]
+position = Vector2(1280, 410)
+
+[node name="FallsCliff" parent="Falls" instance=ExtResource("p_cliff")]
+position = Vector2(1280, 768)
+
+[node name="Falls" parent="Falls" instance=ExtResource("p_falls")]
+position = Vector2(1216, 44)
+region_rect = Rect2(0, 0, 624, 630)
+
+[node name="FallsFoam" parent="Falls" instance=ExtResource("p_foam")]
+position = Vector2(1216, 672)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
@@ -201,7 +247,7 @@ map = ExtResource("room_map")
 [node name="Flashbacks" type="Node2D" parent="."]
 
 [node name="Lure1" type="Node2D" parent="Flashbacks"]
-position = Vector2(952, 200)
+position = Vector2(1216, 552)
 script = ExtResource("fb_lure")
 when = Array[ExtResource("st_fact")]([SubResource("due_1")])
 unless = Array[ExtResource("st_fact")]([SubResource("crossing_1_seen")])
@@ -215,7 +261,7 @@ collision_mask = 256
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Flashbacks/GardenZone"]
-position = Vector2(640, 192)
+position = Vector2(640, 384)
 shape = SubResource("garden_rect")
 
 [node name="PoolEdge" type="Area2D" parent="Flashbacks"]
@@ -224,7 +270,7 @@ collision_mask = 256
 monitorable = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Flashbacks/PoolEdge"]
-position = Vector2(1104, 256)
+position = Vector2(1100, 608)
 shape = SubResource("pool_edge_rect")
 
 [node name="Crossing1" type="Node" parent="Flashbacks"]
@@ -234,12 +280,12 @@ when = Array[ExtResource("st_fact")]([SubResource("due_1")])
 zone = NodePath("../PoolEdge")
 
 [node name="CrossingBloom" type="Node2D" parent="Flashbacks"]
-position = Vector2(952, 192)
+position = Vector2(1216, 544)
 script = ExtResource("cs_bloom")
 bloom_id = &"crossing_bloom"
 
 [node name="Creak3" type="Node2D" parent="Flashbacks"]
-position = Vector2(312, 200)
+position = Vector2(312, 552)
 script = ExtResource("fb_lure")
 when = Array[ExtResource("st_fact")]([SubResource("due_3")])
 unless = Array[ExtResource("st_fact")]([SubResource("crossing_3_seen")])
@@ -248,11 +294,11 @@ gap = 0.4
 zone = NodePath("../GardenZone")
 
 [node name="Swing3" parent="Flashbacks" instance=ExtResource("tk_talkable")]
-position = Vector2(312, 288)
+position = Vector2(312, 640)
 talk = ExtResource("tk_swing_3")
 
 [node name="RopeBloom" type="Node2D" parent="Flashbacks"]
-position = Vector2(312, 288)
+position = Vector2(312, 640)
 script = ExtResource("cs_bloom")
 bloom_id = &"rope_bloom"
 feather = 28.0
@@ -281,7 +327,7 @@ cutscene = ExtResource("cs_crossing_5")
 when = Array[ExtResource("st_fact")]([SubResource("due_5")])
 
 [node name="Bloom5" type="Node2D" parent="Flashbacks"]
-position = Vector2(952, 192)
+position = Vector2(1216, 384)
 script = ExtResource("cs_bloom")
 bloom_id = &"song_bloom"
 feather = 96.0
@@ -293,13 +339,13 @@ bloom = NodePath("../Bloom5")
 song = ExtResource("fb_lullaby")
 from = 0.5
 to = 6.3
-size_from = Vector2(48, 384)
-size_to = Vector2(2600, 960)
+size_from = Vector2(104, 768)
+size_to = Vector2(2600, 1600)
 ring_from = 0.8
 
 [node name="Swap5" type="Area2D" parent="Flashbacks"]
 script = ExtResource("fb_swap")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Flashbacks/Swap5"]
-position = Vector2(985, 192)
+position = Vector2(916, 384)
 shape = SubResource("swap_rect")

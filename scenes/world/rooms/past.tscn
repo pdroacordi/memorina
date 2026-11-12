@@ -11,7 +11,7 @@ name_key = "REGION_PAST"
 shows_title = false
 season = 3
 backdrop_set = ExtResource("bd_region_set")
-horizon_y = 13003.0
+horizon_y = 13387.0
 calm_interiors = true
 past = true
 twin_shift = Vector2(-102400, 0)
@@ -21,4 +21,4 @@ script = ExtResource("2_regmem")
 authored = 1.0
 
 [node name="GardenPast" parent="." instance=ExtResource("r0")]
-position = Vector2(103680, 12000)
+position = Vector2(105600, 12000)

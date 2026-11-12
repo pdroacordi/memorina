@@ -1,7 +1,7 @@
 class_name FlashbackRoomsTest extends GdUnitTestSuite
 
 ## Nothing in the past can hurt Ivo or keep anything (architecture/story-05-playable-flashbacks): no creature, hazard,
-## bench, door, pickup or reward slot, and its water and the present garden's are shallow, so nobody drowns there.
+## bench, door, pickup or reward slot, and no water in it or in the present garden can take Ivo in.
 
 const PAST_REGION := "res://scenes/world/rooms/past.tscn"
 const PRESENT_GARDEN := "res://scenes/world/rooms/home_village/village_garden.tscn"
@@ -65,23 +65,29 @@ func test_no_past_room_holds_anything_harmful() -> void:
 			instance.free()
 		room.free()
 
-## Every water cell is a WADE kind (a body with no hazard) one row deep over ground.
-func _assert_shallow(room_name: String, map: RoomMap) -> void:
+## Every body of water pours no hazard and none can take Ivo in: shallow water (WADE) lies one row deep over ground, and
+## a lake lies under the bank, every one of its columns topped by solid ground (architecture/story-05-playable-flashbacks,
+## "The garden rebuilt").
+func _assert_no_drowning(room_name: String, map: RoomMap) -> void:
 	for kind: Dictionary in [map.reach, map.shell_reach]:
 		assert_dict(kind).override_failure_message("%s: water that rises" % room_name).is_empty()
 	for symbol: String in map.water:
 		var entry := map.legend.entry(symbol)
-		assert_int(entry.reach_role).override_failure_message("%s: '%s' is not shallow" % [room_name, symbol]) \
-				.is_equal(RoomLegendEntry.ReachRole.WADE)
 		var layer := entry.water_layer.instantiate() as WaterLayer
 		var body := layer.body_scene.instantiate()
 		assert_str(_hazard_in(body)).override_failure_message("%s: '%s' pours a hazard" % [room_name, symbol]).is_empty()
 		body.free()
 		layer.free()
+		var cells := {}
 		for point: Vector2 in map.water[symbol]:
-			var below := Vector2i(point) + Vector2i.DOWN
-			assert_bool(map.is_solid(below)).override_failure_message("%s: water at %s is deeper than a row" % [room_name, point]) \
-					.is_true()
+			cells[Vector2i(point)] = true
+		for cell: Vector2i in cells:
+			if entry.reach_role == RoomLegendEntry.ReachRole.WADE:
+				assert_bool(map.is_solid(cell + Vector2i.DOWN)).override_failure_message("%s: water at %s is deeper than a row" % [
+						room_name, cell]).is_true()
+			elif not cells.has(cell + Vector2i.UP):
+				assert_bool(map.is_solid(cell + Vector2i.UP)).override_failure_message("%s: '%s' at %s lies open to Ivo" % [
+						room_name, symbol, cell]).is_true()
 
 func _hazard_in(root: Node) -> String:
 	var stack: Array[Node] = [root]
@@ -92,16 +98,16 @@ func _hazard_in(root: Node) -> String:
 		stack.append_array(node.get_children())
 	return ""
 
-func test_the_pasts_water_is_shallow() -> void:
+func test_nobody_drowns_in_the_past() -> void:
 	for room: Room in _past_rooms():
-		_assert_shallow(str(room.name), _map_of(room))
+		_assert_no_drowning(str(room.name), _map_of(room))
 		room.free()
 
 func test_ivo_never_drowns_in_the_present_garden() -> void:
 	var garden := (load(PRESENT_GARDEN) as PackedScene).instantiate() as Room
 	var map := _map_of(garden)
 	assert_dict(map.water).is_not_empty()
-	_assert_shallow("village_garden", map)
+	_assert_no_drowning("village_garden", map)
 	garden.free()
 
 ## The ids a contents scene gives its cutscenes: actors, marks, visuals, blooms and named stagings, and Ivo.
@@ -493,3 +499,59 @@ func test_the_lullaby_under_the_old_tree_for_flashback_5() -> void:
 	assert_float(marks.max()).is_less(ogg.beat_count * 60.0 / ogg.bpm)
 	assert_float(visit.bars_thin).is_equal(0.0)
 	contents.free()
+
+## Flashback `n` due (0: none): the Memorina owned, n - 1 guardians restored and the flashbacks before it seen.
+func _due(n: int) -> PlayerData:
+	var data := PlayerData.new()
+	data.owned_items[Enums.PlayerItem.MEMORINA] = n > 0
+	var guardians: Array = Enums.Guardian.values()
+	for g: int in guardians.slice(0, maxi(n - 1, 0)):
+		data.restored_guardians[g] = true
+	for k: int in range(1, n):
+		data.scenes_seen.append(FlashbackSchedule.id(k))
+	return data
+
+const TIMES := ["morning", "day", "afternoon", "night", "twilight"]
+
+func _sky(contents: Node, data: PlayerData) -> String:
+	var sky := contents.get_node("Sky") as FactBackdrop
+	var rest := (contents.get_node("Backdrop") as Backdrop).backdrop_set
+	return FactBackdrop.set_for(sky.sets, data, rest).resource_path.get_file().get_basename()
+
+## Each flashback's past has its own time of day (user, 2026-11-12: 1 morning, 2 day, 3 late afternoon, 4 moonlit night,
+## 5 darkening twilight); the present shows day, and the past's twilight while flashback 5 is due, so the hidden swap
+## meets the same sky.
+func test_the_sky_follows_the_flashback() -> void:
+	var past := (load(PAST_GARDEN_CONTENTS) as PackedScene).instantiate()
+	var present := (load(PRESENT_GARDEN_CONTENTS) as PackedScene).instantiate()
+	for n: int in range(1, FlashbackSchedule.COUNT + 1):
+		var data := _due(n)
+		assert_int(FlashbackSchedule.due(data)).is_equal(n)
+		assert_str(_sky(past, data)).is_equal("waterfall_garden_%s" % TIMES[n - 1])
+		assert_str(_sky(present, data)).is_equal("waterfall_garden_%s" % ("twilight" if n == 5 else "day"))
+	assert_str(_sky(present, _due(0))).is_equal("waterfall_garden_day")
+	past.free()
+	present.free()
+
+func _lantern(contents: Node, data: PlayerData) -> String:
+	var lantern := contents.get_node("Props/Lantern") as FactStaging
+	return String(lantern.stages[FactStaging.pick(lantern.stages, data)].show)
+
+## The lantern is lit from late afternoon in the past, faint while the day is still bright; in the present only while her
+## lullaby brings the colour back (flashback 5), and its light follows the memory there.
+func test_the_lantern_is_lit_from_late_afternoon() -> void:
+	var past := (load(PAST_GARDEN_CONTENTS) as PackedScene).instantiate()
+	var present := (load(PRESENT_GARDEN_CONTENTS) as PackedScene).instantiate()
+	var expected := ["Unlit", "Unlit", "LitDusk", "Lit", "Lit"]
+	for n: int in range(1, FlashbackSchedule.COUNT + 1):
+		assert_str(_lantern(past, _due(n))).override_failure_message("past, flashback %d" % n).is_equal(expected[n - 1])
+		assert_str(_lantern(present, _due(n))).override_failure_message("present, flashback %d" % n) \
+				.is_equal("Lit" if n == 5 else "Unlit")
+	for contents: Node in [past, present]:
+		var lit := contents.get_node("Props/Lantern/Lit") as Sprite2D
+		var light := lit.get_node("Light") as LanternLight
+		assert_object(light.flame).is_same(lit)
+		assert_float(light.strength).is_equal(1.0)
+	assert_float((past.get_node("Props/Lantern/LitDusk/Light") as LanternLight).strength).is_less(0.5)
+	past.free()
+	present.free()

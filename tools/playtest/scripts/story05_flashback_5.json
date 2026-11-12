@@ -19,8 +19,8 @@
   "flashback_4"
  ],
  "player_position": [
-  2660,
-  -500
+  3090,
+  -530
  ],
  "steps": [
   {
@@ -33,7 +33,7 @@
   },
   {
    "t": 0.5,
-   "key": "Left",
+   "key": "Right",
    "pressed": true
   },
   {
@@ -41,17 +41,25 @@
    "log": "garden_entered"
   },
   {
-   "t": 1.75,
-   "key": "Left",
-   "pressed": false
-  },
-  {
    "t": 2.5,
    "screenshot": "c00_colour"
   },
   {
+   "t": 3.0,
+   "log": "walking"
+  },
+  {
    "t": 4.5,
    "screenshot": "c01_colour"
+  },
+  {
+   "t": 5.6,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 5.7,
+   "log": "stopped"
   },
   {
    "t": 6.0,
@@ -62,23 +70,23 @@
    "screenshot": "s00_swap"
   },
   {
-   "t": 7.01,
+   "t": 7.0,
    "log": "swap_0"
+  },
+  {
+   "t": 7.25,
+   "log": "swap_1"
   },
   {
    "t": 7.3,
    "screenshot": "s01_swap"
   },
   {
-   "t": 7.31,
-   "log": "swap_1"
-  },
-  {
    "t": 7.5,
    "screenshot": "s02_swap"
   },
   {
-   "t": 7.51,
+   "t": 7.5,
    "log": "swap_2"
   },
   {
@@ -86,7 +94,7 @@
    "screenshot": "s03_swap"
   },
   {
-   "t": 7.71,
+   "t": 7.75,
    "log": "swap_3"
   },
   {
@@ -94,7 +102,7 @@
    "screenshot": "s04_swap"
   },
   {
-   "t": 7.91,
+   "t": 8.0,
    "log": "swap_4"
   },
   {
@@ -102,7 +110,7 @@
    "screenshot": "s05_swap"
   },
   {
-   "t": 8.11,
+   "t": 8.25,
    "log": "swap_5"
   },
   {
@@ -110,7 +118,7 @@
    "screenshot": "s06_swap"
   },
   {
-   "t": 8.31,
+   "t": 8.5,
    "log": "swap_6"
   },
   {
@@ -119,14 +127,32 @@
    "pressed": true
   },
   {
+   "t": 8.75,
+   "log": "swap_7"
+  },
+  {
+   "t": 9.0,
+   "log": "swap_8"
+  },
+  {
+   "t": 9.25,
+   "log": "swap_9"
+  },
+  {
+   "t": 9.5,
+   "log": "swap_10"
+  },
+  {
    "t": 9.75,
-   "key": "Z",
-   "pressed": true
+   "log": "swap_11"
   },
   {
    "t": 10.0,
-   "key": "Z",
-   "pressed": false
+   "log": "swap_12"
+  },
+  {
+   "t": 10.25,
+   "log": "swap_13"
   },
   {
    "t": 11.0,
@@ -137,9 +163,16 @@
    "screenshot": "w00_tree"
   },
   {
-   "t": 13.45,
+   "t": 12.0,
    "key": "Left",
    "pressed": false
+  },
+  {
+   "t": 12.4,
+   "teleport": [
+    105862,
+    12622
+   ]
   },
   {
    "t": 13.6,

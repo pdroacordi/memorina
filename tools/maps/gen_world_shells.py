@@ -48,8 +48,10 @@ ROOM_LIST = [
     ("home_village", "village_square", 0, 2, 0, 0, True),
     ("home_village", "village_mill", 3, 4, 0, 0, True),
     ("home_village", "village_gate_east", 5, 6, 0, 0, True),
-    # Up the river trail, one screen clear of the street's sky band (architecture/story-05-playable-flashbacks).
-    ("home_village", "village_garden", 2, 3, -2, -2, True),
+    # The foot of the river's waterfall, east off the river trail behind the mill's fence, one screen clear of the
+    # street's sky band; two screens tall so flashback 5's widest frame (zoom 0.5) stays inside it
+    # (architecture/story-05-playable-flashbacks, "The garden rebuilt").
+    ("home_village", "village_garden", 5, 6, -3, -2, True),
     ("threshold", "threshold_fields", 7, 9, 0, 0, True),
     ("threshold", "threshold_bridge", 10, 11, 0, 0, True),
     ("threshold", "threshold_wayshrine", 12, 12, 0, 0, True),
@@ -113,7 +115,7 @@ H_LINKS = [
     ("threshold_bridge", "threshold_wayshrine", 0), ("threshold_wayshrine", "frost_shore", 0),
     ("frost_shore", "frost_cliffs", 0), ("frost_cliffs", "lighthouse_base", -3),
     ("lake_shore", "lake_fishing_village", -5), ("lake_fishing_village", "lake_waterfall_path", -5),
-    ("lake_waterfall_path", "lake_ice_caves", -5), ("village_garden", "lake_waterfall_path", -2), ("lake_ice_caves", "lake_frost_arena", -5),
+    ("lake_waterfall_path", "lake_ice_caves", -5), ("lake_waterfall_path", "village_garden", -2), ("lake_ice_caves", "lake_frost_arena", -5),
     ("lake_high_wall", "lake_shore", -5), ("lake_chasm", "lake_high_wall", -5),
     ("orchard_chasm_bridge", "lake_chasm", -6),
     ("orchard_cliff_chimney", "orchard_arena", -4), ("orchard_arena", "orchard_leaf_path", -4),
@@ -126,6 +128,7 @@ H_LINKS = [
     ("caldera_temple_gate", "caldera_arena", 4),
     ("woods_hollow_tree", "bloom_hollow", 0), ("woods_deep", "woods_crown", -1),
     ("lake_frost_arena", "lake_glacier", -5), ("lake_glacier", "lake_icefall", -5),
+    # The waterfall path and the garden meet at rows 4-7 of r -2, over the garden's bank (its row 20): the maps are the truth.
     # The crag and the ridge meet at rows 1-4 of r -5 and the counterweights' mouth into the summit is at its rows 3-6, not
     # 5-8; the windy gap's passage and the arena's east doorway are rows 6-8 (the maps are the truth, systems/world).
     ("orchard_crag", "orchard_ridge", -5), ("orchard_ridge", "orchard_windy_gap", -5),
@@ -185,12 +188,12 @@ INTERIORS = [
     ("spring_woods", "woods_hut", 1, 1),
     ("frozen_lake", "lake_fisher_hut", 1, 1),
     ("wind_orchards", "orchard_inn", 2, 1),
-    ("past", "garden_past", 2, 1),
+    ("past", "garden_past", 2, 2),
 ]
 # Interiors placed off their slot. garden_past is village_garden shifted 102400 px: the least shift at which every
-# village_valley layer (scroll x 0.05, 0.12, 0.3, 0.55 over 1024 px) draws the same room-relative pixels (twin rule,
+# garden layer (scroll x 0.05, 0.12, 0.3, 0.55 over 1024 px) draws the same room-relative pixels (twin rule,
 # architecture/story-05-playable-flashbacks).
-INTERIOR_ORIGINS = {"garden_past": (1280 + 102400, INTERIOR_Y)}
+INTERIOR_ORIGINS = {"garden_past": (3200 + 102400, INTERIOR_Y)}
 
 # (room A, cell col in A, room B, cell col in B, link, extra params for A, extra params for B).
 # A door stands on its room's bottom floor unless a row is given as "row".
@@ -402,8 +405,8 @@ REGION_BACKDROPS = {
     "home_village": ("village_valley", 235), "threshold": ("threshold", 235), "frost_edge": ("frost_edge", 235),
     "spring_woods": ("spring_woods", 235), "frozen_lake": ("frozen_lake", -1685),
     "wind_orchards": ("wind_orchards", -1301), "summer_caldera": ("caldera_crater", 1536),
-    # village_garden's horizon (235) is 1003 px under its top (-768); garden_past's top is 12000.
-    "past": ("village_valley", 13003),
+    # village_garden's horizon (235) is 1387 px under its top (-1152); garden_past's top is 12000.
+    "past": ("village_valley", 13387),
 }
 # Open rooms inside rock override their region's set with a rock wall (WORLD-28).
 ROCK_SETS = {
@@ -414,8 +417,8 @@ ROCK_SETS = {
 }
 # Enclosed rooms whose walls are neither rock nor their region's caves: the inside of the giant tree.
 ROOM_SETS = {"woods_hollow_tree": "heartwood"}
-# Interiors whose wall is not interior_timber: the wrecked ship's hold; the past's garden shows the garden's set.
-INTERIOR_SETS = {"frost_wreck_hold": "ship_hold", "garden_past": "village_valley"}
+# Interiors whose wall is not interior_timber: the wrecked ship's hold; the past's garden shows the garden's own set.
+INTERIOR_SETS = {"frost_wreck_hold": "ship_hold", "garden_past": "waterfall_garden_day"}
 # The backdrop set an underground room of each region shows (architecture/backdrop-seams).
 UNDERGROUND_SETS = {
     "home_village": "village_strata", "threshold": "earth_caves", "frost_edge": "ice_caves",

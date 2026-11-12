@@ -7,8 +7,8 @@
   1
  ],
  "player_position": [
-  2470,
-  -490
+  4180,
+  -530
  ],
  "steps": [
   {
@@ -21,12 +21,12 @@
   },
   {
    "t": 0.3,
-   "key": "Left",
+   "key": "Right",
    "pressed": true
   },
   {
-   "t": 0.8,
-   "key": "Left",
+   "t": 0.9,
+   "key": "Right",
    "pressed": false
   },
   {
@@ -128,8 +128,8 @@
   {
    "t": 24.5,
    "teleport": [
-    103930,
-    12270
+    105850,
+    12622
    ]
   },
   {

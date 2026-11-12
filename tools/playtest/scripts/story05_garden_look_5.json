@@ -1,0 +1,83 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 7.0,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "scenes_seen": [
+  "flashback_1",
+  "flashback_2",
+  "flashback_3",
+  "flashback_4"
+ ],
+ "player_position": [
+  106240,
+  12640
+ ],
+ "steps": [
+  {
+   "t": 0.8,
+   "screenshot": "past5_mid"
+  },
+  {
+   "t": 0.9,
+   "log": "mid"
+  },
+  {
+   "t": 1.0,
+   "teleport": [
+    106700,
+    12640
+   ]
+  },
+  {
+   "t": 1.8,
+   "screenshot": "past5_falls"
+  },
+  {
+   "t": 2.0,
+   "teleport": [
+    105900,
+    12640
+   ]
+  },
+  {
+   "t": 2.8,
+   "screenshot": "past5_tree"
+  },
+  {
+   "t": 3.0,
+   "teleport": [
+    3900,
+    -512
+   ]
+  },
+  {
+   "t": 4.2,
+   "screenshot": "present5"
+  },
+  {
+   "t": 4.3,
+   "log": "present"
+  },
+  {
+   "t": 4.5,
+   "teleport": [
+    4300,
+    -512
+   ]
+  },
+  {
+   "t": 5.6,
+   "screenshot": "present5_falls"
+  }
+ ]
+}

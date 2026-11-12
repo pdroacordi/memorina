@@ -112,10 +112,10 @@ steps = Dictionary[int, float]({
 })
 
 [node name="GardenWell" type="Node2D" parent="."]
-position = Vector2(1920, -652)
+position = Vector2(3840, -844)
 script = ExtResource("w_source")
 shape = 1
-rect_size = Vector2(1216, 536)
+rect_size = Vector2(1216, 920)
 feather = 32.0
 strength = -0.8
 
@@ -164,4 +164,4 @@ position = Vector2(0, 14000)
 position = Vector2(1600, 14000)
 
 [node name="VillageGarden" parent="." instance=ExtResource("r14")]
-position = Vector2(1280, -768)
+position = Vector2(3200, -1152)

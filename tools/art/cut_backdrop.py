@@ -12,6 +12,9 @@ Layer: python -I tools/art/cut_backdrop.py layer <strip.png> <out.png> --kind=mo
     the top N art px under every edge of the silhouette with snow in the winter band ("Draw spring, recolour to winter
     (Recommended)", user, 2026-10-13).
 Sky: python -I tools/art/cut_backdrop.py sky <out.png>: stepped bands and four flat clouds, per season.
+--time=morning|day|afternoon|night|twilight (sky and layer): the light of one time of day (TIMES): the sky's colours,
+    its sun, moon and stars, and each layer's colours multiplied by the time's tint before the aerial mix toward that
+    time's horizon. Without it the sky and layers are the default day (the waterfall garden's flashbacks, STORY-05).
 Layout rules (one flat EDGE row per band, a transparent top row): architecture/vertical-backdrops, "Art contract".
 """
 import colorsys
@@ -33,6 +36,22 @@ CLOUD = {"spring": ((242, 244, 246), (206, 218, 230)), "autumn": ((236, 232, 224
          "winter": ((226, 230, 234), (196, 204, 212))}
 # 0..1 mix toward the horizon sky: atmospheric depth, so the play plane stands out (systems/backdrops).
 AERIAL = {"mountains": 0.5, "hills": 0.42, "trees": 0.32, "sea": 0.35, "pines": 0.32, "broadleaf": 0.32}
+# Times of day, spring colours; autumn and winter shift by the default seasons' difference scaled by the tint's
+# brightness. mid: an optional sky step colour halfway down; sun / moon: (x, y, radius) art px, placed in art columns
+# 440..511 and 0..264, the span the garden rooms (x 3200..4480) show (camera x * 0.05 - 320 game px, mod 1024); stars: count.
+TIMES = {
+    "morning": {"zenith": (112, 156, 212), "horizon": (236, 214, 190), "cloud": ((250, 238, 226), (226, 200, 190)),
+                "tint": (1.0, 0.97, 0.93), "sun": (488, 66, 7), "sun_colour": (252, 240, 200)},
+    "day": {"zenith": ZENITH["spring"], "horizon": HORIZON["spring"], "cloud": CLOUD["spring"], "tint": (1.0, 1.0, 1.0)},
+    "afternoon": {"zenith": (104, 118, 188), "mid": (196, 164, 176), "horizon": (244, 196, 148),
+                  "cloud": ((252, 222, 182), (214, 164, 152)), "tint": (1.04, 0.92, 0.80), "sun": (136, 88, 9),
+                  "sun_colour": (252, 226, 156)},
+    "night": {"zenith": (22, 28, 58), "horizon": (60, 76, 116), "cloud": ((82, 94, 130), (58, 68, 104)),
+              "tint": (0.42, 0.48, 0.66), "moon": (72, 38, 10), "stars": 70, "clouds": 2},
+    "twilight": {"zenith": (40, 44, 92), "mid": (118, 86, 132), "horizon": (214, 128, 106),
+                 "cloud": ((176, 108, 124), (120, 80, 112)), "tint": (0.64, 0.56, 0.68), "stars": 24},
+}
+TIME = None
 # Art px of snow laid under each top edge of the silhouette in the winter band (0: none).
 SNOW = 0
 
@@ -161,7 +180,11 @@ def band_of(spring, kind, band):
     if band == "winter" and SNOW > 0:
         recoloured = capped(spring, opaque, recoloured)
     k = AERIAL[kind]
-    out[..., :3][opaque] = np.round(recoloured * (1 - k) + np.array(HORIZON[band]) * k).astype(np.uint8)
+    horizon = np.array(HORIZON[band])
+    if TIME:
+        recoloured = recoloured * np.array(TIMES[TIME]["tint"])
+        horizon = timed(TIME, "horizon", band)
+    out[..., :3][opaque] = np.round(np.clip(recoloured * (1 - k) + horizon * k, 0, 255)).astype(np.uint8)
     out[-8:] = out[-9, 0]  # EDGE below: the bottom rows are one colour
     out[0, :, 3] = 0  # NONE above: the top row is transparent
     return out
@@ -224,18 +247,63 @@ def layer(strip, out_path, kind, colors, top_row, x_max, cut, overlap):
     print(f"{kind}: cut {x0}..{x1}, {scale:.2f} source px per art px")
 
 
+def timed(time, key, band):
+    """A time's sky colour for a season band: spring as given, the others shifted like the default seasons."""
+    spring = np.array(TIMES[time][key], dtype=float)
+    base = {"horizon": HORIZON, "zenith": ZENITH, "mid": HORIZON}[key]
+    light = float(np.mean(TIMES[time]["tint"]))
+    return np.clip(spring + (np.array(base[band]) - np.array(base["spring"])) * light, 0, 255)
+
+
 def sky(out_path):
     bands = []
+    times = TIMES[TIME] if TIME else {}
     for band in BANDS:
         a = np.zeros((H, W, 4), dtype=np.uint8)
         a[..., 3] = 255
-        top, low = np.array(ZENITH[band]), np.array(HORIZON[band])
+        if TIME:
+            top, low = timed(TIME, "zenith", band), timed(TIME, "horizon", band)
+            mid = timed(TIME, "mid", band) if "mid" in times else (top + low) / 2
+            shift = np.array(CLOUD[band][0]) - np.array(CLOUD["spring"][0])
+            lit, shade = (tuple(np.clip(np.array(c) + shift * float(np.mean(times["tint"])), 0, 255).astype(int))
+                          for c in times["cloud"])
+        else:
+            top, low = np.array(ZENITH[band]), np.array(HORIZON[band])
+            mid = (top + low) / 2
+            lit, shade = CLOUD[band]
         steps, start, end = 6, 8, 116
         for y in range(H):
             t = min(1.0, max(0.0, (y - start) / (end - start)))
-            a[y, :, :3] = top + (low - top) * (min(steps - 1, int(t * steps)) / (steps - 1))
-        lit, shade = CLOUD[band]
-        for cx, cy, size in [(40, 34, 1.0), (170, 22, 0.7), (300, 44, 1.2), (420, 28, 0.8)]:
+            q = min(steps - 1, int(t * steps)) / (steps - 1)
+            a[y, :, :3] = top + (mid - top) * q * 2 if q < 0.5 else mid + (low - mid) * (q - 0.5) * 2
+        if "stars" in times:
+            rng = np.random.default_rng(7)
+            for _ in range(times["stars"]):
+                x, y = int(rng.integers(0, W)), int(rng.integers(3, 96 if TIME == "night" else 40))
+                bright = rng.random() < 0.2
+                colour = np.clip(a[y, x, :3] + (150 if TIME == "night" else 90), 0, 255)
+                a[y, x, :3] = colour
+                if bright and TIME == "night":
+                    for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        a[y + dy, (x + dx) % W, :3] = (a[y + dy, (x + dx) % W, :3].astype(int) + colour) // 2
+        for body in ("sun", "moon"):
+            if body in times:
+                bx, by, r = times[body]
+                for y in range(max(0, by - r - 1), by + r + 2):
+                    for x in range(bx - r - 1, bx + r + 2):
+                        d2 = (x - bx) ** 2 + (y - by) ** 2
+                        if d2 <= r * r + r * 0.6:
+                            if body == "sun":
+                                a[y, x % W, :3] = times["sun_colour"]
+                            else:
+                                a[y, x % W, :3] = (236, 236, 218)
+                                # Maria: flat darker patches, so the moon reads as a moon at 2x.
+                                if (x - bx + 3) ** 2 + (y - by + 2) ** 2 <= 8 or (x - bx - 3) ** 2 + (y - by - 3) ** 2 <= 5                                         or (x - bx + 1) ** 2 + (y - by - 4) ** 2 <= 2:
+                                    a[y, x % W, :3] = (204, 206, 196)
+        clouds = [(40, 34, 1.0), (170, 22, 0.7), (300, 44, 1.2), (420, 28, 0.8)][:times.get("clouds", 4)]
+        if TIME == "night":
+            clouds = [(150, 60, 0.8), (460, 70, 1.0)]
+        for cx, cy, size in clouds:
             puffs = [(cx + dx * size, cy + dy * size, r * size) for dx, dy, r in
                      [(-14, 2, 7), (-5, -3, 9), (6, -1, 8), (15, 3, 6), (0, 4, 8), (-22, 5, 4), (22, 5, 4)]]
             for y in range(8, 90):
@@ -257,6 +325,7 @@ def write(sheet, path):
 if __name__ == "__main__":
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     opts = dict((a[2:].split("=", 1) + [""])[:2] for a in sys.argv[1:] if a.startswith("--"))
+    TIME = opts.get("time") or None
     if args[0] == "sky":
         sky(args[1])
     else:

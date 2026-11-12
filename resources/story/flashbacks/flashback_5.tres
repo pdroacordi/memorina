@@ -20,5 +20,5 @@ entry_fade = 0.8
 entry_colour = Color(1, 1, 1, 1)
 bars_thin = 0.0
 past_room = &"garden_past"
-arrival = Vector2(720, 288)
+arrival = Vector2(720, 640)
 arrival_facing = -1
