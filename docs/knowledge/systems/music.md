@@ -50,7 +50,7 @@ Sombra's old track (`chant_of_the_noon_sun.mp3`, AIVA "Chant of the Waking Sun")
 
 ## The wife's song
 
-`assets/audios/soundtrack/wife_song_{full,lullaby,epilogue}.ogg` (2026-11-02), Ashley Lawless "Ouh" with vibrato, the morning song's first eight notes exactly (`resources/story/morning_song.tres`, 143 BPM), the lost ending rising to A (a note the Memorina lacks). Not wired yet: they wait for the flashbacks (STORY-05) and the epilogue (STORY-07). Sketches `tools/audio/make_wife_song_midis.py`; decisions `docs/knowledge/music/wifes-song.md`.
+`assets/audios/soundtrack/wife_song_{full,lullaby,epilogue}.ogg` (2026-11-02), Ashley Lawless "Ouh" with vibrato, the morning song's first eight notes exactly (`resources/story/morning_song.tres`, 143 BPM), the lost ending rising to A (a note the Memorina lacks). `wife_song_full` is wired (STORY-05 step 7): `resources/music/wife_song_full.tres` (stem `voice`, 142.857 BPM, loops, fade in 1.5 s) is flashback 1's visit music. Its import loops on beats before her lost ending: `loop_offset` 0.555, `bpm` 141.926, `beat_count` 49, so it plays 0.555..20.715 s (12 bars) and jumps back to her first note. Measured onsets in the render: first note 0.565 s, phrase ends 5.62, 10.66, 17.38 s, her A after beat 48 at 20.725 s. The lost ending is never heard in flashback 1, however long the visit (`music_cue_test.test_her_full_song_loops_before_the_lost_ending`; `_loop_length` reads a beat loop). The lullaby and the epilogue wait for flashback 5 and STORY-07. Sketches `tools/audio/make_wife_song_midis.py`; decisions `docs/knowledge/music/wifes-song.md`.
 
 ## Tools
 

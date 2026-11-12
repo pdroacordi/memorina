@@ -1,0 +1,87 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e3"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e4"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e5"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bloom.gd" id="e6"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e7"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sequence.gd" id="e8"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e9"]
+
+[sub_resource type="Resource" id="bars_1"]
+script = ExtResource("e1")
+open = true
+seconds = 1.5
+
+[sub_resource type="Resource" id="camera_2"]
+script = ExtResource("e2")
+targets = Array[StringName]([&"waterfall_foot"])
+offset = Vector2(0, -56)
+zoom = 2.0
+seconds = 2.5
+
+[sub_resource type="Resource" id="wait_3"]
+script = ExtResource("e3")
+seconds = 3.0
+
+[sub_resource type="Resource" id="together_4"]
+script = ExtResource("e5")
+steps = Array[ExtResource("e4")]([SubResource("bars_1"), SubResource("camera_2"), SubResource("wait_3")])
+
+[sub_resource type="Resource" id="bloom_5"]
+script = ExtResource("e6")
+bloom_id = &"crossing_bloom"
+at = &"waterfall_top"
+offset = Vector2(0, -88)
+shape = 1
+rect_size = Vector2(40, 16)
+strength = 1.0
+ring = 0.6
+seconds = 0.0
+
+[sub_resource type="Resource" id="bloom_6"]
+script = ExtResource("e6")
+bloom_id = &"crossing_bloom"
+at = &"waterfall_top"
+offset = Vector2(0, 64)
+shape = 1
+rect_size = Vector2(40, 320)
+strength = 1.0
+ring = 0.6
+seconds = 2.8
+
+[sub_resource type="Resource" id="bloom_7"]
+script = ExtResource("e6")
+bloom_id = &"crossing_bloom"
+at = &"waterfall_foot"
+offset = Vector2(0, -40)
+shape = 1
+rect_size = Vector2(1440, 800)
+strength = 1.0
+ring = 0.8
+seconds = 3.2
+
+[sub_resource type="Resource" id="wait_8"]
+script = ExtResource("e3")
+seconds = 1.8
+
+[sub_resource type="Resource" id="fade_9"]
+script = ExtResource("e7")
+to_black = true
+colour = Color(1, 1, 1, 1)
+seconds = 1.4
+
+[sub_resource type="Resource" id="sequence_10"]
+script = ExtResource("e8")
+steps = Array[ExtResource("e4")]([SubResource("wait_8"), SubResource("fade_9")])
+
+[sub_resource type="Resource" id="together_11"]
+script = ExtResource("e5")
+steps = Array[ExtResource("e4")]([SubResource("bloom_7"), SubResource("sequence_10")])
+
+[resource]
+script = ExtResource("e9")
+id = &"flashback_1_crossing"
+steps = Array[ExtResource("e4")]([SubResource("together_4"), SubResource("bloom_5"), SubResource("bloom_6"), SubResource("together_11")])

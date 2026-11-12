@@ -230,3 +230,14 @@ func test_a_bloom_and_a_fray_end_with_the_scene() -> void:
 	_director.interrupt()
 	assert_bool(shown.is_blooming()).is_false()
 	assert_object(edge.sprite.material).is_null()
+
+## A muffle is scene state: the scene's end lifts it.
+func test_a_muffle_ends_with_the_scene() -> void:
+	var muffle := CutsceneMuffle.new()
+	muffle.amount = 1.0
+	_director.play(_scene([muffle, C.wait(30.0)]), _host)
+	await get_tree().create_timer(0.3).timeout
+	assert_float(Music.muffled()).is_greater(0.0)
+	_director.interrupt()
+	await get_tree().create_timer(0.8).timeout
+	assert_float(Music.muffled()).is_equal(0.0)

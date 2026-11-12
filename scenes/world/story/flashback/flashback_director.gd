@@ -8,8 +8,10 @@ extends Node
 signal travel_requested(point: TravelPoint, colour: Color, seconds: float)
 
 const GROUP := &"flashback_directors"
+## The id of the cue with no stream that holds the music silent after the leaving scene.
+const SILENCE := &"flashback_silence"
 
-enum Stage { IDLE, WAITING_TALK, WAITING_MARK, TRAVELLING_IN, IN_PAST, TRAVELLING_BACK, RETURNING }
+enum Stage { IDLE, WAITING_TALK, WAITING_MARK, TRAVELLING_IN, IN_PAST, LEAVING_TALK, TRAVELLING_BACK, RETURNING }
 
 @export var catalog: FlashbackCatalog
 @export var cutscenes: CutsceneDirector
@@ -57,6 +59,11 @@ func _physics_process(_delta: float) -> void:
 		Stage.WAITING_MARK:
 			if _entry_reached():
 				_travel_in()
+		Stage.LEAVING_TALK:
+			# A leaving scene played from a talk's beat: the talk ends under the black before the travel.
+			if dialogue == null or not dialogue.is_talking():
+				_stage = Stage.TRAVELLING_BACK
+				travel_requested.emit(_return, Color.BLACK, 0.0)
 
 ## The visit running, or null.
 func visiting() -> Flashback:
@@ -97,8 +104,8 @@ func _on_scene_ended(scene: Cutscene) -> void:
 		Stage.IN_PAST:
 			if scene.id == _visit.leaving.id and SaveSystem.is_scene_seen(scene.id):
 				_set_bars(0.0)
-				_stage = Stage.TRAVELLING_BACK
-				travel_requested.emit(_return, Color.BLACK, 0.0)
+				_hush()
+				_stage = Stage.LEAVING_TALK
 		Stage.RETURNING:
 			if scene.id == _visit.returning.id:
 				_finish()
@@ -127,6 +134,16 @@ func _play(scene: Cutscene) -> bool:
 		push_error("Flashback %d: '%s' could not play" % [_visit.number, scene.id if scene != null else &""])
 		return false
 	return true
+
+## The visit's music stops at the cut, and silence holds the SCENE layer over the region's music until the returning
+## scene ends (design drafts/camada_pessoal.md §2, "A volta").
+func _hush() -> void:
+	Music.release(_music, 0.0)
+	var silence := MusicCue.new()
+	silence.id = SILENCE
+	silence.fade_in = 0.0
+	silence.fade_out = 0.0
+	_music = Music.request(silence, MusicRequest.Layer.SCENE, self)
 
 func _past_room() -> Room:
 	for room: Room in get_tree().get_nodes_in_group(Room.GROUP):

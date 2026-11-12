@@ -22,6 +22,12 @@ func _streams(cue: MusicCue) -> Array[AudioStream]:
 		found.append(cue.stream)
 	return found
 
+## Seconds one loop lasts: from `loop_offset` to the stream's end, or to its `beat_count` beats when it loops on beats
+## (wife_song_full loops before her lost ending).
+func _loop_length(ogg: AudioStreamOggVorbis) -> float:
+	var end := ogg.beat_count * 60.0 / ogg.bpm if ogg.beat_count > 0 and ogg.bpm > 0.0 else ogg.get_length()
+	return end - ogg.loop_offset
+
 func test_every_cue_validates() -> void:
 	var cues := _cues()
 	assert_int(cues.size()).is_greater_equal(3)
@@ -34,10 +40,23 @@ func test_a_looping_cue_loops_every_stem_at_one_length() -> void:
 			continue
 		var lengths: Array[float] = []
 		for stream: AudioStream in _streams(cue):
-			assert_bool((stream as AudioStreamOggVorbis).loop).override_failure_message("%s does not loop" % cue.id).is_true()
-			lengths.append(stream.get_length())
+			var ogg := stream as AudioStreamOggVorbis
+			assert_bool(ogg.loop).override_failure_message("%s does not loop" % cue.id).is_true()
+			lengths.append(_loop_length(ogg))
 		for length: float in lengths:
 			assert_float(length).is_equal_approx(lengths[0], 0.01)
 		# The loop is a whole number of bars.
 		var bars := lengths[0] / BarClock.bar_seconds(cue.bpm, cue.beats_per_bar)
 		assert_float(bars).override_failure_message("%s: %f bars" % [cue.id, bars]).is_equal_approx(roundf(bars), 0.01)
+
+## Flashback 1 never reaches her lost ending: the loop closes at its first note, measured at 20.725 s in the render
+## (her A after beat 48), and opens at her first note (0.565 s).
+func test_her_full_song_loops_before_the_lost_ending() -> void:
+	var cue := load("res://resources/music/wife_song_full.tres") as MusicCue
+	var ogg := cue.stream as AudioStreamOggVorbis
+	assert_bool(ogg.loop).is_true()
+	var end := ogg.beat_count * 60.0 / ogg.bpm
+	assert_float(end).is_less(20.725)
+	assert_float(end).is_greater(20.6)
+	assert_float(ogg.loop_offset).is_less(0.565)
+	assert_float(end - ogg.loop_offset).is_equal_approx(12.0 * BarClock.bar_seconds(cue.bpm, cue.beats_per_bar), 0.01)

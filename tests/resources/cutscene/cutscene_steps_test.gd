@@ -128,6 +128,36 @@ func test_a_music_mark_waits_for_the_position_or_for_no_music() -> void:
 	_context.music_at = -1.0
 	assert_bool(step.begin(_context).tick(0.0)).is_true()
 
+## With `every`, the wait ends on the next bar line after where the music was, or when a looping cue wraps.
+func test_a_music_mark_every_bar_waits_for_the_next_one() -> void:
+	var step := CutsceneMusicMark.new()
+	step.seconds = 0.5
+	step.every = 2.0
+	assert_float(step.next_mark(0.2)).is_equal(0.5)
+	assert_float(step.next_mark(3.1)).is_equal_approx(4.5, 0.0001)
+	assert_float(step.next_mark(4.5)).is_equal_approx(4.5, 0.0001)
+	_context.music_at = 3.1
+	var task := step.begin(_context)
+	_context.music_at = 4.4
+	assert_bool(task.tick(0.0)).is_false()
+	_context.music_at = 4.5
+	assert_bool(task.tick(0.0)).is_true()
+	_context.music_at = 7.0
+	var wraps := step.begin(_context)
+	_context.music_at = 8.4
+	assert_bool(wraps.tick(0.0)).is_false()
+	_context.music_at = 0.6
+	assert_bool(wraps.tick(0.0)).is_true()
+	_context.music_at = -1.0
+	assert_bool(step.begin(_context).tick(0.0)).is_true()
+
+func test_a_muffle_asks_for_its_amount_at_once() -> void:
+	var step := CutsceneMuffle.new()
+	step.amount = 0.8
+	assert_bool(step.begin(_context).tick(0.0)).is_true()
+	step.land(_context)
+	assert_array(_calls()).is_equal(["muffle:0.8", "muffle:0.8"])
+
 func test_a_music_mark_fits_before_the_end_of_its_cue() -> void:
 	var step := CutsceneMusicMark.new()
 	step.seconds = 1.0

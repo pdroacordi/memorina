@@ -73,6 +73,10 @@ func show_visual(_id: StringName, _alpha: float, _seconds: float) -> void:
 func bloom(_step: CutsceneBloom, _centre: Vector2, _seconds: float) -> void:
 	pass
 
+## Muffles the music by `amount` (0..1, 0 lifts it) for the rest of the scene.
+func muffle(_amount: float) -> void:
+	pass
+
 ## Agitates the actor's CorruptionEdge, or calms it.
 func fray(_id: StringName, _on: bool) -> void:
 	pass

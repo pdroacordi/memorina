@@ -2,7 +2,8 @@ class_name FlashbackDirectorTest extends GdUnitTestSuite
 
 ## A recorded crossing takes Ivo to the past under white, plays the opening there, and the recorded leaving brings him back
 ## under a 0 s black to the same step and facing, where the returning scene plays. A dropped crossing never travels, an
-## open talk is waited out, the visit's music plays from the crossing's end to the returning's, and a director leaving the
+## open talk is waited out (at the crossing and at the leaving), the visit's music plays from the crossing's end to the
+## leaving's and silence from there to the returning's end, and a director leaving the
 ## tree mid-visit writes nothing (architecture/story-05-playable-flashbacks). Game's travel is stood in for by `_land`.
 
 const F := preload("res://tests/resources/story/flashbacks/flashback_fixture.gd")
@@ -134,6 +135,10 @@ func _visit_music() -> bool:
 	var playing := Music.playing()
 	return playing != null and playing.cue == _flashback.music and playing.layer == MusicRequest.Layer.SCENE
 
+func _silence_holds() -> bool:
+	var playing := Music.playing()
+	return playing != null and playing.cue.id == FlashbackDirector.SILENCE and playing.layer == MusicRequest.Layer.SCENE
+
 ## Plays the crossing in the present and waits for the opening in the past to end.
 func _cross() -> void:
 	assert_bool(_cutscenes.play(_flashback.crossing, _present.contents())).is_true()
@@ -205,9 +210,26 @@ func test_the_music_lives_the_visit() -> void:
 	assert_bool(_visit_music()).is_true()
 	assert_bool(_cutscenes.play(_flashback.leaving, _past.contents())).is_true()
 	assert_bool(await _until_playing(_flashback.returning)).is_true()
-	assert_bool(_visit_music()).is_true()
+	# The voice is cut with the image; silence holds the SCENE layer through the returning scene.
+	assert_bool(_visit_music()).is_false()
+	assert_bool(_silence_holds()).is_true()
 	await _until_idle()
 	assert_bool(_visit_music()).is_false()
+	assert_bool(_silence_holds()).is_false()
+
+## A leaving scene played from a talk's beat ends inside the talk: the travel back waits for its end.
+func test_a_talk_open_at_the_leaving_is_waited_out() -> void:
+	await _settle()
+	await _cross()
+	assert_bool(_dialogue.start_dialogue(D.dialogue(&"guitar", [D.line("SPEAKER_ELDER")]), _ivo.global_position)).is_true()
+	assert_bool(_cutscenes.play(_flashback.leaving, _past.contents())).is_true()
+	await _until_idle()
+	await _frames(20)
+	assert_int(_travels.size()).is_equal(1)
+	assert_bool(_silence_holds()).is_true()
+	_dialogue.interrupt()
+	assert_bool(await _until_playing(_flashback.returning)).is_true()
+	assert_int(_travels.size()).is_equal(2)
 
 ## A quit or a death's SceneSwap mid-visit: nothing is recorded, so the flashback is still due at the bench.
 func test_leaving_the_tree_mid_visit_writes_nothing() -> void:

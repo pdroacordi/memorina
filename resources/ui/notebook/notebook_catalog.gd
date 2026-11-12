@@ -35,8 +35,9 @@ func in_section(section: NotebookEntry.Section) -> Array[NotebookEntry]:
 			found.append(entry)
 	return found
 
-## The problems found, one line each; empty when the catalog is sound.
-func validate() -> PackedStringArray:
+## The problems found, one line each; empty when the catalog is sound. With `cutscenes`, a SCENE_SEEN entry must name one
+## of its scenes.
+func validate(cutscenes: CutsceneCatalog = null) -> PackedStringArray:
 	var problems := PackedStringArray()
 	var ids: Dictionary[StringName, bool] = {}
 	for entry: NotebookEntry in entries:
@@ -49,9 +50,11 @@ func validate() -> PackedStringArray:
 		if SECTION_REQUIREMENT.has(entry.section) and SECTION_REQUIREMENT[entry.section] != entry.requirement:
 			problems.append("%s: section %d needs requirement %d" % [entry.id, entry.section, SECTION_REQUIREMENT[entry.section]])
 		var reads_an_id := entry.requirement in [SaveFact.Kind.DIALOGUE_HEARD, SaveFact.Kind.RESPONSE_CHOSEN, SaveFact.Kind.PIECE_FOUND,
-				SaveFact.Kind.OFFER_BOUGHT]
+				SaveFact.Kind.OFFER_BOUGHT, SaveFact.Kind.SCENE_SEEN]
 		if reads_an_id and entry.fact_id == &"":
 			problems.append("%s reads an id fact with no fact_id" % entry.id)
+		elif entry.requirement == SaveFact.Kind.SCENE_SEEN and cutscenes != null and cutscenes.find(entry.fact_id) == null:
+			problems.append("%s reads the scene '%s', not in the cutscene catalog" % [entry.id, entry.fact_id])
 		if entry.title_key.is_empty() or entry.body_key.is_empty():
 			problems.append("%s has no title or body key" % entry.id)
 		if entry.section == NotebookEntry.Section.ITEMS and entry.icon == null:

@@ -19,7 +19,7 @@ source_files:
 
 # STORY-05: five playable flashbacks (plan)
 
-**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-5 (2026-11-12).
+**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-7 (2026-11-12).
 
 ## Context
 
@@ -106,6 +106,10 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
    - At full colour the director travels with a 0 s fade. The rooms are identical, so the swap is hidden.
    - A `Seat` with no `bench_id` sits him down: `Game` rests only a bench seat. Then the opening scene (the widest shot), then the darkening twilight, then the 0 s collapse at the mark.
 
+### Flashback 1 (step 7, built 2026-11-12; `systems/cutscenes`, "Flashback 1")
+- Corrections: the guitar's talk opens with a cue-only `flashback_1_take` (Ivo walks from the tree to her, 3.8 s) so the lines and the jam play beside her; the Talkable sits in the contents scene, not the `.room` (twin grids). The leaving is a beat of that talk, so the director waits for the talk to end under the black (`LEAVING_TALK`) before the travel back, cuts the visit's music at the leaving's end and holds a stream-less SCENE cue through the returning scene (the 1 s of silence). `Game.travel` emits `travelled` before the fade clears. `CutsceneMusicMark.every` (bar lines) and `CutsceneMuffle` were added. `wife_song_full` loops on beats before the lost ending (`systems/music`), so a long visit never reaches it and the leaving's mark lands on the next bar line.
+- The laugh is a stand-in (her `sit_sing` loop at 2.5x, no laugh sound). The kneel is the bench's `sit` loop.
+
 ### Alba
 - A `Speaker` `alba` (`SPEAKER_ALBA`, portrait).
 - A `StoryActor` `alba_actor.tscn` with `AlbaAnimationResolver` (clip consts), used only in scenes, covering the `Alba` staging. Free play shows the staging's figures.
@@ -169,7 +173,7 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 - A second "visit elsewhere and come back" (the epilogue's, the bearer fragments' engraving) reuses `FlashbackDirector`'s travel and return point, never the save.
 - Every past pose is derived; the past room is never a save place.
 - The new region is the eighth; interiors of the seven keep their x.
-- Art not in this plan: Ivo kneeling, Ivo seated on the ground, the push gesture, the ribbon in hand.
+- Art not in this plan: Ivo kneeling (flashback 1's returning stands in the `sit` loop), Ivo seated on the ground, the push gesture, the ribbon in hand, Ivo walking with the guitar, Alba laughing (a sound and a clip), the garden's waterfall and its flat stone (no prop yet; flashback 1's crossing and opening show the pool and a colour column in their place).
 
 ## Decisions (user, 2026-11-11)
 

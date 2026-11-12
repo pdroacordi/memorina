@@ -10,6 +10,8 @@ const IVO_BUBBLE_HEIGHT := 66.0
 const RETURN_SECONDS := 0.8
 ## Real seconds the scene's music fades over when the scene is skipped.
 const SKIP_MUSIC_FADE := 0.8
+## The name a scene's muffle is opened under (Music.muffle).
+const MUFFLE_ID := &"cutscene"
 
 var cast: CutsceneCast
 var _director: CutsceneDirector
@@ -26,6 +28,7 @@ var _frayed: Array[StoryActor] = []
 var _rig_used: bool = false
 var _driving_ivo: bool = false
 var _posed: bool = false
+var _muffled: bool = false
 
 
 func _init(director: CutsceneDirector, scope: Node, rig: CameraRig, ivo_controller: ScriptedController) -> void:
@@ -150,6 +153,13 @@ func music(cue: MusicCue, fade: float) -> void:
 	if cue != null:
 		_music = Music.request(cue, MusicRequest.Layer.SCENE, _director)
 
+func muffle(amount: float) -> void:
+	_muffled = amount > 0.0
+	if _muffled:
+		Music.muffle(MUFFLE_ID, amount)
+	else:
+		Music.unmuffle(MUFFLE_ID)
+
 func silence() -> void:
 	for voice: AudioStreamPlayer in _voices:
 		if is_instance_valid(voice):
@@ -223,6 +233,8 @@ func restore(clear_fade: bool, cut: bool = false) -> void:
 			visual.reset()
 	_visuals.clear()
 	silence()
+	if _muffled:
+		muffle(0.0)
 	# A skip fades the scene's music out; a scene that ended lets a one-shot cue play to its end.
 	music(null, SKIP_MUSIC_FADE if cut else -1.0)
 	for bubble: EmoteBubble in _bubbles:

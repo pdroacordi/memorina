@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e3"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e4"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e5"]
+
+[sub_resource type="Resource" id="camera_1"]
+script = ExtResource("e1")
+targets = Array[StringName]([&"waterfall_foot"])
+offset = Vector2(0, -20)
+zoom = 3.0
+seconds = 0.0
+
+[sub_resource type="Resource" id="bars_2"]
+script = ExtResource("e2")
+open = true
+seconds = 0.0
+
+[sub_resource type="Resource" id="wait_3"]
+script = ExtResource("e3")
+seconds = 2.6
+
+[sub_resource type="Resource" id="camera_4"]
+script = ExtResource("e1")
+targets = Array[StringName]([&"alba"])
+offset = Vector2(0, -36)
+zoom = 2.0
+seconds = 3.6
+
+[sub_resource type="Resource" id="wait_5"]
+script = ExtResource("e3")
+seconds = 2.2
+
+[sub_resource type="Resource" id="camera_6"]
+script = ExtResource("e1")
+targets = Array[StringName]([&"alba", &"ivo"])
+offset = Vector2(0, -48)
+zoom = 1.0
+seconds = 2.4
+
+[sub_resource type="Resource" id="wait_7"]
+script = ExtResource("e3")
+seconds = 0.8
+
+[resource]
+script = ExtResource("e5")
+id = &"flashback_1_opening"
+steps = Array[ExtResource("e4")]([SubResource("camera_1"), SubResource("bars_2"), SubResource("wait_3"), SubResource("camera_4"), SubResource("wait_5"), SubResource("camera_6"), SubResource("wait_7")])

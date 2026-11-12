@@ -309,10 +309,11 @@ func travel(point: TravelPoint, colour: Color, seconds: float) -> void:
 	_player.set_deferred(&"process_mode", Node.PROCESS_MODE_DISABLED)
 	await _fade.to_colour(colour, seconds)
 	await _land_in(point.room, point.place.bind(_player))
-	await _fade.to_clear()
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
+	# Before the clear, so the scene that follows opens under the cover (the opening's first shot, the kneel).
 	travelled.emit(true)
+	await _fade.to_clear()
 
 func _arrive_through(room: Room, link: StringName) -> void:
 	var arrival := Door.find(get_tree(), room, link)

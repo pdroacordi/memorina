@@ -2,10 +2,33 @@
 
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_mark.gd" id="cs_mark"]
+[ext_resource type="Script" path="res://scenes/world/story/flashback/flashback_lure.gd" id="fb_lure"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/wife_hum_opening.wav" id="fb_hum"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_trigger.gd" id="cs_trigger"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_1_crossing.tres" id="cs_crossing_1"]
+[ext_resource type="Script" path="res://scenes/world/memory/memory_bloom.gd" id="cs_bloom"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/home_village/contents/village_garden.room" id="room_map"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/village_tree.tscn" id="p_tree"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/garden_bed_planted.tscn" id="p_bed"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bush.tscn" id="p_bush"]
+
+[sub_resource type="Resource" id="due_1"]
+script = ExtResource("st_fact")
+kind = 15
+index = 1
+
+[sub_resource type="Resource" id="crossing_1_seen"]
+script = ExtResource("st_fact")
+kind = 9
+id = &"flashback_1_crossing"
+
+[sub_resource type="RectangleShape2D" id="garden_rect"]
+size = Vector2(1280, 384)
+
+[sub_resource type="RectangleShape2D" id="pool_edge_rect"]
+size = Vector2(80, 64)
 
 [node name="Contents" type="Node2D"]
 
@@ -37,28 +60,84 @@ position = Vector2(712, 288)
 
 [node name="OldTree" type="Marker2D" parent="Marks"]
 position = Vector2(200, 288)
+script = ExtResource("cs_mark")
+mark_id = &"old_tree"
 
 [node name="SwingBranch" type="Marker2D" parent="Marks"]
 position = Vector2(312, 184)
+script = ExtResource("cs_mark")
+mark_id = &"swing_branch"
 
 [node name="Swing" type="Marker2D" parent="Marks"]
 position = Vector2(312, 270)
+script = ExtResource("cs_mark")
+mark_id = &"swing"
 
 [node name="FlowerBedA" type="Marker2D" parent="Marks"]
 position = Vector2(464, 288)
+script = ExtResource("cs_mark")
+mark_id = &"flower_bed_a"
 
 [node name="FlowerBedB" type="Marker2D" parent="Marks"]
 position = Vector2(624, 288)
+script = ExtResource("cs_mark")
+mark_id = &"flower_bed_b"
 
 [node name="FlatStone" type="Marker2D" parent="Marks"]
 position = Vector2(816, 288)
+script = ExtResource("cs_mark")
+mark_id = &"flat_stone"
 
 [node name="WaterfallTop" type="Marker2D" parent="Marks"]
 position = Vector2(952, 96)
+script = ExtResource("cs_mark")
+mark_id = &"waterfall_top"
 
 [node name="WaterfallFoot" type="Marker2D" parent="Marks"]
 position = Vector2(952, 288)
+script = ExtResource("cs_mark")
+mark_id = &"waterfall_foot"
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
+
+[node name="Flashbacks" type="Node2D" parent="."]
+
+[node name="Lure1" type="Node2D" parent="Flashbacks"]
+position = Vector2(952, 200)
+script = ExtResource("fb_lure")
+when = Array[ExtResource("st_fact")]([SubResource("due_1")])
+unless = Array[ExtResource("st_fact")]([SubResource("crossing_1_seen")])
+stream = ExtResource("fb_hum")
+gap = 3.5
+zone = NodePath("../GardenZone")
+
+[node name="GardenZone" type="Area2D" parent="Flashbacks"]
+collision_layer = 0
+collision_mask = 256
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Flashbacks/GardenZone"]
+position = Vector2(640, 192)
+shape = SubResource("garden_rect")
+
+[node name="PoolEdge" type="Area2D" parent="Flashbacks"]
+collision_layer = 0
+collision_mask = 256
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Flashbacks/PoolEdge"]
+position = Vector2(1104, 256)
+shape = SubResource("pool_edge_rect")
+
+[node name="Crossing1" type="Node" parent="Flashbacks"]
+script = ExtResource("cs_trigger")
+cutscene = ExtResource("cs_crossing_1")
+when = Array[ExtResource("st_fact")]([SubResource("due_1")])
+zone = NodePath("../PoolEdge")
+
+[node name="CrossingBloom" type="Node2D" parent="Flashbacks"]
+position = Vector2(952, 192)
+script = ExtResource("cs_bloom")
+bloom_id = &"crossing_bloom"

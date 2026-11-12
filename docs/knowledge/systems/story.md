@@ -72,6 +72,12 @@ STORY-03: the mechanisms (phase A) and the opening's content (phase B), both bui
 - `morning_song.tres`: E G E D | C D E C on the Memorina's inputs (UP G4, RIGHT E4, LEFT D4, DOWN C4) = RIGHT UP RIGHT LEFT DOWN LEFT RIGHT DOWN, beats 1 1 1.5 0.5 1 1 1 2.5 at 0.42 s ("Approve melody (Recommended)", user, 2026-10-15).
 - `GuitarAttempt`: `guitar_first.tres` (gap 5: he stops after the fifth note) and `guitar_again.tres` (gap 4: one note earlier on "[Try again]").
 
+
+## The free guitar (`GuitarJam`, pure; STORY-05 step 7)
+
+- Flashback 1's jam beside her song. `GuitarJam` (`scenes/world/story/guitar_jam.gd`) over a `GuitarJamSetup` (`resources/story/flashback_1_jam.tres`: the morning melody, `max_presses` 12, `laugh_at` 3, `laugh_seconds` 1.2, `end_after_silence` 2.5, `end_before_first` 8, `min_gap` 0.08, `detune_cents` 38 -46 31 -52 44 -35). `press(note)` returns `Strum.ALONG` (the note her line has at that press) or `ASTRAY`; there is no PLAYED outcome and no count of notes played. Every press sounds `cents(i)` off, at least `MIN_DETUNE_CENTS` (20) either way, so the morning song is never played in tune. `laughs()` is true on the press that makes the third mismatch, once.
+- `GuitarJamBeat` (`guitar_jam_beat.tscn`; NOTES, GUITAR) sounds each press on its string at the detuned pitch (Notes bus), stands `laugh_stand_ins` in for `laugh_seconds` at the laugh and releases them, and ends after `max_presses`, `end_after_silence` after a press, or `end_before_first` with none. It shows no phrase sheet.
+- `guitar_jam_test` runs every sequence of eight presses (4^8) and the melody twice over; `guitar_jam_beat_test` the beat.
 ## The opening (phase B)
 
 Script: `docs/design/05_roteiro.md`, Acts 1, 3 and 4, its wording kept in both languages. Ivo has no spoken lines; his three choices are gestures or an answer to a question, each a HOLD_ON and a LET_GO.

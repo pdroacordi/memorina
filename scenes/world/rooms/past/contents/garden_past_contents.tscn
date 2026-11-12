@@ -3,10 +3,40 @@
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_set"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_mark.gd" id="cs_mark"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/past/contents/garden_past.room" id="room_map"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/village_tree.tscn" id="p_tree"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/garden_bed_planted.tscn" id="p_bed"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/bush.tscn" id="p_bush"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="st_staging"]
+[ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
+[ext_resource type="PackedScene" path="res://scenes/characters/story_actor/alba/alba_figure.tscn" id="st_alba_figure"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/ivo_house/guitar.tscn" id="st_guitar"]
+[ext_resource type="PackedScene" path="res://scenes/characters/story_actor/alba/alba_actor.tscn" id="cs_alba"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/talkable/talkable.tscn" id="tk_talkable"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_1_guitar.tres" id="tk_guitar_1"]
+[ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="cs_beat"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_1_take_guitar.tres" id="cs_take_1"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_1.tres" id="cs_leaving_1"]
+[ext_resource type="PackedScene" path="res://scenes/world/story/guitar_jam_beat.tscn" id="st_jam_beat"]
+[ext_resource type="Resource" path="res://resources/story/flashback_1_jam.tres" id="st_jam_1"]
+[ext_resource type="Script" path="res://scenes/world/memory/memory_bloom.gd" id="cs_bloom"]
+
+[sub_resource type="Resource" id="due_1"]
+script = ExtResource("st_fact")
+kind = 15
+index = 1
+
+[sub_resource type="Resource" id="alba_stone"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_1")])
+show = &"Stone"
+
+[sub_resource type="Resource" id="guitar_at_tree"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_1")])
+show = &"AtTree"
 
 [node name="Contents" type="Node2D"]
 
@@ -39,28 +69,123 @@ position = Vector2(712, 288)
 
 [node name="OldTree" type="Marker2D" parent="Marks"]
 position = Vector2(200, 288)
+script = ExtResource("cs_mark")
+mark_id = &"old_tree"
 
 [node name="SwingBranch" type="Marker2D" parent="Marks"]
 position = Vector2(312, 184)
+script = ExtResource("cs_mark")
+mark_id = &"swing_branch"
 
 [node name="Swing" type="Marker2D" parent="Marks"]
 position = Vector2(312, 270)
+script = ExtResource("cs_mark")
+mark_id = &"swing"
 
 [node name="FlowerBedA" type="Marker2D" parent="Marks"]
 position = Vector2(464, 288)
+script = ExtResource("cs_mark")
+mark_id = &"flower_bed_a"
 
 [node name="FlowerBedB" type="Marker2D" parent="Marks"]
 position = Vector2(624, 288)
+script = ExtResource("cs_mark")
+mark_id = &"flower_bed_b"
 
 [node name="FlatStone" type="Marker2D" parent="Marks"]
 position = Vector2(816, 288)
+script = ExtResource("cs_mark")
+mark_id = &"flat_stone"
 
 [node name="WaterfallTop" type="Marker2D" parent="Marks"]
 position = Vector2(952, 96)
+script = ExtResource("cs_mark")
+mark_id = &"waterfall_top"
 
 [node name="WaterfallFoot" type="Marker2D" parent="Marks"]
 position = Vector2(952, 288)
+script = ExtResource("cs_mark")
+mark_id = &"waterfall_foot"
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
+
+[node name="Stagings" type="Node2D" parent="."]
+z_index = -10
+
+[node name="Alba" type="Node2D" parent="Stagings"]
+script = ExtResource("st_staging")
+staging_id = &"alba_staging"
+stages = Array[ExtResource("st_stage")]([SubResource("alba_stone")])
+
+[node name="Stone" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
+position = Vector2(816, 288)
+flip_h = true
+loop = &"stone"
+
+[node name="AlbaLaugh" type="Node2D" parent="Stagings"]
+script = ExtResource("st_staging")
+
+[node name="Laughing" parent="Stagings/AlbaLaugh" instance=ExtResource("st_alba_figure")]
+position = Vector2(816, 288)
+flip_h = true
+speed_scale = 2.5
+loop = &"sit_sing"
+
+[node name="Guitar" type="Node2D" parent="Stagings"]
+script = ExtResource("st_staging")
+staging_id = &"guitar_staging"
+stages = Array[ExtResource("st_stage")]([SubResource("guitar_at_tree")])
+
+[node name="AtTree" parent="Stagings/Guitar" instance=ExtResource("st_guitar")]
+position = Vector2(228, 288)
+
+[node name="Cast" type="Node2D" parent="."]
+z_index = -10
+
+[node name="Alba" parent="Cast" instance=ExtResource("cs_alba")]
+stands_for = NodePath("../../Stagings/Alba")
+
+[node name="SceneMarks" type="Node2D" parent="."]
+
+[node name="ByTheStone" type="Marker2D" parent="SceneMarks"]
+position = Vector2(760, 288)
+script = ExtResource("cs_mark")
+mark_id = &"by_the_stone"
+
+[node name="Talkables" type="Node2D" parent="."]
+
+[node name="Guitar1" parent="Talkables" instance=ExtResource("tk_talkable")]
+position = Vector2(228, 288)
+talk = ExtResource("tk_guitar_1")
+
+[node name="Beats" type="Node2D" parent="."]
+
+[node name="TakeGuitar1" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_1_take"
+cutscene = ExtResource("cs_take_1")
+
+[node name="Jam1" parent="Beats" instance=ExtResource("st_jam_beat")]
+cue = &"flashback_1_jam"
+face = NodePath("../../Stagings/Alba/Stone")
+setup = ExtResource("st_jam_1")
+laugh_stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Stagings/Alba"): &"", NodePath("../../Stagings/AlbaLaugh"): &"Laughing"})
+
+[node name="Leaving1" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
+cue = &"flashback_1_leaving"
+pose = 1
+face = NodePath("../../Stagings/Alba/Stone")
+cutscene = ExtResource("cs_leaving_1")
+
+[node name="PastGrey" type="Node2D" parent="."]
+position = Vector2(640, 192)
+script = ExtResource("cs_bloom")
+bloom_id = &"past_grey"
+
+[node name="PastKeep" type="Node2D" parent="."]
+position = Vector2(816, 258)
+script = ExtResource("cs_bloom")
+bloom_id = &"past_keep"

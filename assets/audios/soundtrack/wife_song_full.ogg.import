@@ -12,8 +12,8 @@ dest_files=["res://.godot/imported/wife_song_full.ogg-b06aca79be0a06b41296eab237
 
 [params]
 
-loop=false
-loop_offset=0
-bpm=0
-beat_count=0
+loop=true
+loop_offset=0.555
+bpm=141.926
+beat_count=49
 bar_beats=4

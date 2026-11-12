@@ -129,6 +129,9 @@ class Recorder:
 	func bloom(step: CutsceneBloom, centre: Vector2, seconds: float) -> void:
 		calls.append("bloom:%s:%d,%d:%.1f:%.1f" % [step.bloom_id, int(centre.x), int(centre.y), step.strength, seconds])
 
+	func muffle(amount: float) -> void:
+		calls.append("muffle:%.1f" % amount)
+
 	func fray(id: StringName, on: bool) -> void:
 		calls.append("fray:%s:%s" % [id, on])
 

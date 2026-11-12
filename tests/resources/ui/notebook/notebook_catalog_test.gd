@@ -4,6 +4,7 @@ class_name NotebookCatalogTest extends GdUnitTestSuite
 
 const CATALOG_PATH := "res://resources/ui/notebook/notebook_catalog.tres"
 const CSV_PATH := "res://i18n/translations.csv"
+const CUTSCENES_PATH := "res://resources/cutscene/cutscene_catalog.tres"
 const GUARDIAN_STATS: Array[String] = [
 	"res://resources/characters/guardians/frost_guardian/frost_guardian_stats.tres",
 	"res://resources/characters/guardians/bloom_guardian/bloom_guardian_stats.tres",
@@ -37,6 +38,21 @@ func _csv_keys() -> Dictionary[String, PackedStringArray]:
 
 func test_the_shipped_catalog_is_valid() -> void:
 	assert_array(Array(_catalog().validate())).is_empty()
+	assert_array(Array(_catalog().validate(load(CUTSCENES_PATH) as CutsceneCatalog))).is_empty()
+
+## A Memories page of a flashback reads its leaving scene's SCENE_SEEN, which the cutscene catalog must hold.
+func test_a_scene_seen_entry_must_name_a_catalog_scene() -> void:
+	var catalog := NotebookCatalog.new()
+	catalog.entries = _catalog().entries.duplicate()
+	var page := _entry(&"lore_unseen", NotebookEntry.Section.LORE, SaveFact.Kind.SCENE_SEEN, 0)
+	page.fact_id = &"no_such_scene"
+	catalog.entries.append(page)
+	var cutscenes := load(CUTSCENES_PATH) as CutsceneCatalog
+	assert_str(", ".join(catalog.validate(cutscenes))).contains("lore_unseen reads the scene 'no_such_scene'")
+	page.fact_id = &""
+	assert_str(", ".join(catalog.validate(cutscenes))).contains("lore_unseen reads an id fact with no fact_id")
+	page.fact_id = FlashbackSchedule.id(1)
+	assert_array(Array(catalog.validate(cutscenes))).is_empty()
 
 func test_a_duplicate_id_is_reported() -> void:
 	var catalog := NotebookCatalog.new()

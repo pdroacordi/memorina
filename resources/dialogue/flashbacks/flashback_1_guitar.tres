@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="DialogueSet" format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/alba.tres" id="s_alba"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/ivo.tres" id="s_ivo"]
+
+[sub_resource type="Resource" id="line_take"]
+script = ExtResource("f_line")
+cue = &"flashback_1_take"
+
+[sub_resource type="Resource" id="line_1"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_alba")
+text_key = "DLG_FLASHBACK_1_01"
+
+[sub_resource type="Resource" id="line_2"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_FLASHBACK_1_02"
+
+[sub_resource type="Resource" id="line_3"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_alba")
+text_key = "DLG_FLASHBACK_1_03"
+cue = &"flashback_1_jam"
+
+[sub_resource type="Resource" id="line_4"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_alba")
+text_key = "DLG_FLASHBACK_1_04"
+cue = &"flashback_1_leaving"
+
+[sub_resource type="Resource" id="due_1"]
+script = ExtResource("f_fact")
+kind = 15
+index = 1
+
+[sub_resource type="Resource" id="dialogue_guitar"]
+script = ExtResource("f_dialogue")
+id = &"flashback_1_guitar"
+once = true
+when = Array[ExtResource("f_fact")]([SubResource("due_1")])
+lines = Array[ExtResource("f_line")]([SubResource("line_take"), SubResource("line_1"), SubResource("line_2"), SubResource("line_3"), SubResource("line_4")])
+
+[resource]
+script = ExtResource("f_set")
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_guitar")])

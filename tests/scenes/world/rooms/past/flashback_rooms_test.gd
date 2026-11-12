@@ -103,3 +103,47 @@ func test_ivo_never_drowns_in_the_present_garden() -> void:
 	assert_dict(map.water).is_not_empty()
 	_assert_shallow("village_garden", map)
 	garden.free()
+
+## The ids a contents scene gives its cutscenes: actors, marks, visuals, blooms and named stagings, and Ivo.
+func _cutscene_ids(root: Node) -> Array[StringName]:
+	var ids: Array[StringName] = [CutsceneStep.IVO]
+	var stack: Array[Node] = [root]
+	while not stack.is_empty():
+		var node: Node = stack.pop_back()
+		if node is StoryActor:
+			ids.append((node as StoryActor).actor_id)
+		elif node is CutsceneMark:
+			ids.append((node as CutsceneMark).mark_id)
+		elif node is CutsceneVisual:
+			ids.append((node as CutsceneVisual).visual_id)
+		elif node is MemoryBloom:
+			ids.append((node as MemoryBloom).bloom_id)
+		elif node is FactStaging and (node as FactStaging).staging_id != &"":
+			ids.append((node as FactStaging).staging_id)
+		stack.append_array(node.get_children())
+	return ids
+
+## FlashbackDirector plays each opening on its past room's contents: every id it names resolves there
+## (cutscene_rooms_test sees only the scenes a room starts itself).
+func test_every_opening_names_ids_of_its_past_room() -> void:
+	var catalog := load("res://resources/story/flashbacks/flashback_catalog.tres") as FlashbackCatalog
+	assert_int(catalog.flashbacks.size()).is_greater(0)
+	var rooms := _past_rooms()
+	for flashback: Flashback in catalog.flashbacks:
+		var past: Room = null
+		for room: Room in rooms:
+			if room.id() == flashback.past_room:
+				past = room
+		assert_object(past).override_failure_message("flashback %d: no past room '%s'" % [flashback.number,
+				flashback.past_room]).is_not_null()
+		if past == null:
+			continue
+		var contents := past.contents_scene.instantiate()
+		var ids := _cutscene_ids(contents)
+		for leaf: CutsceneStep in CutsceneCatalog.leaves(flashback.opening.steps):
+			for id: StringName in leaf.names():
+				assert_bool(ids.has(id)).override_failure_message("flashback %d: its opening names '%s'" % [flashback.number,
+						id]).is_true()
+		contents.free()
+	for room: Room in rooms:
+		room.free()

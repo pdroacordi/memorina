@@ -1,0 +1,382 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 58.0,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "player_position": [
+  2470,
+  -490
+ ],
+ "steps": [
+  {
+   "t": 0.2,
+   "screenshot": "00_garden_grey"
+  },
+  {
+   "t": 0.25,
+   "log": "start"
+  },
+  {
+   "t": 0.3,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 0.8,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 1.0,
+   "screenshot": "01_pool_edge"
+  },
+  {
+   "t": 2.0,
+   "screenshot": "c00_crossing"
+  },
+  {
+   "t": 3.0,
+   "screenshot": "c01_crossing"
+  },
+  {
+   "t": 4.0,
+   "screenshot": "c02_crossing"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "c03_crossing"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "c04_crossing"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "c05_crossing"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "c06_crossing"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "c07_crossing"
+  },
+  {
+   "t": 9.8,
+   "screenshot": "c08_crossing"
+  },
+  {
+   "t": 9.9,
+   "log": "crossing_end"
+  },
+  {
+   "t": 10.5,
+   "screenshot": "o00_opening"
+  },
+  {
+   "t": 11.3,
+   "screenshot": "o01_opening"
+  },
+  {
+   "t": 11.8,
+   "screenshot": "o02_opening"
+  },
+  {
+   "t": 12.5,
+   "screenshot": "o03_opening"
+  },
+  {
+   "t": 13.5,
+   "screenshot": "o04_opening"
+  },
+  {
+   "t": 15.0,
+   "screenshot": "o05_opening"
+  },
+  {
+   "t": 16.5,
+   "screenshot": "o06_opening"
+  },
+  {
+   "t": 18.0,
+   "screenshot": "o07_opening"
+  },
+  {
+   "t": 19.5,
+   "screenshot": "o08_opening"
+  },
+  {
+   "t": 21.0,
+   "screenshot": "o09_opening"
+  },
+  {
+   "t": 22.5,
+   "screenshot": "o10_opening"
+  },
+  {
+   "t": 23.0,
+   "log": "opening_end"
+  },
+  {
+   "t": 24.0,
+   "screenshot": "p00_free_play"
+  },
+  {
+   "t": 24.5,
+   "teleport": [
+    103930,
+    12270
+   ]
+  },
+  {
+   "t": 24.9,
+   "screenshot": "p01_at_guitar"
+  },
+  {
+   "t": 25.0,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 25.08,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 25.6,
+   "screenshot": "g00_take"
+  },
+  {
+   "t": 27.0,
+   "screenshot": "g01_take"
+  },
+  {
+   "t": 28.5,
+   "screenshot": "g02_take"
+  },
+  {
+   "t": 29.6,
+   "screenshot": "g03_take"
+  },
+  {
+   "t": 30.0,
+   "log": "talk"
+  },
+  {
+   "t": 30.4,
+   "screenshot": "g04_line1"
+  },
+  {
+   "t": 31.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 31.28,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 31.8,
+   "screenshot": "g05_line2"
+  },
+  {
+   "t": 32.4,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 32.48,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 33.0,
+   "screenshot": "g06_line3"
+  },
+  {
+   "t": 33.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 33.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 34.0,
+   "log": "jam"
+  },
+  {
+   "t": 34.2,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 34.28,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 34.6,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 34.68,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 35.0,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 35.08,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 35.1,
+   "screenshot": "j00_jam"
+  },
+  {
+   "t": 35.4,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 35.48,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 35.8,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 35.88,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 36.0,
+   "screenshot": "j01_laugh"
+  },
+  {
+   "t": 36.4,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 36.48,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 36.8,
+   "screenshot": "j02_after_laugh"
+  },
+  {
+   "t": 39.2,
+   "screenshot": "j03_line4"
+  },
+  {
+   "t": 39.3,
+   "log": "line4"
+  },
+  {
+   "t": 40.0,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 40.08,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 40.5,
+   "screenshot": "l00_leaving"
+  },
+  {
+   "t": 41.5,
+   "screenshot": "l01_leaving"
+  },
+  {
+   "t": 42.5,
+   "screenshot": "l02_leaving"
+  },
+  {
+   "t": 43.5,
+   "screenshot": "l03_leaving"
+  },
+  {
+   "t": 44.5,
+   "screenshot": "l04_leaving"
+  },
+  {
+   "t": 45.5,
+   "screenshot": "l05_leaving"
+  },
+  {
+   "t": 46.5,
+   "screenshot": "l06_leaving"
+  },
+  {
+   "t": 47.5,
+   "screenshot": "l07_leaving"
+  },
+  {
+   "t": 48.5,
+   "screenshot": "l08_leaving"
+  },
+  {
+   "t": 49.5,
+   "screenshot": "l09_leaving"
+  },
+  {
+   "t": 50.3,
+   "screenshot": "l10_leaving"
+  },
+  {
+   "t": 50.4,
+   "log": "leaving"
+  },
+  {
+   "t": 51.0,
+   "screenshot": "r00_return"
+  },
+  {
+   "t": 51.6,
+   "screenshot": "r01_return"
+  },
+  {
+   "t": 52.2,
+   "screenshot": "r02_return"
+  },
+  {
+   "t": 53.0,
+   "screenshot": "r03_return"
+  },
+  {
+   "t": 54.0,
+   "screenshot": "r04_return"
+  },
+  {
+   "t": 55.5,
+   "screenshot": "r05_return"
+  },
+  {
+   "t": 56.0,
+   "log": "end"
+  }
+ ]
+}
