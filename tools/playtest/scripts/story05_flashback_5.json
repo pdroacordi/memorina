@@ -1,0 +1,223 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 51.0,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "scenes_seen": [
+  "flashback_1",
+  "flashback_2",
+  "flashback_3",
+  "flashback_4"
+ ],
+ "player_position": [
+  2660,
+  -500
+ ],
+ "steps": [
+  {
+   "t": 0.2,
+   "screenshot": "p00_path"
+  },
+  {
+   "t": 0.25,
+   "log": "start"
+  },
+  {
+   "t": 0.5,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 1.2,
+   "log": "garden_entered"
+  },
+  {
+   "t": 1.75,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "screenshot": "c00_colour"
+  },
+  {
+   "t": 4.5,
+   "screenshot": "c01_colour"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "c02_colour"
+  },
+  {
+   "t": 7.0,
+   "screenshot": "s00_swap"
+  },
+  {
+   "t": 7.01,
+   "log": "swap_0"
+  },
+  {
+   "t": 7.3,
+   "screenshot": "s01_swap"
+  },
+  {
+   "t": 7.31,
+   "log": "swap_1"
+  },
+  {
+   "t": 7.5,
+   "screenshot": "s02_swap"
+  },
+  {
+   "t": 7.51,
+   "log": "swap_2"
+  },
+  {
+   "t": 7.7,
+   "screenshot": "s03_swap"
+  },
+  {
+   "t": 7.71,
+   "log": "swap_3"
+  },
+  {
+   "t": 7.9,
+   "screenshot": "s04_swap"
+  },
+  {
+   "t": 7.91,
+   "log": "swap_4"
+  },
+  {
+   "t": 8.1,
+   "screenshot": "s05_swap"
+  },
+  {
+   "t": 8.11,
+   "log": "swap_5"
+  },
+  {
+   "t": 8.3,
+   "screenshot": "s06_swap"
+  },
+  {
+   "t": 8.31,
+   "log": "swap_6"
+  },
+  {
+   "t": 8.6,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 9.75,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 10.0,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 11.0,
+   "log": "walk"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "w00_tree"
+  },
+  {
+   "t": 13.45,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 13.6,
+   "log": "at_seat"
+  },
+  {
+   "t": 13.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 13.9,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 13.9,
+   "log": "sat"
+  },
+  {
+   "t": 14.2,
+   "screenshot": "l00_sit"
+  },
+  {
+   "t": 18.0,
+   "screenshot": "l01_pull"
+  },
+  {
+   "t": 24.0,
+   "screenshot": "l02_pull"
+  },
+  {
+   "t": 31.0,
+   "screenshot": "l03_wide"
+  },
+  {
+   "t": 35.8,
+   "screenshot": "l04_line"
+  },
+  {
+   "t": 38.5,
+   "screenshot": "l05_dusk"
+  },
+  {
+   "t": 41.6,
+   "screenshot": "l06_gap"
+  },
+  {
+   "t": 41.7,
+   "log": "gap"
+  },
+  {
+   "t": 41.95,
+   "screenshot": "l07_grey"
+  },
+  {
+   "t": 42.5,
+   "screenshot": "l08_black"
+  },
+  {
+   "t": 43.2,
+   "screenshot": "k00_return"
+  },
+  {
+   "t": 43.3,
+   "log": "returned"
+  },
+  {
+   "t": 46.0,
+   "screenshot": "k01_kneel"
+  },
+  {
+   "t": 49.5,
+   "screenshot": "k02_up"
+  },
+  {
+   "t": 49.6,
+   "log": "end"
+  }
+ ]
+}

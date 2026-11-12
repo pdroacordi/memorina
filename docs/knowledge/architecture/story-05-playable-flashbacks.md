@@ -19,7 +19,7 @@ source_files:
 
 # STORY-05: five playable flashbacks (plan)
 
-**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-10 (2026-11-12).
+**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-11 (2026-11-12).
 
 ## Context
 
@@ -123,6 +123,11 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 ### Flashback 4 (step 10, built 2026-11-12; `systems/cutscenes`, "Flashback 4")
 - Corrections: the crossing ends black and `Flashback.entry_colour` (white by default) lets the travel cut to night under black. The music is a stream-less cue, so nothing plays; the water is a `FlashbackLure` with no zone in the past, silenced when the first talk is heard. The close on "Por você." is a second talk, auto-started, framed with a new `Dialogue.cut` (the frame lands at once): a beat's scene cannot hold the frame after it ends, and cannot hold a talk. The fray plays as that line's box closes, in the leaving scene. Her back is `PoolBack` (flipped `standing`), her turn a beat scene whose SCENE_SEEN stages `Turned`.
 - Stand-ins: the water (synthesized), the ribbon on the wrist (in his hand), her untying (the `ribbon` clip).
+
+### Flashback 5 (step 11, built 2026-11-12; `systems/cutscenes`, "Flashback 5")
+- The hidden swap holds (playtest `playtests/2026-11-12-story05-flashback-5`); the soft-white fallback is kept for Ivo outside the swap zone at the mark. Corrections: the crossing is a scene with no steps, recorded on entering the garden, so the director's visit (music, mark, travel) runs while Ivo walks; a `FlashbackSwap` area in the present room makes the travel hidden (twin pixel, `Color.TRANSPARENT`, 0 s, `TravelPoint.keep_motion`) only while Ivo stands inside it on the floor, else the flashback's own entry plays. The past room is built ahead (`Room.prepare`) and the life notes fade at the visit's begin (`FlashbackDirector.visit_began`). Two seams the twin rule missed: the song's bloom must wear the region's season tint, and grass hashes on world columns (`Region.twin_shift`). The opening has no steps. The seat is a `GroundSeat` (`sit_ground`) that plays the leaving. One line, held (`DialogueLine.hold`). `Game.travel` awaits a physics frame after its cover (`bugs/a-travel-asked-under-a-cut-to-black-left-ivo-disabled`).
+- The lure is Music, not Sfx: `FlashbackLure.voice` asks `wife_song_lullaby_far` at SCENE layer with a distance duck and a muffle; the water is the stand-in loop. The visit's cue is a separate resource, so the song restarts (cross-faded) at the garden.
+- Not met: the widest shot is zoom 1 (the room's height); below 1 the past room shows its void and an undrawn backdrop, so the waterfall is not in it.
 
 ### Alba
 - A `Speaker` `alba` (`SPEAKER_ALBA`, portrait).

@@ -68,6 +68,14 @@ func activate() -> void:
 		_contents_node.process_mode = Node.PROCESS_MODE_INHERIT
 		_contents_node.show()
 
+## Builds the contents ahead of a travel, idle and hidden until activate(), so the travel lands on a built room
+## (a flashback's hidden swap).
+func prepare() -> void:
+	if is_cached():
+		return
+	activate()
+	deactivate()
+
 ## Deactivates contents while preserving their session state.
 func deactivate() -> void:
 	if _contents_node:

@@ -17,6 +17,8 @@ const GROUP := &"seats"
 var bench_id: StringName = &""
 ## Facing direction: 1 right, -1 left.
 var facing: int = 1
+## He sits on the ground here (`sit_ground`), not on a bench (GroundSeat).
+var ground: bool = false
 
 var _occupied: bool = false
 var _bodies: int = 0

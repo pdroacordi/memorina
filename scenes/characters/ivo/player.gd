@@ -1402,6 +1402,10 @@ func is_death_shown() -> bool:
 func is_sitting() -> bool:
 	return _sit.is_sitting()
 
+## Seated on a GroundSeat: the resolver plays `sit_ground`, not the bench's `sit`.
+func sits_on_ground() -> bool:
+	return _sit.is_sitting() and _sit.seat().ground
+
 ## A move that is not motion ends any hold: nothing pulls him back toward a stair or a root.
 func teleport(point: Vector2) -> void:
 	_climb.release()

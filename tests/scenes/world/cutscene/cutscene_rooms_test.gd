@@ -45,7 +45,7 @@ func test_every_scene_names_ids_its_contents_hold() -> void:
 				ids.append((node as FactStaging).staging_id)
 			elif node is Guardian and (node as Guardian).cutscene_id != &"":
 				ids.append((node as Guardian).cutscene_id)
-			if node is CutsceneBeat or node is CutsceneTrigger:
+			if node is CutsceneBeat or node is CutsceneTrigger or node is GroundSeat:
 				starts.append(node)
 		for id: StringName in ids:
 			if ids.count(id) > 1:
@@ -102,7 +102,7 @@ func test_the_catalog_and_the_rooms_agree() -> void:
 	for path: String in _contents(ROOMS):
 		var root := (load(path) as PackedScene).instantiate()
 		for node: Node in _descendants(root):
-			if node is CutsceneBeat or node is CutsceneTrigger:
+			if node is CutsceneBeat or node is CutsceneTrigger or node is GroundSeat:
 				var scene: Cutscene = node.get(&"cutscene")
 				if scene != null:
 					started.append(scene.id)

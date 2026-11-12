@@ -18,6 +18,8 @@ extends Resource
 @export var cue: StringName = &""
 ## An ITEM fact the director grants as the line shows; null for none.
 @export var grants: SaveFact
+## Scaled seconds after which a plain line goes on by itself, a press still allowed; 0 waits for a press.
+@export var hold: float = 0.0
 
 
 func holds(data: PlayerData) -> bool:

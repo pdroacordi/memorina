@@ -33,6 +33,9 @@ uniform float sway_amplitude = 0.12;
 // Art px kept bare at each end (0 at a closed end).
 uniform int free_left = 0;
 uniform int free_right = 0;
+// Art columns added to a blade's column before hashing: a twin room's grass hashes as the room it mirrors
+// (Region.twin_shift).
+uniform int hash_shift = 0;
 // The room's bounds in world px, widened sideways by a blade's lean so a tip may cross a room seam.
 uniform vec4 clip_rect = vec4(-1e9, -1e9, 2e9, 2e9);
 
@@ -44,7 +47,7 @@ void vertex() {
 
 // 0..1 from an art column and a salt; the same on every platform (integer hash).
 float blade_hash(int column, int salt) {
-	uint h = uint(column) * 2654435761u ^ uint(salt) * 2246822519u;
+	uint h = uint(column + hash_shift) * 2654435761u ^ uint(salt) * 2246822519u;
 	h ^= h >> 15u;
 	h *= 2246822519u;
 	h ^= h >> 13u;

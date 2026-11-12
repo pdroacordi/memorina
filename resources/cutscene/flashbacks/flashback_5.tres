@@ -1,0 +1,92 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_music_mark.gd" id="e_mark"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sequence.gd" id="e_sequence"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_talk.gd" id="e_talk"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_music.gd" id="e_music"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bloom.gd" id="e_bloom"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e_fade"]
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="e_cue"]
+[ext_resource type="Resource" path="res://resources/dialogue/flashbacks/flashback_5_lullaby.tres" id="d_lullaby"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[sub_resource type="Resource" id="camera_0"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"alba", &"ivo"])
+offset = Vector2(0, -32)
+zoom = 1.5
+seconds = 4.0
+
+[sub_resource type="Resource" id="camera_1"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"alba", &"ivo"])
+offset = Vector2(0, -120)
+zoom = 1.0
+seconds = 14.0
+
+[sub_resource type="Resource" id="mark_2"]
+script = ExtResource("e_mark")
+seconds = 33.7
+every = 40.32
+
+[sub_resource type="Resource" id="mark_3"]
+script = ExtResource("e_mark")
+seconds = 33.7
+
+[sub_resource type="Resource" id="sequence_4"]
+script = ExtResource("e_sequence")
+steps = Array[ExtResource("e_step")]([SubResource("mark_2"), SubResource("mark_3")])
+
+[sub_resource type="Resource" id="together_5"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("camera_1"), SubResource("sequence_4")])
+
+[sub_resource type="Resource" id="talk_6"]
+script = ExtResource("e_talk")
+talk = ExtResource("d_lullaby")
+speaker = &"alba"
+
+[sub_resource type="Resource" id="mark_7"]
+script = ExtResource("e_mark")
+seconds = 40.7
+
+[sub_resource type="Resource" id="gap"]
+script = ExtResource("e_cue")
+id = &"flashback_5_gap"
+fade_in = 0.0
+fade_out = 0.0
+
+[sub_resource type="Resource" id="music_8"]
+script = ExtResource("e_music")
+cue = SubResource("gap")
+fade = 0.0
+
+[sub_resource type="Resource" id="bloom_9"]
+script = ExtResource("e_bloom")
+bloom_id = &"past_grey"
+shape = 1
+rect_size = Vector2(2400, 1600)
+strength = -1.0
+seconds = 0.0
+
+[sub_resource type="Resource" id="together_10"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("music_8"), SubResource("bloom_9")])
+
+[sub_resource type="Resource" id="wait_11"]
+script = ExtResource("e_wait")
+seconds = 0.5
+
+[sub_resource type="Resource" id="fade_12"]
+script = ExtResource("e_fade")
+to_black = true
+seconds = 0.0
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_5"
+steps = Array[ExtResource("e_step")]([SubResource("camera_0"), SubResource("together_5"), SubResource("talk_6"), SubResource("mark_7"), SubResource("together_10"), SubResource("wait_11"), SubResource("fade_12")])

@@ -421,6 +421,7 @@ layer = 3
 [connection signal="room_changed" from="." to="World/FlashbackDirector" method="on_room_changed"]
 [connection signal="travelled" from="." to="World/FlashbackDirector" method="on_travelled"]
 [connection signal="travel_requested" from="World/FlashbackDirector" to="." method="travel"]
+[connection signal="visit_began" from="World/FlashbackDirector" to="CanvasLayer/LifeHud" method="on_visit_began"]
 [connection signal="skip_scene_requested" from="ScreenLayer/Screens" to="World/CutsceneDirector" method="request_skip"]
 [connection signal="shown" from="World/NoticeWatcher" to="CanvasLayer/NoticeToast" method="show_notice"]
 [connection signal="withdrawn" from="World/NoticeWatcher" to="CanvasLayer/NoticeToast" method="withdraw"]

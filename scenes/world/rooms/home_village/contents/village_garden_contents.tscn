@@ -31,6 +31,10 @@
 [ext_resource type="Script" path="res://scenes/world/story/flashback/swing_raise_beat.gd" id="fb_raise"]
 [ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="cs_beat"]
 [ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_3_crossing.tres" id="cs_crossing_3"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_5_crossing.tres" id="cs_crossing_5"]
+[ext_resource type="Resource" path="res://resources/music/wife_song_lullaby.tres" id="fb_lullaby"]
+[ext_resource type="Script" path="res://scenes/world/story/flashback/song_bloom.gd" id="fb_song_bloom"]
+[ext_resource type="Script" path="res://scenes/world/story/flashback/flashback_swap.gd" id="fb_swap"]
 
 [sub_resource type="Resource" id="due_1"]
 script = ExtResource("st_fact")
@@ -65,6 +69,14 @@ index = 3
 script = ExtResource("st_fact")
 kind = 9
 id = &"flashback_3_crossing"
+
+[sub_resource type="Resource" id="due_5"]
+script = ExtResource("st_fact")
+kind = 15
+index = 5
+
+[sub_resource type="RectangleShape2D" id="swap_rect"]
+size = Vector2(590, 384)
 
 [sub_resource type="RectangleShape2D" id="garden_rect"]
 size = Vector2(1280, 384)
@@ -262,3 +274,32 @@ script = ExtResource("cs_beat")
 cue = &"flashback_3_crossing"
 face = NodePath("../Swing3")
 cutscene = ExtResource("cs_crossing_3")
+
+[node name="Crossing5" type="Node" parent="Flashbacks"]
+script = ExtResource("cs_trigger")
+cutscene = ExtResource("cs_crossing_5")
+when = Array[ExtResource("st_fact")]([SubResource("due_5")])
+
+[node name="Bloom5" type="Node2D" parent="Flashbacks"]
+position = Vector2(952, 192)
+script = ExtResource("cs_bloom")
+bloom_id = &"song_bloom"
+feather = 96.0
+tint = Color(0.58, 0.83, 0.5, 1)
+
+[node name="SongBloom5" type="Node" parent="Flashbacks" node_paths=PackedStringArray("bloom")]
+script = ExtResource("fb_song_bloom")
+bloom = NodePath("../Bloom5")
+song = ExtResource("fb_lullaby")
+from = 0.5
+to = 6.3
+size_from = Vector2(48, 384)
+size_to = Vector2(2600, 960)
+ring_from = 0.8
+
+[node name="Swap5" type="Area2D" parent="Flashbacks"]
+script = ExtResource("fb_swap")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Flashbacks/Swap5"]
+position = Vector2(985, 192)
+shape = SubResource("swap_rect")

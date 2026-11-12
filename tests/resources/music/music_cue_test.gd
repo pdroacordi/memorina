@@ -60,3 +60,17 @@ func test_her_full_song_loops_before_the_lost_ending() -> void:
 	assert_float(end).is_greater(20.6)
 	assert_float(ogg.loop_offset).is_less(0.565)
 	assert_float(end - ogg.loop_offset).is_equal_approx(12.0 * BarClock.bar_seconds(cue.bpm, cue.beats_per_bar), 0.01)
+
+## Flashback 5 never reaches her lost ending either: the loop closes inside her G before the A, measured rising at
+## 41.12 s in the render, and opens at her first note (0.53 s); the leaving's cut at 40.7 s lies inside the loop.
+func test_her_lullaby_loops_before_the_lost_ending() -> void:
+	for path: String in ["res://resources/music/wife_song_lullaby.tres", "res://resources/music/wife_song_lullaby_far.tres"]:
+		var cue := load(path) as MusicCue
+		var ogg := cue.stream as AudioStreamOggVorbis
+		assert_bool(ogg.loop).is_true()
+		var end := ogg.beat_count * 60.0 / ogg.bpm
+		assert_float(end).is_less(41.12)
+		assert_float(end).is_greater(40.7)
+		assert_float(ogg.loop_offset).is_less_equal(0.53)
+		assert_float(end - ogg.loop_offset).is_equal_approx(12.0 * BarClock.bar_seconds(cue.bpm, cue.beats_per_bar), 0.01)
+

@@ -191,6 +191,45 @@ func test_a_dropped_crossing_stays_in_the_present() -> void:
 	assert_object(_director.visiting()).is_null()
 	assert_bool(_visit_music()).is_false()
 
+## A FlashbackSwap of `number` over the whole present room's contents.
+func _swap_in_present(number: int, at: Vector2 = Vector2.ZERO) -> FlashbackSwap:
+	var swap := FlashbackSwap.new()
+	swap.number = number
+	swap.position = at
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = SIZE
+	shape.shape = rect
+	shape.position = SIZE * 0.5
+	swap.add_child(shape)
+	_present.contents().add_child(swap)
+	return swap
+
+## Flashback 5's hidden swap: inside the room's FlashbackSwap Ivo crosses to the twin pixel of the past with no cover,
+## his facing kept; the visit announces itself as it begins.
+func test_a_swap_hides_the_travel_in() -> void:
+	_swap_in_present(1)
+	var began: Array[Flashback] = []
+	_director.visit_began.connect(func(flashback: Flashback) -> void: began.append(flashback))
+	await _settle()
+	_ivo.face_towards(-1)
+	var feet := _ivo.global_position
+	await _cross()
+	assert_array(began).has_size(1)
+	assert_that(_travels[0][1]).is_equal(Color.TRANSPARENT)
+	assert_float(_travels[0][2]).is_equal(0.0)
+	assert_vector(_ivo.global_position).is_equal_approx(feet + PAST_AT, Vector2(0.5, 0.5))
+	assert_int(_ivo.facing).is_equal(-1)
+
+## Outside the swap the flashback's own entry plays: its colour, its fade, its arrival.
+func test_outside_the_swap_the_flashbacks_own_entry_plays() -> void:
+	_swap_in_present(1, Vector2(0, -2000))
+	await _settle()
+	await _cross()
+	assert_that(_travels[0][1]).is_equal(Color.WHITE)
+	assert_float(_travels[0][2]).is_equal(_flashback.entry_fade)
+	assert_int(_ivo.facing).is_equal(_flashback.arrival_facing)
+
 ## A crossing played from a talk's beat ends inside the talk: the travel waits for its end.
 func test_an_open_talk_is_waited_out() -> void:
 	await _settle()

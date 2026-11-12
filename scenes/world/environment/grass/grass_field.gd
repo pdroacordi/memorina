@@ -50,8 +50,15 @@ func _ready() -> void:
 		var i: int = material.get_meta(&"run")
 		material.set_shader_parameter(&"run_left", _areas[i].position.x + reach)
 		material.set_shader_parameter(&"walk_y", _walks[i])
+		material.set_shader_parameter(&"hash_shift", _hash_shift())
 	for i: int in _runs.size():
 		_upload(i)
+
+## Art columns from this room to the room it twins; 0 for a room that twins none.
+func _hash_shift() -> int:
+	var room := Room.of(self)
+	var region := room.get_parent() as Region if room != null else null
+	return roundi(region.twin_shift.x / ART_SCALE) if region != null else 0
 
 func _physics_process(delta: float) -> void:
 	# A deactivated room is hidden; its grass waits.

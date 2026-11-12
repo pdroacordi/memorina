@@ -22,6 +22,23 @@
 [ext_resource type="Resource" path="res://resources/save_facts/village_replanted.tres" id="ls_replanted"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/garden_bed_bare.tscn" id="ls_bed_bare"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/garden_bed_planted.tscn" id="ls_bed_planted"]
+[ext_resource type="Script" path="res://scenes/world/story/flashback/flashback_lure.gd" id="l5_lure"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/waterfall_night.wav" id="l5_water"]
+[ext_resource type="Resource" path="res://resources/music/wife_song_lullaby_far.tres" id="l5_voice"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="l5_fact"]
+
+[sub_resource type="Resource" id="l5_due_5"]
+script = ExtResource("l5_fact")
+kind = 15
+index = 5
+
+[sub_resource type="Resource" id="l5_crossing_5_seen"]
+script = ExtResource("l5_fact")
+kind = 9
+id = &"flashback_5_crossing"
+
+[sub_resource type="RectangleShape2D" id="l5_zone_rect"]
+size = Vector2(1280, 384)
 
 [sub_resource type="Resource" id="ls_stage_replanted"]
 script = ExtResource("ls_stage")
@@ -108,3 +125,26 @@ stages = Array[ExtResource("ls_stage")]([SubResource("ls_stage_replanted"), SubR
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")
 map = ExtResource("room_map")
+
+[node name="Lure5" type="Node2D" parent="." node_paths=PackedStringArray("zone")]
+position = Vector2(960, 0)
+script = ExtResource("l5_lure")
+when = Array[ExtResource("l5_fact")]([SubResource("l5_due_5")])
+unless = Array[ExtResource("l5_fact")]([SubResource("l5_crossing_5_seen")])
+stream = ExtResource("l5_water")
+gap = 0.0
+duck_db = -34.0
+zone = NodePath("../LureZone5")
+voice = ExtResource("l5_voice")
+voice_reach = 1400.0
+near_db = -20.0
+voice_muffle = 0.6
+
+[node name="LureZone5" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 256
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="LureZone5"]
+position = Vector2(640, 192)
+shape = SubResource("l5_zone_rect")

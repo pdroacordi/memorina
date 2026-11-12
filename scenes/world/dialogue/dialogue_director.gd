@@ -44,6 +44,8 @@ var _beat: DialogueBeat
 var _waiting: bool = false
 ## The talk holds the camera's frame.
 var _framed: bool = false
+## Counts lines shown, so a held line's timer goes on only from the line it was started for.
+var _shown: int = 0
 
 
 func _ready() -> void:
@@ -128,6 +130,9 @@ func _step() -> void:
 		DialogueRunner.Step.LINE:
 			_apply_grant()
 			line_shown.emit(_runner.speaker(), _runner.text_key())
+			_shown += 1
+			if _runner.hold() > 0.0:
+				get_tree().create_timer(_runner.hold(), false).timeout.connect(_advance_held.bind(_shown))
 			# A question's choices come with it; the box shows them once it is typed.
 			if _runner.asks():
 				_step()
@@ -166,6 +171,11 @@ func _play(cue: StringName) -> void:
 	_facing = beat.face_point(_facing)
 	talk_paused.emit(beat.hold, beat.pose, _facing)
 	beat.start()
+
+## A held line's time is up: it goes on unless a press already moved past it.
+func _advance_held(line: int) -> void:
+	if line == _shown:
+		advance()
 
 func _apply_grant() -> void:
 	var grant := _runner.grant()

@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"flashback_5_opening"
+steps = Array[ExtResource("e_step")]([])

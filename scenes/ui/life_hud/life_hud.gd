@@ -8,9 +8,12 @@ const NOTE := preload("res://scenes/ui/life_hud/life_note.tscn")
 @export var phase_step: float = 2.0
 ## Real seconds between successive note refills.
 @export var refill_step: float = 0.18
+## Scaled seconds the notes take to fade when a flashback's visit begins.
+@export var visit_fade: float = 1.5
 
 ## False until the initial health update, which is shown without animation.
 var _shown: bool = false
+var _fade: Tween
 
 @onready var _row: HBoxContainer = $Row
 
@@ -30,7 +33,16 @@ func show_health(current: int, max_hp: int) -> void:
 
 ## Wired from `Game.room_changed`: hidden in the past ("Esconder no passado", architecture/story-05-playable-flashbacks).
 func on_room_changed(room: Room) -> void:
+	_stop_fade()
+	modulate.a = 1.0
 	visible = not room.is_past()
+
+## Wired from `FlashbackDirector.visit_began`: the notes fade before the travel, so a hidden swap into the past shows no
+## change (flashback 5).
+func on_visit_began(_flashback: Flashback) -> void:
+	_stop_fade()
+	_fade = create_tween()
+	_fade.tween_property(self, ^"modulate:a", 0.0, visit_fade)
 
 ## Returns notes in display order.
 func notes() -> Array[LifeNote]:
@@ -38,6 +50,11 @@ func notes() -> Array[LifeNote]:
 	for child: Node in _row.get_children():
 		result.append(child as LifeNote)
 	return result
+
+func _stop_fade() -> void:
+	if _fade != null:
+		_fade.kill()
+		_fade = null
 
 func _fit(count: int) -> void:
 	while _row.get_child_count() < count:

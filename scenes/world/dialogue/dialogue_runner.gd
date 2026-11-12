@@ -57,6 +57,10 @@ func step() -> Step:
 func speaker() -> Speaker:
 	return _line.speaker if _line != null else null
 
+## Scaled seconds the LINE shown holds before it goes on by itself; 0 waits for a press.
+func hold() -> float:
+	return _line.hold if _line != null and _step == Step.LINE and not _line.asks() else 0.0
+
 ## The text key said on LINE, its variant resolved against this run's answers.
 func text_key() -> String:
 	return _line.text_for(_view) if _line != null else ""

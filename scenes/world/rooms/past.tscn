@@ -14,6 +14,7 @@ backdrop_set = ExtResource("bd_region_set")
 horizon_y = 13003.0
 calm_interiors = true
 past = true
+twin_shift = Vector2(-102400, 0)
 
 [node name="Memory" type="Node2D" parent="."]
 script = ExtResource("2_regmem")

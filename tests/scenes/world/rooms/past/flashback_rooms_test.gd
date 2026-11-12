@@ -401,3 +401,95 @@ func test_only_flashback_4_frays_her_once() -> void:
 			if leaf is CutsceneFray and (leaf as CutsceneFray).actor == &"alba":
 				frays.append(scene.id)
 	assert_array(frays).is_equal([FlashbackSchedule.id(4)])
+
+## Flashback 5 is due: all four guardians restored and flashbacks 1-4 seen.
+func _flashback_5_due() -> PlayerData:
+	var data := PlayerData.new()
+	data.owned_items[Enums.PlayerItem.MEMORINA] = true
+	for g: int in Enums.Guardian.values():
+		data.restored_guardians[g] = true
+	for n: int in range(1, 5):
+		data.scenes_seen.append(FlashbackSchedule.id(n))
+	return data
+
+const LULLABY_LURES := [
+	"res://scenes/world/rooms/home_village/contents/village_mill_contents.tscn",
+	"res://scenes/world/rooms/frozen_lake/contents/lake_waterfall_path_contents.tscn",
+]
+
+## Her lullaby calls from outside the garden (design drafts/camada_pessoal.md §2, "5."): in the mill and up the waterfall
+## path the water carries her voice, asked of Music, louder nearer the garden, until the crossing is seen.
+func test_her_lullaby_calls_up_the_river_for_flashback_5() -> void:
+	var due := _flashback_5_due()
+	assert_int(FlashbackSchedule.due(due)).is_equal(5)
+	var visit := load("res://resources/story/flashbacks/flashback_5.tres") as Flashback
+	for path: String in LULLABY_LURES:
+		var contents := (load(path) as PackedScene).instantiate()
+		var lure := contents.get_node("Lure5") as FlashbackLure
+		assert_bool(SaveFact.gates_pass(lure.when, lure.unless, due)).override_failure_message(path).is_true()
+		assert_object(lure.voice).is_not_null()
+		assert_object(lure.zone).is_not_null()
+		assert_float(lure.duck_db_at(lure.position)).is_equal(lure.near_db)
+		assert_float(lure.duck_db_at(lure.position + Vector2(lure.voice_reach, 0))).is_equal(lure.duck_db)
+		var seen := _flashback_5_due()
+		seen.scenes_seen.append(visit.crossing.id)
+		assert_bool(SaveFact.gates_pass(lure.when, lure.unless, seen)).is_false()
+		contents.free()
+
+## In the garden the crossing is entering it while due; the colour follows the visit's song to full at its entry mark, and
+## the swap covers the east half, from where the tree's figures in the past are off-frame.
+func test_the_garden_crosses_with_the_song_for_flashback_5() -> void:
+	var visit := load("res://resources/story/flashbacks/flashback_5.tres") as Flashback
+	var contents := (load(PRESENT_GARDEN_CONTENTS) as PackedScene).instantiate()
+	var due := _flashback_5_due()
+	var crossing := contents.get_node("Flashbacks/Crossing5") as CutsceneTrigger
+	assert_object(crossing.cutscene).is_same(visit.crossing)
+	assert_bool(crossing.wants(due)).is_true()
+	assert_bool(crossing.wants(_flashback_4_due_with(Enums.Guardian.FROST))).is_false()
+	var bloom := contents.get_node("Flashbacks/SongBloom5") as SongBloom
+	assert_object(bloom.song).is_same(visit.music)
+	assert_float(bloom.to).is_less_equal(visit.entry_mark)
+	var swap := contents.get_node("Flashbacks/Swap5") as FlashbackSwap
+	assert_int(swap.number).is_equal(5)
+	var shape := swap.get_node("CollisionShape2D") as CollisionShape2D
+	var west := shape.position.x - (shape.shape as RectangleShape2D).size.x / 2.0
+	var past := (load(PAST_GARDEN_CONTENTS) as PackedScene).instantiate()
+	var her := past.get_node("Stagings/Alba/TreeWithDaughter") as Node2D
+	# From the swap's west edge, walking west with the look-ahead, the view's left edge stays east of her 96 px frame.
+	assert_float(west - 320.0 - 96.0).is_greater(her.position.x + 48.0)
+	contents.free()
+	past.free()
+
+## The past at twilight: Alba under the old tree with the girl asleep, a dusk that deepens with the song, and the ground
+## seat beside them whose sitting plays the leaving, which waits for the song before the lost ending.
+func test_the_lullaby_under_the_old_tree_for_flashback_5() -> void:
+	var visit := load("res://resources/story/flashbacks/flashback_5.tres") as Flashback
+	var contents := (load(PAST_GARDEN_CONTENTS) as PackedScene).instantiate()
+	var due := _flashback_5_due()
+	var alba := contents.get_node("Stagings/Alba") as FactStaging
+	assert_str(String(alba.stages[FactStaging.pick(alba.stages, due)].show)).is_equal("TreeWithDaughter")
+	var light := contents.get_node("Stagings/Light") as FactStaging
+	assert_str(String(light.stages[FactStaging.pick(light.stages, due)].show)).is_equal("Twilight")
+	for tint: Node in [contents.get_node("Lullaby5/Dusk"), contents.get_node("Lullaby5/Afterglow")]:
+		assert_object((tint as SongTint).song).is_same(visit.music)
+		assert_float((tint as SongTint).from).is_equal(visit.entry_mark)
+	var seat := contents.get_node("Lullaby5/Seat") as GroundSeat
+	assert_object(seat.cutscene).is_same(visit.leaving)
+	assert_bool(seat.wants(due)).is_true()
+	assert_bool(seat.wants(_flashback_4_due_with(Enums.Guardian.FROST))).is_false()
+	# One line, held so the player does nothing, and the cut lands inside the loop, before her A.
+	var marks: Array[float] = []
+	var talks := 0
+	for leaf: CutsceneStep in CutsceneCatalog.leaves(visit.leaving.steps):
+		if leaf is CutsceneMusicMark:
+			marks.append((leaf as CutsceneMusicMark).seconds)
+		elif leaf is CutsceneTalk:
+			talks += 1
+			var said := (leaf as CutsceneTalk).talk.current(due)
+			assert_int(said.lines.size()).is_equal(1)
+			assert_float(said.lines[0].hold).is_greater(0.0)
+	assert_int(talks).is_equal(1)
+	var ogg := visit.music.stream as AudioStreamOggVorbis
+	assert_float(marks.max()).is_less(ogg.beat_count * 60.0 / ogg.bpm)
+	assert_float(visit.bars_thin).is_equal(0.0)
+	contents.free()

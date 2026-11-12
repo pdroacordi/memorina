@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="Script" path="res://scenes/world/interactables/bench/ground_seat.gd" id="1_ground"]
+[ext_resource type="Script" path="res://scenes/world/interactables/bench/seat.gd" id="2_seat"]
+[ext_resource type="PackedScene" path="res://scenes/ui/key_glyph/key_glyph.tscn" id="3_glyph"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_seat"]
+size = Vector2(40, 40)
+
+[node name="GroundSeat" type="Node2D"]
+script = ExtResource("1_ground")
+
+[node name="Seat" type="Area2D" parent="."]
+script = ExtResource("2_seat")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Seat"]
+position = Vector2(0, -20)
+shape = SubResource("RectangleShape2D_seat")
+
+[node name="Prompt" parent="." instance=ExtResource("3_glyph")]
+visible = false
+offset_left = -16.0
+offset_top = -88.0
+offset_right = 16.0
+offset_bottom = -56.0

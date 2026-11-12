@@ -97,3 +97,17 @@ func test_every_backdrop_layer_draws_the_same_room_relative_pixel() -> void:
 				var message := "%s camera %s pixel %s: %s vs %s" % [layer.texture.resource_path.get_file(), camera, pixel, a, b]
 				assert_float(absf(dx)).override_failure_message(message).is_less(TOLERANCE)
 				assert_float(absf(a.y - b.y)).override_failure_message(message).is_less(TOLERANCE)
+
+## The hidden swap (flashback 5): the past's grass hashes at the present garden's columns, and the colour the song brings
+## wears the region's season as the past does, so neither the blades nor the grade change at the swap.
+func test_the_grass_and_the_grade_are_the_same() -> void:
+	var present := _room(_present, "VillageGarden")
+	var past := _room(_past, "GardenPast")
+	assert_float(past.position.x + _past.twin_shift.x).is_equal(present.position.x)
+	assert_vector(_present.twin_shift).is_equal(Vector2.ZERO)
+	assert_int(_past.season).is_equal(_present.season)
+	var catalog := load("res://resources/songs/song_catalog.tres") as SongCatalog
+	var contents := present.contents_scene.instantiate()
+	var bloom := contents.get_node("Flashbacks/Bloom5") as MemoryBloom
+	assert_that(bloom.tint).is_equal(catalog.palette_for(_present.season).tint)
+	contents.free()

@@ -227,8 +227,8 @@ DLG_FLASHBACK_1_02,It's the only one I know all the way through.,É a única que
 DLG_FLASHBACK_1_03,I never get the middle right.,Eu nunca acerto o meio.
 DLG_FLASHBACK_1_04,Then play the start with me. I'll sing the middle.,Então toca o começo comigo. O meio eu canto.
 DLG_FLASHBACK_1_05,See? Nobody noticed.,Viu? Ninguém percebeu.
-NOTEBOOK_LORE_FLASHBACK_1_TITLE,"Crooked, but together","Torto, mas junto"
-NOTEBOOK_LORE_FLASHBACK_1,She sang without waiting for me. I always came in late on the note.,Ela cantava sem esperar por mim. Eu sempre chegava atrasado na nota.
+NOTEBOOK_LORE_FLASHBACK_1_TITLE,The only whole one,A única inteira
+NOTEBOOK_LORE_FLASHBACK_1,"She knew the whole song. I only knew the start, and she sang the rest for me.","Ela sabia a canção inteira. Eu só sabia o começo, e ela cantava o resto por mim."
 DLG_FLASHBACK_2_01,"Not those, the yellow ones. The ones nobody picks.","Essas não, as amarelas. As que ninguém colhe."
 DLG_FLASHBACK_2_02,You're pale.,Você tá pálida.
 DLG_FLASHBACK_2_03,I ran up the trail. I'm just tired.,Subi a trilha correndo. Foi só cansaço.
@@ -250,6 +250,9 @@ DLG_FLASHBACK_4_03,All right.,Está bem.
 DLG_FLASHBACK_4_04,For you.,Por você.
 NOTEBOOK_LORE_FLASHBACK_4_TITLE,Before sunrise,Antes do sol
 NOTEBOOK_LORE_FLASHBACK_4,"I had spoken to the carter before I asked her. She said yes for me, and tied her ribbon on my wrist.","Eu já tinha falado com o carroceiro antes de perguntar. Ela disse que sim por mim, e amarrou a fita no meu pulso."
+DLG_FLASHBACK_5_01,"Remember this one, okay? Even if you forget the rest.","Lembra dessa, tá? Mesmo se esquecer o resto."
+NOTEBOOK_LORE_FLASHBACK_5_TITLE,The lullaby,A canção de ninar
+NOTEBOOK_LORE_FLASHBACK_5,"She asked our girl to remember that one, even if she forgot the rest. I am the one who forgot the end.","Ela pediu que a nossa menina lembrasse dessa, mesmo se esquecesse o resto. Quem esqueceu o fim fui eu."
 DLG_DAUGHTER_ERRAND_02,Is it? Says who?,É? Quem disse?
 DLG_DAUGHTER_ERRAND_03,Mama always…,A mamãe sempre…
 DLG_DAUGHTER_ERRAND_04,…the round one.,…o redondo.

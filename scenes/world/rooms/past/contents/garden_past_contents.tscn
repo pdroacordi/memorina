@@ -53,6 +53,10 @@
 [ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_4.tres" id="cs_leaving_4"]
 [ext_resource type="Script" path="res://scenes/world/story/flashback/flashback_lure.gd" id="st_lure"]
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/story/waterfall_night.wav" id="st_water"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/ground_seat.tscn" id="st_ground_seat"]
+[ext_resource type="Resource" path="res://resources/cutscene/flashbacks/flashback_5.tres" id="cs_leaving_5"]
+[ext_resource type="Resource" path="res://resources/music/wife_song_lullaby.tres" id="st_lullaby"]
+[ext_resource type="Script" path="res://scenes/world/story/flashback/song_tint.gd" id="st_song_tint"]
 
 [sub_resource type="Resource" id="due_1"]
 script = ExtResource("st_fact")
@@ -200,6 +204,29 @@ script = ExtResource("st_fact")
 kind = 7
 id = &"flashback_4_alba"
 
+[sub_resource type="Resource" id="due_5"]
+script = ExtResource("st_fact")
+kind = 15
+index = 5
+
+[sub_resource type="Resource" id="alba_tree_with_daughter"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_5")])
+show = &"TreeWithDaughter"
+
+[sub_resource type="Resource" id="light_twilight"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([SubResource("due_5")])
+show = &"Twilight"
+
+[sub_resource type="Gradient" id="dusk_gradient"]
+colors = PackedColorArray(1, 0.5, 0.3, 0.4, 0.5, 0.3, 0.6, 0)
+
+[sub_resource type="GradientTexture2D" id="dusk_glow"]
+gradient = SubResource("dusk_gradient")
+fill_from = Vector2(0.5, 0.9)
+fill_to = Vector2(0.5, 0.1)
+
 [sub_resource type="Gradient" id="moon_gradient"]
 colors = PackedColorArray(0.62, 0.74, 1, 0.22, 0.62, 0.74, 1, 0)
 
@@ -325,7 +352,7 @@ z_index = -10
 [node name="Alba" type="Node2D" parent="Stagings"]
 script = ExtResource("st_staging")
 staging_id = &"alba_staging"
-stages = Array[ExtResource("st_stage")]([SubResource("alba_stone"), SubResource("alba_holding_out"), SubResource("alba_risen"), SubResource("alba_flowers"), SubResource("alba_swing"), SubResource("alba_turned"), SubResource("alba_pool_back")])
+stages = Array[ExtResource("st_stage")]([SubResource("alba_stone"), SubResource("alba_holding_out"), SubResource("alba_risen"), SubResource("alba_flowers"), SubResource("alba_swing"), SubResource("alba_turned"), SubResource("alba_pool_back"), SubResource("alba_tree_with_daughter")])
 
 [node name="Stone" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
 position = Vector2(816, 270)
@@ -357,6 +384,10 @@ loop = &"pool_back"
 position = Vector2(1076, 288)
 flip_h = true
 loop = &"turned"
+
+[node name="TreeWithDaughter" parent="Stagings/Alba" instance=ExtResource("st_alba_figure")]
+position = Vector2(200, 288)
+loop = &"tree_with_daughter"
 
 [node name="AlbaLaugh" type="Node2D" parent="Stagings"]
 script = ExtResource("st_staging")
@@ -406,7 +437,7 @@ texture = ExtResource("st_yellow")
 z_index = 100
 script = ExtResource("st_staging")
 staging_id = &"light_staging"
-stages = Array[ExtResource("st_stage")]([SubResource("light_late_afternoon"), SubResource("light_night")])
+stages = Array[ExtResource("st_stage")]([SubResource("light_late_afternoon"), SubResource("light_night"), SubResource("light_twilight")])
 
 [node name="LateAfternoon" type="Node2D" parent="Stagings/Light"]
 
@@ -448,6 +479,27 @@ offset_right = 1440.0
 offset_bottom = 640.0
 mouse_filter = 2
 texture = SubResource("moon_glow")
+expand_mode = 1
+
+[node name="Twilight" type="Node2D" parent="Stagings/Light"]
+
+[node name="Dusk" type="ColorRect" parent="Stagings/Light/Twilight"]
+material = SubResource("light_multiply")
+offset_left = -160.0
+offset_top = -480.0
+offset_right = 1440.0
+offset_bottom = 640.0
+mouse_filter = 2
+
+[node name="Afterglow" type="TextureRect" parent="Stagings/Light/Twilight"]
+modulate = Color(0, 0, 0, 1)
+material = SubResource("light_add")
+offset_left = -160.0
+offset_top = -480.0
+offset_right = 1440.0
+offset_bottom = 640.0
+mouse_filter = 2
+texture = SubResource("dusk_glow")
 expand_mode = 1
 
 [node name="Cast" type="Node2D" parent="."]
@@ -654,3 +706,28 @@ position = Vector2(816, 258)
 script = ExtResource("cs_bloom")
 bloom_id = &"past_keep"
 feather = 64.0
+
+[node name="Lullaby5" type="Node2D" parent="."]
+
+[node name="Seat" parent="Lullaby5" instance=ExtResource("st_ground_seat")]
+position = Vector2(262, 288)
+facing = -1
+cutscene = ExtResource("cs_leaving_5")
+when = Array[ExtResource("st_fact")]([SubResource("due_5")])
+
+[node name="Dusk" type="Node" parent="Lullaby5" node_paths=PackedStringArray("target")]
+script = ExtResource("st_song_tint")
+target = NodePath("../../Stagings/Light/Twilight/Dusk")
+song = ExtResource("st_lullaby")
+from = 6.5
+to = 40.7
+full = Color(0.56, 0.5, 0.72, 1)
+
+[node name="Afterglow" type="Node" parent="Lullaby5" node_paths=PackedStringArray("target")]
+script = ExtResource("st_song_tint")
+target = NodePath("../../Stagings/Light/Twilight/Afterglow")
+song = ExtResource("st_lullaby")
+from = 6.5
+to = 40.7
+rest = Color(0, 0, 0, 1)
+full = Color(1, 1, 1, 1)

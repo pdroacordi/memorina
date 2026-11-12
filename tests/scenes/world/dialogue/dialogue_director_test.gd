@@ -322,3 +322,24 @@ func test_a_beat_face_holds_until_the_talk_ends() -> void:
 	_director.resume()
 	assert_array(faced).is_equal([Vector2(-50, 0), Vector2(400, 0)])
 
+## A held line goes on by itself after its scaled seconds; a press before it moves on, and the timer never skips the next.
+func test_a_held_line_goes_on_by_itself() -> void:
+	var held := F.line("A")
+	held.hold = 0.2
+	_talk([held, F.line("B")])
+	assert_array(Array(_log)).is_equal(["began", "line:A"])
+	await await_millis(400)
+	assert_array(Array(_log)).is_equal(["began", "line:A", "line:B"])
+	await await_millis(300)
+	assert_bool(_director.is_talking()).is_true()
+	_director.advance()
+	assert_bool(SaveSystem.is_dialogue_heard(&"talk")).is_true()
+
+func test_a_press_before_the_hold_is_not_doubled() -> void:
+	var held := F.line("A")
+	held.hold = 0.2
+	_talk([held, F.line("B"), F.line("C")])
+	_director.advance()
+	await await_millis(400)
+	assert_array(Array(_log)).is_equal(["began", "line:A", "line:B"])
+

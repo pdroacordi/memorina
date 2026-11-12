@@ -24,6 +24,9 @@ signal memory_changed(level: float)
 @export var calm_interiors: bool = false
 ## Remembered time, visited in a flashback: no Memorina, map or life notes (architecture/story-05-playable-flashbacks).
 @export var past: bool = false
+## World px from this region's rooms to the rooms they twin (the past garden to village_garden): their grass hashes at the
+## twin's columns, so a hidden swap shows the same blades (systems/grass).
+@export var twin_shift: Vector2 = Vector2.ZERO
 ## The region's theme, stems `base` and `memory`; null is silence (music/region-themes).
 @export var music: MusicCue
 ## The weather that pushes Ivo in this region's open rooms; null blows nothing (architecture/regional-weather-push).

@@ -6,6 +6,8 @@ extends Node
 
 ## Asks Game to carry Ivo to `point` under a `colour` cover of `seconds` (0 cuts); Game answers with on_travelled.
 signal travel_requested(point: TravelPoint, colour: Color, seconds: float)
+## A crossing was accepted: the visit runs from now until the returning scene ends.
+signal visit_began(flashback: Flashback)
 
 const GROUP := &"flashback_directors"
 ## The id of the cue with no stream that holds the music silent after the leaving scene.
@@ -58,7 +60,7 @@ func _physics_process(_delta: float) -> void:
 				_stage = Stage.WAITING_MARK
 		Stage.WAITING_MARK:
 			if _entry_reached():
-				_travel_in()
+				_try_travel_in()
 		Stage.LEAVING_TALK:
 			# A leaving scene played from a talk's beat: the talk ends under the black before the travel.
 			if dialogue == null or not dialogue.is_talking():
@@ -101,6 +103,10 @@ func _on_scene_ended(scene: Cutscene) -> void:
 					and FlashbackSchedule.due(SaveSystem.player_data) == found.number:
 				_visit = found
 				_stage = Stage.WAITING_TALK
+				var past := _past_room()
+				if past != null:
+					past.prepare()
+				visit_began.emit(found)
 		Stage.IN_PAST:
 			if scene.id == _visit.leaving.id and SaveSystem.is_scene_seen(scene.id):
 				_set_bars(0.0)
@@ -116,7 +122,17 @@ func _entry_reached() -> bool:
 		return true
 	return Music.position() >= _visit.entry_mark
 
-func _travel_in() -> void:
+## Travels in at the entry mark: hidden while Ivo stands, free and on the floor, inside the room's FlashbackSwap; else
+## by the flashback's own entry.
+func _try_travel_in() -> void:
+	var swap := FlashbackSwap.in_room(_room, _visit.number)
+	if swap != null and ivo != null and swap.holds(ivo):
+		if ivo.is_on_floor() and not ivo.is_in_story():
+			_travel_in(true)
+		return
+	_travel_in(false)
+
+func _travel_in(hidden: bool) -> void:
 	var past := _past_room()
 	if past == null or ivo == null or _room == null:
 		push_error("Flashback %d: no past room '%s'" % [_visit.number, _visit.past_room])
@@ -124,6 +140,13 @@ func _travel_in() -> void:
 		return
 	_return = TravelPoint.new(_room, ivo.global_position, ivo.facing)
 	_stage = Stage.TRAVELLING_IN
+	if hidden:
+		# The twin room's same pixel, his facing and motion kept: nothing on screen changes.
+		var twin := TravelPoint.new(past, past.get_bounds().position + ivo.global_position - _room.get_bounds().position,
+				ivo.facing)
+		twin.keep_motion = true
+		travel_requested.emit(twin, Color.TRANSPARENT, 0.0)
+		return
 	var feet := past.get_bounds().position + _visit.arrival
 	travel_requested.emit(TravelPoint.new(past, feet, _visit.arrival_facing), _visit.entry_colour, _visit.entry_fade)
 

@@ -6,7 +6,8 @@
 [ext_resource type="Resource" path="res://resources/story/flashbacks/flashback_2.tres" id="4_two"]
 [ext_resource type="Resource" path="res://resources/story/flashbacks/flashback_3.tres" id="5_three"]
 [ext_resource type="Resource" path="res://resources/story/flashbacks/flashback_4.tres" id="6_four"]
+[ext_resource type="Resource" path="res://resources/story/flashbacks/flashback_5.tres" id="7_five"]
 
 [resource]
 script = ExtResource("1_catalog")
-flashbacks = Array[ExtResource("2_flashback")]([ExtResource("3_one"), ExtResource("4_two"), ExtResource("5_three"), ExtResource("6_four")])
+flashbacks = Array[ExtResource("2_flashback")]([ExtResource("3_one"), ExtResource("4_two"), ExtResource("5_three"), ExtResource("6_four"), ExtResource("7_five")])

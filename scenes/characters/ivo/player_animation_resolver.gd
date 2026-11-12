@@ -58,7 +58,7 @@ func resolve() -> StringName:
 	if _player.just_hit() or driver.holding(HURT):
 		return HURT
 	if _player.is_sitting():
-		return SIT
+		return SIT_GROUND if _player.sits_on_ground() else SIT
 	if _player.is_rolling():
 		return ROLL
 	if _player.is_attacking():
