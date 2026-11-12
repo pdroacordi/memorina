@@ -6,7 +6,7 @@ status: active
 tags: [story, flashback, cutscene, memory-field, greyhush, save-fact, travel, region, music, notebook, plan, story-05]
 related: [systems/story, systems/cutscenes, systems/dialogue, systems/greyhush, systems/life-benches-death, systems/world, systems/rooms, systems/notebook, systems/music, systems/input, systems/backdrops, architecture/cutscenes-are-data-played-between-two-rest-states, architecture/the-opening-is-staged-by-save-facts, architecture/the-region-owns-its-forgetting, architecture/memory-field-cpu-gpu-split, architecture/doors-and-interiors, architecture/music-system, bugs/a-cutscene-trigger-in-a-first-visited-room-never-arms, bugs/a-teleport-across-the-world-glides-like-a-seam-walk, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move, gotchas/a-killed-tween-never-emits-finished]
 created: 2026-11-11
-updated: 2026-11-11
+updated: 2026-11-12
 source_files:
   - docs/design/drafts/camada_pessoal.md
   - tools/maps/gen_world_shells.py
@@ -19,7 +19,7 @@ source_files:
 
 # STORY-05: five playable flashbacks (plan)
 
-**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-2 (2026-11-12).
+**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-3 (2026-11-12).
 
 ## Context
 
@@ -45,21 +45,21 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 - Generator rows (`gen_world_shells.py`): `("home_village", "village_garden", 2, 3, -2, -2, True)`. Plus an `H_LINKS` side opening to `lake_waterfall_path` at r -2. Its `.room` gets a hand-edited west ledge and opening at rows 5-8 (the shell exists, so it is not rewritten).
 - Placement: r -2 keeps a clear screen over the street, so the square and mill keep their sky band. The garden is 320+ px from them (`room_ring_test`). It sits up the river trail, behind the same `owns_memorina` fence at mill col 30. No bench, no creatures, no title. 2x1 so the tree half can be off-frame (flashback 5). Add to `tools/smoke/scenes.txt`; must pass `backdrop_seams_test`.
 - **Its well:** `GardenWell`, a RECT `MemorySource` in `home_village.tscn`, beside `Memory` and not under it, so `RegionMemory.restore()` is not a second writer. A new `FactWell` (Node) is the only writer of its `strength`. It exports `source` and `levels: Array[FactLevel]`. `FactLevel` is a Resource with `when`, `unless` and `strength`; the first that holds wins, like `FactStaging.pick`.
-  - Levels: WORLD_RESTORED 0 (hidden); seen 5 +0.3; seen 4 +0.1; seen 3 -0.1; seen 2 -0.3; seen 1 -0.5; else -0.8. These are starting numbers for the playtest.
+  - Levels (step 3, 2026-11-12): WORLD_RESTORED 0 (hidden); seen 5 +0.2; seen 4 -0.2; seen 3 -0.45; seen 2 -0.5 with 2+ restored, else -0.7; seen 1 -0.55 with 2+ restored, else -0.75; else -0.8. With the village baseline (0.8, 0.6 from 2 restored) the waterfall reads 0, 0.05, 0.1, 0.15, 0.4, 0.8 by flashbacks seen at every reachable restored count (flashback n needs n - 1), 1.0 once the world is restored.
   - It snaps at `_ready` and tweens on `progress_changed` (pausable, scaled).
   - The value is derived from SCENE_SEEN, never recorded.
-- Waterfall and flowers are props with `AmbientMotion`, so they stop below 0.2 and run when remembered. `garden_memory_test` pins that the waterfall's cell reaches >= 0.2 only from seen 4. Correction (step 2): the field is the region's baseline plus the well (`MemoryFieldMath.combine`), so at these levels the garden is 0 with none seen and 0.3 (village 0.8, flashback 1 seen) already from seen 1; `garden_memory_test` pins 0 with none seen, a rise with every one seen at every restored count, and 1.0 with the world restored. Moving the 0.2 crossing to seen 4 needs new levels (the playtest's call).
+- Waterfall and flowers are props with `AmbientMotion`, so they stop below 0.2 and run when remembered. `garden_memory_test` pins that the waterfall's cell reaches >= 0.2 only from seen 4. `garden_memory_test` pins those targets, under 0.2 through seen 3 and from 0.2 from seen 4, and a rise with every one seen.
 - **Twin rule:** `garden_past.room` has the same ground grid as `village_garden.room`. The two Backdrops place every layer at the same room-relative pixel: pick the past x so each repeating layer's phase matches. `garden_twin_test` checks both rules.
 
 ### The past: region `past`, room `garden_past`
-- `REGIONS` gets `past` appended last, so no other interior moves: memory 1.0, no guardian, no music, `shows_title` false, `calm_interiors`. `INTERIORS` gets `("past", "garden_past", 2, 1)` at (84000, 12000), with the garden's backdrop set (`INTERIOR_SETS`).
+- `REGIONS` gets `past` appended last, so no other interior moves: memory 1.0, no guardian, no music, `shows_title` false, `calm_interiors`. `INTERIORS` gets `("past", "garden_past", 2, 1)`, with the garden's backdrop set (`INTERIOR_SETS`). Built (step 3) at (103680, 12000), not the slot (84000, 12000): `INTERIOR_ORIGINS` puts it at village_garden's x + 102400, the least shift at which every village_valley layer (scroll x 0.05, 0.12, 0.3, 0.55 over 1024 px) keeps its phase; the region horizon is 13003 (1003 px under the top, as the garden's).
 - `Region.past` (bool) → `Room.is_past()` → Game copies it to `Player.in_past` on each room change, as it does `calm`.
   - The sword is refused by calm, as today.
   - `_try_memorina` sets `enabled = owns and not in_past`; items are untouched.
   - The map is refused.
   - `NoticeHold.applies` reads `is_in_story() or in_past`.
   - Talks, Up and Down stay live.
-- Contents: no Enemy, HazardZone, Bench, Door, pickup, reward slot, or deep water (`flashback_rooms_test`). `WorldEdges` walls it. The reach audit skips `past` rooms, as it skips the trials.
+- Contents: no Enemy, HazardZone, Bench, Door, pickup, reward slot, or deep water (`flashback_rooms_test`). Both garden pools are the legend's shallow water `s` (reach role WADE, `water_shallow.tscn`: a pool with no Hazard), one row deep over stone: it reflects and splashes, Ivo wades. garden_past is an interior (calm, never mapped), but grows grass like the garden (`RoomMapNode._indoors`). The life HUD hides on `Game.room_changed` into a past room. A `Seat` with no `bench_id` only sits him down (`Game._on_player_sat_down`). `WorldEdges` walls it. The reach audit skips `past` rooms, as it skips the trials.
 - Stagings by `FLASHBACK_DUE n`:
   - `Alba`: Stone, Flowers, Swing, PoolBack, TreeWithDaughter.
   - `Light`: overlay children for day, dusk, night and twilight, as `CutsceneVisual`s so a scene can darken them.

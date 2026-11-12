@@ -45,6 +45,8 @@ enum ReachRole {
 	GATE,
 	## ENTITY: a bench: worth reaching, and where a kit trap holding it respawns Ivo inside.
 	BENCH,
+	## WATER: shallow, no hazard: walked through as air.
+	WADE,
 }
 
 ## Where in its cell an ENTITY's origin goes.

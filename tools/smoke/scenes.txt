@@ -58,6 +58,7 @@ res://scenes/world/rooms/summer_caldera/contents/caldera_cistern_bottom_contents
 res://scenes/world/rooms/summer_caldera/contents/caldera_temple_gate_contents.tscn
 res://scenes/world/rooms/summer_caldera/contents/caldera_arena_contents.tscn
 res://scenes/world/rooms/summer_caldera/contents/caldera_sun_stair_contents.tscn
+res://scenes/world/rooms/past/contents/garden_past_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_house_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_tavern_contents.tscn
 res://scenes/world/rooms/home_village/contents/village_tavern_cellar_contents.tscn

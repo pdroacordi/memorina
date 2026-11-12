@@ -8,6 +8,7 @@ const MIN_DISTINCT_ART_PX := 3
 const REGION_TILESETS := {
 	"home_village": "village", "threshold": "threshold", "frost_edge": "frost_edge", "spring_woods": "spring_woods",
 	"frozen_lake": "frozen_lake", "wind_orchards": "wind_orchards", "summer_caldera": "summer_caldera",
+	"past": "village",
 	"trials_winter": "frozen_lake", "trials_spring": "spring_woods", "trials_autumn": "wind_orchards",
 	"trials_solstice": "threshold",
 	# The summer trial's floor is earth, which the caldera biomes lack.

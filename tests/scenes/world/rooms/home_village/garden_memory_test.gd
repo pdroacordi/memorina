@@ -1,9 +1,13 @@
 class_name GardenMemoryTest extends GdUnitTestSuite
 
 ## The garden's memory is the village baseline plus GardenWell, whose FactWell levels are derived from seen flashbacks
-## (architecture/story-05-playable-flashbacks): grey with none seen, rising with every one seen, whole once the world is.
+## (architecture/story-05-playable-flashbacks): grey with none seen, still under 0.2 through three, moving from the
+## fourth, whole once the world is.
 
 const REGION := "res://scenes/world/rooms/home_village.tscn"
+const CONTENTS := "res://scenes/world/rooms/home_village/contents/village_garden_contents.tscn"
+## Memory at the waterfall by flashbacks seen, the plan's targets.
+const TARGETS: Array[float] = [0.0, 0.05, 0.1, 0.15, 0.4, 0.8]
 
 var _region: Node2D
 
@@ -20,6 +24,14 @@ func _well() -> FactWell:
 func _source() -> MemorySource:
 	return _region.get_node("GardenWell") as MemorySource
 
+## Flashback n is seen only with n - 1 guardians or more restored (FlashbackSchedule), so these are the reachable saves.
+func _reachable(restored: int) -> Array[int]:
+	var counts: Array[int] = [0]
+	for seen: int in range(1, FlashbackSchedule.COUNT + 1):
+		if restored >= seen - 1:
+			counts.append(seen)
+	return counts
+
 func _data(restored: int, seen: int, world: bool = false) -> PlayerData:
 	var data := PlayerData.new()
 	data.owned_items[Enums.PlayerItem.MEMORINA] = true
@@ -31,12 +43,22 @@ func _data(restored: int, seen: int, world: bool = false) -> PlayerData:
 	data.world_restored = world
 	return data
 
-## Memory inside the well's core: the region's level for `restored` plus the well's strength.
+## The waterfall's foot, in the region's (world) space.
+func _waterfall() -> Vector2:
+	var contents := (load(CONTENTS) as PackedScene).instantiate() as Node2D
+	var foot := (contents.get_node("Marks/WaterfallFoot") as Node2D).position
+	contents.free()
+	return (_region.get_node("VillageGarden") as Node2D).position + foot + Vector2(0, -16)
+
+## Memory at the waterfall: the region's level for `restored` plus the well's influence there.
 func _memory(data: PlayerData) -> float:
 	var memory := _region.get_node("Memory") as RegionMemory
 	var baseline := 1.0 if data.world_restored else \
 			RegionMemory.level_for(memory.authored, memory.steps, data.restored_guardians.count(true))
-	return MemoryFieldMath.combine(baseline, PackedFloat32Array([FactWell.strength_for(_well().levels, data)]))
+	var source := _source()
+	var dist := MemoryFieldMath.source_distance(_waterfall() - source.position, source.extent(), source.shape)
+	var influence := MemoryFieldMath.disc_influence(dist, source.effective_feather(), FactWell.strength_for(_well().levels, data))
+	return MemoryFieldMath.combine(baseline, PackedFloat32Array([influence]))
 
 func test_the_well_sits_beside_memory_not_under_it() -> void:
 	assert_object(_source().get_parent()).is_same(_region)
@@ -48,19 +70,32 @@ func test_the_well_covers_the_gardens_air() -> void:
 	var half := _source().rect_size * 0.5
 	var core := Rect2(_source().position - half, half * 2.0)
 	assert_bool(core.encloses(air)).override_failure_message("%s does not enclose %s" % [core, air]).is_true()
+	assert_bool(core.has_point(_waterfall())).is_true()
 	# The fade stops at the room's sides, so the trail beside it keeps its own memory.
 	assert_float(core.position.x - _source().feather).is_greater_equal(garden.position.x)
 	assert_float(core.end.x + _source().feather).is_less_equal(garden.position.x + 1280.0)
 
-func test_grey_and_still_with_none_seen() -> void:
+func test_the_waterfall_meets_the_targets_at_every_reachable_restored_count() -> void:
 	for restored: int in range(0, Enums.Guardian.size() + 1):
-		assert_float(_memory(_data(restored, 0))).is_less(AmbientMath.STOP_THRESHOLD)
-	assert_float(_memory(_data(0, 0))).is_equal(0.0)
+		for seen: int in _reachable(restored):
+			assert_float(_memory(_data(restored, seen))).override_failure_message("restored %d, seen %d" % [restored, seen]) \
+					.is_equal_approx(TARGETS[seen], 0.001)
+
+## Below AmbientMath.STOP_THRESHOLD the waterfall and flowers hold still: through the third flashback, never from the fourth.
+func test_the_waterfall_moves_only_from_the_fourth_flashback() -> void:
+	for restored: int in range(0, Enums.Guardian.size() + 1):
+		for seen: int in _reachable(restored):
+			var memory := _memory(_data(restored, seen))
+			var message := "restored %d, seen %d: %f" % [restored, seen, memory]
+			if seen <= 3:
+				assert_float(memory).override_failure_message(message).is_less(AmbientMath.STOP_THRESHOLD)
+			else:
+				assert_float(memory).override_failure_message(message).is_greater_equal(AmbientMath.STOP_THRESHOLD)
 
 func test_every_flashback_seen_brings_it_back() -> void:
 	for restored: int in range(0, Enums.Guardian.size() + 1):
 		var last := -1.0
-		for seen: int in range(0, FlashbackSchedule.COUNT + 1):
+		for seen: int in _reachable(restored):
 			var now := _memory(_data(restored, seen))
 			assert_float(now).override_failure_message("restored %d, seen %d" % [restored, seen]).is_greater(last)
 			last = now

@@ -25,12 +25,15 @@ REGIONS = {
     "frozen_lake": ("REGION_FROZEN_LAKE", 0, 0.3, 0, "#"),
     "wind_orchards": ("REGION_WIND_ORCHARDS", 2, 0.25, None, "#"),
     "summer_caldera": ("REGION_SUMMER_CALDERA", 1, 0.15, None, "S"),
+    # The past: remembered time, so whole (architecture/story-05-playable-flashbacks). Last, so no interior moves.
+    "past": ("REGION_PAST", 3, 1.0, None, "#"),
 }
 REGION_ORDER = list(REGIONS)
 # Each region's biome tileset (resources/world/tiles/biomes/<id>.tres): a new room draws its region's tiles (systems/rooms).
 REGION_TILESETS = {
     "home_village": "village", "threshold": "threshold", "frost_edge": "frost_edge", "spring_woods": "spring_woods",
     "frozen_lake": "frozen_lake", "wind_orchards": "wind_orchards", "summer_caldera": "summer_caldera",
+    "past": "village",
 }
 # Rooms that draw another biome than their region's; the reasons are in systems/rooms.
 ROOM_TILESETS = {
@@ -182,7 +185,12 @@ INTERIORS = [
     ("spring_woods", "woods_hut", 1, 1),
     ("frozen_lake", "lake_fisher_hut", 1, 1),
     ("wind_orchards", "orchard_inn", 2, 1),
+    ("past", "garden_past", 2, 1),
 ]
+# Interiors placed off their slot. garden_past is village_garden shifted 102400 px: the least shift at which every
+# village_valley layer (scroll x 0.05, 0.12, 0.3, 0.55 over 1024 px) draws the same room-relative pixels (twin rule,
+# architecture/story-05-playable-flashbacks).
+INTERIOR_ORIGINS = {"garden_past": (1280 + 102400, INTERIOR_Y)}
 
 # (room A, cell col in A, room B, cell col in B, link, extra params for A, extra params for B).
 # A door stands on its room's bottom floor unless a row is given as "row".
@@ -394,6 +402,8 @@ REGION_BACKDROPS = {
     "home_village": ("village_valley", 235), "threshold": ("threshold", 235), "frost_edge": ("frost_edge", 235),
     "spring_woods": ("spring_woods", 235), "frozen_lake": ("frozen_lake", -1685),
     "wind_orchards": ("wind_orchards", -1301), "summer_caldera": ("caldera_crater", 1536),
+    # village_garden's horizon (235) is 1003 px under its top (-768); garden_past's top is 12000.
+    "past": ("village_valley", 13003),
 }
 # Open rooms inside rock override their region's set with a rock wall (WORLD-28).
 ROCK_SETS = {
@@ -404,8 +414,8 @@ ROCK_SETS = {
 }
 # Enclosed rooms whose walls are neither rock nor their region's caves: the inside of the giant tree.
 ROOM_SETS = {"woods_hollow_tree": "heartwood"}
-# Interiors whose wall is not interior_timber: the wrecked ship's hold.
-INTERIOR_SETS = {"frost_wreck_hold": "ship_hold"}
+# Interiors whose wall is not interior_timber: the wrecked ship's hold; the past's garden shows the garden's set.
+INTERIOR_SETS = {"frost_wreck_hold": "ship_hold", "garden_past": "village_valley"}
 # The backdrop set an underground room of each region shows (architecture/backdrop-seams).
 UNDERGROUND_SETS = {
     "home_village": "village_strata", "threshold": "earth_caves", "frost_edge": "ice_caves",
@@ -483,7 +493,7 @@ def main():
         if index * INTERIOR_SPACING + ws * PX_W > REGION_BAND - RING_GAP:
             row, index = row + 1, 0
         counters[region] = (row, index + 1)
-        origin = (base + index * INTERIOR_SPACING, INTERIOR_Y + row * INTERIOR_ROW_SPACING)
+        origin = INTERIOR_ORIGINS.get(rid, (base + index * INTERIOR_SPACING, INTERIOR_Y + row * INTERIOR_ROW_SPACING))
         room = Room(region, rid, 0, ws - 1, 0, hs - 1, False, interior=True, origin=origin)
         rooms[rid] = room
     for west, east, row in H_LINKS:

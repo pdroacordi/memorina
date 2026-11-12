@@ -30,7 +30,8 @@ func problems() -> PackedStringArray:
 			found.append("symbol '%s' is defined twice" % candidate.symbol)
 		seen[candidate.symbol] = true
 		if candidate.reach_role != RoomLegendEntry.ReachRole.NONE:
-			var water_role := candidate.reach_role in [RoomLegendEntry.ReachRole.HAZARD, RoomLegendEntry.ReachRole.ICE]
+			var water_role := candidate.reach_role in [RoomLegendEntry.ReachRole.HAZARD, RoomLegendEntry.ReachRole.ICE,
+					RoomLegendEntry.ReachRole.WADE]
 			var fits := RoomLegendEntry.Kind.WATER if water_role else RoomLegendEntry.Kind.ENTITY
 			if candidate.kind != fits:
 				found.append("'%s' cannot have the reach role %s" % [candidate.symbol, RoomLegendEntry.ReachRole.keys()[candidate.reach_role]])

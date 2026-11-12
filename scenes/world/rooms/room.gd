@@ -129,6 +129,11 @@ func id() -> StringName:
 func is_calm() -> bool:
 	return interior and get_region().calm_interiors
 
+## In the past: Game copies it to Player.in_past. On the Region, since Room triggers regenerate.
+func is_past() -> bool:
+	var region := get_parent() as Region
+	return region != null and region.past
+
 ## Open to the sky: weather falls and blows here.
 func has_sky() -> bool:
 	return not interior and not covered

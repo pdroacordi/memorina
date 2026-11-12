@@ -5,6 +5,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_pool_layer.tscn" id="3_pool"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_lake_layer.tscn" id="4_lake"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/freezable_water/freezable_water_layer.tscn" id="5_freezable"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/water/water_shallow_layer.tscn" id="5_shallow"]
 [ext_resource type="PackedScene" path="res://scenes/characters/creatures/boar/boar.tscn" id="6_boar"]
 [ext_resource type="PackedScene" path="res://scenes/characters/creatures/scorpion/scorpion.tscn" id="6_scorpion"]
 [ext_resource type="PackedScene" path="res://scenes/characters/creatures/crab/crab.tscn" id="6_crab"]
@@ -122,6 +123,17 @@ water_layer = ExtResource("5_freezable")
 required_params = PackedStringArray()
 reach_role = 6
 description = "Pool water that Congelar freezes into a floor from where the song was played, and that thaws from there."
+
+[sub_resource type="Resource" id="shallow"]
+script = ExtResource("2_entry")
+symbol = "s"
+kind = 2
+ground = 0
+water_layer = ExtResource("5_shallow")
+takes_reach = false
+required_params = PackedStringArray()
+reach_role = 10
+description = "Shallow pool water, one row deep over ground: waves, splashes and reflection like a pool, but no hazard, so Ivo wades through. For water where nobody may drown (the garden's pool)."
 
 [sub_resource type="Resource" id="boar"]
 script = ExtResource("2_entry")
@@ -482,4 +494,4 @@ description = "A lee: a box standing on this cell (width_cells wide, default 3, 
 
 [resource]
 script = ExtResource("1_legend")
-entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("boar"), SubResource("scorpion"), SubResource("crab"), SubResource("hornet"), SubResource("bat"), SubResource("spider"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing"), SubResource("grate"), SubResource("talkable"), SubResource("item_pickup"), SubResource("teacher_snail"), SubResource("teacher_thrush"), SubResource("teacher_kestrel"), SubResource("teacher_lizard"), SubResource("fight_wall"), SubResource("weather_shelter")])
+entries = Array[ExtResource("2_entry")]([SubResource("earth"), SubResource("stone"), SubResource("ledge"), SubResource("wood"), SubResource("plank"), SubResource("roof"), SubResource("back_wall"), SubResource("pool"), SubResource("lake"), SubResource("freezable"), SubResource("shallow"), SubResource("boar"), SubResource("scorpion"), SubResource("crab"), SubResource("hornet"), SubResource("bat"), SubResource("spider"), SubResource("wind"), SubResource("plate"), SubResource("gate"), SubResource("lift"), SubResource("seesaw"), SubResource("load"), SubResource("cover"), SubResource("bridge"), SubResource("rain"), SubResource("shell_reach"), SubResource("lowering"), SubResource("floater"), SubResource("bench"), SubResource("door"), SubResource("barrier"), SubResource("cracked"), SubResource("draft"), SubResource("helix"), SubResource("void"), SubResource("reward_slot"), SubResource("soft_landing"), SubResource("grate"), SubResource("talkable"), SubResource("item_pickup"), SubResource("teacher_snail"), SubResource("teacher_thrush"), SubResource("teacher_kestrel"), SubResource("teacher_lizard"), SubResource("fight_wall"), SubResource("weather_shelter")])

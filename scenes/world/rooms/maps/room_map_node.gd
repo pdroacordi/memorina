@@ -151,10 +151,10 @@ func _fill(layer: TileMapLayer, paint: Callable) -> void:
 	_tile_memo[key] = layer.tile_map_data
 
 ## Generated grass on every grassy top, when the biome grows any (architecture/generated-grass); a runtime-only node.
-# Grass needs open sky: an interior grows none, whatever its floor (systems/grass).
+# Grass needs open sky: an interior grows none, whatever its floor (systems/grass). A past room is an outdoor twin.
 func _indoors() -> bool:
 	var room := Room.of(self)
-	return room != null and room.interior
+	return room != null and room.interior and not room.is_past()
 
 func _grow_grass() -> void:
 	var biome := map.biome

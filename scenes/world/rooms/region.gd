@@ -22,6 +22,8 @@ signal memory_changed(level: float)
 @export var horizon_y: float = 0.0
 ## Ivo cannot swing the sword in this region's interiors (STORY-14: the village's houses).
 @export var calm_interiors: bool = false
+## Remembered time, visited in a flashback: no Memorina, map or life notes (architecture/story-05-playable-flashbacks).
+@export var past: bool = false
 ## The region's theme, stems `base` and `memory`; null is silence (music/region-themes).
 @export var music: MusicCue
 ## The weather that pushes Ivo in this region's open rooms; null blows nothing (architecture/regional-weather-push).

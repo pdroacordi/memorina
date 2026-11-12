@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/frozen_lake.tscn" id="2_lake"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/wind_orchards.tscn" id="2_orchards"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/summer_caldera.tscn" id="2_caldera"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/past.tscn" id="2_past"]
 [ext_resource type="Script" uid="uid://drh8ksb1dbina" path="res://scenes/world/spawner.gd" id="2_hqfqh"]
 [ext_resource type="Script" uid="uid://c0gjegnydjn44" path="res://scenes/world/camera.gd" id="3_r5nxa"]
 [ext_resource type="Script" uid="uid://dudvwafpfnf4a" path="res://scenes/world/game.gd" id="4_game"]
@@ -92,6 +93,8 @@ process_mode = 1
 [node name="WindOrchards" parent="World" instance=ExtResource("2_orchards")]
 
 [node name="SummerCaldera" parent="World" instance=ExtResource("2_caldera")]
+
+[node name="Past" parent="World" instance=ExtResource("2_past")]
 
 [node name="WorldEdges" type="StaticBody2D" parent="World"]
 unique_name_in_owner = true
@@ -373,6 +376,7 @@ layer = 3
 [connection signal="room_changed" from="." to="World/RegionWeather" method="on_room_changed"]
 [connection signal="room_changed" from="." to="World/RegionTitleWatcher" method="on_room_changed"]
 [connection signal="room_changed" from="." to="World/RegionMusic" method="on_room_changed"]
+[connection signal="room_changed" from="." to="CanvasLayer/LifeHud" method="on_room_changed"]
 [connection signal="room_changed" from="." to="World/RegionWind" method="on_room_changed"]
 [connection signal="hazard_respawned" from="." to="World/RegionWind" method="on_hazard_respawned"]
 [connection signal="announced" from="World/RegionTitleWatcher" to="CanvasLayer/RegionTitle" method="show_title"]

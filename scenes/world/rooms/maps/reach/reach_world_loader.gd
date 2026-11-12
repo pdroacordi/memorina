@@ -9,7 +9,7 @@ const REGION_SCRIPT := preload("res://scenes/world/rooms/region.gd")
 const ROOT_GROWER := "res://scenes/world/memory/song_effects/roots/root_grower.tscn"
 const PLAYER := &"Player"
 
-## Every region `game.tscn` places, its rooms parsed from their `.room` text (never a stale import); each mover and song
+## Every region `game.tscn` places but the past, its rooms parsed from their `.room` text (never a stale import); each mover and song
 ## gate keyed in ReachPuzzles for the kit check.
 static func load_world() -> Loaded:
 	var loaded := Loaded.new()
@@ -25,6 +25,10 @@ static func load_world() -> Loaded:
 		if scene == null or scene.get_state().get_node_count() == 0 or _property(scene.get_state(), 0, &"script", null) != REGION_SCRIPT:
 			continue
 		var region := scene.instantiate() as Region
+		# The past is visited in a flashback, never walked to, like the trials (architecture/story-05-playable-flashbacks).
+		if region.past:
+			region.free()
+			continue
 		# The state holds only what game.tscn overrides (gotchas/scene-state-lists-only-the-properties-a-scene-file-sets).
 		region.position = _property(state, i, &"position", region.position)
 		for child: Node in region.get_children():

@@ -1,0 +1,23 @@
+[gd_scene format=3 uid="uid://catausdsr8fsh"]
+
+[ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]
+[ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/past/garden_past.tscn" id="r0"]
+
+[node name="Past" type="Node2D"]
+script = ExtResource("1_region")
+name_key = "REGION_PAST"
+shows_title = false
+season = 3
+backdrop_set = ExtResource("bd_region_set")
+horizon_y = 13003.0
+calm_interiors = true
+past = true
+
+[node name="Memory" type="Node2D" parent="."]
+script = ExtResource("2_regmem")
+authored = 1.0
+
+[node name="GardenPast" parent="." instance=ExtResource("r0")]
+position = Vector2(103680, 12000)

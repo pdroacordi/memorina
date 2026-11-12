@@ -21,6 +21,7 @@
 [ext_resource type="Script" path="res://resources/save_facts/fact_level.gd" id="w_level"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="w_fact"]
 [ext_resource type="Resource" path="res://resources/save_facts/world_restored.tres" id="w_restored"]
+[ext_resource type="Resource" path="res://resources/save_facts/village_at_six_tenths.tres" id="w_six_tenths"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
 [ext_resource type="Resource" path="res://resources/music/region_home_village.tres" id="99_music"]
 
@@ -56,27 +57,37 @@ when = Array[ExtResource("w_fact")]([ExtResource("w_restored")])
 [sub_resource type="Resource" id="w_level_seen_5"]
 script = ExtResource("w_level")
 when = Array[ExtResource("w_fact")]([SubResource("w_seen_5")])
-strength = 0.3
+strength = 0.2
 
 [sub_resource type="Resource" id="w_level_seen_4"]
 script = ExtResource("w_level")
 when = Array[ExtResource("w_fact")]([SubResource("w_seen_4")])
-strength = 0.1
+strength = -0.2
 
 [sub_resource type="Resource" id="w_level_seen_3"]
 script = ExtResource("w_level")
 when = Array[ExtResource("w_fact")]([SubResource("w_seen_3")])
-strength = -0.1
+strength = -0.45
+
+[sub_resource type="Resource" id="w_level_seen_2_low"]
+script = ExtResource("w_level")
+when = Array[ExtResource("w_fact")]([SubResource("w_seen_2"), ExtResource("w_six_tenths")])
+strength = -0.5
 
 [sub_resource type="Resource" id="w_level_seen_2"]
 script = ExtResource("w_level")
 when = Array[ExtResource("w_fact")]([SubResource("w_seen_2")])
-strength = -0.3
+strength = -0.7
+
+[sub_resource type="Resource" id="w_level_seen_1_low"]
+script = ExtResource("w_level")
+when = Array[ExtResource("w_fact")]([SubResource("w_seen_1"), ExtResource("w_six_tenths")])
+strength = -0.55
 
 [sub_resource type="Resource" id="w_level_seen_1"]
 script = ExtResource("w_level")
 when = Array[ExtResource("w_fact")]([SubResource("w_seen_1")])
-strength = -0.5
+strength = -0.75
 
 [sub_resource type="Resource" id="w_level_none"]
 script = ExtResource("w_level")
@@ -111,7 +122,7 @@ strength = -0.8
 [node name="FactWell" type="Node" parent="GardenWell" node_paths=PackedStringArray("source")]
 script = ExtResource("w_well")
 source = NodePath("..")
-levels = Array[ExtResource("w_level")]([SubResource("w_level_restored"), SubResource("w_level_seen_5"), SubResource("w_level_seen_4"), SubResource("w_level_seen_3"), SubResource("w_level_seen_2"), SubResource("w_level_seen_1"), SubResource("w_level_none")])
+levels = Array[ExtResource("w_level")]([SubResource("w_level_restored"), SubResource("w_level_seen_5"), SubResource("w_level_seen_4"), SubResource("w_level_seen_3"), SubResource("w_level_seen_2_low"), SubResource("w_level_seen_2"), SubResource("w_level_seen_1_low"), SubResource("w_level_seen_1"), SubResource("w_level_none")])
 
 [node name="VillageLaneWest" parent="." instance=ExtResource("r0")]
 position = Vector2(-1280, 0)

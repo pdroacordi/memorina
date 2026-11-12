@@ -28,6 +28,10 @@ func show_health(current: int, max_hp: int) -> void:
 		else:
 			note.remember(i < current, instant)
 
+## Wired from `Game.room_changed`: hidden in the past ("Esconder no passado", architecture/story-05-playable-flashbacks).
+func on_room_changed(room: Room) -> void:
+	visible = not room.is_past()
+
 ## Returns notes in display order.
 func notes() -> Array[LifeNote]:
 	var result: Array[LifeNote] = []

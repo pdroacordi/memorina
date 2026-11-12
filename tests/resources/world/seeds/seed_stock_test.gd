@@ -3,7 +3,8 @@ class_name SeedStockTest extends GdUnitTestSuite
 ## The shipped stock validates and sells one map per world region but the village (systems/seeds-and-the-seller).
 
 const REGIONS_DIR := "res://scenes/world/rooms"
-const NO_MAP: Array[String] = ["home_village"]
+## The village and the past (visited in a flashback, never mapped) sell no map.
+const NO_MAP: Array[String] = ["home_village", "past"]
 
 var _stock: SeedStock
 

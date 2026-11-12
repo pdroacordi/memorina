@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://bjvkhkmes2a1v"
+path="res://.godot/imported/garden_past.room-f4ed8912f746f44750a806c86b7146ff.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/past/contents/garden_past.room"
+dest_files=["res://.godot/imported/garden_past.room-f4ed8912f746f44750a806c86b7146ff.res"]
+
+[params]
+

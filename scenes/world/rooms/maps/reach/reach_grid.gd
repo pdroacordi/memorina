@@ -215,6 +215,8 @@ func _add_water(map: RoomMap, offset: Vector2i) -> void:
 				hosts.append(symbol)
 	for host: String in hosts:
 		var role := map.legend.entry(host).reach_role
+		if role == RoomLegendEntry.ReachRole.WADE:
+			continue
 		var body: Dictionary[Vector2i, bool] = {}
 		for kind: Dictionary in [map.water, map.reach, map.shell_reach]:
 			for point: Vector2 in kind.get(host, PackedVector2Array()):

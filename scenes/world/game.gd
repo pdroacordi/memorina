@@ -143,6 +143,7 @@ func _enter_room(room: Room, glide: bool = false) -> void:
 	_current_room = room
 	_entered = true
 	_player.calm = room.is_calm()
+	_player.in_past = room.is_past()
 	_residency.settle(room, rooms, _glide_keep)
 	# The greyhush is a regional property, so it follows the room the player is
 	# standing in rather than being set once at startup.
@@ -315,8 +316,10 @@ func _room_by_key(key: String) -> Room:
 			return room
 	return null
 
-## Restores Ivo and records the bench as the respawn point.
+## Restores Ivo and records the bench as the respawn point; a seat with no bench only sits him down.
 func _on_player_sat_down(seat: Seat) -> void:
+	if seat.bench_id == &"":
+		return
 	_player.rest()
 	seat.rest()
 	var room := _room_at(seat.global_position)

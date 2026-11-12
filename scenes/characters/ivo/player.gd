@@ -178,6 +178,8 @@ var _attack_context: StringName = &""
 var _lip_held_frame: int = -2
 ## In a calm room the sword does not swing; Game sets it on each room change (Room.is_calm).
 var calm: bool = false
+## In the past the Memorina and the map are refused and notices wait; Game sets it on each room change (Room.is_past).
+var in_past: bool = false
 ## A double jump has no lasting gameplay state of its own — afterwards Ivo is
 ## simply rising — so the event is exposed as a one-frame pulse. It fires
 ## inside `_process_motion`, so it is cleared at the top of the next one.
@@ -845,7 +847,7 @@ func _try_memorina() -> void:
 		return
 	if is_attacking() or is_rolling() or is_recovering() or is_in_knockback() or _in_scene:
 		return
-	_memorina.enabled = _has_item(Enums.PlayerItem.MEMORINA)
+	_memorina.enabled = _has_item(Enums.PlayerItem.MEMORINA) and not in_past
 	_memorina.try_draw(is_still(), _known_songs(), _half_known_songs())
 
 ## Whether a note may sound yet is the voice's verdict (never over the mistake,
@@ -1404,10 +1406,10 @@ func teleport(point: Vector2) -> void:
 	_rider.release()
 	super(point)
 
-## On the floor, alive, not sinking, not climbing, not in a talk or a cutscene, with the Memorina sheathed.
+## On the floor, alive, not sinking, not climbing, not in a talk, a cutscene or the past, with the Memorina sheathed.
 func can_open_map() -> bool:
 	return (is_on_floor() and not is_dead() and not _sinking and not is_climbing() and not is_riding_stair()
-			and not is_wall_sliding() and not is_memorina_drawn() and not is_in_story())
+			and not is_wall_sliding() and not is_memorina_drawn() and not is_in_story() and not in_past)
 
 ## The map is open: Ivo stays in the world, hittable, but hears no input.
 func block_input() -> void:
