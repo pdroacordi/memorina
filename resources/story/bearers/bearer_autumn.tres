@@ -4,15 +4,17 @@
 [ext_resource type="Resource" path="res://resources/cutscene/bearers/bearer_autumn_call.tres" id="e2"]
 [ext_resource type="Resource" path="res://resources/cutscene/bearers/bearer_autumn.tres" id="e3"]
 [ext_resource type="Resource" path="res://resources/cutscene/bearers/bearer_autumn_returning.tres" id="e4"]
-[ext_resource type="Script" path="res://resources/story/bearers/bearer_fragment.gd" id="e5"]
+[ext_resource type="Resource" path="res://resources/music/bearer_autumn.tres" id="e5"]
+[ext_resource type="Script" path="res://resources/story/bearers/bearer_fragment.gd" id="e6"]
 
 [resource]
-script = ExtResource("e5")
+script = ExtResource("e6")
 guardian = 2
 song = ExtResource("e1")
 call = ExtResource("e2")
 engraving = ExtResource("e3")
 returning = ExtResource("e4")
+music = ExtResource("e5")
 stage_room = &"bearer_stage"
 arrival = Vector2(320, 288)
 arrival_facing = 1

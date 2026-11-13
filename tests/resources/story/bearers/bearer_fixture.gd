@@ -33,6 +33,8 @@ static func fragment(frame_seconds: float = 0.1, paper: Color = PAPER) -> Bearer
 	made.returning = C.scene(&"bearer_frost_returning", [C.wait(0.1)])
 	made.returning.skippable = false
 	made.music = F.music()
+	made.music.stream = FREEZE.track
+	made.music.loops = false
 	made.stage_room = &"bearer_stage"
 	made.arrival = Vector2(320, 288)
 	made.arrival_facing = 1

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MusicCue" format=3]
+
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="1_cue"]
+[ext_resource type="AudioStream" path="res://assets/audios/soundtrack/hymn_of_frost.mp3" id="2_track"]
+
+[resource]
+script = ExtResource("1_cue")
+id = &"bearer_frost"
+stream = ExtResource("2_track")
+stems = Array[StringName]([&"all"])
+bpm = 52.0
+beats_per_bar = 4
+loops = false
+fade_in = 1.5
+fade_out = 1.5

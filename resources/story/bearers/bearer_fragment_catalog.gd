@@ -74,6 +74,9 @@ func validate(cutscenes: CutsceneCatalog, guardian_stats: Dictionary, paper: Col
 		_check_call(fragment, name, paper, problems)
 		if fragment.engraving != null:
 			_check_engraving(fragment, name, problems)
+		# "A faixa da própria canção (Recommended)" (user, 2026-11-13).
+		if fragment.music == null or fragment.song == null or fragment.music.stream != fragment.song.track:
+			problems.append("%s: its music is not its song's track" % name)
 		if fragment.stage_room == &"":
 			problems.append("%s: no stage room" % name)
 	return problems

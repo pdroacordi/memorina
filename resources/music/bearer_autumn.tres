@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MusicCue" format=3]
+
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="1_cue"]
+[ext_resource type="AudioStream" path="res://assets/audios/soundtrack/song_of_falling_leaves.mp3" id="2_track"]
+
+[resource]
+script = ExtResource("1_cue")
+id = &"bearer_autumn"
+stream = ExtResource("2_track")
+stems = Array[StringName]([&"all"])
+bpm = 61.0
+beats_per_bar = 3
+loops = false
+fade_in = 1.5
+fade_out = 1.5

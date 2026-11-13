@@ -196,7 +196,8 @@ func _paper() -> Color:
 
 func _finish() -> void:
 	if _music != null:
-		Music.release(_music)
+		# Its fade, never a ring-out: the song's track is a one-shot longer than the visit.
+		Music.release(_music, _music.cue.fade_out)
 	_music = null
 	_fragment = null
 	_return = null

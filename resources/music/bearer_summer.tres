@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MusicCue" format=3]
+
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="1_cue"]
+[ext_resource type="AudioStream" path="res://assets/audios/soundtrack/song_of_the_noon_shadow.ogg" id="2_track"]
+
+[resource]
+script = ExtResource("1_cue")
+id = &"bearer_summer"
+stream = ExtResource("2_track")
+stems = Array[StringName]([&"all"])
+bpm = 90.0
+beats_per_bar = 4
+loops = false
+fade_in = 1.5
+fade_out = 1.5

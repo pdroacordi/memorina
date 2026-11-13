@@ -76,6 +76,14 @@ func test_a_skippable_call_or_returning() -> void:
 	fragment.returning.skippable = true
 	_assert_names(fragment, "returning is skippable")
 
+func test_music_that_is_not_its_songs_track() -> void:
+	var fragment := _sound()
+	fragment.music = null
+	_assert_names(fragment, "music is not its song's track")
+	fragment = _sound()
+	fragment.music.stream = (load("res://resources/songs/root.tres") as Song).track
+	_assert_names(fragment, "music is not its song's track")
+
 func test_a_returning_scene_naming_more_than_ivo() -> void:
 	var fragment := _sound()
 	fragment.returning.steps = [B.C.walk(&"alba", 10.0)]

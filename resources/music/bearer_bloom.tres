@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="MusicCue" format=3]
+
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="1_cue"]
+[ext_resource type="AudioStream" path="res://assets/audios/soundtrack/song_of_the_green_reaching.mp3" id="2_track"]
+
+[resource]
+script = ExtResource("1_cue")
+id = &"bearer_bloom"
+stream = ExtResource("2_track")
+stems = Array[StringName]([&"all"])
+bpm = 76.0
+beats_per_bar = 6
+loops = false
+fade_in = 1.5
+fade_out = 1.5
