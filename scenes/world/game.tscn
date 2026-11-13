@@ -51,6 +51,7 @@
 [ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_director.gd" id="50_cutscenes"]
 [ext_resource type="Resource" path="res://resources/cutscene/cutscene_catalog.tres" id="51_cutscene_catalog"]
 [ext_resource type="PackedScene" path="res://scenes/ui/letterbox/letterbox.tscn" id="52_letterbox"]
+[ext_resource type="PackedScene" path="res://scenes/ui/engraving/engraving_view.tscn" id="103_engraving"]
 [ext_resource type="Script" path="res://scenes/ui/notice/notice_watcher.gd" id="53_notices"]
 [ext_resource type="Resource" path="res://resources/story/intent_catalog.tres" id="54_intents"]
 [ext_resource type="PackedScene" path="res://scenes/ui/notice/notice_toast.tscn" id="55_notice_toast"]
@@ -274,6 +275,8 @@ grow_vertical = 2
 mouse_filter = 2
 
 [node name="RegionTitle" parent="CanvasLayer" instance=ExtResource("45_title")]
+
+[node name="EngravingView" parent="CanvasLayer" instance=ExtResource("103_engraving")]
 
 [node name="LessonCinematic" parent="CanvasLayer" unique_id=2033014400 node_paths=PackedStringArray("letterbox") instance=ExtResource("18_cine")]
 letterbox = NodePath("../Letterbox")

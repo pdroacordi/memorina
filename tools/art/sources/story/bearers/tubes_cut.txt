@@ -1,0 +1,5 @@
+Boxes (raw px of tubes_codex.png, 2172x724), in order bloom, frost, autumn, summer:
+0,0,543,724  543,0,1086,724  1086,0,1629,724  1629,0,2172,724
+Each: python -I tools/art/cut_engraving.py tube tools/art/sources/story/bearers/tubes_codex.png t<n>.png --box=<box> --width=72 --height=40 --colors=8 (the bone --colors=12, so its finger holes keep their brown apart from the cord)
+Then pasted side by side at x = 72 * (n - 1) into assets/sprites/story/bearers/bearer_tubes.png (288x40).
+The bone's finger holes (red-brown after the reduce, x >= 22 of its frame) are repainted #543a28 so they never read as the cord.
