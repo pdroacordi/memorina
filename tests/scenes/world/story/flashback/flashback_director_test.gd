@@ -26,12 +26,17 @@ var _present: Room
 var _past: Room
 ## [room, colour, seconds] per travel asked.
 var _travels: Array = []
+## Travels the stand-in Game refuses next, as Game does during its own transitions.
+var _refusals: int = 0
+var _refused: int = 0
 
 
 func before_test() -> void:
 	SaveSystem.begin("", true)
 	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 	_travels.clear()
+	_refusals = 0
+	_refused = 0
 	_holder = auto_free(Node2D.new()) as Node2D
 	add_child(_holder)
 	var floor_body := StaticBody2D.new()
@@ -98,6 +103,11 @@ func _room(path: String, at: Vector2) -> Room:
 
 ## Stands in for Game.travel: lands Ivo a frame later, then room_changed and travelled, in Game's order.
 func _on_travel_requested(point: TravelPoint, colour: Color, seconds: float) -> void:
+	if _refusals > 0:
+		_refusals -= 1
+		_refused += 1
+		_director.on_travelled(false)
+		return
 	_travels.append([point.room, colour, seconds])
 	_land.call_deferred(point)
 
@@ -290,6 +300,48 @@ func test_leaving_the_tree_mid_visit_writes_nothing() -> void:
 	_director.free()
 	await _frames(5)
 	assert_bool(_visit_music()).is_false()
+
+## Game refuses a travel during its own transition: the director asks again, so the crossing it recorded still leads in.
+func test_a_refused_travel_in_is_asked_again() -> void:
+	_refusals = 1
+	await _settle()
+	await _cross()
+	assert_int(_refused).is_equal(1)
+	assert_int(_travels.size()).is_equal(1)
+	assert_object(_travels[0][0]).is_same(_past)
+	assert_bool(_past.get_bounds().has_point(_ivo.global_position)).is_true()
+
+## A refused travel back is asked again: Ivo never stays in the past with the visit over.
+func test_a_refused_travel_back_is_asked_again() -> void:
+	await _settle()
+	await _cross()
+	_refusals = 1
+	assert_bool(_cutscenes.play(_flashback.leaving, _past.contents())).is_true()
+	assert_bool(await _until_playing(_flashback.returning)).is_true()
+	assert_int(_refused).is_equal(1)
+	assert_int(_travels.size()).is_equal(2)
+	assert_object(_travels[1][0]).is_same(_present)
+
+## The hidden swap waits for the Memorina to be sheathed: a sheathe clip in the past would show the cut.
+func test_a_drawn_memorina_holds_the_hidden_swap() -> void:
+	_swap_in_present(1)
+	_flashback.entry_mark = 0.2
+	await _settle()
+	assert_bool(_cutscenes.play(_flashback.crossing, _present.contents())).is_true()
+	await _until_idle()
+	var input := _ivo.get_node("PlayerInput") as PlayerInput
+	input.draw_memorina_pressed.emit()
+	for i: int in 30:
+		await get_tree().physics_frame
+		if _ivo.is_memorina_drawn():
+			break
+	assert_bool(_ivo.is_memorina_drawn()).is_true()
+	await await_millis(500)
+	assert_int(_travels.size()).is_equal(0)
+	input.draw_memorina_pressed.emit()
+	assert_bool(await _until_playing(_flashback.opening, 120)).is_true()
+	assert_bool(_ivo.is_memorina_drawn()).is_false()
+	assert_that(_travels[0][1]).is_equal(Color.TRANSPARENT)
 
 ## game.tscn wires the director to Game's travel and room changes.
 func test_the_game_wires_the_travel() -> void:

@@ -10,7 +10,7 @@ const IVO_BUBBLE_HEIGHT := 66.0
 const RETURN_SECONDS := 0.8
 ## Real seconds the scene's music fades over when the scene is skipped.
 const SKIP_MUSIC_FADE := 0.8
-## The name a scene's muffle is opened under (Music.muffle).
+## The name a scene's muffle is opened under (Music.muffle); the director owns it, so a quit mid-scene closes it.
 const MUFFLE_ID := &"cutscene"
 
 var cast: CutsceneCast
@@ -156,7 +156,7 @@ func music(cue: MusicCue, fade: float) -> void:
 func muffle(amount: float) -> void:
 	_muffled = amount > 0.0
 	if _muffled:
-		Music.muffle(MUFFLE_ID, amount)
+		Music.muffle(MUFFLE_ID, amount, _director)
 	else:
 		Music.unmuffle(MUFFLE_ID)
 

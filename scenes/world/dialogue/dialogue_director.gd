@@ -168,6 +168,8 @@ func _play(cue: StringName) -> void:
 	beat.phrase_shown.connect(phrase_shown.emit)
 	beat.phrase_lit.connect(phrase_lit.emit)
 	beat.phrase_closed.connect(phrase_closed.emit)
+	beat.pose_changed.connect(_on_beat_posed)
+	beat.listener = listener
 	_facing = beat.face_point(_facing)
 	talk_paused.emit(beat.hold, beat.pose, _facing)
 	beat.start()
@@ -195,6 +197,10 @@ func _on_beat_over() -> void:
 	_waiting = true
 	resume_wanted.emit()
 
+func _on_beat_posed(pose: int) -> void:
+	if _beat != null:
+		talk_paused.emit(_beat.hold, pose, _facing)
+
 ## The beat gave up: the talk ends unheard, as an interrupt ends it.
 func _on_beat_abandoned() -> void:
 	if _beat == null:
@@ -211,6 +217,8 @@ func _release_beat() -> void:
 	_beat.phrase_shown.disconnect(phrase_shown.emit)
 	_beat.phrase_lit.disconnect(phrase_lit.emit)
 	_beat.phrase_closed.disconnect(phrase_closed.emit)
+	_beat.pose_changed.disconnect(_on_beat_posed)
+	_beat.listener = null
 	phrase_closed.emit()
 	_beat = null
 

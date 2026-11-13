@@ -105,3 +105,23 @@ func test_the_strongest_muffle_wins_and_eases_the_cutoff() -> void:
 	mix.unmuffle(&"talk")
 	mix.step(1.0)
 	assert_float(mix.muffle_amount()).is_equal(0.0)
+
+## A duck or a muffle with an owner closes once the owner leaves the tree or is disabled; one without stays.
+func test_an_owned_duck_and_muffle_close_with_their_owner() -> void:
+	var mix := MusicMix.new()
+	var gone: Node = auto_free(Node.new())
+	var idled: Node = auto_free(Node.new())
+	add_child(gone)
+	add_child(idled)
+	mix.duck(&"gone", -6.0, gone)
+	mix.muffle(&"idled", 0.8, idled)
+	mix.muffle(&"kept", 0.3)
+	mix.prune()
+	assert_float(mix.duck_target()).is_equal(-6.0)
+	assert_float(mix.muffle_target()).is_equal(0.8)
+	remove_child(gone)
+	idled.process_mode = Node.PROCESS_MODE_DISABLED
+	mix.prune()
+	assert_float(mix.duck_target()).is_equal(0.0)
+	assert_float(mix.muffle_target()).is_equal(0.3)
+	assert_bool(MusicMix.holds(0)).is_false()

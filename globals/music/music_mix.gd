@@ -20,10 +20,23 @@ var _target: Dictionary[StringName, float] = {}
 var _rate: Dictionary[StringName, float] = {}
 ## duck id -> dB, 0 or below.
 var _ducks: Dictionary[StringName, float] = {}
+## duck id -> the instance id of the node it lasts for; absent lasts until unduck.
+var _duck_owners: Dictionary[StringName, int] = {}
 var _duck_db: float = 0.0
 ## muffle id -> amount, 0..1.
 var _muffles: Dictionary[StringName, float] = {}
+## muffle id -> the instance id of the node it lasts for; absent lasts until unmuffle.
+var _muffle_owners: Dictionary[StringName, int] = {}
 var _muffle: float = 0.0
+
+
+## Whether the node `owner_id` names still holds what it opened: it exists, is in the tree and is not disabled. A paused
+## tree counts as holding, so a pause never closes a duck. An id, since a freed node cannot be passed typed.
+static func holds(owner_id: int) -> bool:
+	var node := instance_from_id(owner_id) as Node
+	if node == null or not node.is_inside_tree():
+		return false
+	return node.can_process() or node.get_tree().paused
 
 
 ## Starts a cue's stems at their starting levels.
@@ -46,19 +59,33 @@ func set_stem(stem: StringName, level: float, seconds: float) -> void:
 	else:
 		_rate[stem] = absf(_target[stem] - _level[stem]) / seconds
 
-## Holds the bus `db` lower (negative) while `id` is open; the deepest open duck wins.
-func duck(id: StringName, db: float) -> void:
+## Holds the bus `db` lower (negative) while `id` is open and `owner`, when given, holds; the deepest open duck wins.
+func duck(id: StringName, db: float, owner: Node = null) -> void:
 	_ducks[id] = minf(db, 0.0)
+	_own(_duck_owners, id, owner)
 
 func unduck(id: StringName) -> void:
 	_ducks.erase(id)
+	_duck_owners.erase(id)
 
-## Low-passes the bus by `amount` (0..1) while `id` is open; the strongest open muffle wins.
-func muffle(id: StringName, amount: float) -> void:
+## Low-passes the bus by `amount` (0..1) while `id` is open and `owner`, when given, holds; the strongest open muffle
+## wins.
+func muffle(id: StringName, amount: float, owner: Node = null) -> void:
 	_muffles[id] = clampf(amount, 0.0, 1.0)
+	_own(_muffle_owners, id, owner)
 
 func unmuffle(id: StringName) -> void:
 	_muffles.erase(id)
+	_muffle_owners.erase(id)
+
+## Closes every duck and muffle whose owner no longer holds (MusicMix.holds).
+func prune() -> void:
+	for id: StringName in _duck_owners.keys():
+		if not holds(_duck_owners[id]):
+			unduck(id)
+	for id: StringName in _muffle_owners.keys():
+		if not holds(_muffle_owners[id]):
+			unmuffle(id)
 
 ## The amount the open muffles ask for, 0..1.
 func muffle_target() -> float:
@@ -102,3 +129,9 @@ func stem_db(stem: StringName) -> float:
 ## The current duck, dB, 0 or below.
 func duck_db() -> float:
 	return _duck_db
+
+func _own(owners: Dictionary[StringName, int], id: StringName, owner: Node) -> void:
+	if owner != null:
+		owners[id] = owner.get_instance_id()
+	else:
+		owners.erase(id)

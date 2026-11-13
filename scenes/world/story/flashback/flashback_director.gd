@@ -1,15 +1,13 @@
 class_name FlashbackDirector
 extends Node
-## Runs a flashback's visit: after its crossing, travel to the past, the opening, free play until the leaving scene,
-## travel back to the same step and facing, the returning scene (architecture/story-05-playable-flashbacks).
-## The return point lives in memory only; nothing here writes the save.
+## Runs a flashback's visit from its crossing to its returning scene (systems/flashbacks). The return point lives in
+## memory only; nothing here writes the save.
 
 ## Asks Game to carry Ivo to `point` under a `colour` cover of `seconds` (0 cuts); Game answers with on_travelled.
 signal travel_requested(point: TravelPoint, colour: Color, seconds: float)
 ## A crossing was accepted: the visit runs from now until the returning scene ends.
 signal visit_began(flashback: Flashback)
 
-const GROUP := &"flashback_directors"
 ## The id of the cue with no stream that holds the music silent after the leaving scene.
 const SILENCE := &"flashback_silence"
 
@@ -29,13 +27,6 @@ var _return: TravelPoint
 var _room: Room
 var _music: MusicRequest
 
-
-## The director of the world `tree` runs; null when none is loaded.
-static func find(tree: SceneTree) -> FlashbackDirector:
-	return tree.get_first_node_in_group(GROUP) as FlashbackDirector
-
-func _enter_tree() -> void:
-	add_to_group(GROUP)
 
 func _ready() -> void:
 	if cutscenes != null:
@@ -83,13 +74,19 @@ func on_room_changed(room: Room) -> void:
 func on_travelled(arrived: bool) -> void:
 	match _stage:
 		Stage.TRAVELLING_IN:
+			# Every refusal is one of Game's own transitions (a door, a death, a recovery): the next frame asks again.
+			# Dropping the visit would strand it, its crossing recorded and never played again (systems/flashbacks).
 			if not arrived:
-				_finish()
+				_return = null
+				_stage = Stage.WAITING_MARK
 				return
 			_stage = Stage.IN_PAST
 			_set_bars(_visit.bars_thin)
 			_play(_visit.opening)
 		Stage.TRAVELLING_BACK:
+			if not arrived:
+				_stage = Stage.LEAVING_TALK
+				return
 			_stage = Stage.RETURNING
 			if not _play(_visit.returning):
 				_finish()
@@ -122,12 +119,12 @@ func _entry_reached() -> bool:
 		return true
 	return Music.position() >= _visit.entry_mark
 
-## Travels in at the entry mark: hidden while Ivo stands, free and on the floor, inside the room's FlashbackSwap; else
-## by the flashback's own entry.
+## Travels in at the entry mark: hidden while Ivo stands, free, on the floor and with the Memorina sheathed, inside the
+## room's FlashbackSwap; else by the flashback's own entry.
 func _try_travel_in() -> void:
 	var swap := FlashbackSwap.in_room(_room, _visit.number)
 	if swap != null and ivo != null and swap.holds(ivo):
-		if ivo.is_on_floor() and not ivo.is_in_story():
+		if ivo.is_on_floor() and not ivo.is_in_story() and not ivo.is_memorina_drawn():
 			_travel_in(true)
 		return
 	_travel_in(false)

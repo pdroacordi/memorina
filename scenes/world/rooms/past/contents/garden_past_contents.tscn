@@ -13,7 +13,6 @@
 [ext_resource type="Resource" path="res://scenes/world/rooms/past/contents/garden_past.room" id="room_map"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/old_tree.tscn" id="p_tree"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/swing.tscn" id="p_swing"]
-[ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/swing_fallen.tscn" id="p_swing_fallen"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/flat_stone.tscn" id="p_stone"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/flower_bed_yellow.tscn" id="p_bed_yellow"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/garden/flower_bed_white.tscn" id="p_bed_white"]

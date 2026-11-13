@@ -136,7 +136,7 @@ func test_a_muffle_low_passes_the_music_bus_only() -> void:
 			index = i
 	assert_int(index).is_greater_equal(0)
 	assert_bool(AudioServer.is_bus_effect_enabled(bus, index)).is_false()
-	Music.muffle(&"test", 1.0)
+	Music.muffle(&"test", 1.0, _holder())
 	await await_millis(700)
 	assert_bool(AudioServer.is_bus_effect_enabled(bus, index)).is_true()
 	assert_float(Music.muffled()).is_equal(1.0)

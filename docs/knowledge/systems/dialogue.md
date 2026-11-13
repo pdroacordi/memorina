@@ -6,7 +6,7 @@ status: active
 tags: [dialogue, story, save, save-fact, ui, input, focus, i18n]
 related: [architecture/dialogue-is-data-and-choices-are-save-facts, playtests/2026-10-15-story08-dialogue, bugs/a-beat-that-ends-resumes-the-talk-without-the-start-gates, bugs/an-up-press-in-a-due-auto-start-zone-never-expires, bugs/ivo-faces-the-talkable-not-the-villager-beside-it, gotchas/a-removed-subtree-emits-tree-exiting-later-siblings-first, gotchas/a-static-func-returning-its-own-enum-fails-once-another-script-types-it, systems/screens, systems/input, systems/life-benches-death, systems/notebook, systems/props, systems/rooms, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-killed-tween-never-emits-finished, gotchas/autowrapped-rows-settle-over-several-sorts, gotchas/gdunit-await-millis-never-resumes-while-the-tree-is-paused, gotchas/a-typed-array-of-an-inner-class-is-refused-from-another-script]
 created: 2026-10-15
-updated: 2026-11-12
+updated: 2026-11-13
 source_files:
   - resources/save_facts/save_fact.gd
   - resources/dialogue/speaker.gd
@@ -105,7 +105,7 @@ STORY-08. Plan, options and the reasons: `architecture/dialogue-is-data-and-choi
 
 ## Wiring (`game.tscn`)
 
-`DialogueDirector.listener` is `../Player`. `Player.talk_started` → `DialogueDirector.start`; `talk_began` / `talk_paused` / `talk_ended` → `Player.begin_talk` / `pause_talk` / `end_talk`; `resume_wanted` → `Player.request_talk_resume`; `Player.talk_resumed` → `DialogueDirector.resume`; `box_placed` → `DialogueBox.place`; `line_shown`, `choices_shown`, `box_closed` → `DialogueBox.show_line`, `show_choices`, `close`; `DialogueBox.advanced` / `chosen` → `advance` / `choose`; `Player.hurt` and `fell_into_hazard` → `interrupt`.
+`DialogueDirector.listener` is `../Player`. A beat reads it as `DialogueBeat.listener`, set before `start()` and cleared at the beat's end, and may change Ivo's pose mid-beat with `change_pose(pose)` (`pose_changed`, relayed as a second `talk_paused` with the beat's hold): no beat finds the Player through another director (2026-11-13, `dialogue_director_test`). `Player.talk_started` → `DialogueDirector.start`; `talk_began` / `talk_paused` / `talk_ended` → `Player.begin_talk` / `pause_talk` / `end_talk`; `resume_wanted` → `Player.request_talk_resume`; `Player.talk_resumed` → `DialogueDirector.resume`; `box_placed` → `DialogueBox.place`; `line_shown`, `choices_shown`, `box_closed` → `DialogueBox.show_line`, `show_choices`, `close`; `DialogueBox.advanced` / `chosen` → `advance` / `choose`; `Player.hurt` and `fell_into_hazard` → `interrupt`.
 
 ## Text
 

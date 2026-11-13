@@ -14,6 +14,8 @@ signal phrase_lit(index: int)
 signal phrase_closed
 ## The beat gave up before its end: the talk ends unheard (a swing let fall, flashback 3).
 signal abandoned
+## Ivo holds `pose` (Pose) from now, still held as `hold` says.
+signal pose_changed(pose: int)
 
 const GROUP := &"dialogue_beats"
 
@@ -30,6 +32,9 @@ enum Pose { NONE, GUITAR, MEMORINA, SEATED, KNEEL, SIT_GROUND, PUSH_SWING, RIBBO
 @export var pose: Pose = Pose.NONE
 ## What Ivo turns to as the beat starts and keeps facing for the rest of the talk; empty keeps what he faces.
 @export var face: NodePath
+
+## Who the talk is held for (DialogueDirector.listener), set before `start()`; null outside a talk.
+var listener: Node2D
 
 
 ## The beat for `cue` in the tree; null when none is loaded.
@@ -64,3 +69,7 @@ func finish() -> void:
 
 func abandon() -> void:
 	abandoned.emit()
+
+## Changes what Ivo holds mid-beat (the push given, he stands to hear her).
+func change_pose(to: Pose) -> void:
+	pose_changed.emit(to)

@@ -21,9 +21,7 @@ func _process(delta: float) -> void:
 	if _left <= 0.0:
 		_running = false
 		# The push clip would loop through her line: he stands once the push is given.
-		var director := CutsceneDirector.find(get_tree())
-		if director != null and director.ivo != null:
-			director.ivo.stage_pose(Pose.NONE)
+		change_pose(Pose.NONE)
 		finish()
 
 func start() -> void:

@@ -242,6 +242,19 @@ func test_a_muffle_ends_with_the_scene() -> void:
 	await get_tree().create_timer(0.8).timeout
 	assert_float(Music.muffled()).is_equal(0.0)
 
+## Quit to title frees the director mid-scene with no end: the muffle it owns closes with it
+## (bugs/a-quit-to-title-mid-scene-leaves-the-music-muffled).
+func test_a_muffle_closes_when_the_director_is_freed_mid_scene() -> void:
+	var muffle := CutsceneMuffle.new()
+	muffle.amount = 1.0
+	_director.play(_scene([muffle, C.wait(30.0)]), _host)
+	await get_tree().create_timer(0.3).timeout
+	assert_float(Music.muffled()).is_greater(0.0)
+	_world.remove_child(_director)
+	_director.free()
+	await get_tree().create_timer(0.8).timeout
+	assert_float(Music.muffled()).is_equal(0.0)
+
 ## A scene that ends under an opaque fade (a flashback's leaving, before its travel back) hands the frame straight back
 ## to Ivo: an ease behind the cover would be stretched across the world by the travel.
 func test_an_end_under_an_opaque_fade_cuts_the_frame_back() -> void:

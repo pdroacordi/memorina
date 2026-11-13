@@ -1,8 +1,7 @@
 class_name FlashbackLure
 extends Node2D
-## A flashback's call in the present (design drafts/camada_pessoal.md §2, "O chamado"), or a sound of the past (flashback
-## 4's water): while its gates hold it sounds `stream` again and again from where it stands and ducks the music while Ivo
-## is inside `zone`. With a `voice`, her singing is asked of Music under the call, louder as Ivo nears (flashback 5).
+## A flashback's call, or a sound of the past: while its gates hold it repeats `stream` where it stands, and ducks the
+## music while Ivo is inside `zone` (systems/flashbacks, "The lure").
 
 ## The prefix of each lure's duck and muffle names in Music.
 const DUCK := &"flashback_lure"
@@ -44,8 +43,12 @@ func _ready() -> void:
 	_refresh()
 
 func _exit_tree() -> void:
-	_duck(false)
-	_ask_voice(false)
+	_quiet()
+
+func _notification(what: int) -> void:
+	# An idled room's nodes are disabled, never freed: its physics check stops before it sees Ivo leave.
+	if what == NOTIFICATION_DISABLED:
+		_quiet()
 
 func _physics_process(delta: float) -> void:
 	if not _active:
@@ -80,10 +83,14 @@ func duck_db_at(point: Vector2) -> float:
 func _refresh() -> void:
 	_active = SaveFact.gates_pass(when, unless, SaveSystem.player_data)
 	if not _active:
+		_quiet()
+
+func _quiet() -> void:
+	if _voice != null:
 		_voice.stop()
-		_duck(false)
-		_ask_voice(false)
-		_wait = 0.0
+	_duck(false)
+	_ask_voice(false)
+	_wait = 0.0
 
 ## Ivo, when he is inside `zone`; else null.
 func _ivo_inside() -> Player:
@@ -99,7 +106,7 @@ func _duck_db_for(ivo: Player) -> float:
 
 func _duck(on: bool, db: float = 0.0) -> void:
 	if on:
-		Music.duck(_duck_id, db)
+		Music.duck(_duck_id, db, self)
 	elif _ducked:
 		Music.unduck(_duck_id)
 	_ducked = on
@@ -109,7 +116,7 @@ func _ask_voice(on: bool) -> void:
 		return
 	if on:
 		_voice_request = Music.request(voice, MusicRequest.Layer.SCENE, self)
-		Music.muffle(_duck_id, voice_muffle)
+		Music.muffle(_duck_id, voice_muffle, self)
 	else:
 		Music.release(_voice_request)
 		_voice_request = null

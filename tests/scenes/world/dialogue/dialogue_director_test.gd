@@ -290,6 +290,32 @@ func test_a_beat_passes_its_hold_pose_face_and_notes() -> void:
 	assert_array(heard).is_equal([Enums.Note.UP])
 	assert_array(relayed).is_equal(["shown:2", "lit:0", "closed"])
 
+## A beat knows the talk's listener while it runs, and a pose it changes mid-beat reaches Ivo through talk_paused
+## (the swing's push, flashback 3).
+func test_a_beat_reads_the_listener_and_changes_the_pose() -> void:
+	var listener := auto_free(Node2D.new()) as Node2D
+	add_child(listener)
+	_director.listener = listener
+	var paused: Array = []
+	_director.talk_paused.connect(func(hold: int, pose: int, _at: Vector2) -> void: paused.append([hold, pose]))
+	var beat := auto_free(DialogueBeat.new()) as DialogueBeat
+	beat.cue = &"push"
+	beat.pose = DialogueBeat.Pose.PUSH_SWING
+	add_child(beat)
+	var at_start: Array[Node2D] = []
+	beat.started.connect(func() -> void: at_start.append(beat.listener))
+	_talk([F.cue_line(&"push"), F.line("B")])
+	assert_array(at_start).is_equal([listener])
+	beat.change_pose(DialogueBeat.Pose.NONE)
+	assert_array(paused).is_equal([
+		[DialogueBeat.Hold.STILL, DialogueBeat.Pose.PUSH_SWING],
+		[DialogueBeat.Hold.STILL, DialogueBeat.Pose.NONE],
+	])
+	beat.finish()
+	assert_object(beat.listener).is_null()
+	beat.change_pose(DialogueBeat.Pose.KNEEL)
+	assert_int(paused.size()).is_equal(2)
+
 ## The grant of a cue-only line lands once, as its beat starts; the resume after the beat does not grant it again.
 func test_a_cue_only_grant_is_not_applied_again_on_resume() -> void:
 	var beat := auto_free(DialogueBeat.new()) as DialogueBeat

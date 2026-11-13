@@ -30,7 +30,6 @@ func _ready() -> void:
 		finale.freeze_frame_began.connect(_on_freeze_frame)
 
 func _exit_tree() -> void:
-	Music.unduck(CALL_DUCK)
 	if _hushed:
 		Music.unhush()
 
@@ -44,7 +43,7 @@ func _on_phase_changed(from: GuardianFight.Phase, to: GuardianFight.Phase) -> vo
 
 func _on_lucid_landed() -> void:
 	Music.set_stem(_fight_request, &"lead", 0.0, 0.3)
-	Music.duck(CALL_DUCK, CALL_DUCK_DB)
+	Music.duck(CALL_DUCK, CALL_DUCK_DB, self)
 
 func _on_call_ended() -> void:
 	Music.set_stem(_fight_request, &"lead", 1.0, 1.0)

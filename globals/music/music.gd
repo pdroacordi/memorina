@@ -60,17 +60,17 @@ func set_stem(request: MusicRequest, stem: StringName, level: float, seconds: fl
 	if _live != null and _live.request == request:
 		_mix.set_stem(stem, level, seconds)
 
-## Holds the Music bus `db` lower while `id` is open; the deepest duck wins.
-func duck(id: StringName, db: float) -> void:
-	_mix.duck(id, db)
+## Holds the Music bus `db` lower while `id` is open and `owner` is in the tree and not disabled; the deepest duck wins.
+func duck(id: StringName, db: float, owner: Node) -> void:
+	_mix.duck(id, db, owner)
 
 func unduck(id: StringName) -> void:
 	_mix.unduck(id)
 
-## Low-passes the Music bus by `amount` (0..1, 1 as under water) while `id` is open; the strongest wins. Volume stays
-## Settings'.
-func muffle(id: StringName, amount: float) -> void:
-	_mix.muffle(id, amount)
+## Low-passes the Music bus by `amount` (0..1, 1 as under water) while `id` is open and `owner` is in the tree and not
+## disabled; the strongest wins. Volume stays Settings'.
+func muffle(id: StringName, amount: float, owner: Node) -> void:
+	_mix.muffle(id, amount, owner)
 
 func unmuffle(id: StringName) -> void:
 	_mix.unmuffle(id)
@@ -108,6 +108,7 @@ func _process(_delta: float) -> void:
 			_retire(_live, -1.0)
 			_live = null
 		_refresh()
+	_mix.prune()
 	_mix.step(real)
 	_apply_muffle()
 	for deck: Deck in _decks:

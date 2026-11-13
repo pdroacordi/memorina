@@ -1,8 +1,7 @@
 class_name SwingRaiseBeat
 extends DialogueBeat
-## Ivo raises the fallen swing by holding Up (flashback 3, systems/story): HoldRise decides each step, this node stands in
-## the swing's rise and grows `bloom` up the rope; at the top the swing hangs and swings once, and the talk goes on.
-## Given up, the swing falls back, the colour goes and the talk ends unheard.
+## Ivo raises the fallen swing by holding Up, a HoldRise step at a time, with colour up the rope; given up, the talk ends
+## unheard (systems/flashbacks, "Flashback 3").
 
 @export var swing: FactStaging
 ## The staging's children for steps 1..steps - 1, lowest first.
@@ -25,7 +24,7 @@ extends DialogueBeat
 ## Scaled seconds a step of colour takes.
 @export var bloom_seconds: float = 0.3
 
-## Whether Up is held; empty at start asks the world's Player (`Player.up_held`).
+## Whether Up is held; empty at start reads the talk's listener (`Player.up_held`).
 var up_held: Callable
 
 var _rise: HoldRise
@@ -55,10 +54,8 @@ func _process(delta: float) -> void:
 		abandon()
 
 func start() -> void:
-	if not up_held.is_valid():
-		var director := CutsceneDirector.find(get_tree())
-		if director != null and director.ivo != null:
-			up_held = director.ivo.up_held
+	if not up_held.is_valid() and listener is Player:
+		up_held = (listener as Player).up_held
 	_rise = HoldRise.new(step_seconds, steps, idle_seconds)
 	_level = 0
 	_running = true
