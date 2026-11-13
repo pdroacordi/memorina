@@ -26,6 +26,8 @@ signal lesson_started(song: Song, glyph_set: Enums.GlyphSet)
 ## A half of a song was taught and the song is not yet whole; the HUD shows its notes and blanks.
 signal song_half_learned(song: Song, half: Enums.SongHalf, glyph_set: Enums.GlyphSet)
 signal song_played(song: Song, position: Vector2)
+## A matched performance in the world reached its end; never a lesson's track.
+signal song_performed(song: Song)
 ## The camera holds `caller` with Ivo until `call_unstaged`; a leaping guardian asks at take-off, before the stage.
 signal call_framed(caller: Node2D)
 ## The camera and lights stage `caller` and Ivo until `call_unstaged`.
@@ -208,6 +210,8 @@ var _pending_lesson: bool = false
 var _lead_in_left: float = 0.0
 ## From `learn_song` until its track finishes or is cut: the lead-in and the lesson itself.
 var _in_lesson: bool = false
+## The performance now playing is a lesson's track, so its end is no world performance.
+var _performing_lesson: bool = false
 ## True when an answered call should sheath after the note finishes.
 var _pending_sheathe: bool = false
 ## Authored shield amount restored when recall ends.
@@ -910,6 +914,7 @@ func _tick_pending_performance(delta: float) -> void:
 	if _memorina.performing_song() != song:
 		_in_lesson = false
 		return
+	_performing_lesson = lesson
 	if lesson:
 		_performance.play(song.track, song.cues())
 	else:
@@ -941,6 +946,8 @@ func _on_memorina_sheathed() -> void:
 ## reason: ivo.tscn wires its emitters to Player with from=".".
 func _on_song_played(song: Song) -> void:
 	song_played.emit(song, global_position)
+	if not _performing_lesson:
+		song_performed.emit(song)
 
 ## The lesson: the song is learned and its whole track performed, the sheet
 ## carrying the banner. A restored guardian calls this; F9 stands in for the
