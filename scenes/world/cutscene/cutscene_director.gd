@@ -40,6 +40,8 @@ var _armed: CutsceneTrigger
 var _armed_left: float = 0.0
 ## The side the playing (or last) scene turned or walked Ivo to; 0 when it did not.
 var _ivo_turned: int = 0
+## Whether the last scene's end was recorded (an end or a skip), not a drop.
+var _ended_recorded: bool = false
 
 @onready var _rig: CameraRig = _make_rig()
 @onready var _ivo_controller: ScriptedController = _make_controller()
@@ -103,6 +105,10 @@ func is_playing() -> bool:
 
 func playing() -> Cutscene:
 	return _scene
+
+## Read inside `scene_ended`: whether that end recorded SCENE_SEEN, which an earlier play may also have written.
+func ended_recorded() -> bool:
+	return _ended_recorded
 
 ## Whether the pause menu offers "Skip scene": a skippable scene plays and no talk of it has the box.
 func can_skip() -> bool:
@@ -203,6 +209,7 @@ func _end(record: bool, cut: bool = false) -> void:
 	_runner = null
 	_context = null
 	_skip_requested = false
+	_ended_recorded = record
 	scene_ended.emit(scene)
 
 ## Eases the rig back to Ivo's framed centre, then the camera follows him again with no jump.

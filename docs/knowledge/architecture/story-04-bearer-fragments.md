@@ -282,3 +282,15 @@ The director is pausable and scaled, reads no input, writes no `WorldFreeze` and
 - Pixel density: "Igual ao mundo, 2x (Recommended)".
 - Not asked; the plan's recommendation taken (orchestrator, 2026-11-13): if the start gates fail within the grace, the fragment waits for his next play of that song.
 
+
+## Corrections found while building (2026-11-13, steps 1-5)
+
+- **Step 2, no placeholder script.** The approved art (`assets/sprites/story/bearers/`) was already cut, so `draw_engraving_placeholders.py` was not written.
+- **One dither uniform.** `engraving.gdshader` has one `shown` (0..1) instead of `reveal` and `dissolve`: a frame dithers in over bare paper or over the frame before it, whose sprites `EngravingView` keeps under the new ones until it is whole. A clear dithers `shown` back to 0. The Bayer cell is the cell-local, unscrolled texel, so drifting ink keeps its dither grid.
+- **The paper is a plain colour.** `EngravingView.paper` is `gh_print(#b8b8b8)` at the project's black lift, `Color(0.758, 0.761, 0.771)` (`engraving_view_test` recomputes it), so a call's `CutsceneFade` and `Game.travel` can cover the screen in it. The ink is darkened to luma 0.42 at most (`ink_max_luma`): the winter and summer tints are lighter than the paper.
+- **`CutsceneEngraving.dissolve`.** A step cannot know it is a scene's first, so it carries `dissolve` (false on the first frame); the catalog checks it. The context gains `land_engraving()` beside `engrave` and `clear_engraving`.
+- **Recorded or dropped.** The call's `SCENE_SEEN` stays from any earlier attempt, so `is_scene_seen` cannot tell a recorded call from a dropped one: `CutsceneDirector.ended_recorded()`, read inside `scene_ended`, does.
+- **Catalog.** `validate(cutscenes, guardian_stats, paper)` checks only the fragments listed; a missing guardian is `missing()`'s, so the empty catalog of steps 5-7 boots under the debug assert (the catalog test asserts `missing()` empty from step 8). It also checks the first frame reveals and the rest dissolve, every frame is inked in its song's palette and the returning names only Ivo. `GUARDIAN_STATS` maps each guardian to its stats file, since `GuardianStats` names no guardian.
+- **Director exports.** `flashbacks` (for "FlashbackDirector not visiting") and `engraving` (the paper) join `catalog`, `cutscenes`, `ivo`, `start_grace`. A refused travel to the stage drops the fragment and clears the fade (it stays due); a refused travel back is asked again on the next frame, so Ivo never stays on the stage.
+- **The stage.** `bearer_stage` is region `past`'s interior slot 1, at (85600, 12000). `past.tscn` is written once by the generator, so the room was added to it by hand.
+- **For step 7.** `Game.travel` clears its cover over `Fade.DURATION` (0.5 s) right after `travelled`; that kills the returning scene's own 1.0 s clear, so the returning's clear is Game's 0.5 s unless the returning re-covers first.

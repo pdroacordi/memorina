@@ -64,6 +64,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/weather/region_wind.tscn" id="100_regionwind"]
 [ext_resource type="Script" path="res://scenes/world/story/flashback/flashback_director.gd" id="101_flashbacks"]
 [ext_resource type="Resource" path="res://resources/story/flashbacks/flashback_catalog.tres" id="102_flashback_catalog"]
+[ext_resource type="Script" path="res://scenes/world/story/bearer/bearer_fragment_director.gd" id="104_bearers"]
+[ext_resource type="Resource" path="res://resources/story/bearers/bearer_catalog.tres" id="105_bearer_catalog"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -172,6 +174,14 @@ cutscenes = NodePath("../CutsceneDirector")
 dialogue = NodePath("../DialogueDirector")
 ivo = NodePath("../Player")
 letterbox = NodePath("../../CanvasLayer/Letterbox")
+
+[node name="BearerFragmentDirector" type="Node" parent="World" node_paths=PackedStringArray("cutscenes", "flashbacks", "ivo", "engraving")]
+script = ExtResource("104_bearers")
+catalog = ExtResource("105_bearer_catalog")
+cutscenes = NodePath("../CutsceneDirector")
+flashbacks = NodePath("../FlashbackDirector")
+ivo = NodePath("../Player")
+engraving = NodePath("../../CanvasLayer/EngravingView")
 
 [node name="Spawner" type="Node2D" parent="World" unique_id=1572119967]
 script = ExtResource("2_hqfqh")
@@ -425,6 +435,9 @@ layer = 3
 [connection signal="room_changed" from="." to="World/FlashbackDirector" method="on_room_changed"]
 [connection signal="travelled" from="." to="World/FlashbackDirector" method="on_travelled"]
 [connection signal="travel_requested" from="World/FlashbackDirector" to="." method="travel"]
+[connection signal="room_changed" from="." to="World/BearerFragmentDirector" method="on_room_changed"]
+[connection signal="travelled" from="." to="World/BearerFragmentDirector" method="on_travelled"]
+[connection signal="travel_requested" from="World/BearerFragmentDirector" to="." method="travel"]
 [connection signal="visit_began" from="World/FlashbackDirector" to="CanvasLayer/LifeHud" method="on_visit_began"]
 [connection signal="skip_scene_requested" from="ScreenLayer/Screens" to="World/CutsceneDirector" method="request_skip"]
 [connection signal="shown" from="World/NoticeWatcher" to="CanvasLayer/NoticeToast" method="show_notice"]

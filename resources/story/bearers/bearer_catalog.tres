@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="BearerFragmentCatalog" format=3]
+
+[ext_resource type="Script" path="res://resources/story/bearers/bearer_fragment_catalog.gd" id="1_catalog"]
+[ext_resource type="Script" path="res://resources/story/bearers/bearer_fragment.gd" id="2_fragment"]
+
+[resource]
+script = ExtResource("1_catalog")
+fragments = Array[ExtResource("2_fragment")]([])
