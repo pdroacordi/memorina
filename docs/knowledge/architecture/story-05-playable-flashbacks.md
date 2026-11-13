@@ -2,11 +2,11 @@
 id: architecture/story-05-playable-flashbacks
 type: architecture
 title: STORY-05 plan - a flashback is a visit to a twin past room (its own region at memory 1.0), entered and left by travel, staged by save facts; one appended SaveFact FLASHBACK_DUE; colour written only through MemorySources
-status: active
+status: built
 tags: [story, flashback, cutscene, memory-field, greyhush, save-fact, travel, region, music, notebook, plan, story-05]
-related: [systems/story, systems/cutscenes, systems/dialogue, systems/greyhush, systems/life-benches-death, systems/world, systems/rooms, systems/notebook, systems/music, systems/input, systems/backdrops, architecture/cutscenes-are-data-played-between-two-rest-states, architecture/the-opening-is-staged-by-save-facts, architecture/the-region-owns-its-forgetting, architecture/memory-field-cpu-gpu-split, architecture/doors-and-interiors, architecture/music-system, bugs/a-cutscene-trigger-in-a-first-visited-room-never-arms, bugs/a-teleport-across-the-world-glides-like-a-seam-walk, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move, gotchas/a-killed-tween-never-emits-finished]
+related: [systems/flashbacks, systems/story, systems/cutscenes, systems/dialogue, systems/greyhush, systems/life-benches-death, systems/world, systems/rooms, systems/notebook, systems/music, systems/input, systems/backdrops, architecture/cutscenes-are-data-played-between-two-rest-states, architecture/the-opening-is-staged-by-save-facts, architecture/the-region-owns-its-forgetting, architecture/memory-field-cpu-gpu-split, architecture/doors-and-interiors, architecture/music-system, bugs/a-cutscene-trigger-in-a-first-visited-room-never-arms, bugs/a-teleport-across-the-world-glides-like-a-seam-walk, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move, gotchas/a-killed-tween-never-emits-finished]
 created: 2026-11-11
-updated: 2026-11-12
+updated: 2026-11-13
 source_files:
   - docs/design/drafts/camada_pessoal.md
   - tools/maps/gen_world_shells.py
@@ -19,7 +19,7 @@ source_files:
 
 # STORY-05: five playable flashbacks (plan)
 
-**Status: PLAN, 2026-11-11.** Scope: `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11). Built: steps 1-11 (2026-11-12).
+**Status: BUILT, 2026-11-13.** Planned 2026-11-11, scope `docs/design/drafts/camada_pessoal.md` §1-2 ("Aprovar o rascunho", user, 2026-11-11); steps 1-11 built 2026-11-12, step 12 (the contract `systems/flashbacks`) and the review fixes 2026-11-13. The current contract is `systems/flashbacks`; this entry keeps the reasoning and the history.
 
 ## Context
 

@@ -38,7 +38,7 @@ house would otherwise play. When he comes back out, the mill wakes and the lure 
 
 ## Fix
 
-Fixed 2026-11-13 (the `fix(story)` commit of STORY-05's review). `FlashbackLure._notification(NOTIFICATION_DISABLED)` runs the same release as
+Fixed 2026-11-13 (commit 3a3f15f9). `FlashbackLure._notification(NOTIFICATION_DISABLED)` runs the same release as
 `_exit_tree` (`_quiet`: the call stops, the duck, the muffle and the voice request close); its duck and muffle are also
 owned by the lure (`systems/music`, "Owners"). Test: `flashback_lure_test`
 `test_an_idled_room_closes_what_the_lure_opened`. The proposal was: Close the requests in `FlashbackLure._notification(NOTIFICATION_DISABLED)` (the same release as

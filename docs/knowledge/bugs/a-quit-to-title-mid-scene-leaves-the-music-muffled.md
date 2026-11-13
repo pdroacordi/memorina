@@ -41,7 +41,7 @@ ends normally. Restarting the executable is the only other way out.
 
 ## Fix
 
-Fixed 2026-11-13 (the `fix(story)` commit of STORY-05's review). Ducks and muffles are owned: `Music.duck(id, db, owner)` and
+Fixed 2026-11-13 (commit 3a3f15f9). Ducks and muffles are owned: `Music.duck(id, db, owner)` and
 `Music.muffle(id, amount, owner)`, closed by `MusicMix.prune()` once the owner is freed, leaves the tree or is disabled
 (`MusicMix.holds`, by instance id, since a freed node cannot be passed to a typed argument). `WorldCutsceneContext` opens
 its muffle owned by the director, so a quit closes it. Tests: `cutscene_director_test`
