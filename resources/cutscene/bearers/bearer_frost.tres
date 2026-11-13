@@ -1,0 +1,144 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/story/engraving/engraving_layer.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/story/engraving/engraving_frame.gd" id="e3"]
+[ext_resource type="Resource" path="res://resources/songs/palettes/winter_palette.tres" id="e4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/frost/frame_1_base.png" id="e5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/frost/frame_1_flakes.png" id="e6"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_engraving.gd" id="e7"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/frost/frame_2_base.png" id="e8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/frost/frame_2_flakes.png" id="e9"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/frost/frame_3_base.png" id="e10"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/frost/frame_3_snow.png" id="e11"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/frost/frame_4_base.png" id="e12"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/frost/frame_4_flakes.png" id="e13"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_engraving_clear.gd" id="e14"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e15"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e16"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e17"]
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("e1")
+open = true
+seconds = 0.0
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("e2")
+texture = ExtResource("e5")
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("e2")
+texture = ExtResource("e6")
+ink_only = true
+drift = Vector2(0, 3)
+
+[sub_resource type="Resource" id="s4"]
+script = ExtResource("e3")
+layers = Array[ExtResource("e2")]([SubResource("s2"), SubResource("s3")])
+captions = Array[StringName]([&"BEARER_FROST_1"])
+seconds = 8.0
+pan_from = Vector2(0, 32)
+pan_to = Vector2(64, 8)
+reveal_seconds = 1.5
+dissolve_seconds = 1.0
+
+[sub_resource type="Resource" id="s5"]
+script = ExtResource("e7")
+frame = SubResource("s4")
+ink = ExtResource("e4")
+dissolve = false
+
+[sub_resource type="Resource" id="s6"]
+script = ExtResource("e2")
+texture = ExtResource("e8")
+
+[sub_resource type="Resource" id="s7"]
+script = ExtResource("e2")
+texture = ExtResource("e9")
+ink_only = true
+drift = Vector2(0, 4)
+
+[sub_resource type="Resource" id="s8"]
+script = ExtResource("e3")
+layers = Array[ExtResource("e2")]([SubResource("s6"), SubResource("s7")])
+captions = Array[StringName]([&"BEARER_FROST_2"])
+seconds = 7.5
+pan_from = Vector2(48, 16)
+pan_to = Vector2(8, 24)
+reveal_seconds = 1.5
+dissolve_seconds = 1.0
+
+[sub_resource type="Resource" id="s9"]
+script = ExtResource("e7")
+frame = SubResource("s8")
+ink = ExtResource("e4")
+dissolve = true
+
+[sub_resource type="Resource" id="s10"]
+script = ExtResource("e2")
+texture = ExtResource("e10")
+
+[sub_resource type="Resource" id="s11"]
+script = ExtResource("e2")
+texture = ExtResource("e11")
+ink_only = true
+drift = Vector2(8, 3)
+
+[sub_resource type="Resource" id="s12"]
+script = ExtResource("e3")
+layers = Array[ExtResource("e2")]([SubResource("s10"), SubResource("s11")])
+captions = Array[StringName]([&"BEARER_FROST_3"])
+seconds = 7.5
+pan_from = Vector2(0, 16)
+pan_to = Vector2(64, 16)
+reveal_seconds = 1.5
+dissolve_seconds = 1.0
+
+[sub_resource type="Resource" id="s13"]
+script = ExtResource("e7")
+frame = SubResource("s12")
+ink = ExtResource("e4")
+dissolve = true
+
+[sub_resource type="Resource" id="s14"]
+script = ExtResource("e2")
+texture = ExtResource("e12")
+
+[sub_resource type="Resource" id="s15"]
+script = ExtResource("e2")
+texture = ExtResource("e13")
+ink_only = true
+drift = Vector2(0, 3)
+
+[sub_resource type="Resource" id="s16"]
+script = ExtResource("e3")
+layers = Array[ExtResource("e2")]([SubResource("s14"), SubResource("s15")])
+captions = Array[StringName]([&"BEARER_FROST_4"])
+seconds = 7.5
+pan_from = Vector2(64, 0)
+pan_to = Vector2(16, 24)
+reveal_seconds = 1.5
+dissolve_seconds = 1.0
+
+[sub_resource type="Resource" id="s17"]
+script = ExtResource("e7")
+frame = SubResource("s16")
+ink = ExtResource("e4")
+dissolve = true
+
+[sub_resource type="Resource" id="s18"]
+script = ExtResource("e14")
+seconds = 1.0
+
+[sub_resource type="Resource" id="s19"]
+script = ExtResource("e15")
+to_black = true
+colour = Color(0, 0, 0, 1)
+seconds = 0.8
+
+[resource]
+script = ExtResource("e16")
+id = &"bearer_frost"
+steps = Array[ExtResource("e17")]([SubResource("s1"), SubResource("s5"), SubResource("s9"), SubResource("s13"), SubResource("s17"), SubResource("s18"), SubResource("s19")])
+skippable = true

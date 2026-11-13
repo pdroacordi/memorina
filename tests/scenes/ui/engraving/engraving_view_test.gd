@@ -125,3 +125,20 @@ func test_the_paper_is_the_printed_paper_grey() -> void:
 	assert_float(_view.paper.r).is_equal_approx(expected.x, 0.002)
 	assert_float(_view.paper.g).is_equal_approx(expected.y, 0.002)
 	assert_float(_view.paper.b).is_equal_approx(expected.z, 0.002)
+
+## The caption sits in the bottom bar, so the view draws after the Letterbox and before the Fade; its paper leaves the
+## bars uncovered (playtests/2026-11-13-story04-bearer-fragments: the bar hid every caption).
+func test_the_caption_draws_over_the_bars_and_the_paper_between_them() -> void:
+	var game := (load("res://scenes/world/game.tscn") as PackedScene).get_state()
+	var order: Array[StringName] = []
+	for node: int in game.get_node_count():
+		if String(game.get_node_path(node, true)).trim_prefix("./") == "CanvasLayer":
+			order.append(game.get_node_name(node))
+	assert_int(order.find(&"EngravingView")).is_greater(order.find(&"Letterbox"))
+	assert_int(order.find(&"EngravingView")).is_less(order.find(&"Fade"))
+	var letterbox := auto_free((load("res://scenes/ui/letterbox/letterbox.tscn") as PackedScene).instantiate()) as Letterbox
+	var paper := _view.get_node("Paper") as ColorRect
+	assert_float(paper.position.y).is_equal(letterbox.bar_height)
+	assert_float(paper.position.y + paper.size.y).is_equal(_view.size.y - letterbox.bar_height)
+	var caption := _view.caption_label().get_global_rect()
+	assert_float(caption.position.y).is_greater_equal(_view.size.y - letterbox.bar_height)

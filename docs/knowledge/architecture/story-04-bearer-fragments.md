@@ -294,3 +294,10 @@ The director is pausable and scaled, reads no input, writes no `WorldFreeze` and
 - **Director exports.** `flashbacks` (for "FlashbackDirector not visiting") and `engraving` (the paper) join `catalog`, `cutscenes`, `ivo`, `start_grace`. A refused travel to the stage drops the fragment and clears the fade (it stays due); a refused travel back is asked again on the next frame, so Ivo never stays on the stage.
 - **The stage.** `bearer_stage` is region `past`'s interior slot 1, at (85600, 12000). `past.tscn` is written once by the generator, so the room was added to it by hand.
 - **For step 7.** `Game.travel` clears its cover over `Fade.DURATION` (0.5 s) right after `travelled`; that kills the returning scene's own 1.0 s clear, so the returning's clear is Game's 0.5 s unless the returning re-covers first.
+
+## Corrections found while building (steps 6-11)
+
+- **Step 7, the returning.** It is bars held (0 s) and a 1.8 s wait: `Game.travel`'s own 0.5 s clear is the returning's clear, as in the flashbacks' returning scenes; no second cover is laid.
+- **Step 7, the caption under the bar.** The caption is in the bottom bar, so a view drawn before `Letterbox` hid every caption (playtest 2026-11-13). `EngravingView` sits after `Letterbox` and before `Fade`, and its `Paper` covers only the 288 px between the bars, so the bars stay black (`engraving_view_test`).
+- **Step 7, the data.** `resources/cutscene/bearers/bearer_<g>{_call,,_returning}.tres` and `resources/story/bearers/bearer_<g>.tres`. Each frame's moving ink layers and drifts are the art contract's (`tools/art/prompts/story_bearer_<g>.md`), at depth 1; the pans are chosen per frame toward its subject.
+- **Step 7, `cutscene_rooms_test`.** Every catalog scene must be started by something; the bearer catalog's three scenes per fragment are started by `BearerFragmentDirector`, so the test reads them from `bearer_catalog.tres` as it reads the flashbacks'.

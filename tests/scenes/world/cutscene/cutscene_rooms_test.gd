@@ -99,6 +99,9 @@ func test_the_catalog_and_the_rooms_agree() -> void:
 	var flashbacks := load("res://resources/story/flashbacks/flashback_catalog.tres") as FlashbackCatalog
 	for flashback: Flashback in flashbacks.flashbacks:
 		started.append_array([flashback.opening.id, flashback.returning.id])
+	var bearers := load("res://resources/story/bearers/bearer_catalog.tres") as BearerFragmentCatalog
+	for fragment: BearerFragment in bearers.fragments:
+		started.append_array([fragment.call.id, fragment.engraving.id, fragment.returning.id])
 	for path: String in _contents(ROOMS):
 		var root := (load(path) as PackedScene).instantiate()
 		for node: Node in _descendants(root):
