@@ -142,6 +142,12 @@ The vocabulary of `architecture/story-05-playable-flashbacks` ("Cutscene vocabul
 - `_exit_tree` forgets the visit and writes nothing; the music request dies with its owner. Nothing is saved inside, so a quit leaves the flashback due.
 - `flashback_director_test` (a fake travel in Game's order): there and back to the same step and facing, a dropped crossing stays, an open talk is waited out, the music lives the visit, leaving the tree mid-visit writes nothing, a refused travel in or back is asked again, a drawn Memorina holds the hidden swap, and game.tscn wires it; `flashback_catalog_test`.
 
+## Added for the bearer fragments (STORY-04 step 3, 2026-11-13)
+
+- **`EngravingView`** (`scenes/ui/engraving/`, `CanvasLayer/EngravingView` after `RegionTitle`, before `LessonCinematic`, INHERIT; group `engraving_views`) is a third director service beside `Letterbox` and `Fade`: `CutsceneDirector.engraving`. It draws an engraved still opaque on its `paper` (`gh_print(#b8b8b8)`), layers at 2x through `engraving.gdshader`; `show_frame(frame, tint, dissolve)`, `clear(seconds)`, `land()`, `hide_now()`, `is_settled()`. Its clock is its own `_process` (pausable, scaled). `EngravingMath` is the pure pan, parallax, drift, dither and caption timing (plan `architecture/story-04-bearer-fragments`, "The look").
+- **`CutsceneEngraving`** (`frame: EngravingFrame`, `ink: SeasonPalette`, `dissolve`): `context.engrave(frame, ink.tint, dissolve)`, then waits `frame.seconds`; `land` shows it whole at its end (`land_engraving`). **`CutsceneEngravingClear`** (`seconds`): `context.clear_engraving(seconds)` dithers it to bare paper. Both have the subject `engraving`.
+- `WorldCutsceneContext.restore` calls `EngravingView.hide_now()`, so an end, a skip and a drop all leave the view hidden (`cutscene_director_test`).
+
 ## Flashback 1 (STORY-05 step 7, 2026-11-12)
 
 Draft `camada_pessoal` §2, "1. Estabelecimento"; data `resources/story/flashbacks/flashback_1.tres` (music `wife_song_full`, entry mark 1.0 s, entry fade 0 s because the crossing already left white, bars 12 px, arrival (1100, 640) facing west), scenes `resources/cutscene/flashbacks/`. Playtest `playtests/2026-11-12-story05-flashback-1`.

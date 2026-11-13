@@ -155,13 +155,14 @@ script = ExtResource("46_director")
 catalog = ExtResource("47_dialogues")
 listener = NodePath("../Player")
 
-[node name="CutsceneDirector" type="Node" parent="World" node_paths=PackedStringArray("ivo", "camera", "letterbox", "fade", "dialogue")]
+[node name="CutsceneDirector" type="Node" parent="World" node_paths=PackedStringArray("ivo", "camera", "letterbox", "fade", "engraving", "dialogue")]
 script = ExtResource("50_cutscenes")
 catalog = ExtResource("51_cutscene_catalog")
 ivo = NodePath("../Player")
 camera = NodePath("../Camera2D")
 letterbox = NodePath("../../CanvasLayer/Letterbox")
 fade = NodePath("../../CanvasLayer/Fade")
+engraving = NodePath("../../CanvasLayer/EngravingView")
 dialogue = NodePath("../DialogueDirector")
 
 [node name="FlashbackDirector" type="Node" parent="World" node_paths=PackedStringArray("cutscenes", "dialogue", "ivo", "letterbox")]

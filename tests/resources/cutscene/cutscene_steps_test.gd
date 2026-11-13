@@ -186,3 +186,36 @@ func test_a_fray_agitates_for_its_seconds_then_calms() -> void:
 	step.land(_context)
 	assert_array(_calls()).is_equal(["fray:girl:true", "fray:girl:false", "fray:girl:true", "fray:girl:false",
 			"fray:girl:false"])
+
+func _engraving(dissolve: bool) -> CutsceneEngraving:
+	var step := CutsceneEngraving.new()
+	step.frame = EngravingFrame.new()
+	step.frame.seconds = 6.5
+	step.ink = preload("res://resources/songs/palettes/winter_palette.tres")
+	step.dissolve = dissolve
+	return step
+
+func test_an_engraving_shows_its_frame_for_its_seconds_and_lands_its_end() -> void:
+	var step := _engraving(true)
+	var task := step.begin(_context)
+	assert_bool(task.tick(6.0)).is_false()
+	assert_bool(task.tick(0.6)).is_true()
+	step.land(_context)
+	var tint := step.ink.tint.to_html(false)
+	assert_array(_calls()).is_equal(["engrave:6.5:%s:true" % tint, "engrave:6.5:%s:false" % tint, "land_engraving"])
+	assert_array(step.subjects()).is_equal([CutsceneEngraving.SUBJECT])
+	assert_array(step.names()).is_empty()
+
+func test_the_first_engraving_reveals_from_paper() -> void:
+	_engraving(false).begin(_context)
+	assert_array(_calls()).is_equal(["engrave:6.5:%s:false" % _engraving(false).ink.tint.to_html(false)])
+
+func test_an_engraving_clear_dithers_out_and_lands_bare_paper() -> void:
+	var step := CutsceneEngravingClear.new()
+	step.seconds = 1.0
+	var task := step.begin(_context)
+	assert_bool(task.tick(0.9)).is_false()
+	assert_bool(task.tick(0.2)).is_true()
+	step.land(_context)
+	assert_array(_calls()).is_equal(["clear_engraving:1.0", "clear_engraving:0.0"])
+	assert_array(step.subjects()).is_equal([CutsceneEngraving.SUBJECT])

@@ -19,6 +19,7 @@ const MAX_BEGUN_PER_TICK := 256
 @export var camera: GameCamera
 @export var letterbox: Letterbox
 @export var fade: Fade
+@export var engraving: EngravingView
 @export var dialogue: DialogueDirector
 ## Scaled seconds the bars take to close at a scene's end.
 @export var letterbox_close_seconds: float = 0.4

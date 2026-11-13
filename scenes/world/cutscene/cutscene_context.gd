@@ -84,3 +84,15 @@ func fray(_id: StringName, _on: bool) -> void:
 ## The FactStaging `staging_id` stands in `child` (empty: nothing) over `seconds`.
 func stage(_staging_id: StringName, _child: StringName, _seconds: float) -> void:
 	pass
+
+## Shows `frame` on the EngravingView inked in `tint`, over the frame shown (`dissolve`) or from bare paper.
+func engrave(_frame: EngravingFrame, _tint: Color, _dissolve: bool) -> void:
+	pass
+
+## Puts the engraved still shown at its end at once.
+func land_engraving() -> void:
+	pass
+
+## Dithers the engraved still out to bare paper over `seconds`.
+func clear_engraving(_seconds: float) -> void:
+	pass

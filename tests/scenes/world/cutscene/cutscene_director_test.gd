@@ -9,6 +9,8 @@ const D := preload("res://tests/resources/dialogue/dialogue_fixture.gd")
 const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const DAUGHTER := preload("res://scenes/characters/story_actor/daughter/daughter_actor.tscn")
 const LETTERBOX := preload("res://scenes/ui/letterbox/letterbox.tscn")
+const ENGRAVING := preload("res://scenes/ui/engraving/engraving_view.tscn")
+const ENGRAVED := preload("res://assets/sprites/story/bearers/frost/frame_1_base.png")
 const FLOOR_Y := 288.0
 
 var _world: Node2D
@@ -19,6 +21,7 @@ var _host: Node
 var _ivo: Player
 var _director: CutsceneDirector
 var _letterbox: Letterbox
+var _engraving: EngravingView
 ## What scene_ended saw, the frame it was emitted.
 var _at_end: Dictionary = {}
 
@@ -49,9 +52,12 @@ func before_test() -> void:
 	_world.add_child(layer)
 	_letterbox = LETTERBOX.instantiate() as Letterbox
 	layer.add_child(_letterbox)
+	_engraving = ENGRAVING.instantiate() as EngravingView
+	layer.add_child(_engraving)
 	_director = CutsceneDirector.new()
 	_director.ivo = _ivo
 	_director.letterbox = _letterbox
+	_director.engraving = _engraving
 	_world.add_child(_director)
 	_director.scene_began.connect(_ivo.begin_scene.unbind(1))
 	_director.scene_ended.connect(_ivo.end_scene.unbind(1))
@@ -278,3 +284,37 @@ func test_an_end_under_an_opaque_fade_cuts_the_frame_back() -> void:
 	await get_tree().physics_frame
 	await get_tree().physics_frame
 	assert_float(camera.shown_centre().distance_to(camera.centre_for(_ivo))).is_less(2.0)
+
+func _engraving_step() -> CutsceneEngraving:
+	var layer := EngravingLayer.new()
+	layer.texture = ENGRAVED
+	var step := CutsceneEngraving.new()
+	step.frame = EngravingFrame.new()
+	step.frame.layers = [layer]
+	step.frame.seconds = 30.0
+	step.ink = preload("res://resources/songs/palettes/winter_palette.tres")
+	step.dissolve = false
+	return step
+
+func test_a_drop_hides_the_engraving() -> void:
+	_director.play(_scene([_engraving_step()]), _host)
+	await get_tree().physics_frame
+	assert_bool(_engraving.visible).is_true()
+	_director.interrupt()
+	assert_bool(_engraving.visible).is_false()
+
+func test_a_skip_and_an_end_hide_the_engraving() -> void:
+	_director.play(_scene([_engraving_step()]), _host)
+	await get_tree().physics_frame
+	_director.request_skip()
+	await get_tree().physics_frame
+	assert_bool(_director.is_playing()).is_false()
+	assert_bool(_engraving.visible).is_false()
+	var short := _engraving_step()
+	short.frame.seconds = 0.1
+	var clear := CutsceneEngravingClear.new()
+	clear.seconds = 0.1
+	_director.play(C.scene(&"engraved", [short, clear]), _host)
+	await _until_ended(120)
+	assert_bool(SaveSystem.is_scene_seen(&"engraved")).is_true()
+	assert_bool(_engraving.visible).is_false()

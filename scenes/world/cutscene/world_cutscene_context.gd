@@ -250,8 +250,22 @@ func restore(clear_fade: bool, cut: bool = false) -> void:
 	if _posed:
 		_posed = false
 		_director.ivo_posed.emit(DialogueBeat.Pose.NONE)
+	if _director.engraving != null:
+		_director.engraving.hide_now()
 	if clear_fade and _director.fade != null and _director.fade.is_black():
 		_director.fade.to_clear()
+
+func engrave(frame: EngravingFrame, tint: Color, dissolve: bool) -> void:
+	if _director.engraving != null and frame != null:
+		_director.engraving.show_frame(frame, tint, dissolve)
+
+func land_engraving() -> void:
+	if _director.engraving != null:
+		_director.engraving.land()
+
+func clear_engraving(seconds: float) -> void:
+	if _director.engraving != null:
+		_director.engraving.clear(seconds)
 
 func _body(id: StringName) -> Character:
 	if id == CutsceneStep.IVO:
