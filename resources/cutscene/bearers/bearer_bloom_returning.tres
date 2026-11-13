@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e3"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e4"]
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("e1")
+open = true
+seconds = 0.0
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("e2")
+seconds = 1.8
+
+[resource]
+script = ExtResource("e3")
+id = &"bearer_bloom_returning"
+steps = Array[ExtResource("e4")]([SubResource("s1"), SubResource("s2")])
+skippable = false

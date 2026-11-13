@@ -1,0 +1,509 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "clock": "real",
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "known_songs": [
+  2
+ ],
+ "restored_guardians": [
+  3
+ ],
+ "scenes_seen": [
+  "flashback_1",
+  "flashback_2",
+  "flashback_3",
+  "flashback_4",
+  "flashback_5"
+ ],
+ "player_position": [
+  3470,
+  -530
+ ],
+ "max_duration": 42,
+ "steps": [
+  {
+   "t": 0.5,
+   "log": "start"
+  },
+  {
+   "t": 1.2,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 1.27,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 1.8,
+   "screenshot": "a0_before"
+  },
+  {
+   "t": 1.9,
+   "log": "before_play"
+  },
+  {
+   "t": 2.0,
+   "pressed": true,
+   "action": "draw_memorina"
+  },
+  {
+   "t": 2.08,
+   "pressed": false,
+   "action": "draw_memorina"
+  },
+  {
+   "t": 2.6,
+   "pressed": true,
+   "action": "note_down"
+  },
+  {
+   "t": 2.68,
+   "pressed": false,
+   "action": "note_down"
+  },
+  {
+   "t": 3.0,
+   "pressed": true,
+   "action": "note_left"
+  },
+  {
+   "t": 3.08,
+   "pressed": false,
+   "action": "note_left"
+  },
+  {
+   "t": 3.4,
+   "pressed": true,
+   "action": "note_right"
+  },
+  {
+   "t": 3.48,
+   "pressed": false,
+   "action": "note_right"
+  },
+  {
+   "t": 3.8,
+   "pressed": true,
+   "action": "note_up"
+  },
+  {
+   "t": 3.88,
+   "pressed": false,
+   "action": "note_up"
+  },
+  {
+   "t": 4.2,
+   "pressed": true,
+   "action": "note_up"
+  },
+  {
+   "t": 4.28,
+   "pressed": false,
+   "action": "note_up"
+  },
+  {
+   "t": 4.6,
+   "pressed": true,
+   "action": "note_up"
+  },
+  {
+   "t": 4.68,
+   "pressed": false,
+   "action": "note_up"
+  },
+  {
+   "t": 4.7,
+   "log": "p1_last_note"
+  },
+  {
+   "t": 20,
+   "log": "L_020.00"
+  },
+  {
+   "t": 20.5,
+   "log": "L_020.50"
+  },
+  {
+   "t": 21.0,
+   "log": "L_021.00"
+  },
+  {
+   "t": 21.5,
+   "log": "L_021.50"
+  },
+  {
+   "t": 22.0,
+   "log": "L_022.00"
+  },
+  {
+   "t": 22.5,
+   "log": "L_022.50"
+  },
+  {
+   "t": 23.0,
+   "log": "L_023.00"
+  },
+  {
+   "t": 23.5,
+   "log": "L_023.50"
+  },
+  {
+   "t": 24.0,
+   "log": "L_024.00"
+  },
+  {
+   "t": 24.5,
+   "log": "L_024.50"
+  },
+  {
+   "t": 25.0,
+   "log": "L_025.00"
+  },
+  {
+   "t": 25.5,
+   "log": "L_025.50"
+  },
+  {
+   "t": 26.0,
+   "log": "L_026.00"
+  },
+  {
+   "t": 26.5,
+   "log": "L_026.50"
+  },
+  {
+   "t": 27.0,
+   "log": "L_027.00"
+  },
+  {
+   "t": 27.5,
+   "log": "L_027.50"
+  },
+  {
+   "t": 28.0,
+   "log": "L_028.00"
+  },
+  {
+   "t": 28.5,
+   "log": "L_028.50"
+  },
+  {
+   "t": 29.0,
+   "log": "L_029.00"
+  },
+  {
+   "t": 29.5,
+   "log": "L_029.50"
+  },
+  {
+   "t": 30.0,
+   "log": "L_030.00"
+  },
+  {
+   "t": 30.5,
+   "log": "L_030.50"
+  },
+  {
+   "t": 31.0,
+   "log": "L_031.00"
+  },
+  {
+   "t": 31.0,
+   "screenshot": "b0_engraving"
+  },
+  {
+   "t": 31.5,
+   "log": "L_031.50"
+  },
+  {
+   "t": 32.0,
+   "pressed": true,
+   "key": "Escape"
+  },
+  {
+   "t": 32.08,
+   "pressed": false,
+   "key": "Escape"
+  },
+  {
+   "t": 32.6,
+   "screenshot": "c0_pause"
+  },
+  {
+   "t": 32.65,
+   "log": "pause"
+  },
+  {
+   "t": 33.0,
+   "pressed": true,
+   "key": "Down"
+  },
+  {
+   "t": 33.08,
+   "pressed": false,
+   "key": "Down"
+  },
+  {
+   "t": 33.4,
+   "screenshot": "c1_pause_skip"
+  },
+  {
+   "t": 33.45,
+   "log": "pause_skip"
+  },
+  {
+   "t": 33.8,
+   "pressed": true,
+   "key": "Z"
+  },
+  {
+   "t": 33.88,
+   "pressed": false,
+   "key": "Z"
+  },
+  {
+   "t": 33.9,
+   "log": "K_033.90"
+  },
+  {
+   "t": 33.9,
+   "screenshot": "K_033.90"
+  },
+  {
+   "t": 34.0,
+   "log": "K_034.00"
+  },
+  {
+   "t": 34.1,
+   "log": "K_034.10"
+  },
+  {
+   "t": 34.15,
+   "screenshot": "K_034.15"
+  },
+  {
+   "t": 34.2,
+   "log": "K_034.20"
+  },
+  {
+   "t": 34.3,
+   "log": "K_034.30"
+  },
+  {
+   "t": 34.4,
+   "log": "K_034.40"
+  },
+  {
+   "t": 34.4,
+   "screenshot": "K_034.40"
+  },
+  {
+   "t": 34.5,
+   "log": "K_034.50"
+  },
+  {
+   "t": 34.6,
+   "log": "K_034.60"
+  },
+  {
+   "t": 34.65,
+   "screenshot": "K_034.65"
+  },
+  {
+   "t": 34.7,
+   "log": "K_034.70"
+  },
+  {
+   "t": 34.8,
+   "log": "K_034.80"
+  },
+  {
+   "t": 34.9,
+   "log": "K_034.90"
+  },
+  {
+   "t": 34.9,
+   "screenshot": "K_034.90"
+  },
+  {
+   "t": 35.0,
+   "log": "K_035.00"
+  },
+  {
+   "t": 35.1,
+   "log": "K_035.10"
+  },
+  {
+   "t": 35.15,
+   "screenshot": "K_035.15"
+  },
+  {
+   "t": 35.2,
+   "log": "K_035.20"
+  },
+  {
+   "t": 35.3,
+   "log": "K_035.30"
+  },
+  {
+   "t": 35.4,
+   "log": "K_035.40"
+  },
+  {
+   "t": 35.4,
+   "screenshot": "K_035.40"
+  },
+  {
+   "t": 35.5,
+   "log": "K_035.50"
+  },
+  {
+   "t": 35.6,
+   "log": "K_035.60"
+  },
+  {
+   "t": 35.65,
+   "screenshot": "K_035.65"
+  },
+  {
+   "t": 35.7,
+   "log": "K_035.70"
+  },
+  {
+   "t": 35.8,
+   "log": "K_035.80"
+  },
+  {
+   "t": 35.9,
+   "log": "K_035.90"
+  },
+  {
+   "t": 35.9,
+   "screenshot": "K_035.90"
+  },
+  {
+   "t": 36.0,
+   "log": "K_036.00"
+  },
+  {
+   "t": 36.1,
+   "log": "K_036.10"
+  },
+  {
+   "t": 36.15,
+   "screenshot": "K_036.15"
+  },
+  {
+   "t": 36.2,
+   "log": "K_036.20"
+  },
+  {
+   "t": 36.3,
+   "log": "K_036.30"
+  },
+  {
+   "t": 36.4,
+   "log": "K_036.40"
+  },
+  {
+   "t": 36.4,
+   "screenshot": "K_036.40"
+  },
+  {
+   "t": 36.5,
+   "log": "K_036.50"
+  },
+  {
+   "t": 36.6,
+   "log": "K_036.60"
+  },
+  {
+   "t": 36.65,
+   "screenshot": "K_036.65"
+  },
+  {
+   "t": 36.7,
+   "log": "K_036.70"
+  },
+  {
+   "t": 36.8,
+   "log": "K_036.80"
+  },
+  {
+   "t": 36.9,
+   "log": "K_036.90"
+  },
+  {
+   "t": 36.9,
+   "screenshot": "K_036.90"
+  },
+  {
+   "t": 37.0,
+   "log": "K_037.00"
+  },
+  {
+   "t": 37.1,
+   "log": "K_037.10"
+  },
+  {
+   "t": 37.2,
+   "log": "K_037.20"
+  },
+  {
+   "t": 37.3,
+   "log": "K_037.30"
+  },
+  {
+   "t": 37.4,
+   "log": "K_037.40"
+  },
+  {
+   "t": 37.5,
+   "log": "K_037.50"
+  },
+  {
+   "t": 37.6,
+   "log": "K_037.60"
+  },
+  {
+   "t": 37.7,
+   "log": "K_037.70"
+  },
+  {
+   "t": 37.8,
+   "log": "K_037.80"
+  },
+  {
+   "t": 37.9,
+   "log": "K_037.90"
+  },
+  {
+   "t": 38.5,
+   "pressed": true,
+   "key": "E"
+  },
+  {
+   "t": 38.58,
+   "pressed": false,
+   "key": "E"
+  },
+  {
+   "t": 40.0,
+   "screenshot": "n0_notebook"
+  },
+  {
+   "t": 40.1,
+   "log": "notebook"
+  },
+  {
+   "t": 41.0,
+   "log": "end"
+  }
+ ]
+}

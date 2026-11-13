@@ -1,0 +1,158 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/story/engraving/engraving_layer.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/story/engraving/engraving_frame.gd" id="e3"]
+[ext_resource type="Resource" path="res://resources/songs/palettes/autumn_palette.tres" id="e4"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/autumn/frame_1_base.png" id="e5"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/autumn/frame_1_wind.png" id="e6"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/autumn/frame_1_leaves.png" id="e7"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_engraving.gd" id="e8"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/autumn/frame_2_base.png" id="e9"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/autumn/frame_2_birds.png" id="e10"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/autumn/frame_3_base.png" id="e11"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/autumn/frame_3_leaves.png" id="e12"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/autumn/frame_4_base.png" id="e13"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/autumn/frame_4_leaves.png" id="e14"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/bearers/autumn/frame_4_wind.png" id="e15"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_engraving_clear.gd" id="e16"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e17"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e18"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e19"]
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("e1")
+open = true
+seconds = 0.0
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("e2")
+texture = ExtResource("e5")
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("e2")
+texture = ExtResource("e6")
+ink_only = true
+drift = Vector2(10, 0)
+
+[sub_resource type="Resource" id="s4"]
+script = ExtResource("e2")
+texture = ExtResource("e7")
+ink_only = true
+drift = Vector2(9, 2)
+
+[sub_resource type="Resource" id="s5"]
+script = ExtResource("e3")
+layers = Array[ExtResource("e2")]([SubResource("s2"), SubResource("s3"), SubResource("s4")])
+captions = Array[StringName]([&"BEARER_AUTUMN_1"])
+seconds = 8.0
+pan_from = Vector2(0, 16)
+pan_to = Vector2(48, 24)
+reveal_seconds = 1.5
+dissolve_seconds = 1.0
+
+[sub_resource type="Resource" id="s6"]
+script = ExtResource("e8")
+frame = SubResource("s5")
+ink = ExtResource("e4")
+dissolve = false
+
+[sub_resource type="Resource" id="s7"]
+script = ExtResource("e2")
+texture = ExtResource("e9")
+
+[sub_resource type="Resource" id="s8"]
+script = ExtResource("e2")
+texture = ExtResource("e10")
+ink_only = true
+drift = Vector2(6, -2)
+
+[sub_resource type="Resource" id="s9"]
+script = ExtResource("e3")
+layers = Array[ExtResource("e2")]([SubResource("s7"), SubResource("s8")])
+captions = Array[StringName]([&"BEARER_AUTUMN_2"])
+seconds = 7.5
+pan_from = Vector2(64, 32)
+pan_to = Vector2(64, 0)
+reveal_seconds = 1.5
+dissolve_seconds = 1.0
+
+[sub_resource type="Resource" id="s10"]
+script = ExtResource("e8")
+frame = SubResource("s9")
+ink = ExtResource("e4")
+dissolve = true
+
+[sub_resource type="Resource" id="s11"]
+script = ExtResource("e2")
+texture = ExtResource("e11")
+
+[sub_resource type="Resource" id="s12"]
+script = ExtResource("e2")
+texture = ExtResource("e12")
+ink_only = true
+drift = Vector2(6, 5)
+
+[sub_resource type="Resource" id="s13"]
+script = ExtResource("e3")
+layers = Array[ExtResource("e2")]([SubResource("s11"), SubResource("s12")])
+captions = Array[StringName]([&"BEARER_AUTUMN_3"])
+seconds = 7.5
+pan_from = Vector2(32, 32)
+pan_to = Vector2(16, 8)
+reveal_seconds = 1.5
+dissolve_seconds = 1.0
+
+[sub_resource type="Resource" id="s14"]
+script = ExtResource("e8")
+frame = SubResource("s13")
+ink = ExtResource("e4")
+dissolve = true
+
+[sub_resource type="Resource" id="s15"]
+script = ExtResource("e2")
+texture = ExtResource("e13")
+
+[sub_resource type="Resource" id="s16"]
+script = ExtResource("e2")
+texture = ExtResource("e14")
+ink_only = true
+drift = Vector2(8, 2)
+
+[sub_resource type="Resource" id="s17"]
+script = ExtResource("e2")
+texture = ExtResource("e15")
+ink_only = true
+drift = Vector2(10, 0)
+
+[sub_resource type="Resource" id="s18"]
+script = ExtResource("e3")
+layers = Array[ExtResource("e2")]([SubResource("s15"), SubResource("s16"), SubResource("s17")])
+captions = Array[StringName]([&"BEARER_AUTUMN_4"])
+seconds = 7.5
+pan_from = Vector2(0, 16)
+pan_to = Vector2(64, 24)
+reveal_seconds = 1.5
+dissolve_seconds = 1.0
+
+[sub_resource type="Resource" id="s19"]
+script = ExtResource("e8")
+frame = SubResource("s18")
+ink = ExtResource("e4")
+dissolve = true
+
+[sub_resource type="Resource" id="s20"]
+script = ExtResource("e16")
+seconds = 1.0
+
+[sub_resource type="Resource" id="s21"]
+script = ExtResource("e17")
+to_black = true
+colour = Color(0, 0, 0, 1)
+seconds = 0.8
+
+[resource]
+script = ExtResource("e18")
+id = &"bearer_autumn"
+steps = Array[ExtResource("e19")]([SubResource("s1"), SubResource("s6"), SubResource("s10"), SubResource("s14"), SubResource("s19"), SubResource("s20"), SubResource("s21")])
+skippable = true

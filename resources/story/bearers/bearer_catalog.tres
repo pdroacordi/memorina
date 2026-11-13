@@ -3,7 +3,10 @@
 [ext_resource type="Script" path="res://resources/story/bearers/bearer_fragment_catalog.gd" id="1_catalog"]
 [ext_resource type="Script" path="res://resources/story/bearers/bearer_fragment.gd" id="2_fragment"]
 [ext_resource type="Resource" path="res://resources/story/bearers/bearer_frost.tres" id="r_bearer_frost"]
+[ext_resource type="Resource" path="res://resources/story/bearers/bearer_bloom.tres" id="r_bearer_bloom"]
+[ext_resource type="Resource" path="res://resources/story/bearers/bearer_autumn.tres" id="r_bearer_autumn"]
+[ext_resource type="Resource" path="res://resources/story/bearers/bearer_summer.tres" id="r_bearer_summer"]
 
 [resource]
 script = ExtResource("1_catalog")
-fragments = Array[ExtResource("2_fragment")]([ExtResource("r_bearer_frost")])
+fragments = Array[ExtResource("2_fragment")]([ExtResource("r_bearer_frost"), ExtResource("r_bearer_bloom"), ExtResource("r_bearer_autumn"), ExtResource("r_bearer_summer")])

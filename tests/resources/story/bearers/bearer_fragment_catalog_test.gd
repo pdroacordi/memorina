@@ -38,6 +38,7 @@ func test_the_shipped_catalog_is_sound() -> void:
 	var catalog := load("res://resources/story/bearers/bearer_catalog.tres") as BearerFragmentCatalog
 	var cutscenes := load("res://resources/cutscene/cutscene_catalog.tres") as CutsceneCatalog
 	assert_array(Array(catalog.validate(cutscenes, _stats, B.PAPER))).is_empty()
+	assert_array(catalog.missing()).is_empty()
 
 func test_a_guardian_listed_twice() -> void:
 	var catalog := B.catalog([_sound(), _sound()])

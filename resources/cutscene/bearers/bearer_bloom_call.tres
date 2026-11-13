@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e1"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e2"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_muffle.gd" id="e3"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e4"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e5"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e6"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e7"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e8"]
+
+[sub_resource type="Resource" id="s1"]
+script = ExtResource("e1")
+open = true
+seconds = 0.8
+
+[sub_resource type="Resource" id="s2"]
+script = ExtResource("e2")
+targets = Array[StringName]([&"ivo"])
+offset = Vector2(0, -40)
+zoom = 2.0
+seconds = 1.6
+
+[sub_resource type="Resource" id="s3"]
+script = ExtResource("e3")
+amount = 0.9
+
+[sub_resource type="Resource" id="s4"]
+script = ExtResource("e4")
+steps = Array[ExtResource("e5")]([SubResource("s1"), SubResource("s2"), SubResource("s3")])
+
+[sub_resource type="Resource" id="s5"]
+script = ExtResource("e6")
+seconds = 0.6
+
+[sub_resource type="Resource" id="s6"]
+script = ExtResource("e7")
+to_black = true
+colour = Color(0.758, 0.761, 0.771, 1)
+seconds = 1.2
+
+[resource]
+script = ExtResource("e8")
+id = &"bearer_bloom_call"
+steps = Array[ExtResource("e5")]([SubResource("s4"), SubResource("s5"), SubResource("s6")])
+skippable = false
