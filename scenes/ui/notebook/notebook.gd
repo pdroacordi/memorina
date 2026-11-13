@@ -76,6 +76,7 @@ var _shown_first: int = 0
 @onready var _more_below: Control = %MoreBelow
 @onready var _portrait: TextureRect = %Portrait
 @onready var _detail: VBoxContainer = %Detail
+@onready var _drawing: TextureRect = %Drawing
 @onready var _entry_title: Label = %EntryTitle
 @onready var _notes: Control = %Notes
 @onready var _line: Label = %Line
@@ -165,8 +166,10 @@ func turn_to(target: NotebookEntry.Section) -> void:
 func render_entry(entry: NotebookEntry, data: PlayerData) -> void:
 	_detail.visible = entry != null
 	_portrait.visible = entry != null and entry.art != null
+	_drawing.visible = entry != null and entry.drawing != null
 	if entry == null:
 		return
+	_drawing.texture = entry.drawing
 	_entry_title.text = tr(title_key(entry, data))
 	_notes.visible = entry.section == NotebookEntry.Section.SONGS
 	if _notes.visible:

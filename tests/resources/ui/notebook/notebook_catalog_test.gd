@@ -88,6 +88,25 @@ func test_entries_keep_story_order() -> void:
 	assert_array(ids).contains_exactly([&"song_freeze", &"song_bell_jar", &"song_release", &"song_gale",
 			&"song_root", &"song_rain", &"song_shadow", &"song_solstice"])
 
+## One Memories page per tube, in the draft's order, present only once its fragment is seen; each draws its tube
+## (architecture/story-04-bearer-fragments, "Notebook").
+func test_each_bearer_page_draws_its_tube_once_its_fragment_is_seen() -> void:
+	var guardians: Array[Enums.Guardian] = [Enums.Guardian.BLOOM, Enums.Guardian.FROST, Enums.Guardian.AUTUMN,
+			Enums.Guardian.SUMMER]
+	var lore := _catalog().in_section(NotebookEntry.Section.LORE)
+	var after_flashbacks := lore.find(_catalog().get_entry(&"lore_flashback_5")) + 1
+	for i: int in guardians.size():
+		var name := String(Enums.Guardian.keys()[guardians[i]]).to_lower()
+		var entry := _catalog().get_entry(StringName("lore_bearer_%s" % name))
+		assert_object(entry).override_failure_message("no page for %s" % name).is_not_null()
+		assert_int(lore.find(entry)).is_equal(after_flashbacks + i)
+		assert_object(entry.drawing).override_failure_message("%s draws no tube" % entry.id).is_not_null()
+		assert_vector(entry.drawing.get_size()).is_equal(Vector2(72, 40))
+		var data := PlayerData.new()
+		assert_bool(entry.is_present(data)).is_false()
+		data.scenes_seen.append(BearerSchedule.id(guardians[i]))
+		assert_bool(entry.is_present(data)).is_true()
+
 func test_every_guardian_has_a_portrait() -> void:
 	for entry: NotebookEntry in _catalog().in_section(NotebookEntry.Section.GUARDIANS):
 		assert_object(entry.art).override_failure_message("%s has no portrait" % entry.id).is_not_null()

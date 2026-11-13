@@ -26,6 +26,8 @@ const SECOND_HALF_BODY_KEY := "NOTEBOOK_SONG_SECOND_HALF_BODY"
 @export var body_key: String = ""
 ## A guardian's portrait; null for none.
 @export var art: Texture2D
+## A drawing above the title on the right page (a bearer tube, 72x40 art px); null for none.
+@export var drawing: Texture2D
 ## An item's icon, 16x16 art px; the item notice draws it (systems/notices). Null outside the Items section.
 @export var icon: Texture2D
 ## A song learned by ear: the body in Ivo's voice, and the margin line once the guessed half is found. Empty on other entries.
