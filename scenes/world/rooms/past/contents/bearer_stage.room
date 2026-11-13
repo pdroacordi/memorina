@@ -1,0 +1,20 @@
+; bearer_stage.room - the hidden stage a bearer fragment plays on, reached under the paper colour and left under black
+; (architecture/story-04-bearer-fragments, "The stage"). One floor and nothing else (flashback_rooms_test).
+
+[room]
+origin = 0, 0
+tileset = village
+
+[grid]
+%%%%%%%%%%%%%%%%%%%%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%..................%
+%%%%%%%%%%%%%%%%%%%%
+____________________
+____________________

@@ -189,6 +189,8 @@ INTERIORS = [
     ("frozen_lake", "lake_fisher_hut", 1, 1),
     ("wind_orchards", "orchard_inn", 2, 1),
     ("past", "garden_past", 2, 2),
+    # The hidden stage a bearer fragment plays on, under the engraving (architecture/story-04-bearer-fragments).
+    ("past", "bearer_stage", 1, 1),
 ]
 # Interiors placed off their slot. garden_past is village_garden shifted 102400 px: the least shift at which every
 # garden layer (scroll x 0.05, 0.12, 0.3, 0.55 over 1024 px) draws the same room-relative pixels (twin rule,
@@ -417,8 +419,9 @@ ROCK_SETS = {
 }
 # Enclosed rooms whose walls are neither rock nor their region's caves: the inside of the giant tree.
 ROOM_SETS = {"woods_hollow_tree": "heartwood"}
-# Interiors whose wall is not interior_timber: the wrecked ship's hold; the past's garden shows the garden's own set.
-INTERIOR_SETS = {"frost_wreck_hold": "ship_hold", "garden_past": "waterfall_garden_day"}
+# Interiors whose wall is not interior_timber: the wrecked ship's hold; the past's garden shows the garden's own set;
+# the bearer stage is never seen, but every room has a backdrop.
+INTERIOR_SETS = {"frost_wreck_hold": "ship_hold", "garden_past": "waterfall_garden_day", "bearer_stage": "interior_stone"}
 # The backdrop set an underground room of each region shows (architecture/backdrop-seams).
 UNDERGROUND_SETS = {
     "home_village": "village_strata", "threshold": "earth_caves", "frost_edge": "ice_caves",

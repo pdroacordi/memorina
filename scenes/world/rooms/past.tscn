@@ -4,6 +4,7 @@
 [ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/past/garden_past.tscn" id="r0"]
+[ext_resource type="PackedScene" path="res://scenes/world/rooms/past/bearer_stage.tscn" id="r1"]
 
 [node name="Past" type="Node2D"]
 script = ExtResource("1_region")
@@ -22,3 +23,6 @@ authored = 1.0
 
 [node name="GardenPast" parent="." instance=ExtResource("r0")]
 position = Vector2(105600, 12000)
+
+[node name="BearerStage" parent="." instance=ExtResource("r1")]
+position = Vector2(85600, 12000)

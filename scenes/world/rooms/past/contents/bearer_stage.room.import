@@ -1,0 +1,15 @@
+[remap]
+
+importer="memorina.room_map"
+importer_version=11
+type="Resource"
+uid="uid://bybh0j8x3sec2"
+path="res://.godot/imported/bearer_stage.room-ffc2af9b043928c8ac1f650036749ffb.res"
+
+[deps]
+
+source_file="res://scenes/world/rooms/past/contents/bearer_stage.room"
+dest_files=["res://.godot/imported/bearer_stage.room-ffc2af9b043928c8ac1f650036749ffb.res"]
+
+[params]
+
