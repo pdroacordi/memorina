@@ -69,7 +69,7 @@ Her `Speaker` `alba` (`SPEAKER_ALBA`, portrait), a `StoryActor` (`alba_actor.tsc
 
 ## Single writers
 
-- `FlashbackDirector`: the letterbox's rest thickness; the only asker of `Game.travel`.
+- `FlashbackDirector`: the letterbox's rest thickness. It and `BearerFragmentDirector` (`systems/bearer-fragments`) are the askers of `Game.travel`; each acts on `travelled` only while it awaits its own travel.
 - `FactWell`: `GardenWell.strength` (and each ribbon room's `GreyPocket`).
 - `FactBackdrop`: its Backdrop's set. `FactStaging`: its children's visibility.
 - `CutsceneDirector`: `SCENE_SEEN`, crossings and leavings included.

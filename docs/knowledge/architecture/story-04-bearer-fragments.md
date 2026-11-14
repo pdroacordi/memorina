@@ -2,7 +2,7 @@
 id: architecture/story-04-bearer-fragments
 type: architecture
 title: STORY-04 plan - a bearer fragment is a skippable cutscene of engraved stills on an EngravingView overlay, played in a hidden stage room reached by Game.travel; armed by Player.song_performed of the restored guardian's song once its pulse is gone; seen is live SCENE_SEEN bearer_<guardian>
-status: active
+status: built
 tags: [story, bearer-fragment, cutscene, engraving, travel, notebook, music, i18n, plan, story-04]
 related: [architecture/story-05-playable-flashbacks, architecture/cutscenes-are-data-played-between-two-rest-states, architecture/notebook-entries-are-derived-from-the-save, architecture/found-pieces, architecture/music-system, systems/cutscenes, systems/story, systems/songs-and-the-memorina, systems/guardians, systems/notebook, systems/music, systems/greyhush, systems/dialogue, systems/found-pieces, systems/screens, systems/world, systems/rooms, gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/a-killed-tween-never-emits-finished, bugs/a-travel-asked-under-a-cut-to-black-left-ivo-disabled, bugs/a-flashback-return-glides-the-frame-from-the-past]
 created: 2026-11-13
@@ -20,7 +20,7 @@ source_files:
 
 # STORY-04: bearer fragments, one per tube (plan)
 
-**Status: PLAN, 2026-11-13.** Scope: `docs/design/drafts/camada_pessoal.md` §3 ("Aprovar o rascunho", user, 2026-11-11; "Cena curta assistida (Recommended)"; the four bearers are the hands of the four songbooks of `07_achados.md`, all four marked by the user) and design 01 §5-6. The 16 captions are the draft's (pt_BR); en is written at build for approval.
+**Status: BUILT, 2026-11-13** (closed; the contract is `systems/bearer-fragments`). Scope: `docs/design/drafts/camada_pessoal.md` §3 ("Aprovar o rascunho", user, 2026-11-11; "Cena curta assistida (Recommended)"; the four bearers are the hands of the four songbooks of `07_achados.md`, all four marked by the user) and design 01 §5-6. The 16 captions are the draft's (pt_BR); en is written at build for approval.
 
 ## Context
 
@@ -281,6 +281,7 @@ The director is pausable and scaled, reads no input, writes no `WorldFreeze` and
 - Notebook page: "O tubo e uma frase do Ivo (Recommended)": the tube drawing and one short line in Ivo's voice (texts drafted for approval).
 - Pixel density: "Igual ao mundo, 2x (Recommended)".
 - Not asked; the plan's recommendation taken (orchestrator, 2026-11-13): if the start gates fail within the grace, the fragment waits for his next play of that song.
+- Texts: "Aprovar os textos" (user, 2026-11-13): the 16 en captions (`BEARER_<G>_<N>` in `i18n/translations.csv`), the 4 en notebook lines (`NOTEBOOK_LORE_BEARER_<G>_BODY`) and the page titles taken from the tube names (O caule vivo / The living stem, O galho petrificado / The petrified branch, O osso oco / The hollow bone, A pedra furada / The pierced stone).
 
 
 ## Corrections found while building (2026-11-13, steps 1-5)
@@ -305,3 +306,11 @@ The director is pausable and scaled, reads no input, writes no `WorldFreeze` and
 - **Step 9, the drawing.** The tube is a new `NotebookEntry.drawing` (an AtlasTexture of one 72x40 cell of `bearer_tubes.png`), drawn by `Drawing` above the title on the right page. `art` stays the guardians' portrait on the left page.
 - **Step 10, the music.** `resources/music/bearer_<g>.tres` streams the song's `track` as one stem and does not loop: each track (60-97 s) outlasts the visit (~38 s). `Music.release` without a fade lets a one-shot ring to its end, so the director releases with the cue's `fade_out` (1.5 s). `validate` names a fragment whose music is not its song's track.
 - **Step 11.** No stand-ins were ever drawn: the four engravings use the 32 approved files of `assets/sprites/story/bearers/<g>/` and the pages the 4 cells of `bearer_tubes.png`. The playtest (`playtests/2026-11-13-story04-bearer-fragments`) found the caption bug fixed in step 7; the summer ember layer (single-pixel embers) barely shows, an art note left open.
+
+## Corrections found while closing (step 12, review 2026-11-13)
+
+- **The music on a quit.** `_exit_tree` only dropped the request, so `Music` pruned it and let the one-shot track ring 60-97 s over the title or the rebuilt world. It now calls `_finish()`, which releases with the cue's fade (`bearer_fragment_director_test` checks no deck still sounds the track).
+- **No stage at the travel.** That branch now clears the paper cover the call's recorded end left, as a refused travel in does.
+- **Catalog.** `validate` also names an engraving that cannot be skipped and one whose last fade is not to black (the travel back is a 0 s cut).
+- **`EngravingMath.fits`** tests the snapped windows `layer_window` draws, not the raw lerp.
+- **Not changed:** a `CutsceneTrigger` armed but not yet playing does not block the call. The travel out re-arms the room's trigger on the way back (`CutsceneDirector.on_room_changed`), and a trigger that wins the same tick makes the call's `play` refuse, which drops the fragment unrecorded; neither loses a scene.
