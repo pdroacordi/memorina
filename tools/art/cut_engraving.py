@@ -2,7 +2,7 @@
 
 python -I tools/art/cut_engraving.py board <raw.png> <out_dir> --ink=#RRGGBB [--order=1,2,3,4] [--shift=n:dx,dy;...] [--chroma=0.16]
     Finds the four panels (the largest non-magenta parts, reading order), crops each to the 384x176 aspect, centred
-    (--shift moves a frame's crop, raw px; --chroma is the least chroma, 0..1, that counts as ink: raise it when the
+    (--shift moves a frame's crop along the axis the aspect trims, raw px, kept inside the panel; --chroma is the least chroma, 0..1, that counts as ink: raise it when the
     drawing tints its fills in a pale ink), and writes <out_dir>/frame_<n>_base.png: an opaque 384x176 art px canvas
     (1 px per art px, shown at scale 2) of neutral greys from GREYS plus the key ink #FF00FF where the drawing's line
     work is in the --ink hue. Prints each frame's grey and ink share.
@@ -10,8 +10,8 @@ python -I tools/art/cut_engraving.py motes <out.png> <kind> --count=N --seed=S
     Draws an ink-only layer (key #FF00FF on transparent) of small motes, tileable on both axes, so a layer that
     drifts can repeat. Kinds: snow, flakes, leaves, birds, petals, embers, wind.
 python -I tools/art/cut_engraving.py tube <raw.png> <out.png> --box=x0,y0,x1,y1 --width=W --height=H --colors=N
-    Cuts one notebook tube drawing from a magenta board: the box's subject, reduced to W x H (aspect kept, centred,
-    bottom-aligned), flattened to N colours, transparent elsewhere, 1 px per notebook px.
+    Cuts one notebook tube drawing from a magenta board: the box's subject, reduced to W x H (aspect kept, centred),
+    flattened to N colours, transparent elsewhere, 1 px per notebook px.
 
 The engraving contract is tools/art/prompts/story_bearer_<guardian>.md; the shader that reads the layers is described
 in docs/knowledge/architecture/story-04-bearer-fragments.md ("The look").
@@ -79,11 +79,11 @@ def crop_to_canvas(box: tuple[int, int, int, int], shift: tuple[int, int]) -> tu
     aspect = CANVAS[0] / CANVAS[1]
     if w / h > aspect:
         nw = round(h * aspect)
-        x0 += (w - nw) // 2 + shift[0]
+        x0 += min(max((w - nw) // 2 + shift[0], 0), w - nw)
         x1 = x0 + nw
     else:
         nh = round(w / aspect)
-        y0 += (h - nh) // 2 + shift[1]
+        y0 += min(max((h - nh) // 2 + shift[1], 0), h - nh)
         y1 = y0 + nh
     return x0, y0, x1, y1
 

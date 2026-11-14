@@ -7,9 +7,9 @@ extends Node
 ## Asks Game to carry Ivo to `point` under a `colour` cover of `seconds` (0 cuts); Game answers with on_travelled.
 signal travel_requested(point: TravelPoint, colour: Color, seconds: float)
 
-const GROUP := &"bearer_directors"
-
 enum Stage { IDLE, WAITING, CALLING, TRAVELLING_IN, ENGRAVING, LEAVING, TRAVELLING_BACK, RETURNING }
+
+const GROUP := &"bearer_directors"
 
 @export var catalog: BearerFragmentCatalog
 @export var cutscenes: CutsceneDirector
@@ -42,12 +42,10 @@ func _ready() -> void:
 			var problems := catalog.validate(cutscenes.catalog, BearerFragmentCatalog.shipped_stats(), _paper())
 			assert(problems.is_empty(), "Bearer fragment catalog: %s" % "; ".join(problems))
 
-## Out of the tree (a death's SceneSwap, a quit): the fragment is forgotten and nothing is written, so it stays due.
+## Out of the tree (a death's SceneSwap, a quit): the fragment is forgotten and its music faded; nothing is written, so
+## it stays due.
 func _exit_tree() -> void:
-	_stage = Stage.IDLE
-	_fragment = null
-	_return = null
-	_music = null
+	_finish()
 
 func _physics_process(delta: float) -> void:
 	match _stage:
@@ -89,8 +87,7 @@ func on_travelled(arrived: bool) -> void:
 	match _stage:
 		Stage.TRAVELLING_IN:
 			if not arrived:
-				if cutscenes != null and cutscenes.fade != null:
-					cutscenes.fade.to_clear()
+				_clear_cover()
 				_finish()
 				return
 			_stage = Stage.ENGRAVING
@@ -134,12 +131,12 @@ func _tick_waiting(delta: float) -> void:
 		_finish()
 
 func _call() -> void:
-	var stage := _stage_room()
-	if stage == null:
+	var stage_room := _stage_room()
+	if stage_room == null:
 		push_error("Bearer fragment: no stage room '%s'" % _fragment.stage_room)
 		_finish()
 		return
-	stage.prepare()
+	stage_room.prepare()
 	_stage = Stage.CALLING
 	if not _play(_fragment.call, _room):
 		_finish()
@@ -164,16 +161,18 @@ func _on_scene_ended(scene: Cutscene) -> void:
 				_finish()
 
 func _travel_in() -> void:
-	var stage := _stage_room()
-	if stage == null or ivo == null or _room == null:
+	var stage_room := _stage_room()
+	if stage_room == null or ivo == null or _room == null:
+		# The call's recorded end left the screen covered.
+		_clear_cover()
 		_finish()
 		return
 	_return = TravelPoint.new(_room, ivo.global_position, ivo.facing)
 	if _fragment.music != null:
 		_music = Music.request(_fragment.music, MusicRequest.Layer.SCENE, self)
 	_stage = Stage.TRAVELLING_IN
-	var feet := stage.get_bounds().position + _fragment.arrival
-	travel_requested.emit(TravelPoint.new(stage, feet, _fragment.arrival_facing), _paper(), 0.0)
+	var feet := stage_room.get_bounds().position + _fragment.arrival
+	travel_requested.emit(TravelPoint.new(stage_room, feet, _fragment.arrival_facing), _paper(), 0.0)
 
 ## Plays `scene` on `room`'s contents, so its ids resolve there; false when it cannot play.
 func _play(scene: Cutscene, room: Room) -> bool:
@@ -193,6 +192,10 @@ func _stage_room() -> Room:
 
 func _paper() -> Color:
 	return engraving.paper if engraving != null else Color.BLACK
+
+func _clear_cover() -> void:
+	if cutscenes != null and cutscenes.fade != null:
+		cutscenes.fade.to_clear()
 
 func _finish() -> void:
 	if _music != null:

@@ -67,7 +67,8 @@ static func fits(frame: EngravingFrame) -> bool:
 		return false
 	for layer: EngravingLayer in frame.layers:
 		var room := cell_size(layer) - VIEW
-		for corner: Vector2 in [frame.pan_from, frame.pan_from.lerp(frame.pan_to, layer.depth)]:
+		# The snapped windows layer_window draws; the eased pan is monotone, so its ends bound it.
+		for corner: Vector2 in [layer_window(frame, layer, 0.0), layer_window(frame, layer, frame.seconds)]:
 			if corner.x < 0.0 or corner.y < 0.0 or corner.x > room.x or corner.y > room.y:
 				return false
 	return true

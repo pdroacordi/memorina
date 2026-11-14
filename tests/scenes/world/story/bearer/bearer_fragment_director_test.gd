@@ -1,16 +1,15 @@
 class_name BearerFragmentDirectorTest extends GdUnitTestSuite
 
-## A world performance of a restored guardian's song arms its fragment; once the song's pulse is gone and every start
-## gate holds, the call plays in the room, Ivo travels to the stage under the paper, the engraving plays, and he comes
-## back under black to the same point and facing for the returning scene. A lesson, a fight, a talk, a scene, the map,
-## a seat, the past and another acting pulse refuse it; the grace runs out; a dropped call stays due
-## (architecture/story-04-bearer-fragments). Game's travel is stood in for by `_land`.
+## A world performance arms its fragment, which waits out its pulse and the start gates, then travels there and back
+## (architecture/story-04-bearer-fragments, "Trigger"); `_land` stands in for Game's travel.
 
 const B := preload("res://tests/resources/story/bearers/bearer_fixture.gd")
 const D := preload("res://tests/resources/dialogue/dialogue_fixture.gd")
 const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const ENGRAVING := preload("res://scenes/ui/engraving/engraving_view.tscn")
 const PULSE := preload("res://scenes/world/memory/color_pulse/color_pulse.tscn")
+const SEAT := preload("res://scenes/world/interactables/bench/ground_seat.tscn")
+const BLOOM_GUARDIAN := preload("res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn")
 const FREEZE := preload("res://resources/songs/freeze.tres")
 const ROOT := preload("res://resources/songs/root.tres")
 const SIZE := Vector2(640, 384)
@@ -150,6 +149,23 @@ func _visit_music() -> bool:
 	var playing := Music.playing()
 	return playing != null and playing.cue == _fragment.music and playing.layer == MusicRequest.Layer.SCENE
 
+## Whether any Music deck still sounds the song's track, live or released and ringing out.
+func _track_sounds() -> bool:
+	var length := FREEZE.track.get_length()
+	for player: Node in Music.get_children():
+		var deck := player as AudioStreamPlayer
+		if deck != null and deck.playing and deck.stream != null and is_equal_approx(deck.stream.get_length(), length):
+			return true
+	return false
+
+## The grace ran out with the gate shut: dropped, nothing played or travelled or recorded, still due.
+func _assert_refused() -> void:
+	assert_object(_director.pending()).is_null()
+	assert_bool(_cutscenes.playing() == _fragment.call).is_false()
+	assert_int(_travels.size()).is_equal(0)
+	assert_bool(SaveSystem.is_scene_seen(_fragment.call.id)).is_false()
+	assert_bool(BearerSchedule.due(SaveSystem.player_data, _fragment)).is_true()
+
 ## A live pulse of `song` at Ivo, acting unless `acts` is false.
 func _pulse(song: Song, acts: bool = true) -> ColorPulse:
 	var pulse := PULSE.instantiate() as ColorPulse
@@ -205,8 +221,7 @@ func test_another_acting_pulse_refuses_it_until_the_grace_runs_out() -> void:
 	var pulse := _pulse(ROOT)
 	_ivo.song_performed.emit(FREEZE)
 	await await_millis(800)
-	assert_object(_director.pending()).is_null()
-	assert_bool(_cutscenes.is_playing()).is_false()
+	_assert_refused()
 	pulse.free()
 
 func test_a_drawn_memorina_refuses_it() -> void:
@@ -219,15 +234,14 @@ func test_a_drawn_memorina_refuses_it() -> void:
 	assert_bool(_ivo.is_memorina_drawn()).is_true()
 	_ivo.song_performed.emit(FREEZE)
 	await await_millis(800)
-	assert_object(_director.pending()).is_null()
-	assert_bool(_cutscenes.is_playing()).is_false()
+	_assert_refused()
 
 func test_a_talk_refuses_it() -> void:
 	await _settle()
 	assert_bool(_dialogue.start_dialogue(D.dialogue(&"chat", [D.line("SPEAKER_ELDER")]), _ivo.global_position)).is_true()
 	_ivo.song_performed.emit(FREEZE)
 	await await_millis(800)
-	assert_object(_director.pending()).is_null()
+	_assert_refused()
 	_dialogue.interrupt()
 
 func test_a_scene_playing_refuses_it() -> void:
@@ -236,7 +250,7 @@ func test_a_scene_playing_refuses_it() -> void:
 	assert_bool(_cutscenes.play(other, _present.contents())).is_true()
 	_ivo.song_performed.emit(FREEZE)
 	await await_millis(800)
-	assert_object(_director.pending()).is_null()
+	_assert_refused()
 	_cutscenes.interrupt()
 
 func test_the_past_refuses_it() -> void:
@@ -244,8 +258,66 @@ func test_the_past_refuses_it() -> void:
 	_ivo.in_past = true
 	_ivo.song_performed.emit(FREEZE)
 	await await_millis(800)
-	assert_object(_director.pending()).is_null()
+	_assert_refused()
 	_ivo.in_past = false
+
+func test_a_seat_refuses_it() -> void:
+	await _settle()
+	var seat := SEAT.instantiate() as GroundSeat
+	_holder.add_child(seat)
+	seat.global_position = _ivo.global_position
+	_ivo.sit(seat.seat())
+	assert_bool(_ivo.is_sitting()).is_true()
+	_ivo.song_performed.emit(FREEZE)
+	await await_millis(800)
+	assert_bool(_ivo.is_sitting()).is_true()
+	_assert_refused()
+
+func test_the_open_map_refuses_it() -> void:
+	await _settle()
+	_ivo.block_input()
+	_ivo.song_performed.emit(FREEZE)
+	await await_millis(800)
+	_assert_refused()
+	_ivo.unblock_input()
+
+func test_a_fight_refuses_it() -> void:
+	await _settle()
+	# Not restored and with no Arena, the guardian fights everywhere, so Ivo stands in its fight.
+	var guardian := BLOOM_GUARDIAN.instantiate() as Guardian
+	guardian.position = Vector2(1800, FLOOR_Y)
+	_holder.add_child(guardian)
+	await _frames(4)
+	guardian.call(&"_on_player_entered")
+	assert_bool(Guardian.fight_at(get_tree(), _ivo.global_position)).is_true()
+	_ivo.song_performed.emit(FREEZE)
+	await await_millis(800)
+	_assert_refused()
+	guardian.free()
+
+func test_a_flashback_visit_refuses_it() -> void:
+	var flashbacks := FlashbackDirector.new()
+	_holder.add_child(flashbacks)
+	flashbacks.set(&"_visit", Flashback.new())
+	_director.flashbacks = flashbacks
+	await _settle()
+	_ivo.song_performed.emit(FREEZE)
+	await await_millis(800)
+	_assert_refused()
+
+func test_standing_up_inside_the_grace_starts_it() -> void:
+	_director.start_grace = 5.0
+	await _settle()
+	var seat := SEAT.instantiate() as GroundSeat
+	_holder.add_child(seat)
+	seat.global_position = _ivo.global_position
+	_ivo.sit(seat.seat())
+	_ivo.song_performed.emit(FREEZE)
+	await _frames(10)
+	assert_bool(_cutscenes.is_playing()).is_false()
+	_ivo.arrive(_ivo.global_position, _ivo.facing)
+	assert_bool(_ivo.is_sitting()).is_false()
+	assert_bool(await _until_playing(_fragment.call)).is_true()
 
 func test_a_gate_that_opens_inside_the_grace_starts_it() -> void:
 	_director.start_grace = 5.0
@@ -281,6 +353,8 @@ func test_there_and_back_to_the_same_point_and_facing() -> void:
 	await _until_idle()
 	assert_object(_director.pending()).is_null()
 	assert_bool(_visit_music()).is_false()
+	await _frames(3)
+	assert_bool(_track_sounds()).is_false()
 	assert_bool(SaveSystem.is_scene_seen(_fragment.engraving.id)).is_true()
 	assert_bool(BearerSchedule.due(SaveSystem.player_data, _fragment)).is_false()
 	assert_bool(_view.visible).is_false()
@@ -367,6 +441,8 @@ func test_leaving_the_tree_mid_visit_writes_nothing() -> void:
 	_cutscenes.interrupt()
 	await _frames(5)
 	assert_bool(_visit_music()).is_false()
+	# Released with its fade, never left to ring the one-shot track over the next screen.
+	assert_bool(_track_sounds()).is_false()
 
 ## game.tscn holds the director, wired to Game's travel and room changes and to the engraving view.
 func test_the_game_wires_it() -> void:

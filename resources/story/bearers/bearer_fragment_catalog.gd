@@ -3,7 +3,7 @@ extends Resource
 ## Every bearer fragment; `validate()` names what the data cannot hold (architecture/story-04-bearer-fragments).
 
 ## The shipped guardians' stats, whose `song` each fragment must name.
-const GUARDIAN_STATS := {
+const GUARDIAN_STATS: Dictionary[Enums.Guardian, String] = {
 	Enums.Guardian.FROST: "res://resources/characters/guardians/frost_guardian/frost_guardian_stats.tres",
 	Enums.Guardian.BLOOM: "res://resources/characters/guardians/bloom_guardian/bloom_guardian_stats.tres",
 	Enums.Guardian.AUTUMN: "res://resources/characters/guardians/autumn_guardian/autumn_guardian_stats.tres",
@@ -20,9 +20,9 @@ const MAX_SECONDS := 35.0
 
 
 ## Guardian -> its GuardianStats, loaded from GUARDIAN_STATS.
-static func shipped_stats() -> Dictionary:
-	var stats := {}
-	for guardian: int in GUARDIAN_STATS:
+static func shipped_stats() -> Dictionary[Enums.Guardian, GuardianStats]:
+	var stats: Dictionary[Enums.Guardian, GuardianStats] = {}
+	for guardian: Enums.Guardian in GUARDIAN_STATS:
 		stats[guardian] = load(GUARDIAN_STATS[guardian]) as GuardianStats
 	return stats
 
@@ -56,7 +56,8 @@ func missing() -> Array[int]:
 
 ## Problems with the fragments listed, one line each, against `cutscenes`, `guardian_stats` (guardian -> GuardianStats)
 ## and the engraving's `paper`; empty when sound. Missing guardians are `missing()`'s.
-func validate(cutscenes: CutsceneCatalog, guardian_stats: Dictionary, paper: Color) -> PackedStringArray:
+func validate(cutscenes: CutsceneCatalog, guardian_stats: Dictionary[Enums.Guardian, GuardianStats],
+		paper: Color) -> PackedStringArray:
 	var problems := PackedStringArray()
 	var seen: Array[int] = []
 	for fragment: BearerFragment in fragments:
@@ -67,7 +68,7 @@ func validate(cutscenes: CutsceneCatalog, guardian_stats: Dictionary, paper: Col
 		if seen.has(fragment.guardian):
 			problems.append("%s: listed twice" % name)
 		seen.append(fragment.guardian)
-		var stats := guardian_stats.get(fragment.guardian) as GuardianStats
+		var stats: GuardianStats = guardian_stats.get(fragment.guardian)
 		if fragment.song == null or stats == null or stats.song == null or stats.song.id != fragment.song.id:
 			problems.append("%s: its song is not its guardian's" % name)
 		_check_scenes(fragment, name, cutscenes, problems)
@@ -82,15 +83,19 @@ func validate(cutscenes: CutsceneCatalog, guardian_stats: Dictionary, paper: Col
 	return problems
 
 func _check_scenes(fragment: BearerFragment, name: String, cutscenes: CutsceneCatalog, problems: PackedStringArray) -> void:
-	var roles := {&"call": fragment.call, &"engraving": fragment.engraving, &"returning": fragment.returning}
+	var roles: Dictionary[StringName, Cutscene] = {
+		&"call": fragment.call,
+		&"engraving": fragment.engraving,
+		&"returning": fragment.returning,
+	}
 	for role: StringName in roles:
-		var scene: Cutscene = roles[role]
+		var scene := roles[role]
 		if scene == null:
 			problems.append("%s: no %s scene" % [name, role])
 		elif cutscenes != null and cutscenes.find(scene.id) == null:
 			problems.append("%s: its %s '%s' is not in the cutscene catalog" % [name, role, scene.id])
-		elif role != &"engraving" and scene.skippable:
-			problems.append("%s: its %s is skippable" % [name, role])
+		elif scene.skippable != (role == &"engraving"):
+			problems.append("%s: its %s is %s" % [name, role, "skippable" if scene.skippable else "not skippable"])
 	if fragment.engraving != null and fragment.engraving.id != BearerSchedule.id(fragment.guardian):
 		problems.append("%s: its engraving is '%s', not '%s'" % [name, fragment.engraving.id,
 				BearerSchedule.id(fragment.guardian)])
@@ -104,11 +109,7 @@ func _check_scenes(fragment: BearerFragment, name: String, cutscenes: CutsceneCa
 func _check_call(fragment: BearerFragment, name: String, paper: Color, problems: PackedStringArray) -> void:
 	if fragment.call == null:
 		return
-	var last: CutsceneFade = null
-	for leaf: CutsceneStep in CutsceneCatalog.leaves(fragment.call.steps):
-		if leaf is CutsceneFade:
-			last = leaf as CutsceneFade
-	if last == null or not last.to_black or not last.colour.is_equal_approx(paper):
+	if not _ends_covered(fragment.call, paper):
 		problems.append("%s: its call does not end covered in the paper" % name)
 
 func _check_engraving(fragment: BearerFragment, name: String, problems: PackedStringArray) -> void:
@@ -131,9 +132,20 @@ func _check_engraving(fragment: BearerFragment, name: String, problems: PackedSt
 			problems.append("%s: frame %d %s" % [name, i + 1, "dissolves over nothing" if i == 0 else "does not dissolve"])
 		if fragment.song != null and step.ink != fragment.song.palette:
 			problems.append("%s: frame %d is not inked in its song's palette" % [name, i + 1])
+	# A recorded end never clears a fade, and the travel back is a cut: black hides the stage.
+	if not _ends_covered(fragment.engraving, Color.BLACK):
+		problems.append("%s: its engraving does not end covered in black" % name)
 	var seconds := seconds_of(fragment.engraving.steps)
 	if seconds < MIN_SECONDS or seconds > MAX_SECONDS:
 		problems.append("%s: its engraving runs %.1f s, not %.0f..%.0f" % [name, seconds, MIN_SECONDS, MAX_SECONDS])
+
+## Whether the last fade among `scene`'s steps covers the screen in `colour`.
+static func _ends_covered(scene: Cutscene, colour: Color) -> bool:
+	var last: CutsceneFade = null
+	for leaf: CutsceneStep in CutsceneCatalog.leaves(scene.steps):
+		if leaf is CutsceneFade:
+			last = leaf as CutsceneFade
+	return last != null and last.to_black and last.colour.is_equal_approx(colour)
 
 static func _seconds_of(step: CutsceneStep) -> float:
 	if step is CutsceneTogether:

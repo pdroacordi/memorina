@@ -6,7 +6,7 @@ class_name BearerFragmentCatalogTest extends GdUnitTestSuite
 const B := preload("res://tests/resources/story/bearers/bearer_fixture.gd")
 const SOUND_FRAME_SECONDS := 7.0
 
-var _stats: Dictionary
+var _stats: Dictionary[Enums.Guardian, GuardianStats]
 
 
 func before() -> void:
@@ -75,6 +75,19 @@ func test_a_skippable_call_or_returning() -> void:
 	fragment = _sound()
 	fragment.returning.skippable = true
 	_assert_names(fragment, "returning is skippable")
+
+func test_an_engraving_that_cannot_be_skipped() -> void:
+	var fragment := _sound()
+	fragment.engraving.skippable = false
+	_assert_names(fragment, "engraving is not skippable")
+
+func test_an_engraving_not_ending_in_black() -> void:
+	var fragment := _sound()
+	fragment.engraving.steps.pop_back()
+	_assert_names(fragment, "does not end covered in black")
+	fragment = _sound()
+	(fragment.engraving.steps.back() as CutsceneFade).colour = B.PAPER
+	_assert_names(fragment, "does not end covered in black")
 
 func test_music_that_is_not_its_songs_track() -> void:
 	var fragment := _sound()
