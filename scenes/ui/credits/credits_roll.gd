@@ -105,12 +105,13 @@ func _build() -> void:
 		if not first:
 			_gap(SECTION_GAP)
 		first = false
-		_label(section.heading_key, heading_font, HEADING_SIZE, NAME_COLOUR)
+		if not section.heading_key.is_empty():
+			_label(section.heading_key, heading_font, HEADING_SIZE, NAME_COLOUR)
 		for entry: CreditsEntry in section.entries:
 			_gap(ENTRY_GAP)
 			if not entry.role_key.is_empty():
 				_label(entry.role_key, text_font, TEXT_SIZE, ROLE_COLOUR)
-			for credited: String in entry.names:
+			for credited: String in entry.lines():
 				_label(&"", text_font, TEXT_SIZE, NAME_COLOUR).text = credited
 	_gap(SECTION_GAP * 2.0)
 	var mark := TextureRect.new()

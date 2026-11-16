@@ -90,6 +90,13 @@ func _ready() -> void:
 		SaveSystem.mark_scene_seen(StringName(str(scene_id)))
 	if bool(timeline.get("world_restored", false)):
 		SaveSystem.restore_world()
+	# A committed bench, so the world arrives seated there as a loaded save does (story07_reload).
+	if timeline.has("bench"):
+		var bench: Dictionary = timeline["bench"]
+		var room_path := String(bench.get("room", ""))
+		var uid := ResourceLoader.get_resource_uid(room_path)
+		var room_key := ResourceUID.id_to_text(uid) if uid != ResourceUID.INVALID_ID else room_path
+		SaveSystem.rest_at(StringName(str(bench.get("id", ""))), room_key, String(bench.get("region", "")))
 	var responses: Dictionary = timeline.get("responses", {})
 	for ask_id: Variant in responses:
 		SaveSystem.record_response(StringName(str(ask_id)), StringName(str(responses[ask_id])))
@@ -274,7 +281,20 @@ func _log_state(label: String) -> void:
 	line += _map_state()
 	line += _notebook_state()
 	line += _notice_state()
+	line += _save_state()
 	print(line)
+
+## The live save's bench and the ending's facts (architecture/story-07-epilogue).
+func _save_state() -> String:
+	var data := SaveSystem.player_data
+	return " bench=%s epilogue_due=%s ending_finished=%s credits_rolling=%s" % [SaveSystem.bench_id(),
+		EpilogueSchedule.due(data), EpilogueSchedule.finished(data), _credits_state()]
+
+func _credits_state() -> String:
+	var roll := CreditsRoll.find(get_tree())
+	if roll == null or not roll.visible:
+		return "no"
+	return "%.1f/%.1f" % [roll.elapsed(), roll.duration()]
 
 ## The current room and its camera bounds, Ivo's facing, the fade's alpha, the weather and every loaded door.
 func _room_state(player: Player) -> String:

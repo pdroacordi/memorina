@@ -1,7 +1,8 @@
 class_name GardenEpilogueTest extends GdUnitTestSuite
 
 ## The present garden for the epilogue (architecture/story-07-epilogue): late afternoon while the epilogue is due and after
-## it, and the flat stone's two seats, the scene's seat until the credits and the bench garden_stone after them.
+## it, and the flat stone's three seats: the epilogue's until it is seen, the credits' until they are, then the bench
+## garden_stone.
 
 const CONTENTS := preload("res://scenes/world/rooms/home_village/contents/village_garden_contents.tscn")
 const AFTERNOON := "res://resources/world/backdrops/waterfall_garden_afternoon.tres"
@@ -45,19 +46,33 @@ func test_the_garden_is_late_afternoon_while_due_and_after() -> void:
 		assert_str(_shown("Stagings/Light", data)).is_equal("LateAfternoon")
 		assert_str(_shown("Props/Lantern", data)).is_equal("LitDusk")
 
-func test_the_stone_is_the_scenes_seat_until_the_credits_then_a_bench() -> void:
+func test_the_stone_is_the_epilogues_seat_then_the_credits_then_a_bench() -> void:
 	var seat := _garden.get_node("Seats/StoneSeat") as GroundSeat
+	var again := _garden.get_node("Seats/CreditsSeat") as GroundSeat
 	var bench := _garden.get_node("Seats/StoneBench") as Bench
+	var bench_seat := bench.get_node("Seat") as Seat
 	assert_bool(seat.seat().ground).is_false()
+	assert_bool(again.seat().ground).is_false()
 	assert_object(seat.when[0]).is_same(load("res://resources/save_facts/epilogue_due.tres"))
+	assert_str(String(again.cutscene.id)).is_equal(String(EpilogueSchedule.CREDITS_ID))
 	assert_str(String(bench.bench_id)).is_equal(String(EpilogueSchedule.BENCH_ID))
 	assert_vector(bench.position).is_equal(seat.position)
+	assert_vector(again.position).is_equal(seat.position)
 	assert_bool((bench.get_node("Sprite2D") as CanvasItem).visible).is_false()
-	assert_bool(seat.seat().open).is_true()
-	assert_bool((bench.get_node("Seat") as Seat).open).is_false()
+	assert_array([seat.seat().open, again.seat().open, bench_seat.open]).is_equal([true, false, false])
+	var data := SaveSystem.player_data
+	data.world_restored = true
+	for number: int in range(1, FlashbackSchedule.COUNT + 1):
+		data.scenes_seen.append(FlashbackSchedule.id(number))
+	SaveSystem.mark_dialogue_heard(EpilogueSchedule.REUNION_ID)
+	SaveSystem.mark_scene_seen(EpilogueSchedule.EPILOGUE_ID)
+	assert_array([seat.seat().open, again.seat().open, bench_seat.open]).is_equal([false, true, false])
+	assert_bool(again.wants(SaveSystem.player_data)).is_true()
 	SaveSystem.mark_scene_seen(EpilogueSchedule.CREDITS_ID)
-	assert_bool(seat.seat().open).is_false()
-	assert_bool((bench.get_node("Seat") as Seat).open).is_true()
+	assert_array([seat.seat().open, again.seat().open, bench_seat.open]).is_equal([false, false, true])
+	assert_bool(again.wants(SaveSystem.player_data)).is_false()
+	# The afternoon sky swapped the backdrop's layers; their queue_free lands on the next frame.
+	await get_tree().process_frame
 
 func test_albas_mark_is_beside_the_stone() -> void:
 	var mark := _garden.get_node("Marks/BesideStone") as CutsceneMark

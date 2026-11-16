@@ -1,0 +1,534 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 130,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "world_restored": true,
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_song",
+  "elder_story",
+  "mentor_gift",
+  "elder_return",
+  "mentor_final_first",
+  "daughter_reunion"
+ ],
+ "scenes_seen": [
+  "opening_morning",
+  "home_return",
+  "daughter_to_bed",
+  "world_restoration",
+  "daughter_reunion",
+  "flashback_1",
+  "flashback_2",
+  "flashback_3",
+  "flashback_4",
+  "flashback_5"
+ ],
+ "player_position": [
+  3990,
+  -530
+ ],
+ "steps": [
+  {
+   "t": 0.5,
+   "log": "spawn"
+  },
+  {
+   "t": 1.4,
+   "screenshot": "s00_before_down"
+  },
+  {
+   "t": 1.5,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 1.65,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 2.0,
+   "screenshot": "s01_sitting_closing"
+  },
+  {
+   "t": 2.02,
+   "log": "s01_sitting_closing"
+  },
+  {
+   "t": 3.2,
+   "screenshot": "s02_closeup_zoom4"
+  },
+  {
+   "t": 3.22,
+   "log": "s02_closeup_zoom4"
+  },
+  {
+   "t": 4.5,
+   "screenshot": "s03_closeup_melody"
+  },
+  {
+   "t": 4.52,
+   "log": "s03_closeup_melody"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "s04_the_gap"
+  },
+  {
+   "t": 6.02,
+   "log": "s04_the_gap"
+  },
+  {
+   "t": 7.1,
+   "screenshot": "s05_gap_end"
+  },
+  {
+   "t": 7.12,
+   "log": "s05_gap_end"
+  },
+  {
+   "t": 7.15,
+   "screenshot": "p_007.15"
+  },
+  {
+   "t": 7.2,
+   "screenshot": "p_007.20"
+  },
+  {
+   "t": 7.25,
+   "screenshot": "p_007.25"
+  },
+  {
+   "t": 7.3,
+   "screenshot": "p_007.30"
+  },
+  {
+   "t": 7.35,
+   "screenshot": "p_007.35"
+  },
+  {
+   "t": 7.4,
+   "screenshot": "p_007.40"
+  },
+  {
+   "t": 7.45,
+   "screenshot": "p_007.45"
+  },
+  {
+   "t": 7.5,
+   "screenshot": "p_007.50"
+  },
+  {
+   "t": 7.55,
+   "screenshot": "p_007.55"
+  },
+  {
+   "t": 7.6,
+   "screenshot": "p_007.60"
+  },
+  {
+   "t": 7.65,
+   "screenshot": "p_007.65"
+  },
+  {
+   "t": 7.7,
+   "screenshot": "p_007.70"
+  },
+  {
+   "t": 7.75,
+   "screenshot": "p_007.75"
+  },
+  {
+   "t": 7.8,
+   "screenshot": "p_007.80"
+  },
+  {
+   "t": 8.5,
+   "screenshot": "s06_pullback_mid"
+  },
+  {
+   "t": 8.52,
+   "log": "s06_pullback_mid"
+  },
+  {
+   "t": 10.1,
+   "screenshot": "s07_pair"
+  },
+  {
+   "t": 10.12,
+   "log": "s07_pair"
+  },
+  {
+   "t": 11.5,
+   "screenshot": "s08_talk1_alba"
+  },
+  {
+   "t": 11.52,
+   "log": "s08_talk1_alba"
+  },
+  {
+   "t": 12.46,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 12.58,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 14.0,
+   "screenshot": "s09_talk1_ivo"
+  },
+  {
+   "t": 14.02,
+   "log": "s09_talk1_ivo"
+  },
+  {
+   "t": 14.82,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 14.94,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 15.8,
+   "screenshot": "s10_her_silence"
+  },
+  {
+   "t": 15.82,
+   "log": "s10_her_silence"
+  },
+  {
+   "t": 18.6,
+   "screenshot": "s11_talk2_alba"
+  },
+  {
+   "t": 18.62,
+   "log": "s11_talk2_alba"
+  },
+  {
+   "t": 19.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 19.92,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 20.5,
+   "screenshot": "s12_why"
+  },
+  {
+   "t": 20.52,
+   "log": "s12_why"
+  },
+  {
+   "t": 21.52,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 21.64,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 24.0,
+   "screenshot": "s13_because"
+  },
+  {
+   "t": 24.02,
+   "log": "s13_because"
+  },
+  {
+   "t": 24.76,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 24.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 26.2,
+   "screenshot": "s14_same_note"
+  },
+  {
+   "t": 26.22,
+   "log": "s14_same_note"
+  },
+  {
+   "t": 27.02,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 27.14,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 28.0,
+   "screenshot": "s15_zoom3_closing"
+  },
+  {
+   "t": 28.02,
+   "log": "s15_zoom3_closing"
+  },
+  {
+   "t": 29.8,
+   "screenshot": "s16_talk3_alba"
+  },
+  {
+   "t": 29.82,
+   "log": "s16_talk3_alba"
+  },
+  {
+   "t": 30.75,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 30.87,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 31.5,
+   "screenshot": "s17_ivo_alba"
+  },
+  {
+   "t": 31.52,
+   "log": "s17_ivo_alba"
+  },
+  {
+   "t": 32.51,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 32.63,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 33.2,
+   "screenshot": "s18_duet_start"
+  },
+  {
+   "t": 33.22,
+   "log": "s18_duet_start"
+  },
+  {
+   "t": 37.0,
+   "screenshot": "s19_rise_mid"
+  },
+  {
+   "t": 37.02,
+   "log": "s19_rise_mid"
+  },
+  {
+   "t": 41.5,
+   "screenshot": "s20_top"
+  },
+  {
+   "t": 41.52,
+   "log": "s20_top"
+  },
+  {
+   "t": 45.8,
+   "screenshot": "s21_coming_down"
+  },
+  {
+   "t": 45.82,
+   "log": "s21_coming_down"
+  },
+  {
+   "t": 47.0,
+   "screenshot": "s22_back_on_ivo"
+  },
+  {
+   "t": 47.02,
+   "log": "s22_back_on_ivo"
+  },
+  {
+   "t": 48.5,
+   "screenshot": "s23_last_note"
+  },
+  {
+   "t": 48.52,
+   "log": "s23_last_note"
+  },
+  {
+   "t": 50.8,
+   "screenshot": "s24_scene_end"
+  },
+  {
+   "t": 50.82,
+   "log": "s24_scene_end"
+  },
+  {
+   "t": 52.0,
+   "screenshot": "c00_credits_begin"
+  },
+  {
+   "t": 52.02,
+   "log": "c00_credits_begin"
+  },
+  {
+   "t": 55.5,
+   "screenshot": "c01_wide"
+  },
+  {
+   "t": 55.52,
+   "log": "c01_wide"
+  },
+  {
+   "t": 62.0,
+   "screenshot": "c02_title"
+  },
+  {
+   "t": 62.02,
+   "log": "c02_title"
+  },
+  {
+   "t": 70.0,
+   "screenshot": "c03_art"
+  },
+  {
+   "t": 70.02,
+   "log": "c03_art"
+  },
+  {
+   "t": 78.0,
+   "screenshot": "c04_music"
+  },
+  {
+   "t": 78.02,
+   "log": "c04_music"
+  },
+  {
+   "t": 86.0,
+   "screenshot": "c05_thanks"
+  },
+  {
+   "t": 86.02,
+   "log": "c05_thanks"
+  },
+  {
+   "t": 94.0,
+   "screenshot": "c06_godot"
+  },
+  {
+   "t": 94.02,
+   "log": "c06_godot"
+  },
+  {
+   "t": 102.0,
+   "screenshot": "c07_licence"
+  },
+  {
+   "t": 102.02,
+   "log": "c07_licence"
+  },
+  {
+   "t": 108.0,
+   "screenshot": "c08_licence_end"
+  },
+  {
+   "t": 108.02,
+   "log": "c08_licence_end"
+  },
+  {
+   "t": 112.5,
+   "screenshot": "c09_logo"
+  },
+  {
+   "t": 112.52,
+   "log": "c09_logo"
+  },
+  {
+   "t": 116.4,
+   "screenshot": "c10_black"
+  },
+  {
+   "t": 116.42,
+   "log": "c10_black"
+  },
+  {
+   "t": 117.4,
+   "screenshot": "c11_rest_under_black"
+  },
+  {
+   "t": 117.42,
+   "log": "c11_rest_under_black"
+  },
+  {
+   "t": 119.5,
+   "screenshot": "c12_after_rest"
+  },
+  {
+   "t": 119.52,
+   "log": "c12_after_rest"
+  },
+  {
+   "t": 121.0,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 121.12,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 122.5,
+   "screenshot": "c13_stood"
+  },
+  {
+   "t": 122.52,
+   "log": "c13_stood"
+  },
+  {
+   "t": 123.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 123.15,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 125.5,
+   "screenshot": "c14_rest_again"
+  },
+  {
+   "t": 125.52,
+   "log": "c14_rest_again"
+  },
+  {
+   "t": 127.0,
+   "log": "end"
+  }
+ ]
+}

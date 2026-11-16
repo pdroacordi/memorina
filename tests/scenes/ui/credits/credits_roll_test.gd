@@ -60,6 +60,16 @@ func test_it_builds_headings_roles_and_names_with_the_logo_last() -> void:
 	assert_object((last as TextureRect).texture).is_same(_roll.logo)
 	assert_bool(_roll.is_done()).is_false()
 
+## A section with no heading shows its entries alone; an entry shows its lines() (a licence's paragraphs).
+func test_a_section_without_a_heading_shows_its_entries_alone() -> void:
+	var licence := CreditsLicence.new()
+	var section := CreditsSection.new()
+	section.entries = [licence]
+	var sheet := CreditsSheet.new()
+	sheet.sections = [section]
+	_roll.roll(sheet)
+	assert_array(PackedStringArray(_texts())).is_equal(licence.lines())
+
 func test_its_keys_retranslate_and_its_names_stay() -> void:
 	_roll.roll(_sheet())
 	var english := _texts()

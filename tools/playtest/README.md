@@ -59,7 +59,10 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
 - **The ending (STORY-07).** `"world_restored": true` restores the world in the save before the scene loads, and
   `"year": {"season_seconds": s, "turn_seconds": t}` gives every `RegionYear` a copy of its stats at that pace, so a run
   can watch the village's year turn. `log` prints the field's season and, in a region with a year,
-  `year=<season>><next> turn=<0..1> advancing=<bool>`.
+  `year=<season>><next> turn=<0..1> advancing=<bool>`. `"bench": {"id": "garden_stone", "room": "res://...tscn",
+  "region": "REGION_HOME_VILLAGE"}` commits that bench before the scene loads, so the world arrives seated there as a
+  loaded save does. `log` ends with the live save's `bench`, `epilogue_due`, `ending_finished` and the credits roll's
+  `elapsed/duration` (`no` while hidden).
 - **Teleport.** `"teleport": [x, y]` moves Ivo mid-run with `Character.teleport`, as `player_position` does at the
   start, so one timeline can visit several rooms (the opening's errand, `systems/story`). The game enters the room under
   him with a cut.

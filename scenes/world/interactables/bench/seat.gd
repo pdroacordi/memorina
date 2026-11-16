@@ -69,9 +69,13 @@ func is_occupied() -> bool:
 func has_body_in_reach() -> bool:
 	return _bodies > 0
 
-## Open, with Ivo in reach and not already sitting: its prompt shows.
+## Open, with Ivo in reach and not sitting here or on another seat at the same spot: its prompt shows.
 func offers() -> bool:
-	return open and has_body_in_reach() and not _occupied
+	return open and has_body_in_reach() and not _occupied and not _sitter_in_reach()
+
+## Re-reads the prompt rule: a body in reach sat down or stood up on another seat.
+func refresh() -> void:
+	changed.emit()
 
 func _on_body_entered(_body: Node2D) -> void:
 	_bodies += 1
@@ -80,3 +84,10 @@ func _on_body_entered(_body: Node2D) -> void:
 func _on_body_exited(_body: Node2D) -> void:
 	_bodies = maxi(_bodies - 1, 0)
 	changed.emit()
+
+func _sitter_in_reach() -> bool:
+	for body: Node2D in get_overlapping_bodies():
+		var player := body as Player
+		if player != null and player.is_sitting():
+			return true
+	return false

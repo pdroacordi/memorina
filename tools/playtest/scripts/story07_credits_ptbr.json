@@ -1,0 +1,187 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 75,
+ "locale": "pt_BR",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "world_restored": true,
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_song",
+  "elder_story",
+  "mentor_gift",
+  "elder_return",
+  "mentor_final_first",
+  "daughter_reunion"
+ ],
+ "scenes_seen": [
+  "opening_morning",
+  "home_return",
+  "daughter_to_bed",
+  "world_restoration",
+  "daughter_reunion",
+  "flashback_1",
+  "flashback_2",
+  "flashback_3",
+  "flashback_4",
+  "flashback_5",
+  "epilogue"
+ ],
+ "player_position": [
+  3990,
+  -530
+ ],
+ "steps": [
+  {
+   "t": 1.2,
+   "screenshot": "p00_before_down"
+  },
+  {
+   "t": 1.22,
+   "log": "p00_before_down"
+  },
+  {
+   "t": 1.5,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 1.65,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 2.5,
+   "screenshot": "p01_002.5"
+  },
+  {
+   "t": 2.52,
+   "log": "p01_002.5"
+  },
+  {
+   "t": 5.0,
+   "screenshot": "p02_005.0"
+  },
+  {
+   "t": 5.02,
+   "log": "p02_005.0"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "p03_009.0"
+  },
+  {
+   "t": 9.02,
+   "log": "p03_009.0"
+  },
+  {
+   "t": 14.0,
+   "screenshot": "p04_014.0"
+  },
+  {
+   "t": 14.02,
+   "log": "p04_014.0"
+  },
+  {
+   "t": 20.0,
+   "screenshot": "p05_020.0"
+  },
+  {
+   "t": 20.02,
+   "log": "p05_020.0"
+  },
+  {
+   "t": 26.0,
+   "screenshot": "p06_026.0"
+  },
+  {
+   "t": 26.02,
+   "log": "p06_026.0"
+  },
+  {
+   "t": 33.0,
+   "screenshot": "p07_033.0"
+  },
+  {
+   "t": 33.02,
+   "log": "p07_033.0"
+  },
+  {
+   "t": 40.0,
+   "screenshot": "p08_040.0"
+  },
+  {
+   "t": 40.02,
+   "log": "p08_040.0"
+  },
+  {
+   "t": 46.0,
+   "screenshot": "p09_046.0"
+  },
+  {
+   "t": 46.02,
+   "log": "p09_046.0"
+  },
+  {
+   "t": 52.0,
+   "screenshot": "p10_052.0"
+  },
+  {
+   "t": 52.02,
+   "log": "p10_052.0"
+  },
+  {
+   "t": 57.0,
+   "screenshot": "p11_057.0"
+  },
+  {
+   "t": 57.02,
+   "log": "p11_057.0"
+  },
+  {
+   "t": 61.5,
+   "screenshot": "p12_061.5"
+  },
+  {
+   "t": 61.52,
+   "log": "p12_061.5"
+  },
+  {
+   "t": 65.5,
+   "screenshot": "p13_065.5"
+  },
+  {
+   "t": 65.52,
+   "log": "p13_065.5"
+  },
+  {
+   "t": 67.0,
+   "screenshot": "p14_067.0"
+  },
+  {
+   "t": 67.02,
+   "log": "p14_067.0"
+  },
+  {
+   "t": 69.5,
+   "screenshot": "p15_069.5"
+  },
+  {
+   "t": 69.52,
+   "log": "p15_069.5"
+  },
+  {
+   "t": 72.0,
+   "log": "end"
+  }
+ ]
+}

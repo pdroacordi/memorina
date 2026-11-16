@@ -1,0 +1,196 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 30,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "world_restored": true,
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_song",
+  "elder_story",
+  "mentor_gift",
+  "elder_return",
+  "mentor_final_first",
+  "daughter_reunion"
+ ],
+ "scenes_seen": [
+  "opening_morning",
+  "home_return",
+  "daughter_to_bed",
+  "world_restoration",
+  "daughter_reunion",
+  "flashback_1",
+  "flashback_2",
+  "flashback_3",
+  "flashback_4",
+  "flashback_5",
+  "epilogue"
+ ],
+ "player_position": [
+  3990,
+  -530
+ ],
+ "clock": "real",
+ "steps": [
+  {
+   "t": 1.2,
+   "screenshot": "k00_before_down"
+  },
+  {
+   "t": 1.22,
+   "log": "k00_before_down"
+  },
+  {
+   "t": 1.5,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 1.65,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 10.0,
+   "screenshot": "k01_rolling"
+  },
+  {
+   "t": 10.02,
+   "log": "k01_rolling"
+  },
+  {
+   "t": 12.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 12.08,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 12.6,
+   "screenshot": "k02_pause"
+  },
+  {
+   "t": 12.62,
+   "log": "k02_pause"
+  },
+  {
+   "t": 13.0,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 13.08,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 13.4,
+   "screenshot": "k03_pause_skip"
+  },
+  {
+   "t": 13.42,
+   "log": "k03_pause_skip"
+  },
+  {
+   "t": 13.8,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 13.88,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 14.0,
+   "screenshot": "k_14.00"
+  },
+  {
+   "t": 14.02,
+   "log": "k_14.00"
+  },
+  {
+   "t": 14.3,
+   "screenshot": "k_14.30"
+  },
+  {
+   "t": 14.32,
+   "log": "k_14.30"
+  },
+  {
+   "t": 14.8,
+   "screenshot": "k_14.80"
+  },
+  {
+   "t": 14.82,
+   "log": "k_14.80"
+  },
+  {
+   "t": 15.5,
+   "screenshot": "k_15.50"
+  },
+  {
+   "t": 15.52,
+   "log": "k_15.50"
+  },
+  {
+   "t": 16.5,
+   "screenshot": "k_16.50"
+  },
+  {
+   "t": 16.52,
+   "log": "k_16.50"
+  },
+  {
+   "t": 18.0,
+   "screenshot": "k_18.00"
+  },
+  {
+   "t": 18.02,
+   "log": "k_18.00"
+  },
+  {
+   "t": 20.0,
+   "screenshot": "k_20.00"
+  },
+  {
+   "t": 20.02,
+   "log": "k_20.00"
+  },
+  {
+   "t": 22.0,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 22.12,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 23.5,
+   "screenshot": "k10_stood"
+  },
+  {
+   "t": 23.52,
+   "log": "k10_stood"
+  },
+  {
+   "t": 25.0,
+   "log": "end"
+  }
+ ]
+}

@@ -128,7 +128,29 @@ func test_the_game_wires_the_ending() -> void:
 		if state.get_node_name(node) != &"EpilogueDirector":
 			continue
 		found = true
+		var props := {}
 		for i: int in state.get_node_property_count(node):
-			if state.get_node_property_name(node, i) == &"cutscenes":
-				assert_str(String(state.get_node_property_value(node, i))).is_equal("../CutsceneDirector")
+			props[state.get_node_property_name(node, i)] = state.get_node_property_value(node, i)
+		assert_str(String(props[&"cutscenes"])).is_equal("../CutsceneDirector")
+		assert_str(String(props[&"fade"])).is_equal("../../CanvasLayer/Fade")
+		assert_str(String((props[&"epilogue"] as Cutscene).id)).is_equal(String(EpilogueSchedule.EPILOGUE_ID))
+		assert_str(String((props[&"credits"] as Cutscene).id)).is_equal(String(EpilogueSchedule.CREDITS_ID))
 	assert_bool(found).is_true()
+
+## The credits end on black: the rest lands under it, then the director clears it (a recorded end never does).
+func test_the_black_the_credits_end_on_clears_after_the_rest() -> void:
+	var fade := Fade.new()
+	fade.color = Color(0.0, 0.0, 0.0, 0.0)
+	_world.add_child(fade)
+	_cutscenes.fade = fade
+	_director.fade = fade
+	var cover := CutsceneFade.new()
+	cover.seconds = 0.0
+	var black_at_rest: Array[bool] = []
+	_director.rest_requested.connect(func(_id: StringName) -> void: black_at_rest.append(fade.is_black()))
+	_director.credits.steps = [C.wait(0.1), cover]
+	_cutscenes.play(_director.credits, _host)
+	await _frames(20)
+	assert_array(black_at_rest).is_equal([true])
+	await get_tree().create_timer(EpilogueDirector.CLEAR_SECONDS + 0.3).timeout
+	assert_bool(fade.is_black()).is_false()

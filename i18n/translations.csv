@@ -513,3 +513,13 @@ PAD_L3,L3,L3
 PAD_R3,R3,R3
 ACTION_UI_ACCEPT,Confirm,Confirmar
 ACTION_UI_CANCEL,Back,Voltar
+CREDITS_TITLE,Memorina,Memorina
+CREDITS_A_GAME_BY,A game by,Um jogo de
+CREDITS_ART,Art,Arte
+CREDITS_INTERFACE,"Interface, icons and fonts","Interface, ícones e fontes"
+CREDITS_ART_DIRECTION,Art direction and the art made for this game,Direção de arte e a arte feita para este jogo
+CREDITS_MUSIC,Music,Música
+CREDITS_MUSIC_BY,Music,Música
+CREDITS_THANKS,Thanks,Agradecimentos
+CREDITS_THANK_YOU,Thank you for playing,Obrigado por jogar
+CREDITS_MADE_WITH_GODOT,Made with Godot Engine,Feito com Godot Engine

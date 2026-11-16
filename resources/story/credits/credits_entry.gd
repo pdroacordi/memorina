@@ -5,3 +5,8 @@ extends Resource
 ## A translation key; empty shows the names alone.
 @export var role_key: StringName = &""
 @export var names: PackedStringArray = PackedStringArray()
+
+
+## The rows shown under the role, top to bottom, untranslated.
+func lines() -> PackedStringArray:
+	return names

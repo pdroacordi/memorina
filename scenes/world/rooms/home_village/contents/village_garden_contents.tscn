@@ -49,6 +49,7 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/bench.tscn" id="ep_bench"]
 [ext_resource type="Script" path="res://scenes/world/interactables/bench/seat_gate.gd" id="ep_seat_gate"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/epilogue.tres" id="ep_epilogue"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/credits.tres" id="ep_credits_scene"]
 [ext_resource type="PackedScene" path="res://scenes/characters/story_actor/alba/alba_actor.tscn" id="ep_alba"]
 
 [sub_resource type="Resource" id="due_1"]
@@ -252,6 +253,13 @@ ground = false
 cutscene = ExtResource("ep_epilogue")
 when = Array[ExtResource("st_fact")]([ExtResource("ep_due")])
 
+[node name="CreditsSeat" parent="Seats" instance=ExtResource("ep_ground_seat")]
+position = Vector2(816, 640)
+facing = -1
+ground = false
+cutscene = ExtResource("ep_credits_scene")
+when = Array[ExtResource("st_fact")]([ExtResource("ep_seen")])
+
 [node name="StoneBench" parent="Seats" instance=ExtResource("ep_bench")]
 position = Vector2(816, 640)
 bench_id = &"garden_stone"
@@ -263,6 +271,12 @@ visible = false
 [node name="StoneSeatGate" type="Node" parent="Seats" node_paths=PackedStringArray("seat")]
 script = ExtResource("ep_seat_gate")
 seat = NodePath("../StoneSeat/Seat")
+unless = Array[ExtResource("st_fact")]([ExtResource("ep_seen")])
+
+[node name="CreditsSeatGate" type="Node" parent="Seats" node_paths=PackedStringArray("seat")]
+script = ExtResource("ep_seat_gate")
+seat = NodePath("../CreditsSeat/Seat")
+when = Array[ExtResource("st_fact")]([ExtResource("ep_seen")])
 unless = Array[ExtResource("st_fact")]([ExtResource("ep_credits")])
 
 [node name="StoneBenchGate" type="Node" parent="Seats" node_paths=PackedStringArray("seat")]

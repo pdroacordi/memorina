@@ -1,0 +1,67 @@
+[gd_resource type="Resource" script_class="CreditsSheet" format=3]
+
+[ext_resource type="Script" path="res://resources/story/credits/credits_sheet.gd" id="c_sheet"]
+[ext_resource type="Script" path="res://resources/story/credits/credits_section.gd" id="c_section"]
+[ext_resource type="Script" path="res://resources/story/credits/credits_entry.gd" id="c_entry"]
+[ext_resource type="Script" path="res://resources/story/credits/credits_licence.gd" id="c_licence"]
+
+[sub_resource type="Resource" id="game_by"]
+script = ExtResource("c_entry")
+role_key = &"CREDITS_A_GAME_BY"
+names = PackedStringArray("Pedro Acordi")
+
+[sub_resource type="Resource" id="title"]
+script = ExtResource("c_section")
+heading_key = &"CREDITS_TITLE"
+entries = Array[ExtResource("c_entry")]([SubResource("game_by")])
+
+[sub_resource type="Resource" id="interface"]
+script = ExtResource("c_entry")
+role_key = &"CREDITS_INTERFACE"
+names = PackedStringArray("Franuka", "franuka.itch.io")
+
+[sub_resource type="Resource" id="art_direction"]
+script = ExtResource("c_entry")
+role_key = &"CREDITS_ART_DIRECTION"
+names = PackedStringArray("Pedro Acordi")
+
+[sub_resource type="Resource" id="art"]
+script = ExtResource("c_section")
+heading_key = &"CREDITS_ART"
+entries = Array[ExtResource("c_entry")]([SubResource("interface"), SubResource("art_direction")])
+
+[sub_resource type="Resource" id="music_by"]
+script = ExtResource("c_entry")
+role_key = &"CREDITS_MUSIC_BY"
+names = PackedStringArray("Pedro Acordi")
+
+[sub_resource type="Resource" id="music"]
+script = ExtResource("c_section")
+heading_key = &"CREDITS_MUSIC"
+entries = Array[ExtResource("c_entry")]([SubResource("music_by")])
+
+[sub_resource type="Resource" id="thank_you"]
+script = ExtResource("c_entry")
+role_key = &"CREDITS_THANK_YOU"
+
+[sub_resource type="Resource" id="thanks"]
+script = ExtResource("c_section")
+heading_key = &"CREDITS_THANKS"
+entries = Array[ExtResource("c_entry")]([SubResource("thank_you")])
+
+[sub_resource type="Resource" id="made_with"]
+script = ExtResource("c_entry")
+role_key = &"CREDITS_MADE_WITH_GODOT"
+
+[sub_resource type="Resource" id="engine_licence"]
+script = ExtResource("c_licence")
+
+[sub_resource type="Resource" id="engine"]
+script = ExtResource("c_section")
+entries = Array[ExtResource("c_entry")]([SubResource("made_with"), SubResource("engine_licence")])
+
+[resource]
+script = ExtResource("c_sheet")
+sections = Array[ExtResource("c_section")]([SubResource("title"), SubResource("art"), SubResource("music"), SubResource("thanks"), SubResource("engine")])
+scroll_speed = 12.0
+hold_end = 4.0

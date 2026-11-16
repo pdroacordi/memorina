@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="c_cutscene"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="c_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="c_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_music.gd" id="c_music"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="c_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_credits.gd" id="c_credits"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_year.gd" id="c_year"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="c_fade"]
+[ext_resource type="Resource" path="res://resources/music/menu_title.tres" id="r_title"]
+[ext_resource type="Resource" path="res://resources/story/credits/credits.tres" id="r_sheet"]
+
+[sub_resource type="Resource" id="title_theme"]
+script = ExtResource("c_music")
+cue = ExtResource("r_title")
+
+[sub_resource type="Resource" id="widest"]
+script = ExtResource("c_camera")
+targets = Array[StringName]([&"ivo"])
+offset = Vector2(-176, -256)
+zoom = 0.5
+seconds = 3.0
+
+[sub_resource type="Resource" id="roll"]
+script = ExtResource("c_credits")
+sheet = ExtResource("r_sheet")
+
+[sub_resource type="Resource" id="year"]
+script = ExtResource("c_year")
+seconds = 56.0
+
+[sub_resource type="Resource" id="together_roll"]
+script = ExtResource("c_together")
+steps = Array[ExtResource("c_step")]([SubResource("title_theme"), SubResource("widest"), SubResource("roll"), SubResource("year")])
+
+[sub_resource type="Resource" id="to_black"]
+script = ExtResource("c_fade")
+seconds = 1.5
+
+[resource]
+script = ExtResource("c_cutscene")
+id = &"credits"
+steps = Array[ExtResource("c_step")]([SubResource("together_roll"), SubResource("to_black")])

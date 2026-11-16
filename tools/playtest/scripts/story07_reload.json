@@ -1,0 +1,117 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 12,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "world_restored": true,
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_song",
+  "elder_story",
+  "mentor_gift",
+  "elder_return",
+  "mentor_final_first",
+  "daughter_reunion"
+ ],
+ "scenes_seen": [
+  "opening_morning",
+  "home_return",
+  "daughter_to_bed",
+  "world_restoration",
+  "daughter_reunion",
+  "flashback_1",
+  "flashback_2",
+  "flashback_3",
+  "flashback_4",
+  "flashback_5",
+  "epilogue",
+  "credits"
+ ],
+ "bench": {
+  "id": "garden_stone",
+  "room": "res://scenes/world/rooms/home_village/village_garden.tscn",
+  "region": "REGION_HOME_VILLAGE"
+ },
+ "steps": [
+  {
+   "t": 0.3,
+   "log": "spawn"
+  },
+  {
+   "t": 1.0,
+   "screenshot": "r00_arrival"
+  },
+  {
+   "t": 1.02,
+   "log": "r00_arrival"
+  },
+  {
+   "t": 2.5,
+   "screenshot": "r01_seated"
+  },
+  {
+   "t": 2.52,
+   "log": "r01_seated"
+  },
+  {
+   "t": 3.0,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 3.12,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 4.5,
+   "screenshot": "r02_stood"
+  },
+  {
+   "t": 4.52,
+   "log": "r02_stood"
+  },
+  {
+   "t": 5.0,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 5.12,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 5.6,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 5.75,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 8.0,
+   "screenshot": "r03_down_again"
+  },
+  {
+   "t": 8.02,
+   "log": "r03_down_again"
+  },
+  {
+   "t": 10.0,
+   "log": "end"
+  }
+ ]
+}

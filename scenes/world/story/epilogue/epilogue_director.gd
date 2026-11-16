@@ -9,10 +9,15 @@ signal ending_ended
 ## The credits were recorded: Game seats Ivo on bench `bench_id` and rests there.
 signal rest_requested(bench_id: StringName)
 
+## Scaled seconds the black the credits end on clears over, once the rest has landed under it.
+const CLEAR_SECONDS := 1.5
+
 @export var epilogue: Cutscene
 @export var credits: Cutscene
 @export var bench_id: StringName = EpilogueSchedule.BENCH_ID
 @export var cutscenes: CutsceneDirector
+## The cover the credits end on; cleared after the rest, because a recorded end never clears a fade.
+@export var fade: Fade
 
 ## The node the epilogue was played for; the credits play on it too.
 var _host: Node
@@ -52,6 +57,8 @@ func _on_scene_ended(scene: Cutscene) -> void:
 	elif _is(scene, credits):
 		if cutscenes.ended_recorded():
 			rest_requested.emit(bench_id)
+			if fade != null and fade.is_black():
+				fade.to_clear(CLEAR_SECONDS)
 		_close()
 
 ## Deferred: every scene_ended listener (Player.end_scene first) sees the epilogue end before the credits begin.

@@ -84,3 +84,21 @@ func test_two_seats_on_one_spot_sit_him_on_the_open_one() -> void:
 	assert_bool(stone.seat().is_occupied()).is_true()
 	assert_bool(_ivo.sits_on_ground()).is_false()
 	assert_bool((bench.get_node("Seat") as Seat).is_occupied()).is_false()
+
+## Seated on one seat of a shared spot, another that opens there shows no prompt until he stands (the garden's stone
+## after the epilogue).
+func test_a_seat_beside_the_one_he_sits_on_shows_no_prompt() -> void:
+	var bench := _bench_gated_on_memorina()
+	var prompt := bench.get_node("Prompt") as CanvasItem
+	var stone := GROUND.instantiate() as GroundSeat
+	stone.ground = false
+	stone.position = Vector2(0, FLOOR_Y)
+	_holder.add_child(stone)
+	await _land_ivo()
+	await _press_down()
+	assert_bool(stone.seat().is_occupied()).is_true()
+	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
+	assert_bool(prompt.visible).is_false()
+	(_ivo.get_node("Sit") as SitComponent).stand()
+	await get_tree().physics_frame
+	assert_bool(prompt.visible).is_true()
