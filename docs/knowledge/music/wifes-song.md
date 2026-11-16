@@ -16,3 +16,22 @@
 
 - Her voice: Ashley Lawless, "Mmh", Sustain (user, 2026-11-02: "Ashley"), chosen over Kiera "Mmh" and Masha "Hmm".
 - The voice changed after listening: "Mmh" sounded like heavy autotune ("os hums estão muito estranhos... parecem autotune demais"); chosen instead: Ashley Lawless "Ouh" Sustain (Vibrato) ("Ashley Ouh", user, 2026-11-02), over a female choir. Vibrato and an open vowel hide the sample's fixed pitch.
+
+## The epilogue's render (measured 2026-11-16, STORY-07 step 7)
+
+`assets/audios/soundtrack/wife_song_epilogue.ogg`, 15.9 s, flute, voice, viola and bass mixed in one stream. Measured by band energy at each note's fundamental (STFT, 2048-sample window, 64-sample hop, at 22.05 kHz; the time is where the band rises or falls through its plateau), so each value is good to about 20 ms:
+
+| Event | s | Sketch beat |
+|---|---|---|
+| Flute's first E5 (AIVA's lead-in) | 0.56 | 0 |
+| His wrong D5, re-struck after the D of beat 3.5 | 2.25 | 4 |
+| Her entry on C4, with his wrong D | 2.23 | 4 |
+| Her A4 (the flute holds G5 under it) | 9.05 | 20 |
+| Her last onset, C4 | 11.56 | 26 |
+| The flute's last C5, with hers | 11.62 | 26 |
+| Her release | 12.45 | 27.5 |
+| The flute's release | 14.12 | 30 |
+| The tail (viola and bass) fades out | 15.9 | |
+
+The render follows the sketch: the flute's last C starts with hers, not after it, so "the last note is his alone" is the 1.67 s after her release (12.45..14.12 s). The one-beat-late heterophony is in the first phrase only (her C D E C at beats 4-8, the flute's at 5-9).
+
