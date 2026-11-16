@@ -43,6 +43,18 @@ func test_after_the_credits_the_stone_is_the_bench_and_the_rest_keeps_the_ending
 	assert_bool(EpilogueSchedule.due(data)).is_false()
 	assert_str(SaveSlots.bench_name_key(SaveSystem.bench_id())).is_equal("BENCH_GARDEN_STONE")
 
+## Game.rest_at_bench runs in the same call as the credits' SCENE_SEEN: the stone's bench must be open by then, so its
+## gate answers progress_changed at once, never deferred.
+func test_the_credits_seen_open_the_bench_in_the_same_frame() -> void:
+	var garden := GARDEN.instantiate() as Node
+	add_child(garden)
+	var bench_seat := garden.get_node("Seats/StoneBench/Seat") as Seat
+	assert_object(Seat.find_open(get_tree(), EpilogueSchedule.BENCH_ID)).is_null()
+	_end_the_ending()
+	assert_object(Seat.find_open(get_tree(), EpilogueSchedule.BENCH_ID)).is_same(bench_seat)
+	garden.queue_free()
+	await get_tree().process_frame
+
 ## Before the rest nothing of the ending is committed: a quit (a rewind) leaves the epilogue due again.
 func test_before_the_rest_a_rewind_leaves_the_epilogue_due() -> void:
 	var data := SaveSystem.player_data

@@ -6,6 +6,8 @@ extends Node
 ## A turn ended: the region is now in `season`.
 signal season_changed(season: Enums.Season)
 
+const NO_FACTS: Array[SaveFact] = []
+
 @export var stats: YearStats
 
 ## Scaled seconds of advance, wrapped at one cycle.
@@ -15,6 +17,9 @@ var _field: MemoryField
 var _ivo: Player
 ## The room Ivo was last found in, so the search runs only when he leaves it.
 var _room: Room
+## The year at `_point_at` elapsed seconds, kept so the renderer's reads each frame compute it once.
+var _point: YearMath.Point
+var _point_at: float = -1.0
 ## A run (`run_year`): scaled seconds left, advance per scaled second, and where it began; `_run_left` 0 when none.
 var _run_left: float = 0.0
 var _run_rate: float = 0.0
@@ -34,14 +39,14 @@ func _physics_process(delta: float) -> void:
 		advance(delta)
 
 func season() -> Enums.Season:
-	return YearMath.at(_elapsed, stats, _start).season
+	return _now().season
 
 func next_season() -> Enums.Season:
-	return YearMath.at(_elapsed, stats, _start).next
+	return _now().next
 
 ## 0..1 through the turn into `next_season()`; 0 while a season holds.
 func turn() -> float:
-	return YearMath.at(_elapsed, stats, _start).turn
+	return _now().turn
 
 ## Moves the year on by `seconds` of advance, emitting `season_changed` at each commit it passes.
 func advance(seconds: float) -> void:
@@ -80,7 +85,7 @@ func can_advance() -> bool:
 		_ivo = get_tree().get_first_node_in_group(Player.GROUP) as Player
 	if _ivo == null:
 		return false
-	return may_advance(SaveFact.gates_pass(stats.when, [], SaveSystem.player_data), _room_of_ivo(), get_parent() as Region,
+	return may_advance(SaveFact.gates_pass(stats.when, NO_FACTS, SaveSystem.player_data), _room_of_ivo(), get_parent() as Region,
 			_ivo.is_in_story(), forgetting_in_view(_field, _view()))
 
 ## The year moves only on an open room of its own region, out of any story, with no forgetting source in view.
@@ -93,6 +98,12 @@ static func forgetting_in_view(field: MemoryField, view: Rect2) -> bool:
 		if source.strength < 0.0:
 			return true
 	return false
+
+func _now() -> YearMath.Point:
+	if _point == null or _point_at != _elapsed:
+		_point = YearMath.at(_elapsed, stats, _start)
+		_point_at = _elapsed
+	return _point
 
 func _tick_run(delta: float) -> void:
 	var step := minf(delta, _run_left)

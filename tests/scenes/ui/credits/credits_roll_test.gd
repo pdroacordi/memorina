@@ -80,6 +80,13 @@ func test_its_keys_retranslate_and_its_names_stay() -> void:
 	assert_str(portuguese[0]).is_not_equal(english[0])
 	assert_str(portuguese[2]).is_equal("Ana Example")
 
+## A name or a licence line that matches a translation key is still shown as written.
+func test_no_row_is_auto_translated() -> void:
+	_roll.roll(_sheet())
+	for row: Control in _roll.rows():
+		if row is Label:
+			assert_int(row.auto_translate_mode).is_equal(Node.AUTO_TRANSLATE_MODE_DISABLED)
+
 func test_it_rolls_up_in_whole_art_px() -> void:
 	_roll.roll(_sheet())
 	var column := _roll.get_node("Art/Column") as Control

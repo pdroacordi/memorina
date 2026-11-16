@@ -40,6 +40,14 @@ static func find(tree: SceneTree, id: StringName) -> Seat:
 			return seat
 	return null
 
+## The open seat of bench `id`; null when none is open.
+static func find_open(tree: SceneTree, id: StringName) -> Seat:
+	for node: Node in tree.get_nodes_in_group(GROUP):
+		var seat := node as Seat
+		if seat != null and seat.bench_id == id and seat.open:
+			return seat
+	return null
+
 func _enter_tree() -> void:
 	add_to_group(GROUP)
 

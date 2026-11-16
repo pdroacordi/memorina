@@ -131,6 +131,8 @@ func _label(key: StringName, font: Font, font_size: int, colour: Color) -> Label
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Keyed rows are translated in _retranslate; names and the licence never are.
+	label.auto_translate_mode = Node.AUTO_TRANSLATE_MODE_DISABLED
 	_column.add_child(label)
 	if not key.is_empty():
 		_keys[label] = key
