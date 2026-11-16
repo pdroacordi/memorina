@@ -8,5 +8,7 @@ const MASTER := &"Master"
 const MUSIC := &"Music"
 ## Every played or sung note: the Memorina, performances, calls, teachers, melodies, the guitar.
 const NOTES := &"Notes"
-## Story and world sounds that are not notes.
+## Story, body and menu sounds that are not notes.
 const SFX := &"Sfx"
+## World-object sounds (doors, pickups, splashes); sends to Sfx, its volume stays 0 dB, its low-pass is SfxMuffle's.
+const SFX_WORLD := &"SfxWorld"

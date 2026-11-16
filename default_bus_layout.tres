@@ -1,6 +1,10 @@
-[gd_resource type="AudioBusLayout" format=3]
+[gd_resource type="AudioBusLayout" format=3 uid="uid://boat5vxi21gb6"]
 
 [sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_muffle"]
+resource_name = "Muffle"
+cutoff_hz = 20000.0
+
+[sub_resource type="AudioEffectLowPassFilter" id="AudioEffectLowPassFilter_sfx_muffle"]
 resource_name = "Muffle"
 cutoff_hz = 20000.0
 
@@ -25,3 +29,11 @@ bus/3/mute = false
 bus/3/bypass_fx = false
 bus/3/volume_db = 0.0
 bus/3/send = &"Master"
+bus/4/name = &"SfxWorld"
+bus/4/solo = false
+bus/4/mute = false
+bus/4/bypass_fx = false
+bus/4/volume_db = 0.0
+bus/4/send = &"Sfx"
+bus/4/effect/0/effect = SubResource("AudioEffectLowPassFilter_sfx_muffle")
+bus/4/effect/0/enabled = false
