@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
 [ext_resource type="Resource" path="res://resources/save_facts/village_at_six_tenths.tres" id="f_at06"]
+[ext_resource type="Resource" path="res://resources/save_facts/world_restored.tres" id="f_at10"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/water_carrier.tres" id="s_speaker"]
 
 [sub_resource type="Resource" id="v_1"]
@@ -16,6 +17,7 @@ text_key = "DLG_WATER_CARRIER_06"
 script = ExtResource("f_dialogue")
 id = &"water_carrier_06"
 when = Array[ExtResource("f_fact")]([ExtResource("f_at06")])
+unless = Array[ExtResource("f_fact")]([ExtResource("f_at10")])
 lines = Array[ExtResource("f_line")]([SubResource("v_1")])
 
 [sub_resource type="Resource" id="v_3"]
@@ -28,6 +30,17 @@ script = ExtResource("f_dialogue")
 id = &"water_carrier_water"
 lines = Array[ExtResource("f_line")]([SubResource("v_3")])
 
+[sub_resource type="Resource" id="v_10"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_speaker")
+text_key = "DLG_WATER_CARRIER_10"
+
+[sub_resource type="Resource" id="v_11"]
+script = ExtResource("f_dialogue")
+id = &"water_carrier_10"
+when = Array[ExtResource("f_fact")]([ExtResource("f_at10")])
+lines = Array[ExtResource("f_line")]([SubResource("v_10")])
+
 [resource]
 script = ExtResource("f_set")
-dialogues = Array[ExtResource("f_dialogue")]([SubResource("v_2"), SubResource("v_4")])
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("v_11"), SubResource("v_2"), SubResource("v_4")])

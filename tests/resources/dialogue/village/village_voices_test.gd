@@ -199,7 +199,8 @@ func test_the_seller_stays_to_trade_all_game() -> void:
 ## STORY-07: every talk the village gives at 0.6 gives way at 1.0, as a voice's own `unless`.
 func test_no_six_tenths_talk_holds_at_one() -> void:
 	var data := _at_one()
-	for path: String in [BAKER, VILLAGE + "seller.tres", "res://resources/dialogue/story/elder.tres",
+	for path: String in [BAKER, VILLAGE + "seller.tres", VILLAGE + "taverner.tres", VILLAGE + "water_carrier.tres",
+			VILLAGE + "boy.tres", "res://resources/dialogue/story/elder.tres",
 			"res://resources/dialogue/story/daughter_bed.tres"]:
 		for dialogue: Dialogue in (load(path) as DialogueSet).dialogues:
 			if dialogue.when.any(func(fact: SaveFact) -> bool: return fact.kind == SaveFact.Kind.GUARDIANS_RESTORED_AT_LEAST):
@@ -219,6 +220,14 @@ func test_the_baker_and_the_seller_speak_at_one() -> void:
 	assert_str(String(trade.id)).is_equal("seller_trade")
 	assert_str(trade.lines[0].text_for(data)).is_equal("DLG_SELLER_10")
 	assert_str(String(trade.lines[1].cue)).is_equal("seller_shop")
+
+func test_the_taverner_the_water_carrier_and_the_boy_speak_at_one() -> void:
+	var data := _at_one()
+	for who: String in ["taverner", "water_carrier", "boy"]:
+		var talk := load(VILLAGE + who + ".tres") as DialogueSet
+		assert_str(_id(talk, data)).override_failure_message(who).is_equal(who + "_10")
+		assert_array(_keys(talk.current(data))).is_equal(["DLG_%s_10" % who.to_upper()])
+		assert_bool(talk.current(data).once).override_failure_message(who).is_false()
 
 ## What 0.6 took away comes back as at 0.8 ("Volta como em 0.8 (Recommended)", user, 2026-11-16).
 func test_the_mugs_and_the_drawings_are_as_at_eight_tenths_at_one() -> void:
