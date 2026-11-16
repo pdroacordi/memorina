@@ -79,3 +79,38 @@ func test_it_holds_mid_turn_and_commits_with_season_changed() -> void:
 	assert_int(_village.current_season()).is_equal(Enums.Season.SUMMER)
 	_year().advance(stats.season_seconds * 3.0)
 	assert_array(commits).is_equal([Enums.Season.SUMMER, Enums.Season.AUTUMN, Enums.Season.WINTER, Enums.Season.SPRING])
+
+## The credits' year (decision 4): one whole year over the run's seconds, whatever the gate, ending where it began.
+func test_a_run_passes_one_year_and_ends_on_its_start() -> void:
+	var commits: Array[int] = []
+	_year().season_changed.connect(func(season: Enums.Season) -> void: commits.append(season))
+	assert_bool(_year().can_advance()).is_false()
+	_year().run_year(4.0)
+	assert_bool(_year().is_running()).is_true()
+	for frame: int in range(0, 130):
+		_year()._physics_process(1.0 / 60.0)
+	assert_int(_year().season()).is_equal(Enums.Season.AUTUMN)
+	for frame: int in range(0, 130):
+		_year()._physics_process(1.0 / 60.0)
+	assert_bool(_year().is_running()).is_false()
+	assert_array(commits).is_equal([Enums.Season.SUMMER, Enums.Season.AUTUMN, Enums.Season.WINTER, Enums.Season.SPRING])
+	assert_int(_year().season()).is_equal(_village.season)
+	assert_float(_year().turn()).is_equal(0.0)
+
+func test_settle_ends_a_run_at_once_on_its_start() -> void:
+	var stats := _year().stats
+	_year().advance(stats.season_seconds * 0.25)
+	var start := _year().turn()
+	_year().run_year(4.0)
+	for frame: int in range(0, 90):
+		_year()._physics_process(1.0 / 60.0)
+	assert_int(_year().season()).is_not_equal(_village.season)
+	var commits: Array[int] = []
+	_year().season_changed.connect(func(season: Enums.Season) -> void: commits.append(season))
+	_year().settle()
+	assert_array(commits).is_equal([_village.season])
+	assert_int(_year().season()).is_equal(_village.season)
+	assert_float(_year().turn()).is_equal(start)
+	assert_bool(_year().is_running()).is_false()
+	_year().settle()
+	assert_array(commits).is_equal([_village.season])

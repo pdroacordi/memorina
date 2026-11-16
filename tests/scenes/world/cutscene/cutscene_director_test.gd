@@ -10,6 +10,7 @@ const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const DAUGHTER := preload("res://scenes/characters/story_actor/daughter/daughter_actor.tscn")
 const LETTERBOX := preload("res://scenes/ui/letterbox/letterbox.tscn")
 const ENGRAVING := preload("res://scenes/ui/engraving/engraving_view.tscn")
+const CREDITS := preload("res://scenes/ui/credits/credits_roll.tscn")
 const ENGRAVED := preload("res://assets/sprites/story/bearers/frost/frame_1_base.png")
 const FLOOR_Y := 288.0
 
@@ -22,6 +23,7 @@ var _ivo: Player
 var _director: CutsceneDirector
 var _letterbox: Letterbox
 var _engraving: EngravingView
+var _credits: CreditsRoll
 ## What scene_ended saw, the frame it was emitted.
 var _at_end: Dictionary = {}
 
@@ -54,10 +56,13 @@ func before_test() -> void:
 	layer.add_child(_letterbox)
 	_engraving = ENGRAVING.instantiate() as EngravingView
 	layer.add_child(_engraving)
+	_credits = CREDITS.instantiate() as CreditsRoll
+	layer.add_child(_credits)
 	_director = CutsceneDirector.new()
 	_director.ivo = _ivo
 	_director.letterbox = _letterbox
 	_director.engraving = _engraving
+	_director.credits = _credits
 	_world.add_child(_director)
 	_director.scene_began.connect(_ivo.begin_scene.unbind(1))
 	_director.scene_ended.connect(_ivo.end_scene.unbind(1))
@@ -318,3 +323,54 @@ func test_a_skip_and_an_end_hide_the_engraving() -> void:
 	await _until_ended(120)
 	assert_bool(SaveSystem.is_scene_seen(&"engraved")).is_true()
 	assert_bool(_engraving.visible).is_false()
+
+func _credits_step() -> CutsceneCredits:
+	var section := CreditsSection.new()
+	section.heading_key = &"REGION_THRESHOLD"
+	var step := CutsceneCredits.new()
+	step.sheet = CreditsSheet.new()
+	step.sheet.sections = [section]
+	step.sheet.scroll_speed = 1.0
+	return step
+
+func test_a_drop_and_a_skip_hide_the_credits() -> void:
+	_director.play(_scene([_credits_step()]), _host)
+	await get_tree().physics_frame
+	assert_bool(_credits.visible).is_true()
+	_director.interrupt()
+	assert_bool(_credits.visible).is_false()
+	_director.play(_scene([_credits_step()]), _host)
+	await get_tree().physics_frame
+	_director.request_skip()
+	await get_tree().physics_frame
+	assert_bool(_director.is_playing()).is_false()
+	assert_bool(_credits.visible).is_false()
+
+## The credits' year ends where it began however the scene ends (decision 4).
+func test_a_drop_settles_the_year() -> void:
+	var field := MemoryField.new()
+	_world.add_child(field)
+	var year := auto_free(RegionYear.new()) as RegionYear
+	year.stats = YearStats.new()
+	field.year = year
+	var step := CutsceneYear.new()
+	step.seconds = 30.0
+	_director.play(_scene([step]), _host)
+	await get_tree().physics_frame
+	assert_bool(year.is_running()).is_true()
+	_director.interrupt()
+	assert_bool(year.is_running()).is_false()
+
+## An exit hides the actor mid-scene; the staging stays covered until the end gives its place back.
+func test_an_exit_hides_the_actor_until_the_end() -> void:
+	var place := CutscenePlace.new()
+	place.actor = &"daughter"
+	place.mark = &"bed_edge"
+	var leave := CutsceneExit.new()
+	leave.actor = &"daughter"
+	_director.play(C.scene(&"exit_scene", [place, leave, C.wait(0.2)]), _host)
+	await get_tree().physics_frame
+	assert_bool(_actor.visible).is_false()
+	assert_bool(_staging.is_covered()).is_true()
+	await _until_ended(60)
+	assert_bool(_staging.is_covered()).is_false()

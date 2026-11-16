@@ -52,6 +52,7 @@
 [ext_resource type="Resource" path="res://resources/cutscene/cutscene_catalog.tres" id="51_cutscene_catalog"]
 [ext_resource type="PackedScene" path="res://scenes/ui/letterbox/letterbox.tscn" id="52_letterbox"]
 [ext_resource type="PackedScene" path="res://scenes/ui/engraving/engraving_view.tscn" id="103_engraving"]
+[ext_resource type="PackedScene" path="res://scenes/ui/credits/credits_roll.tscn" id="104_credits"]
 [ext_resource type="Script" path="res://scenes/ui/notice/notice_watcher.gd" id="53_notices"]
 [ext_resource type="Resource" path="res://resources/story/intent_catalog.tres" id="54_intents"]
 [ext_resource type="PackedScene" path="res://scenes/ui/notice/notice_toast.tscn" id="55_notice_toast"]
@@ -157,7 +158,7 @@ script = ExtResource("46_director")
 catalog = ExtResource("47_dialogues")
 listener = NodePath("../Player")
 
-[node name="CutsceneDirector" type="Node" parent="World" node_paths=PackedStringArray("ivo", "camera", "letterbox", "fade", "engraving", "dialogue")]
+[node name="CutsceneDirector" type="Node" parent="World" node_paths=PackedStringArray("ivo", "camera", "letterbox", "fade", "engraving", "credits", "dialogue")]
 script = ExtResource("50_cutscenes")
 catalog = ExtResource("51_cutscene_catalog")
 ivo = NodePath("../Player")
@@ -165,6 +166,7 @@ camera = NodePath("../Camera2D")
 letterbox = NodePath("../../CanvasLayer/Letterbox")
 fade = NodePath("../../CanvasLayer/Fade")
 engraving = NodePath("../../CanvasLayer/EngravingView")
+credits = NodePath("../../CanvasLayer/CreditsRoll")
 dialogue = NodePath("../DialogueDirector")
 
 [node name="FlashbackDirector" type="Node" parent="World" node_paths=PackedStringArray("cutscenes", "dialogue", "ivo", "letterbox")]
@@ -293,6 +295,8 @@ letterbox = NodePath("../Letterbox")
 [node name="Letterbox" parent="CanvasLayer" instance=ExtResource("52_letterbox")]
 
 [node name="EngravingView" parent="CanvasLayer" instance=ExtResource("103_engraving")]
+
+[node name="CreditsRoll" parent="CanvasLayer" instance=ExtResource("104_credits")]
 
 [node name="MemorinaHud" parent="CanvasLayer" unique_id=1302556383 instance=ExtResource("10_hud")]
 

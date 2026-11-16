@@ -15,6 +15,10 @@ var _field: MemoryField
 var _ivo: Player
 ## The room Ivo was last found in, so the search runs only when he leaves it.
 var _room: Room
+## A run (`run_year`): scaled seconds left, advance per scaled second, and where it began; `_run_left` 0 when none.
+var _run_left: float = 0.0
+var _run_rate: float = 0.0
+var _run_from: float = 0.0
 
 
 func _ready() -> void:
@@ -24,7 +28,9 @@ func _ready() -> void:
 	_field = MemoryField.find_in(self)
 
 func _physics_process(delta: float) -> void:
-	if can_advance():
+	if is_running():
+		_tick_run(delta)
+	elif can_advance():
 		advance(delta)
 
 func season() -> Enums.Season:
@@ -50,6 +56,22 @@ func advance(seconds: float) -> void:
 			before = now
 			season_changed.emit(now)
 
+## Passes one whole year over `seconds` (scaled), whatever the gate, ending on the season it began on (the credits).
+func run_year(seconds: float) -> void:
+	_run_from = _elapsed
+	_run_left = maxf(seconds, 0.0)
+	_run_rate = stats.cycle_seconds() / seconds if seconds > 0.0 else 0.0
+
+## Ends a run at once where it began; nothing when none runs.
+func settle() -> void:
+	if not is_running():
+		return
+	_run_left = 0.0
+	_jump_to(_run_from)
+
+func is_running() -> bool:
+	return _run_left > 0.0
+
 ## The gate, Ivo outdoors in this region and out of any story, and no forgetting source in view.
 func can_advance() -> bool:
 	if _field == null or _field.year != self:
@@ -71,6 +93,21 @@ static func forgetting_in_view(field: MemoryField, view: Rect2) -> bool:
 		if source.strength < 0.0:
 			return true
 	return false
+
+func _tick_run(delta: float) -> void:
+	var step := minf(delta, _run_left)
+	_run_left -= step
+	if _run_left > 0.0:
+		advance(step * _run_rate)
+	else:
+		_jump_to(_run_from)
+
+## Sets the elapsed time, emitting `season_changed` if the season differs.
+func _jump_to(elapsed: float) -> void:
+	var before := season()
+	_elapsed = elapsed
+	if season() != before:
+		season_changed.emit(season())
 
 func _room_of_ivo() -> Room:
 	var feet := _ivo.global_position

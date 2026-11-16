@@ -6,7 +6,7 @@ status: active
 tags: [cutscene, story, staging, save-fact, actor, camera, letterbox, dialogue, beat, skip, story-15]
 related: [architecture/cutscenes-are-data-played-between-two-rest-states, bugs/a-cutscene-trigger-in-a-first-visited-room-never-arms, playtests/2026-10-16-story15-cutscenes, systems/story, systems/dialogue, systems/animation, systems/songs-and-the-memorina, systems/guardians, systems/input, systems/life-benches-death, systems/props, systems/screens, gotchas/a-killed-tween-never-emits-finished, gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/an-explicit-process-mode-escapes-a-disabled-ancestor, gotchas/gdunit-await-millis-never-resumes-while-the-tree-is-paused, bugs/the-canvas-passes-draw-one-frame-behind-a-camera-zoom-tween]
 created: 2026-10-16
-updated: 2026-11-13
+updated: 2026-11-16
 source_files:
   - resources/cutscene/
   - resources/cutscene/story/daughter_to_bed.tres
@@ -24,6 +24,7 @@ source_files:
   - resources/story/flashbacks/
   - scenes/characters/components/corruption/corruption_edge.gd
   - scenes/ui/letterbox/
+  - scenes/ui/credits/
   - scenes/ui/lesson_cinematic/lesson_cinematic.gd
   - scenes/ui/pause_menu/pause_menu.gd
   - scenes/ui/screens/screens.gd
@@ -236,6 +237,17 @@ Draft `camada_pessoal` §2, "5. A canção de ninar"; data `resources/story/flas
 - **Her edge**: a `CorruptionEdge` with `creature_pass` false and `rest_fray` 0, `frame_size` (64, 64) (the lullaby's 96 px frame is never frayed: only flashback 4 frays her). Plain art at rest; the edge material only while `CutsceneFray` agitates it.
 - **Her figure** `scenes/characters/story_actor/alba/alba_figure.tscn`: a `StagedStrip` whose `SpriteFrames` hold every actor clip with the same frames, pace and loop (`centered`, offset (0, -30), so a 64 and a 96 px frame both stand on the node). A staging child instances it, sets `loop` to its own snake name and `flip_h` for her facing; the actor entering on it is a cut.
 - `alba_actor_test`: every clip whole from a strip, rests loop and one-shots settle on loops, the figure matches every clip, entering a flipped figure faces west in its rest clip, a turn settles, the edge material only while agitated.
+
+## Added for the epilogue (STORY-07 step 8, 2026-11-16)
+
+The vocabulary of `architecture/story-07-epilogue` ("The credits", decision 4); each step has a `cutscene_steps_test` case.
+
+- **`CutsceneExit`** (`actor`): `context.exit(id)` → `CutsceneCast.exit`: an entered actor leaves at once (hidden, process off deferred) while its staging stays covered; the scene's end uncovers it as for every actor (`cutscene_director_test.test_an_exit_hides_the_actor_until_the_end`). A cut: the frame should be off the actor.
+- **`CreditsRoll`** (`scenes/ui/credits/`, `CanvasLayer/CreditsRoll` after `EngravingView`, before `Fade`; INHERIT; group `credits_rolls`) is a fourth director service, `CutsceneDirector.credits`: `roll(sheet)`, `land()`, `hide_now()`, `is_done()`, `duration()`. One 320x180 `Art` root at scale 2 (clipped); a `Column` VBox 200 art px wide at x 60, its top starting at the view's bottom edge. Rows: each section's heading (`memorina_title_outline_font_size_20`, BannerTitle's font), each entry's role (`memorina_text_font_size_8`, dim cream) and names (cream), all with the notice outline; the logo (`memorina_logo.png`) last. Its clock is its own `_process` (pausable, scaled), so a hold stops it. Keys are set through `tr()` and again on `NOTIFICATION_TRANSLATION_CHANGED`; names are never translated. `WorldCutsceneContext.restore` calls `hide_now()`, so an end, a skip and a drop all hide it (`credits_roll_test`, `cutscene_director_test`).
+- **`CreditsSheet`** (`resources/story/credits/`): `sections: Array[CreditsSection]` (`heading_key`, `entries: Array[CreditsEntry]`: `role_key`, `names`), `scroll_speed` (art px/s), `hold_end` (s the logo holds).
+- **`CreditsMath`** (pure): `travel` (the column rolls until its last row stands centred), `offset` (whole art px, held at the travel), `duration` (travel / speed + hold), `edge_alpha` (rows fade over 24 art px at the top and bottom edges; `credits_math_test`).
+- **`CutsceneCredits`** (`sheet`; subject `credits`): rolls it and waits on `is_done()`, not a fixed time, because autowrapped rows settle their height over a sort or two (`gotchas/autowrapped-rows-settle-over-several-sorts`); `land` puts the logo centred with its hold over.
+- **`CutsceneYear`** (`seconds`; subject `year`): `context.run_year(seconds)` → the `MemoryField.year` (the village's `RegionYear`) runs one whole year over `seconds`, whatever its gate, and ends on the season it began on; `land` and `restore` call `settle()`, which jumps back there at once (`region_year_test`, `cutscene_director_test.test_a_drop_settles_the_year`).
 
 ## User decisions (2026-10-16), in their words
 

@@ -219,3 +219,35 @@ func test_an_engraving_clear_dithers_out_and_lands_bare_paper() -> void:
 	step.land(_context)
 	assert_array(_calls()).is_equal(["clear_engraving:1.0", "clear_engraving:0.0"])
 	assert_array(step.subjects()).is_equal([CutsceneEngraving.SUBJECT])
+
+func test_an_exit_takes_the_actor_out_at_once() -> void:
+	var step := CutsceneExit.new()
+	step.actor = &"alba"
+	assert_bool(step.begin(_context).tick(0.0)).is_true()
+	step.land(_context)
+	assert_array(_calls()).is_equal(["exit:alba", "exit:alba"])
+	assert_array(step.subjects()).is_equal([&"alba"])
+
+func test_the_credits_roll_until_the_roll_says_done_and_land_its_end() -> void:
+	var step := CutsceneCredits.new()
+	step.sheet = CreditsSheet.new()
+	step.sheet.sections = [CreditsSection.new(), CreditsSection.new()]
+	var task := step.begin(_context)
+	assert_bool(task.tick(100.0)).is_false()
+	_context.credits_over = true
+	assert_bool(task.tick(0.0)).is_true()
+	step.land(_context)
+	assert_array(_calls()).is_equal(["credits:2", "land_credits"])
+	assert_array(step.subjects()).is_equal([CutsceneCredits.SUBJECT])
+	assert_array(step.names()).is_empty()
+
+func test_a_year_runs_for_its_seconds_and_lands_settled() -> void:
+	var step := CutsceneYear.new()
+	step.seconds = 40.0
+	var task := step.begin(_context)
+	assert_bool(task.tick(39.0)).is_false()
+	assert_bool(task.tick(1.5)).is_true()
+	step.land(_context)
+	assert_array(_calls()).is_equal(["year:40.0", "settle_year"])
+	assert_array(step.subjects()).is_equal([CutsceneYear.SUBJECT])
+	assert_array(step.names()).is_empty()

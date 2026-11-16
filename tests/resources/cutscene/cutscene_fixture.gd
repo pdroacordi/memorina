@@ -70,6 +70,8 @@ class Recorder:
 	var points: Dictionary[StringName, Vector2] = {}
 	## What music_position answers; negative is no music.
 	var music_at: float = -1.0
+	## What credits_done answers.
+	var credits_over: bool = false
 
 	func point_of(id: StringName) -> Vector2:
 		return points.get(id, Vector2.ZERO)
@@ -149,3 +151,21 @@ class Recorder:
 
 	func clear_engraving(seconds: float) -> void:
 		calls.append("clear_engraving:%.1f" % seconds)
+
+	func exit(id: StringName) -> void:
+		calls.append("exit:%s" % id)
+
+	func roll_credits(sheet: CreditsSheet) -> void:
+		calls.append("credits:%d" % (sheet.sections.size() if sheet != null else -1))
+
+	func credits_done() -> bool:
+		return credits_over
+
+	func land_credits() -> void:
+		calls.append("land_credits")
+
+	func run_year(seconds: float) -> void:
+		calls.append("year:%.1f" % seconds)
+
+	func settle_year() -> void:
+		calls.append("settle_year")

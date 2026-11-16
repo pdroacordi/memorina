@@ -73,6 +73,12 @@ func point_of(id: StringName) -> Vector2:
 	push_error("Cutscene: no actor, mark, visual or bloom '%s' in %s" % [id, _scope.name if _scope != null else "nothing"])
 	return Vector2.ZERO
 
+## The entered actor `id` leaves at once; its staging stays covered until `release_all()`.
+func exit(id: StringName) -> void:
+	var found := find_actor(id)
+	if found != null and _entered.has(found) and found.is_in_scene():
+		found.leave()
+
 func entered() -> Array[StoryActor]:
 	return _entered
 

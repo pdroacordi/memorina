@@ -25,6 +25,8 @@ var _bubbles: Array[EmoteBubble] = []
 var _visuals: Array[CutsceneVisual] = []
 var _blooms: Array[MemoryBloom] = []
 var _frayed: Array[StoryActor] = []
+## The year a CutsceneYear ran; restore settles it.
+var _year: RegionYear
 var _rig_used: bool = false
 var _driving_ivo: bool = false
 var _posed: bool = false
@@ -252,6 +254,9 @@ func restore(clear_fade: bool, cut: bool = false) -> void:
 		_director.ivo_posed.emit(DialogueBeat.Pose.NONE)
 	if _director.engraving != null:
 		_director.engraving.hide_now()
+	if _director.credits != null:
+		_director.credits.hide_now()
+	settle_year()
 	if clear_fade and _director.fade != null and _director.fade.is_black():
 		_director.fade.to_clear()
 
@@ -266,6 +271,31 @@ func land_engraving() -> void:
 func clear_engraving(seconds: float) -> void:
 	if _director.engraving != null:
 		_director.engraving.clear(seconds)
+
+func exit(id: StringName) -> void:
+	cast.exit(id)
+
+func roll_credits(sheet: CreditsSheet) -> void:
+	if _director.credits != null:
+		_director.credits.roll(sheet)
+
+func credits_done() -> bool:
+	return _director.credits == null or _director.credits.is_done()
+
+func land_credits() -> void:
+	if _director.credits != null:
+		_director.credits.land()
+
+func run_year(seconds: float) -> void:
+	var field := MemoryField.find_in(_director)
+	_year = field.year if field != null else null
+	if _year != null:
+		_year.run_year(seconds)
+
+func settle_year() -> void:
+	if _year != null and is_instance_valid(_year):
+		_year.settle()
+	_year = null
 
 func _body(id: StringName) -> Character:
 	if id == CutsceneStep.IVO:

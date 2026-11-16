@@ -144,3 +144,4 @@ res://scenes/ui/teacher_balloon/teacher_balloon.tscn
 res://scenes/ui/bark_balloon/bark_balloon.tscn
 res://scenes/ui/settings/settings_screen.tscn
 res://scenes/ui/engraving/engraving_view.tscn
+res://scenes/ui/credits/credits_roll.tscn

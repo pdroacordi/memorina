@@ -96,3 +96,27 @@ func land_engraving() -> void:
 ## Dithers the engraved still out to bare paper over `seconds`.
 func clear_engraving(_seconds: float) -> void:
 	pass
+
+## The actor leaves the scene at once.
+func exit(_id: StringName) -> void:
+	pass
+
+## Starts rolling `sheet` on the CreditsRoll.
+func roll_credits(_sheet: CreditsSheet) -> void:
+	pass
+
+## Whether the roll has ended on its held logo; true with no roll.
+func credits_done() -> bool:
+	return true
+
+## Puts the roll at its end at once.
+func land_credits() -> void:
+	pass
+
+## Passes the region's year once round over `seconds` (scaled).
+func run_year(_seconds: float) -> void:
+	pass
+
+## Ends a running year at once on the season it began on.
+func settle_year() -> void:
+	pass

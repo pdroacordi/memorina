@@ -1,0 +1,38 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/credits/credits_roll.gd" id="1_roll"]
+[ext_resource type="FontFile" uid="uid://dekvpc24v4eyc" path="res://assets/fonts/memorina_title_outline_font_size_20.ttf" id="2_heading"]
+[ext_resource type="FontFile" uid="uid://dsutvchk6baqt" path="res://assets/fonts/memorina_text_font_size_8.ttf" id="3_text"]
+[ext_resource type="Texture2D" path="res://assets/sprites/hud/title/memorina_logo.png" id="4_logo"]
+
+[node name="CreditsRoll" type="Control"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_roll")
+heading_font = ExtResource("2_heading")
+text_font = ExtResource("3_text")
+logo = ExtResource("4_logo")
+
+[node name="Art" type="Control" parent="."]
+clip_contents = true
+layout_mode = 0
+offset_right = 320.0
+offset_bottom = 180.0
+scale = Vector2(2, 2)
+mouse_filter = 2
+
+[node name="Column" type="VBoxContainer" parent="Art"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 0
+offset_left = 60.0
+offset_top = 180.0
+offset_right = 260.0
+offset_bottom = 180.0
+mouse_filter = 2
+theme_override_constants/separation = 1
