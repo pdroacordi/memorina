@@ -4,6 +4,7 @@
 [ext_resource type="Resource" path="res://resources/characters/creatures/crab/crab_locomotion.tres" id="2_loco"]
 [ext_resource type="Resource" path="res://resources/characters/creatures/crab/crab_snap.tres" id="3_move"]
 [ext_resource type="Script" path="res://resources/characters/enemies/enemy_move.gd" id="4_move"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/combat/creature_sounds.tres" id="95_sounds"]
 
 [resource]
 script = ExtResource("1_stats")
@@ -19,3 +20,4 @@ stop_distance = 28.0
 front_guard = true
 locomotion = ExtResource("2_loco")
 moves = Array[ExtResource("4_move")]([ExtResource("3_move")])
+sounds = ExtResource("95_sounds")

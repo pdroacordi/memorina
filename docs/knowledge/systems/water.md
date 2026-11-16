@@ -37,6 +37,7 @@ Design 03 §6: water is computed, not drawn. Everything lives in `scenes/world/e
 - **`RainBasin`** (glue on a `FreezableWater`, `rain_basin.tscn`, or on a pool, `rising_pool.tscn`): rests at its rest level (dry for a lone `r`) until a RAIN pulse covers it; it rises while lit and sinks back to rest when the last pulse leaves, at the memory under it, and under ice it never rises but keeps draining: Chuva then Congelar is ice where there was no water, and the water sinks under it while the thaw comes from the origin - two clocks (design 02 §8.4, Combinado 1). A `Floater` frozen into the ice stays where the ice holds it. It sets its rest level deferred, after a `FreezableWater` (when there is one) has sized its receiver from the full water. A `Floater` (room map `O`, the fallen log) lies where placed until water reaches it, then rides `surface_y() + draft`, a one-way platform on Props: the dry basin's log carries Ivo up to its passage. Water a shell holds back is not under it.
 
 - **Wading** (SND-01): `WaterVolume.wade` (true only in `water_shallow.tscn`) tells a body it holds through `enter_wading` / `exit_wading`, as `SoftLanding` does; Ivo's footsteps then sound as SHALLOW_WATER (`systems/sound-effects`).
+- **Splash sound** (SND-01): `WaterBody.splash` emits `surface_splashed(point, speed)` after its dry and roofed return; `SplashSounds` in `water_pool.tscn` and `water_shallow.tscn` plays it, small or large by speed (`systems/sound-effects`).
 
 ## Current limits (from the old "Known gaps", 2026-10-02)
 

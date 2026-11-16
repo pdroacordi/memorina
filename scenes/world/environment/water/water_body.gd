@@ -4,6 +4,9 @@ class_name WaterBody extends Node2D
 ## Coordinates water simulation, collision, and rendering for pools and lakes with movable levels.
 ## Simulation follows pausable physics time; reflection reads the season mask independently.
 
+## A fall broke the surface at the global `point`, `speed` px/s down; not on dry or roofed columns.
+signal surface_splashed(point: Vector2, speed: float)
+
 ## Render rows above the rest line for wave crests.
 const HEADROOM := 12
 ## Physics frames between memory-field samples.
@@ -281,6 +284,7 @@ func splash(world_x: float, speed: float) -> void:
 	var centre := column_of(world_x)
 	if _dry.size() > centre and _dry[centre] == 1 or _ceilings[centre] > 0.0:
 		return
+	surface_splashed.emit(Vector2(world_x, surface_y(world_x)), speed)
 	var width := float(profile.splash_half_width)
 	for k in range(-3 * profile.splash_half_width, 3 * profile.splash_half_width + 1):
 		var x := float(k) / width

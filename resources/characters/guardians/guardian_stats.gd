@@ -12,6 +12,8 @@ extends Resource
 @export var music: MusicCue
 ## The final battle's tuning; set only on the mentor, whose scene then has a Finale child (GRD-06).
 @export var finale: FinaleStats
+## Struck, played by BodySounds; every stats .tres has one (body_sound_set_test).
+@export var sounds: BodySoundSet
 
 @export_group("Lucidity")
 ## Hits in the pressure phase before lucidity opens.

@@ -13,6 +13,8 @@ signal call_note_sung(index: int)
 signal call_ended
 ## The fight's phase moved; re-emitted from GuardianFight for listeners outside the guardian (GuardianMusic).
 signal phase_changed(from: GuardianFight.Phase, to: GuardianFight.Phase)
+## A hit landed in the pressure phase.
+signal struck
 
 ## Guardians group used for encounter queries.
 const GROUP := &"guardians"
@@ -106,6 +108,7 @@ var _bowing: bool = false
 @onready var _pulse_emitter     : PulseEmitter = $PulseEmitter
 @onready var _arena             : Arena = get_node_or_null(arena_path) as Arena
 @onready var _sight             : EnemySight = $EnemySight
+@onready var _body_sounds       : BodySounds = $BodySounds
 ## A concrete view of Character's generic resolver, for the duration assert.
 @onready var _guardian_resolver : GuardianAnimationResolver = $AnimationResolver
 @onready var _animation_tree    : AnimationTree = %AnimationTree
@@ -137,6 +140,8 @@ func _ready() -> void:
 	_ai.pace_time = stats.pace_time
 	_ai.pace_speed = stats.pace_speed
 	_ai.step_out_speed = stats.step_out_speed
+	_body_sounds.sounds = stats.sounds
+	struck.connect(_body_sounds.on_struck)
 	_ai.attack_telegraphed.connect(_on_attack_telegraphed)
 	_ai.attack_started.connect(_on_attack_started)
 	_ai.attack_finished.connect(_on_attack_finished)
@@ -336,6 +341,7 @@ func _on_hit_received(_damage: int, _knockback: Vector2, _source: Node2D) -> voi
 		return
 	_just_hit = true
 	_flash(hit_flash_color)
+	struck.emit()
 	_flinch_from(_source)
 	if _fight.register_hit():
 		_open_lucidity()

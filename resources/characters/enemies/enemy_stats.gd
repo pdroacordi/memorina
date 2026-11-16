@@ -32,6 +32,10 @@ extends Resource
 ## In priority order: the first whose reach holds the target is thrown.
 @export var moves: Array[EnemyMove] = []
 
+@export_group("Sound")
+## Struck, blocked and death, played by BodySounds; every stats .tres has one (body_sound_set_test).
+@export var sounds: BodySoundSet
+
 @export_group("Wander")
 ## Walking and standing phases of a wander, s.
 @export var min_wander_duration: float = 1.0

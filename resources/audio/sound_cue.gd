@@ -20,3 +20,16 @@ const MAX_VOICES := 4
 
 func bus() -> StringName:
 	return AudioBuses.SFX_WORLD if world else AudioBuses.SFX
+
+## Seconds of the longest variant at `pitch_scale`; the stream's random pitch is not counted.
+func length() -> float:
+	var longest := 0.0
+	var randomizer := stream as AudioStreamRandomizer
+	if randomizer != null:
+		for i: int in randomizer.streams_count:
+			var variant := randomizer.get_stream(i)
+			if variant != null:
+				longest = maxf(longest, variant.get_length())
+	elif stream != null:
+		longest = stream.get_length()
+	return longest / pitch_scale

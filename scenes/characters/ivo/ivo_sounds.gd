@@ -65,3 +65,15 @@ func on_died() -> void:
 
 func on_sat_down(_seat: Seat) -> void:
 	_emitter.play(sounds.rest)
+
+func on_door_entered(door: Door) -> void:
+	_emitter.play(sounds.door_open.get(door.look) as SoundCue)
+
+func on_arrived_through(door: Door) -> void:
+	_emitter.play(sounds.door_close.get(door.look) as SoundCue)
+
+func on_door_knocked(_door: Door) -> void:
+	_emitter.play(sounds.door_knock)
+
+func on_took(what: Player.Taken) -> void:
+	_emitter.play(sounds.taken.get(what) as SoundCue)

@@ -86,6 +86,12 @@ signal death_shown
 signal sat_down(seat: Seat)
 ## Ivo took an open door; the composition root carries the travel out.
 signal door_entered(door: Door)
+## Up at a sealed door: it knocked.
+signal door_knocked(door: Door)
+## Game put him at `door` after a trip through its partner.
+signal arrived_through(door: Door)
+## Up took something lying in reach.
+signal took(what: Taken)
 ## Up at a Talkable, or its auto start; the dialogue director runs the talk.
 signal talk_started(talkable: Talkable)
 ## Taking an item started what he says about it (`ItemPickup.talk`), spoken from `at`.
@@ -122,6 +128,8 @@ const STROLL_PACE := 0.75
 const GROUND_POSES: Array[int] = [DialogueBeat.Pose.SEATED, DialogueBeat.Pose.KNEEL, DialogueBeat.Pose.SIT_GROUND]
 
 enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
+## What Up took: an item, a letter, a songbook, a season seed.
+enum Taken { ITEM, LETTER, SONGBOOK, SEED }
 
 
 @onready var _input           : PlayerInput = $PlayerInput
@@ -723,6 +731,7 @@ func _try_door(on_floor: bool) -> bool:
 		door_entered.emit(door)
 	else:
 		door.knock()
+		door_knocked.emit(door)
 	return true
 
 # With no door in reach, Up talks to a Talkable in reach, under the door's gates; a
@@ -769,6 +778,7 @@ func _try_pickup(on_floor: bool) -> bool:
 		return false
 	_drop_buffers()
 	pickup.take()
+	took.emit(Taken.ITEM)
 	# The take itself starts the line, so no zone can miss it (bugs/the-sword-line-is-missed-when-ivo-takes-it-from-the-west-edge-of-its-reach).
 	var said := pickup.talk_after_take()
 	if said != null:
@@ -796,6 +806,7 @@ func _try_found(on_floor: bool) -> bool:
 			return false
 	_drop_buffers()
 	found.take()
+	took.emit(Taken.LETTER if book == null else Taken.SONGBOOK)
 	return true
 
 # After a found piece, Up takes a season seed (systems/seeds-and-the-seller), the letter path: same buffer and gates,
@@ -811,6 +822,7 @@ func _try_cache(on_floor: bool) -> bool:
 		return false
 	_drop_buffers()
 	cache.take()
+	took.emit(Taken.SEED)
 	return true
 
 # One gate list for doors, talks and pickups, so a moment refused for one is refused for all.
@@ -1586,6 +1598,7 @@ func is_talking() -> bool:
 ## `arrive_facing`, with no press of the trip still pending.
 func arrive_at(door: Door) -> void:
 	arrive(door.global_position, door.arrive_facing)
+	arrived_through.emit(door)
 
 ## Puts his feet at `feet` facing `side` after a trip (a door, a flashback's travel), with no press of it pending.
 func arrive(feet: Vector2, side: int) -> void:

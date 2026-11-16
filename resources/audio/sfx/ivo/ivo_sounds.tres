@@ -21,6 +21,16 @@
 [ext_resource type="Resource" path="res://resources/audio/sfx/ivo/land_water.tres" id="19_b0v1m"]
 [ext_resource type="Resource" path="res://resources/audio/sfx/ivo/step_water.tres" id="20_m8qlb"]
 [ext_resource type="Resource" path="res://resources/audio/sfx/ivo/swing.tres" id="21_g5ro4"]
+[ext_resource type="Script" path="res://resources/audio/sound_cue.gd" id="40_soundcue"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/door_open.tres" id="30_door_open"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/door_close.tres" id="31_door_close"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/door_open_alt.tres" id="32_door_open_alt"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/door_close_alt.tres" id="33_door_close_alt"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/door_knock.tres" id="34_door_knock"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/pickup.tres" id="35_pickup"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/letter.tres" id="36_letter"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/songbook.tres" id="37_songbook"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/seeds.tres" id="38_seeds"]
 
 [sub_resource type="Resource" id="Resource_l8xpo"]
 script = ExtResource("10_iufqg")
@@ -65,3 +75,26 @@ swing = ExtResource("21_g5ro4")
 hurt = ExtResource("5_0fa2g")
 death = ExtResource("3_yr864")
 rest = ExtResource("8_q1xis")
+door_open = Dictionary[String, ExtResource("40_soundcue")]({
+"breach": null,
+"door": ExtResource("30_door_open"),
+"hatch_down": ExtResource("32_door_open_alt"),
+"hatch_up": ExtResource("32_door_open_alt"),
+"passage": null,
+"stairwell": null
+})
+door_close = Dictionary[String, ExtResource("40_soundcue")]({
+"breach": null,
+"door": ExtResource("31_door_close"),
+"hatch_down": ExtResource("33_door_close_alt"),
+"hatch_up": ExtResource("33_door_close_alt"),
+"passage": null,
+"stairwell": null
+})
+door_knock = ExtResource("34_door_knock")
+taken = Dictionary[int, ExtResource("40_soundcue")]({
+0: ExtResource("35_pickup"),
+1: ExtResource("36_letter"),
+2: ExtResource("37_songbook"),
+3: ExtResource("38_seeds")
+})

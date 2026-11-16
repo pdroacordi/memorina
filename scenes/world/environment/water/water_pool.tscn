@@ -8,6 +8,7 @@
 [ext_resource type="Resource" path="res://resources/world/water/still_pool_profile.tres" id="6_profile"]
 [ext_resource type="Resource" path="res://resources/world/water/pool_look.tres" id="7_look"]
 [ext_resource type="Script" path="res://scenes/combat/hazard/hazard_zone.gd" id="8_hazard"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/water/splash_sounds.tscn" id="20_splash"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_surface"]
 shader = ExtResource("3_surface")
@@ -51,4 +52,7 @@ script = ExtResource("8_hazard")
 
 [node name="Notifier" type="VisibleOnScreenNotifier2D" parent="."]
 
+[node name="SplashSounds" parent="." instance=ExtResource("20_splash")]
+
 [connection signal="splashed" from="Volume" to="." method="splash"]
+[connection signal="surface_splashed" from="." to="SplashSounds" method="on_surface_splashed"]

@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/world/environment/water/splash_sounds.gd" id="1_splash"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/splash_sounds.tres" id="2_sounds"]
+[ext_resource type="Script" path="res://scenes/audio/sfx_emitter.gd" id="3_emitter"]
+
+[node name="SplashSounds" type="Node2D"]
+script = ExtResource("1_splash")
+sounds = ExtResource("2_sounds")
+
+[node name="SfxEmitter" type="Node2D" parent="."]
+script = ExtResource("3_emitter")
+positional = true

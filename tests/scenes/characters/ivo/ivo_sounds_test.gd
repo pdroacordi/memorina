@@ -2,7 +2,7 @@ class_name IvoSoundsTest extends GdUnitTestSuite
 
 ## Ivo's sounds: a killing hit plays death, not hurt; a voice keeps sounding, and a new one starts, while Game holds
 ## him DISABLED for a fade; a tree pause starts none; a soft landing is levelled by speed; the floor and shallow
-## water name the surface (systems/sound-effects).
+## water name the surface; every door look has its open and close, and every take its cue (systems/sound-effects).
 
 const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const SOUNDS := preload("res://resources/audio/sfx/ivo/ivo_sounds.tres")
@@ -144,3 +144,44 @@ func test_a_run_sounds_steps_on_its_floor() -> void:
 	assert_str(String(_ivo.animation_state())).is_equal(String(PlayerAnimationResolver.RUN))
 	# One second of a 0.67 s loop with two contacts, plus the start: 2 to 4 steps, never one per frame.
 	assert_int(_played.count(step)).is_between(2, 4)
+
+## A new Door look must be given a sound or an explicit silence (null) on both the way in and the way out.
+func test_every_door_look_has_an_open_and_a_close_entry() -> void:
+	for table: Dictionary in [SOUNDS.door_open, SOUNDS.door_close]:
+		assert_array(table.keys()).contains_exactly_in_any_order(Door.LOOKS.keys())
+		for look: String in table:
+			assert_bool(table[look] == null).override_failure_message("%s is half silent" % look) \
+					.is_equal(SOUNDS.door_open[look] == null)
+
+func test_a_door_plays_its_looks_open_and_close() -> void:
+	await _land()
+	_played.clear()
+	var door := auto_free(Door.new()) as Door
+	door.look = "door"
+	_ivo.door_entered.emit(door)
+	_ivo.arrived_through.emit(door)
+	assert_array(_played).contains_exactly([SOUNDS.door_open["door"], SOUNDS.door_close["door"]])
+
+func test_a_silent_look_plays_nothing() -> void:
+	await _land()
+	_played.clear()
+	var door := auto_free(Door.new()) as Door
+	door.look = "passage"
+	_ivo.door_entered.emit(door)
+	_ivo.arrived_through.emit(door)
+	assert_array(_played).is_empty()
+
+func test_a_knock_plays_the_knock() -> void:
+	await _land()
+	_played.clear()
+	_ivo.door_knocked.emit(auto_free(Door.new()) as Door)
+	assert_array(_played).contains_exactly([SOUNDS.door_knock])
+
+func test_everything_taken_has_its_cue() -> void:
+	await _land()
+	for what: int in Player.Taken.values():
+		var cue := SOUNDS.taken.get(what) as SoundCue
+		assert_object(cue).override_failure_message("%s has no cue" % Player.Taken.keys()[what]).is_not_null()
+		assert_bool(cue.world).is_true()
+		_ivo.took.emit(what)
+		assert_array(_played).contains([cue])

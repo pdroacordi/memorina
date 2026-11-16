@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="BodySoundSet" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/body_sound_set.gd" id="1_set"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/combat/guardian_struck.tres" id="2_struck"]
+
+[resource]
+script = ExtResource("1_set")
+struck = ExtResource("2_struck")

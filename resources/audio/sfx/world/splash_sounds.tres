@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="SplashSoundSet" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/splash_sound_set.gd" id="1_set"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/splash_small.tres" id="2_small"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/world/splash_large.tres" id="3_large"]
+
+[resource]
+script = ExtResource("1_set")
+small = ExtResource("2_small")
+large = ExtResource("3_large")

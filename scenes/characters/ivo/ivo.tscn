@@ -3012,5 +3012,9 @@ script = ExtResource("94_sfxemit")
 [connection signal="hurt" from="." to="IvoSounds" method="on_hurt"]
 [connection signal="died" from="." to="IvoSounds" method="on_died"]
 [connection signal="sat_down" from="." to="IvoSounds" method="on_sat_down"]
+[connection signal="door_entered" from="." to="IvoSounds" method="on_door_entered"]
+[connection signal="arrived_through" from="." to="IvoSounds" method="on_arrived_through"]
+[connection signal="door_knocked" from="." to="IvoSounds" method="on_door_knocked"]
+[connection signal="took" from="." to="IvoSounds" method="on_took"]
 
 [editable path="Hurtbox"]

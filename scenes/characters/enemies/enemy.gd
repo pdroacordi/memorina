@@ -6,6 +6,8 @@ extends Character
 signal woken
 ## A hit turned away by its front guard: no damage, a white flash.
 signal blocked
+## A hit landed on it; emitted after the wound, so a killing hit emits `died` first.
+signal struck
 
 ## Over-bright modulate: the shader multiplies the texel by it, so a blocked hit flashes the body white.
 const BLOCK_FLASH := Color(4.0, 4.0, 4.0)
@@ -32,6 +34,7 @@ var _move_hitboxes: Dictionary[StringName, Hitbox] = {}
 @onready var _flight: FlightComponent = get_node_or_null(^"Flight") as FlightComponent
 @onready var _guard: Hitbox = get_node_or_null(^"Guard") as Hitbox
 @onready var _ledge_probe: RayCast2D = get_node_or_null(^"LedgeProbe") as RayCast2D
+@onready var _sounds: BodySounds = $BodySounds
 
 
 func _ready() -> void:
@@ -137,6 +140,7 @@ func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
 	wake()
 	var armoured := is_armoured()
 	_wound(damage)
+	struck.emit()
 	if not armoured:
 		apply_knockback(knockback)
 	_ai.on_hurt()
@@ -153,6 +157,10 @@ func _apply_stats() -> void:
 	if _flight != null:
 		_flight.stats = stats.locomotion
 	_ai.stats = stats
+	_sounds.sounds = stats.sounds
+	struck.connect(_sounds.on_struck)
+	blocked.connect(_sounds.on_blocked)
+	died.connect(_sounds.on_died)
 	for move: EnemyMove in stats.moves:
 		_move_hitboxes[move.hitbox] = get_node(NodePath(String(move.hitbox))) as Hitbox
 	for hitbox: Hitbox in _move_hitboxes.values():

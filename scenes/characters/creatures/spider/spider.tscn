@@ -20,6 +20,7 @@
 [ext_resource type="Resource" path="res://resources/characters/creatures/spider/spider_stats.tres" id="14_stats"]
 [ext_resource type="Script" path="res://scenes/characters/creatures/spider/silk_thread.gd" id="15_thread"]
 [ext_resource type="Shader" path="res://scenes/characters/creatures/spider/silk_thread.gdshader" id="16_thread_shader"]
+[ext_resource type="PackedScene" path="res://scenes/characters/components/body_sounds.tscn" id="90_bodysounds"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_edge"]
 resource_local_to_scene = true
@@ -449,6 +450,8 @@ script = ExtResource("15_thread")
 ai = NodePath("../AI")
 spider = NodePath("..")
 attach = Vector2(0, -11)
+
+[node name="BodySounds" parent="." instance=ExtResource("90_bodysounds")]
 
 [connection signal="area_entered" from="ContactHitbox" to="ContactHitbox" method="_on_area_entered"]
 [connection signal="area_entered" from="BiteHitbox" to="BiteHitbox" method="_on_area_entered"]

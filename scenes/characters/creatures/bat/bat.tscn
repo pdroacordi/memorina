@@ -19,6 +19,7 @@
 [ext_resource type="Script" path="res://scenes/characters/enemies/ai/ceiling_ai.gd" id="12_ai"]
 [ext_resource type="Script" path="res://scenes/characters/components/corruption/corruption_edge.gd" id="13_edge"]
 [ext_resource type="Resource" path="res://resources/characters/creatures/bat/bat_stats.tres" id="14_stats"]
+[ext_resource type="PackedScene" path="res://scenes/characters/components/body_sounds.tscn" id="90_bodysounds"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_edge"]
 resource_local_to_scene = true
@@ -465,6 +466,8 @@ sprite = NodePath("../Sprite2D")
 health = NodePath("../Health")
 drift = Vector2(0, 1)
 frame_size = Vector2(64, 64)
+
+[node name="BodySounds" parent="." instance=ExtResource("90_bodysounds")]
 
 [connection signal="area_entered" from="ContactHitbox" to="ContactHitbox" method="_on_area_entered"]
 [connection signal="area_entered" from="SwoopHitbox" to="SwoopHitbox" method="_on_area_entered"]

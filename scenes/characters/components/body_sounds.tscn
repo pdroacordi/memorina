@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/characters/components/body_sounds.gd" id="1_body"]
+[ext_resource type="Script" path="res://scenes/audio/sfx_emitter.gd" id="2_emitter"]
+
+[node name="BodySounds" type="Node2D"]
+script = ExtResource("1_body")
+
+[node name="SfxEmitter" type="Node2D" parent="."]
+script = ExtResource("2_emitter")
+positional = true

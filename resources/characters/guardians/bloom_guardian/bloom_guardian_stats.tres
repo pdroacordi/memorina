@@ -8,6 +8,7 @@
 [ext_resource type="Resource" uid="uid://brabloompnc" path="res://resources/characters/guardians/bloom_guardian/bloom_pounce.tres" id="5_pounce"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_guardian_voice.tres" id="9_voice"]
 [ext_resource type="Resource" path="res://resources/music/fight_bloom.tres" id="90_fight_music"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/combat/guardian_sounds.tres" id="95_sounds"]
 
 [resource]
 script = ExtResource("1_stats")
@@ -24,3 +25,4 @@ give_ground_distance = 46.0
 pace_time = 0.8
 pace_speed = 0.55
 step_out_speed = 1.8
+sounds = ExtResource("95_sounds")
