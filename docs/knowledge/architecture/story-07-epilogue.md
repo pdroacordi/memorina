@@ -312,3 +312,4 @@ No other text: the seats and the reunion use glyph prompts. Fit tests: `dialogue
 8. A flashback still due after the reunion: "\"A fita azul.\" (Recommended)", and "O jardim." once none is due.
 9. Credits content: "Uso o CREDITS.md". The list is built from `CREDITS.md` and the author, and shown to the user for approval before it ships. Layout as recommended.
 10. The garden's hour after the epilogue: "Fica no fim de tarde (Recommended)".
+11. The draft texts in the i18n table: "Aprovar os textos" (user, 2026-11-16): the daughter's garden and after lines, the five villagers' 1.0 lines, `INTENT_GARDEN`, `INTENT_RIBBON` and `BENCH_GARDEN_STONE`, in pt_BR as written. The en lines, Ivo's tone variants and the credits list are shown for approval at build.
