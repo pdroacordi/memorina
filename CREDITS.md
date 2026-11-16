@@ -1,6 +1,6 @@
 # Credits
 
-Third-party art used in Memorina, with the terms it was taken under.
+Third-party art and sound used in Memorina, with the terms it was taken under.
 
 ## World
 
@@ -143,3 +143,17 @@ Third-party art used in Memorina, with the terms it was taken under.
 - **Title logo** (`assets/sprites/hud/title/memorina_logo.png`) - generated for this project with
   Codex CLI's image tool from `tools/art/prompts/memorina_logo.md`, then keyed, snapped to the world
   palette and shrunk by `tools/art/process_image.gd`. No third-party art was given as a reference.
+
+## Sound effects
+
+All CC0 1.0 (public domain; no credit required, given anyway). Downloaded 2026-11-16 for SND-01;
+each source's title, author and page are in `tools/audio/sfx_sources/sources.md`. Files under
+`assets/audios/sfx/` cut from them name their source in that list.
+
+- **Kenney** (https://kenney.nl): *RPG Audio* and *Interface Sounds*.
+- **Freesound** (https://freesound.org): Nox_Sound (footsteps on grass, mud, rock, snow, wood),
+  RomanKolachnik (water footsteps), Joao_Janz (swings and whooshes), MrFossy (pain grunt),
+  bbrocer (flour bag drop), speedygonzo (bodyfall), kyles (bench creak), MorenaLuz (wooden door),
+  PanPiper5 (kalimba), Aurelon (letter), REACTORFACTORY (seed envelope), N-RAZM (small splashes),
+  yurkobb (jump into water), ZIP.Creates (wind), Joshua_van_Zyl (bush rustle), SpaceJoe (page
+  turn), eyesonlegs (paper slide).

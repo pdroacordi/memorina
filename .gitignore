@@ -12,3 +12,6 @@ __pycache__/
 
 # Release builds (export_presets.cfg writes them here).
 builds/
+
+# Downloaded sound-effect sources (SND-01): kept local, listed in tools/audio/sfx_sources/sources.md.
+tools/audio/sfx_sources/raw/
