@@ -41,6 +41,13 @@
 [ext_resource type="Resource" path="res://resources/music/wife_song_lullaby.tres" id="fb_lullaby"]
 [ext_resource type="Script" path="res://scenes/world/story/flashback/song_bloom.gd" id="fb_song_bloom"]
 [ext_resource type="Script" path="res://scenes/world/story/flashback/flashback_swap.gd" id="fb_swap"]
+[ext_resource type="Resource" path="res://resources/world/backdrops/waterfall_garden_afternoon.tres" id="bd_afternoon"]
+[ext_resource type="Resource" path="res://resources/save_facts/epilogue_due.tres" id="ep_due"]
+[ext_resource type="Resource" path="res://resources/save_facts/seen_epilogue.tres" id="ep_seen"]
+[ext_resource type="Resource" path="res://resources/save_facts/seen_credits.tres" id="ep_credits"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/ground_seat.tscn" id="ep_ground_seat"]
+[ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/bench.tscn" id="ep_bench"]
+[ext_resource type="Script" path="res://scenes/world/interactables/bench/seat_gate.gd" id="ep_seat_gate"]
 
 [sub_resource type="Resource" id="due_1"]
 script = ExtResource("st_fact")
@@ -97,6 +104,51 @@ script = ExtResource("bd_fact_set")
 when = Array[ExtResource("st_fact")]([SubResource("due_5")])
 backdrop_set = ExtResource("bd_twilight")
 
+[sub_resource type="Resource" id="sky_afternoon_due"]
+script = ExtResource("bd_fact_set")
+when = Array[ExtResource("st_fact")]([ExtResource("ep_due")])
+backdrop_set = ExtResource("bd_afternoon")
+
+[sub_resource type="Resource" id="sky_afternoon_after"]
+script = ExtResource("bd_fact_set")
+when = Array[ExtResource("st_fact")]([ExtResource("ep_seen")])
+backdrop_set = ExtResource("bd_afternoon")
+
+[sub_resource type="Resource" id="lantern_dusk_due"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([ExtResource("ep_due")])
+show = &"LitDusk"
+fade_seconds = 0.0
+
+[sub_resource type="Resource" id="lantern_dusk_after"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([ExtResource("ep_seen")])
+show = &"LitDusk"
+fade_seconds = 0.0
+
+[sub_resource type="Resource" id="light_due"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([ExtResource("ep_due")])
+show = &"LateAfternoon"
+fade_seconds = 0.0
+
+[sub_resource type="Resource" id="light_after"]
+script = ExtResource("st_stage")
+when = Array[ExtResource("st_fact")]([ExtResource("ep_seen")])
+show = &"LateAfternoon"
+fade_seconds = 0.0
+
+[sub_resource type="CanvasItemMaterial" id="light_add"]
+blend_mode = 1
+
+[sub_resource type="Gradient" id="sun_gradient"]
+colors = PackedColorArray(1, 0.5, 0.16, 0.12, 1, 0.5, 0.16, 0.03)
+
+[sub_resource type="GradientTexture2D" id="sun_glow"]
+gradient = SubResource("sun_gradient")
+fill_from = Vector2(0, 0.2)
+fill_to = Vector2(0.75, 0.2)
+
 [sub_resource type="RectangleShape2D" id="swap_rect"]
 size = Vector2(472, 768)
 
@@ -116,7 +168,7 @@ widest_zoom = 0.5
 [node name="Sky" type="Node" parent="." node_paths=PackedStringArray("backdrop")]
 script = ExtResource("bd_fact")
 backdrop = NodePath("../Backdrop")
-sets = Array[ExtResource("bd_fact_set")]([SubResource("sky_twilight")])
+sets = Array[ExtResource("bd_fact_set")]([SubResource("sky_afternoon_due"), SubResource("sky_afternoon_after"), SubResource("sky_twilight")])
 
 [node name="Props" type="Node2D" parent="."]
 z_index = -10
@@ -175,12 +227,69 @@ position = Vector2(816, 640)
 [node name="Lantern" type="Node2D" parent="Props"]
 position = Vector2(880, 640)
 script = ExtResource("st_staging")
-stages = Array[ExtResource("st_stage")]([SubResource("lantern_lit_5"), SubResource("lantern_unlit")])
+stages = Array[ExtResource("st_stage")]([SubResource("lantern_dusk_due"), SubResource("lantern_dusk_after"), SubResource("lantern_lit_5"), SubResource("lantern_unlit")])
 
 [node name="Unlit" parent="Props/Lantern" instance=ExtResource("p_lantern")]
 
 [node name="Lit" parent="Props/Lantern" instance=ExtResource("p_lantern_lit")]
 visible = false
+
+[node name="LitDusk" parent="Props/Lantern" instance=ExtResource("p_lantern_lit")]
+visible = false
+
+[node name="Light" parent="Props/Lantern/LitDusk"]
+texture_scale = 1.0
+strength = 0.12
+
+[node name="Seats" type="Node2D" parent="."]
+
+[node name="StoneSeat" parent="Seats" instance=ExtResource("ep_ground_seat")]
+position = Vector2(816, 640)
+facing = -1
+ground = false
+when = Array[ExtResource("st_fact")]([ExtResource("ep_due")])
+
+[node name="StoneBench" parent="Seats" instance=ExtResource("ep_bench")]
+position = Vector2(816, 640)
+bench_id = &"garden_stone"
+facing = -1
+
+[node name="Sprite2D" parent="Seats/StoneBench" index="0"]
+visible = false
+
+[node name="StoneSeatGate" type="Node" parent="Seats" node_paths=PackedStringArray("seat")]
+script = ExtResource("ep_seat_gate")
+seat = NodePath("../StoneSeat/Seat")
+unless = Array[ExtResource("st_fact")]([ExtResource("ep_credits")])
+
+[node name="StoneBenchGate" type="Node" parent="Seats" node_paths=PackedStringArray("seat")]
+script = ExtResource("ep_seat_gate")
+seat = NodePath("../StoneBench/Seat")
+when = Array[ExtResource("st_fact")]([ExtResource("ep_credits")])
+
+[node name="Stagings" type="Node2D" parent="."]
+
+[node name="Light" type="Node2D" parent="Stagings"]
+z_index = 100
+script = ExtResource("st_staging")
+staging_id = &"light_staging"
+stages = Array[ExtResource("st_stage")]([SubResource("light_due"), SubResource("light_after")])
+
+[node name="LateAfternoon" type="Node2D" parent="Stagings/Light"]
+
+[node name="Warm" type="CanvasModulate" parent="Stagings/Light/LateAfternoon"]
+color = Color(1, 0.96, 0.9, 1)
+
+[node name="Sun" type="TextureRect" parent="Stagings/Light/LateAfternoon"]
+light_mask = 0
+material = SubResource("light_add")
+offset_left = -160.0
+offset_top = -480.0
+offset_right = 1440.0
+offset_bottom = 1120.0
+mouse_filter = 2
+texture = SubResource("sun_glow")
+expand_mode = 1
 
 [node name="Marks" type="Node2D" parent="."]
 
@@ -213,6 +322,11 @@ mark_id = &"flower_bed_b"
 position = Vector2(816, 640)
 script = ExtResource("cs_mark")
 mark_id = &"flat_stone"
+
+[node name="BesideStone" type="Marker2D" parent="Marks"]
+position = Vector2(840, 640)
+script = ExtResource("cs_mark")
+mark_id = &"beside_stone"
 
 [node name="WaterfallTop" type="Marker2D" parent="Marks"]
 position = Vector2(1216, 50)

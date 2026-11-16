@@ -55,6 +55,9 @@ func test_every_scene_names_ids_its_contents_hold() -> void:
 			if start is CutsceneBeat and (start as CutsceneBeat).hold != DialogueBeat.Hold.STILL:
 				problems.append("%s: %s does not hold STILL" % [path.get_file(), start.name])
 			var scene: Cutscene = start.get(&"cutscene")
+			# A ground seat with no scene only seats Ivo (the garden's stone until the epilogue exists, STORY-07).
+			if scene == null and start is GroundSeat:
+				continue
 			if scene == null:
 				problems.append("%s: %s has no cutscene" % [path.get_file(), start.name])
 				continue

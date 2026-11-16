@@ -401,6 +401,11 @@ position = Vector2(816, 640)
 script = ExtResource("cs_mark")
 mark_id = &"flat_stone"
 
+[node name="BesideStone" type="Marker2D" parent="Marks"]
+position = Vector2(840, 640)
+script = ExtResource("cs_mark")
+mark_id = &"beside_stone"
+
 [node name="WaterfallTop" type="Marker2D" parent="Marks"]
 position = Vector2(1216, 50)
 script = ExtResource("cs_mark")

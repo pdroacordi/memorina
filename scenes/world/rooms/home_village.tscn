@@ -54,7 +54,32 @@ id = &"flashback_5"
 
 [sub_resource type="Resource" id="w_level_restored"]
 script = ExtResource("w_level")
+when = Array[ExtResource("w_fact")]([ExtResource("w_restored"), SubResource("w_seen_5")])
+
+[sub_resource type="Resource" id="w_level_restored_4"]
+script = ExtResource("w_level")
+when = Array[ExtResource("w_fact")]([ExtResource("w_restored"), SubResource("w_seen_4")])
+strength = -0.6
+
+[sub_resource type="Resource" id="w_level_restored_3"]
+script = ExtResource("w_level")
+when = Array[ExtResource("w_fact")]([ExtResource("w_restored"), SubResource("w_seen_3")])
+strength = -0.85
+
+[sub_resource type="Resource" id="w_level_restored_2"]
+script = ExtResource("w_level")
+when = Array[ExtResource("w_fact")]([ExtResource("w_restored"), SubResource("w_seen_2")])
+strength = -0.9
+
+[sub_resource type="Resource" id="w_level_restored_1"]
+script = ExtResource("w_level")
+when = Array[ExtResource("w_fact")]([ExtResource("w_restored"), SubResource("w_seen_1")])
+strength = -0.95
+
+[sub_resource type="Resource" id="w_level_restored_none"]
+script = ExtResource("w_level")
 when = Array[ExtResource("w_fact")]([ExtResource("w_restored")])
+strength = -1.0
 
 [sub_resource type="Resource" id="w_level_seen_5"]
 script = ExtResource("w_level")
@@ -129,7 +154,7 @@ strength = -0.8
 [node name="FactWell" type="Node" parent="GardenWell" node_paths=PackedStringArray("source")]
 script = ExtResource("w_well")
 source = NodePath("..")
-levels = Array[ExtResource("w_level")]([SubResource("w_level_restored"), SubResource("w_level_seen_5"), SubResource("w_level_seen_4"), SubResource("w_level_seen_3"), SubResource("w_level_seen_2_low"), SubResource("w_level_seen_2"), SubResource("w_level_seen_1_low"), SubResource("w_level_seen_1"), SubResource("w_level_none")])
+levels = Array[ExtResource("w_level")]([SubResource("w_level_restored"), SubResource("w_level_restored_4"), SubResource("w_level_restored_3"), SubResource("w_level_restored_2"), SubResource("w_level_restored_1"), SubResource("w_level_restored_none"), SubResource("w_level_seen_5"), SubResource("w_level_seen_4"), SubResource("w_level_seen_3"), SubResource("w_level_seen_2_low"), SubResource("w_level_seen_2"), SubResource("w_level_seen_1_low"), SubResource("w_level_seen_1"), SubResource("w_level_none")])
 
 [node name="VillageLaneWest" parent="." instance=ExtResource("r0")]
 position = Vector2(-1280, 0)

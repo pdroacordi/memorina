@@ -2,7 +2,7 @@ class_name GardenMemoryTest extends GdUnitTestSuite
 
 ## The garden's memory is the village baseline plus GardenWell, whose FactWell levels are derived from seen flashbacks
 ## (architecture/story-05-playable-flashbacks): grey with none seen, still under 0.2 through three, moving from the
-## fourth, whole once the world is.
+## fourth; at 1.0 the same targets until all five are seen, then whole (architecture/story-07-epilogue).
 
 const REGION := "res://scenes/world/rooms/home_village.tscn"
 const CONTENTS := "res://scenes/world/rooms/home_village/contents/village_garden_contents.tscn"
@@ -100,8 +100,19 @@ func test_every_flashback_seen_brings_it_back() -> void:
 			assert_float(now).override_failure_message("restored %d, seen %d" % [restored, seen]).is_greater(last)
 			last = now
 
-func test_the_restored_world_hides_the_well() -> void:
-	for seen: int in range(0, FlashbackSchedule.COUNT + 1):
+## STORY-07 revises STORY-05: a world restored before every flashback is seen keeps the garden's targets at 1.0.
+func test_the_restored_world_meets_the_targets_until_all_five_are_seen() -> void:
+	var last := -1.0
+	for seen: int in range(0, FlashbackSchedule.COUNT):
 		var data := _data(Enums.Guardian.size(), seen, true)
-		assert_float(FactWell.strength_for(_well().levels, data)).is_equal(0.0)
-		assert_float(_memory(data)).is_equal(1.0)
+		var memory := _memory(data)
+		assert_float(memory).override_failure_message("world restored, seen %d" % seen).is_equal_approx(TARGETS[seen], 0.001)
+		if seen <= 3:
+			assert_float(memory).is_less(AmbientMath.STOP_THRESHOLD)
+		assert_float(memory).is_greater(last)
+		last = memory
+
+func test_the_restored_world_with_all_five_seen_hides_the_well() -> void:
+	var data := _data(Enums.Guardian.size(), FlashbackSchedule.COUNT, true)
+	assert_float(FactWell.strength_for(_well().levels, data)).is_equal(0.0)
+	assert_float(_memory(data)).is_equal(1.0)

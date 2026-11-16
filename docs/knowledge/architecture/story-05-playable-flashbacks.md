@@ -220,3 +220,8 @@ A flashback starts in the present (a sound in the garden, a ribbon in a far regi
 - Death: "Sim, como o resto (Recommended)": a death before a bench forgets a seen flashback.
 - Flashback 1's "Mais devagar": "Tirar a fala (Recommended)"; the line is rewritten in the draft without asking for another tempo.
 - HUD: "Esconder no passado (Recommended)": the life notes hide while Ivo is in the past.
+
+## Revision (2026-11-16, STORY-07 step 6)
+
+The well's first level was `WORLD_RESTORED → 0` (hidden), so a world restored with flashbacks still unseen showed the garden whole before its time. `GardenWell`'s levels now begin: WORLD_RESTORED and seen 5 → 0 (hidden); WORLD_RESTORED and seen 4 → -0.6, seen 3 → -0.85, seen 2 → -0.9, seen 1 → -0.95, none → -1.0, the same waterfall targets (0.4, 0.15, 0.1, 0.05, 0) at baseline 1.0; then the table above. `garden_memory_test` holds the world-restored rows (`architecture/story-07-epilogue`).
+

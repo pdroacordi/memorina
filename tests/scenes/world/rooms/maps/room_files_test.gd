@@ -57,7 +57,33 @@ func test_save_ids_bench_ids_and_slot_ids_are_unique_across_every_map() -> void:
 				if seen.has(id):
 					problems.append("%s in %s and %s" % [id, seen[id], path])
 				seen[id] = path
+	for bench: Array in _contents_benches(ROOMS_DIR):
+		var id := "bench_id=%s" % bench[0]
+		if seen.has(id):
+			problems.append("%s in %s and %s" % [id, seen[id], bench[1]])
+		seen[id] = bench[1]
 	assert_array(Array(problems)).is_empty()
+
+## [bench_id, path] of every Bench node set in a contents scene (the garden's stone, STORY-07): a bench not in a `.room`.
+func _contents_benches(dir: String) -> Array:
+	var found := []
+	for sub: String in DirAccess.get_directories_at(dir):
+		found.append_array(_contents_benches(dir.path_join(sub)))
+	for file: String in DirAccess.get_files_at(dir):
+		if not file.ends_with("_contents.tscn"):
+			continue
+		var state := (load(dir.path_join(file)) as PackedScene).get_state()
+		for node: int in state.get_node_count():
+			for i: int in state.get_node_property_count(node):
+				if state.get_node_property_name(node, i) == &"bench_id":
+					found.append([StringName(state.get_node_property_value(node, i)), dir.path_join(file)])
+	return found
+
+func test_a_contents_scene_bench_is_found() -> void:
+	var ids: Array[StringName] = []
+	for bench: Array in _contents_benches(ROOMS_DIR):
+		ids.append(bench[0])
+	assert_array(ids).contains([&"garden_stone"])
 
 ## A bat hangs under ground and a spider under ground or a one-way, over open cells (HANG_CLEARANCE); no creature lies
 ## in the village or a room of NO_CREATURE_ROOMS; the world holds the 16 placed by the plan.
@@ -349,6 +375,10 @@ func test_every_bench_has_a_name_in_the_translations() -> void:
 			var key := SaveSlots.bench_name_key(StringName(placed.params["bench_id"]))
 			if not keys.has(key):
 				problems.append("%s (%s) has no translated name" % [key, path])
+	for bench: Array in _contents_benches(ROOMS_DIR):
+		var key := SaveSlots.bench_name_key(bench[0])
+		if not keys.has(key):
+			problems.append("%s (%s) has no translated name" % [key, bench[1]])
 	assert_array(Array(problems)).is_empty()
 
 ## A Talkable's set is in the dialogue catalog, so the catalog's validation covers every talk a room can start (systems/dialogue).

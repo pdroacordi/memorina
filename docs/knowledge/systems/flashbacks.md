@@ -44,7 +44,7 @@ STORY-05, scope `docs/design/drafts/camada_pessoal.md` §1-2, plan `architecture
 
 ## The garden's well and sky
 
-- `GardenWell`, a RECT `MemorySource` in `home_village.tscn` beside `Memory`, has one writer: a `FactWell` whose `FactLevel`s (first that holds wins) lift the waterfall's memory from 0 through 0.05, 0.1, 0.15, 0.4 to 0.8 as flashbacks are seen, 1.0 once the world is restored. It snaps at `_ready` and tweens on `progress_changed` (`garden_memory_test`). The waterfall and flowers move only from 0.2 (seen 4).
+- `GardenWell`, a RECT `MemorySource` in `home_village.tscn` beside `Memory`, has one writer: a `FactWell` whose `FactLevel`s (first that holds wins) lift the waterfall's memory from 0 through 0.05, 0.1, 0.15, 0.4 to 0.8 as flashbacks are seen; once the world is restored the same targets hold at baseline 1.0 (seen 4: -0.6 to 0.4, seen 3: -0.85, seen 2: -0.9, seen 1: -0.95, none: -1.0) until all five are seen, which hides it (STORY-07 revision, `architecture/story-07-epilogue`). It snaps at `_ready` and tweens on `progress_changed` (`garden_memory_test`). The waterfall and flowers move only from 0.2 (seen 4).
 - `FactBackdrop` (the `Sky` node) is the only writer of its Backdrop's set: in the past morning, day, afternoon, night and twilight for flashbacks 1 to 5; in the present day, and twilight while flashback 5 is due. The lantern is a `FactStaging` with a `PointLight2D` whose energy follows the memory at it. Grades are `CanvasModulate`s so Ivo and Alba share the light (`architecture/story-05-playable-flashbacks`, "The garden fixed").
 
 ## The director and the travel
