@@ -7,6 +7,7 @@
 [ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
 [ext_resource type="Resource" path="res://resources/save_facts/village_at_six_tenths.tres" id="f_at06"]
+[ext_resource type="Resource" path="res://resources/save_facts/world_restored.tres" id="f_at10"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/baker.tres" id="s_baker"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/ivo.tres" id="s_ivo"]
 
@@ -59,6 +60,7 @@ text_key = "DLG_BAKER_06"
 script = ExtResource("f_dialogue")
 id = &"baker_06"
 when = Array[ExtResource("f_fact")]([ExtResource("f_at06")])
+unless = Array[ExtResource("f_fact")]([ExtResource("f_at10")])
 lines = Array[ExtResource("f_line")]([SubResource("line_8")])
 
 [sub_resource type="Resource" id="line_10"]
@@ -101,6 +103,17 @@ when = Array[ExtResource("f_fact")]([SubResource("fact_15")])
 unless = Array[ExtResource("f_fact")]([ExtResource("f_at06")])
 lines = Array[ExtResource("f_line")]([SubResource("line_14")])
 
+[sub_resource type="Resource" id="line_17"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_baker")
+text_key = "DLG_BAKER_10"
+
+[sub_resource type="Resource" id="dialogue_18"]
+script = ExtResource("f_dialogue")
+id = &"baker_10"
+when = Array[ExtResource("f_fact")]([ExtResource("f_at10")])
+lines = Array[ExtResource("f_line")]([SubResource("line_17")])
+
 [resource]
 script = ExtResource("f_set")
-dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_7"), SubResource("dialogue_9"), SubResource("dialogue_13"), SubResource("dialogue_16")])
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("dialogue_7"), SubResource("dialogue_18"), SubResource("dialogue_9"), SubResource("dialogue_13"), SubResource("dialogue_16")])

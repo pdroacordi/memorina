@@ -28,11 +28,13 @@
 [ext_resource type="Script" path="res://scenes/world/environment/props/fact_staging.gd" id="st_staging"]
 [ext_resource type="Script" path="res://resources/save_facts/fact_stage.gd" id="st_stage"]
 [ext_resource type="Resource" path="res://resources/save_facts/village_at_six_tenths.tres" id="st_at06"]
+[ext_resource type="Resource" path="res://resources/save_facts/world_restored.tres" id="st_at10"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
 
 [sub_resource type="Resource" id="stage_mugs"]
 script = ExtResource("st_stage")
 when = Array[ExtResource("st_fact")]([ExtResource("st_at06")])
+unless = Array[ExtResource("st_fact")]([ExtResource("st_at10")])
 show = &"AtSix"
 fade_seconds = 0.5
 

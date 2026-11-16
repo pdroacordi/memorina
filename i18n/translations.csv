@@ -196,6 +196,8 @@ DLG_WATER_CARRIER_06,…,…
 DLG_SELLER_APPLES,"Apples. West orchards. Last ones, till someone goes out there.","Maçãs. Pomares do oeste. As últimas, até alguém ir lá."
 DLG_BOY_STATUES,Don't move. You moved.,Não mexe. Mexeu.
 DLG_BOY_ALONE,Don't move.,Não mexe.
+DLG_BAKER_10,I made the round one and the long one. Nobody has to choose today.,Fiz o redondo e o comprido. Hoje ninguém precisa escolher.
+DLG_SELLER_10,The seeds sprout on their own now. They hardly need me.,As sementes brotam sozinhas agora. Quase não precisam de mim.
 DLG_DAUGHTER_SONG_01,Play the morning one? The one Mama used to sing.,Toca a da manhã? A que a mamãe cantava.
 DLG_CHOICE_GUITAR_TRY_AGAIN,[Try again],[Tentar de novo]
 DLG_CHOICE_GUITAR_LOWER,[Lower the guitar],[Baixar o violão]

@@ -37,6 +37,7 @@
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="st_fact"]
 [ext_resource type="Script" path="res://scenes/world/environment/props/ambient_motion.gd" id="st_motion"]
 [ext_resource type="Resource" path="res://resources/save_facts/seen_daughter_to_bed.tres" id="st_seen_to_bed"]
+[ext_resource type="Resource" path="res://resources/save_facts/world_restored.tres" id="st_at10"]
 [ext_resource type="PackedScene" path="res://scenes/characters/story_actor/daughter/daughter_actor.tscn" id="cs_daughter"]
 [ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_mark.gd" id="cs_mark"]
 [ext_resource type="Script" path="res://scenes/world/cutscene/cutscene_beat.gd" id="cs_beat"]
@@ -203,6 +204,7 @@ index = 2
 [sub_resource type="Resource" id="stage_25"]
 script = ExtResource("st_stage")
 when = Array[ExtResource("st_fact")]([SubResource("stage_24")])
+unless = Array[ExtResource("st_fact")]([ExtResource("st_at10")])
 show = &"Repeated"
 fade_seconds = 0.5
 

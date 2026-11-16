@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://d2eoql5qejigt" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/seller.tres" id="s_speaker"]
 [ext_resource type="Resource" path="res://resources/save_facts/took_a_cache.tres" id="f_cache"]
+[ext_resource type="Resource" path="res://resources/save_facts/world_restored.tres" id="f_at10"]
 
 [sub_resource type="Resource" id="v_1"]
 script = ExtResource("f_line")
@@ -47,10 +48,16 @@ once = true
 when = Array[ExtResource("f_fact")]([ExtResource("f_cache")])
 lines = Array[ExtResource("f_line")]([SubResource("seeds_1"), SubResource("seeds_2"), SubResource("seeds_shop"), SubResource("seeds_3")])
 
+[sub_resource type="Resource" id="trade_1_at10"]
+script = ExtResource("6_8xasd")
+when = Array[ExtResource("f_fact")]([ExtResource("f_at10")])
+text_key = "DLG_SELLER_10"
+
 [sub_resource type="Resource" id="trade_1"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_speaker")
 text_key = "DLG_SELLER_TRADE_01"
+variants = Array[ExtResource("6_8xasd")]([SubResource("trade_1_at10")])
 
 [sub_resource type="Resource" id="trade_shop"]
 script = ExtResource("f_line")
@@ -67,6 +74,17 @@ id = &"seller_trade"
 when = Array[ExtResource("f_fact")]([ExtResource("f_cache")])
 lines = Array[ExtResource("f_line")]([SubResource("trade_1"), SubResource("trade_shop"), SubResource("trade_2")])
 
+[sub_resource type="Resource" id="at10_1"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_speaker")
+text_key = "DLG_SELLER_10"
+
+[sub_resource type="Resource" id="at10"]
+script = ExtResource("f_dialogue")
+id = &"seller_10"
+when = Array[ExtResource("f_fact")]([ExtResource("f_at10")])
+lines = Array[ExtResource("f_line")]([SubResource("at10_1")])
+
 [resource]
 script = ExtResource("f_set")
-dialogues = Array[ExtResource("f_dialogue")]([SubResource("seeds_first"), SubResource("trade"), SubResource("v_2")])
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("seeds_first"), SubResource("trade"), SubResource("at10"), SubResource("v_2")])

@@ -1,11 +1,13 @@
 class_name VillageVoicesTest extends GdUnitTestSuite
 
 ## The village voices (STORY-09; design 05, "Village voices"): one optional line per villager by memory step, 0.8 at
-## the start and 0.6 from the second guardian restored; the baker's cough is said once, after the errand.
+## the start and 0.6 from the second guardian restored, 1.0 once the world is restored (STORY-07); the baker's cough is
+## said once, after the errand.
 
 const REGION := "res://scenes/world/rooms/home_village.tscn"
 const CONTENTS := "res://scenes/world/rooms/home_village/contents/"
 const AT_06 := "res://resources/save_facts/village_at_six_tenths.tres"
+const AT_10 := "res://resources/save_facts/world_restored.tres"
 const VILLAGE := "res://resources/dialogue/village/"
 const BAKER := "res://resources/dialogue/story/baker.tres"
 const VOICE_ROOMS: Array[String] = [
@@ -193,3 +195,48 @@ func test_the_seller_stays_to_trade_all_game() -> void:
 	var trade := seller.current(PlayerData.new())
 	assert_str(String(trade.id)).is_equal("seller_apples")
 	assert_array(_keys(trade)).is_equal(["DLG_SELLER_APPLES"])
+
+## STORY-07: every talk the village gives at 0.6 gives way at 1.0, as a voice's own `unless`.
+func test_no_six_tenths_talk_holds_at_one() -> void:
+	var data := _at_one()
+	for path: String in [BAKER, VILLAGE + "seller.tres", "res://resources/dialogue/story/elder.tres",
+			"res://resources/dialogue/story/daughter_bed.tres"]:
+		for dialogue: Dialogue in (load(path) as DialogueSet).dialogues:
+			if dialogue.when.any(func(fact: SaveFact) -> bool: return fact.kind == SaveFact.Kind.GUARDIANS_RESTORED_AT_LEAST):
+				assert_bool(dialogue.is_open_for(data)).override_failure_message("%s holds at 1.0" % dialogue.id).is_false()
+				assert_bool(dialogue.unless.has(load(AT_10))).override_failure_message(String(dialogue.id)).is_true()
+
+func test_the_baker_and_the_seller_speak_at_one() -> void:
+	var data := _at_one()
+	assert_str(_id(load(BAKER) as DialogueSet, data)).is_equal("baker_10")
+	assert_array(_keys((load(BAKER) as DialogueSet).current(data))).is_equal(["DLG_BAKER_10"])
+	var seller := load(VILLAGE + "seller.tres") as DialogueSet
+	assert_str(_id(seller, data)).is_equal("seller_10")
+	assert_array(_keys(seller.current(data))).is_equal(["DLG_SELLER_10"])
+	data.caches_taken.append(&"threshold_ravine_cache")
+	data.dialogues_heard.append(&"seller_seeds_first")
+	var trade := seller.current(data)
+	assert_str(String(trade.id)).is_equal("seller_trade")
+	assert_str(trade.lines[0].text_for(data)).is_equal("DLG_SELLER_10")
+	assert_str(String(trade.lines[1].cue)).is_equal("seller_shop")
+
+## What 0.6 took away comes back as at 0.8 ("Volta como em 0.8 (Recommended)", user, 2026-11-16).
+func test_the_mugs_and_the_drawings_are_as_at_eight_tenths_at_one() -> void:
+	var data := _at_one()
+	var tavern := auto_free((load(CONTENTS + "village_tavern_contents.tscn") as PackedScene).instantiate()) as Node
+	var mugs := tavern.get_node("Props/Mugs") as FactStaging
+	assert_str(String(mugs.stages[FactStaging.pick(mugs.stages, data)].show)).is_equal("")
+	var house := auto_free((load(CONTENTS + "village_house_contents.tscn") as PackedScene).instantiate()) as Node
+	var drawings := house.get_node("Props/Drawings") as FactStaging
+	assert_str(String(drawings.stages[FactStaging.pick(drawings.stages, data)].show)).is_equal("Usual")
+	data.world_restored = false
+	assert_str(String(drawings.stages[FactStaging.pick(drawings.stages, data)].show)).is_equal("Repeated")
+
+func _at_one() -> PlayerData:
+	var data := PlayerData.new()
+	for guardian: int in Enums.Guardian.values():
+		data.restored_guardians[guardian] = true
+	data.world_restored = true
+	for id: StringName in [&"baker_errand", &"baker_cough", &"elder_story", &"elder_return", &"daughter_errand"]:
+		data.dialogues_heard.append(id)
+	return data

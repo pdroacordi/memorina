@@ -6,7 +6,7 @@ status: active
 tags: [story, staging, save-fact, beat, guitar, melody, dialogue, opening]
 related: [systems/notices, architecture/the-opening-is-staged-by-save-facts, playtests/2026-10-15-story03-opening, systems/dialogue, systems/props, systems/input, systems/notebook, systems/life-benches-death, systems/pickups, gotchas/a-killed-tween-never-emits-finished, gotchas/a-removed-subtree-emits-tree-exiting-later-siblings-first, gotchas/json-numbers-are-floats-so-array-has-an-int-misses-them, gotchas/a-preloaded-resources-typed-enum-array-reads-as-array-int]
 created: 2026-10-15
-updated: 2026-11-13
+updated: 2026-11-16
 source_files:
   - resources/save_facts/fact_stage.gd
   - scenes/world/environment/props/fact_staging.gd
@@ -188,6 +188,7 @@ Draft 3 of design 05, Atos 1 to 4 ("Aprovar (Recommended)", user, 2026-10-16; "F
 | Seller | `seller_seeds_first` once from his first seed, then `seller_trade` (the shop beat); else `seller_apples` | the seed trade only, once Ivo holds a seed; no apples line (she and her stall stay, LIFE-04) |
 | Boy | `boy_statues`, once the children are in the square (`elder_story`) | `boy_alone` (the girl leaves at 0.6) |
 
+- **At 1.0 (STORY-07, `architecture/story-07-epilogue`):** every village talk gated on the 0.6 fact (`baker_06`, `elder_empty`, `daughter_eyes`) has `unless world_restored.tres`, and the 1.0 voices are `when world_restored.tres`: `baker_10` (before `baker_06`); the seller's `seller_10` when he has no seed, and at the trade his first line is a `LineVariant` to `DLG_SELLER_10` before the shop opens, which stays. The tavern's `Mugs` and the house's `Drawings` give way at 1.0, so what 0.6 took away is as at 0.8 ("Volta como em 0.8 (Recommended)", user, 2026-11-16); the girl, the patron and the cart come back by their `RegionPresence` at the restored baseline. `village_voices_test` checks no 0.6 talk holds at 1.0. The taverner's, the water carrier's and the boy's 1.0 lines are not built yet.
 - **The cough says the greeting first** so it is said "in passing" (01 §9) and never comes out of nowhere; it is `once` and needs `baker_errand` heard. The baker's FactStaging is untouched: no new line has a cue. A death before a bench forgets it like any heard talk, so it can play again: "Keep it: a death rewinds what was heard, so the baker's cough can play again before a bench. It's consistent with the rest of the save." (user, 2026-10-15).
 - **The taverner's two mugs** (design 05: "He sets two mugs on the counter, one in front of the patron's empty seat, and waits."): a `Mugs` FactStaging in village_tavern shows `AtSix` (two `tavern/mug.tscn`) on `village_at_six_tenths.tres`, so their presence is derived like every stage. One stands on the bar counter's top by the taverner (448, 636). The patron's seat is the bench at x 604 by table A, east of the counter's end (x 482), so the other stands on table A's west end in front of that bench (636, 652). `prop_grounding_test` holds both to their support (`SUPPORTED`). Up on him at 0.6 gives nothing: the gesture is the line.
 - **Not built (behaviour, art needed):** the water carrier holding the full bucket at the well at 0.6 (she keeps her idle loop), and the baker going back to the dough after the cough line (she keeps her idle). Neither is staged; each needs a pose strip.
