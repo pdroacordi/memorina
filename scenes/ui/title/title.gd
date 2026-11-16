@@ -2,6 +2,9 @@ class_name Title
 extends Control
 ## The title: New game, Continue, Settings and Quit game, and the slot and Settings screens behind them. It owns the saves list and every SaveSystem call.
 
+## A back press closed a panel or a screen.
+signal stepped_back
+
 ## Loaded at swap time: the game exports this scene, so a PackedScene export would be a cycle.
 @export_file("*.tscn") var game_scene: String = ""
 ## The title's theme, asked at MENU layer while the title is in the tree (music/menu-theme).
@@ -139,11 +142,13 @@ func _step_back() -> void:
 			_settings_screen.close()
 			_main.show()
 			_settings.grab_focus()
+		stepped_back.emit()
 		return
 	if not _slot_screen.visible:
 		return
 	if not _slot_screen.step_back():
 		_show_main()
+	stepped_back.emit()
 
 func _play(slot: int, fresh: bool) -> void:
 	if _leaving:

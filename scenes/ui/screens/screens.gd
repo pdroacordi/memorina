@@ -12,6 +12,10 @@ signal quit_to_title_requested
 signal quit_game_requested
 ## The pause menu's "Skip scene"; the menu closes and the scene lands on its next unpaused tick.
 signal skip_scene_requested
+## The open screen changed; NONE is no screen.
+signal screen_changed(from: ScreenRouter.Kind, to: ScreenRouter.Kind)
+## A back press closed an inner panel of `kind`, or began the notebook's shutting.
+signal stepped_back(kind: ScreenRouter.Kind)
 
 ## Screens that stop everything behind them while open; the map does not.
 const HOLDING: Array[ScreenRouter.Kind] = [ScreenRouter.Kind.PAUSE, ScreenRouter.Kind.NOTEBOOK]
@@ -105,6 +109,7 @@ func _on_press(press: ScreenRouter.Press) -> void:
 	# Consumed, so the pad's back (also roll) that resumes the game does not also roll.
 	get_viewport().set_input_as_handled()
 	if next == ScreenRouter.Kind.NONE and _screens[_open].step_back():
+		stepped_back.emit(_open)
 		return
 	_apply(next)
 
@@ -168,3 +173,4 @@ func _apply(next: ScreenRouter.Kind) -> void:
 	_dim.visible = HOLDING.has(next)
 	if next != ScreenRouter.Kind.NONE:
 		_screens[next].open()
+	screen_changed.emit(was, next)

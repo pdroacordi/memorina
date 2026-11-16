@@ -6,7 +6,7 @@ status: active
 tags: [input, gamepad, glyphs, keybindings, menu, pause]
 related: [systems/settings, systems/dialogue, systems/map, systems/notebook, architecture/character-controller-input-split, architecture/pause-menu-worldfreeze-reuse, systems/screens, gotchas/a-stick-is-pressed-on-every-motion-event, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-menu-press-reaches-the-last-node-first, bugs/player-input-edge-state-goes-stale-across-a-pause-menu]
 created: 2026-10-02
-updated: 2026-11-12
+updated: 2026-11-16
 source_files:
   - scenes/characters/ivo/player_input.gd
   - scenes/ui/menu/menu_input.gd
@@ -73,6 +73,7 @@ The title has its own `MenuInput` (`scenes/ui/title/title.tscn`). Esc arrives as
 
 - **The dialogue box adds no reader** (`systems/dialogue`): a text-less `ContinueArea` Button and one Button per choice take focus, and a Button acts on the `ui_accept` release after a press. Z and pad A are `ui_accept`, so they type, advance and choose; a release with no press (Z held into an auto start) does nothing, and the press that closes a talk never reaches the disabled `PlayerInput` (`player_talk_test`, through `Input.parse_input_event`).
 
+- `MenuInput.focus_stepped(direction)` is the press edge of `ui_up` / `ui_down` (held per direction like `_page_edge`, re-read when a capture ends), the last signal of its one-per-event chain. It does not move focus; `MenuSounds` reads it with `page_pressed` to tell a focus move from a focus grab (`systems/sound-effects`).
 - The engine's `ui_*` focus navigation moves once per stick tilt through `Input.parse_input_event` (measured in 4.7.2, `gotchas/gui-focus-moves-once-per-stick-tilt`), so menus keep the stick on `ui_up` / `ui_down`.
 - `_input` reaches the last node in the tree first. `ScreenLayer` stays after `World` in `game.tscn`, so `MenuInput` sees a press before `PlayerInput` (`gotchas/a-menu-press-reaches-the-last-node-first`).
 

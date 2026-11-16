@@ -6,7 +6,7 @@ status: active
 tags: [settings, options, volume, audio-bus, language, locale, i18n, display, window, fullscreen, rebinding, input, keybindings, glyphs, menu, screens, boot, ui-07]
 related: [architecture/settings-screen, gotchas/fullscreen-does-nothing-in-an-editor-run, gotchas/a-new-inputevent-is-not-for-all-devices, bugs/a-rebound-pad-button-answers-only-joypad-0, bugs/a-binding-refused-by-ui-accept-shows-the-raw-key-action-ui-accept, bugs/a-hand-edited-keyboard-code-of-0-silently-unbinds-the-action, bugs/closing-the-window-with-settings-open-forgets-the-changes, bugs/settings-rows-measure-12-px-so-reset-to-defaults-sits-on-the-status-line, playtests/2026-11-10-ui07-settings, systems/screens, systems/input, systems/music, systems/notebook, architecture/save-slots-and-the-boot-swap, gotchas/translation-changed-reaches-every-node-before-set-locale-returns, gotchas/headless-has-no-keyboard-layout, gotchas/find-child-skips-nodes-a-script-built, gotchas/a-script-run-with-s-cannot-compile-classes-that-name-autoloads, gotchas/a-stick-is-pressed-on-every-motion-event, bugs/player-input-edge-state-goes-stale-across-a-pause-menu]
 created: 2026-11-10
-updated: 2026-11-10
+updated: 2026-11-16
 source_files:
   - globals/settings/settings.gd
   - globals/settings/game_settings.gd
@@ -99,8 +99,9 @@ The plan and the options weighed are `architecture/settings-screen`; this entry 
 1. Accept on a `BindingRow` (a Button acts on the `ui_accept` release) sets `MenuInput.capturing`. The row shows "Press a key" / "Press a button"; the full-rect `CaptureShield` (mouse STOP) keeps clicks off the tabs.
 2. While capturing, `MenuInput._input` marks every key and pad event handled (press, release, motion) before emitting, and emits only `capture_cancelled` (a `pause` press: Esc or Start, from either page) or `bind_pressed(device, code)` (a non-echo key press as its physical keycode, a pad button press). `InputDevice` still sees the press on `window_input` and switches the prompts.
 3. `SettingsScreen` ignores a code of the other device, calls `Settings.bind` and writes the outcome on the status line. Assigned, swapped or unchanged ends the capture; a refusal keeps it open for another press. Cancelling clears the status line, and so does the focus leaving a row.
-4. Leaving capture re-reads `_left_held` / `_right_held` from `Input`, so a direction held through it is not a page edge. The release of the captured press finds no pressed Button and does nothing.
+4. Leaving capture re-reads `_left_held` / `_right_held` / `_up_held` / `_down_held` from `Input`, so a direction held through it is not a page edge or a focus step. The release of the captured press finds no pressed Button and does nothing.
 5. B on the pad page is a candidate, never a cancel.
+6. A capture is silent past the row's CONFIRM: `MenuInput` emits no `focus_stepped` or `back_pressed` while capturing, so a captured arrow or a cancel plays no menu cue. A volume step plays only its preview, since the focus does not move (`systems/sound-effects`, `menu_sounds_test`).
 
 ## Screen
 

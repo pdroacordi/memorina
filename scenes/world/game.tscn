@@ -70,6 +70,7 @@
 [ext_resource type="Resource" path="res://resources/story/flashbacks/flashback_catalog.tres" id="102_flashback_catalog"]
 [ext_resource type="Script" path="res://scenes/world/story/bearer/bearer_fragment_director.gd" id="104_bearers"]
 [ext_resource type="Resource" path="res://resources/story/bearers/bearer_catalog.tres" id="105_bearer_catalog"]
+[ext_resource type="Script" path="res://scenes/audio/sfx_muffle.gd" id="109_muffle"]
 
 [sub_resource type="ViewportTexture" id="ViewportTexture_creatures"]
 viewport_path = NodePath("CreatureMask")
@@ -207,6 +208,10 @@ subject = NodePath("../Player")
 [node name="MemoryField" type="Node" parent="World" unique_id=1572119968]
 unique_name_in_owner = true
 script = ExtResource("7_mfield")
+
+[node name="SfxMuffle" type="Node" parent="World" node_paths=PackedStringArray("subject")]
+script = ExtResource("109_muffle")
+subject = NodePath("../Player")
 
 [node name="CreatureMask" type="SubViewport" parent="." unique_id=873140420]
 process_mode = 3

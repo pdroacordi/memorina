@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://be0v2br7tupo7" path="res://scenes/world/fade.gd" id="4_fade"]
 [ext_resource type="PackedScene" path="res://scenes/ui/map/map_screen.tscn" id="5_map"]
 [ext_resource type="PackedScene" path="res://scenes/ui/notebook/notebook.tscn" id="6_notebook"]
+[ext_resource type="PackedScene" path="res://scenes/ui/menu/menu_sounds.tscn" id="7_sounds"]
 
 [node name="Screens" type="Control"]
 process_mode = 3
@@ -55,3 +56,11 @@ mouse_filter = 2
 color = Color(0, 0, 0, 0)
 script = ExtResource("4_fade")
 real_time = true
+
+[node name="MenuSounds" parent="." node_paths=PackedStringArray("menu_input", "scope") instance=ExtResource("7_sounds")]
+menu_input = NodePath("../MenuInput")
+scope = NodePath("..")
+
+[connection signal="screen_changed" from="." to="MenuSounds" method="on_screen_changed"]
+[connection signal="stepped_back" from="." to="MenuSounds" method="on_screen_stepped_back"]
+[connection signal="page_turned" from="Notebook" to="MenuSounds" method="on_page_turned"]

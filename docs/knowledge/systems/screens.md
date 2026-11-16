@@ -6,7 +6,7 @@ status: active
 tags: [menu, pause, screens, ui, focus, theme, hold, i18n]
 related: [systems/settings, systems/notices, systems/dialogue, systems/map, systems/notebook, systems/region-title, architecture/pause-menu-worldfreeze-reuse, architecture/save-slots-and-the-boot-swap, architecture/notebook-entries-are-derived-from-the-save, architecture/map-reveal-seen-cells-per-room, systems/input, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/time-scale-zero-stops-delta-particles-and-time, playtests/2026-10-02-pause-menu, playtests/2026-10-02-title-and-slots, bugs/a-click-during-a-leave-fade-still-reaches-the-menu-buttons, bugs/accents-on-a-focused-menu-button-land-on-its-top-highlight]
 created: 2026-10-02
-updated: 2026-11-10
+updated: 2026-11-16
 source_files:
   - scenes/ui/screens/screens.gd
   - scenes/ui/screens/screen_router.gd
@@ -122,6 +122,7 @@ One ALWAYS `Screens` Control owns which menu screen is open. `MenuInput` turns p
 - A frame-stepped animation is a tween, never `_process(delta)`.
 - `Fade.real_time` is set on the Blackout, which runs under the hold.
 - A `KeyGlyph` blink shows nothing under a hold, so no held screen relies on one.
+- Menu sounds: `MenuSounds`, the last child of the `Screens` root (and of the `Title` root), inherits ALWAYS and plays one cue per frame. `Screens.screen_changed(from, to)` and `stepped_back(kind)` drive it; the map is silent (`systems/sound-effects`).
 
 ## Text
 

@@ -5,6 +5,8 @@ extends MenuScreen
 
 ## The closing animation finished; Screens closes the screen.
 signal close_requested
+## A page turn began: +1 to a later section, -1 to an earlier one.
+signal page_turned(direction: int)
 
 enum Phase { SHUT, OPENING, OPEN, TURNING, CLOSING }
 
@@ -153,7 +155,8 @@ func turn(direction: int) -> void:
 func turn_to(target: NotebookEntry.Section) -> void:
 	if _phase != Phase.OPEN or target == _section:
 		return
-	var strip := next_page_strip if target > _section else previous_page_strip
+	var direction := 1 if target > _section else -1
+	var strip := next_page_strip if direction > 0 else previous_page_strip
 	_leave_entry()
 	_section = target
 	_refresh_tabs(SaveSystem.player_data)
@@ -161,6 +164,7 @@ func turn_to(target: NotebookEntry.Section) -> void:
 	_book.hide()
 	_phase = Phase.TURNING
 	_play(strip, 0, STRIP_FRAMES - 1, _on_turned)
+	page_turned.emit(direction)
 
 ## Fills the right page with `entry` as `data` knows it; null clears it.
 func render_entry(entry: NotebookEntry, data: PlayerData) -> void:

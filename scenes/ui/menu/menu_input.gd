@@ -10,6 +10,8 @@ signal zoom_pressed(direction: int)
 signal back_pressed
 ## +1 is the next page (right), -1 the previous (left).
 signal page_pressed(direction: int)
+## +1 is down, -1 up: the press edge of ui_down or ui_up, a focus move's press (systems/sound-effects).
+signal focus_stepped(direction: int)
 ## While capturing: a key (physical keycode) or pad button was pressed for a binding (systems/settings).
 signal bind_pressed(device: KeyBindings.Device, code: int)
 ## While capturing: `pause` (Esc, Start) gave the capture up.
@@ -26,11 +28,15 @@ var capturing: bool = false:
 			# A direction held through the capture is not a new page edge.
 			_left_held = Input.is_action_pressed("ui_left")
 			_right_held = Input.is_action_pressed("ui_right")
+			_up_held = Input.is_action_pressed("ui_up")
+			_down_held = Input.is_action_pressed("ui_down")
 		capturing = value
 
 ## Whether left or right was held as of the last event about it; a stick reports pressed on every motion.
 var _left_held: bool = false
 var _right_held: bool = false
+var _up_held: bool = false
+var _down_held: bool = false
 
 
 ## At most one signal per event, toggles before back: Esc is both `pause` and `ui_cancel`.
@@ -39,6 +45,7 @@ func _input(event: InputEvent) -> void:
 		_capture(event)
 		return
 	var page := _page_edge(event)
+	var step := _step_edge(event)
 	if event.is_action_pressed("pause"):
 		pause_pressed.emit()
 	elif event.is_action_pressed("notebook"):
@@ -53,6 +60,8 @@ func _input(event: InputEvent) -> void:
 		back_pressed.emit()
 	elif page != 0:
 		page_pressed.emit(page)
+	elif step != 0:
+		focus_stepped.emit(step)
 
 ## -1 or +1 on the press edge of ui_left or ui_right, else 0; see docs/knowledge/gotchas/a-stick-is-pressed-on-every-motion-event.md.
 func _page_edge(event: InputEvent) -> int:
@@ -67,6 +76,21 @@ func _page_edge(event: InputEvent) -> int:
 		if held and not _right_held:
 			edge = 1
 		_right_held = held
+	return edge
+
+## -1 or +1 on the press edge of ui_up or ui_down, else 0; held like `_page_edge`.
+func _step_edge(event: InputEvent) -> int:
+	var edge := 0
+	if event.is_action("ui_up"):
+		var held := event.is_action_pressed("ui_up", true)
+		if held and not _up_held:
+			edge = -1
+		_up_held = held
+	if event.is_action("ui_down"):
+		var held := event.is_action_pressed("ui_down", true)
+		if held and not _down_held:
+			edge = 1
+		_down_held = held
 	return edge
 
 ## Consumed first: a handler may end the capture, and the press must still reach nothing else.

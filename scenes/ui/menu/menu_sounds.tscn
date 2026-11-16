@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/ui/menu/menu_sounds.gd" id="1_sounds"]
+[ext_resource type="Script" path="res://scenes/audio/sfx_emitter.gd" id="2_emitter"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/menu_sounds.tres" id="3_set"]
+
+[node name="MenuSounds" type="Node"]
+script = ExtResource("1_sounds")
+sounds = ExtResource("3_set")
+
+[node name="SfxEmitter" type="Node2D" parent="."]
+script = ExtResource("2_emitter")

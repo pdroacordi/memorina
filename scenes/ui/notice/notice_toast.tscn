@@ -2,6 +2,8 @@
 
 [ext_resource type="Script" path="res://scenes/ui/notice/notice_toast.gd" id="1_toast"]
 [ext_resource type="FontFile" uid="uid://dsutvchk6baqt" path="res://assets/fonts/memorina_text_font_size_8.ttf" id="2_text_font"]
+[ext_resource type="Script" path="res://scenes/audio/sfx_emitter.gd" id="3_emitter"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/notice.tres" id="4_slide"]
 
 [node name="NoticeToast" type="Control"]
 layout_mode = 3
@@ -12,6 +14,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_toast")
+slide_sound = ExtResource("4_slide")
 
 [node name="Art" type="Control" parent="."]
 layout_mode = 0
@@ -52,3 +55,6 @@ theme_override_constants/outline_size = 2
 theme_override_fonts/font = ExtResource("2_text_font")
 theme_override_font_sizes/font_size = 8
 vertical_alignment = 1
+
+[node name="SfxEmitter" type="Node2D" parent="."]
+script = ExtResource("3_emitter")

@@ -59,3 +59,16 @@ func test_a_withdrawn_notice_hides_at_once_without_finishing() -> void:
 ## Pausable: a menu hold stops it where it is (systems/screens, "Real time under a hold").
 func test_it_is_pausable() -> void:
 	assert_int(_toast.process_mode).is_equal(Node.PROCESS_MODE_INHERIT)
+
+## It slides in with its sound on Sfx; a withdrawn notice stops it, to slide in with it again later.
+func test_the_slide_sounds_and_a_withdrawal_stops_it() -> void:
+	var played: Array[SoundCue] = []
+	_toast.emitter().cue_played.connect(func(cue: SoundCue) -> void: played.append(cue))
+	_toast.show_notice("ITEM_BREAD", ICON)
+	assert_object(_toast.slide_sound).is_not_null()
+	assert_array(played).contains_exactly([_toast.slide_sound])
+	assert_str(String(_toast.slide_sound.bus())).is_equal(String(AudioBuses.SFX))
+	var player := _toast.emitter().player_of(_toast.slide_sound) as AudioStreamPlayer
+	assert_bool(player.playing).is_true()
+	_toast.withdraw()
+	assert_bool(player.playing).is_false()

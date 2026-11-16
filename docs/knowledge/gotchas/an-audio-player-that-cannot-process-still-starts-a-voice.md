@@ -10,6 +10,7 @@ updated: 2026-11-16
 source_files:
   - scenes/audio/sfx_emitter.gd
   - tests/scenes/audio/sfx_emitter_test.gd
+  - tests/scenes/ui/menu/menu_sounds_test.gd
 ---
 
 ## Summary
@@ -50,3 +51,6 @@ panned against one listener. This was read from the flags, not heard.
   `NOTIFICATION_DISABLED` instead, so they do not come back when the room does.
 - In the GdUnit runner, wait on `Time.get_ticks_usec()` when comparing with the mixer: a 1 s game timer
   (`create_timer(1.0, true, false, true)`) ended after 0.77 wall s, and `await_millis` stops with the tree.
+- The headless mixer can start a fresh voice a buffer late: in one run of `menu_sounds_test` an ALWAYS
+  player read 0.003 s after 0.06 wall s, in the others over 0.04 s (2026-11-16). Poll the position for a
+  few tenths of a second and assert the furthest value seen, not one read after a fixed wait.

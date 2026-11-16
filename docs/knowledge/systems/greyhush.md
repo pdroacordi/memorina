@@ -6,7 +6,7 @@ status: active
 tags: [greyhush, memory-field, shader, dither]
 related: [performance/2026-11-11-tech12-baseline, architecture/memory-field-cpu-gpu-split, gotchas/glsl-gdscript-math-must-be-duplicated]
 created: 2026-10-02
-updated: 2026-11-11
+updated: 2026-11-16
 source_files:
   - scenes/world/memory/memory_field.gd
   - scenes/world/memory/greyhush_renderer.gd
@@ -33,6 +33,7 @@ The world's state at any point is a memory value from 0 to 1 (`docs/design/03_mu
   - A separate unshielded pass was rejected: it would need its own cull bit and texture for every consumer, and it could not tell who is in front.
   - Accepted leaks: a creature pixel over an opaque Ivo pixel, two creatures overlapping, and an antialiased item whose alpha is exactly 253 (`bugs/ivos-greyhush-shield-colours-a-creature-in-melee-range`).
 - **Environment freezes; characters never.** `MemoryClock` drives a neighbour's `speed_scale` from the field and asserts in `_ready()` that its target has no `Character` ancestor.
+- **Sound** (SND-01 option (c), user, 2026-11-16): `SfxMuffle` low-passes the `SfxWorld` bus from `MemoryField.sample` at Ivo, 20 kHz at memory 1 to 1.2 kHz at 0 (`SfxMuffleMath`). Only world-object cues go through it; Ivo and the creatures stay clear, as characters never freeze (`systems/sound-effects`). It reads the clean CPU field, so `MemoryFieldMath` has nothing to mirror.
 - **A teacher's shield** (CORE-04, `systems/teaching-creatures`): each teaching creature carries a SILHOUETTE `GreyhushShield` (CIRCLE, `amount` 1.0) and a sprite with no material, so its pixels carry no unshielded mark and its own shield (and Ivo's, in reach) lights it. Its balloon is drawn on the HUD, never greyed.
 - New field sources (death marks, flashbacks, the hero's aura in the final fight) compose `MemorySource`. New world effects compose `SongReceiver`. Neither requires touching the song, pulse or field code.
 - **The forgotten print outside the greyhush pass is one formula**: `gh_print(rgb)` in `scenes/world/memory/greyhush_print.gdshaderinc` (luma, blacks lifted toward `greyhush_black_lift_color` by `greyhush_black_lift`, the globals `GreyhushRenderer` pushes). `life_note.gdshader` and the title's `title_grey.gdshader` include it; change the print there only. `gh_shade` in `greyhush_common.gdshaderinc` is a different composition (lift weighted by how forgotten, haze, contrast loss) and does not use it.

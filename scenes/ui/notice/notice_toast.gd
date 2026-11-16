@@ -21,6 +21,8 @@ const TEXT_WIDTH := 180.0
 @export var gap: float = 0.25
 ## Art px the notice travels from the right while it slides in and out.
 @export var slide: float = 12.0
+## Played as the notice slides in; the toast is pausable, so a hold stops it with the world.
+@export var slide_sound: SoundCue
 
 var _tween: Tween
 
@@ -28,6 +30,7 @@ var _tween: Tween
 @onready var _card: Control = $Art/Card
 @onready var _icon: TextureRect = $Art/Card/Row/Icon
 @onready var _text: Label = $Art/Card/Row/Text
+@onready var _emitter: SfxEmitter = $SfxEmitter
 
 
 func _ready() -> void:
@@ -43,6 +46,7 @@ func show_notice(text_key: String, icon: Texture2D) -> void:
 	_card.position.x = slide
 	_art.modulate.a = 0.0
 	_art.show()
+	_emitter.play(slide_sound)
 	_tween = create_tween().set_trans(Tween.TRANS_SINE)
 	_tween.tween_property(_art, "modulate:a", 1.0, slide_in).set_ease(Tween.EASE_OUT)
 	_tween.parallel().tween_property(_card, "position:x", 0.0, slide_in).set_ease(Tween.EASE_OUT)
@@ -57,6 +61,7 @@ func show_notice(text_key: String, icon: Texture2D) -> void:
 ## Hides the notice at once, without `leaving` or `finished`: the watcher that withdrew it queues it again.
 func withdraw() -> void:
 	_stop()
+	_emitter.stop_all()
 	_art.hide()
 	_art.modulate.a = 0.0
 
@@ -66,6 +71,10 @@ func is_showing() -> bool:
 ## The translated text shown or last shown.
 func shown_text() -> String:
 	return _text.text
+
+## The emitter the slide sounds through, for tests and the playtest log.
+func emitter() -> SfxEmitter:
+	return _emitter
 
 func shows_icon() -> bool:
 	return _icon.visible and _icon.texture != null

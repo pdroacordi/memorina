@@ -16,6 +16,7 @@
 [ext_resource type="Script" path="res://scenes/ui/title/flute_pulse.gd" id="16_pulse"]
 [ext_resource type="Resource" path="res://resources/music/menu_title.tres" id="90_music"]
 [ext_resource type="PackedScene" path="res://scenes/ui/settings/settings_screen.tscn" id="91_settings"]
+[ext_resource type="PackedScene" path="res://scenes/ui/menu/menu_sounds.tscn" id="92_sounds"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_pulse"]
 shader = ExtResource("15_pulse_shader")
@@ -178,3 +179,9 @@ grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
 script = ExtResource("14_fade")
+
+[node name="MenuSounds" parent="." node_paths=PackedStringArray("menu_input", "scope") instance=ExtResource("92_sounds")]
+menu_input = NodePath("../MenuInput")
+scope = NodePath("..")
+
+[connection signal="stepped_back" from="." to="MenuSounds" method="on_stepped_back"]

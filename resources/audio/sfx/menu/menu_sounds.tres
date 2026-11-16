@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="MenuSoundSet" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/menu_sound_set.gd" id="1_set"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/move.tres" id="2_move"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/confirm.tres" id="3_confirm"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/back.tres" id="4_back"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/open.tres" id="5_open"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/close.tres" id="6_close"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/page.tres" id="7_page"]
+
+[resource]
+script = ExtResource("1_set")
+move = ExtResource("2_move")
+confirm = ExtResource("3_confirm")
+back = ExtResource("4_back")
+open = ExtResource("5_open")
+close = ExtResource("6_close")
+page = ExtResource("7_page")

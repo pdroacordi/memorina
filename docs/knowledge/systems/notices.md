@@ -80,6 +80,7 @@ UI-11, design 06 §5 Pilar 2 and §9. Two kinds of notice share one queue and on
   - `Text`: the 8 px text font, cream (0.96, 0.9, 0.72) with a 2 px dark outline (0.13, 0.08, 0.05), the region title's epithet style, so it reads over any room; `TEXT_WIDTH` (180) is the widest text the line holds.
 - `show_notice(key, icon)`: slides in from 12 art px right while fading in (0.3 s), holds 2.0 s, emits `leaving`, slides out (0.5 s), waits `gap` (0.25 s) and emits `finished`. One tween bound to the toast: pausable and scaled, like the quill and the region title; under a menu hold it stops where it is.
 - `withdraw()` kills the tween and hides at once without `leaving` or `finished` (`gotchas/a-killed-tween-never-emits-finished`).
+- `slide_sound` (`resources/audio/sfx/menu/notice.tres`) plays through the toast's `SfxEmitter` child in `show_notice`; `withdraw()` stops it. Pausable with the toast (`systems/sound-effects`).
 
 ## Season seeds (LIFE-04, `systems/seeds-and-the-seller`)
 

@@ -18,6 +18,7 @@ func before_test() -> void:
 	_input.bind_pressed.connect(
 			func(device: KeyBindings.Device, code: int) -> void: _emitted.append("bind %d %d" % [device, code]))
 	_input.capture_cancelled.connect(func() -> void: _emitted.append("cancel"))
+	_input.focus_stepped.connect(func(direction: int) -> void: _emitted.append("step %d" % direction))
 
 func test_escape_is_pause_and_not_also_back() -> void:
 	_input._input(_key(KEY_ESCAPE))
@@ -92,6 +93,35 @@ func test_leaving_capture_rereads_the_page_edges() -> void:
 	_input.capturing = false
 	_input._input(_key(KEY_RIGHT))
 	assert_array(_emitted).contains_exactly(["page 1", "page 1"])
+
+func test_up_and_down_step_the_focus_once_per_press() -> void:
+	var echo := _key(KEY_DOWN)
+	echo.echo = true
+	_input._input(_key(KEY_DOWN))
+	_input._input(echo)
+	_input._input(_key(KEY_UP))
+	assert_array(_emitted).contains_exactly(["step 1", "step -1"])
+
+func test_a_held_stick_steps_once_per_tilt() -> void:
+	for value: float in [0.6, 0.9, 1.0]:
+		_input._input(_stick_y(value))
+	_input._input(_stick_y(0.1))
+	_input._input(_stick_y(-0.9))
+	assert_array(_emitted).contains_exactly(["step 1", "step -1"])
+
+## A press that ends a capture is not a focus step afterwards.
+func test_leaving_capture_rereads_the_step_edges() -> void:
+	_input._input(_key(KEY_DOWN))
+	_input.capturing = true
+	_input.capturing = false
+	_input._input(_key(KEY_DOWN))
+	assert_array(_emitted).contains_exactly(["step 1", "step 1"])
+
+func _stick_y(value: float) -> InputEventJoypadMotion:
+	var motion := InputEventJoypadMotion.new()
+	motion.axis = JOY_AXIS_LEFT_Y
+	motion.axis_value = value
+	return motion
 
 func _key(keycode: Key) -> InputEventKey:
 	var event := InputEventKey.new()
