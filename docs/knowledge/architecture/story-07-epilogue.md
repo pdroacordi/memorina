@@ -316,6 +316,7 @@ No other text: the seats and the reunion use glyph prompts. Fit tests: `dialogue
 9. Credits content: "Uso o CREDITS.md". The list is built from `CREDITS.md` and the author, and shown to the user for approval before it ships. Layout as recommended.
 10. The garden's hour after the epilogue: "Fica no fim de tarde (Recommended)".
 11. The draft texts in the i18n table: "Aprovar os textos" (user, 2026-11-16): the daughter's garden and after lines, the five villagers' 1.0 lines, `INTENT_GARDEN`, `INTENT_RIBBON` and `BENCH_GARDEN_STONE`, in pt_BR as written. The en lines, Ivo's tone variants and the credits list are shown for approval at build.
+12. Approvals (user, 2026-11-16): the epilogue's en lines 01-08, "Aprovar"; Ivo's tone variants 02_V1, 02_V2, 06_V1, 06_V2 in pt_BR and en, "Aprovar"; the "Credits list (draft)" as written, "Aprovar" (no GandalfHardcore line; no AIVA, PixelLab or Codex line); Godot: "Aviso e linha nos créditos (Recommended)", a "Made with Godot Engine" line and the engine's MIT notice at the end of the roll.
 
 ## Corrections found while building
 
@@ -356,4 +357,3 @@ Open points, each with a recommendation:
 - PixelLab and Codex (image tools that made most sprites from our own stills): no line, as with AIVA. Recommended: ask; a "Made with" line is optional.
 - Godot Engine: CREDITS.md does not list it. Its MIT licence asks for its copyright notice in the shipped game, which a licences screen or file can hold; a "Made with Godot Engine" line in the roll is optional.
 - Testers and other thanks: CREDITS.md names none. Add names here if there are any.
-12. Approvals (user, 2026-11-16): the epilogue's en lines 01-08, "Aprovar"; Ivo's tone variants 02_V1, 02_V2, 06_V1, 06_V2 in pt_BR and en, "Aprovar"; the "Credits list (draft)" as written, "Aprovar" (no GandalfHardcore line; no AIVA, PixelLab or Codex line); Godot: "Aviso e linha nos créditos (Recommended)", a "Made with Godot Engine" line and the engine's MIT notice at the end of the roll.
