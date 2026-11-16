@@ -24,6 +24,8 @@
 [ext_resource type="Resource" path="res://resources/save_facts/village_at_six_tenths.tres" id="w_six_tenths"]
 [ext_resource type="Resource" path="res://resources/world/backdrops/village_valley.tres" id="bd_region_set"]
 [ext_resource type="Resource" path="res://resources/music/region_home_village.tres" id="99_music"]
+[ext_resource type="Script" path="res://scenes/world/rooms/year/region_year.gd" id="y_year"]
+[ext_resource type="Resource" path="res://resources/world/year/village_year.tres" id="y_stats"]
 
 [sub_resource type="Resource" id="w_seen_1"]
 script = ExtResource("w_fact")
@@ -93,7 +95,7 @@ strength = -0.75
 script = ExtResource("w_level")
 strength = -0.8
 
-[node name="HomeVillage" type="Node2D"]
+[node name="HomeVillage" type="Node2D" node_paths=PackedStringArray("year")]
 script = ExtResource("1_region")
 music = ExtResource("99_music")
 name_key = "REGION_HOME_VILLAGE"
@@ -103,6 +105,7 @@ calm_interiors = true
 season = 3
 backdrop_set = ExtResource("bd_region_set")
 horizon_y = 235.0
+year = NodePath("Year")
 
 [node name="Memory" type="Node2D" parent="."]
 script = ExtResource("2_regmem")
@@ -110,6 +113,10 @@ authored = 0.8
 steps = Dictionary[int, float]({
 2: 0.6
 })
+
+[node name="Year" type="Node" parent="."]
+script = ExtResource("y_year")
+stats = ExtResource("y_stats")
 
 [node name="GardenWell" type="Node2D" parent="."]
 position = Vector2(3840, -844)

@@ -1,0 +1,144 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 95.0,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "world_restored": true,
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_song",
+  "elder_story",
+  "mentor_gift"
+ ],
+ "scenes_seen": [
+  "home_return",
+  "daughter_to_bed",
+  "world_restoration"
+ ],
+ "year": {
+  "season_seconds": 20,
+  "turn_seconds": 6
+ },
+ "player_position": [
+  320,
+  250
+ ],
+ "steps": [
+  {
+   "t": 0.3,
+   "log": "start"
+  },
+  {
+   "t": 1.0,
+   "screenshot": "y00_spring"
+  },
+  {
+   "t": 16.4,
+   "log": "y01_turn_to_summer_mid"
+  },
+  {
+   "t": 16.5,
+   "screenshot": "y01_turn_to_summer_mid"
+  },
+  {
+   "t": 21.4,
+   "log": "y02_summer"
+  },
+  {
+   "t": 21.5,
+   "screenshot": "y02_summer"
+  },
+  {
+   "t": 36.4,
+   "log": "y03_turn_to_autumn_mid"
+  },
+  {
+   "t": 36.5,
+   "screenshot": "y03_turn_to_autumn_mid"
+  },
+  {
+   "t": 41.4,
+   "log": "y04_autumn"
+  },
+  {
+   "t": 41.5,
+   "screenshot": "y04_autumn"
+  },
+  {
+   "t": 56.0,
+   "log": "y05_turning_to_winter"
+  },
+  {
+   "t": 56.2,
+   "screenshot": "y05_turning_to_winter"
+  },
+  {
+   "t": 56.5,
+   "teleport": [
+    320,
+    12250
+   ]
+  },
+  {
+   "t": 58.0,
+   "log": "y06_indoors_holds"
+  },
+  {
+   "t": 58.2,
+   "screenshot": "y06_indoors_holds"
+  },
+  {
+   "t": 65.0,
+   "log": "y07_indoors_still_holding"
+  },
+  {
+   "t": 65.5,
+   "teleport": [
+    320,
+    250
+   ]
+  },
+  {
+   "t": 67.0,
+   "log": "y08_back_out_mid_turn"
+  },
+  {
+   "t": 67.2,
+   "screenshot": "y08_back_out_mid_turn"
+  },
+  {
+   "t": 72.9,
+   "log": "y09_winter"
+  },
+  {
+   "t": 73.0,
+   "screenshot": "y09_winter"
+  },
+  {
+   "t": 87.4,
+   "log": "y10_turn_to_spring_mid"
+  },
+  {
+   "t": 87.5,
+   "screenshot": "y10_turn_to_spring_mid"
+  },
+  {
+   "t": 92.9,
+   "log": "y11_spring_again"
+  },
+  {
+   "t": 93.0,
+   "screenshot": "y11_spring_again"
+  }
+ ]
+}

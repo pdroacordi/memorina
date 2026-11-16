@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="YearStats" format=3]
+
+[ext_resource type="Script" path="res://resources/world/year/year_stats.gd" id="1_stats"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="2_fact"]
+[ext_resource type="Resource" path="res://resources/save_facts/world_restored.tres" id="3_restored"]
+
+[resource]
+script = ExtResource("1_stats")
+order = Array[int]([3, 1, 2, 0])
+season_seconds = 240.0
+turn_seconds = 12.0
+when = Array[ExtResource("2_fact")]([ExtResource("3_restored")])

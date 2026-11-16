@@ -42,6 +42,8 @@ var _glide_keep: Array[Room] = []
 var _baseline_tween: Tween
 ## A room was entered since the last _process: that frame builds only the waiting rooms that are due.
 var _entered: bool = false
+## The year of the region Ivo is in, or null.
+var _year: RegionYear
 
 func _ready() -> void:
 	assert(SaveSystem.has_session(), "The game runs on a session that Boot or the title began")
@@ -151,11 +153,31 @@ func _enter_room(room: Room, glide: bool = false) -> void:
 	# standing in rather than being set once at startup.
 	var region := _current_room.get_region()
 	_set_baseline(region.current_baseline(), glide)
-	_memory_field.season = region.season
-	_memory_field.palette = song_catalog.palette_for(region.season) if song_catalog else null
+	_follow_year(region.year)
+	_write_season(region.current_season())
 	_camera.set_bounds(_current_room.get_bounds(), glide, RoomRing.reach(_current_room.get_bounds()))
 	if not room.interior:
 		_screens.clear_map_anchor()
+
+## Follows the year of the region Ivo is in, so its turns reach the field while he is there.
+func _follow_year(year: RegionYear) -> void:
+	if _year == year:
+		return
+	if _year != null and is_instance_valid(_year):
+		_year.season_changed.disconnect(_on_year_turned)
+	_year = year
+	if _year != null:
+		_year.season_changed.connect(_on_year_turned)
+
+## The only writer of the field's season and palettes (architecture/story-07-epilogue, "One writer each").
+func _write_season(season: Enums.Season) -> void:
+	_memory_field.season = season
+	_memory_field.palette = song_catalog.palette_for(season) if song_catalog else null
+	_memory_field.year = _year
+	_memory_field.next_palette = song_catalog.palette_for(_year.next_season()) if song_catalog and _year != null else null
+
+func _on_year_turned(season: Enums.Season) -> void:
+	_write_season(season)
 
 # Idles the rooms the glide kept running.
 func _on_camera_glide_finished() -> void:

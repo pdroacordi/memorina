@@ -221,6 +221,14 @@ greyhush_region_season={
 "type": "int",
 "value": 3
 }
+greyhush_region_season_next={
+"type": "int",
+"value": 3
+}
+greyhush_season_turn={
+"type": "float",
+"value": 0.0
+}
 greyhush_haze_color={
 "type": "vec3",
 "value": Vector3(0.34, 0.37, 0.43)

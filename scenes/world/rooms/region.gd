@@ -33,6 +33,8 @@ signal memory_changed(level: float)
 @export var weather: WeatherProfile
 ## The one way the region's weather blows.
 @export_enum("West:-1", "East:1") var weather_wind: int = 1
+## The region's passing year, or null: its season is then always `season` (architecture/story-07-epilogue).
+@export var year: RegionYear
 
 @onready var _memory: RegionMemory = $Memory
 
@@ -55,6 +57,10 @@ func _ready() -> void:
 ## Current baseline memory value.
 func current_baseline() -> float:
 	return _memory.current()
+
+## The year's season when the region has one, else its native season.
+func current_season() -> Enums.Season:
+	return year.season() if year != null else season
 
 func _on_guardian_restored(restored: Enums.Guardian) -> void:
 	if has_guardian and restored == guardian:

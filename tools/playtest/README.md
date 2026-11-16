@@ -56,6 +56,10 @@ Used by the `godot-playtester` agent (see `.claude/agents/godot-playtester.md`) 
   centre, the fade's alpha, `transitioning`, Ivo's facing and process mode, whether the region weather
   is visible, every loaded door (`link@x:open|sealed[+prompt] shake=<sprite x>`), and the region title's
   alpha, text and the count of announced regions (`title=<alpha> '<name>' announced=<n>`).
+- **The ending (STORY-07).** `"world_restored": true` restores the world in the save before the scene loads, and
+  `"year": {"season_seconds": s, "turn_seconds": t}` gives every `RegionYear` a copy of its stats at that pace, so a run
+  can watch the village's year turn. `log` prints the field's season and, in a region with a year,
+  `year=<season>><next> turn=<0..1> advancing=<bool>`.
 - **Teleport.** `"teleport": [x, y]` moves Ivo mid-run with `Character.teleport`, as `player_position` does at the
   start, so one timeline can visit several rooms (the opening's errand, `systems/story`). The game enters the room under
   him with a cut.

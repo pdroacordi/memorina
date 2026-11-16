@@ -13,6 +13,10 @@ const MAX_SOURCES := 32
 var season: Enums.Season = Enums.Season.SPRING
 ## Season palette; see docs/design/03_mundo_e_ambiente.md section 5.2.
 var palette: SeasonPalette
+## The current region's RegionYear, or null; Game writes it with `season`, `palette` and `next_palette`.
+var year: RegionYear
+## The palette of `year.next_season()`, which the region tint turns toward; null without a year.
+var next_palette: SeasonPalette
 
 var _sources: Array[MemorySource] = []
 ## Render-only shields; keep separate from `_sources` so they never affect `sample()`.

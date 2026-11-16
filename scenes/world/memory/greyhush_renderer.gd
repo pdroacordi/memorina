@@ -140,12 +140,32 @@ func _process(delta: float) -> void:
 	# The season's tint rides on the baseline: the more a region remembers, the
 	# more it wears its season (docs/design/03_mundo_e_ambiente.md section 5.2).
 	var palette := _field.palette
-	var tint := palette.tint if palette != null else Color.WHITE
+	var turn := turn_of(_field)
+	var tint := region_tint_of(_field, turn)
 	_set_param("region_tint", Vector3(tint.r, tint.g, tint.b))
 	_set_param("region_tint_amount", _field.baseline if palette != null else 0.0)
 	_set_param("game_size", size)
+	# The mask's turn dither stays on the world's game pixels as the camera moves (architecture/story-07-epilogue).
+	_set_param("turn_origin", canvas.origin.round())
 	# World materials read the region season through a global parameter.
 	RenderingServer.global_shader_parameter_set(&"greyhush_region_season", int(_field.season))
+	RenderingServer.global_shader_parameter_set(&"greyhush_region_season_next", int(next_season_of(_field)))
+	RenderingServer.global_shader_parameter_set(&"greyhush_season_turn", turn)
+
+## How far the field's region has turned into its next season, 0..1; 0 without a year.
+static func turn_of(field: MemoryField) -> float:
+	return field.year.turn() if field.year != null else 0.0
+
+static func next_season_of(field: MemoryField) -> Enums.Season:
+	return field.year.next_season() if field.year != null else field.season
+
+## The region tint, turned from the season's palette toward the next one's by `turn`.
+static func region_tint_of(field: MemoryField, turn: float) -> Color:
+	if field.palette == null:
+		return Color.WHITE
+	if field.next_palette == null or turn <= 0.0:
+		return field.palette.tint
+	return field.palette.tint.lerp(field.next_palette.tint, turn)
 
 func _pack_sources(canvas: Transform2D, scale: float, visible_world: Rect2) -> void:
 	var sources := _field.sources_intersecting(visible_world)

@@ -4,9 +4,9 @@ type: system
 title: Seasonal art: stacked sheets, the season mask and regional weather
 status: active
 tags: [season, art, shader, mask, weather]
-related: [features/regional-weather, gotchas/screen-texture-copy-scope]
+related: [features/regional-weather, gotchas/screen-texture-copy-scope, architecture/story-07-epilogue]
 created: 2026-10-02
-updated: 2026-10-06
+updated: 2026-11-16
 source_files: []
 ---
 
@@ -30,3 +30,18 @@ A pulse does not tint the world into its season; it **redraws** it. Every season
 - **Generated grass** (WORLD-23, `systems/grass`) picks its band per game pixel exactly as the tiles do, so a blade and the turf under it swap on the same pixels; winter has no blades (the snow lip shows).
 
 - **No falling weather under rock** (MEM-05; user, 2026-11-11: "Yes, every region (Recommended)"): `RegionWeather` fades out over 0.5 s in any room where `Room.has_sky()` is false (interiors and generator-marked `covered` rooms), in every region and season; the first room of a world build shows at once. It multiplies every layer's alpha by `Settings.weather_intensity()` and never writes `amount` (that respawns the particles). A region with a `WeatherProfile.gust_particles` gets a layer driven sideways by `RegionWind.drive()` at z -10 (`RegionWeather.GUST_Z`), behind the ground and in front of back walls and backdrops (MEM-16) (`systems/air`, Regional weather).
+
+## The year (STORY-07, 2026-11-16)
+
+"Pelo relógio (Recommended)" (user, 2026-11-16): at 1.0 the village passes through its four seasons, about 4 minutes each while Ivo is outdoors there, with a 12 s dithered turn (`architecture/story-07-epilogue`, "The year").
+
+- **Data:** `YearStats` (`resources/world/year/year_stats.gd`; `village_year.tres`: order SPRING, SUMMER, AUTUMN, WINTER, `season_seconds` 240, `turn_seconds` 12, `when` `world_restored.tres`). `YearMath.at(elapsed, stats, start)` (pure) gives `{season, next, turn}`: a season holds `season_seconds - turn_seconds`, then `turn` rises 0..1 (smoothstep) and the next season commits.
+- **`RegionYear`** (`scenes/world/rooms/year/region_year.gd`, the `Year` child of `home_village.tscn`, `Region.year`): the only owner of the elapsed time, in memory only (a world build starts at `Region.season`, turn 0). It advances in `_physics_process` (pausable, scaled) only while `MemoryField.year` is itself (Game follows Ivo's region), its `when` holds, Ivo's room is in its region and `has_sky()`, he is not `is_in_story()`, and no visible source with negative strength reaches the view (`forgetting_in_view`), so no grey pixel on screen ever turns. Otherwise it holds, mid-turn included. `season_changed(season)` at each commit.
+- **One writer each:** `Game` stays the only writer of `MemoryField.season`, `palette`, and the new `year` and `next_palette`: at a room change it follows the region's `year` and writes `Region.current_season()`; on `season_changed` while it follows that year it writes the new season.
+- **Renderer:** the globals `greyhush_region_season_next` and `greyhush_season_turn` (0 without a year), and the region tint lerped from `palette` to `next_palette` by the turn. The pulses' tints are untouched.
+- **Mask:** `season_mask.gdshader` writes `next + 1` into R where no pulse swapped the pixel and `greyhush_season_turn > BAYER[...]` (strict greater, as the pulse test). The Bayer cell is read at `floor(px - turn_origin)`, `px = UV * game_size` and `turn_origin` the canvas origin rounded, so the turn's cells stay on the world's game pixels as the camera moves instead of crawling over the screen. No `TIME`, no `FRAGCOORD`; G is unchanged. Every consumer already decodes R, so no consumer shader changed.
+- **Weather:** `RegionWeather` is unchanged: turned pixels read as swapped, so the current season's flakes or petals leave them; at the commit it mounts the new season's particles.
+- Interiors never turn (band 0, no weather) and hold the year; the rest of the world keeps its own season.
+- **Band audit (2026-11-16):** every seasonal drawable the village shows outdoors has its own picture in each band: the ground tiles (`village/earth.png`, `stone.png`, `wood.png`, every cell drawn in all three bands), the generated grass (`village_earth_grass`, `village_stone_grass`: no blades in winter), every layer of `village_valley` and of the five `waterfall_garden_*` sets, and the props on `prop_seasonal_material` (`bush`, `flower_pot_a/b/c`, `garden_bed_planted`, `village_tree`, the garden's `flower_bed_{mixed,white,yellow}` and `old_tree`). The drawables that never change with the season: the built wall `wall.png` and `crack.png` (one picture in every band; built walls stay one band, above), `village_strata` (one band, the interiors' rock), and everything without a seasonal material: the facades, the other props (barrels, carts, fences, lanterns, the well head, the market stalls, the swing, the flat stone, the falls and their cliff and foam), the villagers, the hens and the cat. New seasonal art for any of them is a separate roadmap item.
+- Tests: `year_math_test`, `region_year_test`, `game_season_test`, `greyhush_renderer_season_test` (headless renders nothing, so the mask's turn is held to its source).
+

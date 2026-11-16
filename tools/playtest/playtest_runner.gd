@@ -88,6 +88,8 @@ func _ready() -> void:
 		SaveSystem.mark_dialogue_heard(StringName(str(dialogue_id)))
 	for scene_id: Variant in timeline.get("scenes_seen", []):
 		SaveSystem.mark_scene_seen(StringName(str(scene_id)))
+	if bool(timeline.get("world_restored", false)):
+		SaveSystem.restore_world()
 	var responses: Dictionary = timeline.get("responses", {})
 	for ask_id: Variant in responses:
 		SaveSystem.record_response(StringName(str(ask_id)), StringName(str(responses[ask_id])))
@@ -102,6 +104,9 @@ func _ready() -> void:
 	var packed: PackedScene = load(scene_path)
 	assert(packed != null, "Could not load playtest scene %s" % scene_path)
 	add_child(packed.instantiate())
+	# A shorter year for a run that watches it turn (architecture/story-07-epilogue, "The year").
+	if timeline.has("year"):
+		_shorten_years(timeline["year"])
 	if timeline.has("player_position"):
 		_place_player(timeline["player_position"])
 
@@ -309,7 +314,24 @@ func _room_state(player: Player) -> String:
 	if title != null:
 		line += " title=%.2f '%s' announced=%d" % [title.alpha(), title.shown_name(),
 			SaveSystem.player_data.announced_regions.size()]
+	var field := MemoryField.find_in(self)
+	if field != null:
+		line += " season=%s" % Enums.Season.keys()[int(field.season)]
+		if field.year != null:
+			line += " year=%s>%s turn=%.2f advancing=%s" % [Enums.Season.keys()[int(field.year.season())],
+				Enums.Season.keys()[int(field.year.next_season())], field.year.turn(), field.year.can_advance()]
 	return line
+
+## `{"season_seconds": s, "turn_seconds": t}` on a copy of every region year's stats.
+func _shorten_years(pace: Dictionary) -> void:
+	for node: Node in get_tree().root.find_children("*", "Node", true, false):
+		var year := node as RegionYear
+		if year == null:
+			continue
+		var stats := year.stats.duplicate() as YearStats
+		stats.season_seconds = float(pace.get("season_seconds", stats.season_seconds))
+		stats.turn_seconds = float(pace.get("turn_seconds", stats.turn_seconds))
+		year.stats = stats
 
 ## Which screen is open, the map's centre and zoom, and the seen cells per room key in the live save.
 func _map_state() -> String:
