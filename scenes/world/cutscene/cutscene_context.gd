@@ -8,7 +8,8 @@ extends RefCounted
 func point_of(_id: StringName) -> Vector2:
 	return Vector2.ZERO
 
-func walk(_id: StringName, _x: float, _pace: float) -> CutsceneTask:
+## `run` plays an actor's run at its `run_speed` (a StoryActor only).
+func walk(_id: StringName, _x: float, _pace: float, _run: bool = false) -> CutsceneTask:
 	return CutsceneTask.new()
 
 func place(_id: StringName, _point: Vector2) -> void:

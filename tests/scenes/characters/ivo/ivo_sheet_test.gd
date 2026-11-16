@@ -9,6 +9,8 @@ const HELD_PROPS := {
 	"ivo_guitar.png": "res://assets/sprites/world/props/interiors/ivo_house/guitar.png",
 	"ivo_memorina_play.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
 	"ivo_memorina_lower.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
+	"ivo_sit_memorina.png": "res://assets/sprites/characters/ivo/ivo_memorina_play.png",
+	"ivo_sit_memorina_raise.png": "res://assets/sprites/characters/ivo/ivo_memorina_play.png",
 	"ivo_ribbon.png": "res://assets/sprites/world/props/garden/ribbon_hand.png",
 }
 const FRAME := 128
@@ -25,7 +27,8 @@ const STEADY_TOLERANCE := 4.0
 const GROUNDED: Array[StringName] = [
 	&"idle", &"run", &"brace", &"brace_stand", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle", &"memorina_lower",
 	&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in", &"run_attack_swing_out",
-	&"guitar_hold", &"guitar_strum", &"kneel", &"sit_ground", &"push_swing", &"ribbon",
+	&"guitar_hold", &"guitar_strum", &"kneel", &"sit_ground", &"push_swing", &"ribbon", &"sit_memorina_raise", &"sit_memorina",
+	&"sit_memorina_lower",
 ]
 ## Sheet frames in flight, both boots off the floor 1-3 art px; the running attack keeps the run's legs.
 const FLIGHT := {&"run": [3, 4, 7], &"run_attack_swing_in": [3, 4], &"run_attack_swing_out": [7]}
@@ -63,7 +66,8 @@ const LENGTHS := {
 	&"climb": 0.6, &"climb_hold": 0.1, &"climb_back": 0.6, &"climb_back_hold": 0.1, &"memorina_draw": 0.33333334,
 	&"memorina_idle": 1.0, &"memorina_lower": 0.33333334, &"idle_attack_swing_in": 0.41666666, &"idle_attack_swing_out": 0.33333334,
 	&"run_attack_swing_in": 0.41666666, &"run_attack_swing_out": 0.33333334, &"jump_attack": 0.33333334,
-	&"fall_attack": 0.33333334, &"air_downwards_attack": 0.5,
+	&"fall_attack": 0.33333334, &"air_downwards_attack": 0.5, &"sit_memorina_raise": 0.625, &"sit_memorina": 1.0,
+	&"sit_memorina_lower": 0.625,
 }
 
 var _library: AnimationLibrary
@@ -215,6 +219,17 @@ func test_every_colour_is_from_the_palette() -> void:
 			if not allowed.has(rgba):
 				strays["%s %x" % [_texture(clip).resource_path.get_file(), rgba]] = true
 	assert_array(strays.keys()).is_empty()
+
+## The seated flute's sheets sit where `sit` sits (STORY-07): the lower's last frame is the seated rest, so a raise or a
+## lower never jumps on the stone.
+func test_the_seated_flute_lands_on_the_seated_rest() -> void:
+	var rest := _centroid_x(&"sit", 0, 80, 96)
+	for frame: int in _frames(&"sit_memorina_lower"):
+		var lowered := _centroid_x(&"sit_memorina_lower", frame, 80, 96)
+		assert_float(lowered).override_failure_message("lower frame %d" % frame).is_equal_approx(rest, CENTRE_TOLERANCE)
+	for frame: int in _frames(&"sit_memorina"):
+		var playing := _centroid_x(&"sit_memorina", frame, 80, 96)
+		assert_float(playing).override_failure_message("play frame %d" % frame).is_equal_approx(rest, CENTRE_TOLERANCE)
 
 func test_the_body_is_the_capsule_the_rooms_were_built_for() -> void:
 	var shape_node := _ivo.get_node("CollisionShape2D") as CollisionShape2D

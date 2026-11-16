@@ -53,6 +53,7 @@
 [ext_resource type="Resource" path="res://resources/cutscene/story/song_fails.tres" id="cs_song_fails"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/ivo_hears_story.tres" id="cs_hears_story"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/daughter_sees_flute.tres" id="cs_sees_flute"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/daughter/window.png" id="st_window"]
 
 [sub_resource type="Resource" id="seen_reunion"]
 script = ExtResource("st_fact")
@@ -342,16 +343,16 @@ frames_per_second = 6.0
 sequence = PackedInt32Array(0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1)
 
 [node name="Waiting" type="Sprite2D" parent="Props/Daughter"]
-position = Vector2(384, 288)
-texture = ExtResource("st_standing")
+position = Vector2(400, 288)
+texture = ExtResource("st_window")
 centered = false
 offset = Vector2(-32, -62)
-hframes = 8
+hframes = 4
 
 [node name="AmbientMotion" type="Node" parent="Props/Daughter/Waiting"]
 script = ExtResource("st_motion")
-frames_per_second = 6.0
-sequence = PackedInt32Array(0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1)
+frames_per_second = 4.0
+sequence = PackedInt32Array(0, 1, 2, 3)
 
 [node name="Reunited" type="Sprite2D" parent="Props/Daughter"]
 position = Vector2(240, 288)

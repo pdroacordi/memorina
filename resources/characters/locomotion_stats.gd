@@ -3,6 +3,8 @@ extends Resource
 ## Ground and air movement tuning for a character.
 
 @export var move_speed  : float = 96.0
+## px/s of a scripted run (CutsceneWalk.run); 0: this body never runs.
+@export var run_speed   : float = 0.0
 @export var acceleration: float = 1024.0
 @export var deceleration: float = 2048.0
 ## Airborne acceleration multiplier.

@@ -76,8 +76,8 @@ class Recorder:
 	func point_of(id: StringName) -> Vector2:
 		return points.get(id, Vector2.ZERO)
 
-	func walk(id: StringName, x: float, pace: float) -> CutsceneTask:
-		calls.append("walk:%s:%d:%.2f" % [id, int(x), pace])
+	func walk(id: StringName, x: float, pace: float, run: bool = false) -> CutsceneTask:
+		calls.append("walk:%s:%d:%.2f%s" % [id, int(x), pace, ":run" if run else ""])
 		return CutsceneWaitTask.new(1.0)
 
 	func place(id: StringName, point: Vector2) -> void:

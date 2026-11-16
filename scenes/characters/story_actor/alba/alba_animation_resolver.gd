@@ -21,10 +21,13 @@ const FLOWERS := &"flowers"
 const SWING := &"swing"
 const POOL_BACK := &"pool_back"
 const TREE_WITH_DAUGHTER := &"tree_with_daughter"
+## Seated on the flat stone beside Ivo in the epilogue (STORY-07): her lap is the stone's seat height, 9 art px.
+const BESIDE := &"beside"
+const BESIDE_SING := &"beside_sing"
 
 const CLIPS: Array[StringName] = [
 	STANDING, WALK, SIT, SEATED, SIT_SING, PICK, PICKED, CHEST, RISEN, TURN, TURNED, RIBBON, HOLDING_OUT, LULLABY,
-	STONE, FLOWERS, SWING, POOL_BACK, TREE_WITH_DAUGHTER,
+	STONE, FLOWERS, SWING, POOL_BACK, TREE_WITH_DAUGHTER, BESIDE, BESIDE_SING,
 ]
 ## The rest clips, one per child of the past garden's `Alba` staging.
 const RESTS: Array[StringName] = [STONE, FLOWERS, SWING, POOL_BACK, TREE_WITH_DAUGHTER]

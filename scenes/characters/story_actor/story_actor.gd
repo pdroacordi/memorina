@@ -15,6 +15,7 @@ const GROUP := &"story_actors"
 ## The clip a gesture asked for; empty shows the resolver's idle clip.
 var _clip: StringName = &""
 var _in_scene: bool = false
+var _running: bool = false
 
 @onready var _controller: ScriptedController = $Controller
 @onready var _locomotion: LocomotionComponent = $Locomotion
@@ -69,12 +70,20 @@ func face_towards(axis: float) -> void:
 func is_in_scene() -> bool:
 	return _in_scene
 
-func walk_to(x: float, pace: float) -> void:
+## `run` moves at `pace` of the stats' `run_speed` with the resolver's run clip.
+func walk_to(x: float, pace: float, run: bool = false) -> void:
+	assert(not run or (_resolver.run_clip() != &"" and _locomotion.stats.run_speed > 0.0
+			and _locomotion.stats.move_speed > 0.0), "%s cannot run" % actor_id)
 	_clip = _resolver.idle_clip()
+	_running = run
 	_controller.walk_to(x, pace)
 
 func is_walking() -> bool:
 	return _controller.is_walking()
+
+## Read by the resolver: walking, and asked to run.
+func is_running() -> bool:
+	return _running and is_walking()
 
 ## Plays `clip`, a clip of this actor's resolver.
 func gesture(clip: StringName) -> void:
@@ -99,7 +108,11 @@ func _process_motion(delta: float) -> void:
 		velocity.x = 0.0
 		teleport(Vector2(_controller.target_x(), global_position.y))
 	face_towards(_controller.direction)
-	_locomotion.ground_update(delta, _controller.direction)
+	# The run reaches run_speed through the same ground motion: the axis scales move_speed.
+	var axis := _controller.direction
+	if is_running():
+		axis *= _locomotion.stats.run_speed / _locomotion.stats.move_speed
+	_locomotion.ground_update(delta, axis)
 	if not is_on_floor():
 		velocity.y += base_gravity() * delta
 

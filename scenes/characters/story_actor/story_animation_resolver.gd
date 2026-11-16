@@ -8,7 +8,7 @@ extends AnimationResolver
 
 func resolve() -> StringName:
 	if _actor.is_walking():
-		return walk_clip()
+		return run_clip() if _actor.is_running() else walk_clip()
 	var asked := _actor.asked_clip()
 	if asked == &"":
 		return idle_clip()
@@ -38,6 +38,10 @@ func settles() -> Dictionary[StringName, StringName]:
 	return {}
 
 func walk_clip() -> StringName:
+	return &""
+
+## Empty when the actor has no run.
+func run_clip() -> StringName:
 	return &""
 
 ## What the actor shows after a walk and when nothing is asked.

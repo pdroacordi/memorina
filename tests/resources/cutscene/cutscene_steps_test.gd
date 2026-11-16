@@ -22,6 +22,12 @@ func test_a_walk_to_a_mark_walks_and_lands_facing_the_way_it_went() -> void:
 	step.land(_context)
 	assert_array(_calls()).is_equal(["walk:girl:60:0.50", "face:girl:-1", "place:girl:60,288"])
 
+func test_a_run_asks_the_context_to_run() -> void:
+	var step := C.walk(&"girl", 58.0)
+	step.run = true
+	step.begin(_context)
+	assert_array(_calls()).is_equal(["walk:girl:58:1.00:run"])
+
 func test_face_away_turns_its_back() -> void:
 	var step := CutsceneFace.new()
 	step.actor = &"girl"

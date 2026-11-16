@@ -30,6 +30,43 @@ func test_it_seats_him_on_the_ground() -> void:
 	assert_str(String((ivo.get_node("AnimationResolver") as AnimationResolver).resolve())).is_equal(
 			String(PlayerAnimationResolver.SIT_GROUND))
 
+## STORY-07: on the stone a scene's MEMORINA pose raises the flute seated, and ending the pose lowers it.
+func test_seated_on_a_stone_the_memorina_pose_plays_and_lowers_the_flute_seated() -> void:
+	var seat := auto_free(SEAT.instantiate()) as GroundSeat
+	seat.ground = false
+	add_child(seat)
+	var ivo := auto_free(IVO.instantiate()) as Player
+	add_child(ivo)
+	await get_tree().physics_frame
+	ivo.sit(seat.seat())
+	var resolver := ivo.get_node("AnimationResolver") as AnimationResolver
+	var driver := ivo.get_node("AnimationDriver") as AnimationDriver
+	assert_str(String(resolver.resolve())).is_equal(String(PlayerAnimationResolver.SIT))
+	ivo.stage_pose(DialogueBeat.Pose.MEMORINA)
+	assert_str(String(resolver.resolve())).is_equal(String(PlayerAnimationResolver.SIT_MEMORINA_RAISE))
+	driver.play(PlayerAnimationResolver.SIT_MEMORINA)
+	assert_str(String(resolver.resolve())).is_equal(String(PlayerAnimationResolver.SIT_MEMORINA))
+	ivo.stage_pose(DialogueBeat.Pose.NONE)
+	assert_bool(ivo.is_sitting()).is_true()
+	assert_str(String(resolver.resolve())).is_equal(String(PlayerAnimationResolver.SIT_MEMORINA_LOWER))
+
+## A pose that ends mid-raise lowers the flute from where it is instead of cutting to the rest.
+func test_a_pose_ended_mid_raise_lowers_the_flute() -> void:
+	var seat := auto_free(SEAT.instantiate()) as GroundSeat
+	seat.ground = false
+	add_child(seat)
+	var ivo := auto_free(IVO.instantiate()) as Player
+	add_child(ivo)
+	await get_tree().physics_frame
+	ivo.sit(seat.seat())
+	var resolver := ivo.get_node("AnimationResolver") as AnimationResolver
+	var driver := ivo.get_node("AnimationDriver") as AnimationDriver
+	ivo.stage_pose(DialogueBeat.Pose.MEMORINA)
+	driver.play(resolver.resolve())
+	assert_str(String(driver.current)).is_equal(String(PlayerAnimationResolver.SIT_MEMORINA_RAISE))
+	ivo.stage_pose(DialogueBeat.Pose.NONE)
+	assert_str(String(resolver.resolve())).is_equal(String(PlayerAnimationResolver.SIT_MEMORINA_LOWER))
+
 func test_it_wants_its_scene_only_while_gated_and_unseen() -> void:
 	var seat := auto_free(SEAT.instantiate()) as GroundSeat
 	seat.cutscene = C.scene(&"seat_scene", [C.wait(0.1)])

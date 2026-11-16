@@ -19,6 +19,8 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/alba/turn.png" id="t_turn"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/alba/ribbon.png" id="t_ribbon"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/alba/lullaby.png" id="t_lullaby"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/alba/beside.png" id="t_beside"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/alba/beside_sing.png" id="t_beside_sing"]
 
 [sub_resource type="ShaderMaterial" id="edge_material"]
 resource_local_to_scene = true
@@ -1322,8 +1324,142 @@ tracks/4/keys = {
 "values": [Vector2(0, 0)]
 }
 
+[sub_resource type="Animation" id="anim_beside"]
+resource_name = "beside"
+length = 1
+loop_mode = 1
+step = 0.25
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("t_beside")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:offset")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(-32, -62)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="anim_beside_sing"]
+resource_name = "beside_sing"
+length = 1
+loop_mode = 1
+step = 0.1666666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("t_beside_sing")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [6]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1666667, 0.3333333, 0.5, 0.6666667, 0.8333333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:offset")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(-32, -62)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(0, 0)]
+}
+
 [sub_resource type="AnimationLibrary" id="library"]
 _data = {
+&"beside": SubResource("anim_beside"),
+&"beside_sing": SubResource("anim_beside_sing"),
 &"RESET": SubResource("anim_reset"),
 &"standing": SubResource("anim_standing"),
 &"walk": SubResource("anim_walk"),
@@ -1403,7 +1539,17 @@ animation = &"pool_back"
 [sub_resource type="AnimationNodeAnimation" id="node_tree_with_daughter"]
 animation = &"tree_with_daughter"
 
+[sub_resource type="AnimationNodeAnimation" id="node_beside"]
+animation = &"beside"
+
+[sub_resource type="AnimationNodeAnimation" id="node_beside_sing"]
+animation = &"beside_sing"
+
 [sub_resource type="AnimationNodeStateMachine" id="machine"]
+states/beside/node = SubResource("node_beside")
+states/beside/position = Vector2(780, 380)
+states/beside_sing/node = SubResource("node_beside_sing")
+states/beside_sing/position = Vector2(880, 380)
 states/standing/node = SubResource("node_standing")
 states/standing/position = Vector2(300, 60)
 states/walk/node = SubResource("node_walk")

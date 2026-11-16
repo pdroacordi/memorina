@@ -9,6 +9,7 @@
 [ext_resource type="Resource" path="res://resources/dialogue/story/daughter_reunion.tres" id="e7"]
 [ext_resource type="Script" path="res://resources/cutscene/cutscene_walk.gd" id="e8"]
 [ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e10"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_gesture.gd" id="e11"]
 [ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e12"]
 
 [sub_resource type="Resource" id="ivo_faces"]
@@ -36,6 +37,12 @@ script = ExtResource("e3")
 actor = &"daughter"
 toward = &"ivo"
 
+[sub_resource type="Resource" id="from_the_window"]
+script = ExtResource("e11")
+actor = &"daughter"
+clip = &"standing"
+wait = false
+
 [sub_resource type="Resource" id="she_sees"]
 script = ExtResource("e4")
 actor = &"daughter"
@@ -47,6 +54,7 @@ script = ExtResource("e8")
 actor = &"daughter"
 pace = 1
 mark = &"reunion"
+run = true
 
 [sub_resource type="Resource" id="he_steps_in"]
 script = ExtResource("e8")
@@ -81,4 +89,4 @@ wait = false
 [resource]
 script = ExtResource("e12")
 id = &"daughter_reunion"
-steps = Array[ExtResource("e2")]([SubResource("together_1"), SubResource("still"), SubResource("she_turns"), SubResource("she_sees"), SubResource("together_2"), SubResource("together_3"), SubResource("talk")])
+steps = Array[ExtResource("e2")]([SubResource("together_1"), SubResource("still"), SubResource("she_turns"), SubResource("from_the_window"), SubResource("she_sees"), SubResource("together_2"), SubResource("together_3"), SubResource("talk")])

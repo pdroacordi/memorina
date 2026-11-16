@@ -44,8 +44,9 @@ func point_of(id: StringName) -> Vector2:
 		return _director.ivo.global_position
 	return cast.point_of(id)
 
-func walk(id: StringName, x: float, pace: float) -> CutsceneTask:
+func walk(id: StringName, x: float, pace: float, run: bool = false) -> CutsceneTask:
 	if id == CutsceneStep.IVO:
+		assert(not run, "Ivo has no scripted run")
 		if not _driving_ivo:
 			_driving_ivo = true
 			_director.ivo_driven.emit(_ivo_controller)
@@ -59,7 +60,7 @@ func walk(id: StringName, x: float, pace: float) -> CutsceneTask:
 	var found := cast.actor(id)
 	if found == null:
 		return CutsceneTask.new()
-	found.walk_to(x, pace)
+	found.walk_to(x, pace, run)
 	return CutsceneUntilTask.new(func() -> bool: return not is_instance_valid(found) or not found.is_walking())
 
 func place(id: StringName, point: Vector2) -> void:

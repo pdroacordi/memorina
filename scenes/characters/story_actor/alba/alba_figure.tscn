@@ -10,6 +10,8 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/alba/turn.png" id="t_turn"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/alba/ribbon.png" id="t_ribbon"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/alba/lullaby.png" id="t_lullaby"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/alba/beside.png" id="t_beside"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/alba/beside_sing.png" id="t_beside_sing"]
 
 [sub_resource type="AtlasTexture" id="standing_0"]
 atlas = ExtResource("t_standing")
@@ -270,6 +272,46 @@ region = Rect2(576, 0, 96, 64)
 [sub_resource type="AtlasTexture" id="lullaby_7"]
 atlas = ExtResource("t_lullaby")
 region = Rect2(672, 0, 96, 64)
+
+[sub_resource type="AtlasTexture" id="beside_0"]
+atlas = ExtResource("t_beside")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="beside_1"]
+atlas = ExtResource("t_beside")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="beside_2"]
+atlas = ExtResource("t_beside")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="beside_3"]
+atlas = ExtResource("t_beside")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="beside_sing_0"]
+atlas = ExtResource("t_beside_sing")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="beside_sing_1"]
+atlas = ExtResource("t_beside_sing")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="beside_sing_2"]
+atlas = ExtResource("t_beside_sing")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="beside_sing_3"]
+atlas = ExtResource("t_beside_sing")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="beside_sing_4"]
+atlas = ExtResource("t_beside_sing")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="beside_sing_5"]
+atlas = ExtResource("t_beside_sing")
+region = Rect2(320, 0, 64, 64)
 
 [sub_resource type="SpriteFrames" id="frames"]
 animations = [{
@@ -664,6 +706,46 @@ animations = [{
 "loop": true,
 "name": &"tree_with_daughter",
 "speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("beside_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("beside_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("beside_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("beside_3")
+}],
+"loop": true,
+"name": &"beside",
+"speed": 4.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("beside_sing_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("beside_sing_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("beside_sing_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("beside_sing_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("beside_sing_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("beside_sing_5")
+}],
+"loop": true,
+"name": &"beside_sing",
+"speed": 6.0
 }]
 
 [node name="AlbaFigure" type="AnimatedSprite2D"]

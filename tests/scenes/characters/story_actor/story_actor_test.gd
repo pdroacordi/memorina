@@ -76,6 +76,23 @@ func test_a_walk_stops_exactly_on_its_mark() -> void:
 	assert_float(_actor.global_position.x).is_equal(58.0)
 	assert_float(_actor.global_position.y).is_equal_approx(FLOOR_Y, 0.5)
 
+## STORY-07: a run plays the run clip and outruns the walk, and still stops exactly on its mark.
+func test_a_run_plays_its_clip_and_outruns_the_walk() -> void:
+	_actor.enter()
+	_actor.walk_to(-200.0, 1.0, true)
+	await _frames(2)
+	assert_bool(_actor.is_running()).is_true()
+	assert_str(String(_driver().current)).is_equal(String(DaughterAnimationResolver.RUN))
+	await _frames(30)
+	var stats := (_actor.get_node("Locomotion") as LocomotionComponent).stats
+	assert_float(absf(_actor.velocity.x)).is_greater(stats.move_speed)
+	for i: int in 240:
+		await get_tree().physics_frame
+		if not _actor.is_walking():
+			break
+	assert_bool(_actor.is_running()).is_false()
+	assert_float(_actor.global_position.x).is_equal(-200.0)
+
 func test_a_one_shot_settles_on_its_held_clip() -> void:
 	_actor.enter()
 	_actor.gesture(DaughterAnimationResolver.LIE_DOWN)

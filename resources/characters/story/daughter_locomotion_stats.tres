@@ -7,3 +7,4 @@ script = ExtResource("1_locstats")
 move_speed = 64.0
 acceleration = 512.0
 deceleration = 1024.0
+run_speed = 112.0

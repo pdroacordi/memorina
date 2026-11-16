@@ -35,6 +35,13 @@ const CLIMB_BACK_HOLD := &"climb_back_hold"
 const HURT := &"hurt"
 const DEATH := &"death"
 const SIT := &"sit"
+## Seated on a seat (STORY-07): the raise is the lower sheet played backward, then the playing loop; the lower plays
+## once when the MEMORINA pose ends while he still sits.
+const SIT_MEMORINA_RAISE := &"sit_memorina_raise"
+const SIT_MEMORINA := &"sit_memorina"
+const SIT_MEMORINA_LOWER := &"sit_memorina_lower"
+## The flute is up: ending the pose from either lowers it, even mid-raise.
+const SIT_FLUTE_UP: Array[StringName] = [SIT_MEMORINA_RAISE, SIT_MEMORINA]
 const STAND_UP := &"stand_up"
 ## One-shots held on their last frame (STORY-05): drops to one knee; sits on the ground; lifts the ribbon.
 const KNEEL := &"kneel"
@@ -58,7 +65,7 @@ func resolve() -> StringName:
 	if _player.just_hit() or driver.holding(HURT):
 		return HURT
 	if _player.is_sitting():
-		return SIT_GROUND if _player.sits_on_ground() else SIT
+		return SIT_GROUND if _player.sits_on_ground() else _seated_clip()
 	if _player.is_rolling():
 		return ROLL
 	if _player.is_attacking():
@@ -147,6 +154,14 @@ func attack_clip_for(context: StringName, phase: int) -> StringName:
 		Player.CTX_POGO:
 			return ATTACK_POGO
 	return &""
+
+## On a seat a scene's MEMORINA pose plays the instrument seated; ending it lowers the flute before the rest loop.
+func _seated_clip() -> StringName:
+	if _player.held_pose() == DialogueBeat.Pose.MEMORINA:
+		return driver.sequence(SIT_MEMORINA_RAISE, SIT_MEMORINA)
+	if driver.current in SIT_FLUTE_UP or driver.holding(SIT_MEMORINA_LOWER):
+		return SIT_MEMORINA_LOWER
+	return SIT
 
 ## Ground attacks use the same clip family; air attacks yield immediately on landing.
 func _attack_clip(on_floor: bool) -> StringName:

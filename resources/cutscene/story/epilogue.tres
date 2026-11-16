@@ -13,6 +13,8 @@
 [ext_resource type="Script" path="res://resources/cutscene/cutscene_talk.gd" id="e_talk"]
 [ext_resource type="Script" path="res://resources/cutscene/cutscene_exit.gd" id="e_exit"]
 [ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e_face"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_pose.gd" id="e_pose"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sequence.gd" id="e_sequence"]
 [ext_resource type="Script" path="res://resources/music/music_cue.gd" id="e_cue"]
 [ext_resource type="Resource" path="res://resources/music/wife_song_epilogue.tres" id="r_duet"]
 [ext_resource type="Resource" path="res://resources/story/morning_song.tres" id="r_morning"]
@@ -43,15 +45,22 @@ offset = Vector2(-64, -16)
 zoom = 4.0
 seconds = 1.5
 
+[sub_resource type="Resource" id="he_plays"]
+script = ExtResource("e_pose")
+pose = 2
+
 [sub_resource type="Resource" id="together_close"]
 script = ExtResource("e_together")
-steps = Array[ExtResource("e_step")]([SubResource("hush"), SubResource("close_on_him")])
+steps = Array[ExtResource("e_step")]([SubResource("hush"), SubResource("close_on_him"), SubResource("he_plays")])
 
 [sub_resource type="Resource" id="first_attempt"]
 script = ExtResource("e_melody")
 melody = ExtResource("r_morning")
 count = 4
 voices = Array[AudioStream]([ExtResource("a_up"), ExtResource("a_down"), ExtResource("a_left"), ExtResource("a_right")])
+
+[sub_resource type="Resource" id="he_stops"]
+script = ExtResource("e_pose")
 
 [sub_resource type="Resource" id="the_gap"]
 script = ExtResource("e_wait")
@@ -61,12 +70,12 @@ seconds = 2.5
 script = ExtResource("e_place")
 actor = &"alba"
 mark = &"beside_stone"
-offset = Vector2(12, 0)
+offset = Vector2(4, 0)
 
 [sub_resource type="Resource" id="seated"]
 script = ExtResource("e_gesture")
 actor = &"alba"
-clip = &"seated"
+clip = &"beside"
 wait = false
 
 [sub_resource type="Resource" id="she_faces_him"]
@@ -80,6 +89,23 @@ targets = Array[StringName]([&"ivo", &"alba"])
 offset = Vector2(0, -40)
 zoom = 2.0
 seconds = 3.0
+
+[sub_resource type="Resource" id="before_he_turns"]
+script = ExtResource("e_wait")
+seconds = 1.5
+
+[sub_resource type="Resource" id="he_turns_to_her"]
+script = ExtResource("e_face")
+actor = &"ivo"
+toward = &"alba"
+
+[sub_resource type="Resource" id="he_notices"]
+script = ExtResource("e_sequence")
+steps = Array[ExtResource("e_step")]([SubResource("before_he_turns"), SubResource("he_turns_to_her")])
+
+[sub_resource type="Resource" id="together_reveal"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("pull_back"), SubResource("he_notices")])
 
 [sub_resource type="Resource" id="talk"]
 script = ExtResource("e_talk")
@@ -114,19 +140,23 @@ cue = ExtResource("r_duet")
 [sub_resource type="Resource" id="she_sings"]
 script = ExtResource("e_gesture")
 actor = &"alba"
-clip = &"sit_sing"
+clip = &"beside_sing"
 wait = false
+
+[sub_resource type="Resource" id="he_plays_again"]
+script = ExtResource("e_pose")
+pose = 2
 
 [sub_resource type="Resource" id="up_the_fall"]
 script = ExtResource("e_camera")
 targets = Array[StringName]([&"waterfall_top"])
-offset = Vector2(0, 0)
-zoom = 2.0
+offset = Vector2(-320, 130)
+zoom = 1.0
 seconds = 8.5
 
 [sub_resource type="Resource" id="together_duet"]
 script = ExtResource("e_together")
-steps = Array[ExtResource("e_step")]([SubResource("duet"), SubResource("she_sings"), SubResource("up_the_fall")])
+steps = Array[ExtResource("e_step")]([SubResource("duet"), SubResource("she_sings"), SubResource("he_plays_again"), SubResource("up_the_fall")])
 
 [sub_resource type="Resource" id="her_release"]
 script = ExtResource("e_mark")
@@ -154,4 +184,4 @@ seconds = 2.0
 [resource]
 script = ExtResource("e_cutscene")
 id = &"epilogue"
-steps = Array[ExtResource("e_step")]([SubResource("together_close"), SubResource("first_attempt"), SubResource("the_gap"), SubResource("she_is_there"), SubResource("seated"), SubResource("she_faces_him"), SubResource("pull_back"), SubResource("talk"), SubResource("her_silence"), SubResource("answer"), SubResource("close_on_both"), SubResource("name"), SubResource("together_duet"), SubResource("her_release"), SubResource("she_is_gone"), SubResource("down_to_him"), SubResource("his_last_note"), SubResource("after")])
+steps = Array[ExtResource("e_step")]([SubResource("together_close"), SubResource("first_attempt"), SubResource("he_stops"), SubResource("the_gap"), SubResource("she_is_there"), SubResource("seated"), SubResource("she_faces_him"), SubResource("together_reveal"), SubResource("talk"), SubResource("her_silence"), SubResource("answer"), SubResource("close_on_both"), SubResource("name"), SubResource("together_duet"), SubResource("her_release"), SubResource("she_is_gone"), SubResource("down_to_him"), SubResource("his_last_note"), SubResource("after")])

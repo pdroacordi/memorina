@@ -9,10 +9,12 @@ extends CutsceneStep
 @export var x: float = 0.0
 ## 0..1 of the walker's move speed.
 @export_range(0.05, 1.0) var pace: float = 1.0
+## Runs instead: the actor's run clip, `pace` of its `LocomotionStats.run_speed` (a StoryActor only).
+@export var run: bool = false
 
 
 func begin(context: CutsceneContext) -> CutsceneTask:
-	return context.walk(actor, target_x(context), pace)
+	return context.walk(actor, target_x(context), pace, run)
 
 func land(context: CutsceneContext) -> void:
 	var from := context.point_of(actor)
