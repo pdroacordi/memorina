@@ -20,7 +20,7 @@ func seat() -> Seat:
 func reachable() -> Seat:
 	for area: Area2D in _sensor.get_overlapping_areas():
 		var found := area as Seat
-		if found != null and not found.is_occupied():
+		if found != null and found.open and not found.is_occupied():
 			return found
 	return null
 

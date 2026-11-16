@@ -54,4 +54,4 @@ func _on_rested() -> void:
 ## The key, shown while Ivo stands in reach and is not already sitting. No
 ## prose: the key is the whole prompt.
 func _refresh_prompt() -> void:
-	_prompt.visible = _seat.has_body_in_reach() and not _seat.is_occupied()
+	_prompt.visible = _seat.offers()

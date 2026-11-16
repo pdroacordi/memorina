@@ -19,6 +19,8 @@ var bench_id: StringName = &""
 var facing: int = 1
 ## He sits on the ground here (`sit_ground`), not on a bench (GroundSeat).
 var ground: bool = false
+## A closed seat cannot be sat on and shows no prompt; a SeatGate is its only writer.
+var open: bool = true: set = set_open
 
 var _occupied: bool = false
 var _bodies: int = 0
@@ -45,6 +47,12 @@ func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 
+func set_open(value: bool) -> void:
+	if value == open:
+		return
+	open = value
+	changed.emit()
+
 func set_occupied(occupied: bool) -> void:
 	if occupied == _occupied:
 		return
@@ -60,6 +68,10 @@ func is_occupied() -> bool:
 
 func has_body_in_reach() -> bool:
 	return _bodies > 0
+
+## Open, with Ivo in reach and not already sitting: its prompt shows.
+func offers() -> bool:
+	return open and has_body_in_reach() and not _occupied
 
 func _on_body_entered(_body: Node2D) -> void:
 	_bodies += 1

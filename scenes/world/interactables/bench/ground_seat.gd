@@ -5,6 +5,8 @@ extends Node2D
 
 ## Which way Ivo faces sitting here: 1 right, -1 left.
 @export var facing: int = 1
+## He sits on the ground (`sit_ground`); false seats him as on a bench (`sit`), on a stone.
+@export var ground: bool = true
 @export var cutscene: Cutscene
 @export var when: Array[SaveFact] = []
 @export var unless: Array[SaveFact] = []
@@ -15,7 +17,7 @@ extends Node2D
 
 func _ready() -> void:
 	_seat.facing = facing
-	_seat.ground = true
+	_seat.ground = ground
 	_seat.changed.connect(_on_changed)
 	_prompt.show_action(&"look_down")
 	_on_changed()
@@ -30,7 +32,7 @@ func seat() -> Seat:
 	return _seat
 
 func _on_changed() -> void:
-	_prompt.visible = _seat.has_body_in_reach() and not _seat.is_occupied()
+	_prompt.visible = _seat.offers()
 	if _seat.is_occupied() and wants(SaveSystem.player_data):
 		# Deferred: he sits inside his own physics step.
 		_play.call_deferred()
