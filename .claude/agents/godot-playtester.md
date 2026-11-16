@@ -744,6 +744,20 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - Positions: threshold_bridge east lip x 7136 (floor y 160), west deck lip x 6720. Forced memory 1 from (7180, 150):
     the gust parks Ivo at the lip at ~t 7.9, and its peak runs ~7.6-9.6. Ravine floor y 351.9.
 
+- **Learned 2026-11-16 (SND-01 sound effects)**: **audio is verified from a cue log, not heard.**
+  - `tools/playtest/scripts/snd01_cue_log_driver.gd` (a `-s` driver around the runner) connects every `SfxEmitter.cue_played`
+    via `node_added` and prints `[sfx]`: the cue path, real ms, frame, owner, bus, pause, time scale, and Ivo's
+    clip/surface/pmode/hp. It also prints `true=` (the Solid cell under his feet, looked up by position), `[muf]` (each
+    `SfxWorld` low-pass change) and `[voices]` (SFX players still playing, every 0.5 s).
+  - Forced beds: `SND_SHALLOW="x,y,w"` adds a `water_shallow` body. No room uses the `s` legend symbol, so shallow water
+    is unreachable in play. `SND_KILL=<real s>` kills Ivo. `SND_BOT="a:b"` swings at the nearest creature; `SND_GOD=1`
+    keeps his hp topped up.
+  - The crab front-guards every frontal hit. For a struck and kill pair use the threshold_bridge boar: spawn (7160, 150),
+    step right 0.3 s, bot from real 5 s; it dies at ~8.8 s.
+  - **Never judge footsteps in a song trial.** The trials' origins put the floor on layer row 0, which hid
+    `bugs/ivo-steps-and-soft-landings-are-silent-on-room-ground`. Use lake_shore (100, -1650) or threshold_bridge.
+  - Ivo's `WALK` clip only plays in a scripted stroll; a partial stick tilt is still `run`.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

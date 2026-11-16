@@ -1,6 +1,6 @@
 # Sound effects
 
-Updated 2026-11-16. How gameplay, world and menu sounds are described and played. SND-01 is in progress: steps 1 (buses, measurements), 2 (the core), 4 (Ivo's one-shots), 5 (footsteps and climbing), 6 (world), 7 (combat), 8 (menus) and 9 (the greyhush muffle) are built; the credits role and the close follow the build order in `architecture/sound-effects-system`.
+Updated 2026-11-16. How gameplay, world and menu sounds are described and played. Built by SND-01 (2026-11-16); the levels are a first pass not yet judged by ear (SND-02). The credits-roll role in the plan was dropped: every source is CC0, credited in `CREDITS.md`.
 
 **Never break:** A sound is a `SoundCue`; only `SfxEmitter` makes SFX players, with the bus from the cue. World emitters inherit their owner's pause; `IvoSounds` is explicit PAUSABLE; only `MenuSounds` plays under a hold. `Settings` stays the only writer of bus volume; `SfxMuffle` is the only writer of the `SfxWorld` effect.
 

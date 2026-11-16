@@ -26,7 +26,7 @@ source_files:
 
 # Sound effects (SND-01)
 
-PLAN (2026-11-16; SND-01, user: "Precisamos de sound effects para o jogo. Combate, pisadas, menu, etc."; licences "CC0 e CC-BY"). Nothing is downloaded before the user approves the candidate list (roadmap SND-01).
+BUILT (2026-11-16; SND-01; planned as below except the credits-roll role, dropped because every source is CC0; user: "Precisamos de sound effects para o jogo. Combate, pisadas, menu, etc."; licences "CC0 e CC-BY"). Nothing is downloaded before the user approves the candidate list (roadmap SND-01).
 
 ## Context
 

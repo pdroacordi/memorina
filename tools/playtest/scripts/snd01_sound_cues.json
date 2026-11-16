@@ -1,0 +1,518 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 47.0,
+ "clock": "real",
+ "locale": "en",
+ "player_position": [
+  10000,
+  5990
+ ],
+ "steps": [
+  {
+   "t": 1.4,
+   "log": "earth_start"
+  },
+  {
+   "t": 1.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 3.5,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 3.6,
+   "log": "after_run_earth"
+  },
+  {
+   "t": 3.8,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 4.05,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 4.3,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 4.55,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 4.8,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 5.05,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 5.3,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 5.55,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 5.8,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 6.05,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 6.3,
+   "joy_axis": [
+    0,
+    0.0
+   ]
+  },
+  {
+   "t": 6.4,
+   "log": "after_stroll_earth"
+  },
+  {
+   "t": 6.6,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.95,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 7.6,
+   "log": "after_jump"
+  },
+  {
+   "t": 8.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 8.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.7,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.0,
+   "screenshot": "a01_shallow"
+  },
+  {
+   "t": 9.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 9.7,
+   "log": "after_shallow"
+  },
+  {
+   "t": 10.5,
+   "teleport": [
+    18800,
+    5990
+   ]
+  },
+  {
+   "t": 11.4,
+   "log": "stone_start"
+  },
+  {
+   "t": 11.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 13.0,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 13.3,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 13.55,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 13.8,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 14.05,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 14.3,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 14.55,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 14.8,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 15.05,
+   "joy_axis": [
+    0,
+    0.55
+   ]
+  },
+  {
+   "t": 15.3,
+   "joy_axis": [
+    0,
+    0.0
+   ]
+  },
+  {
+   "t": 15.4,
+   "log": "after_stroll_stone"
+  },
+  {
+   "t": 15.6,
+   "teleport": [
+    18560,
+    5990
+   ]
+  },
+  {
+   "t": 16.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 16.85,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 17.1,
+   "log": "at_door"
+  },
+  {
+   "t": 17.2,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 17.3,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 17.6,
+   "screenshot": "a02_door_fade"
+  },
+  {
+   "t": 17.6,
+   "log": "door_fade"
+  },
+  {
+   "t": 19.5,
+   "log": "inside"
+  },
+  {
+   "t": 20.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 20.08,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 20.6,
+   "screenshot": "a03_pause"
+  },
+  {
+   "t": 20.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 20.88,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 21.5,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 21.58,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 22.2,
+   "screenshot": "a04_settings"
+  },
+  {
+   "t": 22.5,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 22.58,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 23.3,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 23.38,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 23.8,
+   "log": "pause_before_resume"
+  },
+  {
+   "t": 24.0,
+   "key": "Enter",
+   "pressed": true
+  },
+  {
+   "t": 24.08,
+   "key": "Enter",
+   "pressed": false
+  },
+  {
+   "t": 24.8,
+   "log": "after_resume"
+  },
+  {
+   "t": 25.5,
+   "key": "E",
+   "pressed": true
+  },
+  {
+   "t": 25.58,
+   "key": "E",
+   "pressed": false
+  },
+  {
+   "t": 26.8,
+   "screenshot": "a05_notebook"
+  },
+  {
+   "t": 27.0,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 27.08,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 28.0,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 28.08,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 28.6,
+   "screenshot": "a06_notebook_page"
+  },
+  {
+   "t": 29.5,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 29.58,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 31.0,
+   "log": "after_notebook"
+  },
+  {
+   "t": 36.0,
+   "log": "before_kill"
+  },
+  {
+   "t": 40.0,
+   "log": "after_death"
+  },
+  {
+   "t": 44.0,
+   "screenshot": "a07_rebuilt"
+  },
+  {
+   "t": 46.0,
+   "log": "end"
+  }
+ ]
+}

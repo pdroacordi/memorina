@@ -1,0 +1,126 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 30.0,
+ "locale": "en",
+ "player_position": [
+  10600,
+  5990
+ ],
+ "steps": [
+  {
+   "t": 1.4,
+   "log": "pre_water"
+  },
+  {
+   "t": 1.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.2,
+   "screenshot": "b01_wading"
+  },
+  {
+   "t": 2.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 2.7,
+   "log": "in_water"
+  },
+  {
+   "t": 2.8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 3.1,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "log": "after_water_jump"
+  },
+  {
+   "t": 4.5,
+   "teleport": [
+    8912,
+    280
+   ]
+  },
+  {
+   "t": 6.0,
+   "log": "fight0"
+  },
+  {
+   "t": 8.5,
+   "log": "fight1"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "b02_fight"
+  },
+  {
+   "t": 11.0,
+   "log": "fight2"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "b03_fight"
+  },
+  {
+   "t": 13.5,
+   "log": "fight3"
+  },
+  {
+   "t": 16.0,
+   "log": "fight4"
+  },
+  {
+   "t": 18.5,
+   "log": "fight5"
+  },
+  {
+   "t": 21.0,
+   "log": "fight6"
+  },
+  {
+   "t": 23.5,
+   "log": "fight7"
+  },
+  {
+   "t": 26.0,
+   "log": "fight8"
+  },
+  {
+   "t": 28.5,
+   "log": "fight9"
+  },
+  {
+   "t": 29.5,
+   "log": "end"
+  }
+ ]
+}
