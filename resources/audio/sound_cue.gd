@@ -8,6 +8,8 @@ const MAX_VOICES := 4
 @export var stream: AudioStream
 ## Level of every voice, dB.
 @export_range(-40.0, 6.0, 0.5, "suffix:dB") var volume_db: float = 0.0
+## Base pitch of every voice; the stream's random_pitch jitters around it.
+@export_range(0.5, 2.0, 0.01) var pitch_scale: float = 1.0
 ## Voices of this cue that sound at once in one emitter; a new one steals the oldest.
 @export_range(1, MAX_VOICES) var max_voices: int = 1
 ## Real seconds between two starts of this cue, across every emitter; 0 never gates.

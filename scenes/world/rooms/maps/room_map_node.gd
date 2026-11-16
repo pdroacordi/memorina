@@ -58,6 +58,10 @@ func cell_at(global_point: Vector2) -> Vector2i:
 func ground_at(global_point: Vector2) -> Enums.Ground:
 	return map.ground_at(cell_at(global_point)) if map else Enums.Ground.NONE
 
+## Footstep surface of `cell` (a Solid layer cell), NONE in air or off the map.
+func surface_at(cell: Vector2i) -> Enums.Surface:
+	return StepSurfaces.of(map.look_at(cell), map.ground_at(cell), map.biome) if map else Enums.Surface.NONE
+
 ## The world rectangle of `cell`, for anything that must line up with the grid.
 func cell_rect(cell: Vector2i) -> Rect2:
 	var size := Vector2(RoomMap.CELL_PX, RoomMap.CELL_PX)

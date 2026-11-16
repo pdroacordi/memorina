@@ -77,12 +77,14 @@ func _player_for(cue: SoundCue) -> Node:
 		spatial.panning_strength = PANNING_STRENGTH
 		spatial.bus = cue.bus()
 		spatial.max_polyphony = cue.max_voices
+		spatial.pitch_scale = cue.pitch_scale
 		spatial.stream = cue.stream
 		player = spatial
 	else:
 		var flat := AudioStreamPlayer.new()
 		flat.bus = cue.bus()
 		flat.max_polyphony = cue.max_voices
+		flat.pitch_scale = cue.pitch_scale
 		flat.stream = cue.stream
 		player = flat
 	add_child(player)

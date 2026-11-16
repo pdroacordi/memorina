@@ -76,3 +76,13 @@ enum Ground {
 	## Planks and beams: solid, never roots (architecture/biome-tilesets).
 	WOOD,
 }
+
+## Footstep surfaces (systems/sound-effects). BiomeTileset.step_surfaces stores them by index; append members only.
+enum Surface {
+	NONE,
+	EARTH,
+	STONE,
+	SNOW,
+	WOOD,
+	SHALLOW_WATER,
+}

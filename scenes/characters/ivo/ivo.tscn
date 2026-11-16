@@ -82,6 +82,11 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/mentor_guardian/mentor_guardian_past_self.png" id="92_pastself"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_sit_memorina.png" id="79_sit_memo"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_sit_memorina_raise.png" id="80_sit_memo_raise"]
+[ext_resource type="Script" path="res://scenes/characters/ivo/ivo_sounds.gd" id="93_ivosounds"]
+[ext_resource type="Script" path="res://scenes/audio/sfx_emitter.gd" id="94_sfxemit"]
+[ext_resource type="Script" path="res://scenes/characters/components/step_surface_probe.gd" id="95_stepprobe"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/ivo_sounds.tres" id="96_ivosoundset"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/ivo_footfalls.tres" id="97_footfalls"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_climbsensor"]
 size = Vector2(12, 28)
@@ -2887,6 +2892,9 @@ monitorable = false
 position = Vector2(0, -20)
 shape = SubResource("RectangleShape2D_seatsensor")
 
+[node name="StepSurfaceProbe" type="Node" parent="."]
+script = ExtResource("95_stepprobe")
+
 [node name="Jump" type="Node" parent="." unique_id=1102847533]
 script = ExtResource("19_jumpco")
 stats = ExtResource("20_jumpst")
@@ -2975,6 +2983,15 @@ position = Vector2(40, -30)
 shape = SubResource("CapsuleShape2D_hitbox")
 debug_color = Color(0.930275, 0.2307421, 0.33968982, 0.41960785)
 
+[node name="IvoSounds" type="Node" parent="."]
+process_mode = 1
+script = ExtResource("93_ivosounds")
+sounds = ExtResource("96_ivosoundset")
+footfalls = ExtResource("97_footfalls")
+
+[node name="SfxEmitter" type="Node2D" parent="IvoSounds"]
+script = ExtResource("94_sfxemit")
+
 [connection signal="facing_changed" from="." to="Hitbox" method="_on_character_facing_changed"]
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]
 [connection signal="jumped" from="." to="DustEmitter" method="spawn_jump_dust"]
@@ -2987,5 +3004,13 @@ debug_color = Color(0.930275, 0.2307421, 0.33968982, 0.41960785)
 [connection signal="performance_started" from="." to="AnimationTree" method="set_process_mode" binds= [3]]
 [connection signal="performance_finished" from="." to="AnimationTree" method="set_process_mode" binds= [0]]
 [connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]
+[connection signal="jumped" from="." to="IvoSounds" method="on_jumped"]
+[connection signal="double_jumped" from="." to="IvoSounds" method="on_double_jumped"]
+[connection signal="landed" from="." to="IvoSounds" method="on_landed"]
+[connection signal="hard_landed" from="." to="IvoSounds" method="on_hard_landed"]
+[connection signal="swung" from="." to="IvoSounds" method="on_swung"]
+[connection signal="hurt" from="." to="IvoSounds" method="on_hurt"]
+[connection signal="died" from="." to="IvoSounds" method="on_died"]
+[connection signal="sat_down" from="." to="IvoSounds" method="on_sat_down"]
 
 [editable path="Hurtbox"]

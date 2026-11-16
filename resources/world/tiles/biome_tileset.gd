@@ -45,6 +45,10 @@ const CRACK_SIZE := Vector2i(128, 96)
 @export var wood_grass: GrassLook
 ## Variants each look's sheet draws of its fill and straight edges, 0..4, indexed by Look.
 @export var fill_variants := PackedInt32Array([0, 0, 0, 0])
+## Enums.Surface each look's ground sounds like underfoot, indexed by Look; NONE falls back to the cell's Ground.
+@export var step_surfaces := PackedByteArray([
+	Enums.Surface.EARTH, Enums.Surface.STONE, Enums.Surface.WOOD, Enums.Surface.NONE,
+])
 ## Developer text for the map guide.
 @export_multiline var description: String = ""
 
@@ -93,6 +97,11 @@ func problems() -> PackedStringArray:
 	var found := PackedStringArray()
 	if fill_variants.size() != Look.size():
 		found.append("fill_variants has %d entries, not %d" % [fill_variants.size(), Look.size()])
+	if step_surfaces.size() != Look.size():
+		found.append("step_surfaces has %d entries, not %d" % [step_surfaces.size(), Look.size()])
+	for surface: int in step_surfaces:
+		if surface >= Enums.Surface.size():
+			found.append("step_surfaces holds %d, not an Enums.Surface" % surface)
 	for look: int in Look.values():
 		var texture := sheet(look)
 		if texture != null and Vector2i(texture.get_size()) != SHEET_SIZE:

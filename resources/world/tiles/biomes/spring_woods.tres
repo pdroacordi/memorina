@@ -17,4 +17,5 @@ crack = ExtResource("5_crack")
 earth_grass = ExtResource("6_earth_grass")
 stone_grass = ExtResource("7_stone_grass")
 fill_variants = PackedInt32Array(3, 3, 4, 0)
+step_surfaces = PackedByteArray(1, 2, 4, 0)
 description = "Spring Woods: forest earth under a moss and blossom turf, mossy cave rock, the village oak planks (design 04 section 6; tools/art/tiles/spring_woods_*.json)."

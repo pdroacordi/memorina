@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="SoundCue" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/sound_cue.gd" id="1_ppg40"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_earth_01.wav" id="2_72hk7"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_earth_02.wav" id="3_86ni0"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_earth_03.wav" id="4_p7ra6"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_earth_04.wav" id="5_158o3"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_earth_05.wav" id="6_rlpsd"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_earth_06.wav" id="7_jitbf"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_txgec"]
+random_pitch = 1.05
+random_volume_offset_db = 1.0
+streams_count = 6
+stream_0/stream = ExtResource("2_72hk7")
+stream_1/stream = ExtResource("3_86ni0")
+stream_2/stream = ExtResource("4_p7ra6")
+stream_3/stream = ExtResource("5_158o3")
+stream_4/stream = ExtResource("6_rlpsd")
+stream_5/stream = ExtResource("7_jitbf")
+
+[resource]
+script = ExtResource("1_ppg40")
+stream = SubResource("AudioStreamRandomizer_txgec")
+volume_db = -8.0
+max_voices = 2

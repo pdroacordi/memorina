@@ -13,4 +13,5 @@ wood = ExtResource("3_wood")
 wall = ExtResource("4_wall")
 crack = ExtResource("5_crack")
 fill_variants = PackedInt32Array(0, 3, 4, 3)
+step_surfaces = PackedByteArray(1, 2, 4, 0)
 description = "The lighthouse rooms: white masonry ground and back walls, the village oak planks (\"Lighthouse masonry tiles\", user, 2026-10-13); no earth."

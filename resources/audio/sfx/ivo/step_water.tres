@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="SoundCue" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/sound_cue.gd" id="1_5a7k5"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_water_01.wav" id="2_eg3fp"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_water_02.wav" id="3_ckacu"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_water_03.wav" id="4_74kn4"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_water_04.wav" id="5_pbtxi"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_water_05.wav" id="6_42yby"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_water_06.wav" id="7_tcdf1"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_icuub"]
+random_pitch = 1.05
+random_volume_offset_db = 1.0
+streams_count = 6
+stream_0/stream = ExtResource("2_eg3fp")
+stream_1/stream = ExtResource("3_ckacu")
+stream_2/stream = ExtResource("4_74kn4")
+stream_3/stream = ExtResource("5_pbtxi")
+stream_4/stream = ExtResource("6_42yby")
+stream_5/stream = ExtResource("7_tcdf1")
+
+[resource]
+script = ExtResource("1_5a7k5")
+stream = SubResource("AudioStreamRandomizer_icuub")
+volume_db = -8.0
+max_voices = 2

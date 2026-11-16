@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="StepContacts" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/step_contacts.gd" id="1_ieemr"]
+
+[resource]
+script = ExtResource("1_ieemr")
+contacts = Dictionary[StringName, PackedFloat32Array]({
+&"brace": PackedFloat32Array(0, 0.5, 0.7, 0.9),
+&"climb": PackedFloat32Array(0.15, 0.45),
+&"climb_back": PackedFloat32Array(0.15, 0.45),
+&"run": PackedFloat32Array(0, 0.41666666),
+&"walk": PackedFloat32Array(0, 0.4)
+})

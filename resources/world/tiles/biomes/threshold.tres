@@ -17,4 +17,5 @@ crack = ExtResource("5_crack")
 earth_grass = ExtResource("6_earth_grass")
 stone_grass = ExtResource("7_stone_grass")
 fill_variants = PackedInt32Array(4, 3, 4, 0)
+step_surfaces = PackedByteArray(1, 2, 4, 0)
 description = "Threshold Road: dry pale earth with stones and roots under a straw turf, worn road slabs, the village oak planks (design 04 section 6; tools/art/tiles/threshold_*.json, after the approved style board)."

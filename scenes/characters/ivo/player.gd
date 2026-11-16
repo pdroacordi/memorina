@@ -6,6 +6,10 @@ extends Character
 signal jumped(position: Vector2)
 signal double_jumped(position: Vector2)
 signal hard_landed(position: Vector2, impact_speed: float)
+## A landing that was not hard; `impact_speed` in px/s.
+signal landed(position: Vector2, impact_speed: float)
+## A sword swing began: phase `phase_index` of the current sequence.
+signal swung(phase_index: int)
 ## The sheet uses `facing` to choose the side with open space.
 signal memorina_drawn(known_songs: Array[Song], facing: int)
 signal memorina_sheathed
@@ -145,6 +149,7 @@ enum MotionState { STAIR, KNOCKBACK, ROLL, GROUND, AIR, CLIMB, SIT }
 @onready var _hitbox          : Hitbox = $Hitbox
 @onready var _safe_ground     : SafeGroundTracker = $SafeGroundTracker
 @onready var _airflow_body    : AirflowBody = $AirflowBody
+@onready var _step_surface    : StepSurfaceProbe = $StepSurfaceProbe
 ## Player resolver used by the clip-duration assertion.
 @onready var _player_resolver : PlayerAnimationResolver = $AnimationResolver
 
@@ -277,6 +282,7 @@ func _ready() -> void:
 	# untouched, so moving logic into a component never costs a scene edit.
 	_jump.jumped.connect(jumped.emit)
 	_landing.hard_landed.connect(hard_landed.emit)
+	_landing.landed.connect(landed.emit)
 	_double_jump.double_jumped.connect(_on_double_jumped)
 	_input.roll_pressed.connect(_as_move.bind(_roll.buffer_roll))
 	# The recall hears the same presses the abilities buffer, and unlocks the
@@ -418,6 +424,8 @@ func _process_motion(delta: float) -> void:
 
 func _after_move(_delta: float) -> void:
 	var on_floor := is_on_floor()
+	# Before the landing check, so a landing hears the floor it landed on.
+	_step_surface.update()
 	# A step of the stair is ground: leaving it at an end is no landing.
 	_landing.check_landing(on_floor or _rider.is_riding())
 	if on_floor:
@@ -465,6 +473,22 @@ func is_wall_sliding() -> bool:
 ## On something Enraizar grew (a root web or a pillar).
 func is_climbing() -> bool:
 	return _climb.is_climbing()
+
+## The animation state playing; IvoSounds times steps by it.
+func animation_state() -> StringName:
+	return _animation_driver.current
+
+## Play position of the current clip, s.
+func animation_position() -> float:
+	return _animation_driver.position()
+
+## Length of the current clip, s.
+func animation_length() -> float:
+	return _animation_driver.length()
+
+## The Enums.Surface under his feet, shallow water first.
+func floor_surface() -> Enums.Surface:
+	return _step_surface.surface()
 
 func climb_grip() -> Climbable.Grip:
 	return _climb.grip()
@@ -1604,6 +1628,14 @@ func enter_soft_landing() -> void:
 func exit_soft_landing() -> void:
 	_landing.exit_soft_zone()
 
+## Called by a wading WaterVolume as the body enters it.
+func enter_wading() -> void:
+	_step_surface.enter_wading()
+
+## Called by a wading WaterVolume as the body leaves it.
+func exit_wading() -> void:
+	_step_surface.exit_wading()
+
 func receive_hazard(hazard: HazardZone) -> void:
 	if is_dead() or _sinking:
 		return
@@ -1650,13 +1682,14 @@ func _react_to_hurt() -> void:
 	_climb.release()
 	_stand_up()
 
-func _on_attack_phase_started(_phase_index: int, phase: AttackPhaseData) -> void:
+func _on_attack_phase_started(phase_index: int, phase: AttackPhaseData) -> void:
 	_hitbox.damage = phase.damage
 	_hitbox.knockback_strength = phase.knockback_strength
 	_hitbox.knockback_lift = phase.knockback_lift
 	# A sequence can end and a new one begin in the same frame (a pogo chain),
 	# leaving the clip name unchanged — the swing still has to restart.
 	_animation_driver.request_replay()
+	swung.emit(phase_index)
 
 ## Only pogo hits bounce Ivo; all attack contexts share this hitbox.
 func _on_hitbox_connected(_target: Hurtbox) -> void:

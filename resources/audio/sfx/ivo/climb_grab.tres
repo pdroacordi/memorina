@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SoundCue" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/sound_cue.gd" id="1_6d1mm"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/climb_grab.wav" id="2_uhrwl"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_ex5la"]
+random_pitch = 1.05
+streams_count = 1
+stream_0/stream = ExtResource("2_uhrwl")
+
+[resource]
+script = ExtResource("1_6d1mm")
+stream = SubResource("AudioStreamRandomizer_ex5la")
+volume_db = -6.0

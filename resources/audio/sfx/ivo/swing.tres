@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="SoundCue" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/sound_cue.gd" id="1_ecpqx"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/swing_01.wav" id="2_fg1mi"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/swing_02.wav" id="3_j3loy"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/swing_03.wav" id="4_5tbjm"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/swing_04.wav" id="5_5ygnk"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_brhms"]
+random_pitch = 1.05
+random_volume_offset_db = 1.0
+streams_count = 4
+stream_0/stream = ExtResource("2_fg1mi")
+stream_1/stream = ExtResource("3_j3loy")
+stream_2/stream = ExtResource("4_5tbjm")
+stream_3/stream = ExtResource("5_5ygnk")
+
+[resource]
+script = ExtResource("1_ecpqx")
+stream = SubResource("AudioStreamRandomizer_brhms")
+volume_db = -4.0
+max_voices = 2

@@ -17,4 +17,5 @@ crack = ExtResource("5_crack")
 earth_grass = ExtResource("6_earth_grass")
 stone_grass = ExtResource("7_stone_grass")
 fill_variants = PackedInt32Array(4, 3, 4, 0)
+step_surfaces = PackedByteArray(1, 2, 4, 0)
 description = "Wind Orchards: ochre earth with stones and roots under a golden turf, a dry-stone wall, the village oak planks (design 04 section 6; tools/art/tiles/wind_orchards_*.json)."

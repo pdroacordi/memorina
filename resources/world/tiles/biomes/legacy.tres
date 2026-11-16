@@ -15,4 +15,5 @@ wood = ExtResource("4_wood")
 wall = ExtResource("5_wall")
 crack = ExtResource("6_crack")
 fill_variants = PackedInt32Array(0, 0, 0, 0)
+step_surfaces = PackedByteArray(1, 2, 4, 0)
 description = "The pack's earth and stone converted to the corner-Wang contract; placeholder wood and wall. Test fixtures only: no room uses it (WORLD-07, 2026-10-13)."

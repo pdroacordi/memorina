@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="SoundCue" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/sound_cue.gd" id="1_lp7gv"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/jump.wav" id="2_wc2gm"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_v2jqy"]
+random_pitch = 1.05
+streams_count = 1
+stream_0/stream = ExtResource("2_wc2gm")
+
+[resource]
+script = ExtResource("1_lp7gv")
+stream = SubResource("AudioStreamRandomizer_v2jqy")
+volume_db = -6.0
+pitch_scale = 1.25

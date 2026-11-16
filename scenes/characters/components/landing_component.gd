@@ -3,6 +3,8 @@ extends Node
 ## Detects hard landings and recovery; call after move_and_slide() updates floor state.
 
 signal hard_landed(position: Vector2, impact_speed: float)
+## A landing that was not hard; `impact_speed` in px/s.
+signal landed(position: Vector2, impact_speed: float)
 
 @export var stats: LandingStats
 
@@ -29,6 +31,8 @@ func check_landing(on_floor: bool) -> void:
 	if _just_landed and LandingRule.is_hard(_last_fall_speed, stats.hard_land_speed, _soft_zones):
 		_recovery_timer = stats.hard_land_time
 		hard_landed.emit(_body.global_position, _last_fall_speed)
+	elif _just_landed:
+		landed.emit(_body.global_position, _last_fall_speed)
 	_was_on_floor = on_floor
 
 ## The body entered a soft-landing zone.

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="SoundCue" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/sound_cue.gd" id="1_6ax2g"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/land_mud_01.wav" id="2_760q2"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/land_mud_02.wav" id="3_mi2n5"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/land_mud_03.wav" id="4_tx8qc"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_pnhs0"]
+random_pitch = 1.05
+random_volume_offset_db = 1.0
+streams_count = 3
+stream_0/stream = ExtResource("2_760q2")
+stream_1/stream = ExtResource("3_mi2n5")
+stream_2/stream = ExtResource("4_tx8qc")
+
+[resource]
+script = ExtResource("1_6ax2g")
+stream = SubResource("AudioStreamRandomizer_pnhs0")
+volume_db = -2.0

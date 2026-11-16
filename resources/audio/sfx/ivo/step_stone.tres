@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="SoundCue" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/sound_cue.gd" id="1_3gapw"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_stone_01.wav" id="2_jxejx"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_stone_02.wav" id="3_3llbo"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_stone_03.wav" id="4_wh4g4"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_stone_04.wav" id="5_5gbwy"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_stone_05.wav" id="6_qfm7u"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/step_stone_06.wav" id="7_ai6xh"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_j6u0j"]
+random_pitch = 1.05
+random_volume_offset_db = 1.0
+streams_count = 6
+stream_0/stream = ExtResource("2_jxejx")
+stream_1/stream = ExtResource("3_3llbo")
+stream_2/stream = ExtResource("4_wh4g4")
+stream_3/stream = ExtResource("5_5gbwy")
+stream_4/stream = ExtResource("6_qfm7u")
+stream_5/stream = ExtResource("7_ai6xh")
+
+[resource]
+script = ExtResource("1_3gapw")
+stream = SubResource("AudioStreamRandomizer_j6u0j")
+volume_db = -8.0
+max_voices = 2

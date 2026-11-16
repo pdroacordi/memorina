@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="SoundCue" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/sound_cue.gd" id="1_qr2pk"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/ivo/land_hard.wav" id="2_w0cib"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_7gtpa"]
+random_pitch = 1.05
+streams_count = 1
+stream_0/stream = ExtResource("2_w0cib")
+
+[resource]
+script = ExtResource("1_qr2pk")
+stream = SubResource("AudioStreamRandomizer_7gtpa")
+volume_db = -2.0

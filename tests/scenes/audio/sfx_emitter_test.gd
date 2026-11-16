@@ -181,3 +181,10 @@ func test_an_explicit_pausable_emitter_plays_under_a_disabled_owner() -> void:
 	assert_bool(emitter.play(cue)).is_true()
 	await _real(0.3)
 	assert_float((emitter.player_of(cue) as AudioStreamPlayer).get_playback_position()).is_greater(0.1)
+
+func test_a_player_takes_the_cues_pitch() -> void:
+	var emitter := _emitter()
+	var cue := _cue()
+	cue.pitch_scale = 1.25
+	emitter.play(cue)
+	assert_float((emitter.player_of(cue) as AudioStreamPlayer).pitch_scale).is_equal(1.25)

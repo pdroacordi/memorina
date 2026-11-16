@@ -1,0 +1,67 @@
+[gd_resource type="Resource" script_class="IvoSoundSet" format=3]
+
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/climb_grab.tres" id="1_dlmq0"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/climb_step.tres" id="2_o1xty"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/death.tres" id="3_yr864"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/double_jump.tres" id="4_68qay"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/hurt.tres" id="5_0fa2g"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/jump.tres" id="6_en2th"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/land_hard.tres" id="7_frwyu"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/rest.tres" id="8_q1xis"]
+[ext_resource type="Script" path="res://resources/audio/ivo_sound_set.gd" id="9_w52aw"]
+[ext_resource type="Script" path="res://resources/audio/surface_sounds.gd" id="10_iufqg"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/land_earth.tres" id="11_4hgo7"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/step_earth.tres" id="12_ykmlc"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/land_stone.tres" id="13_kjote"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/step_stone.tres" id="14_unvwg"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/land_snow.tres" id="15_p3t8u"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/step_snow.tres" id="16_7dp7s"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/land_wood.tres" id="17_ktos6"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/step_wood.tres" id="18_j8d6m"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/land_water.tres" id="19_b0v1m"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/step_water.tres" id="20_m8qlb"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/ivo/swing.tres" id="21_g5ro4"]
+
+[sub_resource type="Resource" id="Resource_l8xpo"]
+script = ExtResource("10_iufqg")
+step = ExtResource("12_ykmlc")
+land = ExtResource("11_4hgo7")
+
+[sub_resource type="Resource" id="Resource_1vgin"]
+script = ExtResource("10_iufqg")
+step = ExtResource("14_unvwg")
+land = ExtResource("13_kjote")
+
+[sub_resource type="Resource" id="Resource_u53tp"]
+script = ExtResource("10_iufqg")
+step = ExtResource("16_7dp7s")
+land = ExtResource("15_p3t8u")
+
+[sub_resource type="Resource" id="Resource_atxis"]
+script = ExtResource("10_iufqg")
+step = ExtResource("18_j8d6m")
+land = ExtResource("17_ktos6")
+
+[sub_resource type="Resource" id="Resource_0ckxa"]
+script = ExtResource("10_iufqg")
+step = ExtResource("20_m8qlb")
+land = ExtResource("19_b0v1m")
+
+[resource]
+script = ExtResource("9_w52aw")
+surfaces = Dictionary[int, ExtResource("10_iufqg")]({
+1: SubResource("Resource_l8xpo"),
+2: SubResource("Resource_1vgin"),
+3: SubResource("Resource_u53tp"),
+4: SubResource("Resource_atxis"),
+5: SubResource("Resource_0ckxa")
+})
+land_hard = ExtResource("7_frwyu")
+jump = ExtResource("6_en2th")
+double_jump = ExtResource("4_68qay")
+climb_grab = ExtResource("1_dlmq0")
+climb_step = ExtResource("2_o1xty")
+swing = ExtResource("21_g5ro4")
+hurt = ExtResource("5_0fa2g")
+death = ExtResource("3_yr864")
+rest = ExtResource("8_q1xis")

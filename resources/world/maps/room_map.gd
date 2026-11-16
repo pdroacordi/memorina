@@ -63,6 +63,10 @@ func ground_at(cell: Vector2i) -> Enums.Ground:
 		return Enums.Ground.NONE
 	return ground[_index(cell)] as Enums.Ground
 
+## BiomeTileset.Look at `cell`, or NO_LOOK for air and off the map.
+func look_at(cell: Vector2i) -> int:
+	return looks[_index(cell)] if contains(cell) and not looks.is_empty() else NO_LOOK
+
 func is_solid(cell: Vector2i) -> bool:
 	return ground_at(cell) != Enums.Ground.NONE and not is_platform(cell)
 

@@ -13,4 +13,5 @@ wood = ExtResource("3_wood")
 wall = ExtResource("4_wall")
 crack = ExtResource("5_crack")
 fill_variants = PackedInt32Array(0, 4, 4, 3)
+step_surfaces = PackedByteArray(1, 1, 4, 0)
 description = "Summer Caldera ash scree: loose ash and cinders drawn as the STONE look, so S cells are Ground STONE and roots never take them (\"Caldera ash as scree\", user, 2026-10-13); temple sandstone back walls, the village oak planks."

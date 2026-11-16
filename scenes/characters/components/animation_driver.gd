@@ -36,6 +36,14 @@ func holding(state: StringName) -> bool:
 func finished(state: StringName) -> bool:
 	return current == state and is_finished()
 
+## Play position of the current clip, s; 0 until the tree has started it.
+func position() -> float:
+	return _playback.get_current_play_position() if _playback.get_current_node() == current else 0.0
+
+## Length of the current clip, s; 0 until the tree has started it.
+func length() -> float:
+	return _playback.get_current_length() if _playback.get_current_node() == current else 0.0
+
 ## Plays `intro` once, then `loop`, while the logical state remains active.
 func sequence(intro: StringName, loop: StringName, skip_intro: bool = false) -> StringName:
 	if current == loop:
