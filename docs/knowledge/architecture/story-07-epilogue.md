@@ -6,7 +6,7 @@ status: plan
 tags: [story, epilogue, return, cutscene, credits, season, year, greyhush, seasonal-art, save-fact, bench, save, music, dialogue, i18n, plan, story-07]
 related: [architecture/story-05-playable-flashbacks, architecture/story-04-bearer-fragments, architecture/cutscenes-are-data-played-between-two-rest-states, architecture/the-opening-is-staged-by-save-facts, architecture/dialogue-is-data-and-choices-are-save-facts, architecture/grd-06-final-battle, architecture/the-life-loop-rewinds-by-reloading, architecture/pause-menu-worldfreeze-reuse, architecture/memory-field-cpu-gpu-split, architecture/regional-weather-push, architecture/music-system, architecture/notebook-entries-are-derived-from-the-save, systems/story, systems/cutscenes, systems/flashbacks, systems/dialogue, systems/music, systems/greyhush, systems/seasonal-art, systems/life-benches-death, systems/notices, systems/screens, systems/settings, systems/guardians, systems/world, systems/rooms, systems/backdrops, bugs/a-cutscene-trigger-in-a-first-visited-room-never-arms, bugs/a-flashback-return-glides-the-frame-from-the-past, bugs/a-neighbour-room-in-another-region-runs-on-the-current-regions-memory, bugs/a-quit-to-title-mid-scene-leaves-the-music-muffled, gotchas/a-killed-tween-never-emits-finished, gotchas/time-scale-zero-stops-delta-particles-and-time, gotchas/a-node-idled-or-swapped-out-keeps-what-it-opened-in-an-autoload, gotchas/tileset-padding-bakes-only-defined-tiles, gotchas/autowrapped-rows-settle-over-several-sorts, gotchas/gdunit-await-millis-never-resumes-while-the-tree-is-paused]
 created: 2026-11-13
-updated: 2026-11-13
+updated: 2026-11-16
 source_files:
   - docs/design/drafts/camada_pessoal.md
   - docs/design/01_lore_e_narrativa.md
@@ -313,3 +313,7 @@ No other text: the seats and the reunion use glyph prompts. Fit tests: `dialogue
 9. Credits content: "Uso o CREDITS.md". The list is built from `CREDITS.md` and the author, and shown to the user for approval before it ships. Layout as recommended.
 10. The garden's hour after the epilogue: "Fica no fim de tarde (Recommended)".
 11. The draft texts in the i18n table: "Aprovar os textos" (user, 2026-11-16): the daughter's garden and after lines, the five villagers' 1.0 lines, `INTENT_GARDEN`, `INTENT_RIBBON` and `BENCH_GARDEN_STONE`, in pt_BR as written. The en lines, Ivo's tone variants and the credits list are shown for approval at build.
+
+## Corrections found while building
+
+- **Step 1:** `village_restored.tres` is not made. `resources/save_facts/world_restored.tres` (WORLD_RESTORED) already exists and is the same fact; every 1.0 gate below reads it. `EpilogueSchedule` also names `REUNION_ID` (`daughter_reunion`), the heard talk its rule reads.

@@ -1,6 +1,6 @@
 class_name SaveFactTest extends GdUnitTestSuite
 
-## SaveFact reads one flag of the save, all guardians at once, a count of them, a dialogue heard or answered, or the flashback due.
+## SaveFact reads one flag of the save, all guardians at once, a count of them, a dialogue heard or answered, the flashback due or the epilogue due.
 
 
 func _fact(kind: SaveFact.Kind, index: int, id: StringName = &"") -> SaveFact:
@@ -133,3 +133,14 @@ func test_flashback_due_names_the_one_due() -> void:
 	data.scenes_seen.append(&"flashback_1")
 	assert_bool(SaveFact.check(SaveFact.Kind.FLASHBACK_DUE, 1, data)).is_false()
 	assert_bool(SaveFact.check(SaveFact.Kind.FLASHBACK_DUE, 2, data)).is_true()
+
+func test_epilogue_due_follows_the_schedule() -> void:
+	var data := PlayerData.new()
+	data.world_restored = true
+	for number: int in range(1, FlashbackSchedule.COUNT + 1):
+		data.scenes_seen.append(FlashbackSchedule.id(number))
+	assert_bool(SaveFact.check(SaveFact.Kind.EPILOGUE_DUE, 0, data)).is_false()
+	data.dialogues_heard.append(&"daughter_reunion")
+	assert_bool(SaveFact.check(SaveFact.Kind.EPILOGUE_DUE, 0, data)).is_true()
+	data.scenes_seen.append(&"epilogue")
+	assert_bool(SaveFact.check(SaveFact.Kind.EPILOGUE_DUE, 0, data)).is_false()

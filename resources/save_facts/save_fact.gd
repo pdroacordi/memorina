@@ -31,6 +31,8 @@ enum Kind {
 	WORLD_RESTORED,
 	## Flashback `index` is the one due (FlashbackSchedule.due).
 	FLASHBACK_DUE,
+	## The epilogue is due (EpilogueSchedule.due).
+	EPILOGUE_DUE,
 }
 
 @export var kind: Kind = Kind.ITEM
@@ -92,4 +94,6 @@ static func check(fact_kind: Kind, fact_index: int, data: PlayerData, fact_id: S
 			return data.world_restored
 		Kind.FLASHBACK_DUE:
 			return FlashbackSchedule.due(data) == fact_index
+		Kind.EPILOGUE_DUE:
+			return EpilogueSchedule.due(data)
 	return false
