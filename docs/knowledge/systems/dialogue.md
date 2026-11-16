@@ -55,7 +55,7 @@ STORY-08. Plan, options and the reasons: `architecture/dialogue-is-data-and-choi
 - `PlayerData.dialogues_heard: Array[StringName]` and `responses: Dictionary[StringName, StringName]` (ask id to choice id; asked again, the new answer replaces the old, so each question counts once). Old saves load empty.
 - `SaveSystem.is_dialogue_heard`, `mark_dialogue_heard` (at END only), `response_to(ask_id)`, `record_response(ask_id, choice_id)`; both writers emit `progress_changed`.
 - Live data: `SaveLedger` changes nothing, so a bench commits them and a death forgets them, like a grant the talk gave.
-- `DialogueTally.count(catalog, data) -> Dictionary[int, int]` counts answers by tone. Nothing reads it yet (STORY-07).
+- `DialogueTally.count(catalog, data) -> Dictionary[int, int]` counts answers by tone; `DialogueTally.leans` reads it once, for Ivo's epilogue lines through `SaveFact.Kind.TONE_LEANS` (STORY-07, `systems/ending`).
 
 ## The runner (`DialogueRunner`, pure)
 
