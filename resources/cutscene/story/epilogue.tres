@@ -1,0 +1,157 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_music.gd" id="e_music"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_music_mark.gd" id="e_mark"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_melody.gd" id="e_melody"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_place.gd" id="e_place"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_gesture.gd" id="e_gesture"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_talk.gd" id="e_talk"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_exit.gd" id="e_exit"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e_face"]
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="e_cue"]
+[ext_resource type="Resource" path="res://resources/music/wife_song_epilogue.tres" id="r_duet"]
+[ext_resource type="Resource" path="res://resources/story/morning_song.tres" id="r_morning"]
+[ext_resource type="Resource" path="res://resources/dialogue/story/epilogue_talk.tres" id="r_talk"]
+[ext_resource type="Resource" path="res://resources/dialogue/story/epilogue_answer.tres" id="r_answer"]
+[ext_resource type="Resource" path="res://resources/dialogue/story/epilogue_name.tres" id="r_name"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_up_g4.mp3" id="a_up"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_down_c4.mp3" id="a_down"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_low_mid_d4.mp3" id="a_left"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="a_right"]
+
+[sub_resource type="Resource" id="silence"]
+script = ExtResource("e_cue")
+id = &"epilogue_silence"
+loops = true
+fade_in = 0.0
+fade_out = 0.0
+
+[sub_resource type="Resource" id="hush"]
+script = ExtResource("e_music")
+cue = SubResource("silence")
+fade = 2.0
+
+[sub_resource type="Resource" id="close_on_him"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"ivo"])
+offset = Vector2(-64, -16)
+zoom = 4.0
+seconds = 1.5
+
+[sub_resource type="Resource" id="together_close"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("hush"), SubResource("close_on_him")])
+
+[sub_resource type="Resource" id="first_attempt"]
+script = ExtResource("e_melody")
+melody = ExtResource("r_morning")
+count = 4
+voices = Array[AudioStream]([ExtResource("a_up"), ExtResource("a_down"), ExtResource("a_left"), ExtResource("a_right")])
+
+[sub_resource type="Resource" id="the_gap"]
+script = ExtResource("e_wait")
+seconds = 2.5
+
+[sub_resource type="Resource" id="she_is_there"]
+script = ExtResource("e_place")
+actor = &"alba"
+mark = &"beside_stone"
+offset = Vector2(12, 0)
+
+[sub_resource type="Resource" id="seated"]
+script = ExtResource("e_gesture")
+actor = &"alba"
+clip = &"seated"
+wait = false
+
+[sub_resource type="Resource" id="she_faces_him"]
+script = ExtResource("e_face")
+actor = &"alba"
+toward = &"ivo"
+
+[sub_resource type="Resource" id="pull_back"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"ivo", &"alba"])
+offset = Vector2(0, -40)
+zoom = 2.0
+seconds = 3.0
+
+[sub_resource type="Resource" id="talk"]
+script = ExtResource("e_talk")
+talk = ExtResource("r_talk")
+speaker = &"alba"
+
+[sub_resource type="Resource" id="her_silence"]
+script = ExtResource("e_wait")
+seconds = 2.0
+
+[sub_resource type="Resource" id="answer"]
+script = ExtResource("e_talk")
+talk = ExtResource("r_answer")
+speaker = &"alba"
+
+[sub_resource type="Resource" id="close_on_both"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"ivo", &"alba"])
+offset = Vector2(0, -54)
+zoom = 3.0
+seconds = 1.5
+
+[sub_resource type="Resource" id="name"]
+script = ExtResource("e_talk")
+talk = ExtResource("r_name")
+speaker = &"alba"
+
+[sub_resource type="Resource" id="duet"]
+script = ExtResource("e_music")
+cue = ExtResource("r_duet")
+
+[sub_resource type="Resource" id="she_sings"]
+script = ExtResource("e_gesture")
+actor = &"alba"
+clip = &"sit_sing"
+wait = false
+
+[sub_resource type="Resource" id="up_the_fall"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"waterfall_top"])
+offset = Vector2(0, 0)
+zoom = 2.0
+seconds = 8.5
+
+[sub_resource type="Resource" id="together_duet"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("duet"), SubResource("she_sings"), SubResource("up_the_fall")])
+
+[sub_resource type="Resource" id="her_release"]
+script = ExtResource("e_mark")
+seconds = 12.45
+
+[sub_resource type="Resource" id="she_is_gone"]
+script = ExtResource("e_exit")
+actor = &"alba"
+
+[sub_resource type="Resource" id="down_to_him"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"ivo"])
+offset = Vector2(0, -40)
+zoom = 2.0
+seconds = 1.5
+
+[sub_resource type="Resource" id="his_last_note"]
+script = ExtResource("e_mark")
+seconds = 15.8
+
+[sub_resource type="Resource" id="after"]
+script = ExtResource("e_wait")
+seconds = 2.0
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"epilogue"
+steps = Array[ExtResource("e_step")]([SubResource("together_close"), SubResource("first_attempt"), SubResource("the_gap"), SubResource("she_is_there"), SubResource("seated"), SubResource("she_faces_him"), SubResource("pull_back"), SubResource("talk"), SubResource("her_silence"), SubResource("answer"), SubResource("close_on_both"), SubResource("name"), SubResource("together_duet"), SubResource("her_release"), SubResource("she_is_gone"), SubResource("down_to_him"), SubResource("his_last_note"), SubResource("after")])

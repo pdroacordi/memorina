@@ -48,6 +48,8 @@
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/ground_seat.tscn" id="ep_ground_seat"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/bench/bench.tscn" id="ep_bench"]
 [ext_resource type="Script" path="res://scenes/world/interactables/bench/seat_gate.gd" id="ep_seat_gate"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/epilogue.tres" id="ep_epilogue"]
+[ext_resource type="PackedScene" path="res://scenes/characters/story_actor/alba/alba_actor.tscn" id="ep_alba"]
 
 [sub_resource type="Resource" id="due_1"]
 script = ExtResource("st_fact")
@@ -247,6 +249,7 @@ strength = 0.12
 position = Vector2(816, 640)
 facing = -1
 ground = false
+cutscene = ExtResource("ep_epilogue")
 when = Array[ExtResource("st_fact")]([ExtResource("ep_due")])
 
 [node name="StoneBench" parent="Seats" instance=ExtResource("ep_bench")]
@@ -290,6 +293,17 @@ offset_bottom = 1120.0
 mouse_filter = 2
 texture = SubResource("sun_glow")
 expand_mode = 1
+
+[node name="Alba" type="Node2D" parent="Stagings"]
+script = ExtResource("st_staging")
+staging_id = &"alba_staging"
+
+[node name="Cast" type="Node2D" parent="."]
+z_index = -10
+
+[node name="Alba" parent="Cast" instance=ExtResource("ep_alba")]
+position = Vector2(840, 640)
+stands_for = NodePath("../../Stagings/Alba")
 
 [node name="Marks" type="Node2D" parent="."]
 

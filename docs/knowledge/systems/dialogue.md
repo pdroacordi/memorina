@@ -126,7 +126,7 @@ No story text is approved yet (STORY-03 drafts the opening), so the only talk is
 2026-10-15 (open questions, as relayed by the orchestrator):
 - A talk blocks Ivo like the map; the world keeps running; the pause and the notebook may open over a talk; the map is refused while talking. `WorldFreeze` gets no new writer.
 - Heard and chosen responses are live data: a bench commits them, a death forgets them.
-- `DialogueChoice.tone`: `Tone { NONE, HOLD_ON, LET_GO }` (append only). The tally is derived, never stored; STORY-07 decides how it is read.
+- `DialogueChoice.tone`: `Tone { NONE, HOLD_ON, LET_GO }` (append only). The tally is derived, never stored; it is read once, by Ivo's epilogue lines through `SaveFact.Kind.TONE_LEANS` and `DialogueTally.leans` (a tie leans to none; `systems/story`, "The epilogue").
 - Speaker plates show role names for now (`SPEAKER_ELDER`, `SPEAKER_DAUGHTER`, `SPEAKER_MENTOR`); the mentor stays unnamed. The portrait slot exists and runs empty; the text does not move whether or not a portrait exists.
 - Typing at 40 chars/s real time; the first press completes the line, the second advances. No voice blips for now.
 - Box: bottom box, 2x pixel rule, the wood theme, a speaker name plate, choices inside the box.

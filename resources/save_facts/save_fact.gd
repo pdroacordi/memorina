@@ -33,15 +33,22 @@ enum Kind {
 	FLASHBACK_DUE,
 	## The epilogue is due (EpilogueSchedule.due).
 	EPILOGUE_DUE,
+	## More answers of tone `index` (a DialogueChoice.Tone) than of any other tone; a tie holds for none (DialogueTally).
+	TONE_LEANS,
 }
+
+const DIALOGUE_CATALOG := "res://resources/dialogue/dialogue_catalog.tres"
 
 @export var kind: Kind = Kind.ITEM
 ## Index into the PlayerData flag array `kind` names (an Enums.PlayerSkill, Song, PlayerItem or Guardian; SONG_PART_KNOWN a Song), or the count
-## GUARDIANS_RESTORED_AT_LEAST or CACHES_TAKEN_AT_LEAST needs, or the flashback number (FLASHBACK_DUE); the other kinds ignore it.
+## GUARDIANS_RESTORED_AT_LEAST or CACHES_TAKEN_AT_LEAST needs, the flashback number (FLASHBACK_DUE) or a DialogueChoice.Tone
+## (TONE_LEANS); the other kinds ignore it.
 @export var index: int = 0
 ## A dialogue id (DIALOGUE_HEARD), a choice id (RESPONSE_CHOSEN), a cutscene id (SCENE_SEEN), a slot id (PIECE_FOUND) or an
 ## offer id (OFFER_BOUGHT); the other kinds ignore it.
 @export var id: StringName = &""
+
+static var _catalog: DialogueCatalog
 
 
 func holds(data: PlayerData) -> bool:
@@ -96,4 +103,12 @@ static func check(fact_kind: Kind, fact_index: int, data: PlayerData, fact_id: S
 			return FlashbackSchedule.due(data) == fact_index
 		Kind.EPILOGUE_DUE:
 			return EpilogueSchedule.due(data)
+		Kind.TONE_LEANS:
+			return DialogueTally.leans(_dialogue_catalog(), data) == fact_index
 	return false
+
+## Loaded on first use, not preloaded: the catalog's lines hold SaveFacts.
+static func _dialogue_catalog() -> DialogueCatalog:
+	if _catalog == null:
+		_catalog = load(DIALOGUE_CATALOG) as DialogueCatalog
+	return _catalog

@@ -144,3 +144,19 @@ func test_epilogue_due_follows_the_schedule() -> void:
 	assert_bool(SaveFact.check(SaveFact.Kind.EPILOGUE_DUE, 0, data)).is_true()
 	data.scenes_seen.append(&"epilogue")
 	assert_bool(SaveFact.check(SaveFact.Kind.EPILOGUE_DUE, 0, data)).is_false()
+
+## The game's own answers (guardian_frost's gift: close holds on, open lets go); a tie holds for neither tone.
+func test_tone_leans_needs_more_answers_of_its_tone() -> void:
+	var data := PlayerData.new()
+	for tone: int in [DialogueChoice.Tone.HOLD_ON, DialogueChoice.Tone.LET_GO]:
+		assert_bool(SaveFact.check(SaveFact.Kind.TONE_LEANS, tone, data)).is_false()
+	data.responses[&"guardian_frost_gift"] = &"guardian_frost_gift_open"
+	assert_bool(SaveFact.check(SaveFact.Kind.TONE_LEANS, DialogueChoice.Tone.LET_GO, data)).is_true()
+	assert_bool(SaveFact.check(SaveFact.Kind.TONE_LEANS, DialogueChoice.Tone.HOLD_ON, data)).is_false()
+	data.responses[&"guardian_frost_gift"] = &"guardian_frost_gift_close"
+	assert_bool(SaveFact.check(SaveFact.Kind.TONE_LEANS, DialogueChoice.Tone.HOLD_ON, data)).is_true()
+	var hold_on := load("res://resources/save_facts/tone_leans_hold_on.tres") as SaveFact
+	var let_go := load("res://resources/save_facts/tone_leans_let_go.tres") as SaveFact
+	assert_bool(hold_on.holds(data)).is_true()
+	assert_bool(let_go.holds(data)).is_false()
+	assert_int(let_go.index).is_equal(DialogueChoice.Tone.LET_GO)

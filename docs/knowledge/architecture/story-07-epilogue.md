@@ -186,7 +186,7 @@ Her voice finishes the song only inside this piece. The guitar never plays here,
 | `DLG_DAUGHTER_REUNION_01..05` | Você voltou colorido. / O mundo voltou. / E a música da mãe? / Ainda falta um pedaço. / Ela cantava no jardim. Você me levava lá, lembra? Vai lá. | draft §4 (approved draft); en at build |
 | `DLG_DAUGHTER_GARDEN_01` | O jardim, pai. Ela tá esperando a música. | draft |
 | `DLG_DAUGHTER_AFTER_01` | Você tá cantarolando. Você nunca cantarola. | draft |
-| `DLG_EPILOGUE_01..07` | 01 §9.4, main version, verbatim | design text; en at build |
+| `DLG_EPILOGUE_01..07` | 01 §9.4, main version, verbatim | design text; en drafted at step 10 (below), for approval |
 | `DLG_EPILOGUE_08` | Alba. | draft §4 |
 | `DLG_BAKER_10` | Fiz o redondo e o comprido. Hoje ninguém precisa escolher. | draft |
 | `DLG_TAVERNER_10` | Duas canecas. Dois fregueses. Como antes. | draft (question 6) |
@@ -197,7 +197,10 @@ Her voice finishes the song only inside this piece. The guitar never plays here,
 | `INTENT_RIBBON` | A fita azul. | draft (question 8) |
 | `BENCH_GARDEN_STONE` | A pedra lisa | draft (question 1) |
 | `CREDITS_*` | headings and roles (question 9) | after the user's list |
-| `DLG_EPILOGUE_<NN>_V<k>` | Ivo's variants by tone | only if question 7 is yes |
+| `DLG_EPILOGUE_02_V1`, `_06_V1` (HOLD_ON) | Eu devia ter escutado você. Penso nisso todo dia. / Eu ainda erro a mesma nota. Toda vez. | draft (decision 7), for approval |
+| `DLG_EPILOGUE_02_V2`, `_06_V2` (LET_GO) | Eu devia ter escutado você. Hoje eu sei disso. / Eu ainda erro a mesma nota. Já não me assusta. | draft (decision 7), for approval |
+
+The epilogue's en (step 10, drafts for approval): 01 Alba "You still carry that day." 02 Ivo "I should have listened to you." 03 Alba "That day never weighed on me the way it weighs on you." 04 Ivo "Why?" 05 Alba "Because I loved you. That never depended on you getting it right." 06 Ivo "I still miss the same note." 07 Alba "Miss it. Play it anyway." 08 Ivo "Alba." The variants' en: 02_V1 "I should have listened to you. I think about it every day.", 06_V1 "I still miss the same note. Every time.", 02_V2 "I should have listened to you. I know that now.", 06_V2 "I still miss the same note. It doesn't scare me anymore." 04 and 08 have no variant: a bare question and her name read the same in either tone.
 
 No other text: the seats and the reunion use glyph prompts. Fit tests: `dialogue_text_fit_test`, `notice_text_fit_test` (intents), a new `credits_text_fit_test` (every key and name fits the column, in every locale), the slot card's bench name. A catalog test checks that `DLG_EPILOGUE_08` is the only Ivo line whose text is her name, in every locale (draft §2: "Ivo só diz o nome dela uma vez, no epílogo").
 
@@ -330,3 +333,26 @@ No other text: the seats and the reunion use glyph prompts. Fit tests: `dialogue
 - **Step 7:** the render (`docs/knowledge/music/wifes-song.md`, "The epilogue's render") follows the sketch: the flute's last C (11.62 s) starts with her last C (11.56 s), not after it, so the epilogue outline's "before the flute's last C" (its item 8) cannot come after her exit (item 7). The camera instead comes down during the flute's held C, which sounds alone from her release (12.45 s) to 14.12 s. `fade_in` is 0 too: the flute's first note is 0.56 s in, inside a 1.5 s fade. The measured onsets are `music_cue_test`'s `EPILOGUE_*` consts, which the epilogue's marks read.
 - **Step 8:** `RegionYear.run_year(seconds)` and `settle()` are built here, not in step 3 (decision 4 came after it): a run advances `cycle_seconds() / seconds` per scaled second whatever the gate, and its last frame jumps exactly back to where it began, emitting `season_changed`; `settle()` jumps there at once. `CutsceneCredits` waits on `CreditsRoll.is_done()` instead of a precomputed `duration`: the column's height is known only once its autowrapped rows have sorted.
 - **Step 9:** `EpilogueDirector` knows the scenes by id (it asserts its exports are `epilogue` and `credits`) and plays the credits on `CutsceneDirector.host()`, a new accessor, deferred so `Player.end_scene` sees the epilogue end first. The replay of a dropped credits from the stone (the plan's "two-entry pick, or a second GroundSeat") is decided as a second `GroundSeat`, `CreditsSeat`, on its own `SeatGate` (open when SCENE_SEEN `epilogue` unless `credits`; `StoneSeat` then closes on `seen_epilogue`), built with the credits scene in step 11; the director itself never starts a scene from the stone. Until step 11 its `credits` is empty, so the epilogue's end closes the ending with no rest. `Game.rest_at_bench` takes the open seat of the bench (`Seat.find` takes the first of an id). `epilogue_save_test` holds the stone's seats and the committed save after the rest; no suite builds `game.tscn` in the tree, so the reload itself is the step 11 playtest (`story07_reload`).
+- **Step 10:** the talk is three sets, not two: `epilogue_talk` (01-02), `epilogue_answer` (03-06) and `epilogue_name` (07-08); her "(silêncio)" before 03 is a 2 s `CutsceneWait` with the box closed (a cue in a talk inside a scene cannot start a scene, and a hold would show her line first). The zooms are integers (`CutsceneCamera`: 1.5 draws uneven pixels): the close-up is zoom 4 on Ivo with the frame 64 px west of him, the pull-back to the pair zoom 2 over 3 s, the close on the two zoom 3 with the frame 54 px over their feet, so both heads clear the dialogue box's top position (the playtest saw the box over Ivo's head at 32 px). Alba is placed on `beside_stone` + 12 px east and turned to face him while the frame is on him: at the mark itself, facing west, her hair showed 2-3 px inside the close-up's edge, and a wider offset cut Ivo; the mark is shared with the past garden, so the step offsets it. Ivo stays in the bench's seated `sit` loop (the stand-in for `ivo_sit_memorina`; a MEMORINA pose would stand him). The camera rises to `waterfall_top` (x 1216; there is no `Marks/FallTop`) at zoom 2 over 8.5 s. The marks are her release (12.45 s, then `CutsceneExit alba`, the frame up) and 15.8 s (inside the 15.9 s stream, so it fits), and the frame comes back to Ivo over 1.5 s inside the flute's lone C. `Cast/Alba` (z -10) stands for an empty `Stagings/Alba` (`alba_staging`). Tone (decision 7): `SaveFact.Kind.TONE_LEANS` (appended; `tone_leans_hold_on.tres`, `tone_leans_let_go.tres`) holds by `DialogueTally.leans`; Ivo's 02 and 06 carry the variants (`_V1` HOLD_ON, `_V2` LET_GO); 04, 08 and all of Alba's never vary. `game.tscn`'s `EpilogueDirector.epilogue` is set, so the life notes fade over the scene.
+
+## Credits list (draft)
+
+Built from `CREDITS.md` and the author (decision 9, "Uso o CREDITS.md"); for the user's approval before step 11 builds `credits.tres`. Headings and roles become `CREDITS_*` keys (en / pt_BR); names are never translated. No AIVA line ("Não precisamos dar créditos ao AIVA", user, 2026-11-02).
+
+1. **Memorina** (the logo closes the roll; this opening line is the title in text)
+   - A game by: Pedro Acordi
+2. **Art** / **Arte**
+   - Interface, icons and fonts (the *RPG UI pack*) / Interface, ícones e fontes: Franuka (franuka.itch.io; the licence asks for a link back)
+   - Art direction and the art made for this game / Direção de arte e a arte feita para este jogo: Pedro Acordi (to confirm: CREDITS.md marks every other sheet "our own", generated for the project from our own stills)
+3. **Music** / **Música**
+   - Music / Música: Pedro Acordi (to confirm: the pieces are AIVA-made under the full-authorship plan, `systems/music`; AIVA takes no line)
+4. **Thanks** / **Agradecimentos**
+   - Thank you for playing / Obrigado por jogar (no name)
+
+Open points, each with a recommendation:
+
+- *FREE Platformer Assets* by GandalfHardcore: no line. CREDITS.md records that no room, trial, region or the title draws it since 2026-10-13 (the files stay on disk). If any of it is shipped in the export, it gets a line under Art.
+- The jump and landing dust (`assets/sprites/particles/dust/`): its origin is "unconfirmed" in CREDITS.md (perhaps Cainos' *Pixel Art Platformer - Village Props*). Recommended: find the source or replace the dust before shipping; credit Cainos only if the source is confirmed.
+- PixelLab and Codex (image tools that made most sprites from our own stills): no line, as with AIVA. Recommended: ask; a "Made with" line is optional.
+- Godot Engine: CREDITS.md does not list it. Its MIT licence asks for its copyright notice in the shipped game, which a licences screen or file can hold; a "Made with Godot Engine" line in the roll is optional.
+- Testers and other thanks: CREDITS.md names none. Add names here if there are any.

@@ -54,6 +54,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/engraving/engraving_view.tscn" id="103_engraving"]
 [ext_resource type="PackedScene" path="res://scenes/ui/credits/credits_roll.tscn" id="104_credits"]
 [ext_resource type="Script" path="res://scenes/world/story/epilogue/epilogue_director.gd" id="106_epilogue"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/epilogue.tres" id="107_epilogue_scene"]
 [ext_resource type="Script" path="res://scenes/ui/notice/notice_watcher.gd" id="53_notices"]
 [ext_resource type="Resource" path="res://resources/story/intent_catalog.tres" id="54_intents"]
 [ext_resource type="PackedScene" path="res://scenes/ui/notice/notice_toast.tscn" id="55_notice_toast"]
@@ -188,6 +189,7 @@ engraving = NodePath("../../CanvasLayer/EngravingView")
 
 [node name="EpilogueDirector" type="Node" parent="World" node_paths=PackedStringArray("cutscenes")]
 script = ExtResource("106_epilogue")
+epilogue = ExtResource("107_epilogue_scene")
 cutscenes = NodePath("../CutsceneDirector")
 
 [node name="Spawner" type="Node2D" parent="World" unique_id=1572119967]
