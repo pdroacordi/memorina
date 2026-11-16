@@ -302,6 +302,38 @@ func test_ivo_speaks_in_every_act() -> void:
 			&"DLG_ELDER_STORY_05", &"DLG_SWORD_01", &"DLG_MENTOR_GIFT_07", &"DLG_ELDER_RETURN_02", &"DLG_DAUGHTER_RETURN_04"]:
 		assert_bool(said.has(key)).override_failure_message(String(key)).is_true()
 
+## STORY-07: at 1.0 she waits by the window until the reunion is seen, then stands where it left her; the drawings are
+## as at 0.8 and the guitar stays on its hook.
+func test_the_world_restored_finds_her_at_the_window_then_by_him() -> void:
+	for heard: StringName in [&"daughter_errand", &"baker_errand", &"daughter_song", &"elder_story", &"mentor_gift"]:
+		SaveSystem.mark_dialogue_heard(heard)
+	SaveSystem.mark_scene_seen(&"home_return")
+	for guardian: int in Enums.Guardian.values():
+		SaveSystem.restore_guardian(guardian as Enums.Guardian)
+	var house := _mount(HOUSE)
+	assert_str(_shown(house, "Props/Daughter")).is_equal("Standing")
+	SaveSystem.restore_world()
+	assert_str(_shown(house, "Props/Daughter")).is_equal("Waiting")
+	assert_str(_shown(house, "Props/Drawings")).is_equal("Usual")
+	assert_str(_shown(house, "Props/WallGuitar")).is_equal("OnWall")
+	SaveSystem.mark_scene_seen(&"daughter_reunion")
+	assert_str(_shown(house, "Props/Daughter")).is_equal("Reunited")
+	assert_str(_shown(house, "Props/WallGuitar")).is_equal("OnWall")
+	var mark := house.get_node("Marks/Reunion") as Node2D
+	assert_float((house.get_node("Props/Daughter/Reunited") as Node2D).position.x).is_equal(mark.position.x)
+
+## The reunion is armed only by the restored world, never in the opening, and only until it is seen.
+func test_the_reunion_trigger_waits_for_the_restored_world() -> void:
+	var house := _mount(HOUSE)
+	var trigger := house.get_node("Triggers/Reunion") as CutsceneTrigger
+	assert_str(String(trigger.cutscene.id)).is_equal("daughter_reunion")
+	var data := PlayerData.new()
+	assert_bool(SaveFact.gates_pass(trigger.when, trigger.unless, data)).is_false()
+	data.world_restored = true
+	assert_bool(SaveFact.gates_pass(trigger.when, trigger.unless, data)).is_true()
+	data.scenes_seen.append(&"daughter_reunion")
+	assert_bool(SaveFact.gates_pass(trigger.when, trigger.unless, data)).is_false()
+
 func _restore_two() -> void:
 	SaveSystem.restore_guardian(Enums.Guardian.FROST)
 	SaveSystem.restore_guardian(Enums.Guardian.BLOOM)

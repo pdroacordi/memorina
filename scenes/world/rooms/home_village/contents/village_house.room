@@ -5,6 +5,7 @@
 ; at 0.6; it stops 30 px short of the door at col 4), by the door (col 3, auto, 81 px wide, 23 px short of the door:
 ; the hummed return) and at the guitar (col 9, auto: the played return). The song is no Talkable since STORY-16: the
 ; HomeReturn cutscene trigger starts it as Ivo comes home with the bread. Beats and triggers are in the contents scene.
+; STORY-07: col 7 (Up) is on her where the reunion leaves her (x 240): the garden, then after the credits.
 
 ; Indoors: wood planks, so no earth turf lip shows; no interior grows grass (systems/grass).
 
@@ -21,7 +22,7 @@ tileset = village
 %..................%
 %..................%
 %..................%
-%.ttE....t.........%
+%.ttE..t.t.........%
 %%%%%%%%%%%%%%%%%%%%
 ____________________
 ____________________
@@ -31,3 +32,4 @@ ____________________
 2,8 = {"talk": "res://resources/dialogue/story/daughter_bed.tres", "speaker_offset": -22.0, "reach_west": 26.0, "reach_east": 40.0}
 3,8 = {"talk": "res://resources/dialogue/story/daughter_near.tres", "auto_start": true, "auto_delay": 0.0, "speaker_offset": -28.0, "reach_west": 60.0, "reach_east": 21.0}
 9,8 = {"talk": "res://resources/dialogue/story/daughter_guitar.tres", "auto_start": true, "speaker_offset": -14.0}
+7,8 = {"talk": "res://resources/dialogue/story/daughter_reunited.tres"}

@@ -113,3 +113,29 @@ func test_every_text_has_both_languages() -> void:
 		assert_bool(rows.has(intent.text_key)).override_failure_message("%s has no row" % intent.text_key).is_true()
 		assert_str(rows[intent.text_key][1]).is_not_empty()
 		assert_str(rows[intent.text_key][2]).is_not_empty()
+
+## The Return (STORY-07): home once the world is restored, then the ribbon while flashback 2 or 4 is due ("\"A fita
+## azul.\" (Recommended)", user, 2026-11-16), else the garden, until the epilogue is seen.
+func test_the_intent_follows_the_return() -> void:
+	var data := PlayerData.new()
+	for heard: StringName in [&"daughter_errand", &"baker_errand", &"daughter_song", &"elder_story", &"mentor_gift", &"elder_return"]:
+		data.dialogues_heard.append(heard)
+	data.owned_items[Enums.PlayerItem.MEMORINA] = true
+	for guardian: int in Enums.Guardian.values():
+		data.restored_guardians[guardian] = true
+	data.world_restored = true
+	assert_str(String(_current_id(data))).is_equal("home_again")
+	assert_str(_catalog().current(data).text_key).is_equal("INTENT_HOME")
+	data.dialogues_heard.append(&"daughter_reunion")
+	data.scenes_seen.append(&"flashback_1")
+	assert_str(String(_current_id(data))).is_equal("ribbon_2")
+	data.scenes_seen.append(&"flashback_2")
+	assert_str(String(_current_id(data))).is_equal("garden")
+	data.scenes_seen.append(&"flashback_3")
+	assert_str(String(_current_id(data))).is_equal("ribbon_4")
+	assert_str(_catalog().current(data).text_key).is_equal("INTENT_RIBBON")
+	data.scenes_seen.append(&"flashback_4")
+	data.scenes_seen.append(&"flashback_5")
+	assert_str(String(_current_id(data))).is_equal("garden")
+	data.scenes_seen.append(&"epilogue")
+	assert_str(String(_current_id(data))).is_equal("")

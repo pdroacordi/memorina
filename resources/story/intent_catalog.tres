@@ -3,6 +3,9 @@
 [ext_resource type="Script" path="res://resources/story/intent_catalog.gd" id="1_catalog"]
 [ext_resource type="Script" path="res://resources/story/intent.gd" id="2_intent"]
 [ext_resource type="Script" uid="uid://b7dtsefilgm6i" path="res://resources/save_facts/save_fact.gd" id="3_fact"]
+[ext_resource type="Resource" path="res://resources/save_facts/world_restored.tres" id="4_restored"]
+[ext_resource type="Resource" path="res://resources/save_facts/heard_daughter_reunion.tres" id="5_reunion"]
+[ext_resource type="Resource" path="res://resources/save_facts/seen_epilogue.tres" id="6_epilogue"]
 
 [sub_resource type="Resource" id="heard_daughter_errand"]
 script = ExtResource("3_fact")
@@ -69,6 +72,42 @@ text_key = "INTENT_VILLAGE"
 when = Array[ExtResource("3_fact")]([SubResource("heard_mentor_gift")])
 unless = Array[ExtResource("3_fact")]([SubResource("heard_elder_return")])
 
+[sub_resource type="Resource" id="flashback_2_due"]
+script = ExtResource("3_fact")
+kind = 15
+index = 2
+
+[sub_resource type="Resource" id="flashback_4_due"]
+script = ExtResource("3_fact")
+kind = 15
+index = 4
+
+[sub_resource type="Resource" id="intent_home_again"]
+script = ExtResource("2_intent")
+id = &"home_again"
+text_key = "INTENT_HOME"
+when = Array[ExtResource("3_fact")]([ExtResource("4_restored")])
+unless = Array[ExtResource("3_fact")]([ExtResource("5_reunion")])
+
+[sub_resource type="Resource" id="intent_ribbon_2"]
+script = ExtResource("2_intent")
+id = &"ribbon_2"
+text_key = "INTENT_RIBBON"
+when = Array[ExtResource("3_fact")]([ExtResource("5_reunion"), SubResource("flashback_2_due")])
+
+[sub_resource type="Resource" id="intent_ribbon_4"]
+script = ExtResource("2_intent")
+id = &"ribbon_4"
+text_key = "INTENT_RIBBON"
+when = Array[ExtResource("3_fact")]([ExtResource("5_reunion"), SubResource("flashback_4_due")])
+
+[sub_resource type="Resource" id="intent_garden"]
+script = ExtResource("2_intent")
+id = &"garden"
+text_key = "INTENT_GARDEN"
+when = Array[ExtResource("3_fact")]([ExtResource("5_reunion")])
+unless = Array[ExtResource("3_fact")]([ExtResource("6_epilogue")])
+
 [resource]
 script = ExtResource("1_catalog")
-intents = Array[ExtResource("2_intent")]([SubResource("intent_bread"), SubResource("intent_home"), SubResource("intent_elder"), SubResource("intent_east"), SubResource("intent_village")])
+intents = Array[ExtResource("2_intent")]([SubResource("intent_home_again"), SubResource("intent_ribbon_2"), SubResource("intent_ribbon_4"), SubResource("intent_garden"), SubResource("intent_bread"), SubResource("intent_home"), SubResource("intent_elder"), SubResource("intent_east"), SubResource("intent_village")])

@@ -214,6 +214,136 @@ tracks/4/keys = {
 "values": [Vector2(0, 0)]
 }
 
+[sub_resource type="Animation" id="anim_waiting"]
+resource_name = "waiting"
+length = 2.3333333
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("t_standing")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1666667, 0.3333333, 0.5, 0.6666667, 0.8333333, 1, 1.1666667, 1.3333333, 1.5, 1.6666667, 1.8333333, 2, 2.1666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:offset")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(-32, -62)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(0, 0)]
+}
+
+[sub_resource type="Animation" id="anim_reunited"]
+resource_name = "reunited"
+length = 2.3333333
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("t_standing")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [8]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.1666667, 0.3333333, 0.5, 0.6666667, 0.8333333, 1, 1.1666667, 1.3333333, 1.5, 1.6666667, 1.8333333, 2, 2.1666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 6, 5, 4, 3, 2, 1]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite2D:offset")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(-32, -62)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Sprite2D:position")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2(0, 0)]
+}
+
 [sub_resource type="Animation" id="anim_holding_out"]
 resource_name = "holding_out"
 length = 1
@@ -995,6 +1125,8 @@ _data = {
 &"RESET": SubResource("anim_reset"),
 &"standing": SubResource("anim_standing"),
 &"listening": SubResource("anim_listening"),
+&"waiting": SubResource("anim_waiting"),
+&"reunited": SubResource("anim_reunited"),
 &"holding_out": SubResource("anim_holding_out"),
 &"at_guitar": SubResource("anim_at_guitar"),
 &"asleep": SubResource("anim_asleep"),
@@ -1014,6 +1146,12 @@ animation = &"standing"
 
 [sub_resource type="AnimationNodeAnimation" id="node_listening"]
 animation = &"listening"
+
+[sub_resource type="AnimationNodeAnimation" id="node_waiting"]
+animation = &"waiting"
+
+[sub_resource type="AnimationNodeAnimation" id="node_reunited"]
+animation = &"reunited"
 
 [sub_resource type="AnimationNodeAnimation" id="node_holding_out"]
 animation = &"holding_out"
@@ -1080,6 +1218,10 @@ states/reach_up/node = SubResource("node_reach_up")
 states/reach_up/position = Vector2(300, 300)
 states/guitar_at_chest/node = SubResource("node_guitar_at_chest")
 states/guitar_at_chest/position = Vector2(460, 300)
+states/waiting/node = SubResource("node_waiting")
+states/waiting/position = Vector2(620, 300)
+states/reunited/node = SubResource("node_reunited")
+states/reunited/position = Vector2(780, 300)
 
 [node name="Daughter" type="CharacterBody2D"]
 collision_layer = 0

@@ -4,6 +4,9 @@ extends StoryAnimationResolver
 
 const STANDING := &"standing"
 const LISTENING := &"listening"
+## By the window, then where she stops by Ivo (STORY-07): the standing strip until her own art lands.
+const WAITING := &"waiting"
+const REUNITED := &"reunited"
 const HOLDING_OUT := &"holding_out"
 const AT_GUITAR := &"at_guitar"
 const ASLEEP := &"asleep"
@@ -18,7 +21,7 @@ const REACH_UP := &"reach_up"
 const GUITAR_AT_CHEST := &"guitar_at_chest"
 
 const CLIPS: Array[StringName] = [
-	STANDING, LISTENING, HOLDING_OUT, AT_GUITAR, ASLEEP, IN_BED_TURNED, WALK, LOWER_EYES, EYES_LOWERED, SIT, SEATED,
+	STANDING, LISTENING, WAITING, REUNITED, HOLDING_OUT, AT_GUITAR, ASLEEP, IN_BED_TURNED, WALK, LOWER_EYES, EYES_LOWERED, SIT, SEATED,
 	LIE_DOWN, REACH_UP, GUITAR_AT_CHEST,
 ]
 const SETTLES: Dictionary[StringName, StringName] = {

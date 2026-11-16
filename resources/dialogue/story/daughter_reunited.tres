@@ -1,0 +1,38 @@
+[gd_resource type="Resource" script_class="DialogueSet" format=3]
+
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/ivo.tres" id="s_ivo"]
+[ext_resource type="Resource" path="res://resources/dialogue/speakers/daughter.tres" id="s_daughter"]
+[ext_resource type="Resource" path="res://resources/save_facts/heard_daughter_reunion.tres" id="f_reunion"]
+[ext_resource type="Resource" path="res://resources/save_facts/seen_epilogue.tres" id="f_epilogue"]
+[ext_resource type="Resource" path="res://resources/save_facts/seen_credits.tres" id="f_credits"]
+
+[sub_resource type="Resource" id="garden_1"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_daughter")
+text_key = "DLG_DAUGHTER_GARDEN_01"
+
+[sub_resource type="Resource" id="garden"]
+script = ExtResource("f_dialogue")
+id = &"daughter_garden"
+when = Array[ExtResource("f_fact")]([ExtResource("f_reunion")])
+unless = Array[ExtResource("f_fact")]([ExtResource("f_epilogue")])
+lines = Array[ExtResource("f_line")]([SubResource("garden_1")])
+
+[sub_resource type="Resource" id="after_1"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_daughter")
+text_key = "DLG_DAUGHTER_AFTER_01"
+
+[sub_resource type="Resource" id="after"]
+script = ExtResource("f_dialogue")
+id = &"daughter_after"
+when = Array[ExtResource("f_fact")]([ExtResource("f_credits")])
+lines = Array[ExtResource("f_line")]([SubResource("after_1")])
+
+[resource]
+script = ExtResource("f_set")
+dialogues = Array[ExtResource("f_dialogue")]([SubResource("garden"), SubResource("after")])

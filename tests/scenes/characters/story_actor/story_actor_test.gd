@@ -110,6 +110,17 @@ func test_every_rest_clip_matches_a_house_staging_child() -> void:
 		assert_bool(DaughterAnimationResolver.CLIPS.has(clip)).override_failure_message(String(child.name)).is_true()
 	house.free()
 
+## Every clip the resolver names is in the player's library and a state of the tree, so a travel never misses (STORY-07:
+## the waiting and reunited clips were in the library only).
+func test_every_clip_is_an_animation_and_a_state() -> void:
+	var actor := DAUGHTER.instantiate()
+	var player := actor.get_node("AnimationPlayer") as AnimationPlayer
+	var machine := (actor.get_node("AnimationTree") as AnimationTree).tree_root as AnimationNodeStateMachine
+	for clip: StringName in DaughterAnimationResolver.CLIPS:
+		assert_bool(player.has_animation(clip)).override_failure_message(String(clip)).is_true()
+		assert_bool(machine.has_node(clip)).override_failure_message(String(clip)).is_true()
+	actor.free()
+
 ## A villager's strip is drawn facing west: the actor flips it by that side, so entering on an unflipped child faces west.
 func test_an_actor_drawn_facing_west_flips_by_it() -> void:
 	var elder := (load("res://scenes/characters/story_actor/elder/elder_actor.tscn") as PackedScene).instantiate() as StoryActor

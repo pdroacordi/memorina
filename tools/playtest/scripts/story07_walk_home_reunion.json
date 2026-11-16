@@ -1,0 +1,365 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 55.20000000000001,
+ "locale": "en",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "world_restored": true,
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_song",
+  "elder_story",
+  "mentor_gift",
+  "elder_return",
+  "mentor_final_first"
+ ],
+ "scenes_seen": [
+  "opening_morning",
+  "home_return",
+  "daughter_to_bed",
+  "world_restoration"
+ ],
+ "player_position": [
+  11466,
+  -1250
+ ],
+ "steps": [
+  {
+   "t": 0.3,
+   "log": "lighthouse_top"
+  },
+  {
+   "t": 1.0,
+   "screenshot": "w00_lighthouse_top"
+  },
+  {
+   "t": 3.5,
+   "log": "lighthouse_top_music"
+  },
+  {
+   "t": 4.0,
+   "teleport": [
+    11416,
+    -866
+   ]
+  },
+  {
+   "t": 5.5,
+   "log": "lighthouse_base"
+  },
+  {
+   "t": 6.0,
+   "screenshot": "w01_lighthouse_base"
+  },
+  {
+   "t": 8.0,
+   "teleport": [
+    8176,
+    240
+   ]
+  },
+  {
+   "t": 9.5,
+   "log": "threshold_wayshrine"
+  },
+  {
+   "t": 10.0,
+   "screenshot": "w02_threshold_wayshrine"
+  },
+  {
+   "t": 12.0,
+   "teleport": [
+    3856,
+    272
+   ]
+  },
+  {
+   "t": 13.5,
+   "log": "village_gate_east"
+  },
+  {
+   "t": 14.0,
+   "screenshot": "w03_village_gate_east"
+  },
+  {
+   "t": 16.0,
+   "teleport": [
+    700,
+    280
+   ]
+  },
+  {
+   "t": 17.5,
+   "log": "village_square"
+  },
+  {
+   "t": 18.0,
+   "screenshot": "w04_village_square"
+  },
+  {
+   "t": 18.5,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 20.7,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 21.5,
+   "log": "at_the_house_door"
+  },
+  {
+   "t": 21.6,
+   "screenshot": "w05_house_door"
+  },
+  {
+   "t": 21.8,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 22.0,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 23.5,
+   "screenshot": "r00_reunion"
+  },
+  {
+   "t": 23.55,
+   "log": "reunion_0"
+  },
+  {
+   "t": 24.5,
+   "screenshot": "r01_reunion"
+  },
+  {
+   "t": 24.55,
+   "log": "reunion_1"
+  },
+  {
+   "t": 25.5,
+   "screenshot": "r02_reunion"
+  },
+  {
+   "t": 25.55,
+   "log": "reunion_2"
+  },
+  {
+   "t": 26.5,
+   "screenshot": "r03_reunion"
+  },
+  {
+   "t": 26.55,
+   "log": "reunion_3"
+  },
+  {
+   "t": 27.5,
+   "screenshot": "r04_reunion"
+  },
+  {
+   "t": 27.55,
+   "log": "reunion_4"
+  },
+  {
+   "t": 28.5,
+   "screenshot": "r05_reunion"
+  },
+  {
+   "t": 28.55,
+   "log": "reunion_5"
+  },
+  {
+   "t": 30.0,
+   "screenshot": "r10_line"
+  },
+  {
+   "t": 30.05,
+   "log": "line_0"
+  },
+  {
+   "t": 31.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 31.7,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 32.6,
+   "screenshot": "r11_line"
+  },
+  {
+   "t": 32.65,
+   "log": "line_1"
+  },
+  {
+   "t": 34.2,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 34.300000000000004,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 35.2,
+   "screenshot": "r12_line"
+  },
+  {
+   "t": 35.25,
+   "log": "line_2"
+  },
+  {
+   "t": 36.800000000000004,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 36.900000000000006,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 37.800000000000004,
+   "screenshot": "r13_line"
+  },
+  {
+   "t": 37.85,
+   "log": "line_3"
+  },
+  {
+   "t": 39.400000000000006,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 39.50000000000001,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 40.400000000000006,
+   "screenshot": "r14_line"
+  },
+  {
+   "t": 40.45,
+   "log": "line_4"
+  },
+  {
+   "t": 42.00000000000001,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 42.10000000000001,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 43.00000000000001,
+   "screenshot": "r15_line"
+  },
+  {
+   "t": 43.050000000000004,
+   "log": "line_5"
+  },
+  {
+   "t": 44.60000000000001,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 44.70000000000001,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 45.60000000000001,
+   "screenshot": "r16_line"
+  },
+  {
+   "t": 45.650000000000006,
+   "log": "line_6"
+  },
+  {
+   "t": 47.20000000000001,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 47.30000000000001,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 49.20000000000001,
+   "log": "after_reunion"
+  },
+  {
+   "t": 49.30000000000001,
+   "screenshot": "r20_after_reunion"
+  },
+  {
+   "t": 49.70000000000001,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 50.00000000000001,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 50.50000000000001,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 50.60000000000001,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 51.70000000000001,
+   "screenshot": "r21_garden_line"
+  },
+  {
+   "t": 51.75000000000001,
+   "log": "garden_line"
+  },
+  {
+   "t": 53.20000000000001,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 53.30000000000001,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 54.20000000000001,
+   "log": "end"
+  },
+  {
+   "t": 54.30000000000001,
+   "screenshot": "r22_end"
+  }
+ ]
+}

@@ -6,7 +6,7 @@ status: active
 tags: [ui, hud, notice, item, intent, save, save-fact, queue, i18n, tween, ui-11]
 related: [bugs/a-notice-withdrawn-after-it-left-is-told-twice, bugs/a-withdrawn-intent-comes-back-after-the-intent-ended, systems/songs-and-the-memorina, systems/notebook, systems/screens, systems/story, systems/dialogue, systems/cutscenes, systems/pickups, systems/life-benches-death, architecture/notebook-entries-are-derived-from-the-save, playtests/2026-10-16-ui11-item-and-intent, gotchas/a-killed-tween-never-emits-finished]
 created: 2026-10-16
-updated: 2026-10-16
+updated: 2026-11-16
 source_files:
   - resources/story/intent.gd
   - resources/story/intent_catalog.gd
@@ -49,6 +49,8 @@ UI-11, design 06 §5 Pilar 2 and §9. Two kinds of notice share one queue and on
 | `elder` | `daughter_song` heard, unless `elder_story` | The elder's story. | A história do ancião. |
 | `east` | `elder_story` heard, unless `mentor_gift` | The lighthouse, east. | O farol, a leste. |
 | `village` | `mentor_gift` heard, unless `elder_return` | Back to the village. | De volta à vila. |
+
+- **The Return's intents** (STORY-07, before the opening's in the catalog): `home_again` (`world_restored`, unless `daughter_reunion` heard; `INTENT_HOME`), `ribbon_2` and `ribbon_4` (`daughter_reunion` heard and `FLASHBACK_DUE` 2 or 4; "The blue ribbon." / "A fita azul.": "\"A fita azul.\" (Recommended)", user, 2026-11-16), `garden` (`daughter_reunion` heard, unless SCENE_SEEN `epilogue`; "The garden." / "O jardim."). None after the epilogue.
 
 - The texts and the moments are design 05's draft 3 (its "→ Intenção" marks, approved "Aprovar (Recommended)", user, 2026-10-16). A new game has no intent until the daughter asks for the bread, so the first intent is told as a notice after her talk.
 - After `elder_return` no intent holds: the pause menu shows no line until the next intent is written. The end condition is UI-11's call (2026-10-16), for the user to confirm; the user gave the flow up to "after the gift, back to the village".

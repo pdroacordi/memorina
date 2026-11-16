@@ -193,6 +193,16 @@ Draft 3 of design 05, Atos 1 to 4 ("Aprovar (Recommended)", user, 2026-10-16; "F
 - **The taverner's two mugs** (design 05: "He sets two mugs on the counter, one in front of the patron's empty seat, and waits."): a `Mugs` FactStaging in village_tavern shows `AtSix` (two `tavern/mug.tscn`) on `village_at_six_tenths.tres`, so their presence is derived like every stage. One stands on the bar counter's top by the taverner (448, 636). The patron's seat is the bench at x 604 by table A, east of the counter's end (x 482), so the other stands on table A's west end in front of that bench (636, 652). `prop_grounding_test` holds both to their support (`SUPPORTED`). Up on him at 0.6 gives nothing: the gesture is the line.
 - **Not built (behaviour, art needed):** the water carrier holding the full bucket at the well at 0.6 (she keeps her idle loop), and the baker going back to the dough after the cough line (she keeps her idle). Neither is staged; each needs a pose strip.
 
+## The Return (STORY-07, 2026-11-16)
+
+`architecture/story-07-epilogue`, "The Return"; the reunion's lines are `docs/design/drafts/camada_pessoal.md` §4, approved; the daughter's other lines and the intents are the plan's i18n table ("Aprovar os textos", user, 2026-11-16).
+
+- **village_house at 1.0:** the `Daughter` staging gains two stages on top: `Reunited` (SCENE_SEEN `daughter_reunion`; x 240, the standing strip flipped to face west) and `Waiting` (`world_restored.tres`; x 384 under the window, facing it as drawn, her back to the door). Both breathe through `AmbientMotion`; the actor has `waiting` and `reunited` clips (the standing strip, stand-ins for `story_daughter_window` and her own pose). `WallGuitar` stays `OnWall`: he does not take the guitar.
+- **`Triggers/Reunion`** (`CutsceneTrigger`, when `world_restored.tres`, unless SCENE_SEEN `daughter_reunion`) plays `resources/cutscene/story/daughter_reunion.tres`: Ivo faces her and the frame pairs them at zoom 2 (1 s); 0.8 s still; she turns, a "!"; she runs to `Marks/Reunion` (x 240, her walk at pace 1, the stand-in for `story_daughter_run`) while he steps to `Marks/IvoReunion` (x 200, pace 0.4); they face; a `CutsceneTalk` hand-off (`wait = false`) to `daughter_reunion.tres` (`daughter_reunion`, once, zoom 2): "You came back in colour." / "The world came back." / "And Mama's song?" / "There's still a piece missing." / "She used to sing in the garden. You took me there, remember? Go on." No ribbon ("Deixar de fora (Recommended)", user, 2026-11-16).
+- **After it:** a Talkable at col 7 (Up, on her at x 240, 32 px from the door's zone) with `daughter_reunited.tres`: `daughter_garden` (heard `daughter_reunion`, unless SCENE_SEEN `epilogue`) "The garden, Papa. She's waiting for the song." and `daughter_after` (SCENE_SEEN `credits`) "You're humming. You never hum."
+- **Intents** (`systems/notices`): `home_again` (`INTENT_HOME`), `ribbon_2` / `ribbon_4` ("The blue ribbon." while flashback 2 or 4 is due), `garden` ("The garden." until the epilogue is seen).
+- The walk home needs nothing built: the hatch and the routes are open at 1.0.
+
 ## The box and the notebook
 
 - **Silent ask** (a gesture): an asking line with no text, no speaker and no variants is valid (`DialogueCatalog.validate`). The box opens on `show_choices` with no plate, portrait or text, its choices focused at once.
