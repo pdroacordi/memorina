@@ -364,8 +364,21 @@ func _room_by_key(key: String) -> Room:
 			return room
 	return null
 
-## Restores Ivo and records the bench as the respawn point; a seat with no bench only sits him down.
+## Seats Ivo on the open seat of bench `id` and rests there as Down on it does: the post-credits rest
+## (EpilogueDirector.rest_requested).
+func rest_at_bench(id: StringName) -> void:
+	var seat := _open_seat(id)
+	if seat == null:
+		push_warning("No open seat for bench %s to rest at" % id)
+		return
+	_player.sit(seat)
+	_rest(seat)
+
 func _on_player_sat_down(seat: Seat) -> void:
+	_rest(seat)
+
+## The one rest path: restores Ivo and records the bench as the respawn point; a seat with no bench only sits him down.
+func _rest(seat: Seat) -> void:
 	if seat.bench_id == &"":
 		return
 	_player.rest()
@@ -401,6 +414,13 @@ func _reload_world() -> void:
 
 func _swap_to_title() -> void:
 	SceneSwap.replace(self, load(title_scene) as PackedScene)
+
+func _open_seat(id: StringName) -> Seat:
+	for node: Node in get_tree().get_nodes_in_group(Seat.GROUP):
+		var seat := node as Seat
+		if seat != null and seat.bench_id == id and seat.open:
+			return seat
+	return null
 
 func _room_at(point: Vector2) -> Room:
 	return Room.at(get_tree(), point)

@@ -8,7 +8,7 @@ const NOTE := preload("res://scenes/ui/life_hud/life_note.tscn")
 @export var phase_step: float = 2.0
 ## Real seconds between successive note refills.
 @export var refill_step: float = 0.18
-## Scaled seconds the notes take to fade when a flashback's visit begins.
+## Scaled seconds the notes take to fade out when a flashback's visit or the ending begins, and back after the ending.
 @export var visit_fade: float = 1.5
 
 ## False until the initial health update, which is shown without animation.
@@ -40,9 +40,15 @@ func on_room_changed(room: Room) -> void:
 ## Wired from `FlashbackDirector.visit_began`: the notes fade before the travel, so a hidden swap into the past shows no
 ## change (flashback 5).
 func on_visit_began(_flashback: Flashback) -> void:
-	_stop_fade()
-	_fade = create_tween()
-	_fade.tween_property(self, ^"modulate:a", 0.0, visit_fade)
+	_fade_to(0.0)
+
+## Wired from `EpilogueDirector.ending_began`: the notes fade for the ending, as for a visit.
+func on_ending_began() -> void:
+	_fade_to(0.0)
+
+## Wired from `EpilogueDirector.ending_ended`: the notes come back over the same time.
+func on_ending_ended() -> void:
+	_fade_to(1.0)
 
 ## Returns notes in display order.
 func notes() -> Array[LifeNote]:
@@ -50,6 +56,11 @@ func notes() -> Array[LifeNote]:
 	for child: Node in _row.get_children():
 		result.append(child as LifeNote)
 	return result
+
+func _fade_to(alpha: float) -> void:
+	_stop_fade()
+	_fade = create_tween()
+	_fade.tween_property(self, ^"modulate:a", alpha, visit_fade)
 
 func _stop_fade() -> void:
 	if _fade != null:

@@ -107,6 +107,10 @@ func is_playing() -> bool:
 func playing() -> Cutscene:
 	return _scene
 
+## The beat, trigger or seat the playing scene was asked for; null when none plays.
+func host() -> Node:
+	return _host
+
 ## Read inside `scene_ended`: whether that end recorded SCENE_SEEN, which an earlier play may also have written.
 func ended_recorded() -> bool:
 	return _ended_recorded

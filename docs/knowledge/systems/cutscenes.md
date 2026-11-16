@@ -248,6 +248,7 @@ The vocabulary of `architecture/story-07-epilogue` ("The credits", decision 4); 
 - **`CreditsMath`** (pure): `travel` (the column rolls until its last row stands centred), `offset` (whole art px, held at the travel), `duration` (travel / speed + hold), `edge_alpha` (rows fade over 24 art px at the top and bottom edges; `credits_math_test`).
 - **`CutsceneCredits`** (`sheet`; subject `credits`): rolls it and waits on `is_done()`, not a fixed time, because autowrapped rows settle their height over a sort or two (`gotchas/autowrapped-rows-settle-over-several-sorts`); `land` puts the logo centred with its hold over.
 - **`CutsceneYear`** (`seconds`; subject `year`): `context.run_year(seconds)` → the `MemoryField.year` (the village's `RegionYear`) runs one whole year over `seconds`, whatever its gate, and ends on the season it began on; `land` and `restore` call `settle()`, which jumps back there at once (`region_year_test`, `cutscene_director_test.test_a_drop_settles_the_year`).
+- **`CutsceneDirector.host()`** (step 9): the beat, trigger or seat the playing scene was asked for, so `EpilogueDirector` plays the credits on the epilogue's host.
 
 ## User decisions (2026-10-16), in their words
 
