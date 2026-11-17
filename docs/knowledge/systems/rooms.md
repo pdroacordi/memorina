@@ -6,7 +6,7 @@ status: active
 tags: [rooms, map, importer, legend, tilemap]
 related: [performance/2026-11-11-tech12-baseline, systems/map, systems/region-title, architecture/room-reachability-audit, architecture/reward-slots-reserve-their-place-in-the-room-text, architecture/world-edges-from-the-room-list, architecture/rooms-are-text, bugs/a-teleported-ivo-enters-the-room-he-left, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/import-plugin-output-is-stale-when-its-logic-changes]
 created: 2026-10-02
-updated: 2026-11-11
+updated: 2026-11-17
 source_files:
   - addons/room_maps/room_map_importer.gd
   - resources/world/maps/room_legend.tres
@@ -48,6 +48,7 @@ User, 2026-10-14: "there are some places that should have invisible walls or som
 - **Ivo never stands outside a room.** The allowed space is every room plus a **sky band** over each run of first-row columns that are open (not solid, one-way, roof or void; air, water and a secret are open) with no room at (column centre, top - 1). The band is `RoomEdges.CEILING_RISE` (152 px) tall.
 - **`RoomEdges`** (pure) holds the rule: `closed_top(map)`, `bands(rooms, closed)`, `walls(rooms, bands)` (16 px slabs over every point outside the allowed space within 16 px of it, corners included, merged) and `allows`. A seam, a corner contact or a gap of 32 px or less gets no slab inside a room.
 - **`WorldEdges`** (`World/WorldEdges`, a StaticBody2D on layer 5 "Invisible Walls", mask 0) holds one shape per slab, named after the room it borders. `Game._ready` builds it from every Room after `DebugTrials` mounted the trials. It dies with `game.tscn`.
+- **An open end** (WORLD-44, 2026-11-17): the user asked for an invisible wall and a view where the audit wants a drawn wall (`OPEN_EDGE`); lighthouse_base's east end (col 39, rows 0-5) is air over the sea lookout, allowlisted as `OPEN_EDGE` at 39,0 with the user's words. "ao invés de uma parede de tijolos poderia ter apenas uma parede invisivel e uma linda vista de paisagem" (user, 2026-11-16). `playtests/2026-11-17-world44-lighthouse-view`.
 - **Only Ivo** masks layer 5 (`collision_mask` 27). Guardians, enemies, rain, the shell and the camera's ground ray stay off it.
 - **An edge is never grippable** (`WallMobilityComponent`: a slide collision on layer 5 is no wall) **and never safe ground** (`SafeGroundTracker` probes without layer 5).
 - **152 px** is `RoomRing.WIDTH` less `GameCamera.subject_margin`, so the frame holds every jump over an open top. A full jump from `RoomRing.FLOOR_ROWS` under an open top clears it by 19 px (`room_edges_test`). It is an orchestrator call, not a user decision.
