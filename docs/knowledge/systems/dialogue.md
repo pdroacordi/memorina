@@ -6,7 +6,7 @@ status: active
 tags: [dialogue, story, save, save-fact, ui, input, focus, i18n]
 related: [architecture/dialogue-is-data-and-choices-are-save-facts, playtests/2026-10-15-story08-dialogue, bugs/a-beat-that-ends-resumes-the-talk-without-the-start-gates, bugs/an-up-press-in-a-due-auto-start-zone-never-expires, bugs/ivo-faces-the-talkable-not-the-villager-beside-it, gotchas/a-removed-subtree-emits-tree-exiting-later-siblings-first, gotchas/a-static-func-returning-its-own-enum-fails-once-another-script-types-it, systems/screens, systems/input, systems/life-benches-death, systems/notebook, systems/props, systems/rooms, systems/songs-and-the-memorina, gotchas/a-menu-press-reaches-the-last-node-first, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-killed-tween-never-emits-finished, gotchas/autowrapped-rows-settle-over-several-sorts, gotchas/gdunit-await-millis-never-resumes-while-the-tree-is-paused, gotchas/a-typed-array-of-an-inner-class-is-refused-from-another-script]
 created: 2026-10-15
-updated: 2026-11-13
+updated: 2026-11-17
 source_files:
   - resources/save_facts/save_fact.gd
   - resources/dialogue/speaker.gd
@@ -100,6 +100,7 @@ STORY-08. Plan, options and the reasons: `architecture/dialogue-is-data-and-choi
 - These numbers differ from the plan's starting ones (panel 60 tall at y 114): the frame's measured 9 px border left 42 px of paper, too short for a question and three 12 px choices.
 - `InkButton` (a theme variation in `menu_theme.tres`): empty styles, ink text (0.32, 0.2, 0.25), red ink (0.72, 0.24, 0.16) when focused, like the notebook's rows.
 - **Typing:** `visible_ratio` tweened at `chars_per_second` (40) on a tween bound to the box (pausable) with `set_ignore_time_scale(true)` (real time under a recall's slow). `VC_CHARS_AFTER_SHAPING`, so words do not jump lines. The first press completes the line (kill, set the ratio, `gotchas/a-killed-tween-never-emits-finished`); the next emits `advanced`. Choices sent while typing wait for it.
+- **Voice and cues** (SND-05, 2026-11-17). "já viu sons que tocam enquanto o texto vai se gerando? podia ter isso no dialogo. e mais efeitos sonoros na caixa de diálogo" (user, 2026-11-16); the voice: "Memorina notes" (user, 2026-11-17). `DialogueBox._process` asks `VoiceBlips.due(text, voiced, typed, blip_every)` (pure: letters only, the first letter and every 3rd after) and plays `DialogueSoundSet.voice` (`resources/audio/sfx/dialogue/voice.tres`: four 70 ms attacks cut from the Memorina's C, D, E and G by `tools/audio/cut_voice_blips.py`, picked at random, plays at -36 LUFS) at `Speaker.voice_pitch` (elder 0.75, Ivo 1.0, daughter 1.35, Alba 1.7, mentor 0.6, the frost guardian 0.55...; 0 is silent) through its `%Sfx` emitter, so a pause stops it with the typing. The box also plays `open` when it shows from hidden, `advance` on the press that goes on, `move` on a step between choices (their first focus is silent), `confirm` on a choice and `close` when it hides; they reuse the menu cues (open, page, move, confirm, close). `SfxEmitter.play` takes a `pitch` factor for this. Tests: `voice_blips_test`, `dialogue_box_test`.
 - **Focus and input:** no script reads an event. `ContinueArea` (a text-less `InkButton` over the text) holds focus on a line; on a question the first choice does. Explicit neighbours, itself at either end and on both sides. A Button acts on the `ui_accept` release after a press, so a release with no press (Z held into an auto start) does nothing. `close()` releases focus held inside the box; `NOTIFICATION_UNPAUSED` grabs it back, because closing the pause or the notebook releases it.
 - **The closing press does not jump:** `PlayerInput` is disabled while talking, so the press never reaches it, and the release that ends the talk runs after `_input` (`gotchas/a-menu-press-reaches-the-last-node-first`); re-enabling resyncs jump as released.
 
@@ -128,7 +129,7 @@ No story text is approved yet (STORY-03 drafts the opening), so the only talk is
 - Heard and chosen responses are live data: a bench commits them, a death forgets them.
 - `DialogueChoice.tone`: `Tone { NONE, HOLD_ON, LET_GO }` (append only). The tally is derived, never stored; it is read once, by Ivo's epilogue lines through `SaveFact.Kind.TONE_LEANS` and `DialogueTally.leans` (a tie leans to none; `systems/story`, "The epilogue").
 - Speaker plates show role names for now (`SPEAKER_ELDER`, `SPEAKER_DAUGHTER`, `SPEAKER_MENTOR`); the mentor stays unnamed. The portrait slot exists and runs empty; the text does not move whether or not a portrait exists.
-- Typing at 40 chars/s real time; the first press completes the line, the second advances. No voice blips for now.
+- Typing at 40 chars/s real time; the first press completes the line, the second advances. No voice blips for now (superseded by SND-05, 2026-11-17).
 - Box: bottom box, 2x pixel rule, the wood theme, a speaker name plate, choices inside the box.
 - Input: no new InputEvent reader; GUI focus and Buttons like the pause menu.
 

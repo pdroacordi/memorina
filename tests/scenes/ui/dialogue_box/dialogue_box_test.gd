@@ -1,7 +1,8 @@
 class_name DialogueBoxTest extends GdUnitTestSuite
 
 ## The box types in real time, completes on the first press and advances on the next, waits for the question before
-## its choices, keeps focus inside itself, takes focus back after a hold, and ignores a release with no press.
+## its choices, keeps focus inside itself, takes focus back after a hold, and ignores a release with no press. It
+## blips in the speaker's pitch while typing and sounds its open, advance, move, confirm and close cues (SND-05).
 
 const BOX := preload("res://scenes/ui/dialogue_box/dialogue_box.tscn")
 const ELDER := preload("res://resources/dialogue/speakers/elder.tres")
@@ -11,6 +12,7 @@ const LINE_KEY := "DIALOGUE_TRIAL_FIRST_01"
 var _box: DialogueBox
 var _advanced: int = 0
 var _chosen: Array[int] = []
+var _cues: Array[SoundCue] = []
 var _locale: String
 
 
@@ -30,6 +32,8 @@ func before_test() -> void:
 	add_child(_box)
 	_box.advanced.connect(func() -> void: _advanced += 1)
 	_box.chosen.connect(func(index: int) -> void: _chosen.append(index))
+	_cues.clear()
+	(_box.get_node("%Sfx") as SfxEmitter).cue_played.connect(func(cue: SoundCue) -> void: _cues.append(cue))
 
 func after_test() -> void:
 	get_viewport().gui_release_focus()
@@ -233,3 +237,57 @@ func test_the_top_box_bottom_matches_the_panel() -> void:
 	assert_float(panel.offset_bottom).is_equal(DialogueBox.PANEL_BOTTOM)
 	assert_vector(art.scale).is_equal(Vector2.ONE * DialogueBox.ART_SCALE)
 	assert_float(DialogueBox.TOP_BOX_BOTTOM).is_equal(176.0)
+
+func _count(cue: SoundCue) -> int:
+	return _cues.count(cue)
+
+## "You found the trials. Few come this far." has 32 letters: blips on letters 1, 4, ..., 31.
+func test_a_typed_line_blips_in_the_speakers_pitch() -> void:
+	_box.show_line(ELDER, LINE_KEY)
+	await await_millis(1300)
+	assert_bool(_box.is_typing()).is_false()
+	assert_int(_count(_box.sounds.voice)).is_equal(11)
+	var player := (_box.get_node("%Sfx") as SfxEmitter).player_of(_box.sounds.voice) as AudioStreamPlayer
+	assert_float(player.pitch_scale).is_equal_approx(_box.sounds.voice.pitch_scale * ELDER.voice_pitch, 0.001)
+
+func test_a_completed_line_stops_blipping() -> void:
+	_box.show_line(ELDER, LINE_KEY)
+	await await_idle_frame()
+	await _accept()
+	var blips := _count(_box.sounds.voice)
+	await await_millis(300)
+	assert_int(_count(_box.sounds.voice)).is_equal(blips)
+
+func test_a_voiceless_speaker_types_in_silence() -> void:
+	var mute := Speaker.new()
+	mute.voice_pitch = 0.0
+	_box.show_line(mute, LINE_KEY)
+	await await_millis(1300)
+	assert_int(_count(_box.sounds.voice)).is_equal(0)
+
+func test_the_box_sounds_open_advance_and_close() -> void:
+	_box.show_line(ELDER, LINE_KEY)
+	await await_idle_frame()
+	assert_int(_count(_box.sounds.open)).is_equal(1)
+	await _accept()
+	assert_int(_count(_box.sounds.advance)).is_equal(0)
+	await _accept()
+	assert_int(_count(_box.sounds.advance)).is_equal(1)
+	_box.show_line(ELDER, LINE_KEY)
+	await await_idle_frame()
+	assert_int(_count(_box.sounds.open)).is_equal(1)
+	_box.close()
+	assert_int(_count(_box.sounds.close)).is_equal(1)
+	_box.close()
+	assert_int(_count(_box.sounds.close)).is_equal(1)
+
+func test_choices_move_and_confirm_but_their_first_focus_is_silent() -> void:
+	_box.show_line(ELDER, LINE_KEY)
+	_box.show_choices(PackedStringArray(["DIALOGUE_TRIAL_CHOICE_HOLD", "DIALOGUE_TRIAL_CHOICE_LET_GO"]))
+	await _accept()
+	assert_bool(_box.is_choosing()).is_true()
+	assert_int(_count(_box.sounds.move)).is_equal(0)
+	await _down()
+	assert_int(_count(_box.sounds.move)).is_equal(1)
+	await _accept()
+	assert_int(_count(_box.sounds.confirm)).is_equal(1)

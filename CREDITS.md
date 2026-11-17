@@ -157,3 +157,5 @@ each source's title, author and page are in `tools/audio/sfx_sources/sources.md`
   PanPiper5 (kalimba), Aurelon (letter), REACTORFACTORY (seed envelope), N-RAZM (small splashes),
   yurkobb (jump into water), ZIP.Creates (wind), Joshua_van_Zyl (bush rustle), SpaceJoe (page
   turn), eyesonlegs (paper slide).
+- **Dialogue voice** (`assets/audios/sfx/dialogue/voice_0*.wav`, SND-05) - cut from the Memorina's own note
+  samples (`assets/audios/sfx/memorina/`) by `tools/audio/cut_voice_blips.py`; no new source.

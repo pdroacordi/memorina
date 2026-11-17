@@ -36,6 +36,10 @@ const PLATE_Y_TOP := 165.0
 @export var stutter_hold: float = 0.22
 ## Real seconds between the letter vanishing and the word typing.
 @export var stutter_gap: float = 0.08
+## The box's cues and the typing voice; null is silent.
+@export var sounds: DialogueSoundSet
+## Letters between two voice blips (VoiceBlips).
+@export var blip_every: int = 3
 
 var _typing: Tween
 ## Choice text keys waiting for the question to finish typing; empty for none.
@@ -44,6 +48,10 @@ var _choosing: bool = false
 var _choice_focus: int = 0
 ## Where the shown line's marked words start (StutterText).
 var _stutters: PackedInt32Array = PackedInt32Array()
+## The shown line's voice pitch; 0 is silent.
+var _voice_pitch: float = 0.0
+## Characters already typed when the voice was last checked.
+var _voiced: int = 0
 
 @onready var _box: Control = %Box
 @onready var _plate: NinePatchRect = %Plate
@@ -53,6 +61,7 @@ var _stutters: PackedInt32Array = PackedInt32Array()
 @onready var _continue: Button = %ContinueArea
 @onready var _choice_buttons: Array[Button] = [%Choice0, %Choice1, %Choice2]
 @onready var _next: KeyGlyph = %Next
+@onready var _sfx: SfxEmitter = %Sfx
 
 
 func _ready() -> void:
@@ -61,9 +70,17 @@ func _ready() -> void:
 	_link(_continue, _continue, _continue)
 	for i: int in _choice_buttons.size():
 		_choice_buttons[i].pressed.connect(_on_choice_pressed.bind(i))
-		_choice_buttons[i].focus_entered.connect(func() -> void: _choice_focus = i)
+		_choice_buttons[i].focus_entered.connect(_on_choice_focused.bind(i))
 	_next.show_action(&"jump")
 	hide()
+
+func _process(_delta: float) -> void:
+	if not is_typing():
+		return
+	var typed := _text.visible_characters
+	if VoiceBlips.due(_text.text, _voiced, typed, blip_every):
+		_play(sounds.voice if sounds != null else null, _voice_pitch)
+	_voiced = maxi(_voiced, typed)
 
 # Closing the pause or the notebook releases GUI focus; the box takes it back.
 func _notification(what: int) -> void:
@@ -77,7 +94,7 @@ func place(side: DialogueBoxSide.Side) -> void:
 	_plate.position.y = PLATE_Y_TOP if top else PLATE_Y_BOTTOM
 
 func show_line(speaker: Speaker, text_key: String) -> void:
-	show()
+	_open()
 	_end_choices()
 	_pending_choices = PackedStringArray()
 	_show_speaker(speaker)
@@ -94,7 +111,7 @@ func show_line(speaker: Speaker, text_key: String) -> void:
 func show_choices(keys: PackedStringArray, silent: bool = false) -> void:
 	assert(keys.size() <= MAX_CHOICES, "A question offers at most %d choices" % MAX_CHOICES)
 	if silent or not visible:
-		show()
+		_open()
 		if _typing != null:
 			_typing.kill()
 			_typing = null
@@ -108,6 +125,8 @@ func show_choices(keys: PackedStringArray, silent: bool = false) -> void:
 		_reveal_choices()
 
 func close() -> void:
+	if visible:
+		_play(sounds.close if sounds != null else null)
 	if _typing != null:
 		_typing.kill()
 		_typing = null
@@ -139,7 +158,17 @@ func plate_width(text: String) -> float:
 	return _name.get_theme_font(&"font").get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1,
 			_name.get_theme_font_size(&"font_size")).x + PLATE_PAD * 2.0
 
+func _open() -> void:
+	if not visible:
+		_play(sounds.open if sounds != null else null)
+	show()
+
+func _play(cue: SoundCue, pitch: float = 1.0) -> void:
+	if cue != null and pitch > 0.0:
+		_sfx.play(cue, 0.0, pitch)
+
 func _show_speaker(speaker: Speaker) -> void:
+	_voice_pitch = speaker.voice_pitch if speaker != null else 0.0
 	_portrait.texture = speaker.portrait if speaker != null else null
 	var named := speaker != null and not speaker.name_key.is_empty()
 	_plate.visible = named
@@ -151,6 +180,7 @@ func _type() -> void:
 	if _typing != null:
 		_typing.kill()
 	_text.visible_characters = 0
+	_voiced = 0
 	var total := _text.text.length()
 	# Real time under the recall's slow motion; bound to the box, so a pause or hold stops it.
 	_typing = create_tween().set_ignore_time_scale(true)
@@ -228,12 +258,20 @@ func _on_continue_pressed() -> void:
 	if is_typing():
 		_complete_typing()
 	elif _pending_choices.is_empty():
+		_play(sounds.advance if sounds != null else null)
 		advanced.emit()
 
 func _on_choice_pressed(index: int) -> void:
 	if not _choosing:
 		return
+	_play(sounds.confirm if sounds != null else null)
 	_end_choices()
 	_continue.show()
 	_continue.grab_focus()
 	chosen.emit(index)
+
+# A grab by the box itself (the choices opening) is silent; a step between choices moves.
+func _on_choice_focused(index: int) -> void:
+	if _choosing and index != _choice_focus:
+		_play(sounds.move if sounds != null else null)
+	_choice_focus = index

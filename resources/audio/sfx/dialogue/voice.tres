@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="SoundCue" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/sound_cue.gd" id="1_cue"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/dialogue/voice_01.wav" id="2_v0"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/dialogue/voice_02.wav" id="3_v1"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/dialogue/voice_03.wav" id="4_v2"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/dialogue/voice_04.wav" id="5_v3"]
+
+[sub_resource type="AudioStreamRandomizer" id="AudioStreamRandomizer_v"]
+random_pitch = 1.03
+streams_count = 4
+stream_0/stream = ExtResource("2_v0")
+stream_1/stream = ExtResource("3_v1")
+stream_2/stream = ExtResource("4_v2")
+stream_3/stream = ExtResource("5_v3")
+
+[resource]
+script = ExtResource("1_cue")
+stream = SubResource("AudioStreamRandomizer_v")
+volume_db = -12
+max_voices = 2

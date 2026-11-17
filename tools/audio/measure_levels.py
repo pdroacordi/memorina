@@ -39,6 +39,7 @@ SFX_TARGETS = {
 	"world/songbook": -28.0, "world/splash_small": -29.0, "world/splash_large": -25.0,
 	"menu/move": -40.0, "menu/confirm": -33.0, "menu/back": -33.0, "menu/open": -31.0, "menu/close": -31.0,
 	"menu/page": -31.0, "menu/notice": -29.0,
+	"dialogue/voice": -36.0,
 }
 
 _M_LINE = re.compile(r"\bM:\s*(-?[\d.]+|-inf)")

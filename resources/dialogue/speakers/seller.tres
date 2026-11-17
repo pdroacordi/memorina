@@ -8,3 +8,4 @@ script = ExtResource("1_speaker")
 id = &"seller"
 name_key = "SPEAKER_SELLER"
 portrait = ExtResource("2_portrait")
+voice_pitch = 1.1

@@ -5,6 +5,8 @@
 [ext_resource type="Texture2D" uid="uid://c1s18whd352pq" path="res://assets/sprites/hud/menu/bg_box_wood.png" id="3_panel"]
 [ext_resource type="Texture2D" uid="uid://b51l8630jxmje" path="res://assets/sprites/hud/menu/button_wood_normal.png" id="4_plate"]
 [ext_resource type="PackedScene" uid="uid://ckeyglyph001" path="res://scenes/ui/key_glyph/key_glyph.tscn" id="5_glyph"]
+[ext_resource type="Script" path="res://scenes/audio/sfx_emitter.gd" id="6_emitter"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/dialogue/dialogue_sounds.tres" id="7_sounds"]
 
 [node name="DialogueBox" type="Control"]
 layout_mode = 3
@@ -15,6 +17,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_box")
+sounds = ExtResource("7_sounds")
 
 [node name="Art" type="Control" parent="."]
 layout_mode = 0
@@ -143,3 +146,7 @@ offset_left = 287.0
 offset_top = 158.0
 offset_right = 303.0
 offset_bottom = 174.0
+
+[node name="Sfx" type="Node2D" parent="."]
+unique_name_in_owner = true
+script = ExtResource("6_emitter")

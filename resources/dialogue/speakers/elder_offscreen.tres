@@ -6,3 +6,4 @@
 script = ExtResource("1_speaker")
 id = &"elder_offscreen"
 name_key = "SPEAKER_ELDER"
+voice_pitch = 0.75

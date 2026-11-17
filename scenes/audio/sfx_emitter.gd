@@ -28,14 +28,14 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_DISABLED:
 		stop_all()
 
-## Starts a voice of `cue` at the emitter, `db_offset` dB over its level; false when refused.
-func play(cue: SoundCue, db_offset: float = 0.0) -> bool:
+## Starts a voice of `cue` at the emitter, `db_offset` dB over its level and `pitch` times its pitch; false when refused.
+func play(cue: SoundCue, db_offset: float = 0.0, pitch: float = 1.0) -> bool:
 	if not _can_start(cue):
 		return false
 	var player := _player_for(cue)
 	if player is AudioStreamPlayer2D:
 		(player as AudioStreamPlayer2D).position = Vector2.ZERO
-	_voice(player, cue, db_offset)
+	_voice(player, cue, db_offset, pitch)
 	return true
 
 ## Starts a voice of `cue` at the global `point`; a non-positional emitter ignores the point.
@@ -91,13 +91,15 @@ func _player_for(cue: SoundCue) -> Node:
 	_players[cue] = player
 	return player
 
-func _voice(player: Node, cue: SoundCue, db_offset: float) -> void:
+func _voice(player: Node, cue: SoundCue, db_offset: float, pitch: float = 1.0) -> void:
 	if player is AudioStreamPlayer2D:
 		var spatial := player as AudioStreamPlayer2D
 		spatial.volume_db = cue.volume_db + db_offset
+		spatial.pitch_scale = cue.pitch_scale * pitch
 		spatial.play()
 	else:
 		var flat := player as AudioStreamPlayer
 		flat.volume_db = cue.volume_db + db_offset
+		flat.pitch_scale = cue.pitch_scale * pitch
 		flat.play()
 	cue_played.emit(cue)

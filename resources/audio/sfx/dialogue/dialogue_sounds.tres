@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="DialogueSoundSet" format=3]
+
+[ext_resource type="Script" path="res://resources/audio/dialogue_sound_set.gd" id="1_set"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/dialogue/voice.tres" id="2_voice"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/open.tres" id="3_open"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/page.tres" id="4_advance"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/close.tres" id="5_close"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/move.tres" id="6_move"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/menu/confirm.tres" id="7_confirm"]
+
+[resource]
+script = ExtResource("1_set")
+voice = ExtResource("2_voice")
+open = ExtResource("3_open")
+advance = ExtResource("4_advance")
+close = ExtResource("5_close")
+move = ExtResource("6_move")
+confirm = ExtResource("7_confirm")
