@@ -15,6 +15,7 @@
 - **Palavras partidas do mentor (`~palavra~`):** "Yes, a brief stutter (Recommended)".
 - **A ordem da abertura:** "East gate shut until the elder points east (Recommended)": o portão leste da vila fica fechado até a história do ancião ser ouvida; o "Leste. Ainda está lá." dele é o que o abre. A abertura sempre acontece em ordem. Isso muda, só para a abertura, a "Estrada do Limiar: aberta" de `04_mapa_do_mundo.md`, seção 2.
 - **Gestos em português:** [Tentar de novo], [Baixar o violão], [Esperar por ele], [Olhar o quadro], [Tocar de novo], [Baixá-la] ("Approve (Recommended)").
+- **A história do ancião (STORY-32, 2026-11-17):** "o primeiro diálogo com o ancião pode ser melhorado, ta meio sem sentido" (2026-11-16), depois "Aprovar os dois (Recommended)" sobre o rascunho `drafts/story32_34_talks.md`: o farol traz de volta o que o mar leva; Ivo pergunta se o homem do farol ainda guarda as coisas (a origem do "Disseram que você guarda as coisas" do Ato 3); "Meu pai dizia que sim" prepara o modelo entalhado do Ato 4; o ancião manda Ivo pegar a espada do sítio.
 - **Retratos e personagens:** o quadro do elenco aprovado (`tools/art/sources/story/story_cast_board_codex.png`).
 
 ---
@@ -112,12 +113,14 @@ Lá fora, abafada, uma voz velha começa uma história:
 
 ### 6. A casa do ancião
 As paredes são todas farol. O ancião conta a história às duas crianças no banco.
-**Ancião:** …e acendia a lâmpada, e os barcos voltavam pra casa, até que um inverno ele—
-*Elder: …and he lit the lamp, and the ships came home, until one winter he—*
+**Ancião:** …e toda noite ele acendia a lâmpada, e os barcos voltavam pra casa. E o que o mar levava, ele trazia de volta.
+*Elder: …and every night he lit the lamp, and the ships came home. And what the sea took, he brought back.*
+**Menino:** Até o que caía na água, vô?
+*Boy: Even what fell in the water?*
+**Ancião:** Até isso. Ele guardava tudo, lá no alto. Até que um inverno ele—
+*Elder: Even that. He kept it all, up there. Until one winter he—*
 **Ancião:** Ele…
 *Elder: He…*
-**Menino:** Até que ele o quê, vô?
-*Boy: Until he what?*
 (Ele olha o quadro do farol.)
 **Ancião:** Tinha um fim. Tinha um fim bom.
 *Elder: It had an end. It had a good end.*
@@ -131,8 +134,16 @@ As paredes são todas farol. O ancião conta a história às duas crianças no b
    **Ancião** (atrás dele): Leste. Depois dos campos. Faz anos que ninguém vai.
    *Elder (behind him): East. Past the fields. Nobody's gone in years.*
 
+**Ivo:** E o homem do farol… ainda guarda as coisas?
+*Ivo: And the man in the lighthouse… does he still keep things?*
+**Ancião:** Meu pai dizia que sim.
+*Elder: My father said he did.*
 **Ivo:** Vou até lá.
 *Ivo: I'm going.*
+**Ancião:** (olha as mãos vazias dele) Assim? A estrada não é mais a de antes.
+*Elder: (looks at his empty hands) Like that? The road isn't what it was.*
+**Ancião:** No sítio dos campos tem uma espada em cima da mesa. Ninguém vai sentir falta.
+*Elder: There's a sword on the table at the farm in the fields. No one will miss it.*
 **Ancião:** Leva um casaco. Lá o inverno não acaba.
 *Elder: Take a coat. The winter there doesn't end.*
 **Menina:** Traz o fim da história!

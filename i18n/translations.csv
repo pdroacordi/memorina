@@ -227,7 +227,7 @@ DLG_DAUGHTER_SONG_01,Play the morning one? The one Mama used to sing.,Toca a da 
 DLG_CHOICE_GUITAR_TRY_AGAIN,[Try again],[Tentar de novo]
 DLG_CHOICE_GUITAR_LOWER,[Lower the guitar],[Baixar o violão]
 DLG_DAUGHTER_TURNED_01,…,…
-DLG_ELDER_STORY_01,"…and he lit the lamp, and the ships came home, until one winter he—","…e acendia a lâmpada, e os barcos voltavam pra casa, até que um inverno ele—"
+DLG_ELDER_STORY_01,"…and every night he lit the lamp, and the ships came home. And what the sea took, he brought back.","…e toda noite ele acendia a lâmpada, e os barcos voltavam pra casa. E o que o mar levava, ele trazia de volta."
 DLG_ELDER_STORY_02,He…,Ele…
 DLG_ELDER_STORY_03,It had an end. It had a good end.,Tinha um fim. Tinha um fim bom.
 DLG_CHOICE_ELDER_WAIT,[Wait for him],[Esperar por ele]
@@ -318,10 +318,15 @@ DLG_DAUGHTER_SONG_08,That's all I know.,Só sei até aí.
 DLG_DAUGHTER_SONG_09,"It's all right, Papa.","Tá tudo bem, pai."
 DLG_DAUGHTER_SONG_10,It isn't.,Não tá.
 DLG_DAUGHTER_SONG_11,…and the keeper climbed the stairs every night…,…e o guardião subia a escada toda noite…
-DLG_ELDER_STORY_04,Until he what?,"Até que ele o quê, vô?"
+DLG_ELDER_STORY_04,Even what fell in the water?,"Até o que caía na água, vô?"
 DLG_ELDER_STORY_05,I'm going.,Vou até lá.
 DLG_ELDER_STORY_06,Take a coat. The winter there doesn't end.,Leva um casaco. Lá o inverno não acaba.
 DLG_ELDER_STORY_07,Bring back the end of the story!,Traz o fim da história!
+DLG_ELDER_STORY_08,"Even that. He kept it all, up there. Until one winter he—","Até isso. Ele guardava tudo, lá no alto. Até que um inverno ele—"
+DLG_ELDER_STORY_09,And the man in the lighthouse… does he still keep things?,E o homem do farol… ainda guarda as coisas?
+DLG_ELDER_STORY_10,My father said he did.,Meu pai dizia que sim.
+DLG_ELDER_STORY_11,Like that? The road isn't what it was.,Assim? A estrada não é mais a de antes.
+DLG_ELDER_STORY_12,There's a sword on the table at the farm in the fields. No one will miss it.,No sítio dos campos tem uma espada em cima da mesa. Ninguém vai sentir falta.
 DLG_ELDER_PAINTING_02,Is that lighthouse still there?,Esse farol ainda existe?
 DLG_SWORD_01,…Sorry. I'll need this.,…Desculpa. Vou precisar disso.
 DLG_MENTOR_GIFT_04,They say you keep things.,Disseram que você guarda as coisas.

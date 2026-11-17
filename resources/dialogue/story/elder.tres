@@ -22,12 +22,17 @@ text_key = "DLG_ELDER_STORY_01"
 script = ExtResource("f_line")
 speaker = ExtResource("s_elder")
 text_key = "DLG_ELDER_STORY_02"
+cue = &"elder_looks_at_painting"
 
 [sub_resource type="Resource" id="line_3"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_boy")
 text_key = "DLG_ELDER_STORY_04"
-cue = &"elder_looks_at_painting"
+
+[sub_resource type="Resource" id="line_27"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder")
+text_key = "DLG_ELDER_STORY_08"
 
 [sub_resource type="Resource" id="line_4"]
 script = ExtResource("f_line")
@@ -79,6 +84,26 @@ script = ExtResource("f_line")
 speaker = ExtResource("s_ivo")
 text_key = "DLG_ELDER_STORY_05"
 
+[sub_resource type="Resource" id="line_28"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_ELDER_STORY_09"
+
+[sub_resource type="Resource" id="line_29"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder")
+text_key = "DLG_ELDER_STORY_10"
+
+[sub_resource type="Resource" id="line_30"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder")
+text_key = "DLG_ELDER_STORY_11"
+
+[sub_resource type="Resource" id="line_31"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder")
+text_key = "DLG_ELDER_STORY_12"
+
 [sub_resource type="Resource" id="line_13"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_elder")
@@ -100,7 +125,7 @@ script = ExtResource("f_dialogue")
 id = &"elder_story"
 once = true
 when = Array[ExtResource("f_fact")]([SubResource("fact_15")])
-lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_2"), SubResource("line_3"), SubResource("line_11"), SubResource("line_12"), SubResource("line_13"), SubResource("line_14")])
+lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_3"), SubResource("line_27"), SubResource("line_2"), SubResource("line_11"), SubResource("line_28"), SubResource("line_29"), SubResource("line_12"), SubResource("line_30"), SubResource("line_31"), SubResource("line_13"), SubResource("line_14")])
 zoom = 2.0
 
 [sub_resource type="Resource" id="line_17"]
