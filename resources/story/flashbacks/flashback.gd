@@ -21,6 +21,14 @@ extends Resource
 @export var entry_fade: float = 0.5
 ## The cover's colour: the crossing's own (white, black for flashback 4's cut to night).
 @export var entry_colour: Color = Color.WHITE
+## Seconds the cover holds once Ivo is in the past, before it clears (STORY-36).
+@export var entry_hold: float = 0.6
+## Seconds the cover takes to clear into the past.
+@export var entry_clear: float = 1.5
+## Seconds the black holds once Ivo is back, before it clears.
+@export var return_hold: float = 0.8
+## Seconds the black takes to clear into the present.
+@export var return_clear: float = 1.5
 ## Px of each letterbox bar while Ivo is in the past, 0..Letterbox.bar_height.
 @export var bars_thin: float = 0.0
 ## The past room's id (Room.id(), its scene file name).

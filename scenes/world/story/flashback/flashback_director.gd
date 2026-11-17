@@ -4,7 +4,7 @@ extends Node
 ## memory only; nothing here writes the save.
 
 ## Asks Game to carry Ivo to `point` under a `colour` cover of `seconds` (0 cuts); Game answers with on_travelled.
-signal travel_requested(point: TravelPoint, colour: Color, seconds: float)
+signal travel_requested(point: TravelPoint, colour: Color, seconds: float, hold: float, clear: float)
 ## A crossing was accepted: the visit runs from now until the returning scene ends.
 signal visit_began(flashback: Flashback)
 
@@ -56,7 +56,7 @@ func _physics_process(_delta: float) -> void:
 			# A leaving scene played from a talk's beat: the talk ends under the black before the travel.
 			if dialogue == null or not dialogue.is_talking():
 				_stage = Stage.TRAVELLING_BACK
-				travel_requested.emit(_return, Color.BLACK, 0.0)
+				travel_requested.emit(_return, Color.BLACK, 0.0, _visit.return_hold, _visit.return_clear)
 
 ## The visit running, or null.
 func visiting() -> Flashback:
@@ -142,10 +142,11 @@ func _travel_in(hidden: bool) -> void:
 		var twin := TravelPoint.new(past, past.get_bounds().position + ivo.global_position - _room.get_bounds().position,
 				ivo.facing)
 		twin.keep_motion = true
-		travel_requested.emit(twin, Color.TRANSPARENT, 0.0)
+		travel_requested.emit(twin, Color.TRANSPARENT, 0.0, 0.0, 0.0)
 		return
 	var feet := past.get_bounds().position + _visit.arrival
-	travel_requested.emit(TravelPoint.new(past, feet, _visit.arrival_facing), _visit.entry_colour, _visit.entry_fade)
+	travel_requested.emit(TravelPoint.new(past, feet, _visit.arrival_facing), _visit.entry_colour, _visit.entry_fade,
+			_visit.entry_hold, _visit.entry_clear)
 
 ## Plays `scene` on the current room's contents, so its ids resolve there; false when it cannot play.
 func _play(scene: Cutscene) -> bool:

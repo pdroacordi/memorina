@@ -102,7 +102,7 @@ func _room(path: String, at: Vector2) -> Room:
 	return room
 
 ## Stands in for Game.travel: lands Ivo a frame later, then room_changed and travelled, in Game's order.
-func _on_travel_requested(point: TravelPoint, colour: Color, seconds: float) -> void:
+func _on_travel_requested(point: TravelPoint, colour: Color, seconds: float, _hold: float, _clear: float) -> void:
 	if _refusals > 0:
 		_refusals -= 1
 		_refused += 1

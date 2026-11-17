@@ -85,7 +85,7 @@ every = 1.68
 [sub_resource type="Resource" id="fade_13"]
 script = ExtResource("e_fade")
 to_black = true
-seconds = 0.0
+seconds = 1.2
 
 [resource]
 script = ExtResource("e_cutscene")

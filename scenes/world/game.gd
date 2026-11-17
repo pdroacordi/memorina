@@ -329,7 +329,9 @@ func _on_player_entered_door(door: Door) -> void:
 ## Carries Ivo to `point` under a `colour` cover of `seconds` (0 cuts), with the door path's guards: a FlashbackDirector's
 ## way into the past and back (architecture/story-05-playable-flashbacks). A transparent `colour` covers nothing: the
 ## hidden swap into a twin room.
-func travel(point: TravelPoint, colour: Color, seconds: float) -> void:
+## Covers with `colour` over `seconds`, moves Ivo, holds the cover `hold` s, then clears over `clear` s.
+func travel(point: TravelPoint, colour: Color, seconds: float, hold: float = 0.0,
+		clear: float = Fade.DURATION) -> void:
 	if _is_transitioning or _dying or _lost or _current_room == null or point == null or point.room == null:
 		travelled.emit(false)
 		return
@@ -343,12 +345,14 @@ func travel(point: TravelPoint, colour: Color, seconds: float) -> void:
 	# own cut to black already queued `faded`).
 	await get_tree().physics_frame
 	await _land_in(point.room, point.place.bind(_player))
+	if covered and hold > 0.0:
+		await get_tree().create_timer(hold, false).timeout
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
 	# Before the clear, so the scene that follows opens under the cover (the opening's first shot, the kneel).
 	travelled.emit(true)
 	if covered:
-		await _fade.to_clear()
+		await _fade.to_clear(clear)
 
 func _arrive_through(room: Room, link: StringName) -> void:
 	var arrival := Door.find(get_tree(), room, link)
