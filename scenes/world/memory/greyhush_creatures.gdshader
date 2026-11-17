@@ -9,6 +9,11 @@ render_mode blend_premul_alpha;
 #include "res://scenes/world/memory/greyhush_common.gdshaderinc"
 #include "res://scenes/world/memory/unshielded_mark.gdshaderinc"
 
+// A corrupted creature in the grey is drawn as ink, so it reads against the drained world (CORE-14): its
+// luma 0..1 maps between these two values, by how forgotten its pixel is.
+uniform vec3 creature_ink_dark : source_color = vec3(0.07, 0.07, 0.09);
+uniform vec3 creature_ink_light : source_color = vec3(0.36, 0.36, 0.40);
+
 void fragment() {
 	vec2 px = UV * game_size;
 	vec4 src = texture(TEXTURE, UV);
@@ -31,6 +36,11 @@ void fragment() {
 		float lit_amount = gh_quantise(memory, px);
 
 		vec3 col = gh_shade(straight, lit_amount, smooth_memory, tint_rgb, tint_amount, ring, px);
+		if (unshielded) {
+			// Quantised like the colour edge, so a pulse over a creature dithers ink into colour.
+			float luma = dot(straight, vec3(0.299, 0.587, 0.114));
+			col = mix(mix(creature_ink_dark, creature_ink_light, luma), col, lit_amount);
+		}
 		col = gh_vignette(col, UV, smooth_memory);
 
 		// Match blend_premul_alpha.

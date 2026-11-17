@@ -31,6 +31,7 @@ The world's state at any point is a memory value from 0 to 1 (`docs/design/03_mu
   - The memory formula did not change, and shields are rendering-only, so `MemoryFieldMath` has nothing to mirror.
   - Draw order resolves overlaps: an opaque sprite drawn over a marked pixel writes alpha 1 and is lit by its own shield.
   - A separate unshielded pass was rejected: it would need its own cull bit and texture for every consumer, and it could not tell who is in front.
+  - Since CORE-14 a marked pixel is also drawn as ink in the grey (`creature_ink_dark`..`creature_ink_light` by luma, mixed back by the quantised `lit_amount`; `systems/creatures`). Rendering only.
   - Accepted leaks: a creature pixel over an opaque Ivo pixel, two creatures overlapping, and an antialiased item whose alpha is exactly 253 (`bugs/ivos-greyhush-shield-colours-a-creature-in-melee-range`).
 - **Environment freezes; characters never.** `MemoryClock` drives a neighbour's `speed_scale` from the field and asserts in `_ready()` that its target has no `Character` ancestor.
 - **Sound** (SND-01 option (c), user, 2026-11-16): `SfxMuffle` low-passes the `SfxWorld` bus from `MemoryField.sample` at Ivo, 20 kHz at memory 1 to 1.2 kHz at 0 (`SfxMuffleMath`). Only world-object cues go through it; Ivo and the creatures stay clear, as characters never freeze (`systems/sound-effects`). It reads the clean CPU field, so `MemoryFieldMath` has nothing to mirror.

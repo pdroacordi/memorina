@@ -6,7 +6,7 @@ status: active
 tags: [core-13, enemies, creatures, ai, enemy-move, enemy-stats, corruption-edge, shader, legend]
 related: [architecture/corrupted-creatures, systems/guardians, systems/animation, systems/greyhush, systems/life-benches-death, systems/rooms, systems/air, bugs/the-brute-swings-away-from-a-target-already-in-reach, bugs/the-brute-walks-under-ivo-when-he-jumps-from-where-it-parks, bugs/one-swing-hits-the-brute-twice-when-its-shove-carries-it-out-and-back]
 created: 2026-10-29
-updated: 2026-10-29
+updated: 2026-11-17
 source_files:
   - scenes/characters/enemies/enemy.gd
   - scenes/characters/enemies/enemy_ai.gd
@@ -83,6 +83,8 @@ The plan, its options and the build order: [`architecture/corrupted-creatures`](
 - **Custom shader functions cannot read `TEXTURE`** (and passing `TEXTURE` as a `sampler2D` argument fails to compile), so the samplers are macros (`CE_ALPHA`, `CE_COLOUR`, `CE_EDGE`) expanded in `fragment()`. Godot's preprocessor substitutes a macro parameter inside a member access (`a` in `.a`), so their parameters are `CE_O` and `CE_P`.
 
 `CorruptionEdge` (pausable) writes `fray` (`CorruptionMath.fray(rest_fray, hurt_fray, hp, max_hp)` plus a hit spike fading over 0.3 s), `agitation` (on from `move_telegraphed` to `move_started` or `move_finished`: the tell lives in the fraying), `dissolve`, `seed`, `frame_size` and `drift`. `appear()` and `vanish()` tween the dissolve on a node-bound tween (pausable, scaled). It puts the body on `CanvasPass.CREATURES`; creatures carry no `GreyhushShield`, so the creature composite greys them by the memory field. The shader writes alpha `GH_UNSHIELDED_ALPHA` (253/255) on every pixel it draws, and the composite lights those pixels by the field only, so no one else's shield (Ivo's SILHOUETTE shield in melee, a teacher's later) colours a creature (`systems/greyhush`, "Unshielded pixels"). There is no GDScript twin: gameplay never reads the fray. `creature_pass = false` (a `StoryActor`'s edge, STORY-05) skips the creature pass: the actor stays in the root canvas and its sprite carries the edge material only while agitated, so at rest it draws plain art with no unshielded mark (`corruption_edge_test`).
+
+- **Ink in the grey** (CORE-14, 2026-11-17). "os animais agressivos são impossíveis de serem vistos no cinza" (user, 2026-11-16). The creature composite (`greyhush_creatures.gdshader`) draws an unshielded pixel as ink: its luma maps from `creature_ink_dark` (0.07) to `creature_ink_light` (0.36), mixed back to its shaded colour by the quantised `lit_amount`. A creature in the grey is a dark stain on the lifted world; in colour it is unchanged, and a pulse over it dithers ink into colour like any colour edge. The silk thread carries the mark, so it inks too. Screenshots: crab by the wreck and hornet before and after (`playtests/2026-11-17-core14-creatures-in-the-grey`).
 
 ## Species
 
