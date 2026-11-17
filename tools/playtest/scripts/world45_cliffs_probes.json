@@ -1,0 +1,386 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 16.95,
+ "locale": "en",
+ "player_position": [
+  9760,
+  -614
+ ],
+ "owned_items": [
+  0
+ ],
+ "skills": [],
+ "steps": [
+  {
+   "t": 1.4,
+   "trace": true
+  },
+  {
+   "t": 1.45,
+   "log": "walkE:pre"
+  },
+  {
+   "t": 1.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.75,
+   "screenshot": "m00_lip_east"
+  },
+  {
+   "t": 2.0,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.25,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 2.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 2.7,
+   "log": "walkE:post"
+  },
+  {
+   "t": 2.7,
+   "trace": false
+  },
+  {
+   "t": 2.9,
+   "trace": true
+  },
+  {
+   "t": 2.95,
+   "log": "walkW:pre"
+  },
+  {
+   "t": 3.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.65,
+   "screenshot": "m01_lip_west"
+  },
+  {
+   "t": 3.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 4.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 4.1,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 4.2,
+   "log": "walkW:post"
+  },
+  {
+   "t": 4.2,
+   "trace": false
+  },
+  {
+   "t": 4.5,
+   "teleport": [
+    9825,
+    -614
+   ]
+  },
+  {
+   "t": 5.38,
+   "log": "jump_under_lip:pre"
+  },
+  {
+   "t": 5.39,
+   "trace": true
+  },
+  {
+   "t": 5.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 5.4,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.65,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 5.85,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 5.9,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.15,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 6.4,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 6.9,
+   "trace": false
+  },
+  {
+   "t": 6.95,
+   "log": "jump_under_lip:post"
+  },
+  {
+   "t": 7.2,
+   "teleport": [
+    9825,
+    -614
+   ]
+  },
+  {
+   "t": 8.08,
+   "log": "jump_under_lip_R:pre"
+  },
+  {
+   "t": 8.09,
+   "trace": true
+  },
+  {
+   "t": 8.1,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 8.1,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.35,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.55,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 8.6,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.85,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 9.1,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 9.6,
+   "trace": false
+  },
+  {
+   "t": 9.65,
+   "log": "jump_under_lip_R:post"
+  },
+  {
+   "t": 9.9,
+   "teleport": [
+    10059,
+    -582
+   ]
+  },
+  {
+   "t": 10.78,
+   "log": "p5_long_left:pre"
+  },
+  {
+   "t": 10.79,
+   "trace": true
+  },
+  {
+   "t": 10.8,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 10.8,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.05,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.25,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 11.3,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.55,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 11.8,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.05,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.3,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.3,
+   "trace": false
+  },
+  {
+   "t": 12.35,
+   "log": "p5_long_left:post"
+  },
+  {
+   "t": 12.55,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 12.6,
+   "teleport": [
+    9950,
+    -614
+   ]
+  },
+  {
+   "t": 12.8,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 13.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 13.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 13.88,
+   "log": "p6_run_jump_left:pre"
+  },
+  {
+   "t": 13.89,
+   "trace": true
+  },
+  {
+   "t": 13.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 13.9,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 13.9,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 14.15,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 14.35,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 14.4,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 14.65,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 14.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 15.4,
+   "trace": false
+  },
+  {
+   "t": 15.45,
+   "log": "p6_run_jump_left:post"
+  },
+  {
+   "t": 15.95,
+   "log": "end"
+  }
+ ]
+}

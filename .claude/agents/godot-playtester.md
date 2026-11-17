@@ -780,6 +780,15 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     11656. The talk camera is (11628, -1296) at zoom 2. From the interior door (24220, 13438), `lighthouse_helix_climb`'s
     inputs up to t 18.85 put Ivo on the attic hatch (24408, 12160), and Up at 19.3 takes it.
 
+- **Learned 2026-11-17 (WORLD-45 cliffs)**: **chain jump probes in one run with `"teleport"` steps.** Teleport, settle 0.9 s,
+  `trace` on, jump with the direction held, `trace` off after 1.5 s: ~1.8 s per probe, so 30 probes take one ~60 s run.
+  A 40-line `summ.py` prints per probe the take-off, peak (rise), end position and every frame where vel.y jumps from < -80
+  to ~0 (a head bonk). A full jump rises 143.7 px; a 0.10 s tap 73.4; a 0.08 s tap 64.
+  - frost_cliffs (origin 9600, -1152) since WORLD-45's third pass: bench (9808, 288); landing floor -128 (x 10592..10784),
+    take off for N1 from x >= 10660; N1 step (10837, -256); N2 corbel (10699, -352, one row); P1 (10571, -448); P6 floor -608; well
+    x 9739..9781 under the lip; wall step (9643..9738, -736); slab top -864 from x 9792, exit at x 10880.
+    `world45_cliffs_climb.json` climbs it all in ~28 s.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
