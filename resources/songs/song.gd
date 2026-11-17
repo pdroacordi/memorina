@@ -22,6 +22,8 @@ const DEFAULT_CUE_WINDOW := 6.0
 @export var pulse_stats: PulseStats
 ## Optional effect scene mounted under ColorPulse; world responses are handled by receivers.
 @export var pulse_effect: PackedScene
+## Rain or wind: in an interior the song plays and its pulse opens, but `pulse_effect` is not mounted (WORLD-47).
+@export var weather: bool = false
 
 @export_group("Performance")
 ## The full piece, heard once, when the song is learned.

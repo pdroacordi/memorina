@@ -6,7 +6,7 @@ status: active
 tags: [songs, memorina, pulse, performance, pause]
 related: [architecture/memory-runs-through-pause, architecture/played-pulses-hold-in-a-pause, architecture/pause-menu-worldfreeze-reuse, systems/screens, bugs/memorina-notes-dropped-while-previous-rings, gotchas/time-scale-zero-stops-delta-particles-and-time]
 created: 2026-10-02
-updated: 2026-11-16
+updated: 2026-11-17
 source_files:
   - scenes/characters/ivo/player.gd
   - scenes/characters/ivo/ivo.tscn
@@ -33,6 +33,8 @@ source_files:
 - **The glyph a note is drawn with is decided in `PlayerInput`** (`glyph_set_for(event, joy_name)`, pure and tested) and travels as `Enums.GlyphSet` beside the note. `MemorinaComponent` never sees it — `Player` remembers the pressed glyph and relays `note_played(note, glyph_set)`. The HUD draws a note through `NoteGlyphs` (`resources/ui/memorina/note_glyphs.tres`): the glyph of the input the note is bound to on that set's device, or the blank note key with the binding's name when the art has none (a rebound note, `systems/settings`); no script names a glyph PNG.
 - **The sheet is geometry, not layout.** `NoteSheet` authors the staff in `memorina_hud.png`'s own pixels (`LINE_Y`, `STAFF_LEFT/RIGHT`) and scales them by the sheet's height (`SOURCE_HEIGHT` 64), so the frame's offsets in `memorina_hud.tscn` are the one place that picks 1× (128×64) or 2× (256×128, current); a sheet wider than the art at that scale gets a staff as much longer (the guitar's 300 px frame, STORY-14); the glyphs have their own `icon_scale` (1.5). The frame is placed by code on the side Ivo faces (`MemorinaHud._place_frame`), but only once `GameCamera.focused` reports the zoom and any in-flight look-ahead have landed, with Ivo's final screen position — a frame laid out earlier would cover where he is about to be. The camera is the one node that converts world to screen for UI. The title's outline is the Label's `outline_size`, not the outline `.ttf` (two fonts never overlay glyph for glyph). No nested `scale`, so nothing is left for pixel snapping to round. The one exception is the guitar's `PhraseSheet`, whose frame art is a `NinePatchRect` drawn at an integer scale of 2 under an unscaled `NoteSheet` (`systems/story`, STORY-14); STORY-13's dedicated guitar frame removes it.
 
+
+- **No weather under a roof** (SONG-20, 2026-11-17). "não faz muito sentido chover, ventar, etc. dentro de lugares fechados, faz?" and the choice "Plays, no weather (Recommended)" (user, 2026-11-17). `Song.weather` (Chuva, Vendaval): in a `Room.interior` the song is played and its pulse opens and colours, but `ColorPulse` does not mount `pulse_effect` (no rain, no gale). Caves and covered rooms are not interiors and keep both. No indoor puzzle used them (the cellar's is Enraizar). `color_pulse_indoors_test`.
 
 ## Half songs (SONG-14, 2026-10-28)
 

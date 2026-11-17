@@ -59,8 +59,8 @@ func start(song: Song, stats: PulseStats = null, with_effect: bool = true) -> vo
 		local_memory = field.sample(global_position, _source)
 	_timeline = PulseTimeline.new(stats if stats != null else song.pulse_stats, local_memory)
 	_apply_radius()
-	# Mounted last, so the effect's first frame already sees a started pulse.
-	if song.pulse_effect and with_effect:
+	# Mounted last, so the effect's first frame already sees a started pulse. No rain or gale under a roof.
+	if song.pulse_effect and with_effect and not (song.weather and _indoors()):
 		var effect := song.pulse_effect.instantiate() as PulseEffect
 		assert(effect != null, "Song.pulse_effect must be a PulseEffect scene.")
 		effect.pulse = self
