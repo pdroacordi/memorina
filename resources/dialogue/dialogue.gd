@@ -15,6 +15,9 @@ extends Resource
 @export var zoom: float = 0.0
 ## The frame cuts to the talk's pair and zoom instead of easing there; read only when `zoom` is set.
 @export var cut: bool = false
+## Px the framed talk's centre rises above Ivo's framing, to keep what stands over the pair in view; read only when
+## `zoom` is set.
+@export var frame_lift: float = 0.0
 
 
 ## Its gates hold, and it is not a heard `once` dialogue.

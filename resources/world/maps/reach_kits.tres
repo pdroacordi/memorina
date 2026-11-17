@@ -19,9 +19,9 @@ note = "The opening's talks, heard in the village before anything else (STORY-03
 [sub_resource type="Resource" id="memorina"]
 script = ExtResource("3_milestone")
 id = &"memorina"
-room = &"lighthouse_interior"
+room = &"lighthouse_top"
 items = Array[int]([1])
-note = "The mentor hands it over in the lighthouse (design 04 section 3.3): the cue-only grant of his mentor_gift talk (STORY-03). Opens the west fence and the river trail (owns_memorina.tres)."
+note = "The mentor hands it over in the lighthouse's lantern (design 04 section 3.3; STORY-34: \"Na lanterna, junto à lâmpada\", user, 2026-11-17), through the hatch that is always open: the cue-only grant of his mentor_gift talk (STORY-03). Opens the west fence and the river trail (owns_memorina.tres)."
 
 [sub_resource type="Resource" id="bloom"]
 script = ExtResource("3_milestone")

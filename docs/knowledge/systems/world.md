@@ -6,7 +6,7 @@ status: active
 tags: [world, layout, rooms, regions, interiors, generator, uid]
 related: [systems/rooms, systems/map, systems/backdrops, architecture/doors-and-interiors]
 created: 2026-10-09
-updated: 2026-11-12
+updated: 2026-11-17
 source_files:
   - tools/maps/gen_world_shells.py
   - tools/maps/world_uid_pool.txt
@@ -52,7 +52,7 @@ Design 04 (the approved map, "Approve as proposed", 2026-10-08), WORLD-05.
 | frost_edge | frost_shore | 13..14 | 0 | frozen surf; the lake under the beach (rows 10-11) runs off both sides (WORLD-29); the wreck (WORLD-35 step 6): the `wreck_hull` facade (x 285-909) on the flat run, which grew to cols 8-28 for it (the rock spur moved to cols 3-7, the breaker 3 cells east to cols 29-37, its back steps and curl kept); its breach holds the door (look `breach`, col 18) into frost_wreck_hold; no walkable roof; two crabs (CORE-13 round 2) |
 | frost_edge | frost_cliffs | 15..16 | -3..0 | vertical climb by single jumps; bench `frost_cliffs_bench` in a sheltered cave; secret niche over the cave (WORLD-35) |
 | frost_edge | lighthouse_base | 17..18 | -3 | door: lighthouse_interior; lookout slot on the east steps (WORLD-35) |
-| frost_edge | lighthouse_top | 17..18 | -5..-4 | final arena (empty); door (hatch) to lighthouse_interior; solid floor to the base below |
+| frost_edge | lighthouse_top | 17..18 | -5..-4 | the mentor at the lamp from the opening; the final arena once the four are restored (STORY-34); door (hatch, col 30) to lighthouse_interior; solid floor to the base below |
 | spring_woods | woods_edge | -4..-3 | 0 | bench `woods_edge_bench`; door: woods_hut |
 | spring_woods | woods_deep | -7..-5 | -2..0 | tall trees, ledges; a high ledge (double jump) up into woods_canopy; floor hole down into woods_root_caves (drop in, way back needs Enraizar); east trunk cut at rows 17-20 into woods_crown (WORLD-35); two spiders under the east branches (CORE-13 round 2) |
 | spring_woods | woods_canopy | -7..-5 | -3 | top-left opening up into orchard_terraces at c -7; a spider under the launch branch (CORE-13 round 2) |
@@ -109,7 +109,7 @@ Design 04 (the approved map, "Approve as proposed", 2026-10-08), WORLD-05.
 | home_village | village_mill_house | 1x1 | village_mill; the working mill (row 1, (0, 14000)) |
 | home_village | village_notes_house | 1x1 | village_square; the house of notes (row 1, (1600, 14000)) |
 | threshold | threshold_farmhouse | 1x1 | threshold_fields; sword marker |
-| frost_edge | lighthouse_interior | 1x4 (vertical) | lighthouse_base (bottom), lighthouse_top (hatch, sealed: all_guardians_restored) |
+| frost_edge | lighthouse_interior | 1x4 (vertical) | lighthouse_base (bottom), lighthouse_top (hatch, always open since STORY-34: "Sempre aberto (Recommended)", user, 2026-11-17) |
 | frost_edge | frost_wreck_hold | 1x1 | frost_shore (the `breach` in the wreck's hull; the hold's side a wooden `door`, a bulkhead); WORLD-35 step 6, slot n 1 at (25600, 12000): the hold listing up to its bow in the east, three runs of floor 1 row apart under a deck that lists with them (6 rows of air each), two loose deck planks up to the bow plank and `frost_wreck_letter` (COLLECTIBLE), the deck raised over the middle plank's east end (cols 11-12) so the hop to the bow plank clears it by 42 px; base kit; `frost_edge` tiles, whose planks are the wreck's, with void outside the hull; backdrop `ship_hold` (`INTERIOR_SETS`); a crab on the bow run (CORE-13 round 2) |
 | spring_woods | woods_hut | 1x1 | woods_edge |
 | frozen_lake | lake_fisher_hut | 1x1 | lake_fishing_village |

@@ -118,6 +118,8 @@ var _ground_ray := PhysicsRayQueryParameters2D.new()
 var _rest_zoom: float = 1.0
 ## The point a framed talk's speaker stands at; made on the first `frame_talk`.
 var _talk_point: Node2D
+## Px a framed talk's centre rises (Dialogue.frame_lift).
+var _talk_lift: float = 0.0
 
 
 func _ready() -> void:
@@ -222,8 +224,10 @@ func unfocus() -> void:
 	_focus_pending = false
 	_tween_zoom(Vector2.ONE * _rest_zoom)
 
-## A talk frames its speaker at `at` with Ivo at `zoom_level` until `release_talk()` (Dialogue.zoom, STORY-16).
-func frame_talk(at: Vector2, zoom_level: float, cut: bool = false) -> void:
+## A talk frames its speaker at `at` with Ivo at `zoom_level`, `lift` px higher, until `release_talk()` (Dialogue.zoom,
+## STORY-16).
+func frame_talk(at: Vector2, zoom_level: float, cut: bool = false, lift: float = 0.0) -> void:
+	_talk_lift = lift
 	if _talk_point == null:
 		_talk_point = Node2D.new()
 		_talk_point.top_level = true
@@ -237,6 +241,7 @@ func frame_talk(at: Vector2, zoom_level: float, cut: bool = false) -> void:
 
 func release_talk() -> void:
 	_rest_zoom = 1.0
+	_talk_lift = 0.0
 	if _pair == _talk_point:
 		release_pair()
 	_tween_zoom(Vector2.ONE, pair_duration)
@@ -292,6 +297,8 @@ func centre_for(subject: Node2D) -> Vector2:
 	var at := subject.global_position
 	if subject is Character and is_instance_valid(_pair) and _pair_blend > 0.0:
 		at.x = lerpf(at.x, (at.x + _pair.global_position.x) / 2.0, _pair_blend)
+		if _pair == _talk_point:
+			at.y -= _talk_lift * _pair_blend
 	return at + Vector2(lead, bias + offset.y)
 
 ## Where a followed marker stands for the frame to centre on `centre`: a marker carries no look-ahead or framing, so the
@@ -338,6 +345,8 @@ func _framed_position() -> Vector2:
 	# A cutscene's rig carries its own frame: the pair blends only a followed character.
 	if _subject is Character and is_instance_valid(_pair) and _pair_blend > 0.0:
 		at.x = lerpf(at.x, (at.x + _pair.global_position.x) / 2.0, _pair_blend)
+		if _pair == _talk_point:
+			at.y -= _talk_lift * _pair_blend
 	return at
 
 func _stop_glide() -> void:

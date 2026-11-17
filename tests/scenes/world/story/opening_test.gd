@@ -2,8 +2,8 @@ class_name OpeningTest extends GdUnitTestSuite
 
 ## The opening's stages follow the talks heard, in the order the east gate guarantees (systems/story): a new game starts
 ## in Ivo's house with the daughter asleep, items owned early included; the errand, the song and the mentor's gift move her;
-## the elder's audience leaves for the square after his story or at 0.6; the mentor holds the Memorina, gives it and goes
-## still; the east gate stays shut until the elder's story.
+## the elder's audience leaves for the square after his story or at 0.6; the mentor turns from the lamp, holds the
+## Memorina, gives it and goes still; the east gate stays shut until the elder's story.
 
 const GAME := "res://scenes/world/game.tscn"
 const HOME := "res://scenes/world/rooms/home_village.tscn"
@@ -12,7 +12,7 @@ const HEARD_ELDER := "res://resources/save_facts/heard_elder_story.tres"
 const HOUSE := preload("res://scenes/world/rooms/home_village/contents/village_house_contents.tscn")
 const ELDER := preload("res://scenes/world/rooms/home_village/contents/village_elder_contents.tscn")
 const SQUARE := preload("res://scenes/world/rooms/home_village/contents/village_square_contents.tscn")
-const LIGHTHOUSE := preload("res://scenes/world/rooms/frost_edge/contents/lighthouse_interior_contents.tscn")
+const LIGHTHOUSE := preload("res://scenes/world/rooms/frost_edge/contents/lighthouse_top_contents.tscn")
 ## A room is a 640x384 screen (systems/world).
 const ROOM := Vector2(640, 384)
 
@@ -42,7 +42,7 @@ func test_owning_the_items_early_changes_nothing_in_the_house() -> void:
 	assert_str(_shown(house, "Props/Daughter")).is_equal("Asleep")
 	assert_str(_shown(house, "Props/WallGuitar")).is_equal("OnWall")
 	var lighthouse := _mount(LIGHTHOUSE)
-	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("Holding")
+	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("AtLamp")
 
 ## The baker hands over the round loaf on "Just the round one." (UI-11): a talk grants it, and nothing takes it back.
 func test_the_baker_hands_over_the_round_loaf_on_her_last_line() -> void:
@@ -171,10 +171,18 @@ func test_the_bench_is_empty_at_six_tenths() -> void:
 	var elder := _mount(ELDER)
 	assert_str(_shown(elder, "Props/Audience")).is_equal("")
 
-## The gift's beat stands the empty hand in; the talk's end turns him to stasis; the four restored take him away.
-func test_the_mentor_holds_gives_and_goes_still() -> void:
+## STORY-34: he faces the lamp until the turn is seen, then holds the Memorina toward Ivo with no fade; the gift's beat
+## stands the empty hand in; the talk's end turns him to stasis; the four restored take him away and bring his body.
+func test_the_mentor_turns_holds_gives_and_goes_still() -> void:
 	var lighthouse := _mount(LIGHTHOUSE)
+	var staging := lighthouse.get_node("Props/Mentor") as FactStaging
+	var body := lighthouse.get_node("MentorGuardian") as Node2D
+	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("AtLamp")
+	assert_bool(body.visible).is_false()
+	assert_int(body.process_mode).is_equal(Node.PROCESS_MODE_DISABLED)
+	SaveSystem.mark_scene_seen(&"mentor_turns")
 	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("Holding")
+	assert_float(staging.stages[2].fade_seconds).is_equal(0.0)
 	var gift := lighthouse.get_node("Beats/MentorGift") as StagedBeat
 	assert_str(String(gift.stand_ins.values()[0])).is_equal("EmptyHand")
 	SaveSystem.mark_dialogue_heard(&"mentor_gift")
@@ -184,9 +192,15 @@ func test_the_mentor_holds_gives_and_goes_still() -> void:
 	for guardian: Enums.Guardian in Enums.Guardian.values():
 		SaveSystem.restore_guardian(guardian)
 	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("")
+	await get_tree().process_frame
+	assert_bool(body.visible).is_true()
+	assert_int(body.process_mode).is_equal(Node.PROCESS_MODE_INHERIT)
+	assert_vector((lighthouse.get_node("Marks/MentorHome") as Node2D).position).is_equal(body.position)
 
 ## STORY-11: his phrase stands in the strip that raises the flute and plays it, then gives way to the holding still.
 func test_the_mentor_raises_and_plays_the_flute_during_his_phrase() -> void:
+	# The phrase comes after the turn.
+	SaveSystem.mark_scene_seen(&"mentor_turns")
 	var lighthouse := _mount(LIGHTHOUSE)
 	var staging := lighthouse.get_node("Props/Mentor") as FactStaging
 	var strip := lighthouse.get_node("Props/Mentor/Playing") as StagedStrip

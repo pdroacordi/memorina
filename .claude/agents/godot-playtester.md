@@ -767,6 +767,19 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - Threshold positions: fields east floor y 288 from x ~6282 (a one-cell step up west of it). The bridge's turn-back
     zone is x 6394..6528 (6 cells tall, no Up), and the unseen wall stands on the first step, its face on the step's at x 6528 (floor y 256).
 
+- **Learned 2026-11-17 (STORY-34 mentor at the lantern)**:
+  - **Read a talk with `tools/playtest/scripts/talk_reader_driver.gd`, not with guessed Z times.** It presses Z `READ` s after
+    each line finishes typing, logs `[dlg]` lines and typed and press times, `[stage]` (the visible `Props/Mentor` children and
+    their alpha, and `MentorGuardian` vis/process_mode) and `[box]`, and screenshots each line and each 0.2 s of a
+    box-closed beat (`GAP=0.07` for a burst across a turn or strip; `CAMLOG=1` logs the camera centre and zoom on every change, which is how a release cut shows). A Z pressed while a line is still typing completes it instead of advancing, so fixed estimates fall out
+    of step within three lines. Take the measured press times back into the JSON timeline.
+  - **An auto talk starts only when Ivo's 12 px `DoorSensor` overlaps the zone.** The lantern's east edge is world x 11720,
+    so a stop at 11726 starts nothing. Also test the natural run-in with the direction held: at 192 px/s and `auto_delay`
+    0.4 s Ivo lands ~77 px inside the zone, past any approach mark.
+  - Lantern positions: hatch arrival (11856, -1248) facing west; the keeper and guardian at (11600, -1248); `ivo_near`
+    11656. The talk camera is (11628, -1296) at zoom 2. From the interior door (24220, 13438), `lighthouse_helix_climb`'s
+    inputs up to t 18.85 put Ivo on the attic hatch (24408, 12160), and Up at 19.3 takes it.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

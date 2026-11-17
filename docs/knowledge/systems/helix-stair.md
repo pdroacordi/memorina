@@ -6,7 +6,7 @@ status: active
 tags: [helix, stair, interior, bell-tower, movement-mode, projection, subviewport, room-map, void]
 related: [architecture/walkable-helix-stair, architecture/room-void-outside-the-shell, systems/rooms, systems/world, systems/roots-and-climbing, systems/animation, systems/input, systems/greyhush, playtests/2026-10-11-bell-tower-helix, playtests/2026-10-11-lighthouse-helix]
 created: 2026-10-11
-updated: 2026-10-11
+updated: 2026-11-17
 source_files:
   - scenes/world/interactables/helix_stair/helix_math.gd
   - scenes/world/interactables/helix_stair/helix_steer.gd
@@ -40,7 +40,7 @@ WORLD-26, design 04 §3.1. Plan, options and the revision: `architecture/walkabl
 - The first version (Ivo travelling left and right along a static ribbon, a ForegroundPass cover, darker far runs) was rejected: "And the spiraling is not working quite well, there should be something more 3d like" (user, 2026-10-11). The revision turns the tower around him.
 - The top landing: "Floor across (Recommended)" (user, 2026-10-11): a plank gallery across the shell that Ivo rises through at the centre.
 - The style board `tools/art/sources/bell_tower_board_codex.png`: "Approve (Recommended)" (user, 2026-10-11). Its colours are the `HelixLook`; the bell is the one sprite cut from it, and its right panel is the tower's front in the square (`systems/props`, Facades).
-- The lighthouse: "Stone and iron (Recommended)" (user, 2026-10-11). Two flights around the mentor's room (design 04 §3.3) joined into one tower (the coordinator's brief, 2026-10-11).
+- The lighthouse: "Stone and iron (Recommended)" (user, 2026-10-11). Two flights around the mentor's room (design 04 §3.3; empty since STORY-34, the mentor is in the lantern) joined into one tower (the coordinator's brief, 2026-10-11).
 - The joint: "Walk left into it" (user, 2026-10-11), the option "Make the mentor floor's stair end mirror the bell tower: walking left into the stair from the right side goes down, so left/right alone can do everything (the right half of the floor becomes reachable)." It replaced the builder's first call (the hand side rode on through the joint, so left and right never reached the lower flight: `bugs/left-and-right-cannot-take-ivo-down-past-the-lighthouse-joint`).
 
 ## How it works

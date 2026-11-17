@@ -118,3 +118,11 @@ Not stated in the design (01 section 4: "por amor"; the object is open). **Q1.**
 - **Q2:** "Uma canção que ainda irei criar, especial. Pode utilizar da sequencia de 12 notas sim": the final call is a special song the user will compose. Until then it is a placeholder `Song` resource of 12 notes (Freeze then Redoma's notes), marked as a placeholder in its file and in `systems/guardians`; swapping in the user's song is data only.
 - **Q3:** "Uma vez por save (Recommended)": the revelation is recorded once per save and kept through death.
 - **Q4:** "Exceção: salva na hora": the victory writes the save at once, the one documented exception to "only benches save" (`systems/life-benches-death` and the CLAUDE.md Systems row change in the same commit as the code).
+
+## Revision (2026-11-17, STORY-34)
+
+`architecture/story34-mentor-at-the-lantern` moved the mentor from the interior's gallery to the lantern ("Na lanterna, junto à lâmpada", user, 2026-11-17) and opened the hatch for good ("Sempre aberto (Recommended)", user, 2026-11-17). What changed for this plan:
+
+- **The hatch no longer reads `all_guardians_restored`.** `lighthouse_interior.room` 12,4 and the `lighthouse_hatch` tuple in `gen_world_shells.py` lost their `requires`; the lantern's end moved to col 30 (x 960..992), east of the lamp's axis. The reach audit's `memorina` milestone is now `lighthouse_top`.
+- **The fight is gated by a `FactPresence` on the lantern's `MentorGuardian`** (`when = [all_guardians_restored.tres]`): absent, the body is hidden and DISABLED, so its `ArenaTrigger`, `Talkable`, hurtbox and contact leave the physics server and the fight cannot begin. `Guardian` gained no code; the bare `mentor_guardian.tscn` that `guardian_finale_test` and `combat_reach_test` mount has no presence and stays present.
+- **The lantern's own `mentor_staging` shows nothing once the four are restored** (its Gone stage, the same fact), with the body at `mentor_home` (720, 672), where the keeper stood. Both read one fact, so both are picked in `_ready` on a world build and flip on the same `progress_changed`. `ivo_stand` moved to (824, 672); the lamp hangs lower (`Lamp` y 448, the chain 384 px), and `lamp` (656, 400) still centres the restoration's pull-back.

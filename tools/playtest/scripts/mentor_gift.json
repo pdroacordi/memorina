@@ -1,199 +1,288 @@
 {
  "scene": "res://scenes/world/game.tscn",
- "max_duration": 18.0,
- "locale": "en",
+ "max_duration": 45.5,
+ "locale": "pt_BR",
  "owned_items": [
   0
  ],
  "player_position": [
-  24290,
-  12798
+  11780,
+  -1250
  ],
+ "_note": "STORY-34: the mentor at the lantern's lowered lamp. Ivo walks in from the hatch side and stops inside the auto talk's east edge (x 11725, the DoorSensor must overlap world x 11720); the approach walks him west to ivo_near, \"Ei...\", the 1.2 s silence and the turn (the 6-frame Turning strip, ~1 s, then Holding), the 1.6 s pause after \"Guardo.\", the phrase on Ivo's song line, the gift, the choice ([Tocar de novo]), stasis, \"Se eu o quê?\", the silence hold, then Up on him says \"...\". Z times measured 2026-11-17 (second run, with the Turning strip) with a driver that pressed Z 1.0 s after each line finished typing (pt_BR; en text lengths differ, so re-time for en).",
  "steps": [
   {
-   "t": 1.5,
-   "screenshot": "00_mentor_holding"
+   "t": 0.5,
+   "screenshot": "00_arrive"
   },
   {
-   "t": 2.6,
-   "screenshot": "01_long_way"
+   "t": 0.6,
+   "key": "Left",
+   "pressed": true
   },
   {
-   "t": 2.7,
+   "t": 1.1,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 1.8,
+   "screenshot": "01_approach_a"
+  },
+  {
+   "t": 2.4,
+   "screenshot": "01_approach_b"
+  },
+  {
+   "t": 3.5,
+   "screenshot": "02_hey"
+  },
+  {
+   "t": 4.03,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 2.78,
+   "t": 4.11,
    "key": "Z",
    "pressed": false
   },
   {
-   "t": 2.82,
-   "screenshot": "m_raise_0"
+   "t": 5.45,
+   "screenshot": "03_turning_5.45"
   },
   {
-   "t": 2.92,
-   "screenshot": "m_raise_1"
+   "t": 5.6,
+   "screenshot": "03_silence"
   },
   {
-   "t": 3.02,
-   "screenshot": "m_raise_2"
+   "t": 5.65,
+   "screenshot": "03_turning_5.65"
   },
   {
-   "t": 3.12,
-   "screenshot": "m_raise_3"
+   "t": 5.85,
+   "screenshot": "03_turning_5.85"
   },
   {
-   "t": 3.2,
-   "screenshot": "02_phrase_pulse"
+   "t": 6.05,
+   "screenshot": "03_turning_6.05"
   },
   {
-   "t": 3.22,
-   "screenshot": "m_raise_4"
+   "t": 6.25,
+   "screenshot": "03_turning_6.25"
   },
   {
-   "t": 3.4,
-   "screenshot": "m_play_0"
+   "t": 6.5,
+   "screenshot": "03_turned"
   },
   {
-   "t": 3.65,
-   "screenshot": "m_play_1"
+   "t": 8.0,
+   "screenshot": "04_long_way"
   },
   {
-   "t": 3.9,
-   "screenshot": "m_play_2"
-  },
-  {
-   "t": 4.15,
-   "screenshot": "m_play_3"
-  },
-  {
-   "t": 4.4,
-   "screenshot": "m_play_4"
-  },
-  {
-   "t": 4.65,
-   "screenshot": "m_play_5"
-  },
-  {
-   "t": 4.9,
-   "screenshot": "m_play_6"
-  },
-  {
-   "t": 5.15,
-   "screenshot": "m_play_7"
-  },
-  {
-   "t": 5.8,
-   "screenshot": "m_after_phrase"
-  },
-  {
-   "t": 5.8,
-   "log": "after_phrase"
-  },
-  {
-   "t": 6.8,
-   "screenshot": "03_many_hands"
-  },
-  {
-   "t": 6.9,
+   "t": 8.82,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 6.98,
+   "t": 8.9,
    "key": "Z",
    "pressed": false
   },
   {
-   "t": 7.4,
-   "screenshot": "04_flicker"
+   "t": 10.8,
+   "screenshot": "05_a_story"
   },
   {
-   "t": 8.4,
-   "screenshot": "05_flicker_late"
-  },
-  {
-   "t": 9.8,
-   "screenshot": "06_play_again_or_lower"
-  },
-  {
-   "t": 9.9,
+   "t": 11.55,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 9.98,
+   "t": 11.63,
    "key": "Z",
    "pressed": false
   },
   {
-   "t": 10.4,
-   "screenshot": "07_flat_note"
+   "t": 12.2,
+   "screenshot": "06_i_keep"
   },
   {
-   "t": 13.0,
-   "screenshot": "08_yours_too"
-  },
-  {
-   "t": 13.1,
+   "t": 12.81,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 13.18,
+   "t": 12.89,
    "key": "Z",
    "pressed": false
   },
   {
    "t": 13.6,
-   "screenshot": "09_stasis_fading"
+   "screenshot": "07_pause"
   },
   {
-   "t": 15.0,
-   "screenshot": "10_stasis"
+   "t": 15.6,
+   "screenshot": "08_i_kept"
   },
   {
-   "t": 15.05,
+   "t": 16.33,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 16.41,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 18.4,
+   "screenshot": "09_a_song"
+  },
+  {
+   "t": 19.11,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 19.19,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 20.0,
+   "screenshot": "10_phrase"
+  },
+  {
+   "t": 23.2,
+   "screenshot": "11_many_hands"
+  },
+  {
+   "t": 23.84,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 23.92,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 24.6,
+   "screenshot": "12_gift"
+  },
+  {
+   "t": 27.4,
+   "screenshot": "13_her_song"
+  },
+  {
+   "t": 28.08,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 28.16,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 28.6,
+   "screenshot": "14_choice"
+  },
+  {
+   "t": 29.16,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 29.24,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 30.0,
+   "screenshot": "15_flat_note"
+  },
+  {
+   "t": 32.0,
    "log": "gift"
   },
   {
-   "t": 15.1,
-   "action": "move_left",
-   "pressed": true
+   "t": 32.2,
+   "screenshot": "16_yours_too"
   },
   {
-   "t": 15.25,
-   "action": "move_left",
-   "pressed": false
-  },
-  {
-   "t": 15.5,
-   "key": "Up",
-   "pressed": true
-  },
-  {
-   "t": 15.58,
-   "key": "Up",
-   "pressed": false
-  },
-  {
-   "t": 16.0,
-   "screenshot": "11_up_on_him"
-  },
-  {
-   "t": 16.2,
+   "t": 32.9,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 16.28,
+   "t": 32.98,
    "key": "Z",
    "pressed": false
   },
   {
-   "t": 16.6,
+   "t": 34.2,
+   "screenshot": "17_stasis_fading"
+  },
+  {
+   "t": 36.0,
+   "screenshot": "18_if_i_what"
+  },
+  {
+   "t": 36.74,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 36.82,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 38.5,
+   "screenshot": "19_silence"
+  },
+  {
+   "t": 41.5,
+   "screenshot": "20_still"
+  },
+  {
+   "t": 42.35,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 42.5,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 43.05,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 43.13,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 43.6,
+   "screenshot": "21_up_on_him"
+  },
+  {
+   "t": 44.09,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 44.17,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 45.0,
    "log": "end"
   }
  ]

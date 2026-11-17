@@ -1,0 +1,377 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 34.0,
+ "locale": "pt_BR",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_bread",
+  "daughter_song",
+  "elder_story",
+  "mentor_gift"
+ ],
+ "responses": {
+  "morning_song": "guitar_lower",
+  "elder_story": "elder_painting",
+  "mentor_flicker": "memorina_again"
+ },
+ "player_position": [
+  24220,
+  13438
+ ],
+ "_note": "STORY-34: the four guardians restored and the mentor's gift heard. Ivo rides the lighthouse helix from the door up to the attic (lighthouse_helix_climb's inputs), takes the always-open hatch (interior 12,4) and comes up at lighthouse_top col 30: the still keeper (Props/Mentor) must be Gone, MentorGuardian standing at (720, 672) local = world (11600, -1248), and the fight starting as he comes near (ArenaTrigger radius 560). The mentor_stasis Up talk must not prompt over the body.",
+ "steps": [
+  {
+   "t": 1.0,
+   "screenshot": "a00_inside_door"
+  },
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 8.6,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 9.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 10.5,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 10.5,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 12.0,
+   "screenshot": "a01_gallery_empty"
+  },
+  {
+   "t": 18.3,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 18.3,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 18.8,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 18.9,
+   "log": "attic"
+  },
+  {
+   "t": 18.9,
+   "screenshot": "a02_at_the_hatch"
+  },
+  {
+   "t": 19.3,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 19.38,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 19.4,
+   "log": "top19.40"
+  },
+  {
+   "t": 19.65,
+   "log": "top19.65"
+  },
+  {
+   "t": 19.9,
+   "log": "top19.90"
+  },
+  {
+   "t": 20.15,
+   "log": "top20.15"
+  },
+  {
+   "t": 20.2,
+   "screenshot": "b00_arrive"
+  },
+  {
+   "t": 20.4,
+   "log": "top20.40"
+  },
+  {
+   "t": 20.65,
+   "log": "top20.65"
+  },
+  {
+   "t": 20.8,
+   "screenshot": "b01_arrive"
+  },
+  {
+   "t": 20.9,
+   "log": "top20.90"
+  },
+  {
+   "t": 21.15,
+   "log": "top21.15"
+  },
+  {
+   "t": 21.4,
+   "log": "top21.40"
+  },
+  {
+   "t": 21.4,
+   "screenshot": "b02_arrive"
+  },
+  {
+   "t": 21.65,
+   "log": "top21.65"
+  },
+  {
+   "t": 21.9,
+   "log": "top21.90"
+  },
+  {
+   "t": 22.0,
+   "screenshot": "b03"
+  },
+  {
+   "t": 22.15,
+   "log": "top22.15"
+  },
+  {
+   "t": 22.4,
+   "log": "top22.40"
+  },
+  {
+   "t": 22.65,
+   "log": "top22.65"
+  },
+  {
+   "t": 22.9,
+   "log": "top22.90"
+  },
+  {
+   "t": 23.0,
+   "screenshot": "b04"
+  },
+  {
+   "t": 23.15,
+   "log": "top23.15"
+  },
+  {
+   "t": 23.4,
+   "log": "top23.40"
+  },
+  {
+   "t": 23.65,
+   "log": "top23.65"
+  },
+  {
+   "t": 23.9,
+   "log": "top23.90"
+  },
+  {
+   "t": 24.0,
+   "screenshot": "b05"
+  },
+  {
+   "t": 24.15,
+   "log": "top24.15"
+  },
+  {
+   "t": 24.4,
+   "log": "top24.40"
+  },
+  {
+   "t": 24.65,
+   "log": "top24.65"
+  },
+  {
+   "t": 24.9,
+   "log": "top24.90"
+  },
+  {
+   "t": 25.15,
+   "log": "top25.15"
+  },
+  {
+   "t": 25.4,
+   "log": "top25.40"
+  },
+  {
+   "t": 25.5,
+   "screenshot": "b06"
+  },
+  {
+   "t": 25.65,
+   "log": "top25.65"
+  },
+  {
+   "t": 25.9,
+   "log": "top25.90"
+  },
+  {
+   "t": 26.15,
+   "log": "top26.15"
+  },
+  {
+   "t": 26.4,
+   "log": "top26.40"
+  },
+  {
+   "t": 26.65,
+   "log": "top26.65"
+  },
+  {
+   "t": 26.9,
+   "log": "top26.90"
+  },
+  {
+   "t": 27.0,
+   "screenshot": "b07"
+  },
+  {
+   "t": 27.15,
+   "log": "top27.15"
+  },
+  {
+   "t": 27.4,
+   "log": "top27.40"
+  },
+  {
+   "t": 27.65,
+   "log": "top27.65"
+  },
+  {
+   "t": 27.9,
+   "log": "top27.90"
+  },
+  {
+   "t": 28.15,
+   "log": "top28.15"
+  },
+  {
+   "t": 28.4,
+   "log": "top28.40"
+  },
+  {
+   "t": 28.65,
+   "log": "top28.65"
+  },
+  {
+   "t": 28.9,
+   "log": "top28.90"
+  },
+  {
+   "t": 29.0,
+   "screenshot": "b08"
+  },
+  {
+   "t": 29.15,
+   "log": "top29.15"
+  },
+  {
+   "t": 29.4,
+   "log": "top29.40"
+  },
+  {
+   "t": 29.65,
+   "log": "top29.65"
+  },
+  {
+   "t": 29.9,
+   "log": "top29.90"
+  },
+  {
+   "t": 30.15,
+   "log": "top30.15"
+  },
+  {
+   "t": 30.4,
+   "log": "top30.40"
+  },
+  {
+   "t": 30.65,
+   "log": "top30.65"
+  },
+  {
+   "t": 30.9,
+   "log": "top30.90"
+  },
+  {
+   "t": 31.0,
+   "screenshot": "b09"
+  },
+  {
+   "t": 31.15,
+   "log": "top31.15"
+  },
+  {
+   "t": 31.4,
+   "log": "top31.40"
+  },
+  {
+   "t": 31.65,
+   "log": "top31.65"
+  },
+  {
+   "t": 31.9,
+   "log": "top31.90"
+  },
+  {
+   "t": 32.15,
+   "log": "top32.15"
+  },
+  {
+   "t": 32.4,
+   "log": "top32.40"
+  },
+  {
+   "t": 32.65,
+   "log": "top32.65"
+  },
+  {
+   "t": 32.9,
+   "log": "top32.90"
+  },
+  {
+   "t": 33.0,
+   "screenshot": "b10"
+  },
+  {
+   "t": 33.15,
+   "log": "top33.15"
+  },
+  {
+   "t": 33.4,
+   "log": "top33.40"
+  },
+  {
+   "t": 33.65,
+   "log": "top33.65"
+  }
+ ]
+}

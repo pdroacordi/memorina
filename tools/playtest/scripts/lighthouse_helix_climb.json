@@ -3,7 +3,7 @@
  "max_duration": 36.5,
  "locale": "en",
  "player_position": [24220, 13438],
- "_note": "WORLD-26, the lighthouse's two flights in stone and iron, joined at the mentor's floor (\"Walk left into it\", user, 2026-10-11): right held from the door up the lower flight and off its head onto the floor's right half; left back into the axis boards the lower flight going down; Up rides back up and on through the joint to the attic; right onto the attic gallery; left down the upper flight and off its foot into the mentor's room (left half); right into the axis boards the upper flight; Down rides through the joint; left takes him on down to the floor. Stills at the foot, a quarter turn, mid, the joint, the head, the halves; six frames 0.25 s apart on the lower flight.",
+ "_note": "WORLD-26, the lighthouse's two flights in stone and iron, joined at the middle gallery (the keeper's room, empty since STORY-34: the mentor stands in lighthouse_top) (\"Walk left into it\", user, 2026-10-11): right held from the door up the lower flight and off its head onto the floor's right half; left back into the axis boards the lower flight going down; Up rides back up and on through the joint to the attic; right onto the attic gallery; left down the upper flight and off its foot into the keeper's room (left half), where no talk starts now; right into the axis boards the upper flight; Down rides through the joint; left takes him on down to the floor. Stills at the foot, a quarter turn, mid, the joint, the head, the halves; six frames 0.25 s apart on the lower flight.",
  "steps": [
   {"t": 1.0, "log": "inside"},
   {"t": 1.0, "screenshot": "a00_inside_door"},

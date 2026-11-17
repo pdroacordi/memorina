@@ -135,6 +135,24 @@ func test_a_cut_talk_frames_at_once() -> void:
 	await get_tree().physics_frame
 	assert_float(_centre().x).is_equal_approx(ivo.global_position.x - 20.0, 1.0)
 
+## Dialogue.frame_lift (STORY-34's lantern talk): the framed talk's centre rises by the lift, and falls back on release.
+func test_a_lifted_talk_frames_higher() -> void:
+	var ivo := IVO.instantiate() as Player
+	ivo.position = Vector2(600, 330.0)
+	add_child(ivo)
+	auto_free(ivo)
+	_floor(Vector2(0.0, 330.0), 2000.0)
+	_camera.set_bounds(Rect2(-4000, -4000, 8000, 8000))
+	_camera.follow(ivo)
+	for i: int in 3:
+		await get_tree().physics_frame
+	var level := _camera.centre_for(ivo).y
+	_camera.frame_talk(Vector2(ivo.global_position.x - 40.0, 330.0), 1.5, true, 64.0)
+	await get_tree().physics_frame
+	assert_float(_camera.centre_for(ivo).y).is_equal_approx(level - 64.0, 1.0)
+	_camera.release_talk()
+	assert_float(_camera.centre_for(ivo).y).is_equal_approx(level, 1.0)
+
 ## bugs/a-hop-below-a-seam-flips-the-room-twice: astride a room's top edge the body stays in frame.
 func test_the_clamp_yields_to_keep_the_body_in_frame() -> void:
 	var body := auto_free(BodySubject.new()) as BodySubject

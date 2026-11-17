@@ -1,12 +1,13 @@
-[gd_resource type="Resource" script_class="DialogueSet" format=3]
+[gd_resource type="Resource" script_class="DialogueSet" format=3 uid="uid://btoga1fi5d826"]
 
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
-[ext_resource type="Script" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
-[ext_resource type="Script" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
-[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Script" uid="uid://da7s57is2erh6" path="res://resources/dialogue/dialogue_choice.gd" id="f_choice"]
+[ext_resource type="Script" uid="uid://ehxc5gppjkxp" path="res://resources/dialogue/dialogue.gd" id="f_dialogue"]
+[ext_resource type="Script" uid="uid://b7dtsefilgm6i" path="res://resources/save_facts/save_fact.gd" id="f_fact"]
+[ext_resource type="Script" uid="uid://0kha27ytvt2r" path="res://resources/dialogue/dialogue_line.gd" id="f_line"]
+[ext_resource type="Script" uid="uid://d2eoql5qejigt" path="res://resources/dialogue/dialogue_set.gd" id="f_set"]
+[ext_resource type="Script" uid="uid://bhja2tfpavop7" path="res://resources/dialogue/line_variant.gd" id="f_variant"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/mentor_stasis.tres" id="s_mentor_stasis"]
+[ext_resource type="Resource" path="res://resources/save_facts/all_guardians_restored.tres" id="f_all_restored"]
 
 [sub_resource type="Resource" id="line_1"]
 script = ExtResource("f_line")
@@ -22,6 +23,7 @@ id = &"mentor_gift"
 script = ExtResource("f_dialogue")
 id = &"mentor_stasis"
 when = Array[ExtResource("f_fact")]([SubResource("fact_2")])
+unless = Array[ExtResource("f_fact")]([ExtResource("f_all_restored")])
 lines = Array[ExtResource("f_line")]([SubResource("line_1")])
 
 [resource]

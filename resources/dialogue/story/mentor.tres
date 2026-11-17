@@ -9,6 +9,19 @@
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/mentor.tres" id="s_mentor"]
 [ext_resource type="Resource" path="res://resources/dialogue/speakers/ivo.tres" id="s_ivo"]
 
+[sub_resource type="Resource" id="line_approach"]
+script = ExtResource("f_line")
+cue = &"mentor_approach"
+
+[sub_resource type="Resource" id="line_hey"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_MENTOR_GIFT_08"
+
+[sub_resource type="Resource" id="line_turns"]
+script = ExtResource("f_line")
+cue = &"mentor_turns"
+
 [sub_resource type="Resource" id="line_1"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_mentor")
@@ -18,12 +31,26 @@ text_key = "DLG_MENTOR_GIFT_01"
 script = ExtResource("f_line")
 speaker = ExtResource("s_ivo")
 text_key = "DLG_MENTOR_GIFT_04"
-cue = &"mentor_phrase"
 
 [sub_resource type="Resource" id="line_3"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_mentor")
 text_key = "DLG_MENTOR_GIFT_05"
+
+[sub_resource type="Resource" id="line_pause"]
+script = ExtResource("f_line")
+cue = &"mentor_pause"
+
+[sub_resource type="Resource" id="line_kept"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_mentor")
+text_key = "DLG_MENTOR_GIFT_09"
+
+[sub_resource type="Resource" id="line_song"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_MENTOR_GIFT_10"
+cue = &"mentor_phrase"
 
 [sub_resource type="Resource" id="line_4"]
 script = ExtResource("f_line")
@@ -88,8 +115,9 @@ cue = &"mentor_silence"
 script = ExtResource("f_dialogue")
 id = &"mentor_gift"
 once = true
-lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_2"), SubResource("line_3"), SubResource("line_4"), SubResource("line_6"), SubResource("line_7"), SubResource("line_12"), SubResource("line_13"), SubResource("line_14")])
-zoom = 2.0
+lines = Array[ExtResource("f_line")]([SubResource("line_approach"), SubResource("line_hey"), SubResource("line_turns"), SubResource("line_1"), SubResource("line_2"), SubResource("line_3"), SubResource("line_pause"), SubResource("line_kept"), SubResource("line_song"), SubResource("line_4"), SubResource("line_6"), SubResource("line_7"), SubResource("line_12"), SubResource("line_13"), SubResource("line_14")])
+zoom = 1.5
+frame_lift = 64.0
 
 [resource]
 script = ExtResource("f_set")

@@ -330,10 +330,13 @@ DLG_ELDER_STORY_12,There's a sword on the table at the farm in the fields. No on
 DLG_ELDER_PAINTING_02,Is that lighthouse still there?,Esse farol ainda existe?
 DLG_SWORD_01,…Sorry. I'll need this.,…Desculpa. Vou precisar disso.
 DLG_SWORD_TURN_BACK_01,Not like this.,Assim não.
-DLG_MENTOR_GIFT_04,They say you keep things.,Disseram que você guarda as coisas.
-DLG_MENTOR_GIFT_05,I keep. I kept. ~I kept~.,Guardo. Guardava. ~Guardava~.
+DLG_MENTOR_GIFT_04,In the village they tell a story about you. They say you keep things.,Na vila contam uma história sua. Dizem que você guarda as coisas.
+DLG_MENTOR_GIFT_05,I keep.,Guardo.
 DLG_MENTOR_GIFT_06,That's… that's her song.,Essa é… essa é a música dela.
 DLG_MENTOR_GIFT_07,If I what?,Se eu o quê?
+DLG_MENTOR_GIFT_08,Hey…,Ei…
+DLG_MENTOR_GIFT_09,I kept. ~I kept~.,Guardava. ~Guardava~.
+DLG_MENTOR_GIFT_10,There's a song. My wife sang it. I always stop in the same place.,Tem uma música. Minha mulher cantava. Eu paro sempre no mesmo lugar.
 DLG_ELDER_RETURN_02,He gave it to me. The keeper.,Ele me deu. O guardião.
 DLG_ELDER_RETURN_03,Then he's real.,Então ele existe.
 DLG_ELDER_RETURN_04,Then the end of the story hasn't happened yet.,Então o fim da história ainda não aconteceu.

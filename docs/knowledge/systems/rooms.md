@@ -99,7 +99,7 @@ User, 2026-10-14: "there are some places that should have invisible walls or som
 - Place it on the speaker's cell, `speaker_offset` to the speaker; the zone is centred there. The villager prop itself carries no gameplay (`systems/props`).
 - `room_files_test` fails when a `t`'s `talk` is not in `resources/dialogue/dialogue_catalog.tres`.
 - **The east gate** (STORY-03): village_gate_east's `X` at col 38 reads `heard_elder_story.tres` ("East gate shut until the elder points east (Recommended)", user, 2026-10-15). The kits hold the opening's talks as the `opening` milestone, so it is open to every kit (`systems/story`).
-- **Today:** the dialogue fixture in `trials_winter/winter_trial` (col 8, row 15), and the opening's talks (STORY-03, `systems/story`): three in village_house, one each in village_bakery and village_elder, two on lighthouse_interior's gallery.
+- **Today:** the dialogue fixture in `trials_winter/winter_trial` (col 8, row 15), and the opening's talks (STORY-03, `systems/story`): three in village_house, one each in village_bakery and village_elder, two in lighthouse_top on the mentor at the lamp (STORY-34; the interior's gallery has none).
 - A door hides its Up prompt while Ivo is talking; it is refused until the talk ends. Its prompt shows only where Up would take it (`Player.reaches`, STORY-14; `systems/dialogue`).
 - Adding the legend entry needed no `FORMAT_VERSION` bump: the parser did not change.
 

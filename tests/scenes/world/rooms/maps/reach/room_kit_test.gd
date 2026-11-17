@@ -76,6 +76,8 @@ func test_a_kit_reaches_every_room_its_earlier_kits_reach() -> void:
 func test_the_base_kit_stays_behind_the_fences() -> void:
 	var rooms := _report(&"base").rooms
 	assert_bool(rooms.has(&"lighthouse_interior")).is_true()
+	# STORY-34: the hatch is always open, and the mentor stands in the lantern.
+	assert_bool(rooms.has(&"lighthouse_top")).is_true()
 	assert_bool(rooms.has(&"woods_edge")).is_false()
 	assert_bool(rooms.has(&"lake_waterfall_path")).is_false()
 	assert_bool(_report(&"memorina").rooms.has(&"woods_edge")).is_true()

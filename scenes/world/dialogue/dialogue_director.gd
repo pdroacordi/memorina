@@ -11,8 +11,9 @@ signal talk_paused(hold: int, pose: int, at: Vector2)
 ## The beat is over; Ivo answers with `resume()` once the start gates hold.
 signal resume_wanted
 signal talk_ended
-## The camera holds the speaker at `at` and Ivo at `zoom` until `talk_unframed` (Dialogue.zoom); `cut` lands it at once.
-signal talk_framed(at: Vector2, zoom: float, cut: bool)
+## The camera holds the speaker at `at` and Ivo at `zoom`, `lift` px higher, until `talk_unframed` (Dialogue.zoom);
+## `cut` lands it at once.
+signal talk_framed(at: Vector2, zoom: float, cut: bool, lift: float)
 signal talk_unframed
 ## Where the box opens for this talk; held until the talk ends or resumes.
 signal box_placed(side: DialogueBoxSide.Side)
@@ -71,7 +72,7 @@ func start_dialogue(dialogue: Dialogue, at: Vector2, face_height: float = 0.0) -
 	_facing = _at
 	if dialogue.zoom > 0.0:
 		_framed = true
-		talk_framed.emit(at, dialogue.zoom, dialogue.cut)
+		talk_framed.emit(at, dialogue.zoom, dialogue.cut, dialogue.frame_lift)
 	_begin()
 	return true
 

@@ -1,5 +1,7 @@
 {
- "max_duration": 25.0,
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 45.5,
+ "locale": "pt_BR",
  "owned_items": [
   0
  ],
@@ -15,241 +17,284 @@
   "elder_story": "elder_painting"
  },
  "player_position": [
-  24300,
-  12798
+  11780,
+  -1250
  ],
+ "_note": "STORY-34: the mentor at the lantern's lowered lamp. Ivo walks in from the hatch side and stops inside the auto talk's east edge (x 11725, the DoorSensor must overlap world x 11720); the approach walks him west to ivo_near, \"Ei...\", the 1.2 s silence and the turn (the 6-frame Turning strip, ~1 s, then Holding), the 1.6 s pause after \"Guardo.\", the phrase on Ivo's song line, the gift, the choice ([Tocar de novo]), stasis, \"Se eu o quê?\", the silence hold, then Up on him says \"...\". Z times measured 2026-11-17 (second run, with the Turning strip) with a driver that pressed Z 1.0 s after each line finished typing (pt_BR; en text lengths differ, so re-time for en). The opening's earlier talks heard.",
  "steps": [
+  {
+   "t": 0.5,
+   "screenshot": "m00_arrive"
+  },
   {
    "t": 0.6,
    "key": "Left",
    "pressed": true
   },
   {
-   "t": 0.75,
+   "t": 1.1,
    "key": "Left",
    "pressed": false
   },
   {
    "t": 1.8,
-   "screenshot": "m00_long_way"
+   "screenshot": "m01_approach_a"
   },
   {
-   "t": 2.0,
+   "t": 2.4,
+   "screenshot": "m01_approach_b"
+  },
+  {
+   "t": 3.5,
+   "screenshot": "m02_hey"
+  },
+  {
+   "t": 4.03,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 2.08,
+   "t": 4.11,
    "key": "Z",
    "pressed": false
   },
   {
-   "t": 3.0,
-   "screenshot": "m01_keep_things"
+   "t": 5.45,
+   "screenshot": "m03_turning_5.45"
   },
   {
-   "t": 3.2,
-   "key": "Z",
-   "pressed": true
+   "t": 5.6,
+   "screenshot": "m03_silence"
   },
   {
-   "t": 3.28,
-   "key": "Z",
-   "pressed": false
+   "t": 5.65,
+   "screenshot": "m03_turning_5.65"
   },
   {
-   "t": 3.6,
-   "screenshot": "m100"
+   "t": 5.85,
+   "screenshot": "m03_turning_5.85"
   },
   {
-   "t": 4.2,
-   "screenshot": "m101"
+   "t": 6.05,
+   "screenshot": "m03_turning_6.05"
   },
   {
-   "t": 4.8,
-   "screenshot": "m102"
+   "t": 6.25,
+   "screenshot": "m03_turning_6.25"
   },
   {
-   "t": 5.4,
-   "screenshot": "m103"
-  },
-  {
-   "t": 6.0,
-   "screenshot": "m104"
-  },
-  {
-   "t": 6.6,
-   "screenshot": "m02_i_kept"
-  },
-  {
-   "t": 6.8,
-   "key": "Z",
-   "pressed": true
-  },
-  {
-   "t": 6.88,
-   "key": "Z",
-   "pressed": false
+   "t": 6.5,
+   "screenshot": "m03_turned"
   },
   {
    "t": 8.0,
-   "screenshot": "m03_many_hands"
+   "screenshot": "m04_long_way"
   },
   {
-   "t": 8.2,
+   "t": 8.82,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 8.28,
+   "t": 8.9,
    "key": "Z",
    "pressed": false
   },
   {
-   "t": 8.6,
-   "screenshot": "m200"
+   "t": 10.8,
+   "screenshot": "m05_a_story"
   },
   {
-   "t": 9.1,
-   "screenshot": "m201"
-  },
-  {
-   "t": 9.6,
-   "screenshot": "m202"
-  },
-  {
-   "t": 10.1,
-   "screenshot": "m203"
-  },
-  {
-   "t": 10.6,
-   "screenshot": "m204"
-  },
-  {
-   "t": 11.4,
-   "screenshot": "m04_her_song"
-  },
-  {
-   "t": 11.6,
+   "t": 11.55,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 11.68,
+   "t": 11.63,
    "key": "Z",
    "pressed": false
   },
   {
-   "t": 12.6,
-   "screenshot": "m05_choice"
+   "t": 12.2,
+   "screenshot": "m06_i_keep"
   },
   {
-   "t": 12.8,
+   "t": 12.81,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 12.88,
+   "t": 12.89,
    "key": "Z",
    "pressed": false
   },
   {
    "t": 13.6,
-   "screenshot": "m06_flat_note"
+   "screenshot": "m07_pause"
   },
   {
-   "t": 15.2,
-   "screenshot": "m07_yours_too"
+   "t": 15.6,
+   "screenshot": "m08_i_kept"
   },
   {
-   "t": 15.4,
+   "t": 16.33,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 15.48,
+   "t": 16.41,
    "key": "Z",
    "pressed": false
   },
   {
-   "t": 15.8,
-   "screenshot": "m300"
+   "t": 18.4,
+   "screenshot": "m09_a_song"
   },
   {
-   "t": 16.3,
-   "screenshot": "m301"
-  },
-  {
-   "t": 16.8,
-   "screenshot": "m302"
-  },
-  {
-   "t": 17.3,
-   "screenshot": "m303"
-  },
-  {
-   "t": 17.8,
-   "screenshot": "m304"
-  },
-  {
-   "t": 18.6,
-   "screenshot": "m08_if_i_what"
-  },
-  {
-   "t": 18.8,
+   "t": 19.11,
    "key": "Z",
    "pressed": true
   },
   {
-   "t": 18.88,
+   "t": 19.19,
    "key": "Z",
    "pressed": false
   },
   {
-   "t": 19.2,
-   "screenshot": "m400"
-  },
-  {
-   "t": 19.7,
-   "screenshot": "m401"
-  },
-  {
-   "t": 20.2,
-   "screenshot": "m402"
-  },
-  {
-   "t": 20.7,
-   "screenshot": "m403"
-  },
-  {
-   "t": 21.2,
-   "screenshot": "m404"
-  },
-  {
-   "t": 21.7,
-   "screenshot": "m405"
-  },
-  {
-   "t": 22.2,
-   "screenshot": "m406"
-  },
-  {
-   "t": 22.7,
-   "screenshot": "m407"
+   "t": 20.0,
+   "screenshot": "m10_phrase"
   },
   {
    "t": 23.2,
-   "screenshot": "m408"
+   "screenshot": "m11_many_hands"
   },
   {
-   "t": 24.4,
-   "screenshot": "m09_after"
+   "t": 23.84,
+   "key": "Z",
+   "pressed": true
   },
   {
-   "t": 24.5,
+   "t": 23.92,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 24.6,
+   "screenshot": "m12_gift"
+  },
+  {
+   "t": 27.4,
+   "screenshot": "m13_her_song"
+  },
+  {
+   "t": 28.08,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 28.16,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 28.6,
+   "screenshot": "m14_choice"
+  },
+  {
+   "t": 29.16,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 29.24,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 30.0,
+   "screenshot": "m15_flat_note"
+  },
+  {
+   "t": 32.0,
+   "log": "gift"
+  },
+  {
+   "t": 32.2,
+   "screenshot": "m16_yours_too"
+  },
+  {
+   "t": 32.9,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 32.98,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 34.2,
+   "screenshot": "m17_stasis_fading"
+  },
+  {
+   "t": 36.0,
+   "screenshot": "m18_if_i_what"
+  },
+  {
+   "t": 36.74,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 36.82,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 38.5,
+   "screenshot": "m19_silence"
+  },
+  {
+   "t": 41.5,
+   "screenshot": "m20_still"
+  },
+  {
+   "t": 42.35,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 42.5,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 43.05,
+   "key": "Up",
+   "pressed": true
+  },
+  {
+   "t": 43.13,
+   "key": "Up",
+   "pressed": false
+  },
+  {
+   "t": 43.6,
+   "screenshot": "m21_up_on_him"
+  },
+  {
+   "t": 44.09,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 44.17,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 45.0,
    "log": "end"
   }
- ],
- "scene": "res://scenes/world/game.tscn",
- "locale": "en"
+ ]
 }

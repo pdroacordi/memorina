@@ -14,7 +14,7 @@ seconds = 0.8
 
 [sub_resource type="Resource" id="camera_3"]
 script = ExtResource("e4")
-targets = Array[StringName]([&"mentor"])
+targets = Array[StringName]([&"mentor_home"])
 offset = Vector2(0, -60)
 zoom = 2
 seconds = 1.4

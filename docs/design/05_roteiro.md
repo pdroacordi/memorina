@@ -16,6 +16,7 @@
 - **A ordem da abertura:** "East gate shut until the elder points east (Recommended)": o portão leste da vila fica fechado até a história do ancião ser ouvida; o "Leste. Ainda está lá." dele é o que o abre. A abertura sempre acontece em ordem. Isso muda, só para a abertura, a "Estrada do Limiar: aberta" de `04_mapa_do_mundo.md`, seção 2.
 - **Gestos em português:** [Tentar de novo], [Baixar o violão], [Esperar por ele], [Olhar o quadro], [Tocar de novo], [Baixá-la] ("Approve (Recommended)").
 - **A história do ancião (STORY-32, 2026-11-17):** "o primeiro diálogo com o ancião pode ser melhorado, ta meio sem sentido" (2026-11-16), depois "Aprovar os dois (Recommended)" sobre o rascunho `drafts/story32_34_talks.md`: o farol traz de volta o que o mar leva; Ivo pergunta se o homem do farol ainda guarda as coisas (a origem do "Disseram que você guarda as coisas" do Ato 3); "Meu pai dizia que sim" prepara o modelo entalhado do Ato 4; o ancião manda Ivo pegar a espada do sítio.
+- **O mentor, mais devagar e na lanterna (STORY-34, 2026-11-17):** "o diálogo com o primeiro guardião (corrompido) não está fazendo muito sentido. Parece apressado. Sem falar que não sei se gosto do lugar que ele está, no meio do farol" (2026-11-16); o lugar: "Na lanterna, junto à lâmpada" (no topo, na sala da lanterna, a mão erguida para a lâmpada apagada); o alçapão: "Sempre aberto (Recommended)"; o texto: o rascunho `drafts/story32_34_talks.md`, seção STORY-34, aprovado: Ivo chega devagar, a cabeça do mentor demora a virar, "Guardo." e "Guardava." ficam em caixas separadas com uma pausa longa entre elas, e Ivo diz por que veio.
 - **Retratos e personagens:** o quadro do elenco aprovado (`tools/art/sources/story/story_cast_board_codex.png`).
 
 ---
@@ -168,15 +169,23 @@ Sem a espada, na beira da Ponte Velha (STORY-33; "Ivo volta na ponte (Recommende
 
 ## Ato 3: o farol
 
-Ivo sobe a escada. No andar do meio, uma figura alta, quase toda cinza, a mão ainda erguida com uma flauta.
-[CENA]
+Ivo sobe a escada até o alto e passa pelo alçapão. Na lanterna, uma figura alta, quase toda cinza, de costas para ele, a mão erguida com uma flauta para a lâmpada apagada.
+[CENA] A figura não se mexe. Ele chega perto.
+**Ivo:** Ei…
+*Ivo: Hey…*
+(Silêncio. A cabeça vira, devagar.)
 **Mentor:** …Você veio pelo caminho ~longo~.
 *Mentor: …You came the ~long~ way.*
-**Ivo:** Disseram que você guarda as coisas.
-*Ivo: They say you keep things.*
+**Ivo:** Na vila contam uma história sua. Dizem que você guarda as coisas.
+*Ivo: In the village they tell a story about you. They say you keep things.*
+**Mentor:** Guardo.
+*Mentor: I keep.*
+(Uma pausa longa.)
+**Mentor:** Guardava. ~Guardava~.
+*Mentor: I kept. ~I kept~.*
+**Ivo:** Tem uma música. Minha mulher cantava. Eu paro sempre no mesmo lugar.
+*Ivo: There's a song. My wife sang it. I always stop in the same place.*
 (Ele leva a flauta à máscara e toca uma frase curta. A cor abre em volta dos dois por um fôlego e fecha.)
-**Mentor:** Guardo. Guardava. ~Guardava~.
-*Mentor: I keep. I kept. ~I kept~.*
 **Mentor:** Muitas mãos. Nenhuma ~guardou~. (estende a flauta)
 *Mentor: Many hands. None of them ~kept~ it. (holds the flute out)*
 
