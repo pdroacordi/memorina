@@ -30,7 +30,7 @@ Downloaded 2026-11-16 with the user's approval ("Baixe tudo (Recommended)"). The
 
 ## Game files
 
-Written by `python -I tools/audio/cut_sfx.py tools/audio/sfx_sources/raw assets/audios/sfx` (ffmpeg, numpy, scipy), which prints this table. Every file is mono 16-bit 44.1 kHz WAV, 60 Hz high-passed, cut at the onset (lead under 1 ms), tail cut 45 dB under its loudest frame, capped and faded out. Peak is -6 dBFS for steps and soft landings, -3 dBFS for the rest. Steps are capped at 0.35 s, world one-shots at 1.0 s, `songbook` at 0.5 s and `creature_death` at 0.6 s; `gust` is the 3 s exception (MEM-15). Earth, stone and snow steps are the six walk steps nearest the median RMS; wood has only three Mountain Boots steps, so 04-06 are pitched copies. A slice is in source seconds; "whole" is the file from its onset. `st` is semitones (resampled, so length changes).
+Written by `python -I tools/audio/cut_sfx.py tools/audio/sfx_sources/raw assets/audios/sfx` (ffmpeg, numpy, scipy), which prints this table. Every file is mono 16-bit 44.1 kHz WAV, 60 Hz high-passed, cut at the onset (lead under 1 ms; steps and landings at their impact, the first sample 14 dB under the peak read from 30 ms before their slice, with at least 4 ms faded in, SND-07), tail cut 45 dB under its loudest frame, capped and faded out. Peak is -6 dBFS for steps and soft landings, -3 dBFS for the rest. Steps are capped at 0.35 s, world one-shots at 1.0 s, `songbook` at 0.5 s and `creature_death` at 0.6 s; `gust` is the 3 s exception (MEM-15). Earth, stone and snow steps are the six walk steps nearest the median RMS; wood has only three Mountain Boots steps, so 04-06 are pitched copies. A slice is in source seconds; "whole" is the file from its onset. `st` is semitones (resampled, so length changes).
 
 | File | Source | Slice (s) | Processing | Length (s) | Peak (dBFS) |
 |---|---|---|---|---|---|
@@ -40,23 +40,23 @@ Written by `python -I tools/audio/cut_sfx.py tools/audio/sfx_sources/raw assets/
 | `ivo/step_earth_04.wav` | `556042__nox_sound__footsteps_mountain_boots_grass_mono.wav` | 10.550-11.000 |  | 0.350 | -6.0 |
 | `ivo/step_earth_05.wav` | `556042__nox_sound__footsteps_mountain_boots_grass_mono.wav` | 12.500-12.950 |  | 0.350 | -6.0 |
 | `ivo/step_earth_06.wav` | `556042__nox_sound__footsteps_mountain_boots_grass_mono.wav` | 14.605-15.055 |  | 0.350 | -6.0 |
-| `ivo/step_stone_01.wav` | `558472__nox_sound__footsteps_mountain_boots_rock_walk_sequence_mono.wav` | 7.465-7.915 |  | 0.314 | -6.0 |
+| `ivo/step_stone_01.wav` | `558472__nox_sound__footsteps_mountain_boots_rock_walk_sequence_mono.wav` | 7.465-7.915 |  | 0.289 | -6.0 |
 | `ivo/step_stone_02.wav` | `558472__nox_sound__footsteps_mountain_boots_rock_walk_sequence_mono.wav` | 9.300-9.750 |  | 0.350 | -6.0 |
 | `ivo/step_stone_03.wav` | `558472__nox_sound__footsteps_mountain_boots_rock_walk_sequence_mono.wav` | 10.290-10.740 |  | 0.350 | -6.0 |
-| `ivo/step_stone_04.wav` | `558472__nox_sound__footsteps_mountain_boots_rock_walk_sequence_mono.wav` | 12.265-12.715 |  | 0.344 | -6.0 |
+| `ivo/step_stone_04.wav` | `558472__nox_sound__footsteps_mountain_boots_rock_walk_sequence_mono.wav` | 12.265-12.715 |  | 0.350 | -6.0 |
 | `ivo/step_stone_05.wav` | `558472__nox_sound__footsteps_mountain_boots_rock_walk_sequence_mono.wav` | 16.070-16.520 |  | 0.350 | -6.0 |
 | `ivo/step_stone_06.wav` | `558472__nox_sound__footsteps_mountain_boots_rock_walk_sequence_mono.wav` | 18.045-18.495 |  | 0.350 | -6.0 |
 | `ivo/step_snow_01.wav` | `613849__nox_sound__footsteps_mountain_boots_snow_walk_mono.wav` | 0.010-0.425 |  | 0.350 | -6.0 |
 | `ivo/step_snow_02.wav` | `613849__nox_sound__footsteps_mountain_boots_snow_walk_mono.wav` | 1.025-1.475 |  | 0.350 | -6.0 |
-| `ivo/step_snow_03.wav` | `613849__nox_sound__footsteps_mountain_boots_snow_walk_mono.wav` | 3.675-4.125 |  | 0.289 | -6.0 |
+| `ivo/step_snow_03.wav` | `613849__nox_sound__footsteps_mountain_boots_snow_walk_mono.wav` | 3.675-4.125 |  | 0.279 | -6.0 |
 | `ivo/step_snow_04.wav` | `613849__nox_sound__footsteps_mountain_boots_snow_walk_mono.wav` | 4.515-4.965 |  | 0.350 | -6.0 |
-| `ivo/step_snow_05.wav` | `613849__nox_sound__footsteps_mountain_boots_snow_walk_mono.wav` | 5.510-5.960 |  | 0.350 | -6.0 |
+| `ivo/step_snow_05.wav` | `613849__nox_sound__footsteps_mountain_boots_snow_walk_mono.wav` | 5.510-5.960 |  | 0.324 | -6.0 |
 | `ivo/step_snow_06.wav` | `613849__nox_sound__footsteps_mountain_boots_snow_walk_mono.wav` | 9.385-9.835 |  | 0.350 | -6.0 |
-| `ivo/step_wood_01.wav` | `543685__nox_sound__footsteps_wood_walk_mono.wav` | 21.190-21.600 |  | 0.334 | -6.0 |
-| `ivo/step_wood_02.wav` | `543685__nox_sound__footsteps_wood_walk_mono.wav` | 22.165-22.600 |  | 0.329 | -6.0 |
+| `ivo/step_wood_01.wav` | `543685__nox_sound__footsteps_wood_walk_mono.wav` | 21.190-21.600 |  | 0.350 | -6.0 |
+| `ivo/step_wood_02.wav` | `543685__nox_sound__footsteps_wood_walk_mono.wav` | 22.165-22.600 |  | 0.350 | -6.0 |
 | `ivo/step_wood_03.wav` | `543685__nox_sound__footsteps_wood_walk_mono.wav` | 23.095-23.500 |  | 0.350 | -6.0 |
 | `ivo/step_wood_04.wav` | `543685__nox_sound__footsteps_wood_walk_mono.wav` | 21.190-21.600 | -1.0 st | 0.350 | -6.0 |
-| `ivo/step_wood_05.wav` | `543685__nox_sound__footsteps_wood_walk_mono.wav` | 22.165-22.600 | +1.0 st | 0.309 | -6.0 |
+| `ivo/step_wood_05.wav` | `543685__nox_sound__footsteps_wood_walk_mono.wav` | 22.165-22.600 | +1.0 st | 0.339 | -6.0 |
 | `ivo/step_wood_06.wav` | `543685__nox_sound__footsteps_wood_walk_mono.wav` | 23.095-23.500 | -0.5 st | 0.350 | -6.0 |
 | `ivo/step_mud_01.wav` | `548384__nox_sound__footsteps_mountain_boots_mud_mono.wav` | 0.000-0.410 |  | 0.350 | -6.0 |
 | `ivo/step_mud_02.wav` | `548384__nox_sound__footsteps_mountain_boots_mud_mono.wav` | 1.005-1.455 |  | 0.350 | -6.0 |
@@ -71,11 +71,11 @@ Written by `python -I tools/audio/cut_sfx.py tools/audio/sfx_sources/raw assets/
 | `ivo/step_water_06.wav` | `672203__romankolachnik__footsteps_07.wav` | whole |  | 0.350 | -6.0 |
 | `ivo/land_earth_01.wav` | `556042__nox_sound__footsteps_mountain_boots_grass_mono.wav` | 51.185-51.805 |  | 0.409 | -6.0 |
 | `ivo/land_earth_02.wav` | `556042__nox_sound__footsteps_mountain_boots_grass_mono.wav` | 52.440-53.060 |  | 0.500 | -6.0 |
-| `ivo/land_earth_03.wav` | `556042__nox_sound__footsteps_mountain_boots_grass_mono.wav` | 56.985-57.605 |  | 0.349 | -6.0 |
-| `ivo/land_earth_04.wav` | `556042__nox_sound__footsteps_mountain_boots_grass_mono.wav` | 58.035-58.655 |  | 0.414 | -6.0 |
-| `ivo/land_mud_01.wav` | `548384__nox_sound__footsteps_mountain_boots_mud_mono.wav` | 10.880-11.500 |  | 0.459 | -6.0 |
-| `ivo/land_mud_02.wav` | `548384__nox_sound__footsteps_mountain_boots_mud_mono.wav` | 12.120-12.740 |  | 0.379 | -6.0 |
-| `ivo/land_mud_03.wav` | `548384__nox_sound__footsteps_mountain_boots_mud_mono.wav` | 13.100-13.720 |  | 0.379 | -6.0 |
+| `ivo/land_earth_03.wav` | `556042__nox_sound__footsteps_mountain_boots_grass_mono.wav` | 56.985-57.605 |  | 0.379 | -6.0 |
+| `ivo/land_earth_04.wav` | `556042__nox_sound__footsteps_mountain_boots_grass_mono.wav` | 58.035-58.655 |  | 0.444 | -6.0 |
+| `ivo/land_mud_01.wav` | `548384__nox_sound__footsteps_mountain_boots_mud_mono.wav` | 10.880-11.500 |  | 0.444 | -6.0 |
+| `ivo/land_mud_02.wav` | `548384__nox_sound__footsteps_mountain_boots_mud_mono.wav` | 12.120-12.740 |  | 0.369 | -6.0 |
+| `ivo/land_mud_03.wav` | `548384__nox_sound__footsteps_mountain_boots_mud_mono.wav` | 13.100-13.720 |  | 0.389 | -6.0 |
 | `ivo/land_hard.wav` | `556042__nox_sound__footsteps_mountain_boots_grass_mono.wav` | 51.185-51.800 | + dropLeather.ogg -3 st, -4 dB | 0.409 | -3.0 |
 | `ivo/jump.wav` | `cloth3.ogg` | whole |  | 0.400 | -3.0 |
 | `ivo/climb_grab.wav` | `764900__joshua_van_zyl__vegemisc-ext.wav` | 2.120-2.420 | low-pass 5 kHz | 0.299 | -3.0 |

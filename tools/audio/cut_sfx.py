@@ -16,6 +16,9 @@ FRAME = 0.005  # s, envelope frame
 TAIL_DB = -45.0  # dB under the loudest frame where the tail is cut
 PEAK_DB = -3.0  # dBFS, every cue but footsteps and landings
 STEP_PEAK_DB = -6.0  # dBFS, footsteps, water steps and soft landings
+STEP_ATTACK_DB = -14.0  # dB under the peak where a step or landing is cut (its impact)
+ATTACK_PREROLL = 0.004  # s kept before the impact, faded in
+ATTACK_LEAD = 0.03  # s an attack cut reaches before its slice for the impact's start
 HIGH_PASS = butter(2, 60, "highpass", fs=RATE, output="sos")  # handling rumble: half the wood file's energy is under 40 Hz
 
 
@@ -85,16 +88,24 @@ def tail_index(x):
 	return min(len(x), (above[-1] + 1) * int(FRAME * RATE))
 
 
-def finish(x, peak_db, max_len, fade_out=0.02, fade_in=0.0):
-	"""Onset cut, tail trim, length cap, fades, normalisation."""
-	x = x[onset_index(x):]
+def finish(x, peak_db, max_len, fade_out=0.02, fade_in=0.0, attack_db=None):
+	"""Onset cut, tail trim, length cap, fades, normalisation. attack_db cuts at the first sample that loud under the
+	peak instead, ATTACK_PREROLL before it, faded in: a step sounds on its impact, not on the scuff before it (SND-07)."""
+	if attack_db is None:
+		x = x[onset_index(x):]
+	else:
+		i = int(np.argmax(np.abs(x) > np.max(np.abs(x)) * 10 ** (attack_db / 20)))
+		start = max(0, i - int(ATTACK_PREROLL * RATE))
+		x = x[start:].copy()
+		ramp = max(i - start, int(ATTACK_PREROLL * RATE))  # a slice that opens inside its impact still fades in
+		x[:ramp] *= np.linspace(0, 1, ramp)
 	x = x[:tail_index(x)].copy()
 	if max_len and len(x) > int(max_len * RATE):
 		x = x[:int(max_len * RATE)]
 	if fade_in:  # a swell, not an onset
 		fi = int(fade_in * RATE)
 		x[:fi] *= np.linspace(0, 1, fi)
-	elif abs(x[0]) > 0.03 * np.max(np.abs(x)):  # starts off zero: a 3 ms fade-in avoids the click
+	elif attack_db is None and abs(x[0]) > 0.03 * np.max(np.abs(x)):  # starts off zero: a 3 ms fade-in avoids the click
 		fi = int(0.003 * RATE)
 		x[:fi] *= np.linspace(0, 1, fi)
 	fo = min(int(fade_out * RATE), len(x) // 2)
@@ -144,8 +155,9 @@ UI = "kenney_interface_sounds/Audio/"
 class Cue:
 	"""One output file: a slice of a source (seconds), its processing, and an optional layer (src, st, gain dB, offset s)."""
 
-	def __init__(self, out, src, a=0.0, b=None, max_len=1.0, peak=PEAK_DB, fade=0.02, st=0.0, fade_in=0.0, layer=None, lowpass=0, note=""):
+	def __init__(self, out, src, a=0.0, b=None, max_len=1.0, peak=PEAK_DB, fade=0.02, st=0.0, fade_in=0.0, layer=None, lowpass=0, note="", attack_db=None):
 		self.out, self.src, self.a, self.b, self.max_len, self.peak = out, src, a, b, max_len, peak
+		self.attack_db = attack_db
 		self.fade, self.st, self.fade_in, self.layer, self.lowpass, self.note = fade, st, fade_in, layer, lowpass, note
 
 
@@ -167,7 +179,7 @@ def walk_picks(path, t0, t1, n):
 
 def cues():
 	c = []
-	step = dict(max_len=0.35, peak=STEP_PEAK_DB, fade=0.04)
+	step = dict(max_len=0.35, peak=STEP_PEAK_DB, fade=0.04, attack_db=STEP_ATTACK_DB)
 	# Grass: Walk x19 ends at 20.5 s (then Run, Jump & Land, Scrape, Scuff). Mud: Walk x5 ends at 5 s.
 	for name, src, t0, t1 in (("earth", GRASS, 0, 20.5), ("stone", ROCK, 0, 19.1), ("snow", SNOW, 0, 11.3)):
 		for k, (a, b) in enumerate(walk_picks(RAW + src, t0, t1, 6)):
@@ -180,8 +192,8 @@ def cues():
 		c.append(Cue(f"ivo/step_mud_{k + 1:02d}.wav", MUD, a, b, **step))
 	for k, f in enumerate(("01", "03", "04", "05", "06", "07")):  # 02 is the brightest (2.9 kHz)
 		src = WATER + [n for n in sorted(os.listdir(RAW + WATER)) if n.endswith(f"footsteps_{f}.wav")][0]
-		c.append(Cue(f"ivo/step_water_{k + 1:02d}.wav", src, max_len=0.35, peak=STEP_PEAK_DB, fade=0.08))
-	land = dict(max_len=0.5, peak=STEP_PEAK_DB, fade=0.06)
+		c.append(Cue(f"ivo/step_water_{k + 1:02d}.wav", src, max_len=0.35, peak=STEP_PEAK_DB, fade=0.08, attack_db=STEP_ATTACK_DB))
+	land = dict(max_len=0.5, peak=STEP_PEAK_DB, fade=0.06, attack_db=STEP_ATTACK_DB)
 	for k, a in enumerate((51.205, 52.46, 57.005, 58.055)):  # grass Jump & Land, the four lowest centroids
 		c.append(Cue(f"ivo/land_earth_{k + 1:02d}.wav", GRASS, a - 0.02, a + 0.6, **land))
 	for k, a in enumerate((10.9, 12.14, 13.12)):  # mud Land x3
@@ -235,7 +247,9 @@ def render(cue):
 	if cue.lowpass:
 		full = sosfiltfilt(butter(4, cue.lowpass, "lowpass", fs=RATE, output="sos"), full)
 	k = 2 ** (cue.st / 12)  # a pitch shift stretches source time by 1/k
-	a = int(cue.a / k * RATE)
+	# An attack cut looks ATTACK_LEAD earlier, so a slice picked inside the impact still holds its start.
+	lead = ATTACK_LEAD if cue.attack_db is not None and cue.a > 0 else 0.0
+	a = int(max(0.0, cue.a - lead) / k * RATE)
 	b = int(cue.b / k * RATE) if cue.b is not None else len(full)
 	x = full[a:b]
 	if cue.layer:
@@ -248,7 +262,7 @@ def render(cue):
 		mix[:len(x)] += x
 		mix[off:off + len(y)] += y
 		x = mix
-	return finish(x, cue.peak, cue.max_len, cue.fade, cue.fade_in)
+	return finish(x, cue.peak, cue.max_len, cue.fade, cue.fade_in, cue.attack_db)
 
 
 def main(out_dir):
