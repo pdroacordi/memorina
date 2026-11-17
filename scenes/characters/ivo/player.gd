@@ -174,6 +174,8 @@ enum Taken { ITEM, LETTER, SONGBOOK, SEED }
 @export var lesson_lead_in    : float = 0.5
 ## Seconds for the shield amount to reach its recall value.
 @export var recall_glow_time  : float = 0.2
+## Seconds his colour takes to drain to the grey at death (LIFE-06).
+@export var death_drain_time  : float = 1.4
 
 @export_category("Hazards")
 ## Sink speed in px/s; sink drag in px/s².
@@ -1319,6 +1321,7 @@ func _relay_health() -> void:
 func _on_health_died() -> void:
 	super()
 	_drop_recall()
+	_glow_shield(0.0, death_drain_time)
 
 ## An open recall window would leave the world slowed forever if nothing ticks
 ## it (death, a hazard): dropped without a miss.
@@ -1327,11 +1330,11 @@ func _drop_recall() -> void:
 	if _recall.cancel():
 		_end_recall()
 
-func _glow_shield(amount: float) -> void:
+func _glow_shield(amount: float, seconds: float = recall_glow_time) -> void:
 	if _glow_tween:
 		_glow_tween.kill()
 	_glow_tween = create_tween().set_pause_mode(Tween.TWEEN_PAUSE_PROCESS)
-	_glow_tween.tween_property(_shield, "amount", amount, recall_glow_time)
+	_glow_tween.tween_property(_shield, "amount", amount, seconds)
 
 func _next_unknown_song() -> Song:
 	if song_catalog == null:

@@ -7,12 +7,18 @@ signal hazard_respawned
 ## A travel asked by `travel` ended: Ivo stands at its point (true), or it was refused (false).
 signal travelled(arrived: bool)
 
+const DEATH_DUCK := &"death"
+## How far the music sinks from a death to the rebuilt world, dB.
+const DEATH_DUCK_DB := -40.0
+
 ## Palette lookup by region season.
 @export var song_catalog: SongCatalog
 ## Seconds Ivo sinks before the hazard fade starts.
 @export var hazard_sink_hold: float = 0.25
 ## Seconds the body remains still after its death clip.
-@export var death_hold: float = 0.6
+@export var death_hold: float = 1.0
+## Seconds of the fade to black after the hold.
+@export var death_fade: float = 1.5
 ## Seconds the memory baseline takes to reach the new region's after a walk across a region seam.
 @export var baseline_glide_time: float = 0.45
 ## Loaded at swap time: the title exports this scene, so a PackedScene export would be a cycle.
@@ -399,10 +405,12 @@ func _on_player_died() -> void:
 	var region := _current_room.get_region() if _current_room != null else null
 	var region_key := SceneKey.of(region) if region != null else ""
 	var point := region.to_local(_player.global_position) if region != null else Vector2.ZERO
+	# Silence until the world is rebuilt: the duck closes when this Game is freed (LIFE-06).
+	Music.duck(DEATH_DUCK, DEATH_DUCK_DB, self)
 	if not _player.is_death_shown():
 		await _player.death_shown
 	await get_tree().create_timer(death_hold, false).timeout
-	await _fade.to_black()
+	await _fade.to_black(death_fade)
 	if region != null:
 		SaveSystem.record_death(region_key, point)
 	else:
