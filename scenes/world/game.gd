@@ -315,6 +315,10 @@ func _on_player_entered_door(door: Door) -> void:
 	var link := door.link
 	var door_point := door.global_position
 	var leaving_map := not _current_room.interior
+	# Rain or gale Ivo stands in as he leaves goes out with him (SONG-21).
+	var weather: Array[PulseCarry] = []
+	if _current_room.interior:
+		weather = PulseCarry.held_at(get_tree(), _player.global_position)
 	_is_transitioning = true
 	# Deferred: the press arrives inside Ivo's own physics step (gotchas/disabling-a-body-inside-its-own-physics-step-errors-its-move).
 	_player.set_deferred(&"process_mode", Node.PROCESS_MODE_DISABLED)
@@ -322,14 +326,16 @@ func _on_player_entered_door(door: Door) -> void:
 	await _land_in(room, _arrive_through.bind(room, link))
 	if leaving_map and room.interior:
 		_screens.set_map_anchor(door_point)
+	if not room.interior:
+		for carry: PulseCarry in weather:
+			carry.open_at(_player.global_position)
 	await _fade.to_clear()
 	_player.process_mode = Node.PROCESS_MODE_INHERIT
 	_is_transitioning = false
 
 ## Carries Ivo to `point` under a `colour` cover of `seconds` (0 cuts), with the door path's guards: a FlashbackDirector's
 ## way into the past and back (architecture/story-05-playable-flashbacks). A transparent `colour` covers nothing: the
-## hidden swap into a twin room.
-## Covers with `colour` over `seconds`, moves Ivo, holds the cover `hold` s, then clears over `clear` s.
+## hidden swap into a twin room. The cover holds `hold` s once Ivo lands, then clears over `clear` s.
 func travel(point: TravelPoint, colour: Color, seconds: float, hold: float = 0.0,
 		clear: float = Fade.DURATION) -> void:
 	if _is_transitioning or _dying or _lost or _current_room == null or point == null or point.room == null:

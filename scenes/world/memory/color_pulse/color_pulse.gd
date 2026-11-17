@@ -33,6 +33,26 @@ func _enter_tree() -> void:
 
 ## Starts the pulse; optional stats override its timeline and with_effect disables song actions.
 func start(song: Song, stats: PulseStats = null, with_effect: bool = true) -> void:
+	# Sampled once, excluding this pulse's own light, so the pulse is judged
+	# against the world it arrived in rather than against itself. Re-sampling
+	# every frame would make a pulse prop itself up.
+	var local_memory := 1.0
+	var field := MemoryField.find_in(self)
+	if field:
+		local_memory = field.sample(global_position, _source)
+	_begin(song, PulseTimeline.new(stats if stats != null else song.pulse_stats, local_memory), with_effect)
+
+## A copy of this pulse at `at`, at the same moment of its life, with its reach cut to `reach` px (PulseCarry).
+func carried(at: Vector2, reach: float) -> ColorPulse:
+	var copy := (load(scene_file_path) as PackedScene).instantiate() as ColorPulse
+	copy.performer = performer
+	copy.holds_in_pause = holds_in_pause
+	get_parent().add_child(copy)
+	copy.global_position = at
+	copy._begin(_song, _timeline.carried(reach), _acts)
+	return copy
+
+func _begin(song: Song, timeline: PulseTimeline, with_effect: bool) -> void:
 	_source.tint = song.tint()
 	_source.season = song.season()
 	_source.radius = 0.0
@@ -50,14 +70,7 @@ func start(song: Song, stats: PulseStats = null, with_effect: bool = true) -> vo
 		add_child(_particles)
 		if holds_in_pause:
 			_particles.process_mode = Node.PROCESS_MODE_PAUSABLE
-	# Sampled once, excluding this pulse's own light, so the pulse is judged
-	# against the world it arrived in rather than against itself. Re-sampling
-	# every frame would make a pulse prop itself up.
-	var local_memory := 1.0
-	var field := MemoryField.find_in(self)
-	if field:
-		local_memory = field.sample(global_position, _source)
-	_timeline = PulseTimeline.new(stats if stats != null else song.pulse_stats, local_memory)
+	_timeline = timeline
 	_apply_radius()
 	# Mounted last, so the effect's first frame already sees a started pulse. No rain or gale under a roof.
 	if song.pulse_effect and with_effect and not (song.weather and _indoors()):

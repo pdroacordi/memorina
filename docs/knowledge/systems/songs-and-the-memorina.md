@@ -35,6 +35,7 @@ source_files:
 
 
 - **No weather under a roof** (SONG-20, 2026-11-17). "não faz muito sentido chover, ventar, etc. dentro de lugares fechados, faz?" and the choice "Plays, no weather (Recommended)" (user, 2026-11-17). `Song.weather` (Chuva, Vendaval): in a `Room.interior` the song is played and its pulse opens and colours, but `ColorPulse` does not mount `pulse_effect` (no rain, no gale). Caves and covered rooms are not interiors and keep both. No indoor puzzle used them (the cellar's is Enraizar). `color_pulse_indoors_test`.
+- **Weather goes out through the door** (SONG-21, 2026-11-17). "se eu tocar a musica no lugar fechado, e sair para o lugar aberto (desde que dentro do raio de distancia de onde eu toquei), vai estar? seria legal se estivesse" and "ok" to the proposal (user, 2026-11-17). An interior lies apart from its house (y 12000 and below), so its pulse never reaches outside. When Ivo takes a door from an interior to a non-interior room, `Game._on_player_entered_door` asks `PulseCarry.held_at` for every acting weather pulse whose clean disc holds him at the press, and after landing `PulseCarry.open_at` opens a copy (`ColorPulse.carried`) at his arrival: same song, performer and `PulseTimeline` moment (`PulseTimeline.carried`, a Solstice stretch taken stays taken), reach cut to `max_radius - distance from its centre`. A pulse that ended behind the black opens nothing. The inside pulse stays where it was. Only weather songs go out; a non-acting pulse (a lesson's) never does. `pulse_carry_test`.
 
 ## Half songs (SONG-14, 2026-10-28)
 

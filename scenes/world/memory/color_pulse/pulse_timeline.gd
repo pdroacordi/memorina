@@ -58,6 +58,22 @@ func stretch(reach: float, duration: float) -> bool:
 func is_stretched() -> bool:
 	return _stretched
 
+## A copy at the same moment of its life with its reach scaled to `reach` px; a stretch already taken stays taken.
+func carried(reach: float) -> PulseTimeline:
+	var copy := PulseTimeline.new(PulseStats.new(), 1.0)
+	var scale := reach / _max_radius if _max_radius > 0.0 else 0.0
+	copy.phase = phase
+	copy._max_radius = reach
+	copy._attack_time = _attack_time
+	copy._sustain_time = _sustain_time
+	copy._contract_time = _contract_time
+	copy._elapsed = _elapsed
+	copy._stretched = _stretched
+	copy._grow_from = _grow_from * scale if _grow_from >= 0.0 else -1.0
+	copy._grow_start = _grow_start
+	copy._ring_fade_time = _ring_fade_time
+	return copy
+
 ## Maximum reach after any stretch.
 func max_radius() -> float:
 	return _max_radius

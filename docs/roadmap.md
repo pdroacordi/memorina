@@ -75,6 +75,7 @@ The feature list: what is built, what is next, and what is waiting on a decision
 | SONG-18 | Title theme: a solo flute through the four seasons' modes, at MENU layer | 06 | `[x]` | SONG-15 | 2026-11-03 | "Façamos todas as músicas do jogo: Menu, Regiões, Bosses" (user, 2026-11-02). `systems/music` (Runtime), `music/menu-theme`. |
 | SONG-19 | Guardian calls in each guardian's own flute: four note samples per guardian | 02 | `[x]` | SONG-17 | 2026-11-03 | "Cada guardião toca flautas também" (user, 2026-11-02); "Troca próxima (Recommended)" (user, 2026-11-03). `systems/music` (Runtime), `music/guardian-fights`. |
 | SONG-20 | No rain or gale under a roof | 03 §5 | `[x]` | | 2026-11-17 | "não faz muito sentido chover, ventar, etc. dentro de lugares fechados, faz?"; "Plays, no weather (Recommended)" (user, 2026-11-17). Built: `Song.weather` (Chuva, Vendaval); in an interior the pulse opens but mounts no rain or gale. `systems/songs-and-the-memorina` (No weather under a roof). |
+| SONG-21 | Weather goes out through the door | 03 §5 | `[x]` | SONG-20 | 2026-11-17 | "se eu tocar a musica no lugar fechado, e sair para o lugar aberto (desde que dentro do raio de distancia de onde eu toquei), vai estar? seria legal se estivesse"; "ok" (user, 2026-11-17). Built: `PulseCarry`; a Chuva or Vendaval pulse holding Ivo as he leaves an interior opens again at the outer door with its remaining time and reach. `systems/songs-and-the-memorina` (Weather goes out through the door); `playtests/2026-11-17-song21-weather-through-the-door`. |
 
 ## Puzzles
 

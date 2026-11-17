@@ -1,0 +1,194 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 16,
+ "locale": "en",
+ "player_position": [
+  18560,
+  5960
+ ],
+ "known_songs": [
+  5
+ ],
+ "steps": [
+  {
+   "t": 1.2,
+   "action": "move_right",
+   "pressed": true
+  },
+  {
+   "t": 1.45,
+   "action": "move_right",
+   "pressed": false
+  },
+  {
+   "t": 2.0,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 2.3,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "action": "draw_memorina",
+   "pressed": true
+  },
+  {
+   "t": 4.05,
+   "action": "draw_memorina",
+   "pressed": false
+  },
+  {
+   "t": 4.6,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 4.65,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 5.0,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 5.05,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 5.4,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 5.45,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 5.8,
+   "action": "note_left",
+   "pressed": true
+  },
+  {
+   "t": 5.85,
+   "action": "note_left",
+   "pressed": false
+  },
+  {
+   "t": 6.2,
+   "action": "note_up",
+   "pressed": true
+  },
+  {
+   "t": 6.25,
+   "action": "note_up",
+   "pressed": false
+  },
+  {
+   "t": 6.6,
+   "action": "note_right",
+   "pressed": true
+  },
+  {
+   "t": 6.65,
+   "action": "note_right",
+   "pressed": false
+  },
+  {
+   "t": 7.0,
+   "log": "w0"
+  },
+  {
+   "t": 7.5,
+   "log": "w1"
+  },
+  {
+   "t": 8.0,
+   "log": "w2"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "a2_played_inside"
+  },
+  {
+   "t": 8.5,
+   "log": "w3"
+  },
+  {
+   "t": 8.9,
+   "screenshot": "a2b_inside_pulse"
+  },
+  {
+   "t": 9.0,
+   "log": "w4"
+  },
+  {
+   "t": 9.2,
+   "action": "look_up",
+   "pressed": true
+  },
+  {
+   "t": 9.5,
+   "log": "w5"
+  },
+  {
+   "t": 9.5,
+   "action": "look_up",
+   "pressed": false
+  },
+  {
+   "t": 10.0,
+   "log": "w6"
+  },
+  {
+   "t": 10.5,
+   "log": "w7"
+  },
+  {
+   "t": 11.0,
+   "log": "w8"
+  },
+  {
+   "t": 11.4,
+   "screenshot": "a3_outside"
+  },
+  {
+   "t": 11.5,
+   "log": "w9"
+  },
+  {
+   "t": 12.0,
+   "log": "w10"
+  },
+  {
+   "t": 12.0,
+   "screenshot": "a4_outside"
+  },
+  {
+   "t": 12.5,
+   "log": "w11"
+  },
+  {
+   "t": 13.0,
+   "log": "w12"
+  },
+  {
+   "t": 13.0,
+   "screenshot": "a5_outside"
+  },
+  {
+   "t": 13.5,
+   "log": "w13"
+  },
+  {
+   "t": 15.0,
+   "screenshot": "a6_outside_late"
+  }
+ ]
+}
