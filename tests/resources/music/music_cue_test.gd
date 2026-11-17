@@ -103,3 +103,10 @@ func test_the_epilogue_plays_once_and_ends_on_the_flute_alone() -> void:
 	# His wrong D is the sketch's beat 4 after the first onset (morning_song beat 0.42 s), within AIVA's humanizing.
 	assert_float(EPILOGUE_WRONG_D - EPILOGUE_FLUTE_FIRST).is_equal_approx(4 * 60.0 / cue.bpm, 0.05)
 
+
+## SND-03: a trim only lowers, and every region theme sits at least 8 dB under its mastered level.
+func test_trims_only_lower_and_region_themes_sit_low() -> void:
+	for cue: MusicCue in _cues():
+		assert_float(cue.gain_db).is_less_equal(0.0)
+		if String(cue.id).begins_with("region_"):
+			assert_float(cue.gain_db).is_less_equal(-8.0)

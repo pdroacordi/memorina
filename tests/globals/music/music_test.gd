@@ -146,3 +146,16 @@ func test_a_muffle_low_passes_the_music_bus_only() -> void:
 	await await_millis(700)
 	assert_bool(AudioServer.is_bus_effect_enabled(bus, index)).is_false()
 	assert_float(AudioServer.get_bus_volume_db(bus)).is_equal(volume)
+
+## A cue's gain_db trims its deck; the bus volume stays Settings'.
+func test_a_cue_plays_at_its_trim() -> void:
+	var cue := _cue(&"trimmed")
+	cue.gain_db = -10.0
+	Music.request(cue, MusicRequest.Layer.REGION, _holder())
+	await get_tree().process_frame
+	await get_tree().process_frame
+	var trimmed: Array[float] = []
+	for player: Node in Music.get_children():
+		if (player as AudioStreamPlayer).playing:
+			trimmed.append((player as AudioStreamPlayer).volume_db)
+	assert_array(trimmed).contains([-10.0])

@@ -530,6 +530,10 @@ func just_double_jumped() -> bool:
 func is_memorina_drawn() -> bool:
 	return _memorina.is_drawn()
 
+## The Memorina is out or the guitar is in his hands.
+func is_playing_music() -> bool:
+	return _memorina.is_drawn() or _pose == DialogueBeat.Pose.GUITAR
+
 ## Leaning into a wind hard enough (the resolver's brace pose): walking into it, or standing facing it.
 func is_bracing() -> bool:
 	if not is_on_floor() or absf(carry().x) < brace_wind:

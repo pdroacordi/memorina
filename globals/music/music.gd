@@ -132,6 +132,7 @@ func _start(request: MusicRequest) -> Deck:
 	var deck := _free_deck()
 	deck.request = request
 	deck.ringing = false
+	deck.trim_db = request.cue.gain_db
 	_mix.reset(request.cue)
 	for stem: StringName in request.levels:
 		_mix.set_stem(stem, request.levels[stem], 0.0)
@@ -175,7 +176,7 @@ func _apply(deck: Deck) -> void:
 		for i: int in stems.size():
 			sync.set_sync_stream_volume(i, _mix.stem_db(stems[i]))
 	var gain_db := MusicMix.SILENT_DB if deck.gain <= SILENT_GAIN else linear_to_db(deck.gain)
-	deck.player.volume_db = gain_db + _mix.duck_db()
+	deck.player.volume_db = gain_db + deck.trim_db + _mix.duck_db()
 	if deck.gain <= SILENT_GAIN and deck.target <= 0.0 and not deck.ringing:
 		deck.player.stop()
 		deck.request = null
@@ -221,6 +222,8 @@ class Deck:
 	var rate: float = 0.0
 	## A released one-shot left to play to its end.
 	var ringing: bool = false
+	## The playing cue's `gain_db`.
+	var trim_db: float = 0.0
 
 	func step(delta: float) -> void:
 		gain = target if is_inf(rate) else move_toward(gain, target, rate * delta)

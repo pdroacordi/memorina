@@ -27,3 +27,4 @@ beats_per_bar = 4
 loops = true
 fade_in = 1.0
 fade_out = 1.0
+gain_db = -5.9

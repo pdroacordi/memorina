@@ -83,6 +83,7 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_sit_memorina.png" id="79_sit_memo"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_sit_memorina_raise.png" id="80_sit_memo_raise"]
 [ext_resource type="Script" path="res://scenes/characters/ivo/ivo_sounds.gd" id="93_ivosounds"]
+[ext_resource type="Script" path="res://scenes/characters/ivo/ivo_music_yield.gd" id="98_musicyield"]
 [ext_resource type="Script" path="res://scenes/audio/sfx_emitter.gd" id="94_sfxemit"]
 [ext_resource type="Script" path="res://scenes/characters/components/step_surface_probe.gd" id="95_stepprobe"]
 [ext_resource type="Resource" path="res://resources/audio/sfx/ivo/ivo_sounds.tres" id="96_ivosoundset"]
@@ -2991,6 +2992,9 @@ footfalls = ExtResource("97_footfalls")
 
 [node name="SfxEmitter" type="Node2D" parent="IvoSounds"]
 script = ExtResource("94_sfxemit")
+
+[node name="MusicYield" type="Node" parent="."]
+script = ExtResource("98_musicyield")
 
 [connection signal="facing_changed" from="." to="Hitbox" method="_on_character_facing_changed"]
 [connection signal="hard_landed" from="." to="DustEmitter" method="spawn_land_dust"]

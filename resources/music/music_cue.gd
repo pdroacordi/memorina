@@ -16,6 +16,8 @@ extends Resource
 @export var fade_in: float = 1.0
 ## Real seconds to fade out when the cue is left or released.
 @export var fade_out: float = 1.0
+## Trim that brings the cue to its layer's loudness target, dB (systems/music, Levels).
+@export var gain_db: float = 0.0
 
 
 ## The stem count matches the stream's sub-streams.
