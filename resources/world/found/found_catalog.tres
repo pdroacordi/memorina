@@ -18,8 +18,8 @@ song = ExtResource("5_bell_jar")
 
 [sub_resource type="Resource" id="piece_1"]
 script = ExtResource("2_piece")
-slot_id = &"lake_shore_far_niche"
-room = &"lake_shore"
+slot_id = &"lake_glacier_alcove"
+room = &"lake_glacier"
 texture = ExtResource("4_book")
 song = ExtResource("6_rain")
 
@@ -69,8 +69,8 @@ texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_9"]
 script = ExtResource("2_piece")
-slot_id = &"lake_glacier_alcove"
-room = &"lake_glacier"
+slot_id = &"lake_shore_far_niche"
+room = &"lake_shore"
 texture = ExtResource("3_letter")
 
 [sub_resource type="Resource" id="piece_10"]

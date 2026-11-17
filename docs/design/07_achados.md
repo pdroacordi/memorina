@@ -13,7 +13,7 @@ Regra da escolha: o caderno fica em outra região que a criatura ("Book in anoth
 | Canção | Criatura (CORE-04) | Caderno: lugar | Quem chega sem a canção |
 |---|---|---|---|
 | Redoma | Lago Gelado | `woods_hut_letter` (Cabana do lenhador, o mezanino) | kit `memorina` (nenhuma canção) |
-| Chuva | Bosque Florido | `lake_shore_far_niche` (o segredo da margem distante) | kit `lake` (sem Chuva) |
+| Chuva | Bosque Florido | `lake_glacier_alcove` (a geleira, no extremo leste do Lago; WORLD-47) | kit `lake` (sem Chuva) |
 | Vendaval | Pomar dos Ventos | `caldera_seesaw_ledge` (A Gangorra) | kit `both` (sem Vendaval) |
 | Solstício | Caldeira de Verão | `orchard_ridge_letter` (Crista do Vento, pela escalada do Penhasco) | kit `woods_orchards` (sem Solstício) |
 
@@ -22,11 +22,13 @@ Cada caderno é de um portador diferente, de outra era. O título nunca diz o no
 | Lugar | Título (en / pt) | Linha (en / pt) | Texto (en / pt) |
 |---|---|---|---|
 | `woods_hut_letter` | A winter hand's songbook / Caderno de uma mão de inverno | Songbook · Woodcutter's hut / Caderno · Cabana do lenhador | Only the end of it. Nothing gets in under it; anyone may leave. The start is sung by the frozen lake. / Só o fim. Nada entra debaixo dela; quem quiser, sai. O começo é cantado junto ao lago gelado. |
-| `lake_shore_far_niche` | An earthy hand's songbook / Caderno de uma mão de terra | Songbook · Far shore / Caderno · Margem distante | The end of the song that brings rain and lets it go. Its start is sung in the spring woods. / O fim da canção que traz a chuva e a deixa ir. O começo é cantado no bosque da primavera. |
+| `lake_glacier_alcove` | An earthy hand's songbook / Caderno de uma mão de terra | Songbook · The glacier / Caderno · Geleira | The end of the song that brings rain and lets it go. Its start is sung in the spring woods. / O fim da canção que traz a chuva e a deixa ir. O começo é cantado no bosque da primavera. |
 | `caldera_seesaw_ledge` | A restless hand's songbook / Caderno de uma mão inquieta | Songbook · The seesaw / Caderno · A gangorra | Turn your face and the wind goes with you. I never stood still long enough to learn the start. / Vire o rosto e o vento vai junto. Nunca parei quieto o bastante para aprender o começo. |
 | `orchard_ridge_letter` | An old hand's songbook / Caderno de uma mão antiga | Songbook · Wind ridge / Caderno · Crista do vento | For the longest day, when every other song needs more time. The start is kept where the sun stands still. / Para o dia mais longo, quando toda canção precisa de mais tempo. O começo fica onde o sol para. |
 
 **Troca (usuário, 2026-10-29, CORE-04): "Move the Redoma book (Recommended)" e "Approve the swap (Recommended)".** Com a primeira metade da Redoma no caracol do Lago, a Caldeira (que exige a Redoma inteira na cisterna) deixava de abrir para quem faz o Lago primeiro, porque o caderno estava atrás da parede de raízes (Enraizar). O caderno da Redoma foi para a cabana do lenhador, alcançada sem canção nenhuma, e a primeira carta de Bento foi para as Grutas de Raízes com texto novo.
+
+**Troca (usuário, 2026-11-17, WORLD-47):** "Foi o caderno da Chuva, perto do tordo [...] tinha que ser mais longe" e "The glacier (Recommended)". O caderno da Chuva e o bilhete da Gaivota trocaram de lugar: o caderno na geleira, o bilhete na margem distante.
 
 ## Os 13 achados
 
@@ -46,7 +48,7 @@ O barco naufragado na Praia Gelada e o que restou da tripulação.
 | Lugar | Título (en / pt) | Linha (en / pt) | Texto (en / pt) |
 |---|---|---|---|
 | `frost_wreck_letter` | Log of the Gull / Diário da Gaivota | Log · The wreck's hold / Diário · Porão do naufrágio | The sea stopped mid-wave and held us up like a hand. The crew went ashore. I stay, to remember the ship. / O mar parou no meio da onda e nos segurou como uma mão. A tripulação desceu. Eu fico, para lembrar do barco. |
-| `lake_glacier_alcove` | A note on the ice / Bilhete no gelo | Note · The glacier / Bilhete · Geleira | Whoever finds this: I sailed on the Gull. The sea is west. I keep walking east and don't know why. / Quem achar isto: naveguei na Gaivota. O mar fica a oeste. Sigo andando para leste e não sei por quê. |
+| `lake_shore_far_niche` | A note on the ice / Bilhete no gelo | Note · Far shore / Bilhete · Margem distante | Whoever finds this: I sailed on the Gull. The sea is west. I keep walking east and don't know why. / Quem achar isto: naveguei na Gaivota. O mar fica a oeste. Sigo andando para leste e não sei por quê. |
 | `lake_well_reeds` | A carved oar / Um remo entalhado | Carving · The well / Entalhe · O poço | GULL, cut deep into the blade. Under it, smaller and newer: what is a gull? / GAIVOTA, talhado fundo na pá. Embaixo, menor e mais novo: o que é uma gaivota? |
 
 ### Fio C — Os esboços de Clara (3)

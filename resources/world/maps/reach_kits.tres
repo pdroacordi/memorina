@@ -82,9 +82,9 @@ note = "The snail teaches Redoma's first half (CORE-04); rides along with the la
 [sub_resource type="Resource" id="half_rain_second"]
 script = ExtResource("3_milestone")
 id = &"half_rain_second"
-room = &"lake_shore"
+room = &"lake_glacier"
 second_halves = Array[int]([7])
-note = "Chuva's songbook (lake_shore_far_niche, STORY-06); rides along with the lake kit."
+note = "Chuva's songbook (lake_glacier_alcove, WORLD-47; was lake_shore_far_niche, STORY-06); rides along with the lake kit."
 
 [sub_resource type="Resource" id="half_gale_first"]
 script = ExtResource("3_milestone")

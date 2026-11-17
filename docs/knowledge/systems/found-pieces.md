@@ -6,7 +6,7 @@ status: active
 tags: [story-06, found, collectibles, songbook, reward-slots, pickups, notebook, save, i18n]
 related: [architecture/found-pieces, architecture/reward-slots-reserve-their-place-in-the-room-text, architecture/half-songs, systems/pickups, systems/notebook, systems/songs-and-the-memorina, systems/life-benches-death, systems/rooms]
 created: 2026-10-28
-updated: 2026-10-29
+updated: 2026-11-17
 source_files:
   - resources/world/found/found_piece.gd
   - resources/world/found/found_catalog.gd
@@ -67,6 +67,8 @@ User decisions (2026-10-28): taking a letter, "Quill only (Recommended)": the pi
 ## Reachability
 
 The kits model the halves (CORE-04): each songbook is a `second_halves` milestone in its room, riding along with a kit's guardian milestone; Redoma's book (`woods_hut_letter`, room `woods_hut`) needs no song, so it rides with the memorina kit and every later kit holds it. The guardians' milestones no longer give the second songs. Redoma's book was moved from `woods_root_caves_alcove` to `woods_hut_letter` (and Bento's letter the other way) because, behind the woods root wall, it left a Lake-first kit without Redoma and so outside the Caldera (user, 2026-10-29: "Move the Redoma book (Recommended)", "Approve the swap (Recommended)"; `architecture/teaching-creatures`, "As built"). `room_kit_test.test_no_songbook_needs_its_own_song` pins design 07's rule; `test_the_memorina_kit_reaches_the_redoma_book` pins the move.
+
+**The Chuva book moved to the glacier** (WORLD-47, 2026-11-17). "achei o complemento da música (em caderno) que o passarinho ensinou. Está muito perto do próprio pássaro. tinha que ser mais longe. Recompensar a exploração do jogador" (user, 2026-11-16); "Foi o caderno da Chuva, perto do tordo" and the choice "The glacier (Recommended)" (user, 2026-11-17). Chuva's songbook and the Gull note swapped slots: the book lies in `lake_glacier_alcove` (the lake's far east end, about 8400 px from the thrush; was `lake_shore_far_niche`, about 2100 px), the note on the far shore. The catalog entries, the notebook entries' `fact_id`s, the two DETAIL lines ("Songbook · The glacier", "Note · Far shore") and the `half_rain_second` milestone (room `lake_glacier`, still in the lake kit, so reached without Chuva) moved with them.
 
 ## Completing a teacher's half
 
