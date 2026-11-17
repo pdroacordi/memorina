@@ -3,6 +3,8 @@
 ; (row 9) and the lighthouse (design 04 section 3.3). No gate: base kit, no earth.
 ; A [secret] niche in the crag over the bench cave (cols 9-12, rows 38-39, cracked at col 12) holds a reward slot (`$`, WORLD-35);
 ; one jump from the block east of the cave (row 42).
+; Each ledge is a rock buttress stepping back to its wall (2 rows under it), and the floor east of the block is rock
+; level with it (WORLD-45, "não apenas várias plataformas flutuantes", user, 2026-11-16).
 ; Row 0 closed: a drawn rock ceiling over a room inside rock (WORLD-34, "Drawn rock ceiling, all five (Recommended)", user, 2026-10-14).
 
 [room]
@@ -23,38 +25,38 @@ S......................SSSSSSSSSSSSSSSSS
 S......................SSSSSSSSSSSSSSSSS
 S.............................SSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSSSSSSS............SSSSSSSSSS
+SSSSSSSSSSSSSSS...............SSSSSSSSSS
 SSSSSSSSSSSSS..........SSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.............SSSSSSSSSSSSSS
+SSSSSSSSSSSSS...............SSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSSSSSSS............SSSSSSSSSS
+SSSSSSSSSSSSSSS...............SSSSSSSSSS
 SSSSSSSSSSSSS..........SSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.............SSSSSSSSSSSSSS
+SSSSSSSSSSSSS...............SSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSSSSSSS............SSSSSSSSSS
+SSSSSSSSSSSSSSS...............SSSSSSSSSS
 SSSSSSSSSSSSS..........SSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.............SSSSSSSSSSSSSS
+SSSSSSSSSSSSS...............SSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSSSSSSS............SSSSSSSSSS
+SSSSSSSSSSSSSSS...............SSSSSSSSSS
 SSSSSSSSSSSSS..........SSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSS.............SSSSSSSSSSSSSS
+SSSSSSSSSSSSS...............SSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSS.........SSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
+SSSSSSSSSSSSSSSSSS............SSSSSSSSSS
 SSSSSSSSS.....................SSSSSSSSSS
 SSSSSSSSS.$............SSSSSSSSSSSSSSSSS
-SSSSSSSSSSSSS.................SSSSSSSSSS
-..............................SSSSSSSSSS
-...............SSSSSS.........SSSSSSSSSS
-...............SSSSSS.........SSSSSSSSSS
-......R........SSSSSS.........SSSSSSSSSS
+SSSSSSSSSSSSS.............SSSSSSSSSSSSSS
+............................SSSSSSSSSSSS
+...............SSSSSSSSSSSSSSSSSSSSSSSSS
+...............SSSSSSSSSSSSSSSSSSSSSSSSS
+......R........SSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
