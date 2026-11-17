@@ -1,7 +1,8 @@
 ; village_garden.room - the garden at the foot of the waterfall that feeds the village river (design drafts/camada_pessoal.md
 ; section 1; architecture/story-05-playable-flashbacks, "The garden rebuilt"). Entered from lake_waterfall_path's east stub
 ; (rows 16-19, floor row 20). A grass bank one row deep (row 20) over the lake (`w`, rows 21-23), which the bank and the
-; cliff's stone (cols 36-39, rows 0-20) hold Ivo above: nobody falls in. The cliff and the fall are drawn over that stone
+; cliff's stone (cols 36-39 rows 0-20, and 34-35 rows 4-20 where the drawn cliff starts, WORLD-46) hold Ivo above:
+; nobody falls in. The cliff and the fall are drawn over that stone
 ; (Contents/Falls). Left to right the dressing marks the old tree and its swing, the flower beds, the flat stone, the
 ; lantern and the waterfall (Contents/Marks). No bench, no creatures. Its well is GardenWell in home_village.tscn.
 ; Twin rule: the grid and water of garden_past.room equal these.
@@ -15,23 +16,23 @@ tileset = village
 ....................................SSSS
 ....................................SSSS
 ....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-....................................SSSS
-####################################SSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+..................................SSSSSS
+##################################SSSSSS
 .......................................S
 .......................................S
 .......................................S

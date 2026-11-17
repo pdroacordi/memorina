@@ -372,6 +372,9 @@ z_index = 10
 [node name="FallsCliffHigh" parent="Falls" instance=ExtResource("p_cliff")]
 position = Vector2(1280, 410)
 
+[node name="FallsCliffMid" parent="Falls" instance=ExtResource("p_cliff")]
+position = Vector2(1280, 540)
+
 [node name="FallsCliff" parent="Falls" instance=ExtResource("p_cliff")]
 position = Vector2(1280, 768)
 

@@ -1,0 +1,52 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 6.0,
+ "locale": "en",
+ "owned_items": [
+  0
+ ],
+ "player_position": [
+  4180,
+  -530
+ ],
+ "steps": [
+  {
+   "t": 0.3,
+   "screenshot": "00_bank"
+  },
+  {
+   "t": 0.35,
+   "key": "Right",
+   "pressed": true
+  },
+  {
+   "t": 2.0,
+   "screenshot": "01_against_the_cliff"
+  },
+  {
+   "t": 2.05,
+   "log": "stopped"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "03_landed"
+  },
+  {
+   "t": 3.65,
+   "key": "Right",
+   "pressed": false
+  },
+  {
+   "t": 3.7,
+   "log": "landed"
+  },
+  {
+   "t": 4.0,
+   "zoom": 0.5
+  },
+  {
+   "t": 4.4,
+   "screenshot": "04_whole_cliff"
+  }
+ ]
+}
