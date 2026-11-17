@@ -211,6 +211,7 @@ else in the code knows what a character means.
 | `R` | `[grid]` | entity | - | - | bench | A bench, standing on this cell: down sits Ivo on it, which heals him, brings the creatures back and saves; a death returns him here. Full shelter from the wind. Needs a bench_id unique across every map. |
 | `E` | `[grid]` | entity | - | - | door | A building's door, standing on this cell, two cells tall: up takes Ivo to the door with the same link in the room to_room (that room's scene file name, same region). Each link joins exactly two doors. Optional requires (a SaveFact .tres path) seals it until the save holds that fact; arrive_facing (1 right, -1 left) turns Ivo on arrival here. |
 | `X` | `[grid]` | entity | - | - | gate | A barred gate, standing on this cell, three cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Walked through, not a door: the village fences that open once Ivo owns the Memorina (design 04 section 2). |
+| `m` | `[grid]` | entity | - | - | gate | An unseen wall, standing on this cell, nine cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Pair it with an auto Talkable that says why Ivo turns back: the Old Bridge before he has the sword (STORY-33). |
 | `k` | `[secret]` | secret | - | stone | - | [secret] only: a secret cell drawn as cracked stone until Ivo steps in - the hint that the wall is false. |
 | `d` | `[grid]` | entity | - | - | - | A faint draft of dust at a secret's mouth (facing 1 right, -1 left, 0 up); it freezes in the grey. |
 | `@` | `[grid]` | entity | - | - | stair | A helix stair the tower turns around: Ivo rides straight up its axis while the view turns the stair, wall and slits by his progress. Place it on the bottom floor, its cell's bottom-left corner the axis. shape is a HelixStairShape .tres path, look a HelixLook; hand 1 climbs with right held, -1 with left. The head needs a plank gallery across the shell (one-way, so Ivo rises through it), the column up the axis must be clear of solid ground, and the shell's inner faces stand at the wall's silhouette (room_files_test). |
@@ -520,6 +521,16 @@ Scene `res://scenes/world/interactables/fact_barrier/fact_barrier.tscn`, anchore
 | `requires` | SaveFact | **required** |
 | `art` | Texture2D | `null` |
 
+#### `m` - FactWall
+
+Scene `res://scenes/world/interactables/fact_barrier/fact_wall.tscn`, anchored at its cell's bottom centre (standing on the cell below). An unseen wall, standing on this cell, nine cells tall: solid until the save holds requires (a SaveFact .tres path), then gone. Pair it with an auto Talkable that says why Ivo turns back: the Old Bridge before he has the sword (STORY-33).
+
+| Param | Type | Default |
+|---|---|---|
+| `id` | String | none - names the node so other entities can link to it |
+| `requires` | SaveFact | **required** |
+| `art` | Texture2D | `null` |
+
 #### `d` - Draft
 
 Scene `res://scenes/world/environment/draft/draft.tscn`, anchored at its cell's centre. A faint draft of dust at a secret's mouth (facing 1 right, -1 left, 0 up); it freezes in the grey.
@@ -579,6 +590,7 @@ Scene `res://scenes/world/interactables/talkable/talkable.tscn`, anchored at its
 | `id` | String | none - names the node so other entities can link to it |
 | `talk` | DialogueSet | **required** |
 | `auto_start` | bool | `false` |
+| `up_starts` | bool | `true` |
 | `presence` | float | `0.0` |
 | `reach_west` | float | `48.0` |
 | `reach_east` | float | `48.0` |

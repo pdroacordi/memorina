@@ -758,6 +758,15 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     `bugs/ivo-steps-and-soft-landings-are-silent-on-room-ground`. Use lake_shore (100, -1650) or threshold_bridge.
   - Ivo's `WALK` clip only plays in a scripted stroll; a partial stick tilt is still `run`.
 
+- **Learned 2026-11-17 (STORY-33 bridge turn-back)**:
+  - **A `"jump"` action step never closes a dialogue line.** The box's continue is the `ContinueArea` GUI button
+    (`focus=ContinueArea` in `log`), and an `InputEventAction` does not reach GUI. Use `"key": "Z"`. A draft that used
+    `jump` left the box open (`blocked=true`) for the rest of the run, and every later step was silently swallowed.
+  - An auto `Talkable` re-arms whenever Ivo's body leaves and re-enters its zone, including by a jump (zones are usually
+    2 cells tall). Close each reopened box before the next move.
+  - Threshold positions: fields east floor y 288 from x ~6282 (a one-cell step up west of it). The bridge's turn-back
+    zone is x 6394..6528 (6 cells tall, no Up), and the unseen wall stands on the first step, its face on the step's at x 6528 (floor y 256).
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

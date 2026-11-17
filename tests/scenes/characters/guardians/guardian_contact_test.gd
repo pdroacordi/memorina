@@ -13,6 +13,7 @@ var _guardian: Guardian
 
 func before_test() -> void:
 	SaveSystem.begin("", true)
+	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, true)
 	var holder := auto_free(Node2D.new()) as Node2D
 	add_child(holder)
 	_guardian = FROST.instantiate() as Guardian

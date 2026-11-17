@@ -147,6 +147,7 @@ func _ready() -> void:
 	_ai.attack_finished.connect(_on_attack_finished)
 	_call.note_sounded.connect(_on_call_note_sounded)
 	_call.finished.connect(_on_call_finished)
+	_arena_trigger.stays_open = true
 	_arena_trigger.player_entered.connect(_on_player_entered)
 	_shield_rest_radius = _shield.radius
 	_sprite_rest = _sprite.position
@@ -319,6 +320,12 @@ func _on_player_entered() -> void:
 	_player = get_tree().get_first_node_in_group(Player.GROUP) as Player
 	if _player == null:
 		return
+	# A swordless Ivo stays free to walk out: no fight, so no FightWall closes, and the trigger stays open for his
+	# return (STORY-33).
+	if not _player.is_armed():
+		_player = null
+		return
+	_arena_trigger.close()
 	_player.call_answered.connect(_on_call_answered)
 	if _finale != null:
 		_player.call_mixed.connect(_on_call_mixed)

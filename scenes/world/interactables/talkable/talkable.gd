@@ -13,6 +13,8 @@ const REACH := 48.0
 @export var talk: DialogueSet
 ## Starts its pending dialogue on its own when Ivo comes in reach, once per visit.
 @export var auto_start: bool = false
+## Up starts it and its prompt shows; false for an auto talk with no one standing there (STORY-33's turn-back).
+@export var up_starts: bool = true
 ## Region baseline (0..1) at and above which it is present, like its villager's RegionPresence; 0 is always.
 @export_range(0.0, 1.0) var presence: float = 0.0
 ## Px the zone reaches west of the speaker; less beside a door, so the door's zone stays a body width away.
@@ -83,9 +85,9 @@ func speaker_position() -> Vector2:
 func current(data: PlayerData) -> Dialogue:
 	return talk.current(data) if talk != null else null
 
-## Present, with a current dialogue under the live save.
+## Up starts it: present, `up_starts`, with a current dialogue under the live save.
 func has_talk() -> bool:
-	return is_visible_in_tree() and current(SaveSystem.player_data) != null
+	return up_starts and is_visible_in_tree() and current(SaveSystem.player_data) != null
 
 ## An auto start is armed, its delay has passed and a dialogue is pending.
 func auto_ready() -> bool:

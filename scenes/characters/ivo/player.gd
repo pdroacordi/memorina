@@ -1602,6 +1602,10 @@ func reaches(area: Area2D) -> bool:
 func is_talking() -> bool:
 	return _in_talk
 
+## Whether he owns the sword; a guardian's fight never begins without it (STORY-33).
+func is_armed() -> bool:
+	return _has_item(Enums.PlayerItem.SWORD)
+
 ## Puts him at `door` after a trip through its partner, facing its
 ## `arrive_facing`, with no press of the trip still pending.
 func arrive_at(door: Door) -> void:
@@ -1743,7 +1747,7 @@ func _attack_stats_for(context: StringName) -> AttackStats:
 
 ## The sword swings only when owned and outside a calm room (STORY-14).
 func _can_use_sword() -> bool:
-	return _has_item(Enums.PlayerItem.SWORD) and not calm
+	return is_armed() and not calm
 
 #############################################
 ##  A B I L I T I E S                      ##

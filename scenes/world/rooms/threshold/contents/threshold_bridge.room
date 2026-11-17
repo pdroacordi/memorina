@@ -7,6 +7,9 @@
 ; (Recommended)", user, 2026-10-15). threshold_icefall_foot leaves rows 9-11 open over the east deck, so its jump is
 ; not capped. The ravine's west wall is a [secret] (cols 10-12, rows 8-11, cracked at 12,10, a draft at 13,10) that
 ; drops through row 11 into threshold_ravine_cave; [back] earth lines it.
+; STORY-33: without the sword an unseen wall (m, 4,7) stands on the first step, its face on the step's, so Ivo stops
+; against rock; his auto talk (t, 0,8; 6 cells tall so a hop stays in it, no Up) says why and turns him back west.
+; Both are gone once he owns it (the farmhouse in threshold_fields).
 
 [room]
 origin = 0, 0
@@ -20,8 +23,8 @@ tileset = threshold
 #..............................B.......#
 ..........SSSSSSS......SSSSSSS####......
 ........##SSS..............SSS#####.....
-......#######........n.....#########....
-....######........SSSSS....##########...
+....m.#######........n.....#########....
+t...######........SSSSS....##########...
 ##########........SSSSS....#############
 ##########...d....SSSSS....#############
 ##########...###########################
@@ -57,3 +60,5 @@ tileset = threshold
 [entities]
 21,7 = {"width_cells": 6, "height_cells": 6}
 31,4 = {"save_id": "threshold_bridge_boar"}
+4,7 = {"requires": "res://resources/save_facts/owns_sword.tres"}
+0,8 = {"talk": "res://resources/dialogue/story/sword_turn_back.tres", "auto_start": true, "up_starts": false, "speaker_offset": -22.0, "reach_west": 0.0, "reach_east": 134.0, "height_cells": 6}

@@ -17,6 +17,7 @@ var _wall: FightWall
 
 func before_test() -> void:
 	SaveSystem.begin("", true)
+	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, true)
 	_holder = auto_free(Node2D.new()) as Node2D
 	add_child(_holder)
 	var floor_body := StaticBody2D.new()
@@ -65,6 +66,28 @@ func test_it_waits_for_ivo_to_clear_it_then_holds_until_the_guardian_is_restored
 	await _frames(4)
 	assert_bool(_wall.is_closed()).is_false()
 	assert_bool((_wall.get_node(^"CollisionShape2D") as CollisionShape2D).disabled).is_true()
+
+## STORY-33: a swordless Ivo starts no fight, so the wall never shuts him in.
+func test_without_the_sword_no_fight_begins_and_the_wall_stays_open() -> void:
+	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, false)
+	var guardian := FROST.instantiate() as Guardian
+	guardian.position = Vector2(400, FLOOR_Y)
+	_holder.add_child(guardian)
+	_ivo.teleport(Vector2(-1900, FLOOR_Y - 30.0))
+	await _frames(4)
+	_ivo.teleport(Vector2(200, FLOOR_Y - 30.0))
+	await _frames(6)
+	assert_int(guardian.phase()).override_failure_message("a swordless Ivo started a fight").is_equal(
+			GuardianFight.Phase.DORMANT)
+	assert_bool(_wall.is_closed()).is_false()
+	# Out and back with the sword: the refused entry left the arena trigger open.
+	_ivo.teleport(Vector2(-1900, FLOOR_Y - 30.0))
+	await _frames(4)
+	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, true)
+	_ivo.teleport(Vector2(200, FLOOR_Y - 30.0))
+	await _frames(6)
+	assert_int(guardian.phase()).override_failure_message("no fight on his armed return").is_equal(
+			GuardianFight.Phase.PRESSURE)
 
 func test_its_body_and_curtain_are_its_cells_tall() -> void:
 	var tall := WALL.instantiate() as FightWall

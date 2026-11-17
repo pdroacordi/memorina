@@ -6,6 +6,8 @@ extends Resource
 @export var id: StringName = &""
 ## Skipped once heard.
 @export var once: bool = false
+## An auto start says it on every approach, heard or not (STORY-33's turn-back).
+@export var repeats: bool = false
 @export var when: Array[SaveFact] = []
 @export var unless: Array[SaveFact] = []
 @export var lines: Array[DialogueLine] = []

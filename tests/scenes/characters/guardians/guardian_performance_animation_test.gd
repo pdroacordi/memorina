@@ -24,6 +24,7 @@ var _seen: Array[StringName] = []
 
 func before_test() -> void:
 	SaveSystem.begin("", true)
+	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, true)
 	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 	_seen.clear()
 	_holder = auto_free(Node2D.new()) as Node2D

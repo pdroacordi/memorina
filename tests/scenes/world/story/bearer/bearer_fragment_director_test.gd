@@ -33,6 +33,7 @@ var _refusals: int = 0
 
 func before_test() -> void:
 	SaveSystem.begin("", true)
+	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, true)
 	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 	SaveSystem.restore_guardian(Enums.Guardian.FROST)
 	_travels.clear()

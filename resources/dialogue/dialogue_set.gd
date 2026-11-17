@@ -12,9 +12,9 @@ func current(data: PlayerData) -> Dialogue:
 			return dialogue
 	return null
 
-## `current` while it is not yet heard: what an auto start says.
+## `current` while it is not yet heard, or always when it `repeats`: what an auto start says.
 func pending(data: PlayerData) -> Dialogue:
 	var dialogue := current(data)
-	if dialogue == null or data.dialogues_heard.has(dialogue.id):
+	if dialogue == null or (not dialogue.repeats and data.dialogues_heard.has(dialogue.id)):
 		return null
 	return dialogue

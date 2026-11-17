@@ -16,6 +16,7 @@ var _ivo: Player
 
 func before_test() -> void:
 	SaveSystem.begin("", true)
+	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, true)
 	_holder = auto_free(Node2D.new()) as Node2D
 	add_child(_holder)
 	var floor_body := StaticBody2D.new()

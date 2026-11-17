@@ -159,6 +159,11 @@ Ao pegar a espada:
 *Ivo: …Sorry. I'll need this.*
 → Aviso: **Espada**.
 
+Sem a espada, na beira da Ponte Velha (STORY-33; "Ivo volta na ponte (Recommended)", usuário, 2026-11-17):
+**Ivo:** Assim não.
+*Ivo: Not like this.*
+(Ele dá meia-volta. Uma parede que não se vê fica ali até ele ter a espada; a fala volta a cada vez que ele chega.)
+
 ---
 
 ## Ato 3: o farol

@@ -22,6 +22,7 @@ var _finale: GuardianFinale
 
 func before_test() -> void:
 	SaveSystem.begin("", true)
+	SaveSystem.set_item_owned(Enums.PlayerItem.SWORD, true)
 	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)
 
 func after_test() -> void:
