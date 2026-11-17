@@ -956,9 +956,10 @@ func _tick_pending_performance(delta: float) -> void:
 		return
 	_performing_lesson = lesson
 	if lesson:
-		_performance.play(song.track, song.cues())
+		_performance.play(song.track, song.cues(), 0.0, 0.0, song.track_gain_db)
 	else:
-		_performance.play(song.performance_stream(), song.cues(), song.excerpt_duration, song.excerpt_fade)
+		_performance.play(song.performance_stream(), song.cues(), song.excerpt_duration, song.excerpt_fade,
+				song.performance_gain_db())
 
 ## Thaw before the song is played, so the pulse is born into a moving world.
 func _on_performance_finished() -> void:

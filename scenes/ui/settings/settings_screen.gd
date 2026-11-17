@@ -47,6 +47,8 @@ var _reset_rows: Dictionary[KeyBindings.Device, Button] = {}
 var _capturing: BindingRow
 var _previews: Dictionary[StringName, AudioStreamPlayer] = {}
 var _music_tween: Tween
+## The music sample's authored volume, the title cue's trim; each preview starts from it.
+var _music_preview_db: float = 0.0
 
 @onready var _sheet: Control = %Sheet
 @onready var _status: Label = %Status
@@ -64,6 +66,7 @@ func _ready() -> void:
 		AudioBuses.MASTER: %MasterPreview, AudioBuses.MUSIC: %MusicPreview,
 		AudioBuses.NOTES: %NotesPreview, AudioBuses.SFX: %SfxPreview,
 	}
+	_music_preview_db = _previews[AudioBuses.MUSIC].volume_db
 	for page: Page in _tabs:
 		_tabs[page].focus_entered.connect(_show_page.bind(page))
 		# After MenuEntry's own handler, which drops the Selected look.
@@ -338,7 +341,7 @@ func _preview(bus: StringName) -> void:
 			return
 		if _music_tween != null:
 			_music_tween.kill()
-		player.volume_db = 0.0
+		player.volume_db = _music_preview_db
 		player.play()
 		_music_tween = create_tween().set_ignore_time_scale(true)
 		_music_tween.tween_interval(MUSIC_PREVIEW - MUSIC_PREVIEW_FADE)

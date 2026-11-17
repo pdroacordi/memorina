@@ -41,6 +41,12 @@ func test_a_world_cue_is_a_one_shot_of_at_most_a_second() -> void:
 			assert_float(cue.length()).override_failure_message("%s lasts %.3f s" % [path, cue.length()]) \
 					.is_less_equal(WORLD_ONE_SHOT + SLACK)
 
+## Files carry the loudness (tools/audio/cut_sfx.py); a cue only lowers it, so no cue can clip (systems/sound-effects).
+func test_no_cue_boosts() -> void:
+	for path: String in _cues(SFX_DIR):
+		var cue := load(path) as SoundCue
+		assert_float(cue.volume_db).override_failure_message("%s at %+.1f dB" % [path, cue.volume_db]).is_less_equal(0.0)
+
 ## The lesson's freeze pauses Ivo's emitter, so the songbook ends inside the lead-in.
 func test_the_songbook_ends_inside_the_lesson_lead_in() -> void:
 	var ivo := IVO.instantiate() as Player

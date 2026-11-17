@@ -32,9 +32,10 @@ func _process(_delta: float) -> void:
 	if _stop_at > 0.0 and _fade_tween == null and position >= _stop_at - _fade:
 		_start_fade()
 
-## Starts `stream` from the top. `stop_at` > 0 cuts it at that many seconds,
+## Starts `stream` from the top, `gain_db` over the authored volume. `stop_at` > 0 cuts it at that many seconds,
 ## fading over the last `fade` seconds; 0 plays it whole.
-func play(stream: AudioStream, cues: PackedFloat32Array, stop_at: float = 0.0, fade: float = 0.0) -> void:
+func play(stream: AudioStream, cues: PackedFloat32Array, stop_at: float = 0.0, fade: float = 0.0,
+		gain_db: float = 0.0) -> void:
 	stop()
 	# Report completion for an empty stream so callers can thaw the world.
 	if stream == null:
@@ -44,6 +45,7 @@ func play(stream: AudioStream, cues: PackedFloat32Array, stop_at: float = 0.0, f
 	_stop_at = stop_at
 	_fade = minf(fade, stop_at) if stop_at > 0.0 else 0.0
 	_player.stream = stream
+	_player.volume_db = _base_volume_db + gain_db
 	_player.play()
 	set_process(true)
 	started.emit()

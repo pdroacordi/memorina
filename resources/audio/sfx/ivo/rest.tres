@@ -11,5 +11,5 @@ stream_0/stream = ExtResource("2_jf72w")
 [resource]
 script = ExtResource("1_6pxum")
 stream = SubResource("AudioStreamRandomizer_fbhxe")
-volume_db = -3.0
+volume_db = -5
 world = true

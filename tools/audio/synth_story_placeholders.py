@@ -15,7 +15,7 @@ python -I tools/audio/synth_story_placeholders.py [out_dir] [name ...]
     waterfall_night.wav  (STORY-05) flashback 4's garden at night: a small waterfall into a pool, a seamless 6 s loop
         (written without the room; its import loops it forward).
     The morning song is E G E D | C D E C, beats 1 1 1.5 0.5 1 1 1 2.5 at 0.42 s ("Approve melody (Recommended)",
-    user, 2026-10-15). A real recording replaces a file of the same name.
+    user, 2026-10-15). A real recording replaces a file of the same name, leveled to its LEVELS entry.
 """
 import os
 import sys
@@ -24,10 +24,21 @@ import wave
 import numpy as np
 from scipy import signal
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from loudness import momentary_max  # noqa: E402
+
 SR = 44100
 PITCH = {"c": 261.63, "d": 293.66, "e": 329.63, "g": 392.00}
 MELODY = ["e", "g", "e", "d", "c", "d", "e", "c"]
 BEATS = [1.0, 1.0, 1.5, 0.5, 1.0, 1.0, 1.0, 2.5]
+# Each file's loudest momentary loudness, LUFS: the guitar beside the Memorina's notes (-26..-34), the hums a little
+# over them, the room sounds under the region music (systems/sound-effects, Levels).
+LEVELS = {
+    "guitar_c": -28.0, "guitar_d": -28.0, "guitar_e": -28.0, "guitar_g": -28.0, "guitar_muted": -32.0,
+    "wife_hum_opening": -26.0, "daughter_hum_four": -26.0, "daughter_hum_five": -26.0, "memorina_flat": -28.0,
+    "morning_room": -32.0, "gate_bolt": -27.0, "rope_creak": -29.0, "waterfall_night": -30.0,
+}
+PEAK_CAP = 10 ** (-1.0 / 20)  # no file's peak passes -1 dBFS
 STEP = 0.42
 
 
@@ -221,9 +232,15 @@ def waterfall_night(dur: float = 6.0) -> np.ndarray:
     return y
 
 
-def write_loop(path: str, sound: np.ndarray) -> None:
-    """Normalized, 16-bit mono, with no room tail, so the last sample runs into the first."""
-    sound = sound / np.max(np.abs(sound)) * 0.6
+def leveled(sound: np.ndarray, lufs: float) -> np.ndarray:
+    """`sound` at `lufs` loudest momentary loudness, lower if its peak would pass PEAK_CAP."""
+    gain = 10 ** ((lufs - momentary_max(sound, SR)) / 20)
+    return sound * min(gain, PEAK_CAP / np.max(np.abs(sound)))
+
+
+def write_loop(path: str, sound: np.ndarray, lufs: float) -> None:
+    """Leveled, 16-bit mono, with no room tail, so the last sample runs into the first."""
+    sound = leveled(sound, lufs)
     with wave.open(path, "wb") as file:
         file.setnchannels(1)
         file.setsampwidth(2)
@@ -232,15 +249,15 @@ def write_loop(path: str, sound: np.ndarray) -> None:
     print(path)
 
 
-def write(path: str, sound: np.ndarray) -> None:
-    """Normalized, through a small room, 16-bit mono."""
+def write(path: str, sound: np.ndarray, lufs: float) -> None:
+    """Leveled, through a small room, 16-bit mono."""
     sound = sound / np.max(np.abs(sound))
     room = np.zeros(len(sound) + int(0.3 * SR))
     room[:len(sound)] += sound
     for delay, gain in [(0.031, 0.25), (0.047, 0.2), (0.073, 0.15), (0.11, 0.1), (0.17, 0.06)]:
         k = int(delay * SR)
         room[k:k + len(sound)] += gain * sound
-    room = room / np.max(np.abs(room)) * 0.8
+    room = leveled(room, lufs)
     with wave.open(path, "wb") as file:
         file.setnchannels(1)
         file.setsampwidth(2)
@@ -266,7 +283,7 @@ def main(out_dir: str, names: list[str]) -> None:
     loops = {"waterfall_night"}
     for name, make in sounds.items():
         if not names or name in names:
-            (write_loop if name in loops else write)(os.path.join(out_dir, name + ".wav"), make())
+            (write_loop if name in loops else write)(os.path.join(out_dir, name + ".wav"), make(), LEVELS[name])
 
 
 if __name__ == "__main__":

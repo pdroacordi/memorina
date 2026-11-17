@@ -13,6 +13,18 @@ func test_the_shipped_catalog_loads() -> void:
 func test_the_shipped_catalog_is_valid() -> void:
 	_catalog().validate()
 
+## A song's trims only lower it (systems/music, Levels); a world performance takes the trim of what it plays.
+func test_song_trims_only_lower_and_follow_the_played_stream() -> void:
+	for song: Song in _catalog().songs:
+		assert_float(song.track_gain_db).is_less_equal(0.0)
+		assert_float(song.excerpt_gain_db).is_less_equal(0.0)
+	var song := Song.new()
+	song.track_gain_db = -2.0
+	song.excerpt_gain_db = -5.0
+	assert_float(song.performance_gain_db()).is_equal(-2.0)
+	song.excerpt = AudioStreamWAV.new()
+	assert_float(song.performance_gain_db()).is_equal(-5.0)
+
 func test_every_song_in_the_enum_is_present() -> void:
 	var catalog := _catalog()
 	for id: int in Enums.Song.size():

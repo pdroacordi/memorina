@@ -11,5 +11,5 @@ stream_0/stream = ExtResource("2_v0")
 [resource]
 script = ExtResource("1_cue")
 stream = SubResource("AudioStreamRandomizer_v")
-volume_db = -10
+volume_db = -11
 cooldown = 0.03

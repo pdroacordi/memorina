@@ -22,5 +22,5 @@ stream_5/stream = ExtResource("7_ai6xh")
 [resource]
 script = ExtResource("1_3gapw")
 stream = SubResource("AudioStreamRandomizer_j6u0j")
-volume_db = -8.0
+volume_db = -10
 max_voices = 2

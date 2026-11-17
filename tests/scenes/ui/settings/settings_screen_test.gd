@@ -205,6 +205,18 @@ func test_the_last_row_ends_above_the_status_line_in_every_language() -> void:
 					.is_less_equal(status.position.y)
 	TranslationServer.set_locale(locale)
 
+## Each sample starts at the authored volume (the title cue's trim), not where the last one faded to.
+func test_the_music_sample_plays_at_its_authored_volume() -> void:
+	var sample := _screen.find_child("MusicPreview") as AudioStreamPlayer
+	var authored := sample.volume_db
+	assert_float(authored).is_less(0.0)
+	_screen.music_preview = true
+	_row("SoundPage", "SettingsVolumeMusic").grab_focus()
+	sample.volume_db = -40.0
+	_screen.step(-1)
+	assert_float(sample.volume_db).is_equal(authored)
+	sample.stop()
+
 ## The title's theme already plays on the Music bus, so its Settings plays no Music sample (orchestrator, 2026-11-10).
 func test_without_a_music_preview_a_music_step_plays_nothing() -> void:
 	_screen.music_preview = false

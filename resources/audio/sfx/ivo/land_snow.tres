@@ -22,4 +22,4 @@ stream_5/stream = ExtResource("7_6tm1d")
 [resource]
 script = ExtResource("1_jktl5")
 stream = SubResource("AudioStreamRandomizer_tcrpl")
-volume_db = -4.0
+volume_db = -8

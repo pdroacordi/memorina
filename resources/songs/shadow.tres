@@ -21,3 +21,5 @@ excerpt_duration = 7.0
 excerpt_fade = 0.5
 note_cues = PackedFloat32Array(0.56, 1.23, 1.9, 2.56, 3.23, 3.9)
 pulse_effect = ExtResource("5_effect")
+track_gain_db = -6.0
+excerpt_gain_db = -6.0

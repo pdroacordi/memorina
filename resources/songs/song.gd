@@ -36,6 +36,10 @@ const DEFAULT_CUE_WINDOW := 6.0
 @export var excerpt_fade: float = 0.5
 ## Optional per-note cue times in seconds, tuned to the audio; empty uses evenly spaced cues.
 @export var note_cues: PackedFloat32Array = []
+## Trim that brings the track to the songs' loudness ceiling, dB (systems/music, Levels).
+@export var track_gain_db: float = 0.0
+## Trim that brings the excerpt to the songs' loudness ceiling, dB.
+@export var excerpt_gain_db: float = 0.0
 
 func season() -> Enums.Season:
 	return palette.season
@@ -47,6 +51,10 @@ func tint() -> Color:
 ## the track otherwise.
 func performance_stream() -> AudioStream:
 	return excerpt if excerpt != null else track
+
+## The trim of the stream a world performance plays.
+func performance_gain_db() -> float:
+	return excerpt_gain_db if excerpt != null else track_gain_db
 
 ## The cue times to light the sheet by: the authored ones when they are
 ## present, otherwise the notes spread evenly across the excerpt so an

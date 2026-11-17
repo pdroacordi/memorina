@@ -23,3 +23,4 @@ excerpt = ExtResource("6_excerpt")
 excerpt_duration = 0.0
 excerpt_fade = 0.0
 note_cues = PackedFloat32Array(0.58, 1.42, 2.25, 3.08, 3.92, 4.75)
+excerpt_gain_db = -4.9
