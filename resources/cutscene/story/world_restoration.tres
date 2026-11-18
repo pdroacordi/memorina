@@ -101,7 +101,7 @@ seconds = 1.6
 
 [sub_resource type="Resource" id="wait_16"]
 script = ExtResource("e_wait")
-seconds = 2.0
+seconds = 5.0
 
 [sub_resource type="Resource" id="camera_17"]
 script = ExtResource("e_camera")
@@ -112,7 +112,7 @@ seconds = 2.0
 
 [sub_resource type="Resource" id="wait_18"]
 script = ExtResource("e_wait")
-seconds = 1.0
+seconds = 4.0
 
 [resource]
 script = ExtResource("e_scene")

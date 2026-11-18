@@ -88,3 +88,5 @@ They open with sections (A, A1, Bridge, B) and chord labels, tracks Melody/Chord
 - Render Stems asks for grouping: "Group by instrument" merges tracks on the same patch into one WAV; use "Group by layer" (one WAV per track, named by track). Stems are padded with 0.5 s of silence.
 - Chrome may save AIVA downloads to the Desktop instead of Downloads; look there too.
 - A new import of a revised piece is a new composition and costs one more download.
+- The Compositions list shifts by a row after a render or a reload. Before clicking a row's download icon by coordinate, zoom on the row to read its title; a WAV render once ran on the row above (harmless for a piece already downloaded, but check).
+- `get_page_text` after selecting a track shows its patch (the line after "Add instrument"); it is the cheapest way to audit every track after an import.

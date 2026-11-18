@@ -45,3 +45,19 @@ User verdict on all four fight loops and the finale, 2026-11-18: "Pouco épicas/
 - Patches set by hand after import: 9 Horns Legato, 3 Bass Trombones Sustain, Violins 1 Spiccato (lead) and Sustain (bed), Celli Spiccato, Male Choir Sustain (it came in as Masha Mnjoyan, a solo singer), Epic Taikos Kit, Orchestral Kit with its third channel set to Crash Left (Unassigned after the kit swap). Violas came in as Spiccato, the Violas ensemble has no Staccato.
 - Stems: "Group by instrument" merges two tracks on the same patch (both Violins 1 lines came out as one WAV, mixing lead and bed); render "Group by layer" for one WAV per track. Chrome saved the zips to the Desktop, not Downloads.
 - `build_stems.py` cut 0.475 s of lead-in (AIVA's 0.5 s pad) and folded 14.5 s of tail; loop 153.6 s. All stems summed -15.5 LUFS, so `gain_db` -6.5 (fight target -22). `finale_fight.tres` bpm 200.
+
+## Restoration remake (2026-11-18, in the game)
+
+- Sketch `tools/audio/make_restoration_midis.py` writes two one-shot single-stem sketches at 100 BPM (mentor_winter's beat), C major, cue time 0 = his first note (`together_14` starts the cue beside `mentor_winter.tres`, G E D C C C, last note held to 4.5 s; the lamp lights 4.5-6.1 s; the scene's steps end at 11.1 s).
+- Under his song (0-4.5 s) nothing sounds in MIDI 60..67 and only C D E G A (`check()`): Am7 | G (no B) | C as his C C C holds, the fight's A minor resolving to C exactly when he lands on C; a timpani roll into the lamp.
+- At the lamp (4.5 s): crash, timpani, harp sweep up C major, celesta sparks, horns and male choir open to C.
+- `restauracao_epica.mid` (fits the scene as it is): Ivo's phrase B (E G E D D C, "A frase do Ivo (Recommended)") in flute with horns an octave under, from 4.8 s, over C Am F G C; plagal F/C at beat 14; C with A on top (her song's lost note) from beat 15; ritardando to 92; last note-off 10.69 s.
+- `restauracao_epica_longa.mid` (needs 6 s more in the scene, 17.1 s): horns and choir sing phrase A (the fight's theme) in C from 4.8 s, its last E now over C (the fight's tritone over Bb healed into a major third); Ivo's phrase B in the flute from 9.0 s, its D D over G and its C on the score's first perfect cadence (12.0 s); F/C, then C with A on top; ritardando to 90; last note-off 15.87 s. Proposed waits: after the lamp 2 -> 5 s, the last 1 -> 4 s.
+- AIVA ids that mapped by name in earlier imports: `w.flute2.nat.slur`, `s.basses.vib.slur`, `s.harp2.pizz.stac`, the orchestral kit; horns, choir, violins, celli, celesta and timpani are set by hand (`PATCHES`). The render's lead-in (about 0.5 s) must be cut so his first note and the cue's beat 0 coincide.
+
+### In the game (2026-11-18)
+
+- Choice: "Longa, +6 s", then "Aprovar, colocar no jogo" (user, 2026-11-18). `world_restoration.tres`: `wait_16` 2 -> 5 s, `wait_18` 1 -> 4 s; the scene's steps after his first note run 17.1 s.
+- AIVA: `restauracao_epica_longa.mid` imported (editor `/editor/6afdf38ef51fc831cb2fa48d/composition`). Patches arrived wrong and were set by hand: celli as "Celli | Legato (Auto-Staccato)" -> Celli Sustain; choir as Masha Mnjoyan (a solo singer) -> Male Choir Sustain; violins as Violas -> Violins 1 Sustain; horns as Horn 1 -> 9 Horns Legato; the kit as Rock Drumkit 1 -> Orchestral Kit with its channel set to Crash Left (`form_input` on the channel's select; a click does not open it). Basses, timpani, harp, celesta and flute arrived right. One download (250 left this month); the WAV after it was free.
+- `assets/audios/music/finale_restoration.ogg`: the WAV from 0.5 s, 19.2 s, a 0.6 s fade from 18.6 s (the reverb falls under -50 dB at 18.3 s). Measured -15.4 LUFS; `gain_db` -8.6 to the restoration's -24. The tail rings about 2 s past the scene's last step; a one-shot rings out (`systems/music`).
+- Not heard in the game yet.

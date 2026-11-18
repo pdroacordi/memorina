@@ -63,6 +63,8 @@ Proposta de 2026-11-02, aguardando aprovação; gerada por `tools/audio/make_wif
 | `luta_autumn_epica.mid` | proposta de refazer a luta do Guardião da Folha (2026-11-18, não aprovada): Mi frígio, 3/4 a 192, 160 compassos, loop desde o tempo 0; stems lead/bed nos nomes das faixas, patches pretendidos em `PATCHES` | 2:30 (loop inteiro) | Importar no editor; exportar **stems** (`make_autumn_fight_midis.py`) |
 | `finale_chamado.mid` | fundo do chamado final, loop de 4 compassos, nada entre C4 e G4 | 16 s | Importar no editor |
 | `finale_restauracao.mid` | a cena da lâmpada: pedal em Dó sob a voz do mentor, depois a frase B na flauta | ~11.4 s | Importar no editor |
+| `restauracao_epica.mid` | proposta curta da restauração (2026-11-18, não escolhida): orquestra cheia, a frase B do Ivo, cabe na cena atual | ~10,7 s | Importar no editor; um stem |
+| `restauracao_epica_longa.mid` | a restauração no jogo (2026-11-18), com a cena 6 s mais longa: a frase A (tema da luta) curada em Dó maior, depois a frase B na primeira cadência perfeita | ~15,9 s | Importar no editor; um stem |
 
 Na batalha, peça **stems**: cada faixa marcada `(primavera)` precisa sair separada, porque o jogo a cala quando o jogador escolhe uma trilha.
 
