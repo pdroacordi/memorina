@@ -198,6 +198,8 @@ No `WorldFreeze` writer, no input reader, no router screen.
 
 ## User decisions (2026-11-18)
 
+- After the build: the notebook line and the turn splits of panels 1 and 3 (…havia os Perenes. / Cada um…; …esperasse alguém. / Segurou o frio, e segurou a flor.): "tá aprovado, ficou bom".
+
 - Q1 captions: "Em partes (Recommended)".
 - Q2 English name: the user asked "oq vc acha que fica melhor? greyhush ou forgettingrey?"; answered "the Greyhush" (matches the glossary and code; "hush" is the silence that stops the song). Caption 6 EN: "They called it the Greyhush."
 - Q4 notebook: "Sim, depois de visto (Recommended)".

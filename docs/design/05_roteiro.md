@@ -16,6 +16,7 @@
 - **A ordem da abertura:** "East gate shut until the elder points east (Recommended)": o portão leste da vila fica fechado até a história do ancião ser ouvida; o "Leste. Ainda está lá." dele é o que o abre. A abertura sempre acontece em ordem. Isso muda, só para a abertura, a "Estrada do Limiar: aberta" de `04_mapa_do_mundo.md`, seção 2.
 - **Gestos em português:** [Tentar de novo], [Baixar o violão], [Esperar por ele], [Olhar o quadro], [Tocar de novo], [Baixá-la] ("Approve (Recommended)").
 - **A história do ancião (STORY-32, 2026-11-17):** "o primeiro diálogo com o ancião pode ser melhorado, ta meio sem sentido" (2026-11-16), depois "Aprovar os dois (Recommended)" sobre o rascunho `drafts/story32_34_talks.md`: o farol traz de volta o que o mar leva; Ivo pergunta se o homem do farol ainda guarda as coisas (a origem do "Disseram que você guarda as coisas" do Ato 3); "Meu pai dizia que sim" prepara o modelo entalhado do Ato 4; o ancião manda Ivo pegar a espada do sítio.
+- **A fala da ponte nomeia a espada (2026-11-18):** sobre "o \"Assim não.\" do Ivo na ponte não fala da espada. Quer que fale?", o usuário respondeu "sim": a fala vira "Sem a espada do sítio, não." / "Not without the sword from the farm."
 - **O fragmento final (STORY-42, 2026-11-18):** "Achei que o flashback final, do ultimo guardião era justamente pra mostrar essa origem. A origem do cinzesquecimento, memorina, etc. Não quero deixar o jogo inteiro óbvio, mas acho que essa parte seria legal. O que são os guardiões, um pouco da origem, os caminhos da memória, o cinzesquecimento". É a única exceção à regra 3: sete legendas (`drafts/fragmento_final.md`, "Aprovar o texto (Recommended)") dizem uma vez o que são os Perenes, de onde o cinza veio, por onde anda e o nome dele; toca "Depois da vitória (Recommended)"; o nome é "Ermo (Recommended)".
 - **A história do ancião, rascunho 3 (STORY-41, 2026-11-18):** "o diálogo com o ancião tem que ser mais melhorado ainda. tá uma merda. um monte de frases soltas. \"east.\" \"i'm going there\"." e, sobre o rascunho `drafts/elder_talk_v3.md`, "tem que dar um bom destaque para o quadro, pq acho que o que estava ficando confuso era que não se via o quadro no diálogo. Por isso o \"lá\" não ficava claro. mas etá aprovado." A menina mostra que ele sempre para ali; Ivo reconhece a música que perdeu; "Onde fica?" vem antes do "A leste"; a câmera vai até o quadro quando o ancião olha (zoom 4) e quando Ivo vai até ele (zoom 3).
 - **O mentor, mais devagar e na lanterna (STORY-34, 2026-11-17):** "o diálogo com o primeiro guardião (corrompido) não está fazendo muito sentido. Parece apressado. Sem falar que não sei se gosto do lugar que ele está, no meio do farol" (2026-11-16); o lugar: "Na lanterna, junto à lâmpada" (no topo, na sala da lanterna, a mão erguida para a lâmpada apagada); o alçapão: "Sempre aberto (Recommended)"; o texto: o rascunho `drafts/story32_34_talks.md`, seção STORY-34, aprovado: Ivo chega devagar, a cabeça do mentor demora a virar, "Guardo." e "Guardava." ficam em caixas separadas com uma pausa longa entre elas, e Ivo diz por que veio.
@@ -171,8 +172,8 @@ Ao pegar a espada:
 → Aviso: **Espada**.
 
 Sem a espada, na beira da Ponte Velha (STORY-33; "Ivo volta na ponte (Recommended)", usuário, 2026-11-17):
-**Ivo:** Assim não.
-*Ivo: Not like this.*
+**Ivo:** Sem a espada do sítio, não.
+*Ivo: Not without the sword from the farm.*
 (Ele dá meia-volta. Uma parede que não se vê fica ali até ele ter a espada; a fala volta a cada vez que ele chega.)
 
 ---
