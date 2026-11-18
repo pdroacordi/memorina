@@ -849,6 +849,20 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - On this machine Python's stdout is cp1252: a log line with "ç" crashes `print`. Call
     `sys.stdout.reconfigure(encoding="utf-8")` in every log filter.
 
+- **Learned 2026-11-18 (STORY-43 fragment underscore)**: **measure music sync from a per-frame log, not by ear.**
+  - Use a scratch `-s` driver around the runner. A PAUSABLE child node sums `_physics_process` delta from the
+    director's `scene_began` (that is the scene clock). Each frame, log `root.get_node("Music").position()` and each
+    `_decks` entry (`player`, `request.cue.id`, `gain`, `ringing`, `stream_paused`).
+  - Connect every `MelodyPlayer.note_played` through `node_added`. A step's `resource_path` is `res://...tres::<id>`,
+    so diffing `CutsceneDirector._tasks` keys names each step start.
+  - For "nothing between C4 and G4", add an `AudioEffectSpectrumAnalyzer` to the Music bus from the driver. Read
+    `get_magnitude_for_frequency_range(255, 400, MAGNITUDE_MAX)` and look for a rise at an onset: a low pedal's
+    overtones fill that band.
+  - `Music.position()` reads 0 while a deck is `stream_paused` (`playing` is false). Log the deck's own position.
+  - Leaf steps start up to one physics tick after their nominal time, so a 13-step scene ends ~50 ms past its
+    nominal sum. Quote measured step starts, not sums.
+  - Screenshot runs hitch: take timing from a run with no screenshot steps.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

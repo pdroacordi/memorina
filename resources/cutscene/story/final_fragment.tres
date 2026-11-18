@@ -15,7 +15,7 @@
 [ext_resource type="Script" path="res://resources/cutscene/cutscene_branch.gd" id="e_branch"]
 [ext_resource type="Script" path="res://resources/cutscene/cutscene_case.gd" id="e_case"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="e_fact"]
-[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="e_cue"]
+[ext_resource type="Resource" path="res://resources/music/final_fragment.tres" id="m_fragment"]
 [ext_resource type="Script" path="res://resources/story/engraving/engraving_layer.gd" id="e_layer"]
 [ext_resource type="Script" path="res://resources/story/engraving/engraving_frame.gd" id="e_frame"]
 [ext_resource type="Resource" path="res://resources/songs/palettes/winter_palette.tres" id="r_winter"]
@@ -38,13 +38,6 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_6_base.png" id="t6_base"]
 [ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_7_base.png" id="t7_base"]
 
-[sub_resource type="Resource" id="silence"]
-script = ExtResource("e_cue")
-id = &"final_fragment_silence"
-loops = true
-fade_in = 0
-fade_out = 0
-
 [sub_resource type="Resource" id="bars"]
 script = ExtResource("e_bars")
 open = true
@@ -52,7 +45,7 @@ seconds = 0.6
 
 [sub_resource type="Resource" id="music"]
 script = ExtResource("e_music")
-cue = SubResource("silence")
+cue = ExtResource("m_fragment")
 fade = 1
 
 [sub_resource type="Resource" id="camera"]

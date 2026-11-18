@@ -121,14 +121,15 @@ func test_his_phrase_and_the_broken_phrase_are_the_fights_notes() -> void:
 		assert_array(melody.melody.validate()).is_empty()
 		assert_int(melody.voices.size()).is_equal(4)
 
-## The data slot for the underscore: a stream-less SCENE request held through the scene until the AIVA piece is approved.
-func test_the_music_is_one_stream_less_request() -> void:
+## The underscore (STORY-43): one SCENE request of the AIVA piece, a one-shot that ends in the black.
+func test_the_music_is_the_fragment_underscore() -> void:
 	var music := _of_type(CutsceneMusic)
 	assert_int(music.size()).is_equal(1)
 	var cue := (music[0] as CutsceneMusic).cue
 	assert_object(cue).is_not_null()
-	assert_str(String(cue.id)).is_equal("final_fragment_silence")
-	assert_object(cue.stream).is_null()
+	assert_str(String(cue.id)).is_equal("final_fragment")
+	assert_object(cue.stream).is_not_null()
+	assert_bool(cue.loops).is_false()
 
 func test_it_ends_under_black_and_clears_only_when_the_restoration_was_seen() -> void:
 	var last := SCENE.steps[SCENE.steps.size() - 1] as CutsceneBranch
