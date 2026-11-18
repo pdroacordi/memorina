@@ -286,3 +286,52 @@ func test_dismiss_returns_to_pressure_without_a_cycle_or_aggression() -> void:
 	assert_int(_fight.cycles()).is_equal(0)
 	assert_int(_fight.aggression()).is_equal(0)
 	assert_float(_fight.pressure_progress()).is_equal(0.0)
+
+## Stages escalate on each good answer ("Yes, each answer escalates (Recommended)", user, 2026-11-18;
+## architecture/grd-12-guardian-fight-engine).
+func test_the_stage_is_the_good_answers_and_a_failure_keeps_it() -> void:
+	_fight.begin()
+	assert_int(_fight.stage()).is_equal(0)
+	_hit_until_open()
+	_fight.answer_failed()
+	_relapse_out()
+	assert_int(_fight.stage()).is_equal(0)
+	_hit_until_open()
+	_fight.answer_succeeded()
+	assert_int(_fight.stage()).is_equal(1)
+
+func test_no_stages_is_neutral() -> void:
+	_fight.begin()
+	assert_object(_fight.stage_tuning()).is_null()
+	assert_float(_fight.cooldown_scale()).is_equal(1.0)
+	assert_float(_fight.chain_scale()).is_equal(1.0)
+	assert_int(_fight.max_links()).is_equal(GuardianStage.DEFAULT_MAX_LINKS)
+
+func test_the_cooldown_is_the_aggression_times_the_stage() -> void:
+	var calm := GuardianStage.new()
+	var hot := GuardianStage.new()
+	hot.cooldown_scale = 0.6
+	hot.chain_scale = 2.0
+	hot.max_links = 9
+	_stats.stages = [calm, hot]
+	_fight.begin()
+	_hit_until_open()
+	_fight.answer_failed()
+	_relapse_out()
+	assert_float(_fight.cooldown_scale()).is_equal_approx(0.5, 0.0001)
+	_hit_until_open()
+	_fight.answer_succeeded()
+	assert_object(_fight.stage_tuning()).is_same(hot)
+	assert_float(_fight.cooldown_scale()).is_equal_approx(0.5 * 0.6, 0.0001)
+	assert_float(_fight.chain_scale()).is_equal(2.0)
+	assert_int(_fight.max_links()).override_failure_message("capped by MAX_LINKS").is_equal(GuardianRepertoire.MAX_LINKS)
+
+func test_past_the_table_the_last_stage_applies() -> void:
+	var only := GuardianStage.new()
+	only.cooldown_scale = 0.8
+	_stats.stages = [only]
+	_stats.cycles_to_restore = 3
+	_fight.begin()
+	_hit_until_open()
+	_fight.answer_succeeded()
+	assert_object(_fight.stage_tuning()).is_same(only)

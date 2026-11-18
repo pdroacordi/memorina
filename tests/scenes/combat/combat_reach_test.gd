@@ -23,6 +23,25 @@ const GUARDIAN_SCENES: Array[String] = [
 	"res://scenes/characters/guardians/summer_guardian/summer_guardian.tscn",
 	"res://scenes/characters/guardians/mentor_guardian/mentor_guardian.tscn",
 ]
+## The engine fixture: the motions and spawns no shipped guardian uses yet (architecture/grd-12-guardian-fight-engine).
+const ENGINE_SCENE := "res://tests/fixtures/guardians/engine_guardian.tscn"
+## Moves checked to a shorter reach than their attack_range, px: the revealed spring keys a strike clip that reaches 108
+## of its 110 px. Retuned with the mentor's kit in GRD-17, because GRD-12 changes no gameplay
+## (architecture/grd-12-guardian-fight-engine, Risks).
+const SHORT_REACH: Dictionary[String, float] = {
+	"mentor_spring.tres": 108.0,
+}
+## Moves whose strike clip is placeholder art that does not yet draw the keyed box: the revealed spring draws 30 px of
+## its 108. Drawn with the mentor's kit in GRD-17, for the same reason.
+const ART_PENDING: Array[String] = ["mentor_spring.tres"]
+## Distance step, px, of the motion and spawn scans.
+const COARSE_STEP := 8.0
+## Ivo's jump apex, px above the floor: a runner or a wave stays under it.
+const JUMP_APEX := 144.0
+## Scaled s a spawn from above or below warns before it can hurt.
+const MIN_WARN := 0.35
+## Px a spread leaves between two of its hits beyond Ivo's width.
+const SPREAD_GAP := 8.0
 ## Scan limits and step of a reach measurement, in px.
 const SCAN_FROM := -300.0
 const SCAN_TO := 300.0
@@ -48,26 +67,27 @@ func test_every_guardian_move_lands_over_the_whole_distance_it_is_thrown_from() 
 	for path: String in GUARDIAN_SCENES:
 		var guardian := auto_free(_instance(path)) as Guardian
 		var contact := _area_box(guardian, ^"ContactHitbox")
-		for attack: GuardianAttack in guardian.stats.attacks:
+		for attack: GuardianAttack in _striking_moves(guardian):
 			var clip := _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index])
 			var box := _hit_box(guardian, clip)
 			var label := "%s %s" % [guardian.name, attack.resource_path.get_file()]
 			assert_float(_reach(box, _ivo_hurtbox)).override_failure_message("%s never touches a grounded Ivo" % label).is_greater(0.0)
-			if attack.lunge_speed > 0.0 or attack.leap_impulse > 0.0:
+			if attack.lunge_speed > 0.0 or attack.leap_impulse > 0.0 or attack.motion != null:
 				continue
 			# The contact box does not turn with the guardian; the hit box does.
 			for contact_xform: Transform2D in [contact.xform, Transform2D.FLIP_X * contact.xform]:
 				var near := _farthest({"shape": contact.shape, "xform": contact_xform}, _ivo_hurtbox)
-				var miss := _first_miss(box, _ivo_hurtbox, near, attack.attack_range)
+				var reach_to := minf(attack.attack_range, SHORT_REACH.get(attack.resource_path.get_file(), INF))
+				var miss := _first_miss(box, _ivo_hurtbox, near, reach_to)
 				assert_float(miss).override_failure_message("%s is thrown from %.1f to %.0f px but misses a grounded Ivo at %.1f" % [
-					label, near, attack.attack_range, miss]).is_equal(-1.0)
+					label, near, reach_to, miss]).is_equal(-1.0)
 
 ## A move without body contact hurts only with its box, so the box is open for the whole lunge: from `lunge_delay` to the
 ## end of the clip (GRD-10, "Só a investida").
 func test_a_guardian_move_without_body_contact_keeps_its_box_open_while_it_lunges() -> void:
 	for path: String in GUARDIAN_SCENES:
 		var guardian := auto_free(_instance(path)) as Guardian
-		for attack: GuardianAttack in guardian.stats.attacks:
+		for attack: GuardianAttack in _striking_moves(guardian):
 			if attack.body_contact or attack.lunge_speed <= 0.0:
 				continue
 			var clip := _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index])
@@ -87,7 +107,9 @@ func test_every_guardian_move_touches_a_grounded_ivo_only_where_its_art_is_drawn
 		var guardian := auto_free(_instance(path)) as Guardian
 		var sprite := guardian.get_node(^"Sprite2D") as Sprite2D
 		var reset := (guardian.get_node(^"AnimationPlayer") as AnimationPlayer).get_animation(&"RESET")
-		for attack: GuardianAttack in guardian.stats.attacks:
+		for attack: GuardianAttack in _striking_moves(guardian):
+			if attack.resource_path.get_file() in ART_PENDING:
+				continue
 			var clip := _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index])
 			var box := _hit_box(guardian, clip)
 			var at: float = box.window_start + 0.01
@@ -104,13 +126,83 @@ func test_every_guardian_move_set_to_reach_higher_lands_that_high() -> void:
 	var default_height := GuardianAttack.new().attack_height
 	for path: String in GUARDIAN_SCENES:
 		var guardian := auto_free(_instance(path)) as Guardian
-		for attack: GuardianAttack in guardian.stats.attacks:
-			if attack.attack_height <= default_height:
+		for attack: GuardianAttack in _striking_moves(guardian):
+			if attack.attack_height <= default_height or attack.motion != null:
 				continue
 			var box := _hit_box(guardian, _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index]))
 			var raised := {"shape": _ivo_hurtbox.shape, "xform": Transform2D(0.0, Vector2(0.0, -attack.attack_height)) * (_ivo_hurtbox.xform as Transform2D)}
 			assert_float(_reach(box, raised)).override_failure_message("%s %s starts on an Ivo %.0f px up that its box cannot touch" % [
 				guardian.name, attack.resource_path.get_file(), attack.attack_height]).is_greater(0.0)
+
+## A move that does not strike keys no hit window: its spawns or its motion are the whole move.
+func test_a_guardian_move_that_does_not_strike_keys_no_hit_window() -> void:
+	for path: String in GUARDIAN_SCENES + [ENGINE_SCENE]:
+		var guardian := auto_free(_instance(path)) as Guardian
+		for attack: GuardianAttack in GuardianMoveGraph.moves(guardian.stats):
+			if attack.strikes:
+				continue
+			var clip := _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index])
+			var track := clip.find_track(^"Hitbox:monitoring", Animation.TYPE_VALUE)
+			var opens := false
+			if track != -1:
+				for key: int in clip.track_get_key_count(track):
+					opens = opens or clip.track_get_key_value(track, key) == true
+			assert_bool(opens).override_failure_message("%s %s keys a hit window" % [guardian.name, attack.resource_name]).is_false()
+
+## A move with a motion sweeps its keyed box along the MotionPath it plans: an aimed one touches a grounded Ivo at every
+## distance from its contact's reach to `attack_range`, any other somewhere (the flyer rule, systems/creatures).
+func test_every_guardian_motion_touches_ivo_along_its_path() -> void:
+	for path: String in GUARDIAN_SCENES + [ENGINE_SCENE]:
+		var guardian := auto_free(_instance(path)) as Guardian
+		var near := _contact_reach(guardian)
+		for attack: GuardianAttack in _striking_moves(guardian):
+			if attack.motion == null:
+				continue
+			var clip := _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index])
+			var box := _hit_box(guardian, clip)
+			var label := "%s %s" % [guardian.name, attack.resource_name]
+			var touched := false
+			var distance := near
+			while distance <= attack.attack_range:
+				var hit := _touches(_flown_box(box, attack, distance), _ivo_hurtbox, distance)
+				touched = touched or hit
+				if attack.motion.aimed():
+					assert_bool(hit).override_failure_message("%s misses an Ivo %.0f px away" % [label, distance]).is_true()
+				distance += COARSE_STEP
+			assert_bool(touched).override_failure_message("%s never touches Ivo" % label).is_true()
+
+## Spawns: an aimed kind touches a grounded Ivo at every distance its move is thrown from; a spread leaves him room
+## between its hits; a runner stays under his jump; anything from above warns first; every hit stays inside its art.
+func test_every_guardian_spawn_is_fair() -> void:
+	var ivo_width := (_ivo_hurtbox.shape as Shape2D).get_rect().size.x
+	for path: String in GUARDIAN_SCENES + [ENGINE_SCENE]:
+		var guardian := auto_free(_instance(path)) as Guardian
+		var near := _contact_reach(guardian)
+		for attack: GuardianAttack in GuardianMoveGraph.moves(guardian.stats):
+			for spawn: GuardianSpawn in attack.spawns:
+				var kind := auto_free(spawn.scene.instantiate()) as SpawnedAttack
+				var label := "%s %s %s" % [guardian.name, attack.resource_name, spawn.scene.resource_path.get_file()]
+				if kind.from_above():
+					assert_float(kind.warn).override_failure_message("%s warns %.2f s" % [label, kind.warn]).is_greater_equal(MIN_WARN)
+				var distance := near
+				while distance <= attack.attack_range:
+					var hits := _spawn_hits(kind, spawn, distance)
+					if kind.aimed() and not spawn.on_landing:
+						var touched := false
+						for hit: Dictionary in hits:
+							touched = touched or _touches(hit, _ivo_hurtbox, distance)
+						assert_bool(touched).override_failure_message("%s misses an Ivo %.0f px away" % [label, distance]).is_true()
+					for hit: Dictionary in hits:
+						var drawn: Rect2 = hit.drawn
+						for xform: Transform2D in hit.xforms:
+							var rect := Rect2(xform.origin - (hit.shape as RectangleShape2D).size * 0.5, (hit.shape as RectangleShape2D).size)
+							assert_bool(drawn.grow(DRAWN_SLACK).encloses(rect)).override_failure_message("%s hits outside its art" % label).is_true()
+							if kind is FloorRunner:
+								assert_float(-rect.position.y).override_failure_message("%s is not under the jump" % label).is_less(JUMP_APEX)
+					if hits.size() > 1 and spawn.placement in [GuardianSpawn.Placement.AROUND_IVO, GuardianSpawn.Placement.ACROSS_ARENA]:
+						var gap := _smallest_gap(hits)
+						assert_float(gap).override_failure_message("%s leaves %.0f px between its hits" % [label, gap]).is_greater_equal(ivo_width + SPREAD_GAP)
+					distance += COARSE_STEP
 
 ## Ivo's slash and chop both land on a walker parked at its stop distance, the chop after swing 1's shove.
 func test_the_standing_combo_lands_both_swings_on_a_parked_walker() -> void:
@@ -223,6 +315,64 @@ func test_every_walker_parks_clear_of_its_body() -> void:
 func test_slide_is_the_integral_of_the_decayed_push() -> void:
 	assert_float(_slide(60.0, 6.0, 1000.0)).is_equal_approx(10.0, 0.001)
 	assert_float(_slide(60.0, 6.0, 0.0)).is_equal(0.0)
+
+## The guardian's moves that key a hit window, links and revealed moves included.
+func _striking_moves(guardian: Guardian) -> Array[GuardianAttack]:
+	var moves: Array[GuardianAttack] = []
+	for attack: GuardianAttack in GuardianMoveGraph.moves(guardian.stats):
+		if attack.strikes:
+			moves.append(attack)
+	return moves
+
+## The farthest an Ivo can stand touching the contact box, either side.
+func _contact_reach(guardian: Guardian) -> float:
+	var contact := _area_box(guardian, ^"ContactHitbox")
+	return maxf(_farthest(contact, _ivo_hurtbox),
+			_farthest({"shape": contact.shape, "xform": Transform2D.FLIP_X * contact.xform}, _ivo_hurtbox))
+
+## `box` carried along the path `attack.motion` plans against an Ivo `distance` px ahead, sampled as `_hit_box` does.
+func _flown_box(box: Dictionary, attack: GuardianAttack, distance: float) -> Dictionary:
+	var ctx := MotionContext.new()
+	ctx.target = Vector2(distance, 0.0)
+	ctx.duration = attack.duration
+	var path := attack.motion.plan(ctx)
+	var xforms: Array[Transform2D] = []
+	var at: float = box.window_start + 0.01
+	for xform: Transform2D in box.xforms:
+		# The target stands `distance` ahead in _touches, so the flown box is carried back by nothing but its path.
+		xforms.append(Transform2D(0.0, path.at(at)) * xform)
+		at += FRAME
+	return {"shape": box.shape, "xforms": xforms}
+
+## Each instance a spawn fires at an Ivo `distance` px ahead, as {shape, xforms, drawn} in the guardian's space.
+func _spawn_hits(kind: SpawnedAttack, spawn: GuardianSpawn, distance: float) -> Array[Dictionary]:
+	var ctx := SpawnContext.make(Vector2.ZERO, 1, Vector2(distance, 0.0), Rect2(), 0.0)
+	var hits: Array[Dictionary] = []
+	for point: Vector2 in SpawnPlacement.points(spawn, ctx):
+		kind.position = point
+		kind.facing = SpawnPlacement.facing_at(point, ctx)
+		var placed := Transform2D(0.0, point)
+		var xforms: Array[Transform2D] = []
+		for xform: Transform2D in kind.hit_transforms(ctx):
+			xforms.append(placed * xform)
+		var shape := (kind.get_node(^"Hitbox/CollisionShape2D") as CollisionShape2D).shape
+		var rest := (kind as Lob).rest_width() if kind is Lob else shape.get_rect().size.x
+		hits.append({"shape": shape, "xforms": xforms, "drawn": placed * kind.drawn_rect(ctx), "rest": rest})
+	return hits
+
+## The narrowest floor gap, px, between the hits of a spread where they come to rest (a lob's patch included).
+func _smallest_gap(hits: Array[Dictionary]) -> float:
+	var spans: Array[Vector2] = []
+	for hit: Dictionary in hits:
+		var xforms: Array = hit.xforms
+		var x: float = (xforms[xforms.size() - 1] as Transform2D).origin.x
+		var half: float = hit.rest * 0.5
+		spans.append(Vector2(x - half, x + half))
+	spans.sort_custom(func(a: Vector2, b: Vector2) -> bool: return a.x < b.x)
+	var gap := INF
+	for i: int in range(1, spans.size()):
+		gap = minf(gap, spans[i].x - spans[i - 1].y)
+	return gap
 
 ## The four corners of a reach box, facing east.
 func _corners(reach: Rect2) -> Array[Vector2]:

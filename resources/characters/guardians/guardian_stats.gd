@@ -16,6 +16,8 @@ extends Resource
 @export var sounds: BodySoundSet
 ## Scaled seconds it stands idle once its fight begins, so a fight entered from a scene is seen first (STORY-38); a hit ends it.
 @export var opening_hold: float = 0.0
+## Tuning per cure stage, indexed by good answers; past the end the last applies, and none is neutral (GuardianFight).
+@export var stages: Array[GuardianStage] = []
 
 @export_group("Lucidity")
 ## Hits in the pressure phase before lucidity opens.

@@ -186,9 +186,32 @@ func hits_to_open() -> int:
 func window_duration() -> float:
 	return _stats.window * pow(_stats.window_scale_per_failure, _aggression)
 
-## Attack cooldown multiplier; 1.0 at zero aggression.
+## Attack cooldown multiplier: the aggression's times the stage's; 1.0 at zero aggression and a neutral stage.
 func cooldown_scale() -> float:
-	return pow(_stats.cooldown_scale_per_failure, _aggression)
+	var tuning := stage_tuning()
+	var stage_scale := tuning.cooldown_scale if tuning != null else 1.0
+	return pow(_stats.cooldown_scale_per_failure, _aggression) * stage_scale
+
+## The cure stage: good answers so far; a failure leaves it.
+func stage() -> int:
+	return _cycles
+
+## The stage's tuning, the last entry past the end; null when the guardian has none.
+func stage_tuning() -> GuardianStage:
+	if _stats.stages.is_empty():
+		return null
+	return _stats.stages[mini(stage(), _stats.stages.size() - 1)]
+
+## Multiplier on every link's chance at this stage.
+func chain_scale() -> float:
+	var tuning := stage_tuning()
+	return tuning.chain_scale if tuning != null else 1.0
+
+## Moves in one string at this stage, the first included.
+func max_links() -> int:
+	var tuning := stage_tuning()
+	var links := tuning.max_links if tuning != null else GuardianStage.DEFAULT_MAX_LINKS
+	return clampi(links, 1, GuardianRepertoire.MAX_LINKS)
 
 ## Restoration progress, 0..1.
 func lucidity() -> float:

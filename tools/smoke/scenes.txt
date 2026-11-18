@@ -145,3 +145,10 @@ res://scenes/ui/bark_balloon/bark_balloon.tscn
 res://scenes/ui/settings/settings_screen.tscn
 res://scenes/ui/engraving/engraving_view.tscn
 res://scenes/ui/credits/credits_roll.tscn
+res://scenes/characters/guardians/spawns/floor_runner/floor_runner.tscn
+res://scenes/characters/guardians/spawns/falling_shard/falling_shard.tscn
+res://scenes/characters/guardians/spawns/boomerang/boomerang.tscn
+res://scenes/characters/guardians/spawns/lob/lob.tscn
+res://scenes/characters/guardians/spawns/floor_patch/floor_patch.tscn
+res://scenes/characters/guardians/spawns/light_column/light_column.tscn
+res://tests/fixtures/guardians/engine_guardian.tscn

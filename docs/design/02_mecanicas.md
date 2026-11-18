@@ -85,6 +85,7 @@ Estilo fluido e rápido — referência Hollow Knight com tempero de jogo de aç
 1. **Fase de pressão física:** o guardião ataca através de padrões ligados à sua estação. O jogador desvia, se posiciona, ataca para abrir brechas — não para "matar", mas para forçar instabilidade que abre a fase seguinte.
 2. **Janela de lucidez:** o guardião pausa, tremendo entre a versão corrompida e a lúcida. Aqui entra o call-and-response — o jogo apresenta uma sequência (literal para guardiões mais lúcidos, fragmentada/sugerida para os mais corrompidos) e o jogador reproduz **com timing real**, sem pausa do mundo.
 3. **Consequência:** acertar com bom timing estabiliza o guardião, abre dano real ou avança a cura. Errar não é game over — o guardião recai na fase de pressão mais cedo e mais agressivo.
+4. **Estágios** (usuário, 2026-11-18: "Yes, each answer escalates (Recommended)"): cada resposta certa também leva o guardião ao estágio seguinte da pressão, com mais golpes, recargas mais curtas e sequências mais longas, como a segunda fase de um chefe de Hollow Knight. Uma sequência de golpes custa no máximo uma nota de vida ("One note per string (Recommended)"). Quadro dos golpes: `drafts/guardian_fights_board.md`.
 Estações não limitam o número de guardiões — múltiplos guardiões por estação, cada um com variação regional dentro do vocabulário melódico daquela estação (ver seção 7).
  
 ## 4. Habilidades progressivas — duas trilhas paralelas

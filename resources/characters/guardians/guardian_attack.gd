@@ -1,9 +1,11 @@
 class_name GuardianAttack
 extends Resource
-## Guardian attack tuning; `duration` must match the selected animation clip.
+## Guardian attack tuning; `duration` must match the strike clip (architecture/grd-12-guardian-fight-engine).
 
-## Resolver attack clip index.
-@export_range(0, 2) var clip_index: int = 0
+## Strike slot, `attack_1..8` (GuardianAnimationResolver.ATTACK_CLIPS).
+@export_range(0, 7) var clip_index: int = 0
+## Wind-up slot played through `telegraph`; -1 plays IDLE.
+@export_range(-1, 7) var windup_index: int = -1
 @export var duration: float = 1.0
 ## Telegraph duration in seconds.
 @export var telegraph: float = 0.4
@@ -12,16 +14,30 @@ extends Resource
 ## Vertical attack range in px; combined with `attack_range` as an axis-aligned box.
 @export var attack_height: float = 96.0
 @export var cooldown: float = 1.5
-## Horizontal lunge speed in px/s, in the facing direction.
+## Seconds standing after the string's last link, facing kept: the punish window.
+@export var recovery: float = 0.0
+## Recovery slot; -1 plays IDLE.
+@export_range(-1, 7) var recovery_index: int = -1
+## The cure stage at which the move joins the set (GuardianRepertoire.available).
+@export var from_stage: int = 0
+## The strike clip keys a hit window; false is a pure reposition or spawn move.
+@export var strikes: bool = true
+## Horizontal lunge speed in px/s, in the facing direction; ignored when `motion` is set.
 @export var lunge_speed: float = 0.0
 ## Seconds into the swing before the lunge starts; a move without body contact starts it as its box opens.
 @export var lunge_delay: float = 0.0
-## Upward impulse in px/s; tune so airtime matches the attack clip.
+## Upward impulse in px/s; tune so airtime matches the attack clip. Ignored when `motion` is set.
 @export var leap_impulse: float = 0.0
 ## Relative selection weight; recall attacks use GuardianStats.recall_after_attacks.
 @export var weight: float = 1.0
 ## The body hurts on touch during this move; false leaves the move's own box as its only hit (GRD-10).
 @export var body_contact: bool = true
+## String links, tried in order at the strike's end.
+@export var follow_ups: Array[GuardianFollowUp] = []
+## A reposition solved to fit `duration`; null keeps lunge_speed, lunge_delay and leap_impulse.
+@export var motion: GuardianMotion
+## Attacks fired during the strike.
+@export var spawns: Array[GuardianSpawn] = []
 
 @export_group("Hitbox")
 @export var damage: int = 1

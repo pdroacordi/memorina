@@ -1,0 +1,156 @@
+[gd_resource type="Resource" script_class="GuardianStats" format=3]
+
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_stats.gd" id="1_stats"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_follow_up.gd" id="1_follow"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_stage.gd" id="1_stage"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="1_spawn"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/dash_motion.gd" id="1_dash"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/leap_motion.gd" id="1_leap"]
+[ext_resource type="Resource" path="res://resources/songs/root.tres" id="2_song"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_burst.tres" id="3_burst"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_guardian_voice.tres" id="4_voice"]
+[ext_resource type="Resource" path="res://resources/audio/sfx/combat/guardian_sounds.tres" id="5_sounds"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/floor_runner/floor_runner.tscn" id="6_runner"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/falling_shard/falling_shard.tscn" id="6_shard"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/lob/lob.tscn" id="6_lob"]
+
+[sub_resource type="Resource" id="thrust"]
+script = ExtResource("1_attack")
+duration = 0.6
+telegraph = 0.2
+attack_range = 104.0
+cooldown = 0.6
+recovery = 0.4
+recovery_index = 0
+knockback_strength = 380.0
+
+[sub_resource type="Resource" id="lash_again"]
+script = ExtResource("1_follow")
+
+[sub_resource type="Resource" id="lash_thrust"]
+script = ExtResource("1_follow")
+attack = SubResource("thrust")
+
+[sub_resource type="Resource" id="lash"]
+script = ExtResource("1_attack")
+windup_index = 0
+duration = 0.6
+telegraph = 0.35
+attack_range = 104.0
+cooldown = 0.6
+weight = 2.0
+follow_ups = Array[ExtResource("1_follow")]([SubResource("lash_again"), SubResource("lash_thrust")])
+knockback_strength = 380.0
+
+[sub_resource type="Resource" id="dash_motion"]
+script = ExtResource("1_dash")
+speed = 520.0
+delay = 0.1
+
+[sub_resource type="Resource" id="runner_front"]
+script = ExtResource("1_spawn")
+scene = ExtResource("6_runner")
+at = 0.1
+offset = Vector2(24, 0)
+
+[sub_resource type="Resource" id="dash"]
+script = ExtResource("1_attack")
+clip_index = 3
+duration = 0.6
+telegraph = 0.5
+attack_range = 300.0
+cooldown = 1.2
+weight = 0.6
+strikes = false
+motion = SubResource("dash_motion")
+spawns = Array[ExtResource("1_spawn")]([SubResource("runner_front")])
+
+[sub_resource type="Resource" id="leap_motion"]
+script = ExtResource("1_leap")
+height = 90.0
+air_time = 0.5
+
+[sub_resource type="Resource" id="runner_both"]
+script = ExtResource("1_spawn")
+scene = ExtResource("6_runner")
+on_landing = true
+placement = 4
+offset = Vector2(24, 0)
+
+[sub_resource type="Resource" id="leap"]
+script = ExtResource("1_attack")
+clip_index = 2
+duration = 0.6
+telegraph = 0.5
+attack_range = 220.0
+cooldown = 1.4
+weight = 1.0
+motion = SubResource("leap_motion")
+spawns = Array[ExtResource("1_spawn")]([SubResource("runner_both")])
+knockback_lift = 200.0
+
+[sub_resource type="Resource" id="shards"]
+script = ExtResource("1_spawn")
+scene = ExtResource("6_shard")
+at = 0.2
+placement = 1
+count = 3
+interval = 0.25
+
+[sub_resource type="Resource" id="icicles"]
+script = ExtResource("1_attack")
+clip_index = 3
+duration = 0.6
+telegraph = 0.4
+attack_range = 400.0
+attack_height = 300.0
+cooldown = 1.6
+weight = 0.8
+strikes = false
+spawns = Array[ExtResource("1_spawn")]([SubResource("shards")])
+
+[sub_resource type="Resource" id="pods"]
+script = ExtResource("1_spawn")
+scene = ExtResource("6_lob")
+at = 0.3
+placement = 2
+count = 3
+spacing = 96.0
+
+[sub_resource type="Resource" id="lob"]
+script = ExtResource("1_attack")
+clip_index = 3
+duration = 0.6
+telegraph = 0.4
+attack_range = 360.0
+cooldown = 1.6
+from_stage = 1
+strikes = false
+spawns = Array[ExtResource("1_spawn")]([SubResource("pods")])
+
+[sub_resource type="Resource" id="stage_0"]
+script = ExtResource("1_stage")
+
+[sub_resource type="Resource" id="stage_1"]
+script = ExtResource("1_stage")
+cooldown_scale = 0.7
+chain_scale = 1.5
+max_links = 4
+
+[resource]
+script = ExtResource("1_stats")
+id = 1
+song = ExtResource("2_song")
+voice = ExtResource("4_voice")
+sounds = ExtResource("5_sounds")
+attacks = Array[ExtResource("1_attack")]([SubResource("lash"), ExtResource("3_burst"), SubResource("dash"), SubResource("leap"), SubResource("icicles"), SubResource("lob")])
+stages = Array[ExtResource("1_stage")]([SubResource("stage_0"), SubResource("stage_1")])
+hits_to_open = 7
+call_lead_in = 2.2
+recall_after_attacks = 2
+comfort_distance = 82.0
+give_ground_distance = 46.0
+pace_time = 0.8
+pace_speed = 0.55
+step_out_speed = 1.8

@@ -863,6 +863,18 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     nominal sum. Quote measured step starts, not sums.
   - Screenshot runs hitch: take timing from a run with no screenshot steps.
 
+- **Learned 2026-11-18 (GRD-12 engine regression)**: **for a "no gameplay change" refactor, A/B the bot fights against a
+  `git archive HEAD` export.**
+  - Passive (`BOT_PASSIVE=1`) is the deterministic comparison: on short 30-40 s copies of the timelines, both trees threw
+    the same move order within 0.08 s, and Ivo died at the same instant.
+  - Full god-mode fights match through the first cure, then diverge in move mix: RESTORED times differ by up to 9 s
+    between identical builds. Compare per-strike travel, peak y, landing y and clip strips, not restore times.
+  - A bot timeline runs to its `max_duration` (bloom 150 s, frost 110, summer/autumn 260) even after RESTORED. Thirteen
+    runs in series took ~37 min. Put them in one `series.sh` with `run_in_background`.
+  - A foreground wait loop is moved to the background after ~175 s. Wait in chunks under that.
+  - In a `[bot] ATK` line, an empty move name logs as `ATK  dx=...`. Treat it as "no move", or a parser mistakes `dx=` for
+    a move name.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

@@ -22,6 +22,9 @@ const INSIDE_PUSH_X := 0.5
 ## Keeps near-centered hits moving sideways, with only a small vertical component.
 const INSIDE_PUSH_Y := 0.35
 
+## Refuses a hit a string already paid for; null lets every hit through (a guardian's move box sets it).
+var gate: HitGate = null
+
 ## Hurtboxes struck since monitoring last turned on, by instance id.
 var _struck: Dictionary[int, bool] = {}
 
@@ -49,6 +52,8 @@ func _on_area_entered(area: Area2D) -> void:
 func _hit(area: Area2D) -> void:
 	if not (area is Hurtbox):
 		return
+	if gate != null and not gate.allows(area):
+		return
 
 	var knockback: Vector2 = Vector2.ZERO
 	if knockback_strength > 0.0 or knockback_lift > 0.0:
@@ -60,6 +65,8 @@ func _hit(area: Area2D) -> void:
 	area.receive_hit(damage, knockback, self)
 	connected.emit(area)
 	if landed:
+		if gate != null:
+			gate.record(area)
 		hit_landed.emit(area)
 
 func _push_direction(area: Area2D) -> Vector2:

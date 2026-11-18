@@ -1,9 +1,11 @@
 class_name GuardianAI
 extends AIController
 ## Chooses attacks and movement during the pressure phase; the guardian sets `active` and attack data.
+## A string's links are timed by GuardianMoveClock and chosen by GuardianRepertoire; the signals fire per link.
 
 signal attack_telegraphed(attack: GuardianAttack)
 signal attack_started(attack: GuardianAttack)
+## A link's strike ended or was cancelled; a recovery may follow the string's last.
 signal attack_finished(attack: GuardianAttack)
 
 ## Horizontal dead band, in px, for movement and facing.
@@ -32,6 +34,7 @@ const APPROACH := 0
 const TELEGRAPH := 1
 const ATTACK := 2
 const HOLD := 3
+const RECOVER := 4
 
 ## The repertoire, pushed in from GuardianStats by the guardian.
 var attacks: Array[GuardianAttack] = []
@@ -40,8 +43,16 @@ var recall_after_attacks: int = 0
 ## False outside the pressure phase: the guardian stands where it is.
 var active: bool = false
 ## Multiplier on every cooldown; the guardian lowers it as the fight's
-## aggression rises.
+## aggression rises and its stage advances.
 var cooldown_scale: float = 1.0
+## The cure stage, pushed in from GuardianFight: moves and links join at their `from_stage`.
+var stage: int = 0
+## Multiplier on every link's chance, pushed in from GuardianFight.
+var chain_scale: float = 1.0
+## Moves in one string, the first included, pushed in from GuardianFight.
+var max_links: int = GuardianStage.DEFAULT_MAX_LINKS
+## The body stands against a wall or the arena's edge ahead; pushed in each frame by the guardian.
+var blocked_ahead: bool = false
 ## Spacing and pacing, pushed in from GuardianStats by the guardian.
 var comfort_distance: float = 140.0
 var give_ground_distance: float = 98.0
@@ -50,14 +61,14 @@ var pace_speed: float = 0.5
 var step_out_speed: float = 1.7
 ## Horizontal distance, in px, inside which the player is on top of it: set by the guardian from both bodies' widths.
 var overhead_band: float = 0.0
-## The move in progress (telegraph or swing), or null.
-var current_attack: GuardianAttack = null
+## The move in progress (telegraph, swing or recovery), or null.
+var current_attack: GuardianAttack:
+	get = _get_current_attack
 
 var _next: GuardianAttack = null
-var _telegraph_timer: float = 0.0
-var _attack_timer: float = 0.0
-var _cooldown: float = 0.0
-var _swinging: bool = false
+var _clock := GuardianMoveClock.new()
+## Moves thrown in the string under way, the first included; 0 between strings.
+var _links_done: int = 0
 ## Ordinary moves made since the last scheduled recall move.
 var _since_recall: int = 0
 ## Which way the guardian is looking when it is not walking.
@@ -90,6 +101,7 @@ func _ready() -> void:
 	_states.add_state(TELEGRAPH, _telegraph_tick)
 	_states.add_state(ATTACK, _attack_tick)
 	_states.add_state(HOLD, _hold_tick)
+	_states.add_state(RECOVER, _recover_tick)
 	_states.transition_to(HOLD)
 
 ## Half of both bodies side by side, in px: closer than this the player's feet are over the guardian's body.
@@ -99,7 +111,7 @@ static func overhead_band_for(body_width: float, player_width: float) -> float:
 ## The cooldown decays every tick regardless of state, so it is up to date
 ## before _select_state reads it this same frame (see EnemyAI.tick).
 func tick(delta: float) -> void:
-	_cooldown = maxf(_cooldown - delta, 0.0)
+	_clock.cool(delta)
 	if not _above_reach:
 		_overhead_wait = 0.0
 	elif not is_attacking():
@@ -108,34 +120,42 @@ func tick(delta: float) -> void:
 	super.tick(delta)
 
 ## The side to face: where it walks, else where the player is, so it watches a player it backed away from.
-## 0 during a swing, so a lunge or leap keeps its side and carries past a player who crosses under it.
+## 0 during a swing and a recovery, so a lunge or leap keeps its side and carries past a player who crosses under it.
 func facing_intent() -> float:
-	if _swinging:
+	if is_swinging() or is_recovering():
 		return 0.0
 	if not is_zero_approx(_current_direction):
 		return _current_direction
 	return _look_direction
 
-## True from the telegraph's start to the swing's end.
+## True from a string's first telegraph to the end of its recovery.
 func is_attacking() -> bool:
-	return current_attack != null
+	return _clock.is_busy()
 
 func is_telegraphing() -> bool:
-	return current_attack != null and not _swinging
+	return _clock.phase == GuardianMoveClock.Phase.TELEGRAPH
 
 func is_swinging() -> bool:
-	return _swinging
+	return _clock.phase == GuardianMoveClock.Phase.STRIKE
+
+## Standing after the string's last link: the punish window.
+func is_recovering() -> bool:
+	return _clock.phase == GuardianMoveClock.Phase.RECOVER
 
 ## Seconds since the swing started; 0 outside one.
 func swing_elapsed() -> float:
-	return current_attack.duration - _attack_timer if _swinging else 0.0
+	return _clock.elapsed()
+
+## The link under way in its string, 0 for the first move.
+func link_index() -> int:
+	return maxi(_links_done - 1, 0)
 
 ## Getting out from under a player standing on it.
 func is_escaping() -> bool:
 	return _escaping
 
 ## The next move is the recall move, whatever the cadence says: the player
-## has done their part and is not kept waiting for it.
+## has done their part and is not kept waiting for it. A string under way takes no more links.
 func request_recall() -> void:
 	if _recall_move() == null:
 		return
@@ -144,33 +164,33 @@ func request_recall() -> void:
 		_pick_next()
 
 ## A counter: the cooldown is dropped so the next move starts as soon as it is
-## in range. Nothing while a move is already under way.
+## in range. Nothing while a move or its recovery is under way.
 func provoke() -> void:
 	if is_attacking():
 		return
-	_cooldown = 0.0
+	_clock.provoke()
 
-## Drops the move without a cooldown: lucidity interrupts, it does not rest.
+## Drops the string without a cooldown: lucidity interrupts, it does not rest.
 func cancel_attack() -> void:
-	if current_attack == null:
+	if not _clock.is_busy():
 		return
-	var attack := current_attack
-	current_attack = null
-	_swinging = false
-	_telegraph_timer = 0.0
-	_attack_timer = 0.0
-	attack_finished.emit(attack)
+	var attack := _clock.move
+	var striking := not is_recovering()
+	_clock.cancel()
+	_links_done = 0
+	if striking:
+		attack_finished.emit(attack)
 
 func _select_state() -> int:
 	if not active or _sight.player == null or attacks.is_empty():
 		_escaping = false
 		return HOLD
 	if is_attacking():
-		return ATTACK if _swinging else TELEGRAPH
+		return _busy_state()
 	_refresh_next()
-	if not _escaping and _cooldown <= 0.0 and _in_range(_next):
+	if not _escaping and _clock.phase == GuardianMoveClock.Phase.READY and _in_range(_next):
 		_start_telegraph(_next)
-		return TELEGRAPH
+		return _busy_state()
 	return APPROACH
 
 
@@ -180,7 +200,7 @@ func _approach_tick(delta: float) -> void:
 	_update_reach(to_player, delta)
 	if _update_escape(to_player, delta):
 		return
-	if _cooldown > 0.0:
+	if _clock.phase == GuardianMoveClock.Phase.COOLDOWN:
 		_hold_spacing(to_player, delta)
 		return
 	if _in_range(_next):
@@ -244,7 +264,7 @@ func _update_escape(to_player: Vector2, delta: float) -> bool:
 			_escaping = false
 			if landed:
 				# Allow an attack immediately after the player lands.
-				_cooldown = 0.0
+				_clock.provoke()
 			return false
 
 	if _escape_lunge_left > 0.0:
@@ -296,15 +316,17 @@ func _update_spacing_mode(distance: float) -> void:
 
 func _telegraph_tick(delta: float) -> void:
 	_current_direction = 0.0
-	_telegraph_timer -= delta
-	if _telegraph_timer <= 0.0:
-		_start_swing()
+	if _clock.tick(delta) == GuardianMoveClock.Phase.TELEGRAPH:
+		attack_started.emit(_clock.move)
 
 func _attack_tick(delta: float) -> void:
 	_current_direction = 0.0
-	_attack_timer -= delta
-	if _attack_timer <= 0.0:
-		_finish_attack()
+	if _clock.tick(delta) == GuardianMoveClock.Phase.STRIKE:
+		_end_strike()
+
+func _recover_tick(delta: float) -> void:
+	_current_direction = 0.0
+	_clock.tick(delta)
 
 func _hold_tick(_delta: float) -> void:
 	_current_direction = 0.0
@@ -317,26 +339,47 @@ func _update_look() -> void:
 		_look_direction = signf(dx)
 
 
+func _get_current_attack() -> GuardianAttack:
+	return _clock.move if _clock.is_busy() else null
+
+func _busy_state() -> int:
+	match _clock.phase:
+		GuardianMoveClock.Phase.TELEGRAPH:
+			return TELEGRAPH
+		GuardianMoveClock.Phase.STRIKE:
+			return ATTACK
+	return RECOVER
+
 func _start_telegraph(attack: GuardianAttack) -> void:
-	current_attack = attack
 	_overhead_wait = 0.0
-	_swinging = false
-	_telegraph_timer = attack.telegraph
 	_current_direction = 0.0
+	_links_done = 1
+	_clock.start(attack)
+	_announce(attack)
+
+## The telegraph's signal, and the strike's at once for a move with no telegraph.
+func _announce(attack: GuardianAttack) -> void:
 	attack_telegraphed.emit(attack)
-	if attack.telegraph <= 0.0:
-		_start_swing()
+	if is_swinging():
+		attack_started.emit(attack)
 
-func _start_swing() -> void:
-	_swinging = true
-	_attack_timer = current_attack.duration
-	attack_started.emit(current_attack)
+## A strike ran out: the next link of the string, or the string's end.
+func _end_strike() -> void:
+	var attack := _clock.move
+	var link := GuardianRepertoire.next_link(attack, stage, chain_scale, _links_done, max_links, _in_range,
+			blocked_ahead, _recall_requested, _roll)
+	if link == null:
+		_finish_string(attack)
+		return
+	_links_done += 1
+	_clock.chain(link)
+	attack_finished.emit(attack)
+	_announce(link)
 
-func _finish_attack() -> void:
-	var attack := current_attack
-	current_attack = null
-	_swinging = false
-	_cooldown = attack.cooldown * cooldown_scale
+## The string's last strike ended: its recovery, then its cooldown. The recall cadence counts the string once.
+func _finish_string(attack: GuardianAttack) -> void:
+	_clock.rest(attack.recovery, attack.cooldown * cooldown_scale)
+	_links_done = 0
 	if attack.recall != null:
 		_since_recall = 0
 		_recall_requested = false
@@ -358,14 +401,21 @@ func _in_range(attack: GuardianAttack) -> bool:
 	# Out of patience, it throws where he will come down, never from under him.
 	return _impatient() and absf(to_player.x) > overhead_band
 
+func _roll() -> float:
+	return randf()
+
 func _impatient() -> bool:
 	return _overhead_wait >= OVERHEAD_PATIENCE
 
 func _tallest_reach() -> float:
 	var tallest := 0.0
-	for attack: GuardianAttack in attacks:
+	for attack: GuardianAttack in _available():
 		tallest = maxf(tallest, attack.attack_height)
 	return tallest
+
+## The moves that have joined the set at this stage.
+func _available() -> Array[GuardianAttack]:
+	return GuardianRepertoire.available(attacks, stage)
 
 ## Selects a due recall, a situational move, or a weighted move; weight 0 only permits scheduling.
 func _pick_next() -> void:
@@ -398,7 +448,7 @@ func _situational_pick() -> GuardianAttack:
 	var distance := absf(to_player.x)
 	if above > 0.0:
 		var reaches_up: GuardianAttack = null
-		for attack: GuardianAttack in attacks:
+		for attack: GuardianAttack in _available():
 			if attack.weight <= 0.0 or attack.attack_height < above:
 				continue
 			if distance > attack.attack_range:
@@ -410,7 +460,7 @@ func _situational_pick() -> GuardianAttack:
 	# Require distance beyond the comfort band to avoid always selecting the longest attack.
 	if comfort_distance > 0.0 and distance > comfort_distance * COMFORT_FAR:
 		var longest: GuardianAttack = null
-		for attack: GuardianAttack in attacks:
+		for attack: GuardianAttack in _available():
 			if attack.weight <= 0.0:
 				continue
 			if longest == null or attack.attack_range > longest.attack_range:
@@ -420,20 +470,25 @@ func _situational_pick() -> GuardianAttack:
 	return null
 
 func _weighted_pick() -> GuardianAttack:
+	var pool := _available()
+	# guardian_move_graph_test: every guardian has a move from the first stage.
+	assert(not pool.is_empty(), "%s: no move has joined at stage %d" % [_body.name, stage])
+	if pool.is_empty():
+		return null
 	var total := 0.0
-	for attack: GuardianAttack in attacks:
+	for attack: GuardianAttack in pool:
 		total += maxf(attack.weight, 0.0)
 	if total <= 0.0:
-		return attacks[0]
+		return pool[0]
 	var roll := randf() * total
-	for attack: GuardianAttack in attacks:
+	for attack: GuardianAttack in pool:
 		roll -= maxf(attack.weight, 0.0)
 		if attack.weight > 0.0 and roll <= 0.0:
 			return attack
-	return attacks[attacks.size() - 1]
+	return pool[pool.size() - 1]
 
 func _recall_move() -> GuardianAttack:
-	for attack: GuardianAttack in attacks:
+	for attack: GuardianAttack in _available():
 		if attack.recall != null:
 			return attack
 	return null

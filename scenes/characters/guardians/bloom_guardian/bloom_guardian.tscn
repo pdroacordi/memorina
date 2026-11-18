@@ -45,6 +45,8 @@
 [ext_resource type="Script" path="res://scenes/characters/guardians/guardian_talks.gd" id="94_talks"]
 [ext_resource type="Script" path="res://scenes/characters/guardians/guardian_music.gd" id="96_music"]
 [ext_resource type="PackedScene" path="res://scenes/characters/components/body_sounds.tscn" id="90_bodysounds"]
+[ext_resource type="Script" path="res://scenes/characters/guardians/guardian_mover.gd" id="grd12_mover"]
+[ext_resource type="Script" path="res://scenes/characters/guardians/guardian_spawner.gd" id="grd12_spawner"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_body"]
 radius = 16.0
@@ -1309,6 +1311,12 @@ script = ExtResource("94_talks")
 script = ExtResource("96_music")
 
 [node name="BodySounds" parent="." instance=ExtResource("90_bodysounds")]
+
+[node name="Mover" type="Node" parent="."]
+script = ExtResource("grd12_mover")
+
+[node name="Spawner" type="Node2D" parent="."]
+script = ExtResource("grd12_spawner")
 
 [connection signal="facing_changed" from="." to="Hitbox" method="_on_character_facing_changed"]
 [connection signal="landed" from="." to="DustEmitter" method="spawn_land_dust"]

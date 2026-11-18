@@ -1,0 +1,82 @@
+class_name GuardianMotionsTest extends GdUnitTestSuite
+
+## Every motion lands inside the arena's margins and finishes inside the strike (architecture/grd-12-guardian-fight-engine).
+
+## A 1000 px arena, 400 px tall, floor at y 400.
+const ARENA := Rect2(0.0, 0.0, 1000.0, 400.0)
+const MARGIN := 96.0
+
+
+func test_a_step_backs_off_and_stops_at_the_margin() -> void:
+	var step := StepMotion.new()
+	step.distance = -200.0
+	var path := step.plan(_ctx(Vector2(150.0, 400.0), 1, Vector2(300.0, 400.0)))
+	assert_float(path.end_offset().x).is_equal(MARGIN - 150.0)
+	assert_float(path.end_time()).is_less_equal(path.duration)
+
+func test_a_hop_rises_under_the_arena_top() -> void:
+	var step := StepMotion.new()
+	step.height = 900.0
+	var ctx := _ctx(Vector2(500.0, 400.0), 1, Vector2(600.0, 400.0))
+	ctx.body_height = 120.0
+	var path := step.plan(ctx)
+	var apex := 0.0
+	for i: int in 61:
+		apex = minf(apex, path.at(i / 60.0).y)
+	assert_float(ctx.feet.y + apex - ctx.body_height).is_greater_equal(ARENA.position.y - 0.01)
+
+func test_a_dash_stops_at_the_edge_and_speeds_up_to_finish_in_time() -> void:
+	var dash := DashMotion.new()
+	dash.speed = 100.0
+	dash.margin = 48.0
+	var path := dash.plan(_ctx(Vector2(200.0, 400.0), 1, Vector2(300.0, 400.0)))
+	assert_float(200.0 + path.end_offset().x).is_equal(ARENA.end.x - 48.0)
+	assert_float(path.end_time()).is_less_equal(path.duration + 0.0001)
+	assert_bool(dash.aimed()).is_true()
+
+func test_a_leap_lands_on_its_target_inside_the_margins_under_the_top() -> void:
+	var leap := LeapMotion.new()
+	leap.height = 1000.0
+	var ctx := _ctx(Vector2(500.0, 400.0), 1, Vector2(980.0, 400.0))
+	ctx.body_height = 120.0
+	for target: LeapMotion.Target in [LeapMotion.Target.IVO_SPOT, LeapMotion.Target.PAST_IVO, LeapMotion.Target.FAR_SIDE]:
+		leap.target = target
+		var path := leap.plan(ctx)
+		var landing := ctx.feet.x + path.end_offset().x
+		assert_float(landing).is_between(ARENA.position.x + MARGIN, ARENA.end.x - MARGIN)
+		assert_float(path.end_time()).is_less_equal(path.duration)
+		assert_float(path.at(path.end_time() * 0.5).y + ctx.feet.y - ctx.body_height).is_greater_equal(-0.01)
+	leap.target = LeapMotion.Target.FAR_SIDE
+	assert_float(ctx.feet.x + leap.plan(ctx).end_offset().x).override_failure_message("the far side from Ivo").is_equal(MARGIN)
+
+func test_a_dive_rises_hangs_and_lands_on_ivos_spot_inside_the_strike() -> void:
+	var dive := DiveMotion.new()
+	dive.rise_time = 0.6
+	dive.hang = 0.6
+	dive.dive_time = 0.6
+	var ctx := _ctx(Vector2(500.0, 400.0), 1, Vector2(700.0, 400.0))
+	ctx.duration = 1.2
+	var path := dive.plan(ctx)
+	assert_float(path.end_time()).is_less_equal(1.2 + 0.0001)
+	assert_vector(path.end_offset()).is_equal(Vector2(200.0, 0.0))
+	assert_bool(path.holds_vertical(0.6)).is_true()
+	assert_float(path.at(0.5).y).override_failure_message("the hang is not up").is_less(-100.0)
+
+func test_a_blink_takes_the_other_side_when_the_wall_is_close() -> void:
+	var blink := BlinkMotion.new()
+	blink.behind = 64.0
+	blink.min_gap = 32.0
+	var open := blink.plan(_ctx(Vector2(300.0, 400.0), 1, Vector2(500.0, 400.0)))
+	assert_float(300.0 + open.blink_to.x).is_equal(564.0)
+	var cornered := blink.plan(_ctx(Vector2(500.0, 400.0), 1, Vector2(890.0, 400.0)))
+	assert_float(500.0 + cornered.blink_to.x).override_failure_message("reappeared against the wall").is_equal(826.0)
+
+func _ctx(feet: Vector2, facing: int, target: Vector2) -> MotionContext:
+	var ctx := MotionContext.new()
+	ctx.feet = feet
+	ctx.facing = facing
+	ctx.target = target
+	ctx.arena = ARENA
+	ctx.margin = MARGIN
+	ctx.duration = 0.6
+	return ctx

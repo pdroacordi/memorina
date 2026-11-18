@@ -83,10 +83,15 @@ var _lucidity_wait: float = 0.0
 ## In the air on the way to lucidity: the AI is off and physics owns it.
 var _leaping: bool = false
 var _leap_left: float = 0.0
-## The floor it left, and the mask it collides with when it is not in the
-## air: everything ABOVE that line is passed through on the way up.
+## The floor it left: everything ABOVE that line is passed through on the way up.
 var _leap_floor_y: float = 0.0
-var _leap_mask: int = 0
+## The mask it collides with when nothing passes it through the world.
+var _solid_mask: int = 0
+## The floor it last stood on, for spawns placed on the floor.
+var _floor_y: float = 0.0
+## One life note per string: the move box, the contact box and the spawns refuse a link's hit on a target the string
+## already hurt.
+var _string_gate := HitGate.new()
 var _shield_rest_radius: float = 0.0
 var _sprite_rest: Vector2 = Vector2.ZERO
 ## Seconds of the flinch left: the facing it took on the hit is held until the hurt clip ends.
@@ -97,6 +102,8 @@ var _teaching: bool = false
 var _bowing: bool = false
 
 @onready var _ai                : GuardianAI = $AI
+@onready var _mover             : GuardianMover = $Mover
+@onready var _spawner           : GuardianSpawner = $Spawner
 @onready var _locomotion        : LocomotionComponent = $Locomotion
 @onready var _call              : PhraseCall = $Call
 ## The final battle's strategy; null on every guardian but the mentor (GRD-06).
@@ -109,8 +116,6 @@ var _bowing: bool = false
 @onready var _arena             : Arena = get_node_or_null(arena_path) as Arena
 @onready var _sight             : EnemySight = $EnemySight
 @onready var _body_sounds       : BodySounds = $BodySounds
-## A concrete view of Character's generic resolver, for the duration assert.
-@onready var _guardian_resolver : GuardianAnimationResolver = $AnimationResolver
 @onready var _animation_tree    : AnimationTree = %AnimationTree
 
 
@@ -152,6 +157,12 @@ func _ready() -> void:
 	_arena_trigger.player_entered.connect(_on_player_entered)
 	_shield_rest_radius = _shield.radius
 	_sprite_rest = _sprite.position
+	_solid_mask = collision_mask
+	_floor_y = global_position.y
+	_hitbox.gate = _string_gate
+	_contact.gate = _string_gate
+	_spawner.gate = _string_gate
+	_push_tuning()
 	assert((stats.finale != null) == (_finale != null), "%s: FinaleStats and a Finale child go together" % name)
 	if (_finale.is_restored() if _finale != null else SaveSystem.is_guardian_restored(stats.id)):
 		_fight.restore_silently()
@@ -162,13 +173,12 @@ func _process_motion(delta: float) -> void:
 	if _leaping:
 		# Ballistic: the horizontal speed set at take-off carries it across.
 		velocity.y = minf(velocity.y + base_gravity() * delta, terminal_velocity)
-		# An arena has a ceiling, and this arc is meant to leave the frame
-		# through it: above the floor it left, the guardian passes through the
-		# world, and takes it back on the way down so it lands on real ground.
-		collision_mask = 0 if global_position.y < _leap_floor_y - 8.0 else _leap_mask
+		# An arena has a ceiling, and this arc is meant to leave the frame through it.
+		_pass_through_above(_leap_floor_y)
 		return
 	_flinch_left = maxf(_flinch_left - delta, 0.0)
 	if _fight.phase() == GuardianFight.Phase.PRESSURE and _player_in_arena():
+		_ai.blocked_ahead = _mover.against_wall(arena_bounds())
 		_ai.tick(delta)
 		# Where it LOOKS, not where it walks: a guardian backing out from under
 		# a player keeps watching him, and an x sitting on its own never makes
@@ -176,18 +186,25 @@ func _process_motion(delta: float) -> void:
 		if _flinch_left <= 0.0 or _ai.is_attacking():
 			face_towards(_ai.facing_intent())
 		_locomotion.ground_update(delta, _ai.direction)
-		var attack := _ai.current_attack
-		if (attack != null and _ai.is_swinging() and attack.lunge_speed > 0.0
-				and _ai.swing_elapsed() >= attack.lunge_delay):
-			velocity.x = facing * attack.lunge_speed
+		if _ai.is_swinging():
+			_mover.drive(delta, _ai.swing_elapsed())
 	else:
 		_locomotion.ground_update(delta, 0.0)
 		if _fight.phase() == GuardianFight.Phase.RESTORED:
 			_face_seen_player()
-	if not is_on_floor():
+	if _mover.passes_through():
+		_pass_through_above(_mover.take_off_y())
+	elif collision_mask != _solid_mask:
+		collision_mask = _solid_mask
+	if not is_on_floor() and not _mover.owns_vertical():
 		velocity.y = minf(velocity.y + base_gravity() * delta, terminal_velocity)
 
 func _after_move(delta: float) -> void:
+	_mover.after_move()
+	if is_on_floor():
+		_floor_y = global_position.y
+	if _fight.phase() == GuardianFight.Phase.PRESSURE:
+		_spawner.tick(delta, _mover.just_landed())
 	if is_instance_valid(_player) and not _player_in_arena():
 		_abandon_call()
 	if _bowing and not _still_bowing():
@@ -243,8 +260,11 @@ func body_height() -> float:
 func is_attacking() -> bool:
 	return _ai.is_attacking()
 
-## The body hurts on touch, unless the move under way leaves its own box as its only hit (GuardianAttack.body_contact).
+## The body hurts on touch, unless the move under way leaves its own box as its only hit (GuardianAttack.body_contact)
+## or a blink has taken it out of the world.
 func body_hurts() -> bool:
+	if _mover.is_intangible():
+		return false
 	return _ai.current_attack == null or _ai.current_attack.body_contact
 
 ## The wind-up before a swing: still, announced, not yet dangerous.
@@ -254,12 +274,25 @@ func is_telegraphing() -> bool:
 func is_swinging() -> bool:
 	return _ai.is_swinging()
 
+## Standing after a string's last link: the punish window.
+func is_recovering() -> bool:
+	return _ai.is_recovering()
+
 func current_attack() -> GuardianAttack:
 	return _ai.current_attack
 
 ## The Ivo this fight began against; null before it begins.
 func fought_player() -> Player:
 	return _player if is_instance_valid(_player) else null
+
+## Where the ground runs out; an empty rect when no arena is assigned.
+func arena_bounds() -> Rect2:
+	return _arena.bounds() if _arena != null else Rect2()
+
+## Where a spawn fires from and aims at now: the feet, the facing, Ivo's feet, the arena and the floor.
+func spawn_context() -> SpawnContext:
+	var target := _player.global_position if is_instance_valid(_player) else global_position + Vector2(facing, 0.0)
+	return SpawnContext.make(global_position, facing, target, arena_bounds(), _floor_y)
 
 ## Hits counted toward the next lucidity window, 0..1.
 func pressure_progress() -> float:
@@ -345,7 +378,7 @@ func receive_hazard(_hazard: HazardZone) -> void:
 	pass
 
 func _on_hit_received(_damage: int, _knockback: Vector2, _source: Node2D) -> void:
-	if _fight.phase() != GuardianFight.Phase.PRESSURE:
+	if _fight.phase() != GuardianFight.Phase.PRESSURE or _mover.is_intangible():
 		return
 	_just_hit = true
 	_flash(hit_flash_color)
@@ -389,6 +422,9 @@ func _face_seen_player() -> void:
 ## swing begins.
 func _on_attack_telegraphed(_attack: GuardianAttack) -> void:
 	_hits_since_move = 0
+	if _ai.link_index() == 0:
+		_string_gate.begin_string()
+	_string_gate.link = _ai.link_index()
 	if _player != null:
 		face_towards(signf(_player.global_position.x - global_position.x))
 	_stop_telegraph()
@@ -396,26 +432,46 @@ func _on_attack_telegraphed(_attack: GuardianAttack) -> void:
 	_telegraph_tween.tween_property(_sprite, "modulate", telegraph_color, telegraph_pulse_time)
 	_telegraph_tween.tween_property(_sprite, "modulate", Color.WHITE, telegraph_pulse_time)
 
-## The swing begins: the hitbox takes the move's numbers (Hitbox exports are
-## not RESET-owned, so this write sticks), and the unavoidable move opens the
-## recall while the player still lacks the skill it teaches.
+## The swing begins: the hitbox takes the move's numbers (its exports are not RESET-owned) and a recall move opens
+## the recall while the player still lacks its skill.
 func _on_attack_started(attack: GuardianAttack) -> void:
 	_stop_telegraph()
 	_hitbox.damage = attack.damage
 	_hitbox.knockback_strength = attack.knockback_strength
 	_hitbox.knockback_lift = attack.knockback_lift
-	# A leap: the swing carries it over the player (lunge_speed does the
-	# horizontal half). Gravity brings it down inside the same clip.
-	if attack.leap_impulse > 0.0 and is_on_floor():
-		velocity.y = -attack.leap_impulse
+	_mover.begin(attack, _motion_context(attack))
+	_spawner.begin(attack)
+	# A repeated link keeps its clip's name; without the replay its Hitbox keys would not run again.
+	_animation_driver.request_replay()
 	if attack.recall == null or _player == null:
 		return
 	if SaveSystem.has_skill(attack.recall.skill):
 		return
+	# Nothing stray lands inside the recall's window.
+	_spawner.clear()
 	_player.begin_recall(attack.recall, attack.duration, self)
 
 func _on_attack_finished(_attack: GuardianAttack) -> void:
 	_stop_telegraph()
+	_mover.end()
+	# No link follows: the string is over and its targets may be hurt again.
+	if not _ai.is_telegraphing() and not _ai.is_swinging():
+		_string_gate.begin_string()
+
+## What a move's motion plans against; null for a move with none.
+func _motion_context(attack: GuardianAttack) -> MotionContext:
+	if attack.motion == null:
+		return null
+	var ctx := MotionContext.new()
+	ctx.feet = global_position
+	ctx.facing = facing
+	ctx.target = _player.global_position if is_instance_valid(_player) else global_position
+	ctx.arena = arena_bounds()
+	ctx.margin = lucidity_leap_margin
+	ctx.gravity = base_gravity()
+	ctx.body_height = body_height()
+	ctx.duration = attack.duration
+	return ctx
 
 func _stop_telegraph() -> void:
 	if _telegraph_tween != null:
@@ -449,7 +505,6 @@ func _begin_lucidity_leap() -> void:
 	velocity = Vector2((target - global_position.x) / flight, -speed)
 	face_towards(_player.global_position.x - global_position.x)
 	_leap_floor_y = global_position.y
-	_leap_mask = collision_mask
 	_leaping = true
 	_leap_left = lucidity_leap_timeout
 	# The frame pairs at take-off so the landing is in view; only the landing stages the call
@@ -485,8 +540,12 @@ func _leap_target_x() -> float:
 func _arena_bounds() -> Rect2:
 	if _arena == null:
 		push_warning("%s has no arena: its lucidity leap cannot see the walls." % name)
-		return Rect2()
-	return _arena.bounds()
+	return arena_bounds()
+
+## Above the floor it left, the body passes through the world, and takes it back on the way down so it lands on real
+## ground. Shared by the lucidity leap and a move's leap; the two never run at once.
+func _pass_through_above(floor_y: float) -> void:
+	collision_mask = 0 if global_position.y < floor_y - 8.0 else _solid_mask
 
 ## Presentation, not gameplay: a landing this heavy is felt through whatever
 ## camera is showing it. The engine's own accessor for the active camera, and
@@ -499,7 +558,7 @@ func _shake_camera(strength: float) -> void:
 
 func _finish_lucidity_leap() -> void:
 	_leaping = false
-	collision_mask = _leap_mask
+	collision_mask = _solid_mask
 	var impact := velocity.y
 	velocity = Vector2.ZERO
 	landed.emit(global_position, impact)
@@ -569,7 +628,7 @@ func _close_call(success: bool) -> void:
 	_call.stop()
 	_player.update_call_window(0.0)
 	_player.close_call(success)
-	_ai.cooldown_scale = _fight.cooldown_scale()
+	_push_tuning()
 	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE
 	call_ended.emit()
 
@@ -579,7 +638,7 @@ func _abandon_call() -> void:
 	_lucidity_wait = 0.0
 	if _leaping:
 		_leaping = false
-		collision_mask = _leap_mask
+		collision_mask = _solid_mask
 	if _fight.phase() == GuardianFight.Phase.LUCIDITY:
 		_fight.answer_failed()
 		_close_call(false)
@@ -588,16 +647,27 @@ func _abandon_call() -> void:
 func _on_opening_ended() -> void:
 	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE
 
+## The fight's stage tuning, into the AI: the cooldown (aggression x stage), the link chances and the string length.
+func _push_tuning() -> void:
+	_ai.cooldown_scale = _fight.cooldown_scale()
+	_ai.stage = _fight.stage()
+	_ai.chain_scale = _fight.chain_scale()
+	_ai.max_links = _fight.max_links()
+
 ## The fight's own transitions, as opposed to the ones this node drives: the
 ## relapse begins at an answer and ends on its own clock.
 func _on_phase_changed(from: GuardianFight.Phase, to: GuardianFight.Phase) -> void:
 	phase_changed.emit(from, to)
+	# Spawned attacks belong to the pressure.
+	if to != GuardianFight.Phase.PRESSURE:
+		_spawner.clear()
 	match to:
 		GuardianFight.Phase.RELAPSE:
 			_begin_relapse()
 		GuardianFight.Phase.PRESSURE:
 			if from == GuardianFight.Phase.RELAPSE:
 				_hits_since_move = 0
+				_push_tuning()
 				_ai.active = true
 				_unstage()
 
@@ -753,9 +823,18 @@ func _relapse_amount(rest: float) -> float:
 	var drain := clampf((t - RELAPSE_HOLD) / maxf(_fight.relapse_duration() - RELAPSE_HOLD, 0.001), 0.0, 1.0)
 	return lerpf(maxf(_relapse_from, rest), rest, drain)
 
+## Every move the graph can throw: the strike is its duration, a wind-up fits the telegraph, a recovery the recovery.
 func _assert_clip_durations() -> void:
-	for attack: GuardianAttack in stats.attacks:
-		_assert_clip_length(_guardian_resolver.attack_clip_for(attack.clip_index), attack.duration)
+	for attack: GuardianAttack in GuardianMoveGraph.moves(stats):
+		_assert_clip_length(GuardianAnimationResolver.attack_clip_for(attack.clip_index), attack.duration)
+		var windup := GuardianAnimationResolver.windup_clip_for(attack.windup_index)
+		if windup != &"":
+			assert(_animation_driver.clip_length(windup) <= attack.telegraph + 0.001,
+				"%s: '%s' outlasts its %.4fs telegraph" % [name, windup, attack.telegraph])
+		var recover := GuardianAnimationResolver.recover_clip_for(attack.recovery_index)
+		if recover != &"":
+			assert(_animation_driver.clip_length(recover) <= attack.recovery + 0.001,
+				"%s: '%s' outlasts its %.4fs recovery" % [name, recover, attack.recovery])
 	var enter := _animation_driver.clip_length(GuardianAnimationResolver.LUCID_ENTER)
 	var before_crouch := lucidity_delay - _animation_driver.clip_length(GuardianAnimationResolver.LEAP_CROUCH)
 	assert(enter <= before_crouch + 0.001,
