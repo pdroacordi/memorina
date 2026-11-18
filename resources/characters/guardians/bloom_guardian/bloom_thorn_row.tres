@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="2_spawn"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/bloom_guardian/spawns/thorn_row.tscn" id="3_row"]
+
+[sub_resource type="Resource" id="row"]
+script = ExtResource("2_spawn")
+scene = ExtResource("3_row")
+at = 0.2
+offset = Vector2(28, 0)
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 5
+windup_index = 6
+duration = 0.5
+telegraph = 0.45
+attack_range = 280.0
+cooldown = 0.7
+recovery = 0.3
+recovery_index = 3
+weight = 0.8
+strikes = false
+spawns = Array[ExtResource("2_spawn")]([SubResource("row")])

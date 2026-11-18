@@ -151,4 +151,7 @@ res://scenes/characters/guardians/spawns/boomerang/boomerang.tscn
 res://scenes/characters/guardians/spawns/lob/lob.tscn
 res://scenes/characters/guardians/spawns/floor_patch/floor_patch.tscn
 res://scenes/characters/guardians/spawns/light_column/light_column.tscn
+res://scenes/characters/guardians/bloom_guardian/spawns/thorn_row.tscn
+res://scenes/characters/guardians/bloom_guardian/spawns/thorn_patch.tscn
+res://scenes/characters/guardians/bloom_guardian/spawns/seed_pod.tscn
 res://tests/fixtures/guardians/engine_guardian.tscn

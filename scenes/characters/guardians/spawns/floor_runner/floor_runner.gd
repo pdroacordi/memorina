@@ -61,9 +61,9 @@ func _drawn_rect() -> Rect2:
 
 func _draw() -> void:
 	if _t < warn:
-		# The crack it will burst from, flickering.
-		if int(_t * 20.0) % 2 == 0:
-			draw_rect(snapped_rect(Rect2(-width * 0.5, -4.0, width, 4.0)), dark)
+		# The crack it will burst from, rising along the way it will run.
+		var ahead := facing * (width * 0.5 + TRAIL * 0.5)
+		draw_floor_warning(minf(-width * 0.5, ahead), maxf(width * 0.5, ahead), _t / maxf(warn, 0.001))
 		return
 	var head := run_at(_t)
 	var tail := maxf(head - TRAIL, 0.0)

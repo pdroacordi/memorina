@@ -18,7 +18,10 @@ static func points(spawn: GuardianSpawn, ctx: SpawnContext) -> Array[Vector2]:
 			for i: int in spawn.count:
 				placed.append(Vector2(ctx.target.x, ctx.floor_y + spawn.offset.y))
 		GuardianSpawn.Placement.AROUND_IVO:
-			var first := ctx.target.x - spawn.spacing * (spawn.count - 1) * 0.5
+			var width := spawn.spacing * (spawn.count - 1)
+			# Slid whole off a wall, so the gaps it leaves Ivo keep their width (playtests/2026-11-18-grd13-bloom-fight).
+			var first := ctx.clamp_x(ctx.target.x - width * 0.5 + width, EDGE_MARGIN) - width
+			first = ctx.clamp_x(first, EDGE_MARGIN)
 			for i: int in spawn.count:
 				placed.append(Vector2(first + spawn.spacing * i, ctx.floor_y + spawn.offset.y))
 		GuardianSpawn.Placement.ACROSS_ARENA:

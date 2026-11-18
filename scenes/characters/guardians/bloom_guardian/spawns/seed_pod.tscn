@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/lob/lob.tscn" id="1_base"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/bloom_guardian/spawns/thorn_patch.tscn" id="2_patch"]
+
+[node name="SeedPod" instance=ExtResource("1_base")]
+warn = 0.4
+live = 0.7
+light = Color(0.86, 0.8, 0.6, 1)
+dark = Color(0.3, 0.22, 0.14, 1)
+hand = 60.0
+size = Vector2(12, 12)
+patch = ExtResource("2_patch")

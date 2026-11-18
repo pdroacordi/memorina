@@ -875,6 +875,22 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - In a `[bot] ATK` line, an empty move name logs as `ATK  dx=...`. Treat it as "no move", or a parser mistakes `dx=` for
     a move name.
 
+- **Learned 2026-11-18 (GRD-13 Bloom fight)**: **to judge dodgeability, play a fight with `tools/playtest/scripts/guardian_fight_player_driver.gd`**,
+  not the fight bot (which never dodges). It is a `-s` driver around the runner. It swings in idle and recovery, and it
+  dodges per move: back off from the lash string, jump a floor runner 0.12 s before its head arrives, jump the dash 0.33 s
+  into the strike, step between pod spots, walk away from the pounce, back off the learned burst. Env: `PL_GOD`,
+  `PL_PASSIVE`, `PL_LASH=back|stay|two`, `PL_POUNCE=away|under|jump`, `PL_ROW_LEAD`, `PL_DASH_AT`, `PL_POGO` (its pogo never
+  landed: do not judge pogo with it). It quits 3 s after RESTORED.
+  - `[st]` prints phase|move|T/S/R|link|HB|stage on every change, `[hit]` names what hurt (move, clock, live spawns), and
+    `[sp]` logs each spawn. A ~70-line `summ.py` over `[st]` gives the move sequence, the idle gaps (recovery end to next
+    first-link telegraph), the busy % and wind-up-to-hitbox per move. Run the same policy on a HEAD export for "before".
+  - Shots are named by tag (`tel_<move>`, `hb_<move>`, `sp_row|pod|patch`, `hurt`). Crop by the `[shot]` g/p, but check
+    the full frame when g.x is outside 0..640: the guardian is off screen, and a crop between g and p shows neither.
+  - A real key pressed during a run reaches the game window. The runner logs it as `source=not the timeline` (an F10 moved
+    Ivo to the winter trial mid-call). Grep for that line before trusting a run's end.
+  - Guardian AI gotcha seen in data: a guardian at y 288.0 against Ivo at 287.9 reads him as "above" (overhead branch), so
+    log both y values before blaming the weighted roll for a one-move fight.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

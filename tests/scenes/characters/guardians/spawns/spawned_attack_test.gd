@@ -1,7 +1,7 @@
 class_name SpawnedAttackTest extends GdUnitTestSuite
 
-## Every spawn kind: its hitbox is off in the warning, on while live, and it expires after its fade; it runs only on
-## the physics delta (architecture/grd-12-guardian-fight-engine).
+## Every spawn kind: its hitbox is off in the warning, on while live (never for a lob in flight), and it expires after
+## its fade; it runs only on the physics delta (architecture/grd-12-guardian-fight-engine).
 
 const KINDS: Array[String] = [
 	"res://scenes/characters/guardians/spawns/floor_runner/floor_runner.tscn",
@@ -34,7 +34,8 @@ func test_every_kind_warns_then_hurts_then_expires() -> void:
 			var expected := spawned.is_live(t)
 			assert_bool(box.monitoring).override_failure_message("%s at %.2f s" % [path.get_file(), t]).is_equal(expected)
 			was_live = was_live or box.monitoring
-		assert_bool(was_live).override_failure_message("%s never hurt" % path.get_file()).is_true()
+		# A lob is harmless in flight and hurts through the patch it leaves (test_a_lob_leaves_a_patch_where_it_lands).
+		assert_bool(was_live).override_failure_message("%s: hurt %s" % [path.get_file(), was_live]).is_equal(not spawned is Lob)
 		assert_array(expired).override_failure_message("%s did not expire" % path.get_file()).has_size(1)
 		spawned.free()
 

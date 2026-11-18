@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_follow_up.gd" id="2_follow"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_antler_thrust.tres" id="3_thrust"]
+
+[sub_resource type="Resource" id="to_thrust"]
+script = ExtResource("2_follow")
+attack = ExtResource("3_thrust")
+chance = 0.5
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 3
+windup_index = 1
+duration = 0.4
+telegraph = 0.25
+attack_range = 104.0
+cooldown = 0.6
+recovery = 0.35
+recovery_index = 0
+weight = 0.0
+follow_ups = Array[ExtResource("2_follow")]([SubResource("to_thrust")])
+knockback_strength = 380.0

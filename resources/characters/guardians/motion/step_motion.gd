@@ -13,6 +13,6 @@ extends GuardianMotion
 
 
 func plan(ctx: MotionContext) -> MotionPath:
-	var x := ctx.clamp_x(ctx.feet.x + ctx.facing * distance) - ctx.feet.x
+	var x := ctx.clamp_step(ctx.feet.x, ctx.feet.x + ctx.facing * distance) - ctx.feet.x
 	var rise := minf(height, ctx.headroom())
 	return MotionPath.new(ctx.duration).add(delay, delay + time, Vector2(x, 0.0), rise, rise > 0.0, rise <= 0.0)

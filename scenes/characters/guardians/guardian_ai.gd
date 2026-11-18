@@ -47,6 +47,8 @@ var active: bool = false
 var cooldown_scale: float = 1.0
 ## The cure stage, pushed in from GuardianFight: moves and links join at their `from_stage`.
 var stage: int = 0
+## The player owns the recall move's skill, pushed in by the guardian: a move with owned numbers leaves the cadence.
+var recall_owned: bool = false
 ## Multiplier on every link's chance, pushed in from GuardianFight.
 var chain_scale: float = 1.0
 ## Moves in one string, the first included, pushed in from GuardianFight.
@@ -91,6 +93,10 @@ var _pace_direction: float = 1.0
 var _pace_left: float = 0.0
 ## The guardian asked for the recall move next, cadence or not.
 var _recall_requested: bool = false
+## The far opinion: rolled once by weight when the player is first far, kept while it reaches; null otherwise.
+var _far_pick: GuardianAttack = null
+## The last move of the last string; a move that does not repeat is not chosen right after it.
+var _last_end: GuardianAttack = null
 
 @onready var _body: Node2D = get_parent()
 @onready var _sight: EnemySight = get_parent().get_node("EnemySight") as EnemySight
@@ -352,6 +358,7 @@ func _busy_state() -> int:
 
 func _start_telegraph(attack: GuardianAttack) -> void:
 	_overhead_wait = 0.0
+	_far_pick = null
 	_current_direction = 0.0
 	_links_done = 1
 	_clock.start(attack)
@@ -385,6 +392,7 @@ func _finish_string(attack: GuardianAttack) -> void:
 		_recall_requested = false
 	else:
 		_since_recall += 1
+	_last_end = attack
 	_pick_next()
 	attack_finished.emit(attack)
 
@@ -417,6 +425,25 @@ func _tallest_reach() -> float:
 func _available() -> Array[GuardianAttack]:
 	return GuardianRepertoire.available(attacks, stage)
 
+## The available moves a pick may choose: all but a last string's end that does not repeat.
+func _choosable() -> Array[GuardianAttack]:
+	var pool := _available()
+	if _last_end != null and not _last_end.repeats and pool.size() > 1:
+		pool.erase(_last_end)
+	return pool
+
+## A move's pick weight; a recall move whose skill is owned uses its owned weight when it has one.
+func _weight_of(attack: GuardianAttack) -> float:
+	return attack.weight_for(recall_owned)
+
+## The lowest reach up among the moves a pick may choose: no move is preferred for its height below it.
+func _lowest_reach() -> float:
+	var lowest := INF
+	for attack: GuardianAttack in _choosable():
+		if _weight_of(attack) > 0.0:
+			lowest = minf(lowest, attack.attack_height)
+	return lowest
+
 ## Selects a due recall, a situational move, or a weighted move; weight 0 only permits scheduling.
 func _pick_next() -> void:
 	var recall_move := _recall_move()
@@ -446,10 +473,11 @@ func _situational_pick() -> GuardianAttack:
 	var to_player := _sight.player.global_position - _body.global_position
 	var above := -to_player.y
 	var distance := absf(to_player.x)
-	if above > 0.0:
+	# Only above the lowest reach, where height can rule a move out; level feet differ by float noise (bugs/the-sun-guardians-roar-never-fires).
+	if above > _lowest_reach():
 		var reaches_up: GuardianAttack = null
-		for attack: GuardianAttack in _available():
-			if attack.weight <= 0.0 or attack.attack_height < above:
+		for attack: GuardianAttack in _choosable():
+			if _weight_of(attack) <= 0.0 or attack.attack_height < above:
 				continue
 			if distance > attack.attack_range:
 				continue
@@ -457,38 +485,49 @@ func _situational_pick() -> GuardianAttack:
 				reaches_up = attack
 		if reaches_up != null:
 			return reaches_up
-	# Require distance beyond the comfort band to avoid always selecting the longest attack.
+	# Only past the comfort band; closer in the weighted roll decides.
 	if comfort_distance > 0.0 and distance > comfort_distance * COMFORT_FAR:
-		var longest: GuardianAttack = null
-		for attack: GuardianAttack in _available():
-			if attack.weight <= 0.0:
-				continue
-			if longest == null or attack.attack_range > longest.attack_range:
-				longest = attack
-		if longest != null and longest.attack_range >= distance:
-			return longest
+		return _far_opinion(distance)
+	_far_pick = null
 	return null
 
+## A move that reaches a far player, chosen by weight once and kept while it still reaches and is available.
+func _far_opinion(distance: float) -> GuardianAttack:
+	var reaching: Array[GuardianAttack] = []
+	for attack: GuardianAttack in _choosable():
+		if _weight_of(attack) > 0.0 and attack.attack_range >= distance:
+			reaching.append(attack)
+	if _far_pick != null and reaching.has(_far_pick):
+		return _far_pick
+	# A single reaching move needs no roll, so the random stream is spent only on a choice.
+	_far_pick = reaching[0] if reaching.size() == 1 else _weighted_from(reaching)
+	return _far_pick
+
 func _weighted_pick() -> GuardianAttack:
-	var pool := _available()
+	var pool := _choosable()
 	# guardian_move_graph_test: every guardian has a move from the first stage.
 	assert(not pool.is_empty(), "%s: no move has joined at stage %d" % [_body.name, stage])
+	return _weighted_from(pool)
+
+## One of `pool` by weight.
+func _weighted_from(pool: Array[GuardianAttack]) -> GuardianAttack:
 	if pool.is_empty():
 		return null
 	var total := 0.0
 	for attack: GuardianAttack in pool:
-		total += maxf(attack.weight, 0.0)
+		total += maxf(_weight_of(attack), 0.0)
 	if total <= 0.0:
 		return pool[0]
 	var roll := randf() * total
 	for attack: GuardianAttack in pool:
-		roll -= maxf(attack.weight, 0.0)
-		if attack.weight > 0.0 and roll <= 0.0:
+		roll -= maxf(_weight_of(attack), 0.0)
+		if _weight_of(attack) > 0.0 and roll <= 0.0:
 			return attack
 	return pool[pool.size() - 1]
 
+## The move on the recall cadence; one whose skill is owned and that has owned numbers is an ordinary move instead.
 func _recall_move() -> GuardianAttack:
 	for attack: GuardianAttack in _available():
-		if attack.recall != null:
+		if attack.recall != null and not (recall_owned and attack.leaves_cadence_when_owned()):
 			return attack
 	return null

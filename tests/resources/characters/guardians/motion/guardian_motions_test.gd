@@ -14,6 +14,20 @@ func test_a_step_backs_off_and_stops_at_the_margin() -> void:
 	assert_float(path.end_offset().x).is_equal(MARGIN - 150.0)
 	assert_float(path.end_time()).is_less_equal(path.duration)
 
+func test_a_step_from_inside_the_margin_never_runs_the_wrong_way() -> void:
+	var step := StepMotion.new()
+	step.distance = 32.0
+	# Feet 50 px from the wall ahead, inside the 96 px margin: the step stops short, it does not turn back.
+	var ahead := step.plan(_ctx(Vector2(950.0, 400.0), 1, Vector2(700.0, 400.0)))
+	assert_float(ahead.end_offset().x).is_equal(0.0)
+	var dash := DashMotion.new()
+	dash.speed = 800.0
+	dash.delay = 0.35
+	dash.backstep = 48.0
+	var ctx := _ctx(Vector2(30.0, 400.0), 1, Vector2(300.0, 400.0))
+	ctx.duration = 0.9
+	assert_float(dash.plan(ctx).at(0.35).x).override_failure_message("the backstep ran toward Ivo").is_less_equal(0.0)
+
 func test_a_hop_rises_under_the_arena_top() -> void:
 	var step := StepMotion.new()
 	step.height = 900.0
@@ -33,6 +47,23 @@ func test_a_dash_stops_at_the_edge_and_speeds_up_to_finish_in_time() -> void:
 	assert_float(200.0 + path.end_offset().x).is_equal(ARENA.end.x - 48.0)
 	assert_float(path.end_time()).is_less_equal(path.duration + 0.0001)
 	assert_bool(dash.aimed()).is_true()
+
+func test_a_dash_with_a_backstep_steps_back_first_then_runs_to_the_far_edge() -> void:
+	var dash := DashMotion.new()
+	dash.speed = 800.0
+	dash.delay = 0.35
+	dash.backstep = 48.0
+	dash.backstep_time = 0.2
+	var ctx := _ctx(Vector2(500.0, 400.0), 1, Vector2(600.0, 400.0))
+	ctx.duration = 1.2
+	var path := dash.plan(ctx)
+	assert_float(path.at(0.2).x).is_equal(-48.0)
+	assert_float(path.at(0.35).x).override_failure_message("it held the backstep until the dash").is_equal(-48.0)
+	assert_float(500.0 + path.end_offset().x).is_equal(ARENA.end.x - 48.0)
+	assert_float(path.end_time()).is_less_equal(path.duration + 0.0001)
+	# Against its back wall the step is cut to the margin.
+	var cornered := dash.plan(_ctx(Vector2(110.0, 400.0), 1, Vector2(300.0, 400.0)))
+	assert_float(110.0 + cornered.at(0.35).x).is_equal(MARGIN)
 
 func test_a_leap_lands_on_its_target_inside_the_margins_under_the_top() -> void:
 	var leap := LeapMotion.new()

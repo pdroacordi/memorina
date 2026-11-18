@@ -129,6 +129,119 @@ func test_only_a_player_over_its_body_is_on_top_of_it() -> void:
 	_ai.tick(STEP)
 	assert_bool(_ai.is_escaping()).is_true()
 
+## A far player draws any move that reaches him, by weight, not always the longest; one that does not reach is never
+## picked, and the choice is kept until thrown (systems/guardians, "The Bloom Guardian's fight").
+func test_a_far_player_draws_every_reaching_move_by_weight() -> void:
+	var long := _far_move(300.0, 1.0)
+	var longer := _far_move(320.0, 1.0)
+	var short := _far_move(150.0, 5.0)
+	_ai.attacks = [short, long, longer]
+	_ai.comfort_distance = 82.0
+	# Level, a hair above as move_and_slide leaves feet, and a jump's height under every move's reach up.
+	for above: float in [0.0, 0.1, 40.0]:
+		_player.global_position = _body.global_position + Vector2(250.0, -above)
+		var thrown := {}
+		for i: int in 40:
+			seed(i)
+			_ai.cancel_attack()
+			_ai.set(&"_next", null)
+			_ai.set(&"_far_pick", null)
+			_ai.tick(STEP)
+			assert_bool(_ai.is_telegraphing()).is_true()
+			thrown[_ai.current_attack] = true
+		assert_bool(thrown.has(long)).override_failure_message("%.1f px up: the shorter reaching move was never thrown" % above).is_true()
+		assert_bool(thrown.has(longer)).override_failure_message("%.1f px up" % above).is_true()
+		assert_bool(thrown.has(short)).override_failure_message("%.1f px up: threw a move that does not reach" % above).is_false()
+
+func test_a_far_choice_is_kept_until_it_is_thrown() -> void:
+	_ai.attacks = [_far_move(300.0, 1.0), _far_move(320.0, 1.0)]
+	_ai.comfort_distance = 82.0
+	(_ai.get(&"_clock") as GuardianMoveClock).call(&"_cool", 5.0)
+	_place_player(250.0)
+	seed(7)
+	_ai.tick(STEP)
+	var first: GuardianAttack = _ai.get(&"_next")
+	for i: int in 60:
+		_ai.tick(STEP)
+		assert_object(_ai.get(&"_next")).override_failure_message("re-rolled at frame %d" % i).is_same(first)
+
+## A player a hair above the lion's feet no longer hands the pick to the taller claw: the roar it chose is kept while it
+## closes in and thrown in its range (bugs/the-sun-guardians-roar-never-fires).
+func test_the_sun_roar_is_kept_for_a_player_a_hair_above() -> void:
+	var stats := load("res://resources/characters/guardians/summer_guardian/summer_guardian_stats.tres") as GuardianStats
+	var roar := load("res://resources/characters/guardians/summer_guardian/summer_roar.tres") as GuardianAttack
+	_ai.attacks = stats.attacks
+	_ai.comfort_distance = stats.comfort_distance
+	_ai.set(&"_next", roar)
+	_player.global_position = _body.global_position + Vector2(100.0, -0.1)
+	_ai.tick(STEP)
+	assert_bool(_ai.is_telegraphing()).override_failure_message("threw the claw over the roar").is_false()
+	assert_object(_ai.get(&"_next")).is_same(roar)
+	_player.global_position = _body.global_position + Vector2(80.0, -0.1)
+	_ai.tick(STEP)
+	assert_object(_ai.current_attack).is_same(roar)
+
+## A player above every move's reach but the tallest's still draws the move that reaches him there.
+func test_a_player_above_the_lower_moves_draws_the_tall_one() -> void:
+	var low := _far_move(120.0, 5.0)
+	var tall := _far_move(120.0, 0.1)
+	tall.attack_height = 150.0
+	_ai.attacks = [low, tall]
+	_player.global_position = _body.global_position + Vector2(60.0, -120.0)
+	_ai.tick(STEP)
+	assert_object(_ai.current_attack).is_same(tall)
+
+## Until its skill is owned the recall move keeps its cadence and its call; once owned, a move with owned numbers is
+## an ordinary move by its owned weight, and one without keeps today's cadence.
+func test_an_owned_recall_move_leaves_the_cadence_only_with_owned_numbers() -> void:
+	var hit := _far_move(120.0, 1.0)
+	var recall := _far_move(120.0, 0.0)
+	recall.recall = AbilityRecallStats.new()
+	recall.owned_weight = 1.0
+	_ai.attacks = [hit, recall]
+	_ai.recall_after_attacks = 1
+	_ai.set(&"_since_recall", 3)
+	_ai.call(&"_pick_next")
+	assert_object(_ai.get(&"_next")).override_failure_message("the cadence broke while the skill is missing").is_same(recall)
+	_ai.recall_owned = true
+	var picked := {}
+	for i: int in 30:
+		seed(i)
+		_ai.set(&"_since_recall", 3)
+		_ai.call(&"_pick_next")
+		picked[_ai.get(&"_next")] = true
+	assert_bool(picked.has(hit)).override_failure_message("the owned burst still forced its slot").is_true()
+	assert_bool(picked.has(recall)).override_failure_message("the owned burst never came by weight").is_true()
+	_ai.request_recall()
+	assert_bool(_ai.get(&"_recall_requested")).is_false()
+	recall.owned_weight = -1.0
+	_ai.call(&"_pick_next")
+	assert_object(_ai.get(&"_next")).override_failure_message("a recall move without owned numbers left the cadence").is_same(recall)
+
+## A move that does not repeat is never the pick right after a string it ended, near or far.
+func test_a_move_that_does_not_repeat_never_follows_itself() -> void:
+	var dash := _far_move(260.0, 1.0)
+	dash.repeats = false
+	var lash := _far_move(100.0, 1.0)
+	_ai.attacks = [dash, lash]
+	_ai.comfort_distance = 82.0
+	_ai.set(&"_last_end", dash)
+	for i: int in 30:
+		seed(i)
+		assert_object(_ai.call(&"_weighted_pick")).is_same(lash)
+	_player.global_position = _body.global_position + Vector2(200.0, 0.0)
+	assert_object(_ai.call(&"_far_opinion", 200.0)).override_failure_message("dashed after a dash").is_null()
+	_ai.set(&"_last_end", lash)
+	assert_object(_ai.call(&"_far_opinion", 200.0)).is_same(dash)
+
+func _far_move(reach: float, weight: float) -> GuardianAttack:
+	var move := GuardianAttack.new()
+	move.telegraph = 0.2
+	move.duration = 0.6
+	move.attack_range = reach
+	move.weight = weight
+	return move
+
 func _place_player(dx: float) -> void:
 	_player.global_position = _body.global_position + Vector2(dx, 0.0)
 

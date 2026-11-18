@@ -139,6 +139,7 @@ func _ready() -> void:
 	_fight.phase_changed.connect(_on_phase_changed)
 	_fight.opening_ended.connect(_on_opening_ended)
 	_fight.set_recall_pending(_recall_still_needed())
+	_ai.recall_owned = not _recall_still_needed()
 	_ai.attacks = stats.attacks
 	_ai.recall_after_attacks = stats.recall_after_attacks
 	_ai.comfort_distance = stats.comfort_distance
@@ -436,7 +437,7 @@ func _on_attack_telegraphed(_attack: GuardianAttack) -> void:
 ## the recall while the player still lacks its skill.
 func _on_attack_started(attack: GuardianAttack) -> void:
 	_stop_telegraph()
-	_hitbox.damage = attack.damage
+	_hitbox.damage = attack.damage_for(_ai.recall_owned)
 	_hitbox.knockback_strength = attack.knockback_strength
 	_hitbox.knockback_lift = attack.knockback_lift
 	_mover.begin(attack, _motion_context(attack))
@@ -482,6 +483,7 @@ func _stop_telegraph() -> void:
 ## The body remembered. If the hits were already in, that is the blow that
 ## opens the window: the guardian is shaken by what it forced.
 func _on_skill_recalled(_skill: Enums.PlayerSkill) -> void:
+	_ai.recall_owned = not _recall_still_needed()
 	if _fight.skill_recalled():
 		_open_lucidity()
 

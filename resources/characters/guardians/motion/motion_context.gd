@@ -21,6 +21,13 @@ var duration: float = 1.0
 
 
 ## `x` kept `margin` inside the arena's walls; unchanged when the arena is unbounded.
+## A floor step from `from` to `x`, held inside the margins but never reversed: from inside a margin it stays put.
+func clamp_step(from: float, x: float) -> float:
+	var clamped := clamp_x(x)
+	if signf(clamped - from) != signf(x - from):
+		return from
+	return clamped
+
 func clamp_x(x: float) -> float:
 	if arena.size.x <= 0.0:
 		return x

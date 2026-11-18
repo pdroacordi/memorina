@@ -1,7 +1,8 @@
 class_name Lob
 extends SpawnedAttack
 ## An ember or seed pod thrown from the guardian's hand in a ballistic arc onto its root, the spot its placement chose;
-## it leaves a FloorPatch there.
+## it leaves a FloorPatch there. Harmless in flight: only the patch hurts, so its arc never crosses the gaps it leaves
+## (bugs/a-bloom-seed-pods-flight-crosses-the-gap-it-leaves-ivo).
 
 ## Px of the arc's apex above the line from hand to landing.
 @export var arc: float = 120.0
@@ -13,10 +14,21 @@ extends SpawnedAttack
 @export var patch: PackedScene
 
 var _burst: bool = false
+## Px wide its landing mark is drawn: its patch's.
+var _rest: float = 0.0
+
+
+func _ready() -> void:
+	super()
+	_rest = rest_width()
 
 
 func aimed() -> bool:
 	return true
+
+## The pod never hurts; its patch does.
+func is_live(_t_at: float) -> bool:
+	return false
 
 ## It falls on its spot from above: the spot is marked through the warning.
 func from_above() -> bool:
@@ -67,8 +79,8 @@ func _drawn_rect() -> Rect2:
 func _draw() -> void:
 	if _t >= warn + live:
 		return
+	# The spot it will land on, over the grass, through the warning and the flight.
+	draw_floor_warning(-_rest * 0.5, _rest * 0.5, _t / maxf(warn + live, 0.001))
 	var at := _hit_offset(_t) - Vector2(0.0, size.y * 0.5)
-	draw_rect(snapped_rect(Rect2(at - size * 0.5, size)), dark)
-	draw_rect(snapped_rect(Rect2(at - Vector2(2.0, 2.0), Vector2(4.0, 4.0))), light)
-	# The spot it will land on.
-	draw_rect(snapped_rect(Rect2(-size.x, -2.0, size.x * 2.0, 2.0)), dark)
+	draw_rect(snapped_rect(Rect2(at - size * 0.5 - Vector2(2.0, 2.0), size + Vector2(4.0, 4.0))), dark)
+	draw_rect(snapped_rect(Rect2(at - size * 0.5 + Vector2(2.0, 2.0), size - Vector2(4.0, 4.0))), light)

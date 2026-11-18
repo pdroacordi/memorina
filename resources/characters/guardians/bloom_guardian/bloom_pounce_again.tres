@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/leap_motion.gd" id="4_leap"]
+
+[sub_resource type="Resource" id="arc"]
+script = ExtResource("4_leap")
+target = 2
+height = 96.0
+air_time = 0.5
+past = 24.0
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 2
+windup_index = 4
+duration = 0.6
+telegraph = 0.3
+attack_range = 220.0
+cooldown = 0.8
+recovery = 0.35
+recovery_index = 2
+motion = SubResource("arc")
+weight = 0.0
+knockback_lift = 200.0

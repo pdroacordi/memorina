@@ -1,12 +1,23 @@
 [gd_resource type="Resource" script_class="GuardianAttack" format=3 uid="uid://bq8bloomlash"]
 
 [ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_follow_up.gd" id="2_follow"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_back_lash.tres" id="3_back"]
+
+[sub_resource type="Resource" id="to_back_lash"]
+script = ExtResource("2_follow")
+attack = ExtResource("3_back")
+chance = 0.7
 
 [resource]
 script = ExtResource("1_attack")
-duration = 0.6
+windup_index = 0
+duration = 0.4
 telegraph = 0.35
 attack_range = 104.0
-cooldown = 1.4
+cooldown = 0.6
+recovery = 0.35
+recovery_index = 0
 weight = 2.0
+follow_ups = Array[ExtResource("2_follow")]([SubResource("to_back_lash")])
 knockback_strength = 380.0

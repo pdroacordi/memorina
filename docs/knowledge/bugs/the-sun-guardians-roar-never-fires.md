@@ -2,7 +2,7 @@
 id: bugs/the-sun-guardians-roar-never-fires
 type: bug
 title: The Sun Guardian's roar (attack_range 88) is never thrown, because the claw takes over the pick from 118 px and the charge beyond 174
-status: open
+status: fixed
 severity: low
 tags: [guardians, summer, ai, move-selection, reach, pre-existing]
 related: [systems/guardians, playtests/2026-11-18-grd12-engine-regression, playtests/2026-10-30-grd04-autumn-summer-fights]
@@ -45,7 +45,7 @@ apply. Supporting evidence: in `guardian_ai_timeline_test`, where the scripted I
 body's y, between hops) and sweeps x at up to ~300 px/s, the lion does throw the roar (`tests/fixtures/guardians/guardian_ai_timeline.json`, summer `T2@471`). In play he stands
 0.1 px higher and the roar never comes.
 
-## Fix (proposal, for the guardian owner)
+## Options at filing
 
 Choose one:
 
@@ -56,6 +56,16 @@ Choose one:
 
 Re-check Bloom and Frost after any change to `_situational_pick`, because their passive move order depends on it
 (`playtests/2026-11-18-grd12-engine-regression`).
+
+## Fix
+
+Fixed 2026-11-18 by the same change as `bugs/the-bloom-overhead-branch-preempts-its-far-pick-by-weight`: the overhead
+branch runs only above the lowest reach up of the lion's moves (96), so an Ivo 0.1 px above its feet no longer hands the
+pick to the claw. A roar picked by the weighted roll is kept while the lion closes from 118 px and thrown inside 88.
+
+Test: `guardian_ai_test.test_the_sun_roar_is_kept_for_a_player_a_hair_above` (summer stats, roar chosen, Ivo 0.1 px up:
+nothing thrown at 100 px, the roar at 80). The Sun golden changed only at `T0@908` (the claw where the charge was); its one roar (`T2@471`) was there before, so the test above is the evidence. Not measured in
+a Sun bot fight in this change.
 
 ## Prevention
 

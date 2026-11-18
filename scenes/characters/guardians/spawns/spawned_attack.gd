@@ -8,6 +8,9 @@ signal expired
 
 ## Sampling step, s, of `hit_transforms`.
 const SAMPLE := 1.0 / 60.0
+## Px above the floor a floor warning's line is drawn: over the tallest grass blade (GrassLook, 2x art), which the
+## front grass strip draws over the creature pass.
+const WARN_RISE := float(GrassLook.MAX_BLADE_ART * 2 + 4)
 
 ## Scaled seconds of the warning, the hitbox off.
 @export var warn: float = 0.35
@@ -119,6 +122,23 @@ func _fit_shape() -> void:
 
 func _place_hit(t: float) -> void:
 	_hitbox.position = _hit_offset(t)
+
+## A floor warning across `from_x..to_x`: a light line with a dark rim over the grass, and light sparks rising to it
+## as `progress` (0..1) grows, alternating on the scaled clock.
+func draw_floor_warning(from_x: float, to_x: float, progress: float) -> void:
+	var top := -WARN_RISE
+	draw_rect(snapped_rect(Rect2(from_x - 2.0, top - 2.0, to_x - from_x + 4.0, 6.0)), dark)
+	draw_rect(snapped_rect(Rect2(from_x, top, to_x - from_x, 2.0)), light)
+	var even := int(_t * 12.0) % 2 == 0
+	var rise := WARN_RISE * clampf(progress, 0.0, 1.0)
+	var x := from_x
+	var k := 0
+	while x <= to_x:
+		var tall := rise if (k % 2 == 0) == even else rise * 0.6
+		draw_rect(snapped_rect(Rect2(x - 2.0, -tall, 4.0, tall)), dark)
+		draw_rect(snapped_rect(Rect2(x - 1.0, -tall, 2.0, tall)), light)
+		x += 6.0
+		k += 1
 
 ## `rect` snapped outward to the 2 px art grid.
 static func snapped_rect(rect: Rect2) -> Rect2:

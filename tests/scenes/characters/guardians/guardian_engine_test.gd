@@ -7,7 +7,7 @@ const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const ENGINE := preload("res://tests/fixtures/guardians/engine_guardian.tscn")
 const PATCH := preload("res://scenes/characters/guardians/spawns/floor_patch/floor_patch.tscn")
 const SHARD := preload("res://scenes/characters/guardians/spawns/falling_shard/falling_shard.tscn")
-const BURST := preload("res://resources/characters/guardians/bloom_guardian/bloom_burst.tres")
+const BURST := preload("res://tests/fixtures/guardians/engine_burst.tres")
 
 const FLOOR_Y := 30.0
 const STEP := 1.0 / 60.0

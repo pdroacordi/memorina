@@ -40,7 +40,7 @@ func test_a_flinch_faces_what_hit_it_and_keeps_that_side() -> void:
 	assert_int(guardian.phase()).is_equal(GuardianFight.Phase.PRESSURE)
 	var ai := guardian.get_node("AI") as GuardianAI
 	# A cooldown: it gives ground from Ivo, walking away and so facing away.
-	ai.set(&"_cooldown", 5.0)
+	(ai.get(&"_clock") as GuardianMoveClock).call(&"_cool", 5.0)
 	for i: int in 60:
 		await get_tree().physics_frame
 		if guardian.facing < 0:

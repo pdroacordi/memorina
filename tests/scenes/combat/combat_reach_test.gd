@@ -202,7 +202,37 @@ func test_every_guardian_spawn_is_fair() -> void:
 					if hits.size() > 1 and spawn.placement in [GuardianSpawn.Placement.AROUND_IVO, GuardianSpawn.Placement.ACROSS_ARENA]:
 						var gap := _smallest_gap(hits)
 						assert_float(gap).override_failure_message("%s leaves %.0f px between its hits" % [label, gap]).is_greater_equal(ivo_width + SPREAD_GAP)
+						var struck := _struck_in_a_gap(hits, ivo_width * 0.5)
+						assert_float(struck).override_failure_message("%s hits an Ivo standing in a gap at %.0f px (thrown at %.0f)" % [
+								label, struck, distance]).is_equal(INF)
 					distance += COARSE_STEP
+
+## The Bloom pounce is dodged by walking under it: an Ivo standing under the middle of its arc is touched by neither its
+## leg boxes nor its body, from its comfort distance out to its range (bugs/the-bloom-pounce-cannot-be-walked-under-or-jumped).
+func test_the_bloom_pounce_can_be_walked_under() -> void:
+	var guardian := auto_free(_instance("res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn")) as Guardian
+	var contact := _area_box(guardian, ^"ContactHitbox")
+	for file: String in ["bloom_pounce.tres", "bloom_pounce_again.tres"]:
+		var pounce := load("res://resources/characters/guardians/bloom_guardian/" + file) as GuardianAttack
+		var box := _hit_box(guardian, _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[pounce.clip_index]))
+		var leap := pounce.motion as LeapMotion
+		var distance := guardian.stats.comfort_distance
+		while distance <= pounce.attack_range:
+			var ctx := MotionContext.new()
+			ctx.target = Vector2(distance, 0.0)
+			ctx.duration = pounce.duration
+			var path := pounce.motion.plan(ctx)
+			var under := path.at(leap.delay + leap.air_time * 0.5).x
+			var at := 0.0
+			while at <= pounce.duration:
+				var body := {"shape": contact.shape, "xform": Transform2D(0.0, path.at(at)) * (contact.xform as Transform2D)}
+				assert_bool(_touches(body, _ivo_hurtbox, under)).override_failure_message("%s from %.0f: its body hits an Ivo under it at %.2f s" % [
+						file, distance, at]).is_false()
+				at += FRAME
+			assert_bool(_touches(_flown_box(box, pounce, distance), _ivo_hurtbox, under)).override_failure_message(
+					"%s from %.0f: its legs hit an Ivo under it" % [file, distance]).is_false()
+			assert_float(path.end_offset().x).override_failure_message("%s lands short of Ivo" % file).is_greater(distance)
+			distance += COARSE_STEP
 
 ## Ivo's slash and chop both land on a walker parked at its stop distance, the chop after swing 1's shove.
 func test_the_standing_combo_lands_both_swings_on_a_parked_walker() -> void:
@@ -344,21 +374,53 @@ func _flown_box(box: Dictionary, attack: GuardianAttack, distance: float) -> Dic
 		at += FRAME
 	return {"shape": box.shape, "xforms": xforms}
 
-## Each instance a spawn fires at an Ivo `distance` px ahead, as {shape, xforms, drawn} in the guardian's space.
+## Each live hit a spawn makes at an Ivo `distance` px ahead, as {shape, xforms, drawn, rest} in the guardian's space:
+## only the samples where its hitbox is on, and a lob's landing patch as a hit of its own.
 func _spawn_hits(kind: SpawnedAttack, spawn: GuardianSpawn, distance: float) -> Array[Dictionary]:
 	var ctx := SpawnContext.make(Vector2.ZERO, 1, Vector2(distance, 0.0), Rect2(), 0.0)
 	var hits: Array[Dictionary] = []
 	for point: Vector2 in SpawnPlacement.points(spawn, ctx):
-		kind.position = point
-		kind.facing = SpawnPlacement.facing_at(point, ctx)
-		var placed := Transform2D(0.0, point)
-		var xforms: Array[Transform2D] = []
-		for xform: Transform2D in kind.hit_transforms(ctx):
-			xforms.append(placed * xform)
-		var shape := (kind.get_node(^"Hitbox/CollisionShape2D") as CollisionShape2D).shape
-		var rest := (kind as Lob).rest_width() if kind is Lob else shape.get_rect().size.x
-		hits.append({"shape": shape, "xforms": xforms, "drawn": placed * kind.drawn_rect(ctx), "rest": rest})
+		var facing := SpawnPlacement.facing_at(point, ctx)
+		var hit := _live_hit(kind, point, facing, ctx)
+		if not (hit.xforms as Array).is_empty():
+			hits.append(hit)
+		var lob := kind as Lob
+		if lob != null and lob.patch != null:
+			hits.append(_live_hit(auto_free(lob.patch.instantiate()) as SpawnedAttack, point, facing, ctx))
 	return hits
+
+## `kind` fired at `point`: its hit samples while its hitbox is on, its drawn rect and its width at rest.
+func _live_hit(kind: SpawnedAttack, point: Vector2, facing: int, ctx: SpawnContext) -> Dictionary:
+	kind.position = point
+	kind.facing = facing
+	var placed := Transform2D(0.0, point)
+	var xforms: Array[Transform2D] = []
+	var t := kind.warn
+	for xform: Transform2D in kind.hit_transforms(ctx):
+		if kind.is_live(t):
+			xforms.append(placed * xform)
+		t += SpawnedAttack.SAMPLE
+	var shape := (kind.get_node(^"Hitbox/CollisionShape2D") as CollisionShape2D).shape
+	return {"shape": shape, "xforms": xforms, "drawn": placed * kind.drawn_rect(ctx), "rest": shape.get_rect().size.x}
+
+## The first x, px, of an Ivo (half width `half`) standing wholly inside a gap between a spread's resting hits that any
+## live sample of any hit touches; INF when every gap is safe (bugs/a-bloom-seed-pods-flight-crosses-the-gap-it-leaves-ivo).
+func _struck_in_a_gap(hits: Array[Dictionary], half: float) -> float:
+	var spans: Array[Vector2] = []
+	for hit: Dictionary in hits:
+		var xforms: Array = hit.xforms
+		var x: float = (xforms[xforms.size() - 1] as Transform2D).origin.x
+		spans.append(Vector2(x - hit.rest * 0.5, x + hit.rest * 0.5))
+	spans.sort_custom(func(a: Vector2, b: Vector2) -> bool: return a.x < b.x)
+	for i: int in range(1, spans.size()):
+		# 1 px clear of each edge: shapes that only meet count as touching.
+		var x := spans[i - 1].y + half + 1.0
+		while x <= spans[i].x - half - 1.0:
+			for hit: Dictionary in hits:
+				if _touches(hit, _ivo_hurtbox, x):
+					return x
+			x += 2.0
+	return INF
 
 ## The narrowest floor gap, px, between the hits of a spread where they come to rest (a lob's patch included).
 func _smallest_gap(hits: Array[Dictionary]) -> float:

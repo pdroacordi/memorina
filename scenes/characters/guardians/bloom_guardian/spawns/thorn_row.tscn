@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/floor_runner/floor_runner.tscn" id="1_base"]
+
+[node name="ThornRow" instance=ExtResource("1_base")]
+warn = 0.4
+live = 1.4
+light = Color(0.78, 0.86, 0.62, 1)
+dark = Color(0.2, 0.26, 0.16, 1)
+speed = 300.0
+reach = 420.0

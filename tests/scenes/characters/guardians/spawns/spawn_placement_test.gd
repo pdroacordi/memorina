@@ -44,6 +44,14 @@ func test_every_point_stays_inside_the_arena() -> void:
 	for point: Vector2 in SpawnPlacement.points(_spawn(GuardianSpawn.Placement.AROUND_IVO, 3, 80.0), _ctx):
 		assert_float(point.x).is_between(SpawnPlacement.EDGE_MARGIN, ARENA.end.x - SpawnPlacement.EDGE_MARGIN)
 
+## Against a wall a spread slides whole, so its gaps keep the spacing.
+func test_a_spread_around_ivo_slides_off_a_wall_whole() -> void:
+	for x: float in [5.0, 995.0]:
+		_ctx.target = Vector2(x, 400.0)
+		var points := SpawnPlacement.points(_spawn(GuardianSpawn.Placement.AROUND_IVO, 3, 96.0), _ctx)
+		assert_float(points[1].x - points[0].x).is_equal(96.0)
+		assert_float(points[2].x - points[1].x).is_equal(96.0)
+
 func _spawn(placement: GuardianSpawn.Placement, count: int, spacing: float) -> GuardianSpawn:
 	var spawn := GuardianSpawn.new()
 	spawn.placement = placement

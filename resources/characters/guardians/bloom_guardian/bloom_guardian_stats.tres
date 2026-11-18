@@ -6,9 +6,21 @@
 [ext_resource type="Resource" uid="uid://bq8bloomlash" path="res://resources/characters/guardians/bloom_guardian/bloom_lash.tres" id="3_lash"]
 [ext_resource type="Resource" uid="uid://bq0bloombrst" path="res://resources/characters/guardians/bloom_guardian/bloom_burst.tres" id="4_burst"]
 [ext_resource type="Resource" uid="uid://brabloompnc" path="res://resources/characters/guardians/bloom_guardian/bloom_pounce.tres" id="5_pounce"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_thorn_row.tres" id="6_thorn_row"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_seed_lob.tres" id="7_seed_lob"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_antler_dash.tres" id="8_antler_dash"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_stage.gd" id="8_stage"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/bloom_guardian/bloom_guardian_voice.tres" id="9_voice"]
 [ext_resource type="Resource" path="res://resources/music/fight_bloom.tres" id="90_fight_music"]
 [ext_resource type="Resource" path="res://resources/audio/sfx/combat/guardian_sounds.tres" id="95_sounds"]
+
+[sub_resource type="Resource" id="stage_0"]
+script = ExtResource("8_stage")
+
+[sub_resource type="Resource" id="stage_1"]
+script = ExtResource("8_stage")
+cooldown_scale = 0.7
+chain_scale = 1.5
 
 [resource]
 script = ExtResource("1_stats")
@@ -16,7 +28,8 @@ music = ExtResource("90_fight_music")
 id = 1
 song = ExtResource("2_song")
 voice = ExtResource("9_voice")
-attacks = Array[ExtResource("1_mthau")]([ExtResource("3_lash"), ExtResource("4_burst"), ExtResource("5_pounce")])
+attacks = Array[ExtResource("1_mthau")]([ExtResource("3_lash"), ExtResource("4_burst"), ExtResource("5_pounce"), ExtResource("6_thorn_row"), ExtResource("7_seed_lob"), ExtResource("8_antler_dash")])
+stages = Array[ExtResource("8_stage")]([SubResource("stage_0"), SubResource("stage_1")])
 hits_to_open = 7
 call_lead_in = 2.2
 recall_after_attacks = 2

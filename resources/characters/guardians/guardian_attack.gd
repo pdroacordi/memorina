@@ -30,6 +30,8 @@ extends Resource
 @export var leap_impulse: float = 0.0
 ## Relative selection weight; recall attacks use GuardianStats.recall_after_attacks.
 @export var weight: float = 1.0
+## False keeps the move from being chosen right after a string it ended (a dash never follows a dash).
+@export var repeats: bool = true
 ## The body hurts on touch during this move; false leaves the move's own box as its only hit (GRD-10).
 @export var body_contact: bool = true
 ## String links, tried in order at the strike's end.
@@ -55,3 +57,20 @@ extends Resource
 @export_group("Recall")
 ## Opens recall only while the player lacks this skill; the teaching attack is unavoidable.
 @export var recall: AbilityRecallStats
+## Pick weight once the recall's skill is owned: the move leaves the recall cadence; negative keeps it on the cadence.
+@export var owned_weight: float = -1.0
+## Damage once the recall's skill is owned; negative keeps `damage`.
+@export var owned_damage: int = -1
+
+
+## Whether the move leaves the recall cadence once its skill is owned.
+func leaves_cadence_when_owned() -> bool:
+	return recall != null and owned_weight >= 0.0
+
+## Pick weight; `owned` says whether the player owns the recall's skill.
+func weight_for(owned: bool) -> float:
+	return owned_weight if owned and leaves_cadence_when_owned() else weight
+
+## Hit damage; `owned` says whether the player owns the recall's skill.
+func damage_for(owned: bool) -> int:
+	return owned_damage if owned and recall != null and owned_damage >= 0 else damage
