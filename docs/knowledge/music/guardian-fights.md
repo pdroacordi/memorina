@@ -42,3 +42,20 @@ Sketches only, not approved: `tools/audio/make_guardian_fight_midis.py` writes `
 - "Aprovar, fazer stems" (user, 2026-11-18). AIVA `luta_frost_epica.mid` (editor id 6afdb1c7f51fc831cb2fa342), 1 download.
 - Patches after import: Hulusi 1 came as Legato (kept), `s.violins.trem.slur` came as Steinway D Piano (set to Violins 1 Tremolo), `s.solo-cello.nat.slur` as the Celli ensemble (set to solo Cello Sustain); Violins 1 Spiccato, Celli Spiccato, Epic Taikos Kit, Orchestral Kit with Crash Left set by hand.
 - Stems by layer; lead-in 0.481 s cut, 6.05 s of tail folded, loop 140.0 s. Summed -15.6 LUFS, `gain_db` -6.4. `fight_frost.tres`: bpm 360, beats_per_bar 7.
+
+## Bloom remake proposal (2026-11-18, not approved)
+
+"Sim, Primavera" (user, 2026-11-18), under the same binding recipe as Frost.
+
+- Sketch `tools/audio/make_bloom_fight_midis.py` writes `tools/audio/midi/luta_bloom_epica.mid`: G Mixolydian, 6/8 at dotted quarter 132 (quarter 198), 160 bars of 10/11 s, one loop from beat 0 (145.45 s, `loop_offset` 0). The file's 6/8 meta imports in AIVA as is. Game cue: `bpm` 198, `beats_per_bar` 3.
+- The guardian ("uma primavera que começa e nunca chega", `docs/design/drafts/guardian_talks.md`) is scored by the mode and the harmony: Mixolydian has no F#, so nothing pulls into G; the C section climbs by step to F (bVII) and falls back to C; the recorder's answers climb to F6 and hold there; the loop ends on F, so G arrives only as the loop starts again. Every violin figure ends higher than it starts.
+- Form: A sprouting 1-40, B roots 41-72 (3/4 hemiola in cellos, violas and taikos; Enraizar in canon, clarinet then recorder one bar behind: "As raízes se acharam"), C sap 73-112 (sixteenth scale runs every fourth bar), D rain 113-136 (harp an octave up and louder, flute staccato birdsong quoting Chuva: "Um pássaro desta mata ainda canta uma música nossa. Escuta quando chover."), E almost 137-160.
+- Quotes, exact: Enraizar in the recorder at bars 9, 25, 42, 58, 89, 101, 145 and the clarinet at 41, 57, 89; Chuva in the flute at 117 and 129. Enraizar in 6/8: C D | C E as quarter-eighth pairs, then C and a G held a bar and a half.
+- The Recorder's call sounds at pitch (G4 C4 D4 E4), the same octave as Ivo's answer, so the bed keeps out of 60..67 only; same pitch classes (C D E G A; F and B only as roots at MIDI 47 or under).
+- Production lessons from Frost (2026-11-18): an unknown id maps to Steinway Piano (`s.violins.trem.slur`) or a near ensemble (`s.solo-cello.nat.slur` -> Celli); prefer ids that map on import (flute2, clarinet1, solo-viola, basses, harp2, the kits) and name the patch to set by hand for the rest (`PATCHES`).
+
+## Bloom in the game (2026-11-18)
+
+- "Manter a Chuva (Recommended)", "Sim, gerar", "Aprovar, fazer stems" (user, 2026-11-18). AIVA `luta_bloom_epica.mid` (editor id 6afdba615f1a440e0a6dffce), 1 download.
+- Patches after import: `w.recorder.nat.slur` came as Piano (AIVA's Recorder has only Sustain), `s.violins.nat.slur` as Violas (set to Violins 1 Sustain), the Violins 1 and Celli lead lines set to Spiccato; Flute 2 Staccato, Clarinet 1, Harp 2, Violas Spiccato, Solo Viola and Basses came right. Kits as for frost.
+- Stems by layer; lead-in 0.494 s, 6.55 s of tail folded, loop 145.455 s (160 bars of 6/8 at dotted quarter 132). Summed -15.3 LUFS, `gain_db` -6.7. `fight_bloom.tres`: bpm 198, beats_per_bar 3.
