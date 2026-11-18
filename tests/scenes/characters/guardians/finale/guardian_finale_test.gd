@@ -137,7 +137,8 @@ func test_a_revealed_save_starts_the_fight_two_track() -> void:
 	_lucid()
 	assert_float(Music.playing().levels.get(&"spring", 0.0)).is_equal(1.0)
 
-func test_choosing_a_track_fades_the_spring_and_crosses_to_the_call_music() -> void:
+## The fight loop plays on through the final call ("a música de luta deve ser um loop enquanto há luta", user, 2026-11-18).
+func test_choosing_a_track_fades_the_spring_and_the_fight_loop_plays_on() -> void:
 	SaveSystem.mark_finale_revealed()
 	_set_up()
 	_past_winter()
@@ -145,4 +146,4 @@ func test_choosing_a_track_fades_the_spring_and_crosses_to_the_call_music() -> v
 	_finale.answered(ROOT, _ivo)
 	assert_float(fight.levels.get(&"spring", 1.0)).is_equal(0.0)
 	await await_millis(3200)
-	assert_object(Music.playing().cue).is_same(_mentor.stats.finale.call_music)
+	assert_object(Music.playing()).is_same(fight)

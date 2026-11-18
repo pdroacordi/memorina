@@ -61,7 +61,7 @@ No new `WorldFreeze` writer, no `Input` reader, no `CanvasLayer` mode change.
 
 ## Wiring for the final battle
 
-New data: `GuardianStats.music: MusicCue` (`finale_fight.tres`, stems `bed`, `lead`, `spring`); `FinaleStats.call_music: MusicCue` (`finale_call.tres`); `finale_restoration.tres` (one stem, `loops = false`). New signals: `Guardian.phase_changed` re-emits `GuardianFight.phase_changed`; `GuardianFinale.revelation_opened` (in `open_call`, REVELATION), `track_chosen` (after `_finale.choose()`), `freeze_frame_began(seconds)` (in `_shatter`). `GuardianMusic` subscribes; one-directional.
+New data: `GuardianStats.music: MusicCue` (`finale_fight.tres`, stems `bed`, `lead`, `spring`); `FinaleStats.call_music` and `finale_call.tres` were removed on 2026-11-18 (the fight loop plays through the final call, `systems/music`); `finale_restoration.tres` (one stem, `loops = false`). New signals: `Guardian.phase_changed` re-emits `GuardianFight.phase_changed`; `GuardianFinale.revelation_opened` (in `open_call`, REVELATION), `track_chosen` (after `_finale.choose()`), `freeze_frame_began(seconds)` (in `_shatter`). `GuardianMusic` subscribes; one-directional.
 
 | Event | GuardianMusic asks |
 |---|---|
@@ -70,7 +70,7 @@ New data: `GuardianStats.music: MusicCue` (`finale_fight.tres`, stems `bed`, `le
 | `freeze_frame_began(s)` | `hush()`, real timer `s`, `unhush()` |
 | `lucid_landed` | `set_stem(lead, 0, 0.3 s)`, `duck(&"call", -6)` |
 | `call_ended` | `set_stem(lead, 1, 1 s)`, `unduck(&"call")` |
-| `track_chosen` | `set_stem(spring, 0, 2 s)`; `request(call_music, FIGHT, self)` at `BarClock.next_bar` (crossfade 1 bar) |
+| `track_chosen` | `set_stem(spring, 0, 2 s)`; the fight loop plays on, ducked with its lead out (2026-11-18; the crossfade to `call_music` is gone) |
 | `restored` | release both, fade 0.5 s |
 
 The generic table (fight start, call duck, restored) is shared by every guardian; the three finale rows are skipped when the guardian has no Finale child. A death frees `GuardianMusic`, so its requests drop with the old world.

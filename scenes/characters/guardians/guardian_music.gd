@@ -3,8 +3,8 @@ extends Node
 ## Asks Music for the guardian's fight music at each turn of the fight; never plays audio itself
 ## (architecture/music-system, "Wiring for the final battle").
 
-## How far the music sinks while a call is open, dB ("Abafa ~6 dB", user, 2026-11-02).
-const CALL_DUCK_DB := -6.0
+## How far the music sinks while a call is open, dB ("segue, só abaixa, mas mais do que apenas 6db", user, 2026-11-18).
+const CALL_DUCK_DB := -12.0
 const CALL_DUCK := &"call"
 ## Real seconds the spring layer takes to rise at the revelation and to fade once a track is chosen.
 const SPRING_RISE := 4.0
@@ -12,7 +12,6 @@ const SPRING_FADE := 2.0
 
 var _guardian: Guardian
 var _fight_request: MusicRequest
-var _call_request: MusicRequest
 var _hushed: bool = false
 
 
@@ -60,25 +59,12 @@ func _on_freeze_frame(seconds: float) -> void:
 	_hushed = false
 	Music.unhush()
 
+## The fight loop plays through the final call, ducked with its lead out ("a música de luta deve ser um loop
+## enquanto há luta", user, 2026-11-18).
 func _on_track_chosen() -> void:
 	Music.set_stem(_fight_request, &"spring", 0.0, SPRING_FADE)
-	# The call underscore is written to sit under the notes ("Não, já é baixo", user, 2026-11-02).
-	Music.unduck(CALL_DUCK)
-	var call_music := _guardian.stats.finale.call_music if _guardian.stats.finale != null else null
-	if call_music == null or _fight_request == null:
-		return
-	var cue := _guardian.stats.music
-	await get_tree().create_timer(BarClock.next_bar(Music.position(), cue.bpm, cue.beats_per_bar), true, false, true).timeout
-	# Restored during the wait: the fight is over and nothing follows it.
-	if not is_inside_tree() or _fight_request == null:
-		return
-	_call_request = Music.request(call_music, MusicRequest.Layer.FIGHT, self)
-	Music.release(_fight_request, BarClock.bar_seconds(cue.bpm, cue.beats_per_bar))
-	_fight_request = null
 
 func _on_restored() -> void:
 	Music.unduck(CALL_DUCK)
 	Music.release(_fight_request, 0.5)
-	Music.release(_call_request, 0.5)
 	_fight_request = null
-	_call_request = null
