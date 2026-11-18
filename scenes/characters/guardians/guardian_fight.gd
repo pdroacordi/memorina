@@ -3,6 +3,8 @@ class_name GuardianFight extends RefCounted
 ## Guardian encounter phases and timing rules; see docs/design/02_mecanicas.md sections 3–4.
 
 signal phase_changed(from: Phase, to: Phase)
+## The opening hold ran out or was cut short by a hit: the guardian may act.
+signal opening_ended
 
 enum Phase { DORMANT, PRESSURE, LUCIDITY, RELAPSE, RESTORED }
 
@@ -25,6 +27,8 @@ var _window_total: float = 0.0
 var _relapse_left: float = 0.0
 ## Seconds the window loses per second; 1 normally, more under dissonance.
 var _drain: float = 1.0
+## Seconds of the opening hold left; 0 once the guardian may act.
+var _opening_left: float = 0.0
 
 func _init(stats: GuardianStats) -> void:
 	_stats = stats
@@ -35,7 +39,12 @@ func phase() -> Phase:
 ## Starts the encounter.
 func begin() -> void:
 	if _phase == Phase.DORMANT:
+		_opening_left = maxf(_stats.opening_hold, 0.0)
 		_transition(Phase.PRESSURE)
+
+## Whether the fight has begun but its opening hold still keeps the guardian idle.
+func is_opening() -> bool:
+	return _phase == Phase.PRESSURE and _opening_left > 0.0
 
 ## Restores this guardian without playing the fight.
 func restore_silently() -> void:
@@ -54,6 +63,7 @@ func recall_pending() -> bool:
 func register_hit() -> bool:
 	if _phase != Phase.PRESSURE:
 		return false
+	_end_opening()
 	_hits = mini(_hits + 1, hits_to_open())
 	return _try_open()
 
@@ -108,6 +118,12 @@ func window_fraction() -> float:
 
 ## Advances timers and returns true on the frame the answer window expires.
 func tick(delta: float) -> bool:
+	if is_opening():
+		if _opening_left <= delta:
+			_end_opening()
+		else:
+			_opening_left -= delta
+		return false
 	if _phase == Phase.RELAPSE:
 		_relapse_left -= delta
 		if _relapse_left <= 0.0:
@@ -201,3 +217,9 @@ func _transition(to: Phase) -> void:
 	var from := _phase
 	_phase = to
 	phase_changed.emit(from, to)
+
+func _end_opening() -> void:
+	if _opening_left <= 0.0:
+		return
+	_opening_left = 0.0
+	opening_ended.emit()

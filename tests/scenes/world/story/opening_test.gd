@@ -172,25 +172,32 @@ func test_the_bench_is_empty_at_six_tenths() -> void:
 	assert_str(_shown(elder, "Props/Audience")).is_equal("")
 
 ## STORY-34: he faces the lamp until the turn is seen, then holds the Memorina toward Ivo with no fade; the gift's beat
-## stands the empty hand in; the talk's end turns him to stasis; the four restored take him away and bring his body.
+## stands the empty hand in; the talk's end turns him to stasis. STORY-38: the four restored put him back still at the
+## lamp, and only the awakening seen takes him away and brings his body.
 func test_the_mentor_turns_holds_gives_and_goes_still() -> void:
 	var lighthouse := _mount(LIGHTHOUSE)
 	var staging := lighthouse.get_node("Props/Mentor") as FactStaging
 	var body := lighthouse.get_node("MentorGuardian") as Node2D
+	assert_int(staging.stages.size()).is_equal(5)
 	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("AtLamp")
 	assert_bool(body.visible).is_false()
 	assert_int(body.process_mode).is_equal(Node.PROCESS_MODE_DISABLED)
 	SaveSystem.mark_scene_seen(&"mentor_turns")
 	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("Holding")
-	assert_float(staging.stages[2].fade_seconds).is_equal(0.0)
+	assert_float(staging.stages[3].fade_seconds).is_equal(0.0)
 	var gift := lighthouse.get_node("Beats/MentorGift") as StagedBeat
 	assert_str(String(gift.stand_ins.values()[0])).is_equal("EmptyHand")
 	SaveSystem.mark_dialogue_heard(&"mentor_gift")
 	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("Stasis")
-	assert_float((lighthouse.get_node("Props/Mentor") as FactStaging).stages[1].fade_seconds).is_equal(1.5)
+	assert_float(staging.stages[2].fade_seconds).is_equal(1.5)
 	# GRD-06: with the four restored he has climbed to the lantern.
 	for guardian: Enums.Guardian in Enums.Guardian.values():
 		SaveSystem.restore_guardian(guardian)
+	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("StillAtLamp")
+	await get_tree().process_frame
+	assert_bool(body.visible).is_false()
+	assert_int(body.process_mode).is_equal(Node.PROCESS_MODE_DISABLED)
+	SaveSystem.mark_scene_seen(&"mentor_wakes")
 	assert_str(_shown(lighthouse, "Props/Mentor")).is_equal("")
 	await get_tree().process_frame
 	assert_bool(body.visible).is_true()

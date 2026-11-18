@@ -1,0 +1,106 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e_bars"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_music.gd" id="e_music"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_walk.gd" id="e_walk"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e_face"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_stage.gd" id="e_stage"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="e_cue"]
+
+[sub_resource type="Resource" id="silence"]
+script = ExtResource("e_cue")
+id = &"mentor_wakes_silence"
+loops = true
+fade_in = 0.0
+fade_out = 0.0
+
+[sub_resource type="Resource" id="bars_2"]
+script = ExtResource("e_bars")
+open = true
+seconds = 0.6
+
+[sub_resource type="Resource" id="music_3"]
+script = ExtResource("e_music")
+cue = SubResource("silence")
+fade = 1.0
+
+[sub_resource type="Resource" id="camera_4"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"ivo", &"mentor_home"])
+offset = Vector2(0, -112)
+zoom = 1.0
+seconds = 1.0
+
+[sub_resource type="Resource" id="walk_5"]
+script = ExtResource("e_walk")
+actor = &"ivo"
+mark = &"ivo_stand"
+pace = 0.6
+
+[sub_resource type="Resource" id="together_1"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bars_2"), SubResource("music_3"), SubResource("camera_4"), SubResource("walk_5")])
+
+[sub_resource type="Resource" id="face_6"]
+script = ExtResource("e_face")
+actor = &"ivo"
+toward = &"mentor_home"
+
+[sub_resource type="Resource" id="wait_7"]
+script = ExtResource("e_wait")
+seconds = 0.3
+
+[sub_resource type="Resource" id="stage_8"]
+script = ExtResource("e_stage")
+staging = &"mentor_staging"
+child = &"StillTurning"
+
+[sub_resource type="Resource" id="wait_9"]
+script = ExtResource("e_wait")
+seconds = 1.0
+
+[sub_resource type="Resource" id="stage_10"]
+script = ExtResource("e_stage")
+staging = &"mentor_staging"
+child = &"Stasis"
+
+[sub_resource type="Resource" id="wait_11"]
+script = ExtResource("e_wait")
+seconds = 0.8
+
+[sub_resource type="Resource" id="stage_12"]
+script = ExtResource("e_stage")
+staging = &"mentor_staging"
+child = &"Cracking"
+
+[sub_resource type="Resource" id="wait_15"]
+script = ExtResource("e_wait")
+seconds = 0.625
+
+[sub_resource type="Resource" id="stage_16"]
+script = ExtResource("e_stage")
+staging = &"mentor_staging"
+child = &"RaisingWrong"
+
+[sub_resource type="Resource" id="wait_17"]
+script = ExtResource("e_wait")
+seconds = 0.8
+
+[sub_resource type="Resource" id="face_13"]
+script = ExtResource("e_face")
+actor = &"mentor"
+toward = &"ivo"
+
+[sub_resource type="Resource" id="wait_14"]
+script = ExtResource("e_wait")
+seconds = 0.3
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"mentor_wakes"
+steps = Array[ExtResource("e_step")]([SubResource("together_1"), SubResource("face_6"), SubResource("wait_7"), SubResource("stage_8"), SubResource("wait_9"), SubResource("stage_10"), SubResource("wait_11"), SubResource("stage_12"), SubResource("wait_15"), SubResource("stage_16"), SubResource("wait_17"), SubResource("face_13"), SubResource("wait_14")])

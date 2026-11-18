@@ -132,6 +132,7 @@ func _ready() -> void:
 	assert(stats != null and stats.song != null, "%s has no GuardianStats with a song." % name)
 	_fight = GuardianFight.new(stats)
 	_fight.phase_changed.connect(_on_phase_changed)
+	_fight.opening_ended.connect(_on_opening_ended)
 	_fight.set_recall_pending(_recall_still_needed())
 	_ai.attacks = stats.attacks
 	_ai.recall_after_attacks = stats.recall_after_attacks
@@ -334,7 +335,7 @@ func _on_player_entered() -> void:
 	_player.skill_recalled.connect(_on_skill_recalled)
 	_ai.overhead_band = GuardianAI.overhead_band_for(body_rect().size.x, _player.body_rect().size.x)
 	_fight.begin()
-	_ai.active = true
+	_ai.active = not _fight.is_opening()
 	# The mentor has no Enums.Guardian id: the hatch's gate counts the four (architecture/grd-06-final-battle).
 	if _finale == null:
 		SaveSystem.meet_guardian(stats.id)
@@ -583,6 +584,9 @@ func _abandon_call() -> void:
 		_fight.answer_failed()
 		_close_call(false)
 	_unstage()
+
+func _on_opening_ended() -> void:
+	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE
 
 ## The fight's own transitions, as opposed to the ones this node drives: the
 ## relapse begins at an answer and ends on its own clock.

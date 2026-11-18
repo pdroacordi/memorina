@@ -1,8 +1,10 @@
 ; lighthouse_top.room - Lanterna do Farol (design 04 section 3.3): a flat floor (row 21, cols 3-36) under the lantern's
-; roof, with the hatch door (col 30, east of the lamp's axis) down to lighthouse_interior, always open (STORY-34).
+; roof, with the hatch door (col 36, against the east wall) down to lighthouse_interior, always open (STORY-34).
 ; The mentor (STORY-34, systems/story) stands at x 720 facing west to the lowered lamp (x 656), his back to the hatch:
 ; his talk starts as Ivo comes near from the east (col 23, legend t, auto); in stasis, Up on him says "..." (col 22,
-; legend t). Once the four guardians are restored the final arena (GRD-06) holds his guardian body in the same place.
+; legend t). Once the four guardians are restored he waits there still until Ivo nears, wakes (STORY-38, mentor_wakes)
+; and his guardian body holds the final arena (GRD-06): the arena ends at x 1152, and the grey wall (col 35, rows 3-20,
+; up to the roof, which Ivo's 144 px jump cannot clear) closes the hatch's pocket while the fight is on.
 
 [room]
 origin = 0, 0
@@ -29,12 +31,13 @@ S......................................S
 S......................................S
 S......................................S
 S......................................S
-SSS...................tt......E......SSS
+SSS...................tt...........IESSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
 
 [entities]
-30,20 = {"look": "hatch_down", "link": "lighthouse_hatch", "to_room": "lighthouse_interior", "arrive_facing": -1}
+36,20 = {"look": "hatch_down", "link": "lighthouse_hatch", "to_room": "lighthouse_interior", "arrive_facing": -1}
 23,20 = {"talk": "res://resources/dialogue/story/mentor.tres", "auto_start": true, "speaker_offset": -32.0, "reach_west": 40.0, "reach_east": 120.0, "face_height": 110.0}
 22,20 = {"talk": "res://resources/dialogue/story/mentor_stasis.tres", "face_height": 110.0}
+35,20 = {"cells": 18}

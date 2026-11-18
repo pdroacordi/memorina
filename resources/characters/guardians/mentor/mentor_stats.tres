@@ -43,3 +43,4 @@ pace_time = 1.0
 pace_speed = 0.45
 step_out_speed = 1.6
 sounds = ExtResource("95_sounds")
+opening_hold = 1.5

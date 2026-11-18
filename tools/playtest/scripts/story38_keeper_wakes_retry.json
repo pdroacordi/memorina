@@ -1,0 +1,576 @@
+{
+ "_note": "STORY-38 death and retry (playtests/2026-11-17-story38-the-keeper-wakes, second run): seated at the frost_cliffs bench with the four restored, teleport to the lantern hatch, walk in, the awakening plays (~3.7-8.6), Ivo stands still and dies (~24 s; the guardian holds 1.5 s, then hits about every 5.5 s), respawns at the bench (~25.5 s), teleport back at 29: the keeper is grey at the lamp again, no body, the wall open, and the scene plays again.",
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 45.0,
+ "locale": "pt_BR",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_bread",
+  "daughter_song",
+  "elder_story",
+  "mentor_gift"
+ ],
+ "responses": {
+  "morning_song": "guitar_lower",
+  "elder_story": "elder_painting",
+  "mentor_flicker": "memorina_again"
+ },
+ "player_position": [
+  12048,
+  -1254
+ ],
+ "steps": [
+  {
+   "t": 0.5,
+   "log": "l000.50"
+  },
+  {
+   "t": 1.0,
+   "teleport": [
+    12048,
+    -1254
+   ]
+  },
+  {
+   "t": 1.0,
+   "log": "l001.00"
+  },
+  {
+   "t": 1.5,
+   "log": "l001.50"
+  },
+  {
+   "t": 2.0,
+   "log": "l002.00"
+  },
+  {
+   "t": 2.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.5,
+   "log": "l002.50"
+  },
+  {
+   "t": 2.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.0,
+   "log": "l003.00"
+  },
+  {
+   "t": 3.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.5,
+   "log": "l003.50"
+  },
+  {
+   "t": 3.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 3.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 4.0,
+   "log": "l004.00"
+  },
+  {
+   "t": 4.5,
+   "log": "l004.50"
+  },
+  {
+   "t": 5.0,
+   "log": "l005.00"
+  },
+  {
+   "t": 5.5,
+   "log": "l005.50"
+  },
+  {
+   "t": 6.0,
+   "log": "l006.00"
+  },
+  {
+   "t": 6.5,
+   "log": "l006.50"
+  },
+  {
+   "t": 7.0,
+   "log": "l007.00"
+  },
+  {
+   "t": 7.5,
+   "log": "l007.50"
+  },
+  {
+   "t": 8.0,
+   "log": "l008.00"
+  },
+  {
+   "t": 8.5,
+   "log": "l008.50"
+  },
+  {
+   "t": 9.0,
+   "log": "l009.00"
+  },
+  {
+   "t": 9.5,
+   "log": "l009.50"
+  },
+  {
+   "t": 10.0,
+   "log": "l010.00"
+  },
+  {
+   "t": 10.5,
+   "log": "l010.50"
+  },
+  {
+   "t": 11.0,
+   "log": "l011.00"
+  },
+  {
+   "t": 11.5,
+   "log": "l011.50"
+  },
+  {
+   "t": 12.0,
+   "log": "l012.00"
+  },
+  {
+   "t": 12.5,
+   "log": "l012.50"
+  },
+  {
+   "t": 13.0,
+   "log": "l013.00"
+  },
+  {
+   "t": 13.5,
+   "log": "l013.50"
+  },
+  {
+   "t": 14.0,
+   "log": "l014.00"
+  },
+  {
+   "t": 14.5,
+   "log": "l014.50"
+  },
+  {
+   "t": 15.0,
+   "log": "l015.00"
+  },
+  {
+   "t": 15.5,
+   "log": "l015.50"
+  },
+  {
+   "t": 16.0,
+   "log": "l016.00"
+  },
+  {
+   "t": 16.5,
+   "log": "l016.50"
+  },
+  {
+   "t": 17.0,
+   "log": "l017.00"
+  },
+  {
+   "t": 17.5,
+   "log": "l017.50"
+  },
+  {
+   "t": 18.0,
+   "log": "l018.00"
+  },
+  {
+   "t": 18.5,
+   "log": "l018.50"
+  },
+  {
+   "t": 19.0,
+   "log": "l019.00"
+  },
+  {
+   "t": 19.5,
+   "log": "l019.50"
+  },
+  {
+   "t": 20.0,
+   "log": "l020.00"
+  },
+  {
+   "t": 20.5,
+   "log": "l020.50"
+  },
+  {
+   "t": 21.0,
+   "log": "l021.00"
+  },
+  {
+   "t": 21.5,
+   "log": "l021.50"
+  },
+  {
+   "t": 22.0,
+   "log": "l022.00"
+  },
+  {
+   "t": 22.0,
+   "screenshot": "a022.00"
+  },
+  {
+   "t": 22.5,
+   "log": "l022.50"
+  },
+  {
+   "t": 22.8,
+   "screenshot": "a022.80"
+  },
+  {
+   "t": 23.0,
+   "log": "l023.00"
+  },
+  {
+   "t": 23.5,
+   "log": "l023.50"
+  },
+  {
+   "t": 23.6,
+   "screenshot": "a023.60"
+  },
+  {
+   "t": 24.0,
+   "log": "l024.00"
+  },
+  {
+   "t": 24.4,
+   "screenshot": "a024.40"
+  },
+  {
+   "t": 24.5,
+   "log": "l024.50"
+  },
+  {
+   "t": 25.0,
+   "log": "l025.00"
+  },
+  {
+   "t": 25.2,
+   "screenshot": "a025.20"
+  },
+  {
+   "t": 25.5,
+   "log": "l025.50"
+  },
+  {
+   "t": 26.0,
+   "log": "l026.00"
+  },
+  {
+   "t": 26.0,
+   "screenshot": "a026.00"
+  },
+  {
+   "t": 26.5,
+   "log": "l026.50"
+  },
+  {
+   "t": 26.8,
+   "screenshot": "a026.80"
+  },
+  {
+   "t": 27.0,
+   "log": "l027.00"
+  },
+  {
+   "t": 27.5,
+   "log": "l027.50"
+  },
+  {
+   "t": 28.0,
+   "log": "l028.00"
+  },
+  {
+   "t": 28.5,
+   "log": "l028.50"
+  },
+  {
+   "t": 29.0,
+   "teleport": [
+    12048,
+    -1254
+   ]
+  },
+  {
+   "t": 29.0,
+   "log": "l029.00"
+  },
+  {
+   "t": 29.5,
+   "log": "l029.50"
+  },
+  {
+   "t": 29.5,
+   "screenshot": "b029.50"
+  },
+  {
+   "t": 30.0,
+   "log": "l030.00"
+  },
+  {
+   "t": 30.1,
+   "screenshot": "b030.10"
+  },
+  {
+   "t": 30.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 30.5,
+   "log": "l030.50"
+  },
+  {
+   "t": 30.7,
+   "screenshot": "b030.70"
+  },
+  {
+   "t": 30.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 31.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 31.0,
+   "log": "l031.00"
+  },
+  {
+   "t": 31.25,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 31.3,
+   "screenshot": "b031.30"
+  },
+  {
+   "t": 31.5,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 31.5,
+   "log": "l031.50"
+  },
+  {
+   "t": 31.75,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 31.9,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 31.9,
+   "screenshot": "b031.90"
+  },
+  {
+   "t": 32.0,
+   "log": "l032.00"
+  },
+  {
+   "t": 32.5,
+   "log": "l032.50"
+  },
+  {
+   "t": 32.5,
+   "screenshot": "b032.50"
+  },
+  {
+   "t": 33.0,
+   "log": "l033.00"
+  },
+  {
+   "t": 33.1,
+   "screenshot": "b033.10"
+  },
+  {
+   "t": 33.5,
+   "log": "l033.50"
+  },
+  {
+   "t": 33.7,
+   "screenshot": "b033.70"
+  },
+  {
+   "t": 34.0,
+   "log": "l034.00"
+  },
+  {
+   "t": 34.3,
+   "screenshot": "b034.30"
+  },
+  {
+   "t": 34.5,
+   "log": "l034.50"
+  },
+  {
+   "t": 34.9,
+   "screenshot": "b034.90"
+  },
+  {
+   "t": 35.0,
+   "log": "l035.00"
+  },
+  {
+   "t": 35.5,
+   "log": "l035.50"
+  },
+  {
+   "t": 35.5,
+   "screenshot": "b035.50"
+  },
+  {
+   "t": 36.0,
+   "log": "l036.00"
+  },
+  {
+   "t": 36.1,
+   "screenshot": "b036.10"
+  },
+  {
+   "t": 36.5,
+   "log": "l036.50"
+  },
+  {
+   "t": 36.7,
+   "screenshot": "b036.70"
+  },
+  {
+   "t": 37.0,
+   "log": "l037.00"
+  },
+  {
+   "t": 37.3,
+   "screenshot": "b037.30"
+  },
+  {
+   "t": 37.5,
+   "log": "l037.50"
+  },
+  {
+   "t": 37.9,
+   "screenshot": "b037.90"
+  },
+  {
+   "t": 38.0,
+   "log": "l038.00"
+  },
+  {
+   "t": 38.5,
+   "log": "l038.50"
+  },
+  {
+   "t": 38.5,
+   "screenshot": "b038.50"
+  },
+  {
+   "t": 39.0,
+   "log": "l039.00"
+  },
+  {
+   "t": 39.1,
+   "screenshot": "b039.10"
+  },
+  {
+   "t": 39.5,
+   "log": "l039.50"
+  },
+  {
+   "t": 39.7,
+   "screenshot": "b039.70"
+  },
+  {
+   "t": 40.0,
+   "log": "l040.00"
+  },
+  {
+   "t": 40.5,
+   "log": "l040.50"
+  },
+  {
+   "t": 41.0,
+   "log": "l041.00"
+  },
+  {
+   "t": 41.5,
+   "log": "l041.50"
+  },
+  {
+   "t": 42.0,
+   "log": "l042.00"
+  },
+  {
+   "t": 42.5,
+   "log": "l042.50"
+  },
+  {
+   "t": 43.0,
+   "log": "l043.00"
+  },
+  {
+   "t": 43.5,
+   "log": "l043.50"
+  },
+  {
+   "t": 44.0,
+   "log": "l044.00"
+  }
+ ],
+ "bench": {
+  "id": "frost_cliffs_bench",
+  "room": "res://scenes/world/rooms/frost_edge/frost_cliffs.tscn",
+  "region": "REGION_FROST_EDGE"
+ }
+}

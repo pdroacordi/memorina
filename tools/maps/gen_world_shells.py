@@ -211,7 +211,7 @@ DOORS = [
     ("village_square", 15, "village_notes_house", 4, "village_notes_house_door", {}, {"arrive_facing": 1}),
     ("threshold_fields", 40, "threshold_farmhouse", 4, "threshold_farmhouse_door", {}, {"arrive_facing": 1}),
     ("lighthouse_base", 20, "lighthouse_interior", 6, "lighthouse_door", {}, {"arrive_facing": 1}),
-    ("lighthouse_top", 30, "lighthouse_interior", 12, "lighthouse_hatch",
+    ("lighthouse_top", 36, "lighthouse_interior", 12, "lighthouse_hatch",
         {"arrive_facing": -1},
         {"row": 4, "arrive_facing": -1}),
     ("frost_shore", 18, "frost_wreck_hold", 3, "frost_wreck_hold_door",

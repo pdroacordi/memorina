@@ -442,6 +442,8 @@ A loucura dele é o meio-dia que não acaba: segurou o sol no alto para ninguém
 
 Aprovado 2026-10-30 ("Aprovar as falas"). A revelação não tem fala; o nome dele não é dito (01 §4), e por quem ele segurou a primavera fica em aberto.
 
+**O despertar (STORY-38, 2026-11-17).** "a luta poderia demorar um pouquinho pra começar para o jogador poder assimilar o que está acontecendo. ele não espera encontrar o guardião que antes ele conversava agora agressivo" (usuário); "Cena de despertar (Recommended)". Com os quatro guardiões restaurados, Ivo sobe o alçapão e encontra o mentor parado junto à lâmpada, de costas, na cinza da estase ("De volta à lâmpada (Recommended)"). Quando Ivo se aproxima: silêncio, a mesma virada da abertura, a cinza rachando nele, a mão vazia erguida como se segurasse a flauta que não está ali, parando no lugar errado ao lado da máscara ("Mão vazia (Recommended)"). Sem falas: a primeira é `BARK_MENTOR_LUCID_0`. Só então a parede de cinza fecha o alçapão ("Alçapão ao leste + parede (Recommended)") e a luta começa. Depois de uma morte, o despertar se repete ("Repete sempre (Recommended)").
+
 ### Balões na luta
 
 | Chave | Quando | EN | PT |

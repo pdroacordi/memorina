@@ -49,6 +49,41 @@ func test_no_guardian_talk_can_stand_within_a_body_of_a_door() -> void:
 						path.get_file(), guardian.name, zone, cell]).is_greater(BODY_WIDTH)
 	assert_int(checked).is_greater_equal(5)
 
+## No leap lands a guardian's body on or past a FightWall on its floor row (STORY-38: the lantern's wall at col 35 stands
+## east of the trimmed arena's landings).
+func test_no_leap_lands_on_a_fight_wall() -> void:
+	var walls := 0
+	for path: String in _contents_scenes(ROOMS_DIR):
+		if not FileAccess.get_file_as_string(path).contains(GUARDIANS_DIR):
+			continue
+		var contents := auto_free((load(path) as PackedScene).instantiate()) as Node2D
+		var room_path := path.trim_suffix("_contents.tscn") + ".room"
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(room_path), RoomLegend.load_default(), room_path).map
+		for child: Node in contents.get_children():
+			var guardian := child as Guardian
+			if guardian == null:
+				continue
+			var arena := guardian.get_node(guardian.arena_path) as Arena
+			var shape := arena.get_node(^"CollisionShape2D") as CollisionShape2D
+			var size := (shape.shape as RectangleShape2D).size
+			var centre := arena.position + shape.position
+			var half := (guardian.get_node(^"CollisionShape2D") as CollisionShape2D).shape.get_rect().size.x * 0.5
+			var low := centre.x - size.x * 0.5 + guardian.lucidity_leap_margin - half
+			var high := centre.x + size.x * 0.5 - guardian.lucidity_leap_margin + half
+			var row := floori((guardian.position.y - 1.0) / RoomMap.CELL_PX)
+			for placed: Dictionary in map.entities:
+				var cell := placed.cell as Vector2i
+				if placed.symbol != "I" or cell.y != row:
+					continue
+				walls += 1
+				var across := int((placed.params as Dictionary).get("across", 1))
+				var wall_left := float(cell.x * RoomMap.CELL_PX)
+				var wall_right := wall_left + across * RoomMap.CELL_PX
+				assert_bool(high <= wall_left or low >= wall_right).override_failure_message(
+						"%s: %s lands over x %.0f..%.0f, wall at %s" % [path.get_file(), guardian.name, low, high, cell]
+						).is_true()
+	assert_int(walls).is_greater_equal(1)
+
 func _has_mark_at(contents: Node, point: Vector2) -> bool:
 	for node: Node in contents.find_children("*", "Marker2D", true, false):
 		if node is CutsceneMark and (node as CutsceneMark).position.is_equal_approx(point):

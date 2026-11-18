@@ -43,9 +43,18 @@
 [ext_resource type="Resource" path="res://resources/cutscene/story/mentor_turns.tres" id="cs_turns"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/mentor_goes_still.tres" id="cs_goes_still"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/mentor_silence.tres" id="cs_silence"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/mentor_wakes.tres" id="cs_wakes"]
+[ext_resource type="Resource" path="res://resources/save_facts/seen_mentor_wakes.tres" id="53_seen_wakes"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/still_at_lamp.png" id="st_still_at_lamp"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/still_turn.png" id="st_still_turn"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/wake_crack.png" id="st_wake_crack"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/wake_raise.png" id="st_wake_raise"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_arena"]
-size = Vector2(1280, 768)
+size = Vector2(1152, 768)
+
+[sub_resource type="RectangleShape2D" id="wakes_zone_rect"]
+size = Vector2(940, 704)
 
 [sub_resource type="Resource" id="stage_lit"]
 script = ExtResource("41_stage")
@@ -81,7 +90,13 @@ id = &"mentor_gift"
 
 [sub_resource type="Resource" id="mentor_gone"]
 script = ExtResource("41_stage")
+when = Array[ExtResource("48_fact")]([ExtResource("50_all_restored"), ExtResource("53_seen_wakes")])
+fade_seconds = 0.0
+
+[sub_resource type="Resource" id="mentor_waiting"]
+script = ExtResource("41_stage")
 when = Array[ExtResource("48_fact")]([ExtResource("50_all_restored")])
+show = &"StillAtLamp"
 fade_seconds = 0.0
 
 [sub_resource type="Resource" id="mentor_stasis"]
@@ -195,6 +210,149 @@ animations = [{
 "speed": 6.0
 }]
 
+[sub_resource type="AtlasTexture" id="still_turn_0"]
+atlas = ExtResource("st_still_turn")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="still_turn_1"]
+atlas = ExtResource("st_still_turn")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="still_turn_2"]
+atlas = ExtResource("st_still_turn")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="still_turn_3"]
+atlas = ExtResource("st_still_turn")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="still_turn_4"]
+atlas = ExtResource("st_still_turn")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="still_turn_5"]
+atlas = ExtResource("st_still_turn")
+region = Rect2(640, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="still_turn_frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("still_turn_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("still_turn_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("still_turn_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("still_turn_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("still_turn_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("still_turn_5")
+}],
+"loop": false,
+"name": &"still_turn",
+"speed": 6.0
+}]
+
+[sub_resource type="AtlasTexture" id="wake_crack_0"]
+atlas = ExtResource("st_wake_crack")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="wake_crack_1"]
+atlas = ExtResource("st_wake_crack")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="wake_crack_2"]
+atlas = ExtResource("st_wake_crack")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="wake_crack_3"]
+atlas = ExtResource("st_wake_crack")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="wake_crack_4"]
+atlas = ExtResource("st_wake_crack")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="wake_crack_frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("wake_crack_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("wake_crack_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("wake_crack_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("wake_crack_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("wake_crack_4")
+}],
+"loop": false,
+"name": &"wake_crack",
+"speed": 8.0
+}]
+
+[sub_resource type="AtlasTexture" id="wake_raise_0"]
+atlas = ExtResource("st_wake_raise")
+region = Rect2(0, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="wake_raise_1"]
+atlas = ExtResource("st_wake_raise")
+region = Rect2(128, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="wake_raise_2"]
+atlas = ExtResource("st_wake_raise")
+region = Rect2(256, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="wake_raise_3"]
+atlas = ExtResource("st_wake_raise")
+region = Rect2(384, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="wake_raise_4"]
+atlas = ExtResource("st_wake_raise")
+region = Rect2(512, 0, 128, 96)
+
+[sub_resource type="AtlasTexture" id="wake_raise_5"]
+atlas = ExtResource("st_wake_raise")
+region = Rect2(640, 0, 128, 96)
+
+[sub_resource type="SpriteFrames" id="wake_raise_frames"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("wake_raise_0")
+}, {
+"duration": 1.5,
+"texture": SubResource("wake_raise_1")
+}, {
+"duration": 2.0,
+"texture": SubResource("wake_raise_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("wake_raise_3")
+}, {
+"duration": 1.5,
+"texture": SubResource("wake_raise_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("wake_raise_5")
+}],
+"loop": false,
+"name": &"wake_raise",
+"speed": 10.0
+}]
+
 [sub_resource type="SpriteFrames" id="strip_frames"]
 animations = [{
 "frames": [{
@@ -252,7 +410,7 @@ script = ExtResource("room_map_node")
 map = ExtResource("room_map")
 
 [node name="Arena" type="Area2D" parent="."]
-position = Vector2(640, 384)
+position = Vector2(576, 384)
 monitoring = false
 monitorable = false
 script = ExtResource("30_arena")
@@ -296,14 +454,14 @@ cutscene_id = &"mentor"
 
 [node name="FactPresence" type="Node" parent="MentorGuardian"]
 script = ExtResource("52_presence")
-when = Array[ExtResource("48_fact")]([ExtResource("50_all_restored")])
+when = Array[ExtResource("48_fact")]([ExtResource("50_all_restored"), ExtResource("53_seen_wakes")])
 
 [node name="Props" type="Node2D" parent="."]
 z_index = -10
 
 [node name="Mentor" type="Node2D" parent="Props"]
 script = ExtResource("40_staging")
-stages = Array[ExtResource("41_stage")]([SubResource("mentor_gone"), SubResource("mentor_stasis"), SubResource("mentor_holding"), SubResource("mentor_at_lamp")])
+stages = Array[ExtResource("41_stage")]([SubResource("mentor_gone"), SubResource("mentor_waiting"), SubResource("mentor_stasis"), SubResource("mentor_holding"), SubResource("mentor_at_lamp")])
 staging_id = &"mentor_staging"
 
 [node name="AtLamp" type="Node2D" parent="Props/Mentor"]
@@ -373,6 +531,40 @@ flip_h = true
 script = ExtResource("st_strip")
 intro = &"raise"
 loop = &"play"
+
+[node name="StillAtLamp" type="Node2D" parent="Props/Mentor"]
+
+[node name="Body" type="Sprite2D" parent="Props/Mentor/StillAtLamp"]
+position = Vector2(720, 672)
+texture = ExtResource("st_still_at_lamp")
+centered = false
+offset = Vector2(-43, -120)
+
+[node name="StillTurning" type="AnimatedSprite2D" parent="Props/Mentor"]
+position = Vector2(720, 672)
+sprite_frames = SubResource("still_turn_frames")
+animation = &"still_turn"
+centered = false
+offset = Vector2(-67, -126)
+script = ExtResource("st_strip")
+intro = &"still_turn"
+
+[node name="Cracking" type="AnimatedSprite2D" parent="Props/Mentor"]
+position = Vector2(720, 672)
+sprite_frames = SubResource("wake_crack_frames")
+animation = &"wake_crack"
+centered = false
+offset = Vector2(-67, -126)
+script = ExtResource("st_strip")
+intro = &"wake_crack"
+
+[node name="RaisingWrong" type="AnimatedSprite2D" parent="Props/Mentor"]
+position = Vector2(720, 576)
+scale = Vector2(-2, 2)
+sprite_frames = SubResource("wake_raise_frames")
+animation = &"wake_raise"
+script = ExtResource("st_strip")
+intro = &"wake_raise"
 
 [node name="Beats" type="Node2D" parent="."]
 
@@ -459,7 +651,22 @@ position = Vector2(656, 400)
 script = ExtResource("45_mark")
 mark_id = &"lamp"
 
+[node name="MentorWakesZone" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 256
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MentorWakesZone"]
+position = Vector2(470, 352)
+shape = SubResource("wakes_zone_rect")
+
 [node name="Triggers" type="Node" parent="."]
+
+[node name="MentorWakes" type="Node" parent="Triggers" node_paths=PackedStringArray("zone")]
+script = ExtResource("46_trigger")
+cutscene = ExtResource("cs_wakes")
+when = Array[ExtResource("48_fact")]([ExtResource("50_all_restored")])
+zone = NodePath("../../MentorWakesZone")
 
 [node name="WorldRestoration" type="Node" parent="Triggers"]
 script = ExtResource("46_trigger")

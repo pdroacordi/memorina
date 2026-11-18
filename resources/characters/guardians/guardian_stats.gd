@@ -14,6 +14,8 @@ extends Resource
 @export var finale: FinaleStats
 ## Struck, played by BodySounds; every stats .tres has one (body_sound_set_test).
 @export var sounds: BodySoundSet
+## Scaled seconds it stands idle once its fight begins, so a fight entered from a scene is seen first (STORY-38); a hit ends it.
+@export var opening_hold: float = 0.0
 
 @export_group("Lucidity")
 ## Hits in the pressure phase before lucidity opens.

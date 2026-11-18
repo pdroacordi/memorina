@@ -29,7 +29,7 @@
   24220,
   13438
  ],
- "_note": "STORY-34: the four guardians restored and the mentor's gift heard. Ivo rides the lighthouse helix from the door up to the attic (lighthouse_helix_climb's inputs), takes the always-open hatch (interior 12,4) and comes up at lighthouse_top col 30: the still keeper (Props/Mentor) must be Gone, MentorGuardian standing at (720, 672) local = world (11600, -1248), and the fight starting as he comes near (ArenaTrigger radius 560). The mentor_stasis Up talk must not prompt over the body.",
+ "_note": "STORY-34: the four guardians restored and the mentor's gift heard. Ivo rides the lighthouse helix from the door up to the attic (lighthouse_helix_climb's inputs), takes the always-open hatch (interior 12,4) and comes up at lighthouse_top col 36: since STORY-38 the keeper waits still at the lamp (StillAtLamp) with no body, and walking west into Triggers/MentorWakes' zone plays the awakening (mentor_wakes); only its end brings MentorGuardian at (720, 672) local = world (11600, -1248) and starts the fight. The mentor_stasis Up talk must not prompt over the keeper or the body.",
  "steps": [
   {
    "t": 1.0,

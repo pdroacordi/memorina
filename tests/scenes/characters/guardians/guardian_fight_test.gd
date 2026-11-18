@@ -31,6 +31,37 @@ func test_beginning_starts_the_pressure_phase() -> void:
 	_fight.begin()
 	assert_int(_fight.phase()).is_equal(GuardianFight.Phase.PRESSURE)
 
+func test_no_opening_hold_by_default() -> void:
+	_fight.begin()
+	assert_bool(_fight.is_opening()).is_false()
+
+## STORY-38: the opening hold keeps the guardian idle for its seconds, then ends once.
+func test_the_opening_hold_runs_out_on_the_fight_clock() -> void:
+	_stats.opening_hold = 1.5
+	var ended: Array[bool] = []
+	_fight.opening_ended.connect(func() -> void: ended.append(true))
+	_fight.begin()
+	assert_bool(_fight.is_opening()).is_true()
+	_fight.tick(1.4)
+	assert_bool(_fight.is_opening()).is_true()
+	assert_array(ended).is_empty()
+	_fight.tick(0.2)
+	assert_bool(_fight.is_opening()).is_false()
+	_fight.tick(1.0)
+	assert_array(ended).is_equal([true])
+	assert_int(_fight.phase()).is_equal(GuardianFight.Phase.PRESSURE)
+
+## A hit cuts the hold short: the guardian never stands still under the sword.
+func test_a_hit_ends_the_opening_hold() -> void:
+	_stats.opening_hold = 1.5
+	var ended: Array[bool] = []
+	_fight.opening_ended.connect(func() -> void: ended.append(true))
+	_fight.begin()
+	_fight.register_hit()
+	assert_bool(_fight.is_opening()).is_false()
+	_fight.register_hit()
+	assert_array(ended).is_equal([true])
+
 func test_hits_do_not_count_before_the_fight_begins() -> void:
 	for i: int in 10:
 		assert_bool(_fight.register_hit()).is_false()

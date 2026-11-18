@@ -789,6 +789,23 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     x 9739..9781 under the lip; wall step (9643..9738, -736); slab top -864 from x 9792, exit at x 10880.
     `world45_cliffs_climb.json` climbs it all in ~28 s.
 
+- **Learned 2026-11-17 (STORY-38 keeper wakes)**: **check staging hand-overs on every frame, not on shots.**
+  `tools/playtest/scripts/story38_keeper_wakes_probe_driver.gd` (a `-s` driver around the runner) prints a `[p]` line per rendered
+  frame on any change. It logs the visible `Props/Mentor` children with alpha and strip frame, the `MentorGuardian` body's
+  `visible`/`process_mode`/phase/telegraph/swing, `FightWall.is_closed()` (found by duck typing), the playing cutscene, Ivo, and
+  the camera with `CAM=1`. `KILL=<real s>` kills Ivo. A short script over those lines then flags "both drawn" / "neither" / "fight
+  during a scene". Copy it for any staging or `FactPresence` swap.
+  - **Death and retry far from a bench:** seed `"bench"` (e.g. `frost_cliffs_bench`, room `res://scenes/world/rooms/frost_edge/frost_cliffs.tscn`).
+    A seeded bench seats Ivo there and **overrides `player_position`**, so `"teleport"` to the spot at t 1.0 instead. After the
+    death (respawn ~1.5 s after hp 0), teleport again.
+  - Lantern (four restored): hatch (12048, -1254); zone x 11720..11820; `ivo_stand` 11704; body 11600; wall x 12000..12032 (off the
+    zoom-1 frame from the mark). A still Ivo dies ~13.4 s after the fight starts (hits at +1.8, ~+7.8, ~+13.4).
+  - A pixel diff across a cutscene's end is useless while the zoom eases: compare poses by eye in crops, or diff only frames at
+    one zoom.
+  - Second build (23:44): the zone is room x 0..940, floor to roof, and a `CutsceneTrigger` starts only once Ivo is on the floor
+    (a jump across it starts the scene on landing). Scene 2.2-7.1, body moves +1.55, hits a still Ivo +3.3; a still Ivo dies about
+    22 s after the start. A shot-to-shot diff is valid at the strip-to-body cut there (zoom 1, camera still for one frame).
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

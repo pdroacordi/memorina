@@ -1,0 +1,140 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 12.0,
+ "locale": "pt_BR",
+ "owned_items": [
+  0,
+  1
+ ],
+ "restored_guardians": [
+  0,
+  1,
+  2,
+  3
+ ],
+ "dialogues_heard": [
+  "daughter_errand",
+  "baker_errand",
+  "daughter_bread",
+  "daughter_song",
+  "elder_story",
+  "mentor_gift"
+ ],
+ "responses": {
+  "morning_song": "guitar_lower",
+  "elder_story": "elder_painting",
+  "mentor_flicker": "memorina_again"
+ },
+ "player_position": [
+  12048,
+  -1254
+ ],
+ "clock": "real",
+ "_note": "STORY-38: as story38_keeper_wakes, but the awakening is skipped from the pause menu (Escape, Down to Pular cena, Z) mid-scene. The skip must land the same end: the keeper gone, the body standing at (720, 672) facing Ivo, the fight beginning, the grey wall closed.",
+ "steps": [
+  {
+   "t": 0.8,
+   "screenshot": "s00_on_the_hatch"
+  },
+  {
+   "t": 0.82,
+   "log": "s00_on_the_hatch"
+  },
+  {
+   "t": 1.0,
+   "action": "move_left",
+   "pressed": true
+  },
+  {
+   "t": 2.4,
+   "action": "move_left",
+   "pressed": false
+  },
+  {
+   "t": 3.6,
+   "screenshot": "s01_in_scene"
+  },
+  {
+   "t": 3.62,
+   "log": "s01_in_scene"
+  },
+  {
+   "t": 4.0,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 4.08,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 4.5,
+   "screenshot": "s02_pause"
+  },
+  {
+   "t": 4.52,
+   "log": "s02_pause"
+  },
+  {
+   "t": 4.8,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 4.88,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 5.2,
+   "screenshot": "s03_pause_skip"
+  },
+  {
+   "t": 5.22,
+   "log": "s03_pause_skip"
+  },
+  {
+   "t": 5.5,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 5.58,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 5.8,
+   "screenshot": "s04_landed"
+  },
+  {
+   "t": 5.82,
+   "log": "s04_landed"
+  },
+  {
+   "t": 6.6,
+   "screenshot": "s05_fight_begins"
+  },
+  {
+   "t": 6.62,
+   "log": "s05_fight_begins"
+  },
+  {
+   "t": 7.6,
+   "screenshot": "s06_wall_closed"
+  },
+  {
+   "t": 7.62,
+   "log": "s06_wall_closed"
+  },
+  {
+   "t": 9.0,
+   "screenshot": "s07_fight"
+  },
+  {
+   "t": 9.02,
+   "log": "s07_fight"
+  }
+ ]
+}

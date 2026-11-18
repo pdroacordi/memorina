@@ -6,11 +6,12 @@ status: active
 tags: [godot, physics, area2d, signals, rooms, soft-landing, world-35]
 related: [systems/rooms, gotchas/a-redoma-shell-is-standable-ground-up-to-192-px-over-its-origin]
 created: 2026-10-15
-updated: 2026-10-15
+updated: 2026-11-17
 source_files:
   - scenes/world/environment/soft_landing/soft_landing.gd
   - scenes/characters/components/landing_component.gd
   - scenes/world/rooms/room_residency.gd
+  - scenes/characters/components/fact_presence.gd
 ---
 
 # An Area2D emits body_exited when disabled or removed
@@ -30,3 +31,9 @@ deactivation and eviction. No reset on a room swap is needed.
   count negative.
 - **Not relied on.** A teleport (`Character.teleport`) out of a zone also ends in `body_exited` at the next physics
   flush. A landing judged in that same step can still read the old count, which is harmless: the body is leaving.
+- **Relied on (STORY-38).** The rule also holds for an Area2D whose ancestor was DISABLED from `_ready`, before it
+  was ever in a physics step: on the first enable it emits `body_entered` for a body already inside, on the next physics
+  step. The lantern's `MentorGuardian/ArenaTrigger` (under a `FactPresence`) begins the final fight this way when the
+  awakening's SCENE_SEEN turns the body on with Ivo standing inside it. Verified headless on 4.7.2 by
+  `mentor_wakes_test.test_the_record_hands_the_keeper_to_the_body_in_one_frame_and_the_fight_begins` (the fight
+  leaves DORMANT within 3 physics frames). If an engine upgrade changes this, that test fails first.

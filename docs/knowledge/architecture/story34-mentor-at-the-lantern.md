@@ -202,3 +202,11 @@ Steps 1-5 and 7 as above; step 6 wrote only the two contracts (`tools/art/prompt
 - Art approved and drawn: `at_lamp.png` and the `Turning` strip replace both placeholders (`systems/story`, "Art"); the lamp is raised 20 px (y 428) so the raised hand sits just under its right edge.
 - Review: the approach could walk Ivo back east; it now ends with a `CutsceneFace` toward `mentor_home`. Playtest: the top box covered the keeper; both lantern talks have `face_height` 110.
 - The user's feedback on the build became STORY-37 (he moves while he talks) and STORY-38 (the final battle opens with him waking, replacing Q8's default).
+
+## Revision (2026-11-17, STORY-38)
+
+`architecture/story38-the-keeper-wakes` replaces **Q8**'s default (the body standing in his place and the fight starting as Ivo comes up): "a luta poderia demorar um pouquinho pra começar para o jogador poder assimilar o que está acontecendo. ele não espera encontrar o guardião que antes ele conversava agora agressivo" (user, 2026-11-17); "Cena de despertar (Recommended)".
+
+- With the four restored the keeper stands still at the lamp in the stasis grey (a fifth stage, Waiting: `StillAtLamp`; "De volta à lâmpada (Recommended)"), and the body stays absent: the Gone stage and the body's `FactPresence` read a second fact, SCENE_SEEN `mentor_wakes`.
+- **The rule "the presence never flips while Ivo is in the lantern" is revised:** it flips once, at the awakening's recorded end, with Ivo inside on purpose (deferred, so never inside the body's physics step).
+- **The hatch moved from col 30 to col 36** (x 1152..1184), with a `FightWall` at col 35 ("Alçapão ao leste + parede (Recommended)"); `ivo_stand` and both talks are farther from it.

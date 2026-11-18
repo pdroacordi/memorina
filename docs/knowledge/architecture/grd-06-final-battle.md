@@ -6,7 +6,7 @@ status: accepted
 tags: [grd-06, guardian, finale, mentor, revelation, dissonance, dual-call, shader, world-restored, plan]
 related: [systems/guardians, architecture/guardian-fight-phase-machine, architecture/grd-04-autumn-and-summer-guardians, architecture/guardian-performance-and-talks, architecture/teaching-creatures, architecture/the-region-owns-its-forgetting, architecture/cutscenes-are-data-played-between-two-rest-states, systems/songs-and-the-memorina, systems/greyhush, systems/story, systems/cutscenes, systems/life-benches-death, systems/dialogue, gotchas/screen-texture-copy-scope, gotchas/canvas-layers-on-one-layer-index-stack-by-sibling-index-not-tree-order, gotchas/animationtree-reset-track-overwrites-script-writes, gotchas/physics-parent-before-children-one-frame-lag]
 created: 2026-10-30
-updated: 2026-10-30
+updated: 2026-11-17
 source_files:
   - scenes/characters/guardians/guardian.gd
   - scenes/characters/guardians/guardian_fight.gd
@@ -126,3 +126,10 @@ Not stated in the design (01 section 4: "por amor"; the object is open). **Q1.**
 - **The hatch no longer reads `all_guardians_restored`.** `lighthouse_interior.room` 12,4 and the `lighthouse_hatch` tuple in `gen_world_shells.py` lost their `requires`; the lantern's end moved to col 30 (x 960..992), east of the lamp's axis. The reach audit's `memorina` milestone is now `lighthouse_top`.
 - **The fight is gated by a `FactPresence` on the lantern's `MentorGuardian`** (`when = [all_guardians_restored.tres]`): absent, the body is hidden and DISABLED, so its `ArenaTrigger`, `Talkable`, hurtbox and contact leave the physics server and the fight cannot begin. `Guardian` gained no code; the bare `mentor_guardian.tscn` that `guardian_finale_test` and `combat_reach_test` mount has no presence and stays present.
 - **The lantern's own `mentor_staging` shows nothing once the four are restored** (its Gone stage, the same fact), with the body at `mentor_home` (720, 672), where the keeper stood. Both read one fact, so both are picked in `_ready` on a world build and flip on the same `progress_changed`. `ivo_stand` moved to (824, 672); the lamp hangs lower (`Lamp` y 448, the chain 384 px), and `lamp` (656, 400) still centres the restoration's pull-back.
+
+## Revision (2026-11-17, STORY-38)
+
+`architecture/story38-the-keeper-wakes`: the final battle opens with the still keeper waking ("Cena de despertar (Recommended)", user, 2026-11-17). What changed for this plan:
+
+- **A `FightWall` now stands in the lantern.** This plan built none, since `Player` refuses Up on a door while `Guardian.fight_at` holds. "Alçapão ao leste + parede (Recommended)" (user, 2026-11-17): the hatch moved to the east wall (`lighthouse_top.room` 36,20; `lighthouse_hatch` in `gen_world_shells.py`), and a wall stands at 35,20 with `cells` 18, floor to roof (the room is open above, and Ivo's 144 px jump clears the usual 4 cells). The `Arena` is trimmed to x 0..1152 (centre (576, 384)), so a leap lands at x 1056 or less.
+- **The body is absent until the awakening is seen.** Its `FactPresence` and the keeper's Gone stage read `all_guardians_restored` and SCENE_SEEN `mentor_wakes`; with only the first the keeper waits still at the lamp. The scene's recorded end turns the body on with Ivo inside its `ArenaTrigger`, whose re-entry `body_entered` begins the fight; `Guardian` and `GuardianFight` are unchanged. A death rewinds the record and the awakening replays ("Repete sempre (Recommended)").
