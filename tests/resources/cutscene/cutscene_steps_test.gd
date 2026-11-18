@@ -257,3 +257,22 @@ func test_a_year_runs_for_its_seconds_and_lands_settled() -> void:
 	assert_array(_calls()).is_equal(["year:40.0", "settle_year"])
 	assert_array(step.subjects()).is_equal([CutsceneYear.SUBJECT])
 	assert_array(step.names()).is_empty()
+
+func test_a_second_ink_inks_the_second_key_and_none_keeps_the_first() -> void:
+	var step := _engraving(true)
+	step.second_ink = preload("res://resources/story/engraving/flower_ink.tres")
+	step.begin(_context)
+	step.land(_context)
+	var tint := step.ink.tint.to_html(false)
+	var pink := step.second_ink.colour.to_html(false)
+	assert_array(_calls()).is_equal(["engrave:6.5:%s:true:%s" % [tint, pink], "engrave:6.5:%s:false:%s" % [tint, pink],
+			"land_engraving"])
+
+func test_an_engraving_clear_that_hides_takes_the_paper_away_at_once() -> void:
+	var step := CutsceneEngravingClear.new()
+	step.seconds = 0.0
+	step.hide = true
+	assert_bool(step.begin(_context).tick(0.0)).is_true()
+	step.land(_context)
+	assert_array(_calls()).is_equal(["hide_engraving", "hide_engraving"])
+	assert_array(step.subjects()).is_equal([CutsceneEngraving.SUBJECT])

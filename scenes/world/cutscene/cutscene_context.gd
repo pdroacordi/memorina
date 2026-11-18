@@ -86,8 +86,9 @@ func fray(_id: StringName, _on: bool) -> void:
 func stage(_staging_id: StringName, _child: StringName, _seconds: float) -> void:
 	pass
 
-## Shows `frame` on the EngravingView inked in `tint`, over the frame shown (`dissolve`) or from bare paper.
-func engrave(_frame: EngravingFrame, _tint: Color, _dissolve: bool) -> void:
+## Shows `frame` on the EngravingView inked in `tint` and `second_tint`, over the frame shown (`dissolve`) or from bare
+## paper.
+func engrave(_frame: EngravingFrame, _tint: Color, _dissolve: bool, _second_tint: Color) -> void:
 	pass
 
 ## Puts the engraved still shown at its end at once.
@@ -96,6 +97,10 @@ func land_engraving() -> void:
 
 ## Dithers the engraved still out to bare paper over `seconds`.
 func clear_engraving(_seconds: float) -> void:
+	pass
+
+## Hides the EngravingView at once, its paper too.
+func hide_engraving() -> void:
 	pass
 
 ## The actor leaves the scene at once.

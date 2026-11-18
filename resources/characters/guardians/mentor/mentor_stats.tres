@@ -13,6 +13,7 @@
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_spring.tres" id="5_spring"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_voice.tres" id="9_voice"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/world_restoration.tres" id="10_restoration"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/final_fragment.tres" id="10_fragment"]
 [ext_resource type="Resource" path="res://resources/music/finale_fight.tres" id="11_fight_music"]
 [ext_resource type="Resource" path="res://resources/audio/sfx/combat/guardian_sounds.tres" id="95_sounds"]
 
@@ -21,6 +22,7 @@ script = ExtResource("1_finale")
 second_song = ExtResource("2_root")
 final_phrases = Array[ExtResource("1_song")]([ExtResource("2_final_a"), ExtResource("2_final_b")])
 revealed_attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_sweep"), ExtResource("4_slam"), ExtResource("5_spring")])
+final_fragment = ExtResource("10_fragment")
 restoration_scene = ExtResource("10_restoration")
 
 [resource]

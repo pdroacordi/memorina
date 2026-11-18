@@ -28,7 +28,7 @@ source_files:
 
 ## Summary
 
-STORY-04, scope `docs/design/drafts/camada_pessoal.md` §3 and design 01 §6, plan `architecture/story-04-bearer-fragments` (built and closed 2026-11-13). Each guardian tube held the memory of an earlier bearer. The first time Ivo plays a restored guardian's song outside a fight, after its pulse is gone, a ~38 s watched scene plays: four engraved stills in the song's season ink over forgotten-print paper, slow pans, a few moving ink layers, one caption line per frame in the bottom bar, skippable. A Memories page in the notebook follows. The mentor teaches no song, so his tube has no ordinary fragment; the crack is kept for GRD-06's final fragment, which must not reuse `EngravingView` (design 01 §6).
+STORY-04, scope `docs/design/drafts/camada_pessoal.md` §3 and design 01 §6, plan `architecture/story-04-bearer-fragments` (built and closed 2026-11-13). Each guardian tube held the memory of an earlier bearer. The first time Ivo plays a restored guardian's song outside a fight, after its pulse is gone, a ~38 s watched scene plays: four engraved stills in the song's season ink over forgotten-print paper, slow pans, a few moving ink layers, one caption line per frame in the bottom bar, skippable. A Memories page in the notebook follows. The mentor teaches no song, so his tube has no ordinary fragment; the crack is kept for the final fragment (STORY-42), which runs on `EngravingView` with a look of its own: design 01 §6 forbids reusing the bearers' look, not their code (`architecture/story42-the-final-fragment`).
 
 | Guardian | Song | Tube (page title, en / pt_BR) |
 |---|---|---|
@@ -74,6 +74,12 @@ STORY-04, scope `docs/design/drafts/camada_pessoal.md` §3 and design 01 §6, pl
 - **Only ink moves; the grey never does** (`systems/greyhush`: grey is stopped time). The pan moves the whole picture.
 - Its clock is its own `_process` (pausable, scaled); no tweens. A pause hold stops it.
 - The caption is `tr(key)`, set again in `_retranslate()`.
+- **The final fragment's additions** (STORY-42, `architecture/story42-the-final-fragment`, "The look"); every bearer frame draws as before, since bearer art holds only the greys and `#FF00FF`:
+  - key `#00FFFF` takes the second ink (`ink_b_colour`; `CutsceneEngraving.second_ink: EngravingInk`, the flower pink `resources/story/engraving/flower_ink.tres`; null inks it in the first);
+  - key `#FFFF00` is the mixed ink: each art texel picks ink A, ink B or one of the four printed greys from `tremble_step` (the shader's `GREYS` must match `tools/art/cut_engraving.py`);
+  - `EngravingFrame.tremble` (art px, default 0) shifts the 2 px row bands of ink-only layers by up to that many whole art px; `EngravingMath.tremble_step` counts whole steps at `TREMBLE_HZ` 10 on the view's own clock, 0 when `tremble` is 0, so a hold stops it; grey base layers never move;
+  - `EngravingFrame.caption_turns` (default false) shows the captions one at a time in equal shares of the frame after its entry, each fading in 0.5 s and out 0.4 s (`EngravingMath.caption_turn`, `caption_alpha`); "Em partes (Recommended)" (user, 2026-11-18);
+  - `CutsceneEngravingClear.hide` hides the view at once, paper included (`context.hide_engraving()`).
 
 ## The cutscene vocabulary it adds
 

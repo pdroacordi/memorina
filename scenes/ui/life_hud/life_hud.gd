@@ -8,12 +8,15 @@ const NOTE := preload("res://scenes/ui/life_hud/life_note.tscn")
 @export var phase_step: float = 2.0
 ## Real seconds between successive note refills.
 @export var refill_step: float = 0.18
-## Scaled seconds the notes take to fade out when a flashback's visit or the ending begins, and back after the ending.
+## Scaled seconds the notes take to fade out when a flashback's visit, the ending or a `hud_hidden` scene begins, and
+## back after the ending or the scene.
 @export var visit_fade: float = 1.5
 
 ## False until the initial health update, which is shown without animation.
 var _shown: bool = false
 var _fade: Tween
+## The playing scene faded the notes (`Cutscene.hud_hidden`).
+var _scene_hid: bool = false
 
 @onready var _row: HBoxContainer = $Row
 
@@ -34,6 +37,7 @@ func show_health(current: int, max_hp: int) -> void:
 ## Wired from `Game.room_changed`: hidden in the past ("Esconder no passado", architecture/story-05-playable-flashbacks).
 func on_room_changed(room: Room) -> void:
 	_stop_fade()
+	_scene_hid = false
 	modulate.a = 1.0
 	visible = not room.is_past()
 
@@ -41,6 +45,18 @@ func on_room_changed(room: Room) -> void:
 ## change (flashback 5).
 func on_visit_began(_flashback: Flashback) -> void:
 	_fade_to(0.0)
+
+## Wired from `CutsceneDirector.scene_began`: a scene with `hud_hidden` fades the notes, as the ending does.
+func on_scene_began(scene: Cutscene) -> void:
+	if scene != null and scene.hud_hidden:
+		_scene_hid = true
+		_fade_to(0.0)
+
+## Wired from `CutsceneDirector.scene_ended`: the notes a scene faded come back over the same time.
+func on_scene_ended(_scene: Cutscene) -> void:
+	if _scene_hid:
+		_scene_hid = false
+		_fade_to(1.0)
 
 ## Wired from `EpilogueDirector.ending_began`: the notes fade for the ending, as for a visit.
 func on_ending_began() -> void:

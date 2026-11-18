@@ -143,14 +143,19 @@ class Recorder:
 	func stage(staging_id: StringName, child: StringName, seconds: float) -> void:
 		calls.append("stage:%s:%s:%.1f" % [staging_id, child, seconds])
 
-	func engrave(shown: EngravingFrame, tint: Color, dissolve: bool) -> void:
-		calls.append("engrave:%.1f:%s:%s" % [shown.seconds if shown != null else 0.0, tint.to_html(false), dissolve])
+	func engrave(shown: EngravingFrame, tint: Color, dissolve: bool, second_tint: Color) -> void:
+		var second := "" if second_tint == tint else ":" + second_tint.to_html(false)
+		calls.append("engrave:%.1f:%s:%s%s" % [shown.seconds if shown != null else 0.0, tint.to_html(false), dissolve,
+				second])
 
 	func land_engraving() -> void:
 		calls.append("land_engraving")
 
 	func clear_engraving(seconds: float) -> void:
 		calls.append("clear_engraving:%.1f" % seconds)
+
+	func hide_engraving() -> void:
+		calls.append("hide_engraving")
 
 	func exit(id: StringName) -> void:
 		calls.append("exit:%s" % id)

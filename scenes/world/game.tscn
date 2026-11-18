@@ -466,3 +466,5 @@ layer = 3
 [connection signal="rest_requested" from="World/EpilogueDirector" to="." method="rest_at_bench"]
 [connection signal="ending_began" from="World/EpilogueDirector" to="CanvasLayer/LifeHud" method="on_ending_began"]
 [connection signal="ending_ended" from="World/EpilogueDirector" to="CanvasLayer/LifeHud" method="on_ending_ended"]
+[connection signal="scene_began" from="World/CutsceneDirector" to="CanvasLayer/LifeHud" method="on_scene_began"]
+[connection signal="scene_ended" from="World/CutsceneDirector" to="CanvasLayer/LifeHud" method="on_scene_ended"]

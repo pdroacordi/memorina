@@ -1,8 +1,9 @@
 class_name GuardianFinale extends Node
 
 ## The final battle's stages on the mentor's Guardian, a strategy child it hands off to at its seams: the revelation,
-## the two-track calls and their dissonance, the final call, the world's restoration (design 02 section 5;
-## architecture/grd-06-final-battle). FinaleFight keeps the rules; this node only applies them.
+## the two-track calls and their dissonance, the final call, the final fragment and the world's restoration (design 02
+## section 5; architecture/grd-06-final-battle, story42-the-final-fragment). FinaleFight keeps the rules; this node only
+## applies them.
 
 ## The revelation's level (0..1) and the dissonance veil (0..1) changed; DissonanceFx draws them.
 signal dissonance_changed(veil: float, revelation: float)
@@ -38,6 +39,10 @@ func _ready() -> void:
 	_finale = FinaleFight.new(_stats, SaveSystem.is_finale_revealed())
 	set_process(false)
 	_guardian.call_ended.connect(_on_call_ended)
+	# The fragment ends the same way whoever played it: the victory here, or the lantern's trigger after a quit.
+	var director := CutsceneDirector.find(get_tree())
+	if director != null:
+		director.scene_ended.connect(_on_scene_ended)
 
 ## Restored when the world is.
 func is_restored() -> bool:
@@ -103,13 +108,14 @@ func mixed(player: Player) -> void:
 			dissonance_changed.emit(_finale.veil(), 0.0)
 
 ## The last phrase was answered: the world is restored and the save written at once ("Exceção: salva na hora"), then
-## the restoration scene plays.
+## the final fragment plays, and the restoration after it.
 func restored() -> void:
 	SaveSystem.restore_world()
 	dissonance_changed.emit(0.0, 0.0)
+	var scene := _stats.final_fragment if _stats.final_fragment != null else _stats.restoration_scene
 	var director := CutsceneDirector.find(get_tree())
-	if director != null and not director.play(_stats.restoration_scene, _guardian):
-		push_error("%s: the restoration scene could not start" % _guardian.name)
+	if director != null and not director.play(scene, _guardian):
+		push_error("%s: the scene after the victory could not start" % _guardian.name)
 
 ## The restoration scene plays: the guardian performs through it.
 func is_performing() -> bool:
@@ -174,6 +180,26 @@ func _close_bark() -> void:
 	var balloon := BarkBalloon.find(get_tree())
 	if balloon != null and balloon.speaker() == _anchor:
 		balloon.close()
+
+## A recorded fragment (a skip records too) hands over to the restoration under its black; a dropped one plays nothing.
+func _on_scene_ended(scene: Cutscene) -> void:
+	if scene == null or scene != _stats.final_fragment:
+		return
+	var director := CutsceneDirector.find(get_tree())
+	if director == null or not director.ended_recorded() or _stats.restoration_scene == null:
+		return
+	if SaveSystem.is_scene_seen(_stats.restoration_scene.id):
+		return
+	_play_restoration.call_deferred()
+
+## Deferred: every scene_ended listener sees the fragment end before the restoration begins.
+func _play_restoration() -> void:
+	var director := CutsceneDirector.find(get_tree()) if is_inside_tree() else null
+	if director == null or director.play(_stats.restoration_scene, _guardian):
+		return
+	push_error("%s: the restoration scene could not start" % _guardian.name)
+	if director.fade != null and director.fade.is_black():
+		director.fade.to_clear()
 
 func _on_call_ended() -> void:
 	if _call_b != null:

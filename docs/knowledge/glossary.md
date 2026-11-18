@@ -29,7 +29,8 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | vendedor (de maçãs) | the seller: `seller.tres`, `SeedShopBeat`, `SeedShopPanel`, `SeedStock` / `SeedOffer` |
 | mapa regional (comprado) | `SeedOffer.Kind.MAP`, `MapExtras.known_rooms`, `MapCanvas.FAINT_INK` |
 | Batalha Final, guardião-mentor | the finale: `GuardianFinale` (the mentor's `Finale` child), `FinaleFight`, `FinaleStats` (`GuardianStats.finale`) |
-| revelação (fragmento final) | the revelation: `FinaleFight.Stage.REVELATION`, `PlayerData.finale_revealed`, `HeroSilhouette`, `dissonance_revelation` |
+| revelação | the revelation: `FinaleFight.Stage.REVELATION`, `PlayerData.finale_revealed`, `HeroSilhouette`, `dissonance_revelation` |
+| fragmento final (a história de Ermo) | the final fragment: the `final_fragment` cutscene, `FinaleStats.final_fragment`, `seen_final_fragment.tres`, `lore_final_fragment` (STORY-42) |
 | dissonância, duas trilhas | dissonance, two tracks: `DualCallJudge` (`MIXED`), `Player.call_mixed` / `call_second_track`, `DissonanceFx`, `dissonance_veil` |
 | restauração do mundo | world restored: `PlayerData.world_restored`, `SaveFact.Kind.WORLD_RESTORED`, `SaveSystem.restore_world`, the `world_restoration` cutscene |
 | rumor | rumour: `SeedOffer.Kind.RUMOUR`, `Rumours`, `PlayerData.rumours` |
@@ -149,7 +150,7 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | Ivo bloqueado (mapa aberto, o mundo segue) | `Screens.BLOCKING`, `Player.block_input` / `unblock_input`, `PlayerInput.blocked` |
 | diálogo, conversa | `Dialogue` (one conversation), `DialogueSet` (one talker's), `DialogueCatalog`, `DialogueRunner`, `DialogueDirector`, `DialogueBox` (`systems/dialogue`) |
 | fala (linha de diálogo), variação | `DialogueLine`, `LineVariant` |
-| quem fala; ancião, filha, mentor | `Speaker`; `SPEAKER_ELDER`, `SPEAKER_DAUGHTER`, `SPEAKER_MENTOR` (role names; the mentor stays unnamed) |
+| quem fala; ancião, filha, mentor | `Speaker`; `SPEAKER_ELDER`, `SPEAKER_DAUGHTER`, `SPEAKER_MENTOR` (role names; the mentor's plate stays "Mentor"; his name, Ermo, is said only in the final fragment) |
 | resposta, escolha (pergunta) | `DialogueChoice` (`id`, `tone`), `DialogueLine.ask_id`, `PlayerData.responses` |
 | segurar / soltar (o tom de uma resposta) | `DialogueChoice.Tone.HOLD_ON` / `LET_GO` |
 | acumulado silencioso (01 §9) | `DialogueTally.count` (derived, never stored) |

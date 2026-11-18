@@ -11,6 +11,8 @@ const ART_SCALE := 2.0
 const CAPTION_IN := 0.5
 ## Scaled seconds before the frame's end the caption is gone.
 const CAPTION_OUT := 0.4
+## Steps per scaled second of a trembling frame's mixed ink and shifted rows.
+const TREMBLE_HZ := 10.0
 
 
 ## Scaled seconds the frame takes to come in: from bare paper, or over the frame before it (`dissolve`).
@@ -54,12 +56,34 @@ static func shown(frame: EngravingFrame, dissolve: bool, t: float) -> float:
 		return 1.0
 	return _fraction(t, entry)
 
-## 0..1 of the caption: in over CAPTION_IN once the frame has come in, out over CAPTION_OUT before its end.
+## The caption shown at `t`: with `caption_turns`, one at a time in equal shares of the frame after its entry; 0 for a
+## frame that shows its captions together.
+static func caption_turn(frame: EngravingFrame, dissolve: bool, t: float) -> int:
+	if not _in_turns(frame):
+		return 0
+	var start := entry_seconds(frame, dissolve)
+	var share := _turn_share(frame, dissolve)
+	if share <= 0.0:
+		return 0
+	return clampi(int(floorf((t - start) / share)), 0, frame.captions.size() - 1)
+
+## 0..1 of the caption: in over CAPTION_IN once the frame (or its turn) has come in, out over CAPTION_OUT before its end.
 static func caption_alpha(frame: EngravingFrame, dissolve: bool, t: float) -> float:
 	var start := entry_seconds(frame, dissolve)
+	var end := frame.seconds
+	if _in_turns(frame):
+		var share := _turn_share(frame, dissolve)
+		start += share * caption_turn(frame, dissolve, t)
+		end = start + share
 	var rise := _fraction(t - start, CAPTION_IN)
-	var fall := _fraction(frame.seconds - t, CAPTION_OUT)
+	var fall := _fraction(end - t, CAPTION_OUT)
 	return minf(rise, fall)
+
+## The step of the mixed ink and the shifted rows at `t`, whole steps at TREMBLE_HZ; 0 for a frame that does not tremble.
+static func tremble_step(frame: EngravingFrame, t: float) -> int:
+	if frame.tremble <= 0.0:
+		return 0
+	return int(floorf(maxf(t, 0.0) * TREMBLE_HZ))
 
 ## Whether every window the pan passes keeps the view inside every layer's cell.
 static func fits(frame: EngravingFrame) -> bool:
@@ -72,6 +96,13 @@ static func fits(frame: EngravingFrame) -> bool:
 			if corner.x < 0.0 or corner.y < 0.0 or corner.x > room.x or corner.y > room.y:
 				return false
 	return true
+
+static func _in_turns(frame: EngravingFrame) -> bool:
+	return frame.caption_turns and frame.captions.size() > 1
+
+## Scaled seconds of one caption turn.
+static func _turn_share(frame: EngravingFrame, dissolve: bool) -> float:
+	return maxf(frame.seconds - entry_seconds(frame, dissolve), 0.0) / float(frame.captions.size())
 
 static func _fraction(t: float, span: float) -> float:
 	if span <= 0.0:

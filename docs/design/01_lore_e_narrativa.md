@@ -64,7 +64,7 @@ No encontro inicial, antes de entrar em estase, o mentor menciona — de forma v
  
 ### Nome do mentor
  
-**Em aberto.** Decidido que ele merece nome próprio (revelado só no fragmento final), mas nenhum nome foi proposto ainda. Pendência de lore para sessão dedicada. O mesmo vale para esposa, filha, ancião e outros guardiões — tratado como secundário por ora. (Nome do herói: ver seção 4.1 — já fechado.)
+**Nome: Ermo** ("Ermo (Recommended)", usuário, 2026-11-18), dito só na última legenda do fragmento final (`drafts/fragmento_final.md`). Antes disso, decidido que ele merecia nome próprio, revelado só no fragmento final. Pendência de lore para sessão dedicada. O mesmo vale para esposa, filha, ancião e outros guardiões — tratado como secundário por ora. (Nome do herói: ver seção 4.1 — já fechado.)
 
 ### 4.1 Nome do herói
 

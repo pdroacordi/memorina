@@ -1,0 +1,349 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_scene"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sequence.gd" id="e_sequence"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e_bars"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_music.gd" id="e_music"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_fade.gd" id="e_fade"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_engraving.gd" id="e_engraving"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_engraving_clear.gd" id="e_clear"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_melody.gd" id="e_melody"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_branch.gd" id="e_branch"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_case.gd" id="e_case"]
+[ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="e_fact"]
+[ext_resource type="Script" path="res://resources/music/music_cue.gd" id="e_cue"]
+[ext_resource type="Script" path="res://resources/story/engraving/engraving_layer.gd" id="e_layer"]
+[ext_resource type="Script" path="res://resources/story/engraving/engraving_frame.gd" id="e_frame"]
+[ext_resource type="Resource" path="res://resources/songs/palettes/winter_palette.tres" id="r_winter"]
+[ext_resource type="Resource" path="res://resources/story/engraving/flower_ink.tres" id="r_flower"]
+[ext_resource type="Resource" path="res://resources/story/ermo_phrase.tres" id="r_phrase"]
+[ext_resource type="Resource" path="res://resources/story/ermo_spring.tres" id="r_spring"]
+[ext_resource type="Resource" path="res://resources/save_facts/seen_world_restoration.tres" id="r_seen_restoration"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_up_g4.mp3" id="a_up"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_down_c4.mp3" id="a_down"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_low_mid_d4.mp3" id="a_left"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_high_mid_e4.mp3" id="a_right"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_1_base.png" id="t1_base"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_2_base.png" id="t2_base"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_2_snow.png" id="t2_snow"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_3_base.png" id="t3_base"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_4_base.png" id="t4_base"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_4_crack.png" id="t4_crack"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_5_base.png" id="t5_base"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_5_trace.png" id="t5_trace"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_6_base.png" id="t6_base"]
+[ext_resource type="Texture2D" path="res://assets/sprites/story/final_fragment/panel_7_base.png" id="t7_base"]
+
+[sub_resource type="Resource" id="silence"]
+script = ExtResource("e_cue")
+id = &"final_fragment_silence"
+loops = true
+fade_in = 0
+fade_out = 0
+
+[sub_resource type="Resource" id="bars"]
+script = ExtResource("e_bars")
+open = true
+seconds = 0.6
+
+[sub_resource type="Resource" id="music"]
+script = ExtResource("e_music")
+cue = SubResource("silence")
+fade = 1
+
+[sub_resource type="Resource" id="camera"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"mentor"])
+offset = Vector2(0, -56)
+zoom = 2
+seconds = 1
+
+[sub_resource type="Resource" id="open"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bars"), SubResource("music"), SubResource("camera")])
+
+[sub_resource type="Resource" id="hold"]
+script = ExtResource("e_wait")
+seconds = 1.2
+
+[sub_resource type="Resource" id="to_paper"]
+script = ExtResource("e_fade")
+to_black = true
+colour = Color(0.758, 0.761, 0.771, 1)
+seconds = 1.2
+
+[sub_resource type="Resource" id="p1_base"]
+script = ExtResource("e_layer")
+texture = ExtResource("t1_base")
+
+[sub_resource type="Resource" id="f1"]
+script = ExtResource("e_frame")
+layers = Array[ExtResource("e_layer")]([SubResource("p1_base")])
+captions = Array[StringName]([&"FINAL_FRAGMENT_1_1", &"FINAL_FRAGMENT_1_2"])
+caption_turns = true
+seconds = 9
+pan_from = Vector2(64, 16)
+pan_to = Vector2(0, 16)
+reveal_seconds = 1.5
+dissolve_seconds = 1
+
+[sub_resource type="Resource" id="panel_1"]
+script = ExtResource("e_engraving")
+frame = SubResource("f1")
+dissolve = false
+ink = ExtResource("r_winter")
+second_ink = ExtResource("r_flower")
+
+[sub_resource type="Resource" id="p2_base"]
+script = ExtResource("e_layer")
+texture = ExtResource("t2_base")
+
+[sub_resource type="Resource" id="p2_snow"]
+script = ExtResource("e_layer")
+texture = ExtResource("t2_snow")
+ink_only = true
+drift = Vector2(0, 3)
+
+[sub_resource type="Resource" id="f2"]
+script = ExtResource("e_frame")
+layers = Array[ExtResource("e_layer")]([SubResource("p2_base"), SubResource("p2_snow")])
+captions = Array[StringName]([&"FINAL_FRAGMENT_2_1", &"FINAL_FRAGMENT_2_2"])
+caption_turns = true
+seconds = 9
+pan_from = Vector2(32, 32)
+pan_to = Vector2(32, 0)
+reveal_seconds = 1.5
+dissolve_seconds = 1
+
+[sub_resource type="Resource" id="panel_2"]
+script = ExtResource("e_engraving")
+frame = SubResource("f2")
+dissolve = true
+ink = ExtResource("r_winter")
+second_ink = ExtResource("r_flower")
+
+[sub_resource type="Resource" id="p3_base"]
+script = ExtResource("e_layer")
+texture = ExtResource("t3_base")
+
+[sub_resource type="Resource" id="f3"]
+script = ExtResource("e_frame")
+layers = Array[ExtResource("e_layer")]([SubResource("p3_base")])
+captions = Array[StringName]([&"FINAL_FRAGMENT_3_1", &"FINAL_FRAGMENT_3_2"])
+caption_turns = true
+seconds = 9
+pan_from = Vector2(64, 24)
+pan_to = Vector2(16, 8)
+reveal_seconds = 1.5
+dissolve_seconds = 1
+
+[sub_resource type="Resource" id="panel_3"]
+script = ExtResource("e_engraving")
+frame = SubResource("f3")
+dissolve = true
+ink = ExtResource("r_winter")
+second_ink = ExtResource("r_flower")
+
+[sub_resource type="Resource" id="p4_base"]
+script = ExtResource("e_layer")
+texture = ExtResource("t4_base")
+
+[sub_resource type="Resource" id="p4_crack"]
+script = ExtResource("e_layer")
+texture = ExtResource("t4_crack")
+ink_only = true
+
+[sub_resource type="Resource" id="f4"]
+script = ExtResource("e_frame")
+layers = Array[ExtResource("e_layer")]([SubResource("p4_base"), SubResource("p4_crack")])
+captions = Array[StringName]([&"FINAL_FRAGMENT_4_1"])
+caption_turns = false
+seconds = 7
+pan_from = Vector2(24, 0)
+pan_to = Vector2(40, 32)
+reveal_seconds = 1.5
+dissolve_seconds = 1
+tremble = 1
+
+[sub_resource type="Resource" id="panel_4"]
+script = ExtResource("e_engraving")
+frame = SubResource("f4")
+dissolve = true
+ink = ExtResource("r_winter")
+second_ink = ExtResource("r_flower")
+
+[sub_resource type="Resource" id="p5_base"]
+script = ExtResource("e_layer")
+texture = ExtResource("t5_base")
+
+[sub_resource type="Resource" id="p5_trace"]
+script = ExtResource("e_layer")
+texture = ExtResource("t5_trace")
+ink_only = true
+hframes = 4
+fps = 2
+
+[sub_resource type="Resource" id="f5"]
+script = ExtResource("e_frame")
+layers = Array[ExtResource("e_layer")]([SubResource("p5_base"), SubResource("p5_trace")])
+captions = Array[StringName]([&"FINAL_FRAGMENT_5_1", &"FINAL_FRAGMENT_5_2"])
+caption_turns = true
+seconds = 12
+pan_from = Vector2(0, 24)
+pan_to = Vector2(64, 8)
+reveal_seconds = 1.5
+dissolve_seconds = 1
+
+[sub_resource type="Resource" id="panel_5"]
+script = ExtResource("e_engraving")
+frame = SubResource("f5")
+dissolve = true
+ink = ExtResource("r_winter")
+second_ink = ExtResource("r_flower")
+
+[sub_resource type="Resource" id="p6_base"]
+script = ExtResource("e_layer")
+texture = ExtResource("t6_base")
+
+[sub_resource type="Resource" id="f6"]
+script = ExtResource("e_frame")
+layers = Array[ExtResource("e_layer")]([SubResource("p6_base")])
+captions = Array[StringName]([&"FINAL_FRAGMENT_6_1"])
+caption_turns = false
+seconds = 7
+pan_from = Vector2(48, 16)
+pan_to = Vector2(16, 16)
+reveal_seconds = 1.5
+dissolve_seconds = 1
+
+[sub_resource type="Resource" id="panel_6"]
+script = ExtResource("e_engraving")
+frame = SubResource("f6")
+dissolve = true
+
+[sub_resource type="Resource" id="p7_base"]
+script = ExtResource("e_layer")
+texture = ExtResource("t7_base")
+
+[sub_resource type="Resource" id="f7"]
+script = ExtResource("e_frame")
+layers = Array[ExtResource("e_layer")]([SubResource("p7_base")])
+captions = Array[StringName]([&"FINAL_FRAGMENT_7_1", &"FINAL_FRAGMENT_7_2", &"FINAL_FRAGMENT_7_3"])
+caption_turns = true
+seconds = 12.5
+pan_from = Vector2(0, 16)
+pan_to = Vector2(64, 16)
+reveal_seconds = 1.5
+dissolve_seconds = 1
+
+[sub_resource type="Resource" id="panel_7"]
+script = ExtResource("e_engraving")
+frame = SubResource("f7")
+dissolve = true
+ink = ExtResource("r_winter")
+second_ink = ExtResource("r_flower")
+
+[sub_resource type="Resource" id="paper_in"]
+script = ExtResource("e_fade")
+to_black = false
+colour = Color(0, 0, 0, 1)
+seconds = 0.6
+
+[sub_resource type="Resource" id="first"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("panel_1"), SubResource("paper_in")])
+
+[sub_resource type="Resource" id="phrase_lead"]
+script = ExtResource("e_wait")
+seconds = 1.5
+
+[sub_resource type="Resource" id="phrase"]
+script = ExtResource("e_melody")
+melody = ExtResource("r_phrase")
+count = -1
+voices = Array[AudioStream]([ExtResource("a_up"), ExtResource("a_down"), ExtResource("a_left"), ExtResource("a_right")])
+
+[sub_resource type="Resource" id="phrase_after"]
+script = ExtResource("e_sequence")
+steps = Array[ExtResource("e_step")]([SubResource("phrase_lead"), SubResource("phrase")])
+
+[sub_resource type="Resource" id="second"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("panel_2"), SubResource("phrase_after")])
+
+[sub_resource type="Resource" id="break_lead"]
+script = ExtResource("e_wait")
+seconds = 1
+
+[sub_resource type="Resource" id="break_winter"]
+script = ExtResource("e_melody")
+melody = ExtResource("r_phrase")
+count = 4
+voices = Array[AudioStream]([ExtResource("a_up"), ExtResource("a_down"), ExtResource("a_left"), ExtResource("a_right")])
+
+[sub_resource type="Resource" id="break_lag"]
+script = ExtResource("e_wait")
+seconds = 0.3
+
+[sub_resource type="Resource" id="break_spring"]
+script = ExtResource("e_melody")
+melody = ExtResource("r_spring")
+count = 4
+voices = Array[AudioStream]([ExtResource("a_up"), ExtResource("a_down"), ExtResource("a_left"), ExtResource("a_right")])
+
+[sub_resource type="Resource" id="break_behind"]
+script = ExtResource("e_sequence")
+steps = Array[ExtResource("e_step")]([SubResource("break_lag"), SubResource("break_spring")])
+
+[sub_resource type="Resource" id="break_both"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("break_winter"), SubResource("break_behind")])
+
+[sub_resource type="Resource" id="break_after"]
+script = ExtResource("e_sequence")
+steps = Array[ExtResource("e_step")]([SubResource("break_lead"), SubResource("break_both")])
+
+[sub_resource type="Resource" id="fourth"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("panel_4"), SubResource("break_after")])
+
+[sub_resource type="Resource" id="clear"]
+script = ExtResource("e_clear")
+seconds = 1.5
+
+[sub_resource type="Resource" id="to_black"]
+script = ExtResource("e_fade")
+to_black = true
+colour = Color(0, 0, 0, 1)
+seconds = 0.8
+
+[sub_resource type="Resource" id="hide"]
+script = ExtResource("e_clear")
+seconds = 0
+hide = true
+
+[sub_resource type="Resource" id="uncover"]
+script = ExtResource("e_fade")
+to_black = false
+colour = Color(0, 0, 0, 1)
+seconds = 1.2
+
+[sub_resource type="Resource" id="case_seen"]
+script = ExtResource("e_case")
+when = Array[ExtResource("e_fact")]([ExtResource("r_seen_restoration")])
+steps = Array[ExtResource("e_step")]([SubResource("hide"), SubResource("uncover")])
+
+[sub_resource type="Resource" id="end"]
+script = ExtResource("e_branch")
+cases = Array[ExtResource("e_case")]([SubResource("case_seen")])
+
+[resource]
+script = ExtResource("e_scene")
+id = &"final_fragment"
+steps = Array[ExtResource("e_step")]([SubResource("open"), SubResource("hold"), SubResource("to_paper"), SubResource("first"), SubResource("second"), SubResource("panel_3"), SubResource("fourth"), SubResource("panel_5"), SubResource("panel_6"), SubResource("panel_7"), SubResource("clear"), SubResource("to_black"), SubResource("end")])
+skippable = true
+hud_hidden = true

@@ -1,11 +1,15 @@
 """Cut a Codex engraving board (four panels on magenta) into STORY-04 engraving layers, and draw the moving ink layers.
 
 python -I tools/art/cut_engraving.py board <raw.png> <out_dir> --ink=#RRGGBB [--order=1,2,3,4] [--shift=n:dx,dy;...] [--chroma=0.16]
+    [--ink2=#RRGGBB] [--mixed=#RRGGBB] [--background=#RRGGBB] [--count=4] [--prefix=frame]
     Finds the four panels (the largest non-magenta parts, reading order), crops each to the 384x176 aspect, centred
     (--shift moves a frame's crop along the axis the aspect trims, raw px, kept inside the panel; --chroma is the least chroma, 0..1, that counts as ink: raise it when the
     drawing tints its fills in a pale ink), and writes <out_dir>/frame_<n>_base.png: an opaque 384x176 art px canvas
     (1 px per art px, shown at scale 2) of neutral greys from GREYS plus the key ink #FF00FF where the drawing's line
-    work is in the --ink hue. Prints each frame's grey and ink share.
+    work is in the --ink hue. Prints each frame's grey and ink share. STORY-42's final fragment: --ink2 keys a second
+    drawn hue to #00FFFF and --mixed a third to #FFFF00 (each line pixel takes the nearest of the given ink hues);
+    --background reads the panels off that flat colour instead of magenta (the flower pink is near magenta); --count
+    is the board's panel count and --prefix names the files (<prefix>_<n>_base.png).
 python -I tools/art/cut_engraving.py motes <out.png> <kind> --count=N --seed=S
     Draws an ink-only layer (key #FF00FF on transparent) of small motes, tileable on both axes, so a layer that
     drifts can repeat. Kinds: snow, flakes, leaves, birds, petals, embers, wind.
@@ -30,6 +34,8 @@ from cut_props import flatten, trim  # noqa: E402
 
 CANVAS = (384, 176)
 KEY = (255, 0, 255)
+KEY_2 = (0, 255, 255)
+KEY_MIXED = (255, 255, 0)
 # Neutral greys, dark to paper. gh_print reduces them to luma, so only their values matter.
 GREYS = np.array([60, 96, 140, 184])
 
@@ -39,16 +45,38 @@ def _hue_distance(a: np.ndarray, b: float) -> np.ndarray:
     return np.minimum(d, 1.0 - d)
 
 
-def ink_mask(rgb: np.ndarray, ink: tuple[int, int, int], min_chroma: float) -> np.ndarray:
-    """Pixels whose colour is the ink's hue with real chroma; the greys have none."""
+def _hue_chroma(rgb: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
     f = rgb.astype(float) / 255.0
     mx, mn = f.max(-1), f.min(-1)
     chroma = mx - mn
     r, g, b = f[..., 0], f[..., 1], f[..., 2]
     safe = np.where(chroma == 0, 1, chroma)
     h = np.where(mx == r, ((g - b) / safe) % 6, np.where(mx == g, (b - r) / safe + 2, (r - g) / safe + 4)) / 6.0
-    ink_h = colorsys.rgb_to_hsv(*[c / 255.0 for c in ink])[0]
-    return (chroma > min_chroma) & (_hue_distance(h, ink_h) < 0.12)
+    return h, chroma
+
+
+def _hue_of(colour: tuple[int, int, int]) -> float:
+    return colorsys.rgb_to_hsv(*[c / 255.0 for c in colour])[0]
+
+
+def ink_mask(rgb: np.ndarray, ink: tuple[int, int, int], min_chroma: float) -> np.ndarray:
+    """Pixels whose colour is the ink's hue with real chroma; the greys have none."""
+    h, chroma = _hue_chroma(rgb)
+    return (chroma > min_chroma) & (_hue_distance(h, _hue_of(ink)) < 0.12)
+
+
+def ink_index(rgb: np.ndarray, inks: list, min_chroma: float) -> np.ndarray:
+    """Per pixel, the index of the nearest ink hue within 0.12, or -1 (a grey or another hue); a None ink is never near."""
+    h, chroma = _hue_chroma(rgb)
+    dist = np.stack([_hue_distance(h, _hue_of(ink)) if ink is not None else np.full(h.shape, 9.0) for ink in inks])
+    return np.where((chroma > min_chroma) & (dist.min(0) < 0.12), dist.argmin(0), -1)
+
+
+def keyed_on(path: str, background: tuple[int, int, int]) -> tuple[np.ndarray, np.ndarray]:
+    """The board's pixels and the mask of what is not its flat background colour."""
+    rgb = np.asarray(Image.open(path).convert("RGB")).astype(int)
+    h, chroma = _hue_chroma(rgb)
+    return rgb, ~((chroma > 0.35) & (_hue_distance(h, _hue_of(background)) < 0.06))
 
 
 def panels(solid: np.ndarray, count: int = 4) -> list[tuple[int, int, int, int]]:
@@ -92,9 +120,10 @@ def _area(values: np.ndarray) -> np.ndarray:
     return np.asarray(Image.fromarray(values.astype(np.float32), "F").resize(CANVAS, Image.BOX))
 
 
-def engrave(rgb: np.ndarray, ink: tuple[int, int, int], min_chroma: float) -> tuple[np.ndarray, np.ndarray]:
-    """Returns (grey index per art px, ink mask per art px)."""
-    is_ink = ink_mask(rgb, ink, min_chroma)
+def engrave(rgb: np.ndarray, inks: list[tuple[int, int, int]], min_chroma: float) -> tuple[np.ndarray, np.ndarray]:
+    """Returns (grey index per art px, ink per art px: -1 for none, else the ink's position in `inks`)."""
+    which = ink_index(rgb, inks, min_chroma)
+    is_ink = which >= 0
     coverage = _area(is_ink.astype(float))
     luma = rgb @ np.array([0.299, 0.587, 0.114])
     # Under the ink, the grey is the nearest non-ink grey, so a line never darkens its mass.
@@ -109,7 +138,9 @@ def engrave(rgb: np.ndarray, ink: tuple[int, int, int], min_chroma: float) -> tu
     labels, n = ndimage.label(art_ink, structure=np.ones((3, 3)))
     sizes = ndimage.sum(art_ink, labels, range(1, n + 1))
     art_ink &= np.isin(labels, np.nonzero(sizes >= 2)[0] + 1)
-    return index, art_ink
+    # Each art px takes the ink that covers most of it.
+    shares = np.stack([_area((which == i).astype(float)) for i in range(len(inks))])
+    return index, np.where(art_ink, shares.argmax(0), -1)
 
 
 # How far below the paper (luma steps) a value must lie to print as each darker grey.
@@ -128,25 +159,27 @@ def _quantize(grey: np.ndarray) -> np.ndarray:
     return index
 
 
-def write_base(index: np.ndarray, art_ink: np.ndarray, path: str) -> None:
+def write_base(index: np.ndarray, art_which: np.ndarray, path: str) -> None:
     out = np.zeros((CANVAS[1], CANVAS[0], 4), dtype=np.uint8)
     out[..., :3] = GREYS[index][..., None]
-    out[art_ink, :3] = KEY
+    for i, key in enumerate((KEY, KEY_2, KEY_MIXED)):
+        out[art_which == i, :3] = key
     out[..., 3] = 255
     Image.fromarray(out, "RGBA").save(path)
 
 
-def board(raw: str, out_dir: str, ink: tuple[int, int, int], order: list[int], shifts: dict, min_chroma: float) -> None:
-    rgb, solid = keyed(raw)
+def board(raw: str, out_dir: str, inks: list[tuple[int, int, int]], order: list[int], shifts: dict, min_chroma: float,
+        background: tuple[int, int, int] | None = None, prefix: str = "frame") -> None:
+    rgb, solid = keyed(raw) if background is None else keyed_on(raw, background)
     os.makedirs(out_dir, exist_ok=True)
-    boxes = panels(solid)
+    boxes = panels(solid, len(order))
     for slot, n in enumerate(order):
         x0, y0, x1, y1 = crop_to_canvas(boxes[slot], shifts.get(n, (0, 0)))
-        index, art_ink = engrave(rgb[y0:y1, x0:x1], ink, min_chroma)
-        write_base(index, art_ink, os.path.join(out_dir, "frame_%d_base.png" % n))
+        index, art_which = engrave(rgb[y0:y1, x0:x1], inks, min_chroma)
+        write_base(index, art_which, os.path.join(out_dir, "%s_%d_base.png" % (prefix, n)))
         share = np.bincount(index.ravel(), minlength=len(GREYS)) / index.size
-        print("frame %d: box %s, ink %.2f, greys %s" % (n, (x0, y0, x1, y1), art_ink.mean(),
-            " ".join("%.2f" % s for s in share)))
+        print("%s %d: box %s, inks %s, greys %s" % (prefix, n, (x0, y0, x1, y1),
+            " ".join("%.3f" % (art_which == i).mean() for i, ink in enumerate(inks) if ink is not None), " ".join("%.2f" % v for v in share)))
 
 
 SHAPES = {
@@ -207,6 +240,11 @@ def tube(raw: str, out: str, box: list[int], width: int, height: int, colors: in
     print("%s: %dx%d (subject %dx%d)" % (out, width, height, art.shape[1], art.shape[0]))
 
 
+def _colour(hexa: str) -> tuple[int, int, int]:
+    hexa = hexa.lstrip("#")
+    return tuple(int(hexa[i:i + 2], 16) for i in (0, 2, 4))
+
+
 def _options(args: list[str]) -> dict:
     return dict(a[2:].split("=", 1) for a in args if a.startswith("--"))
 
@@ -216,15 +254,17 @@ if __name__ == "__main__":
     positional = [a for a in rest if not a.startswith("--")]
     opts = _options(rest)
     if mode == "board":
-        hexa = opts["ink"].lstrip("#")
-        ink = tuple(int(hexa[i:i + 2], 16) for i in (0, 2, 4))
-        order = [int(v) for v in opts.get("order", "1,2,3,4").split(",")]
+        # The slot is the key: ink, ink2 and mixed always write #FF00FF, #00FFFF and #FFFF00, even with one left out.
+        inks = [_colour(opts[k]) if k in opts else None for k in ("ink", "ink2", "mixed")]
+        count = int(opts.get("count", "4"))
+        order = [int(v) for v in opts.get("order", ",".join(str(i + 1) for i in range(count))).split(",")]
         shifts = {}
         for item in filter(None, opts.get("shift", "").split(";")):
             n, d = item.split(":")
             dx, dy = d.split(",")
             shifts[int(n)] = (int(dx), int(dy))
-        board(positional[0], positional[1], ink, order, shifts, float(opts.get("chroma", "0.16")))
+        board(positional[0], positional[1], inks, order, shifts, float(opts.get("chroma", "0.16")),
+            _colour(opts["background"]) if "background" in opts else None, opts.get("prefix", "frame"))
     elif mode == "motes":
         motes(positional[0], positional[1], int(opts.get("count", "60")), int(opts.get("seed", "1")))
     elif mode == "tube":

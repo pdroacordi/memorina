@@ -1,0 +1,7 @@
+[gd_resource type="Resource" script_class="EngravingInk" format=3]
+
+[ext_resource type="Script" path="res://resources/story/engraving/engraving_ink.gd" id="1_ink"]
+
+[resource]
+script = ExtResource("1_ink")
+colour = Color(0.878, 0.376, 0.604, 1)

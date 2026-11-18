@@ -100,3 +100,51 @@ func test_every_shipped_canvas_holds_the_widest_pan() -> void:
 				continue
 			var texture := load(folder + file) as Texture2D
 			assert_vector(texture.get_size()).override_failure_message(folder + file).is_equal(widest)
+
+func _turns(seconds: float = 9.0) -> EngravingFrame:
+	var frame := _frame()
+	frame.captions = [&"FINAL_FRAGMENT_1_1", &"FINAL_FRAGMENT_1_2"]
+	frame.caption_turns = true
+	frame.seconds = seconds
+	return frame
+
+## 9 s, entered over a 1 s dissolve: two 4 s turns from 1 s.
+func test_turns_show_one_caption_at_a_time_in_equal_shares() -> void:
+	var frame := _turns()
+	assert_int(EngravingMath.caption_turn(frame, true, 0.0)).is_equal(0)
+	assert_int(EngravingMath.caption_turn(frame, true, 4.9)).is_equal(0)
+	assert_int(EngravingMath.caption_turn(frame, true, 5.0)).is_equal(1)
+	assert_int(EngravingMath.caption_turn(frame, true, 99.0)).is_equal(1)
+	assert_float(EngravingMath.caption_alpha(frame, true, 0.9)).is_equal(0.0)
+	assert_float(EngravingMath.caption_alpha(frame, true, 1.25)).is_equal_approx(0.5, 0.001)
+	assert_float(EngravingMath.caption_alpha(frame, true, 3.0)).is_equal(1.0)
+	assert_float(EngravingMath.caption_alpha(frame, true, 4.8)).is_equal_approx(0.5, 0.001)
+	assert_float(EngravingMath.caption_alpha(frame, true, 5.0)).is_equal(0.0)
+	assert_float(EngravingMath.caption_alpha(frame, true, 5.25)).is_equal_approx(0.5, 0.001)
+	assert_float(EngravingMath.caption_alpha(frame, true, 8.8)).is_equal_approx(0.5, 0.001)
+	assert_float(EngravingMath.caption_alpha(frame, true, 9.0)).is_equal(0.0)
+
+func test_a_frame_without_turns_shows_its_captions_together_as_before() -> void:
+	var frame := _turns()
+	frame.caption_turns = false
+	assert_int(EngravingMath.caption_turn(frame, true, 6.0)).is_equal(0)
+	assert_float(EngravingMath.caption_alpha(frame, true, 5.0)).is_equal(1.0)
+	var single := _turns()
+	single.captions = [&"FINAL_FRAGMENT_6_1"]
+	assert_int(EngravingMath.caption_turn(single, true, 6.0)).is_equal(0)
+	assert_float(EngravingMath.caption_alpha(single, true, 5.0)).is_equal(1.0)
+
+func test_a_still_frame_never_trembles() -> void:
+	var frame := _frame()
+	for t: float in [0.0, 0.35, 4.0, 99.0]:
+		assert_int(EngravingMath.tremble_step(frame, t)).is_equal(0)
+
+func test_the_tremble_steps_at_its_rate_and_repeats_at_the_same_time() -> void:
+	var frame := _frame()
+	frame.tremble = 1.0
+	assert_int(EngravingMath.tremble_step(frame, 0.0)).is_equal(0)
+	assert_int(EngravingMath.tremble_step(frame, 0.09)).is_equal(0)
+	assert_int(EngravingMath.tremble_step(frame, 0.1)).is_equal(1)
+	assert_int(EngravingMath.tremble_step(frame, 2.55)).is_equal(25)
+	assert_int(EngravingMath.tremble_step(frame, 2.55)).is_equal(EngravingMath.tremble_step(frame, 2.55))
+	assert_int(EngravingMath.tremble_step(frame, -1.0)).is_equal(0)

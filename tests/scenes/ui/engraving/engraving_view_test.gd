@@ -1,11 +1,13 @@
 class_name EngravingViewTest extends GdUnitTestSuite
 
-## The view draws a frame in the palette's ink, retranslates its caption, stops under a hold and hides whole.
+## The view draws a frame in the palette's ink and a second ink, retranslates its caption and its caption turns, steps
+## the tremble on its own clock, stops under a hold and hides whole.
 
 const VIEW := preload("res://scenes/ui/engraving/engraving_view.tscn")
 const BASE := preload("res://assets/sprites/story/bearers/frost/frame_1_base.png")
 const FLAKES := preload("res://assets/sprites/story/bearers/frost/frame_1_flakes.png")
 const WINTER := preload("res://resources/songs/palettes/winter_palette.tres")
+const FLOWER := preload("res://resources/story/engraving/flower_ink.tres")
 const KEY := &"REGION_THRESHOLD"
 
 var _view: EngravingView
@@ -142,3 +144,53 @@ func test_the_caption_draws_over_the_bars_and_the_paper_between_them() -> void:
 	assert_float(paper.position.y + paper.size.y).is_equal(_view.size.y - letterbox.bar_height)
 	var caption := _view.caption_label().get_global_rect()
 	assert_float(caption.position.y).is_greater_equal(_view.size.y - letterbox.bar_height)
+
+func test_the_second_key_takes_the_second_ink_and_a_bearer_frame_keeps_one() -> void:
+	_view.show_frame(_frame(), WINTER.tint, false, FLOWER.colour)
+	assert_object(_view.second_tint()).is_equal(FLOWER.colour)
+	for sprite: Sprite2D in _view.sprites():
+		var material := sprite.material as ShaderMaterial
+		assert_object(material.get_shader_parameter(&"ink_colour")).is_equal(WINTER.tint)
+		assert_object(material.get_shader_parameter(&"ink_b_colour")).is_equal(FLOWER.colour)
+		assert_float(material.get_shader_parameter(&"tremble")).is_equal(0.0)
+		assert_int(material.get_shader_parameter(&"tremble_step")).is_equal(0)
+
+## Every key of the shader is a uniform the view sets: the mixed ink draws from both inks and the greys.
+func test_the_shader_reads_both_inks_and_the_tremble() -> void:
+	var names: Array[String] = []
+	for uniform: Dictionary in EngravingView.SHADER.get_shader_uniform_list():
+		names.append(uniform["name"])
+	for name: String in ["ink_colour", "ink_b_colour", "tremble", "tremble_step"]:
+		assert_bool(names.has(name)).override_failure_message(name).is_true()
+
+func test_a_trembling_frame_steps_and_a_hold_stops_it() -> void:
+	var freeze := WorldFreeze.new()
+	add_child(freeze)
+	var frame := _frame(10.0)
+	frame.tremble = 1.0
+	_view.show_frame(frame, WINTER.tint, false, FLOWER.colour)
+	var material := _view.sprites()[1].material as ShaderMaterial
+	assert_float(material.get_shader_parameter(&"tremble")).is_equal(1.0)
+	await await_millis(400)
+	var step: int = material.get_shader_parameter(&"tremble_step")
+	assert_int(step).is_greater(0)
+	freeze.freeze()
+	var held: int = material.get_shader_parameter(&"tremble_step")
+	await get_tree().create_timer(0.5, true, false, true).timeout
+	assert_int(material.get_shader_parameter(&"tremble_step")).is_equal(held)
+	freeze.thaw()
+	remove_child(freeze)
+	freeze.free()
+
+func test_caption_turns_show_one_key_at_a_time() -> void:
+	var frame := _frame(1.0)
+	frame.captions = [&"REGION_THRESHOLD", &"REGION_FROST_EDGE"]
+	frame.caption_turns = true
+	frame.reveal_seconds = 0.0
+	_view.show_frame(frame, WINTER.tint, false)
+	assert_str(_view.caption_label().text).is_equal(tr(&"REGION_THRESHOLD"))
+	await await_millis(700)
+	assert_str(_view.caption_label().text).is_equal(tr(&"REGION_FROST_EDGE"))
+	TranslationServer.set_locale("pt_BR")
+	await get_tree().process_frame
+	assert_str(_view.caption_label().text).is_equal(TranslationServer.translate(&"REGION_FROST_EDGE"))

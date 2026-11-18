@@ -16,6 +16,7 @@
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="48_fact"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/props/frost_edge/lighthouse_lamp_chain.png" id="49_chain"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/world_restoration.tres" id="47_restoration"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/final_fragment.tres" id="47_fragment"]
 [ext_resource type="Resource" path="res://resources/save_facts/all_guardians_restored.tres" id="50_all_restored"]
 [ext_resource type="Resource" path="res://resources/save_facts/seen_mentor_turns.tres" id="51_seen_turns"]
 [ext_resource type="Script" path="res://scenes/characters/components/fact_presence.gd" id="52_presence"]
@@ -916,6 +917,11 @@ script = ExtResource("46_trigger")
 cutscene = ExtResource("cs_wakes")
 when = Array[ExtResource("48_fact")]([ExtResource("50_all_restored")])
 zone = NodePath("../../MentorWakesZone")
+
+[node name="FinalFragment" type="Node" parent="Triggers"]
+script = ExtResource("46_trigger")
+cutscene = ExtResource("47_fragment")
+when = Array[ExtResource("48_fact")]([ExtResource("43_restored")])
 
 [node name="WorldRestoration" type="Node" parent="Triggers"]
 script = ExtResource("46_trigger")

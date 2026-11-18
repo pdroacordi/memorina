@@ -7,3 +7,5 @@ extends Resource
 @export var steps: Array[CutsceneStep] = []
 ## Whether the pause menu offers "Skip scene" while it plays.
 @export var skippable: bool = true
+## The life notes fade out while it plays, since they draw over the Fade and the EngravingView.
+@export var hud_hidden: bool = false

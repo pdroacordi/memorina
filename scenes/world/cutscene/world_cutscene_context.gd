@@ -261,9 +261,9 @@ func restore(clear_fade: bool, cut: bool = false) -> void:
 	if clear_fade and _director.fade != null and _director.fade.is_black():
 		_director.fade.to_clear()
 
-func engrave(frame: EngravingFrame, tint: Color, dissolve: bool) -> void:
+func engrave(frame: EngravingFrame, tint: Color, dissolve: bool, second_tint: Color) -> void:
 	if _director.engraving != null and frame != null:
-		_director.engraving.show_frame(frame, tint, dissolve)
+		_director.engraving.show_frame(frame, tint, dissolve, second_tint)
 
 func land_engraving() -> void:
 	if _director.engraving != null:
@@ -272,6 +272,10 @@ func land_engraving() -> void:
 func clear_engraving(seconds: float) -> void:
 	if _director.engraving != null:
 		_director.engraving.clear(seconds)
+
+func hide_engraving() -> void:
+	if _director.engraving != null:
+		_director.engraving.hide_now()
 
 func exit(id: StringName) -> void:
 	cast.exit(id)

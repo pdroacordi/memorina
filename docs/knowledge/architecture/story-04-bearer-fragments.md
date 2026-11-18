@@ -314,3 +314,7 @@ The director is pausable and scaled, reads no input, writes no `WorldFreeze` and
 - **Catalog.** `validate` also names an engraving that cannot be skipped and one whose last fade is not to black (the travel back is a 0 s cut).
 - **`EngravingMath.fits`** tests the snapped windows `layer_window` draws, not the raw lerp.
 - **Not changed:** a `CutsceneTrigger` armed but not yet playing does not block the call. The travel out re-arms the room's trigger on the way back (`CutsceneDirector.on_room_changed`), and a trigger that wins the same tick makes the call's `play` refuse, which drops the fragment unrecorded; neither loses a scene.
+
+## Revision (2026-11-18)
+
+The consequence "GRD-06's final fragment must not reuse `EngravingView`" read design 01 §6 as code. The user's approved draft (`docs/design/drafts/fragmento_final.md`, 2026-11-18) asks for "o mesmo formato dos fragmentos dos portadores ... mas com estética própria: as duas cores dele". The STORY-42 plan (`architecture/story42-the-final-fragment`) reuses the view and gives the final fragment its own look as data: a second key ink, a trembling mixed ink, caption turns. Bearer art draws as before.

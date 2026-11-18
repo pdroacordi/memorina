@@ -27,5 +27,8 @@ extends Resource
 ## The moves from the revelation on: the winter moves and the second season's.
 @export var revealed_attacks: Array[GuardianAttack] = []
 @export var dissonance_color: Color = Color(0.62, 0.46, 0.78)
-## Played when the last phrase is answered; its SCENE_SEEN is the seam to the epilogue (STORY-07).
+## Played when the last phrase is answered, before the restoration, which GuardianFinale chains on its recorded end
+## (architecture/story42-the-final-fragment); null plays the restoration at once.
+@export var final_fragment: Cutscene
+## The world's restoration after the fragment; its SCENE_SEEN is the seam to the epilogue (STORY-07).
 @export var restoration_scene: Cutscene

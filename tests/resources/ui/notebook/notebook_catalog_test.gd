@@ -200,3 +200,19 @@ func test_ear_texts_are_on_exactly_the_halved_songs() -> void:
 		var halved := songs.get_song(entry.index as Enums.Song).learned_in_halves
 		assert_bool(not entry.ear_body_key.is_empty()).override_failure_message("%s ear_body_key" % entry.id).is_equal(halved)
 		assert_bool(not entry.ear_margin_key.is_empty()).override_failure_message("%s ear_margin_key" % entry.id).is_equal(halved)
+
+## Ermo's page follows the bearers' and is present once his fragment is seen ("Sim, depois de visto", user, 2026-11-18);
+## it draws the flute (architecture/story42-the-final-fragment).
+func test_ermos_page_follows_the_bearers_once_his_fragment_is_seen() -> void:
+	var lore := _catalog().in_section(NotebookEntry.Section.LORE)
+	var entry := _catalog().get_entry(&"lore_final_fragment")
+	assert_object(entry).is_not_null()
+	assert_int(lore.find(entry)).is_equal(lore.find(_catalog().get_entry(&"lore_bearer_summer")) + 1)
+	assert_str(entry.title_key).is_equal("NOTEBOOK_LORE_FINAL_FRAGMENT_TITLE")
+	assert_object(entry.drawing).is_not_null()
+	assert_vector(entry.drawing.get_size()).is_equal(Vector2(72, 40))
+	var data := PlayerData.new()
+	data.world_restored = true
+	assert_bool(entry.is_present(data)).is_false()
+	data.scenes_seen.append(&"final_fragment")
+	assert_bool(entry.is_present(data)).is_true()

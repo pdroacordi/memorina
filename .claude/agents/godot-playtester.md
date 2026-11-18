@@ -835,6 +835,20 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - Split a `[cam]` log into named windows (talk in, close-up in, hold, out, release) and report the max step and the max
     frame-to-frame change of step per window. The second number separates a smooth ease from a kink or a start at full speed.
 
+- **Learned 2026-11-18 (STORY-42 final fragment)**: **probe an engraving scene from `EngravingView`, not from frames.**
+  - A scratch `-s` driver around the runner can read `EngravingView.sprites()` (the first texture names the panel),
+    `-sprites()[0].position` (the pan window), `_turn`, `caption_label()` text and alpha, and `elapsed()`. It can read
+    each layer's `tremble_step` shader parameter and `Sprite2D.frame` (the `hframes` cell) too. Print them on change:
+    one log gives every panel's start, pan, caption visibility (and so characters/s) and the moving layers. Draw the
+    logged windows on the source PNGs to judge what a pan cuts.
+  - The replay path is cheap: `"world_restored": true`, `"scenes_seen": ["mentor_wakes"]`, the four restored, and a
+    spawn at the hatch (12048, -1254). `FinalFragment` plays at t 0.8.
+  - For the victory path, `guardian_fight_bot_driver.gd` + `BOT_GOD=1 BOT_RESTORED_MS=95000 BOT_MAX_SHOTS=500` on
+    `guardian_bot_mentor.json` wins in ~69 s and keeps 0.7 s shots through the fragment and the restoration. Run it with
+    `run_in_background` (~4.5 min).
+  - On this machine Python's stdout is cp1252: a log line with "ç" crashes `print`. Call
+    `sys.stdout.reconfigure(encoding="utf-8")` in every log filter.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
