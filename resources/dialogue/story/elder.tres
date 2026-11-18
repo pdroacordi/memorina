@@ -55,11 +55,6 @@ reply = Array[ExtResource("f_line")]([SubResource("line_4"), SubResource("line_5
 script = ExtResource("f_line")
 cue = &"elder_painting"
 
-[sub_resource type="Resource" id="line_8"]
-script = ExtResource("f_line")
-speaker = ExtResource("s_ivo")
-text_key = "DLG_ELDER_PAINTING_02"
-
 [sub_resource type="Resource" id="line_9"]
 script = ExtResource("f_line")
 speaker = ExtResource("s_elder")
@@ -70,7 +65,7 @@ script = ExtResource("f_choice")
 id = &"elder_painting"
 text_key = "DLG_CHOICE_ELDER_PAINTING"
 tone = 2
-reply = Array[ExtResource("f_line")]([SubResource("line_7"), SubResource("line_8"), SubResource("line_9")])
+reply = Array[ExtResource("f_line")]([SubResource("line_7"), SubResource("line_9")])
 
 [sub_resource type="Resource" id="line_11"]
 script = ExtResource("f_line")
@@ -115,6 +110,31 @@ speaker = ExtResource("s_girl")
 text_key = "DLG_ELDER_STORY_07"
 cue = &"gate_bolt"
 
+[sub_resource type="Resource" id="line_32"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_girl")
+text_key = "DLG_ELDER_STORY_13"
+
+[sub_resource type="Resource" id="line_33"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_ELDER_STORY_14"
+
+[sub_resource type="Resource" id="line_34"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder")
+text_key = "DLG_ELDER_STORY_15"
+
+[sub_resource type="Resource" id="line_35"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_ivo")
+text_key = "DLG_ELDER_STORY_16"
+
+[sub_resource type="Resource" id="line_36"]
+script = ExtResource("f_line")
+speaker = ExtResource("s_elder")
+text_key = "DLG_ELDER_STORY_17"
+
 [sub_resource type="Resource" id="fact_15"]
 script = ExtResource("f_fact")
 kind = 7
@@ -125,7 +145,7 @@ script = ExtResource("f_dialogue")
 id = &"elder_story"
 once = true
 when = Array[ExtResource("f_fact")]([SubResource("fact_15")])
-lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_3"), SubResource("line_27"), SubResource("line_2"), SubResource("line_11"), SubResource("line_28"), SubResource("line_29"), SubResource("line_12"), SubResource("line_30"), SubResource("line_31"), SubResource("line_13"), SubResource("line_14")])
+lines = Array[ExtResource("f_line")]([SubResource("line_1"), SubResource("line_3"), SubResource("line_27"), SubResource("line_2"), SubResource("line_32"), SubResource("line_11"), SubResource("line_33"), SubResource("line_34"), SubResource("line_28"), SubResource("line_29"), SubResource("line_35"), SubResource("line_36"), SubResource("line_12"), SubResource("line_30"), SubResource("line_31"), SubResource("line_13"), SubResource("line_14")])
 zoom = 2.0
 
 [sub_resource type="Resource" id="line_17"]

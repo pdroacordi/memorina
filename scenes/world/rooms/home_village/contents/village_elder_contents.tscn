@@ -191,6 +191,11 @@ position = Vector2(392, 288)
 script = ExtResource("cs_mark")
 mark_id = &"painting"
 
+[node name="PaintingView" type="Marker2D" parent="Marks"]
+position = Vector2(410, 170)
+script = ExtResource("cs_mark")
+mark_id = &"painting_view"
+
 [node name="Outside" type="Marker2D" parent="Marks"]
 position = Vector2(608, 288)
 script = ExtResource("cs_mark")

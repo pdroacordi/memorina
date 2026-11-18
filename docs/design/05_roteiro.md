@@ -16,6 +16,7 @@
 - **A ordem da abertura:** "East gate shut until the elder points east (Recommended)": o portão leste da vila fica fechado até a história do ancião ser ouvida; o "Leste. Ainda está lá." dele é o que o abre. A abertura sempre acontece em ordem. Isso muda, só para a abertura, a "Estrada do Limiar: aberta" de `04_mapa_do_mundo.md`, seção 2.
 - **Gestos em português:** [Tentar de novo], [Baixar o violão], [Esperar por ele], [Olhar o quadro], [Tocar de novo], [Baixá-la] ("Approve (Recommended)").
 - **A história do ancião (STORY-32, 2026-11-17):** "o primeiro diálogo com o ancião pode ser melhorado, ta meio sem sentido" (2026-11-16), depois "Aprovar os dois (Recommended)" sobre o rascunho `drafts/story32_34_talks.md`: o farol traz de volta o que o mar leva; Ivo pergunta se o homem do farol ainda guarda as coisas (a origem do "Disseram que você guarda as coisas" do Ato 3); "Meu pai dizia que sim" prepara o modelo entalhado do Ato 4; o ancião manda Ivo pegar a espada do sítio.
+- **A história do ancião, rascunho 3 (STORY-41, 2026-11-18):** "o diálogo com o ancião tem que ser mais melhorado ainda. tá uma merda. um monte de frases soltas. \"east.\" \"i'm going there\"." e, sobre o rascunho `drafts/elder_talk_v3.md`, "tem que dar um bom destaque para o quadro, pq acho que o que estava ficando confuso era que não se via o quadro no diálogo. Por isso o \"lá\" não ficava claro. mas etá aprovado." A menina mostra que ele sempre para ali; Ivo reconhece a música que perdeu; "Onde fica?" vem antes do "A leste"; a câmera vai até o quadro quando o ancião olha (zoom 4) e quando Ivo vai até ele (zoom 3).
 - **O mentor, mais devagar e na lanterna (STORY-34, 2026-11-17):** "o diálogo com o primeiro guardião (corrompido) não está fazendo muito sentido. Parece apressado. Sem falar que não sei se gosto do lugar que ele está, no meio do farol" (2026-11-16); o lugar: "Na lanterna, junto à lâmpada" (no topo, na sala da lanterna, a mão erguida para a lâmpada apagada); o alçapão: "Sempre aberto (Recommended)"; o texto: o rascunho `drafts/story32_34_talks.md`, seção STORY-34, aprovado: Ivo chega devagar, a cabeça do mentor demora a virar, "Guardo." e "Guardava." ficam em caixas separadas com uma pausa longa entre elas, e Ivo diz por que veio.
 - **Retratos e personagens:** o quadro do elenco aprovado (`tools/art/sources/story/story_cast_board_codex.png`).
 
@@ -122,33 +123,41 @@ As paredes são todas farol. O ancião conta a história às duas crianças no b
 *Elder: Even that. He kept it all, up there. Until one winter he—*
 **Ancião:** Ele…
 *Elder: He…*
-(Ele olha o quadro do farol.)
+[CENA] Ele olha o quadro do farol, e a câmera vai até o quadro (zoom 4) e fica nele.
+**Menina** (baixo, pro irmão): Ele sempre para aí.
+*Girl (quietly, to her brother): He always stops there.*
 **Ancião:** Tinha um fim. Tinha um fim bom.
 *Elder: It had an end. It had a good end.*
 
 ★ **Escolha B** (`elder_story`):
-1. **[Esperar por ele]** (HOLD). **Ancião:** …até que um inverno— até que um— (desiste; aponta o quadro) Leste. Ainda está lá.
-   *Elder: …until one winter— until one— (he gives up; points at the painting) East. It's still there.*
-2. **[Olhar o quadro]** (LET). Ivo vai até o quadro.
-   **Ivo:** Esse farol ainda existe?
-   *Ivo: Is that lighthouse still there?*
-   **Ancião** (atrás dele): Leste. Depois dos campos. Faz anos que ninguém vai.
-   *Elder (behind him): East. Past the fields. Nobody's gone in years.*
+1. **[Esperar por ele]** (HOLD). **Ancião:** …até que um inverno— até que um— (balança a cabeça) Não vem. Faz tempo que não vem.
+   *Elder: …until one winter— until one— (he shakes his head) It won't come. It hasn't come in a long time.*
+2. **[Olhar o quadro]** (LET). Ivo vai até o quadro; a câmera fecha no quadro com ele embaixo (zoom 3).
+   **Ancião** (atrás dele): Ainda tá de pé, sabe. Meu pai subiu lá uma vez.
+   *Elder (behind him): It's still standing, you know. My father climbed it once.*
 
-**Ivo:** E o homem do farol… ainda guarda as coisas?
-*Ivo: And the man in the lighthouse… does he still keep things?*
-**Ancião:** Meu pai dizia que sim.
-*Elder: My father said he did.*
-**Ivo:** Vou até lá.
-*Ivo: I'm going.*
+**Ivo:** Eu também paro no mesmo lugar. Numa música.
+*Ivo: I stop in the same place too. In a song.*
+**Ancião** (olha pra ele um tempo): A que a sua mulher cantava.
+*Elder (looks at him a while): The one your wife used to sing.*
+**Ivo:** Esse homem do farol… se ele trazia de volta o que o mar levava…
+*Ivo: That man in the lighthouse… if he brought back what the sea took…*
+**Ancião:** Meu pai dizia que ele guardava tudo. Até o que a gente nem sabia que tinha perdido.
+*Elder: My father said he kept everything. Even what you didn't know you'd lost.*
+**Ivo:** Onde fica?
+*Ivo: Where is it?*
+**Ancião:** A leste. Depois dos campos, no fim da estrada. Faz anos que ninguém vai.
+*Elder: East. Past the fields, at the end of the road. Nobody's gone in years.*
+**Ivo:** Então eu vou.
+*Ivo: Then I'm going.*
 **Ancião:** (olha as mãos vazias dele) Assim? A estrada não é mais a de antes.
 *Elder: (looks at his empty hands) Like that? The road isn't what it was.*
-**Ancião:** No sítio dos campos tem uma espada em cima da mesa. Ninguém vai sentir falta.
-*Elder: There's a sword on the table at the farm in the fields. No one will miss it.*
-**Ancião:** Leva um casaco. Lá o inverno não acaba.
-*Elder: Take a coat. The winter there doesn't end.*
-**Menina:** Traz o fim da história!
-*Girl: Bring back the end of the story!*
+**Ancião:** No sítio dos campos tem uma espada em cima da mesa. Quem morava lá não volta pra buscar.
+*Elder: There's a sword on the table at the farm in the fields. Whoever lived there isn't coming back for it.*
+**Ancião:** E leva um casaco. Lá o inverno não acaba.
+*Elder: And take a coat. The winter there doesn't end.*
+**Menina:** Traz o fim da história, tá?
+*Girl: Bring back the end of the story, okay?*
 → O portão leste abre (o som do ferrolho, lá fora). Intenção: "O farol, a leste." / "The lighthouse, east."
 
 ---

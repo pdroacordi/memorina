@@ -5,6 +5,7 @@
 [ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e3"]
 [ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e4"]
 [ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e5"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e6"]
 
 [sub_resource type="Resource" id="walk_1"]
 script = ExtResource("e1")
@@ -17,11 +18,23 @@ script = ExtResource("e2")
 actor = &"ivo"
 side = 1
 
+[sub_resource type="Resource" id="camera_4"]
+script = ExtResource("e6")
+targets = Array[StringName]([&"painting_view"])
+offset = Vector2(0, 16)
+zoom = 3.0
+seconds = 0.6
+
 [sub_resource type="Resource" id="wait_3"]
 script = ExtResource("e3")
-seconds = 0.8
+seconds = 1.2
+
+[sub_resource type="Resource" id="face_5"]
+script = ExtResource("e2")
+actor = &"ivo"
+toward = &"elder"
 
 [resource]
 script = ExtResource("e5")
 id = &"ivo_walks_to_painting"
-steps = Array[ExtResource("e4")]([SubResource("walk_1"), SubResource("face_2"), SubResource("wait_3")])
+steps = Array[ExtResource("e4")]([SubResource("walk_1"), SubResource("face_2"), SubResource("camera_4"), SubResource("wait_3"), SubResource("face_5")])

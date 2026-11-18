@@ -828,6 +828,13 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     (village_house) the look-ahead is clamped away, so such a release cannot show a look-ahead step: pick an open room
     (the lantern) for that.
 
+- **Learned 2026-11-18 (STORY-41 elder story)**: **`talk_reader_driver.gd` always answers choice 0.** For another choice, use a
+  scratch copy that taps Down once at `_read * 0.5` after a choosing line has finished typing, before its Z. The `[dlg] press Z`
+  line then logs `focus=Choice1`. The elder's talk from `story16_elder.json`'s walk-in (Right 0.6-1.4 s) runs ~52 s at
+  `READ=1.2`. Set `max_duration` 100 and add a final `log` near it.
+  - Split a `[cam]` log into named windows (talk in, close-up in, hold, out, release) and report the max step and the max
+    frame-to-frame change of step per window. The second number separates a smooth ease from a kink or a start at full speed.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

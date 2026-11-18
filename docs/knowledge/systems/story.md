@@ -303,3 +303,9 @@ Defaults taken from the plan's recommendations (default, 2026-10-15; not asked):
 - Gestures: `Tilting` (`tilt`, 1.1 s) on "Guardo." (`DLG_MENTOR_GIFT_05`), `Lowering` (`lower`, 1.6 s) on "Guardava." (`_09`), `HoldingOut` (`hold_out`, `holds`, out after 0.4 s) on "Muitas mãos." (`_02`), each a `LineGesture` under `Beats` (`mentor_tilt`, `mentor_lower`, `mentor_hold_out`). The hold-out stays until `mentor_gift` stands `EmptyHand` in; STORY-35 starts the hand-over from its last frame.
 - Every strip's frame 0 is the old Holding composite (`EmptyHand`'s without the flute), and tilt and lower end on it, so every cut is pixel-exact (`mentor_moves_test`).
 - Art: PixelLab from `mentor_holding_2x.png`; contracts `tools/art/prompts/story_mentor_breathe.md`, `_holding_breathe`, `_tilt`, `_lower`, `_hold_out`; credits in `CREDITS.md`.
+
+## The elder's story, rewritten (STORY-41)
+
+"o diálogo com o ancião tem que ser mais melhorado ainda. tá uma merda. um monte de frases soltas." then "tem que dar um bom destaque para o quadro … mas etá aprovado." (user, 2026-11-18). The text is `05_roteiro.md` §6.
+- `elder_looks_at_painting` (the cue on "Ele…") turns the elder and moves the camera to `painting_view` (410, 170) at zoom 4 for 1.6 s; `ivo_walks_to_painting` (the [Olhar o quadro] reply) frames it at zoom 3 with Ivo under it, then turns him back toward the elder, so the rest of the talk faces him.
+- The painting is 20x28 art px (40x56 game px); the 9x13 cut showed no lighthouse (`bugs/the-elders-lighthouse-painting-shows-no-lighthouse`). Art approved "Aprovar (Recommended)" (user, 2026-11-18).

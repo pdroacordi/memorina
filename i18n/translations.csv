@@ -232,9 +232,9 @@ DLG_ELDER_STORY_02,He…,Ele…
 DLG_ELDER_STORY_03,It had an end. It had a good end.,Tinha um fim. Tinha um fim bom.
 DLG_CHOICE_ELDER_WAIT,[Wait for him],[Esperar por ele]
 DLG_ELDER_WAIT_01,…until one winter— until one—,…até que um inverno— até que um—
-DLG_ELDER_WAIT_02,East. It's still there.,Leste. Ainda está lá.
+DLG_ELDER_WAIT_02,It won't come. It hasn't come in a long time.,Não vem. Faz tempo que não vem.
 DLG_CHOICE_ELDER_PAINTING,[Look at the painting],[Olhar o quadro]
-DLG_ELDER_PAINTING_01,East. Past the fields. Nobody's gone in years.,Leste. Depois dos campos. Faz anos que ninguém vai.
+DLG_ELDER_PAINTING_01,"It's still standing, you know. My father climbed it once.","Ainda tá de pé, sabe. Meu pai subiu lá uma vez."
 DLG_MENTOR_GIFT_01,…You came the ~long~ way.,…Você veio pelo caminho ~longo~.
 DLG_MENTOR_GIFT_02,Many hands. None of them ~kept~ it.,Muitas mãos. Nenhuma ~guardou~.
 DLG_CHOICE_MEMORINA_AGAIN,[Play it again],[Tocar de novo]
@@ -319,15 +319,19 @@ DLG_DAUGHTER_SONG_09,"It's all right, Papa.","Tá tudo bem, pai."
 DLG_DAUGHTER_SONG_10,It isn't.,Não tá.
 DLG_DAUGHTER_SONG_11,…and the keeper climbed the stairs every night…,…e o guardião subia a escada toda noite…
 DLG_ELDER_STORY_04,Even what fell in the water?,"Até o que caía na água, vô?"
-DLG_ELDER_STORY_05,I'm going.,Vou até lá.
-DLG_ELDER_STORY_06,Take a coat. The winter there doesn't end.,Leva um casaco. Lá o inverno não acaba.
-DLG_ELDER_STORY_07,Bring back the end of the story!,Traz o fim da história!
+DLG_ELDER_STORY_05,Then I'm going.,Então eu vou.
+DLG_ELDER_STORY_06,And take a coat. The winter there doesn't end.,E leva um casaco. Lá o inverno não acaba.
+DLG_ELDER_STORY_07,"Bring back the end of the story, okay?","Traz o fim da história, tá?"
 DLG_ELDER_STORY_08,"Even that. He kept it all, up there. Until one winter he—","Até isso. Ele guardava tudo, lá no alto. Até que um inverno ele—"
-DLG_ELDER_STORY_09,And the man in the lighthouse… does he still keep things?,E o homem do farol… ainda guarda as coisas?
-DLG_ELDER_STORY_10,My father said he did.,Meu pai dizia que sim.
+DLG_ELDER_STORY_09,That man in the lighthouse… if he brought back what the sea took…,Esse homem do farol… se ele trazia de volta o que o mar levava…
+DLG_ELDER_STORY_10,My father said he kept everything. Even what you didn't know you'd lost.,Meu pai dizia que ele guardava tudo. Até o que a gente nem sabia que tinha perdido.
 DLG_ELDER_STORY_11,Like that? The road isn't what it was.,Assim? A estrada não é mais a de antes.
-DLG_ELDER_STORY_12,There's a sword on the table at the farm in the fields. No one will miss it.,No sítio dos campos tem uma espada em cima da mesa. Ninguém vai sentir falta.
-DLG_ELDER_PAINTING_02,Is that lighthouse still there?,Esse farol ainda existe?
+DLG_ELDER_STORY_12,There's a sword on the table at the farm in the fields. Whoever lived there isn't coming back for it.,No sítio dos campos tem uma espada em cima da mesa. Quem morava lá não volta pra buscar.
+DLG_ELDER_STORY_13,He always stops there.,Ele sempre para aí.
+DLG_ELDER_STORY_14,I stop in the same place too. In a song.,Eu também paro no mesmo lugar. Numa música.
+DLG_ELDER_STORY_15,The one your wife used to sing.,A que a sua mulher cantava.
+DLG_ELDER_STORY_16,Where is it?,Onde fica?
+DLG_ELDER_STORY_17,"East. Past the fields, at the end of the road. Nobody's gone in years.","A leste. Depois dos campos, no fim da estrada. Faz anos que ninguém vai."
 DLG_SWORD_01,…Sorry. I'll need this.,…Desculpa. Vou precisar disso.
 DLG_SWORD_TURN_BACK_01,Not like this.,Assim não.
 DLG_MENTOR_GIFT_04,In the village they tell a story about you. They say you keep things.,Na vila contam uma história sua. Dizem que você guarda as coisas.
