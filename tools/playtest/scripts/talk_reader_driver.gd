@@ -1,6 +1,6 @@
 extends SceneTree
 ## Runs the playtest runner and reads any talk at a steady pace (Z after READ s of a fully typed line or choice, choice 0), printing [dlg]/[stage]/[box] lines; screenshots each line, each Props/Mentor stage change and every 0.2 s of a box-closed beat.
-## Run: "$GODOT" --path . -s <abs>/talk_reader_driver.gd -- --script=<timeline> --out=<dir>; env SHOT_DIR=<abs dir>, READ (s, default 1.0), UP_AFTER=1 (after the talk, walk left 0.15 s and press Up), GAP (s between box-closed shots, default 0.2; 0.07 for a burst), CAMLOG=1 (a [cam] line on every change of screen centre or zoom).
+## Run: "$GODOT" --path . -s <abs>/talk_reader_driver.gd -- --script=<timeline> --out=<dir>; env SHOT_DIR=<abs dir>, READ (s, default 1.0), UP_AFTER=1 (after the talk, walk left 0.15 s and press Up), GAP (s between box-closed shots, default 0.2; 0.07 for a burst), CAMLOG=1 (a [cam] line on every change of screen centre or zoom), STRIPSHOT=1 (a shot one frame after each Props/Mentor strip frame change; [strip] lines always print), MASH=<s> (tap Z every <s> while the talk blocks Ivo).
 var _out := ""
 var _read := 1.0
 var _typed_at := -1.0
@@ -16,6 +16,9 @@ var _ended_at := -1.0
 var _up_phase := 0
 var _pending: Array = []
 var _last_cam := ""
+var _last_strip := ""
+var _shot_next := ""
+var _mash_next := 0.0
 
 func _initialize() -> void:
 	_out = OS.get_environment("SHOT_DIR")
@@ -42,7 +45,7 @@ func _tap(code: Key) -> void:
 	_pending.append([_now() + 0.08, code])
 
 func _shot(name: String) -> void:
-	if _out == "" or _shots >= 260:
+	if _out == "" or _shots >= 600:
 		return
 	_shots += 1
 	var img := root.get_texture().get_image()
@@ -54,10 +57,34 @@ func _process(_delta: float) -> bool:
 		if now >= p[0]:
 			_key(p[1], false)
 			_pending.erase(p)
+	if _shot_next != "":
+		_shot(_shot_next)
+		_shot_next = ""
 	var box: Control = root.find_child("DialogueBox", true, false)
 	var player: Node = root.find_child("Player", true, false)
 	if box == null or player == null:
 		return false
+	var mm: Node = root.find_child("Mentor", true, false)
+	if mm != null and mm.get_parent() != null and mm.get_parent().name == "Props":
+		var sd := ""
+		for c in mm.get_children():
+			if c is AnimatedSprite2D and (c as CanvasItem).visible:
+				var a := c as AnimatedSprite2D
+				sd += "%s:%s#%d " % [c.name, a.animation, a.frame]
+			elif c is CanvasItem and (c as CanvasItem).visible:
+				sd += "%s " % c.name
+		if sd != _last_strip:
+			_last_strip = sd
+			var bx: Control = box
+			print("[strip] t=%.3f f=%d %s box=%s" % [_t(), Engine.get_process_frames(), sd, bx.get_global_rect() if bx.is_visible_in_tree() else "closed"])
+			if OS.get_environment("STRIPSHOT") == "1":
+				_shot_next = "fr_" + sd.strip_edges().replace(" ", "+").replace(":", "-").replace("#", "f")
+	var mash := float(OS.get_environment("MASH")) if OS.get_environment("MASH") != "" else 0.0
+	if mash > 0.0 and _t() > 4.0 and _ended_at < 0.0 and _now() >= _mash_next:
+		var blk: bool = player.get_node("PlayerInput").get("blocked") if player.has_node("PlayerInput") else false
+		if blk or box.is_visible_in_tree():
+			_mash_next = _now() + mash
+			_tap(KEY_Z)
 	var ivo := player as Node2D
 	# Mentor staging and guardian body.
 	var stage := ""

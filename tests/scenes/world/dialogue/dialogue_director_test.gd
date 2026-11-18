@@ -5,6 +5,7 @@ class_name DialogueDirectorTest extends GdUnitTestSuite
 ## speakers, and an interrupt or an abandoned beat ends the talk unheard.
 
 const F := preload("res://tests/resources/dialogue/dialogue_fixture.gd")
+const G := preload("res://tests/scenes/world/story/gesture_fixture.gd")
 const TALKABLE := preload("res://scenes/world/interactables/talkable/talkable.tscn")
 
 var _director: DialogueDirector
@@ -369,3 +370,16 @@ func test_a_press_before_the_hold_is_not_doubled() -> void:
 	await await_millis(400)
 	assert_array(Array(_log)).is_equal(["began", "line:A", "line:B"])
 
+## A gesture plays as its line shows; the box stays open and the talk never waits for it (STORY-37).
+func test_a_gesture_plays_as_its_line_shows_and_the_talk_goes_on() -> void:
+	var built := G.build(self)
+	var staging := built[0] as FactStaging
+	auto_free(staging)
+	auto_free(built[1])
+	var waved := F.line("A")
+	waved.gesture = &"wave"
+	_talk([waved, F.line("B")])
+	assert_str(String(staging.shown().name)).is_equal("Gesture")
+	assert_array(Array(_log)).is_equal(["began", "line:A"])
+	_director.advance()
+	assert_array(Array(_log)).is_equal(["began", "line:A", "line:B"])

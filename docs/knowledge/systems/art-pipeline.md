@@ -40,6 +40,7 @@ Art the game needs is a **contract** before it is a picture: `tools/art/prompts/
 ## Creatures (CORE-13, CORE-04; 2026-10-29)
 
 - **A Codex sheet needs a grid-aware cut.** Codex draws at about 12-14 source px per drawn pixel; resampling straight to the target size turns a small creature to mush. `tools/art/cut_creatures.py` measures each creature's own pixel grid, reads each drawn pixel once, then reduces to `--size`. Where that is still mush, PixelLab pixflux redraws it at exact size with the cut as the init image (the `clean_prop.py` route).
+- **A redrawn frame 0 makes a loop shimmer:** animate-with-text-v3 redraws the whole figure, so a strip whose frame 0 is the exact still and whose frames 1+ are the generation changes most of the figure on that step (STORY-37). `tools/art/lock_to_still.py` keeps the still and draws only what moved from the generation's own frame 0 (`bugs/the-mentors-new-strips-redraw-the-figure-between-frame-0-and-frame-1`).
 - **animate-with-text-v3 paints effects into frames:** white notes, flashes, grey backdrops, a turn to face east or the back. `cut_inhabitant.py --drop=D` clears pixels far from the still's colours and `--ceiling=ROW` clears above a row; reject a clip that turned and retry.
 - **One strip per clip:** `ArtPrompt` allows 1 or 3 bands, so a species is one `<name>_<clip>.png` strip per clip, frames side by side, feet on the bottom row; `tools/art/pad_reference.py` places a 2x still on the frame canvas on even pixels.
 

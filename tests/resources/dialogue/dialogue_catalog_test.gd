@@ -133,3 +133,20 @@ func test_choice_finds_by_id() -> void:
 	assert_str(catalog.choice(&"keep_let_go").text_key).is_equal("CHOICE_LET_GO")
 	assert_object(catalog.choice(&"missing")).is_null()
 	assert_int(catalog.lines().size()).is_equal(3)
+
+func test_a_gesture_needs_a_line_with_text() -> void:
+	var cued := F.cue_line(&"beat")
+	cued.gesture = &"wave"
+	assert_str(_problems([cued])).contains("gesture 'wave' is on a line with no text")
+	var said := F.line("A")
+	said.gesture = &"wave"
+	assert_str(_problems([said])).is_empty()
+
+func test_a_gesture_is_refused_on_a_silent_ask() -> void:
+	var silent := F.ask("", &"silent", [
+		F.choice(&"a", "A", DialogueChoice.Tone.NONE),
+		F.choice(&"b", "B", DialogueChoice.Tone.NONE),
+	])
+	silent.speaker = null
+	silent.gesture = &"wave"
+	assert_str(_problems([silent])).contains("gesture 'wave' is on a line with no text")

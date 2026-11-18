@@ -1,0 +1,29 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 62,
+ "locale": "pt_BR",
+ "owned_items": [
+  0
+ ],
+ "player_position": [
+  11780,
+  -1250
+ ],
+ "_note": "STORY-37: setup only for talk_reader_driver.gd (the driver reads the lantern talk). From (11780, -1250) Left 0.6-1.2 s puts Ivo's DoorSensor into the auto talk; 0.5 s once stopped at 11728.4, short of the zone edge (11720), and no talk started.",
+ "steps": [
+  {
+   "t": 0.6,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 1.2,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 61.0,
+   "log": "end"
+  }
+ ]
+}

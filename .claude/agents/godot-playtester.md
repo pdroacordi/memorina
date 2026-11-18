@@ -806,6 +806,16 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     (a jump across it starts the scene on landing). Scene 2.2-7.1, body moves +1.55, hits a still Ivo +3.3; a still Ivo dies about
     22 s after the start. A shot-to-shot diff is valid at the strip-to-body cut there (zoom 1, camera still for one frame).
 
+- **Learned 2026-11-18 (STORY-37 mentor gestures)**: **judge a strip's frame-to-frame step from the source sheet, not only the seam.**
+  - `talk_reader_driver.gd` now prints `[strip]` (the visible `Props/Mentor` child, clip and frame, with the frame number)
+    on every change. `STRIPSHOT=1` shoots one frame after each change, so the shot shows the new frame. `MASH=0.1` taps Z
+    every 0.1 s while the talk blocks Ivo. Setup timeline: `story37_mentor_talk_setup.json`.
+  - From (11780, -1250), Left for 0.5 s once stopped Ivo at 11728.4, short of the lantern zone (11720), and no talk
+    started. Hold Left 0.6 s.
+  - For any generated strip whose frame 0 was swapped for a still, compare the RGBA diff of frame 0 to 1 with frame 1 to
+    2 on the PNG itself (a 20-line Pillow script). A matched strip (`raise.png`) gives 568 vs 300; the STORY-37 strips gave
+    ~2500 vs ~450. Seam tests pass either way.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

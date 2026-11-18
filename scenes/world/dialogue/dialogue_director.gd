@@ -131,6 +131,7 @@ func _step() -> void:
 		DialogueRunner.Step.LINE:
 			_apply_grant()
 			line_shown.emit(_runner.speaker(), _runner.text_key())
+			_gesture(_runner.gesture())
 			_shown += 1
 			if _runner.hold() > 0.0:
 				get_tree().create_timer(_runner.hold(), false).timeout.connect(_advance_held.bind(_shown))
@@ -174,6 +175,16 @@ func _play(cue: StringName) -> void:
 	_facing = beat.face_point(_facing)
 	talk_paused.emit(beat.hold, beat.pose, _facing)
 	beat.start()
+
+## The talk never waits for a gesture: it plays beside the open box.
+func _gesture(id: StringName) -> void:
+	if id == &"":
+		return
+	var gesture := LineGesture.find(get_tree(), id)
+	if gesture == null:
+		push_error("No LineGesture '%s'; the talk goes on" % id)
+		return
+	gesture.play()
 
 ## A held line's time is up: it goes on unless a press already moved past it.
 func _advance_held(line: int) -> void:

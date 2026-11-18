@@ -63,6 +63,8 @@ func validate() -> PackedStringArray:
 	var choice_ids: Dictionary[StringName, bool] = {}
 	var ask_ids: Dictionary[StringName, bool] = {}
 	for line: DialogueLine in lines():
+		if line.gesture != &"" and line.text_key.is_empty():
+			problems.append("gesture '%s' is on a line with no text" % line.gesture)
 		if line.asks():
 			if line.ask_id == &"" or ask_ids.has(line.ask_id):
 				problems.append("ask id '%s' is empty or not unique" % line.ask_id)

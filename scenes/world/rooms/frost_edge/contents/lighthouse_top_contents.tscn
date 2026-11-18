@@ -19,7 +19,6 @@
 [ext_resource type="Resource" path="res://resources/save_facts/all_guardians_restored.tres" id="50_all_restored"]
 [ext_resource type="Resource" path="res://resources/save_facts/seen_mentor_turns.tres" id="51_seen_turns"]
 [ext_resource type="Script" path="res://scenes/characters/components/fact_presence.gd" id="52_presence"]
-[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/empty_hand.png" id="st_empty_hand"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/memorina_in_hand.png" id="st_memorina_in_hand"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/stasis.png" id="st_stasis"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/raise.png" id="st_raise"]
@@ -49,6 +48,212 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/still_turn.png" id="st_still_turn"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/wake_crack.png" id="st_wake_crack"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/wake_raise.png" id="st_wake_raise"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/holding_breathe.png" id="s37_holding"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/empty_hand_breathe.png" id="s37_empty_hand"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/tilt.png" id="s37_tilt"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/lower.png" id="s37_lower"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/hold_out.png" id="s37_hold_out"]
+[ext_resource type="Script" path="res://scenes/world/story/line_gesture.gd" id="s37_gesture"]
+
+[sub_resource type="AtlasTexture" id="s37_holding_0"]
+atlas = ExtResource("s37_holding")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_holding_1"]
+atlas = ExtResource("s37_holding")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_holding_2"]
+atlas = ExtResource("s37_holding")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_holding_3"]
+atlas = ExtResource("s37_holding")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="s37_holding_frames"]
+animations = [{
+"frames": [{
+"duration": 0.375,
+"texture": SubResource("s37_holding_0")
+}, {
+"duration": 0.25,
+"texture": SubResource("s37_holding_1")
+}, {
+"duration": 0.25,
+"texture": SubResource("s37_holding_2")
+}, {
+"duration": 0.375,
+"texture": SubResource("s37_holding_3")
+}, {
+"duration": 0.25,
+"texture": SubResource("s37_holding_2")
+}, {
+"duration": 0.25,
+"texture": SubResource("s37_holding_1")
+}],
+"loop": true,
+"name": &"holding",
+"speed": 1.0
+}]
+
+[sub_resource type="AtlasTexture" id="s37_empty_hand_0"]
+atlas = ExtResource("s37_empty_hand")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_empty_hand_1"]
+atlas = ExtResource("s37_empty_hand")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_empty_hand_2"]
+atlas = ExtResource("s37_empty_hand")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_empty_hand_3"]
+atlas = ExtResource("s37_empty_hand")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="s37_empty_hand_frames"]
+animations = [{
+"frames": [{
+"duration": 0.375,
+"texture": SubResource("s37_empty_hand_0")
+}, {
+"duration": 0.25,
+"texture": SubResource("s37_empty_hand_1")
+}, {
+"duration": 0.25,
+"texture": SubResource("s37_empty_hand_2")
+}, {
+"duration": 0.375,
+"texture": SubResource("s37_empty_hand_3")
+}, {
+"duration": 0.25,
+"texture": SubResource("s37_empty_hand_2")
+}, {
+"duration": 0.25,
+"texture": SubResource("s37_empty_hand_1")
+}],
+"loop": true,
+"name": &"empty_hand",
+"speed": 1.0
+}]
+
+[sub_resource type="AtlasTexture" id="s37_tilt_0"]
+atlas = ExtResource("s37_tilt")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_tilt_1"]
+atlas = ExtResource("s37_tilt")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_tilt_2"]
+atlas = ExtResource("s37_tilt")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="s37_tilt_frames"]
+animations = [{
+"frames": [{
+"duration": 0.1,
+"texture": SubResource("s37_tilt_0")
+}, {
+"duration": 0.15,
+"texture": SubResource("s37_tilt_1")
+}, {
+"duration": 0.6,
+"texture": SubResource("s37_tilt_2")
+}, {
+"duration": 0.15,
+"texture": SubResource("s37_tilt_1")
+}, {
+"duration": 0.1,
+"texture": SubResource("s37_tilt_0")
+}],
+"loop": false,
+"name": &"tilt",
+"speed": 1.0
+}]
+
+[sub_resource type="AtlasTexture" id="s37_lower_0"]
+atlas = ExtResource("s37_lower")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_lower_1"]
+atlas = ExtResource("s37_lower")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_lower_2"]
+atlas = ExtResource("s37_lower")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_lower_3"]
+atlas = ExtResource("s37_lower")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="s37_lower_frames"]
+animations = [{
+"frames": [{
+"duration": 0.1,
+"texture": SubResource("s37_lower_0")
+}, {
+"duration": 0.15,
+"texture": SubResource("s37_lower_1")
+}, {
+"duration": 0.15,
+"texture": SubResource("s37_lower_2")
+}, {
+"duration": 0.7,
+"texture": SubResource("s37_lower_3")
+}, {
+"duration": 0.2,
+"texture": SubResource("s37_lower_2")
+}, {
+"duration": 0.2,
+"texture": SubResource("s37_lower_1")
+}, {
+"duration": 0.1,
+"texture": SubResource("s37_lower_0")
+}],
+"loop": false,
+"name": &"lower",
+"speed": 1.0
+}]
+
+[sub_resource type="AtlasTexture" id="s37_hold_out_0"]
+atlas = ExtResource("s37_hold_out")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_hold_out_1"]
+atlas = ExtResource("s37_hold_out")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_hold_out_2"]
+atlas = ExtResource("s37_hold_out")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s37_hold_out_3"]
+atlas = ExtResource("s37_hold_out")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="s37_hold_out_frames"]
+animations = [{
+"frames": [{
+"duration": 0.1,
+"texture": SubResource("s37_hold_out_0")
+}, {
+"duration": 0.15,
+"texture": SubResource("s37_hold_out_1")
+}, {
+"duration": 0.15,
+"texture": SubResource("s37_hold_out_2")
+}, {
+"duration": 0.15,
+"texture": SubResource("s37_hold_out_3")
+}],
+"loop": false,
+"name": &"hold_out",
+"speed": 1.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_arena"]
 size = Vector2(1152, 768)
@@ -478,30 +683,55 @@ texture = ExtResource("st_memorina_in_hand")
 centered = false
 offset = Vector2(-7, -8)
 
-[node name="Holding" type="Node2D" parent="Props/Mentor"]
-
-[node name="Body" type="Sprite2D" parent="Props/Mentor/Holding"]
+[node name="Holding" type="AnimatedSprite2D" parent="Props/Mentor"]
 position = Vector2(720, 672)
-texture = ExtResource("st_empty_hand")
+sprite_frames = SubResource("s37_holding_frames")
+animation = &"holding"
 centered = false
-offset = Vector2(-43, -120)
+offset = Vector2(-61, -126)
 flip_h = true
+script = ExtResource("st_strip")
+loop = &"holding"
 
-[node name="Memorina" type="Sprite2D" parent="Props/Mentor/Holding"]
-position = Vector2(757, 574)
-texture = ExtResource("st_memorina_in_hand")
-centered = false
-offset = Vector2(-7, -8)
-flip_h = true
-
-[node name="EmptyHand" type="Node2D" parent="Props/Mentor"]
-
-[node name="Body" type="Sprite2D" parent="Props/Mentor/EmptyHand"]
+[node name="EmptyHand" type="AnimatedSprite2D" parent="Props/Mentor"]
 position = Vector2(720, 672)
-texture = ExtResource("st_empty_hand")
+sprite_frames = SubResource("s37_empty_hand_frames")
+animation = &"empty_hand"
 centered = false
-offset = Vector2(-43, -120)
+offset = Vector2(-61, -126)
 flip_h = true
+script = ExtResource("st_strip")
+loop = &"empty_hand"
+
+[node name="Tilting" type="AnimatedSprite2D" parent="Props/Mentor"]
+position = Vector2(720, 672)
+sprite_frames = SubResource("s37_tilt_frames")
+animation = &"tilt"
+centered = false
+offset = Vector2(-61, -126)
+flip_h = true
+script = ExtResource("st_strip")
+intro = &"tilt"
+
+[node name="Lowering" type="AnimatedSprite2D" parent="Props/Mentor"]
+position = Vector2(720, 672)
+sprite_frames = SubResource("s37_lower_frames")
+animation = &"lower"
+centered = false
+offset = Vector2(-61, -126)
+flip_h = true
+script = ExtResource("st_strip")
+intro = &"lower"
+
+[node name="HoldingOut" type="AnimatedSprite2D" parent="Props/Mentor"]
+position = Vector2(720, 672)
+sprite_frames = SubResource("s37_hold_out_frames")
+animation = &"hold_out"
+centered = false
+offset = Vector2(-61, -126)
+flip_h = true
+script = ExtResource("st_strip")
+intro = &"hold_out"
 
 [node name="Stasis" type="Node2D" parent="Props/Mentor"]
 
@@ -589,7 +819,7 @@ duration = 1.6
 cue = &"mentor_phrase"
 stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Mentor"): &"Playing"})
 release_stand_ins = true
-face = NodePath("../../Props/Mentor/Holding/Body")
+face = NodePath("../../Props/Mentor/Holding")
 melody = ExtResource("st_phrase")
 voices = Array[AudioStream]([ExtResource("st_note_up"), ExtResource("st_note_down"), ExtResource("st_note_left"), ExtResource("st_note_right")])
 pulse_song = ExtResource("st_winter")
@@ -601,7 +831,7 @@ duration = 2.6
 cue = &"mentor_gift"
 pose = 2
 stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Mentor"): &"EmptyHand"})
-face = NodePath("../../Props/Mentor/EmptyHand/Body")
+face = NodePath("../../Props/Mentor/EmptyHand")
 stream = ExtResource("st_hum")
 pulse_song = ExtResource("st_spring")
 pulse_stats = ExtResource("st_pulse_stats")
@@ -616,7 +846,7 @@ duration = 1.6
 
 [node name="MemorinaLowered" parent="Beats" instance=ExtResource("st_staged_beat")]
 cue = &"memorina_lowered"
-face = NodePath("../../Props/Mentor/EmptyHand/Body")
+face = NodePath("../../Props/Mentor/EmptyHand")
 duration = 1.0
 
 [node name="MentorGoesStill" type="Node" parent="Beats"]
@@ -628,6 +858,25 @@ cutscene = ExtResource("cs_goes_still")
 script = ExtResource("cs_beat")
 cue = &"mentor_silence"
 cutscene = ExtResource("cs_silence")
+
+[node name="MentorTilt" type="Node" parent="Beats"]
+script = ExtResource("s37_gesture")
+gesture = &"mentor_tilt"
+staging = NodePath("../../Props/Mentor")
+child = &"Tilting"
+
+[node name="MentorLower" type="Node" parent="Beats"]
+script = ExtResource("s37_gesture")
+gesture = &"mentor_lower"
+staging = NodePath("../../Props/Mentor")
+child = &"Lowering"
+
+[node name="MentorHoldOut" type="Node" parent="Beats"]
+script = ExtResource("s37_gesture")
+gesture = &"mentor_hold_out"
+staging = NodePath("../../Props/Mentor")
+child = &"HoldingOut"
+holds = true
 
 [node name="Marks" type="Node2D" parent="."]
 

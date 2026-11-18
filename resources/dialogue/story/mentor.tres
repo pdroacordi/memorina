@@ -36,6 +36,7 @@ text_key = "DLG_MENTOR_GIFT_04"
 script = ExtResource("f_line")
 speaker = ExtResource("s_mentor")
 text_key = "DLG_MENTOR_GIFT_05"
+gesture = &"mentor_tilt"
 
 [sub_resource type="Resource" id="line_pause"]
 script = ExtResource("f_line")
@@ -45,6 +46,7 @@ cue = &"mentor_pause"
 script = ExtResource("f_line")
 speaker = ExtResource("s_mentor")
 text_key = "DLG_MENTOR_GIFT_09"
+gesture = &"mentor_lower"
 
 [sub_resource type="Resource" id="line_song"]
 script = ExtResource("f_line")
@@ -56,6 +58,7 @@ cue = &"mentor_phrase"
 script = ExtResource("f_line")
 speaker = ExtResource("s_mentor")
 text_key = "DLG_MENTOR_GIFT_02"
+gesture = &"mentor_hold_out"
 
 [sub_resource type="Resource" id="fact_5"]
 script = ExtResource("f_fact")

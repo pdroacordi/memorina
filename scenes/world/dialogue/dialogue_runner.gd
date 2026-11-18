@@ -104,3 +104,7 @@ func choose(index: int) -> DialogueChoice:
 
 func cue() -> StringName:
 	return _line.cue if _step == Step.CUE else &""
+
+## The LineGesture played as the LINE shows; empty on any other step.
+func gesture() -> StringName:
+	return _line.gesture if _line != null and _step == Step.LINE else &""

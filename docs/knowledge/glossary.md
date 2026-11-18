@@ -162,6 +162,7 @@ The design docs are written in Portuguese; code identifiers are English. Extend 
 | balão de emote | `EmoteBubble`, `CutsceneEmote.Emote { ELLIPSIS, NOTE, EXCLAIM }` |
 | batida (cena roteirizada após uma fala) | `DialogueBeat` (`hold`, `pose`, `face`), `GuitarBeat`, `StagedBeat` |
 | gesto (escolha sem fala) | a silent ask: an asking `DialogueLine` with no text and no speaker |
+| gesto (de uma fala) | a line's `gesture`: a figure's clip a `LineGesture` plays while the line is shown (STORY-37) |
 | melodia da manhã | `Melody`, `morning_song.tres`; the guitar's tries `GuitarAttempt` (`guitar_first`, `guitar_again`), rules `GuitarPhrase` |
 | gaguejar (`~palavra~`) | `StutterText` |
 | pegar um item, marca da espada (04 §3.2) | `ItemPickup` (legend `i`), `PickupComponent`, `Player._try_pickup`; the sword on the farmhouse table (`systems/pickups`) |

@@ -112,3 +112,18 @@ func test_the_run_writes_nothing_to_the_save() -> void:
 	_said(_run([F.keep_question()], data))
 	assert_bool(data.responses.is_empty()).is_true()
 	assert_array(data.dialogues_heard).is_empty()
+
+func test_a_gesture_is_the_line_s_on_line_only() -> void:
+	var waved := F.line("A")
+	waved.gesture = &"wave"
+	waved.cue = &"after"
+	waved.variants = [F.variant("A2", [])]
+	var runner := _run([waved])
+	assert_str(String(runner.gesture())).is_empty()
+	assert_int(runner.advance()).is_equal(DialogueRunner.Step.LINE)
+	assert_str(runner.text_key()).is_equal("A2")
+	assert_str(String(runner.gesture())).is_equal("wave")
+	assert_int(runner.advance()).is_equal(DialogueRunner.Step.CUE)
+	assert_str(String(runner.gesture())).is_empty()
+	assert_int(runner.advance()).is_equal(DialogueRunner.Step.END)
+	assert_str(String(runner.gesture())).is_empty()

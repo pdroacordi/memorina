@@ -16,6 +16,8 @@ extends Resource
 @export var choices: Array[DialogueChoice] = []
 ## A DialogueBeat's cue, played after the line; empty for none.
 @export var cue: StringName = &""
+## A LineGesture's id, played as the line shows; empty for none. Only on a line with text.
+@export var gesture: StringName = &""
 ## An ITEM fact the director grants as the line shows; null for none.
 @export var grants: SaveFact
 ## Scaled seconds after which a plain line goes on by itself, a press still allowed; 0 waits for a press.
