@@ -57,6 +57,7 @@ Proposta de 2026-11-02, aguardando aprovação; gerada por `tools/audio/make_wif
 | `cancao_final_12.mid` | as 12 notas harmonizadas (frase A e frase B) | ~13 s | Influência para a batalha; importar no editor para ouvir |
 | `finale_luta.mid` | a luta (GRD-06), loop de 16 compassos: inverno (flauta, viola, baixos, piano, taiko) + camada de primavera (harpa, clarinete) | 48 s | Importar no editor; exportar **stems** (`make_finale_midis.py`) |
 | `finale_luta_epica.mid` | proposta de refazer a luta, v2 (2026-11-18, não aprovada): 200 BPM, 128 compassos, loop desde o tempo 0, já em intensidade máxima ("a luta já começou"); stems lead/bed/spring nos nomes das faixas, patches pretendidos em `PATCHES` | 2:34 (loop inteiro) | Importar no editor; exportar **stems** (`make_finale_fight_midis.py`) |
+| `luta_frost_epica.mid` | proposta de refazer a luta do Guardião de Gelo (2026-11-18, não aprovada): Ré dórico, 7/8 (2+2+3), colcheia 360, 120 compassos, loop desde o tempo 0; stems lead/bed nos nomes das faixas, patches pretendidos em `PATCHES` | 2:20 (loop inteiro) | Importar no editor; exportar **stems** (`make_frost_fight_midis.py`) |
 | `finale_chamado.mid` | fundo do chamado final, loop de 4 compassos, nada entre C4 e G4 | 16 s | Importar no editor |
 | `finale_restauracao.mid` | a cena da lâmpada: pedal em Dó sob a voz do mentor, depois a frase B na flauta | ~11.4 s | Importar no editor |
 

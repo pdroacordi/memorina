@@ -78,3 +78,13 @@ They open with sections (A, A1, Bridge, B) and chord labels, tracks Melody/Chord
 1. Move the file; give it the game's snake_case name.
 2. Read the MIDI and check it against the contract in `docs/knowledge/systems/music.md`: the motif's six notes in order at beat 0, white keys, tempo, length.
 3. Audio for the game: WAV from AIVA, converted to OGG (`ffmpeg -i in.wav -c:a libvorbis -q:a 6 out.ogg`), into `assets/audios/soundtrack/`. No credit: the plan gives the project full authorship ("Eu assinei a versão que nos dá autoria total. Não precisamos dar créditos ao AIVA", user, 2026-11-02).
+
+## Learned 2026-11-18 (final battle and frost remakes)
+
+- Import MIDI rejects an odd meter with a red "Invalid time signature" banner (7/8; 4/4, 3/4 and 6/8 import). Write the file's time-signature meta as 4/4 and keep the notes at their times; the render is unaffected.
+- After import, check every track's patch: a solo patch can arrive for an ensemble (`v.choir...` came in as Masha Mnjoyan, `s.violins.nat.slur` as Violas). Swapping a kit leaves channels whose sound the new kit lacks as "Unassigned" (silent); set them with `form_input` on the channel combobox.
+- In the editor, typing goes to the piano roll when the patch search box is not focused (letters are shortcuts): `find` the "patch search textbox" and click its ref before typing; if text went astray, Discard.
+- The instrument label sits under the track list: select a track, scroll the left panel down, click the label at the bottom left. Each Save (Mix & Normalise) re-renders for ~60 s; save once after all patches.
+- Render Stems asks for grouping: "Group by instrument" merges tracks on the same patch into one WAV; use "Group by layer" (one WAV per track, named by track). Stems are padded with 0.5 s of silence.
+- Chrome may save AIVA downloads to the Desktop instead of Downloads; look there too.
+- A new import of a revised piece is a new composition and costs one more download.
