@@ -128,7 +128,8 @@ func test_no_step_redraws_the_figure() -> void:
 		var clip := _clip(strip)
 		for i: int in strip.sprite_frames.get_frame_count(clip) - 1:
 			var changed := _changed(_frame(strip, clip, i), _frame(strip, clip, i + 1))
-			assert_int(changed).override_failure_message("%s step %d changes %d of %d px" % [strip_name, i, changed, body]) 				.is_less(body / 3)
+			assert_int(changed).override_failure_message("%s step %d changes %d of %d px" % [strip_name, i, changed, body]) \
+			.is_less(body / 3)
 
 func _changed(first: Image, second: Image) -> int:
 	var count := 0

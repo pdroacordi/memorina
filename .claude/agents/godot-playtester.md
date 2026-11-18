@@ -816,6 +816,18 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     2 on the PNG itself (a 20-line Pillow script). A matched strip (`raise.png`) gives 568 vs 300; the STORY-37 strips gave
     ~2500 vs ~450. Seam tests pass either way.
 
+- **Learned 2026-11-18 (STORY-39 camera release)**: **a one-physics-step camera state is visible only at a normal frame rate.**
+  - `CAMLOG=1` prints one `[cam]` line per rendered frame. At 180 Hz render and 60 Hz physics, consecutive lines are one
+    physics step apart (`f` advances by 3), so a state written between a node's physics step and the draw shows as a
+    single line: the rig hand-back's 11560 → 11464 → 11560.
+  - A driver that saves a PNG on every frame drops to ~25 fps. Several physics steps then run per draw and the spike
+    vanishes from both log and frames. Take numbers from a log-only run.
+  - To prove such a frame was drawn, use a scratch driver that saves the next 5 frames only when the centre moves more
+    than 40 px in one frame. The shot is one frame behind, so the second saved frame shows the spike.
+  - For a release check, compare against a `git archive HEAD` export with the same driver. In a one-screen room
+    (village_house) the look-ahead is clamped away, so such a release cannot show a look-ahead step: pick an open room
+    (the lantern) for that.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

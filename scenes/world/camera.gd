@@ -199,15 +199,20 @@ func follow(subject: Node2D) -> void:
 		_subject.facing_changed.disconnect(_on_subject_facing_changed)
 
 	_subject = subject
-	# A marker holds the offset it was given: a look-ahead still easing would drift the frame off the rig.
-	if _look_ahead_tween and not (_subject is Character):
+	# A marker holds the offset it was given, and a Character takes its lead at once: a look-ahead still easing would
+	# drift the frame off the rig, or overwrite the seeded lead (bugs/the-mentor-silence-release-eases-to-a-look-ahead-frame-then-cuts-96-px-to-ivo).
+	if _look_ahead_tween:
 		_look_ahead_tween.kill()
 
 	if _subject is Character:
 		_subject.facing_changed.connect(_on_subject_facing_changed)
 		# An edge-triggered signal delivers nothing on connect, so seed the
 		# current facing directly rather than waiting for the first turn.
+		var held := offset.x
 		_look_ahead = _look_ahead_target()
+		# Drawn before the next step re-places it: keep the shown centre where it was
+		# (bugs/the-rig-hand-back-shows-the-seeded-look-ahead-one-frame-before-the-frame-follows-ivo).
+		global_position.x -= offset.x - held
 
 ## Eases in on the subject while the instrument is out. The tween runs through
 ## a paused tree, because the world is frozen while a performance plays and
@@ -408,6 +413,9 @@ func _look_ahead_target() -> float:
 func _tween_look_ahead() -> void:
 	if _look_ahead_tween:
 		_look_ahead_tween.kill()
+	# A followed marker keeps its offset; follow() seeds the lead when a Character is followed again.
+	if not (_subject is Character):
+		return
 
 	# Pause-independent like the zoom: a lesson freezes the world moments after
 	# the draw, and a look-ahead stuck mid-flight would never report `focused`.

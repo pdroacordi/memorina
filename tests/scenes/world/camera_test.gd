@@ -153,6 +153,39 @@ func test_a_lifted_talk_frames_higher() -> void:
 	_camera.release_talk()
 	assert_float(_camera.centre_for(ivo).y).is_equal_approx(level, 1.0)
 
+## bugs/the-mentor-silence-release-eases-to-a-look-ahead-frame-then-cuts-96-px-to-ivo (STORY-39): a talk released while a
+## cutscene's rig holds the frame starts a look-ahead ease toward a marker's 0; the hand-back to Ivo eases onto his lead
+## with no step.
+func test_a_talk_released_under_a_rig_hands_back_without_a_step() -> void:
+	var ivo := IVO.instantiate() as Player
+	ivo.position = Vector2(600, 330.0)
+	add_child(ivo)
+	auto_free(ivo)
+	_floor(Vector2(0.0, 330.0), 2000.0)
+	_camera.set_bounds(Rect2(-4000, -4000, 8000, 8000))
+	_camera.follow(ivo)
+	_camera.frame_talk(Vector2(ivo.global_position.x - 100.0, 330.0), 1.5)
+	for i: int in 40:
+		await get_tree().physics_frame
+	var rig := auto_free(Node2D.new()) as Node2D
+	add_child(rig)
+	rig.global_position = _camera.rig_point_for(_camera.shown_centre())
+	_camera.follow(rig)
+	_camera.release_talk()
+	await get_tree().physics_frame
+	rig.global_position = _camera.rig_point_for(_camera.centre_for(ivo))
+	await get_tree().physics_frame
+	var last := _centre().x
+	_camera.follow(ivo)
+	assert_float(absf(_centre().x - last)).override_failure_message("follow() moved the shown frame") 		.is_less(0.5)
+	for i: int in 60:
+		await get_tree().physics_frame
+		assert_float(absf(_centre().x - last)).override_failure_message("frame %d stepped %f to %f" % [i, last, _centre().x]) \
+			.is_less(6.0)
+		last = _centre().x
+	assert_float(_centre().x).is_equal_approx(_camera.centre_for(ivo).x, 1.0)
+	assert_float(_centre().x - ivo.global_position.x).is_equal_approx(_camera.look_ahead_distance * ivo.facing, 1.0)
+
 ## bugs/a-hop-below-a-seam-flips-the-room-twice: astride a room's top edge the body stays in frame.
 func test_the_clamp_yields_to_keep_the_body_in_frame() -> void:
 	var body := auto_free(BodySubject.new()) as BodySubject
