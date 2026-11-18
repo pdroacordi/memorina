@@ -77,3 +77,21 @@ Sketches only, not approved: `tools/audio/make_guardian_fight_midis.py` writes `
 - "Manter (Recommended)" (the Solstice quote in the roar), "Sim, gerar", "Aprovar, fazer stems" (user, 2026-11-18). AIVA `luta_summer_epica.mid` (editor id 6afdc3d90eb2675b7922ceae), 1 download.
 - Patches after import: Dizi came as Legato (kept); `b.trumpets.nat.slur` came as Trumpet 1, set to 3 Trumpets Legato for the chorded fanfares; trombones to 3 Bass Trombones Sustain; Violins 1 Spiccato and Sustain, Celli Spiccato, kits as before.
 - Stems by layer; lead-in 0.494 s, 7.64 s of tail folded, loop 151.579 s (96 bars of 4/4 at 152). Summed -15.0 LUFS, `gain_db` -7.0. `fight_summer.tres`: bpm 152.
+
+## Autumn remake proposal (2026-11-18, not approved)
+
+"Sim, Outono" (user, 2026-11-18), under the same binding recipe; the last of the four.
+
+- Sketch `tools/audio/make_autumn_fight_midis.py` writes `tools/audio/midi/luta_autumn_epica.mid`: E Phrygian, 3/4 at 192 BPM (one-in-a-bar), 160 bars of 0.9375 s, one loop from beat 0 (150.0 s, `loop_offset` 0). Game cue: `bpm` 192, `beats_per_bar` 3.
+- The guardian ("A loucura dele é não soltar: guarda as últimas folhas do pomar, contadas", `docs/design/drafts/guardian_talks_autumn_summer.md`) is scored three ways: the Xiao's answers after each Soltar tie every note over the bar line and resolve a beat late (held too long), and fall on time only in E, letting go; in B the bassoon counts staccato quarters and every eighth bar stops a beat early ("Trinta e uma. Trinta e… uma?"); from the gust on the violins fall in eighth-note scales down the mode, a new leaf from the top each bar. The loop ends on F, so the Phrygian cadence F -> Em lands on the loop's first beat.
+- Form: A wind 1-40 (whirling violin figure, waltz after-beats in the violas), B counting 41-72 (hemiola: three half notes over two bars in violas, cellos and kicks), C the gust 73-112 (falling scales; Vendaval in the bassoon at 85 and 101), D the last leaf 113-136 (thinner, kick on 1, soft running snare), E letting go 137-160.
+- Quotes, exact: Soltar in the Xiao at bars 5, 21, 45, 77, 93, 117, 141; Vendaval in the bassoon at 85 and 101.
+- The Xiao calls at pitch, so the bed keeps out of 60..67; pitch classes C D E G A, F and B only as roots at MIDI 47 or under (the Phrygian F stays in the lead).
+- Production lessons from Summer (2026-11-18): Dizi arrived as Legato (kept); `b.trumpets.nat.slur` arrived as the solo Trumpet 1 (set to 3 Trumpets Legato for chords); `b.trombones.nat.stac` arrives as Trombone 1 (set to 3 Bass Trombones Sustain).
+
+## Autumn in the game (2026-11-18)
+
+- "Manter (Recommended)" (the Vendaval quote in the gust), "Sim, gerar", "Aprovar, fazer stems" (user, 2026-11-18). AIVA `luta_autumn_epica.mid` (editor id 6afdcfc00eb2675b7922cefb), 1 download.
+- Patches after import: Xiao came as Legato (kept); `w.bassoon.nat.stac` came as Bassoon 1 Legato, set to Bassoon 1 Staccato (AIVA has it); Violins 1 Spiccato and Sustain, Celli Spiccato, kits as before.
+- Stems by layer; lead-in 0.455 s, 7.09 s of tail folded, loop 150.0 s (160 bars of 3/4 at 192). Summed -15.4 LUFS, `gain_db` -6.6. `fight_autumn.tres`: bpm 192.
+- All four guardian fights and the finale are now remade (2026-11-18): each starts at full drive at beat 0 and loops 2:20-2:34 in five sections.
