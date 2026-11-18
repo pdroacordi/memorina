@@ -59,3 +59,21 @@ Sketches only, not approved: `tools/audio/make_guardian_fight_midis.py` writes `
 - "Manter a Chuva (Recommended)", "Sim, gerar", "Aprovar, fazer stems" (user, 2026-11-18). AIVA `luta_bloom_epica.mid` (editor id 6afdba615f1a440e0a6dffce), 1 download.
 - Patches after import: `w.recorder.nat.slur` came as Piano (AIVA's Recorder has only Sustain), `s.violins.nat.slur` as Violas (set to Violins 1 Sustain), the Violins 1 and Celli lead lines set to Spiccato; Flute 2 Staccato, Clarinet 1, Harp 2, Violas Spiccato, Solo Viola and Basses came right. Kits as for frost.
 - Stems by layer; lead-in 0.494 s, 6.55 s of tail folded, loop 145.455 s (160 bars of 6/8 at dotted quarter 132). Summed -15.3 LUFS, `gain_db` -6.7. `fight_bloom.tres`: bpm 198, beats_per_bar 3.
+
+## Summer remake proposal (2026-11-18, not approved)
+
+"Sim, Verão" (user, 2026-11-18), under the same binding recipe.
+
+- Sketch `tools/audio/make_summer_fight_midis.py` writes `tools/audio/midi/luta_summer_epica.mid`: C Lydian, 4/4 at 152 BPM, 96 bars of 60/38 s, one loop from beat 0 (151.58 s, `loop_offset` 0). Game cue: `bpm` 152, `beats_per_bar` 4.
+- The guardian ("o meio-dia que não acaba: segurou o sol no alto para ninguém ver a tarde", `docs/design/drafts/guardian_talks_autumn_summer.md`) is scored by withholding: no F natural anywhere (`check()` refuses one), so the subdominant, the fall to the evening, never sounds; the harmony moves only among I, II (D over C, the Lydian F#), iii, vi and vii; every section ends held on II; the basses hold G (the sun at the top) through A, C and D and follow the roots only in B and E.
+- The shadow (Sombra, "A sombra guarda a forma"): in B and C the bass trombones play each Dizi Sombra one beat late, two octaves down, the same six notes (bars 29.25, 37.25, 53.25).
+- Form: A noon 1-24 (trumpet fanfares on G-A-B, the Lydian climb), B shadows 25-48, C the roar 49-72 (Solstício in the trumpets at 49, 57, 65, each followed by a held A5 over D; the crash on every downbeat), D sun overhead 73-84 (violins an octave up, kick on 1 and 3, soft running snare), E the day is long 85-96. Violins in sixteenths throughout (10.1 drive onsets/s in every section): a heat shimmer over four-note Lydian cells.
+- Quotes, exact: Sombra in the Dizi at bars 5, 13, 29, 37, 53, 77, 89; Solstício in the trumpets at 49, 57, 65.
+- The Dizi calls an octave up (G5 C5 D5 E5) and Ivo answers in 60..67, so the bed keeps out of 60..67 and 72..79; its pitch classes are C D E G A (no F#: a semitone from G), B only as a root at MIDI 47 or under.
+- Production lessons from Bloom (2026-11-18): `w.recorder.nat.slur` arrived as Piano (AIVA's Recorder has only Sustain); `s.violins.nat.slur` arrived as Violas; `s.violins.nat.stac` and `s.cellos.nat.stac` arrive as Legato (Auto-Staccato); `w.flute2.nat.stac`, `w.clarinet1.nat.slur`, `s.harp2.pizz.stac`, `s.violas.nat.stac` (Spiccato), `s.solo-viola.nat.slur` and `s.basses.vib.slur` map on their own. `PATCHES` in the summer script marks which ids map and which are set by hand.
+
+## Summer in the game (2026-11-18)
+
+- "Manter (Recommended)" (the Solstice quote in the roar), "Sim, gerar", "Aprovar, fazer stems" (user, 2026-11-18). AIVA `luta_summer_epica.mid` (editor id 6afdc3d90eb2675b7922ceae), 1 download.
+- Patches after import: Dizi came as Legato (kept); `b.trumpets.nat.slur` came as Trumpet 1, set to 3 Trumpets Legato for the chorded fanfares; trombones to 3 Bass Trombones Sustain; Violins 1 Spiccato and Sustain, Celli Spiccato, kits as before.
+- Stems by layer; lead-in 0.494 s, 7.64 s of tail folded, loop 151.579 s (96 bars of 4/4 at 152). Summed -15.0 LUFS, `gain_db` -7.0. `fight_summer.tres`: bpm 152.
