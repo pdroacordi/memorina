@@ -102,6 +102,10 @@ func passes_through() -> bool:
 func take_off_y() -> float:
 	return _take_off_y
 
+## The feet where the planned path ends, in world px; `fallback` without a path.
+func landing(fallback: Vector2) -> Vector2:
+	return _start + _path.end_offset() if _path != null else fallback
+
 ## Touched the floor this frame after leaving it during the strike.
 func just_landed() -> bool:
 	return _landed

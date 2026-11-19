@@ -97,6 +97,8 @@ var _recall_requested: bool = false
 var _far_pick: GuardianAttack = null
 ## The last move of the last string; a move that does not repeat is not chosen right after it.
 var _last_end: GuardianAttack = null
+## `recall_owned` as the strike under way began: a press landing mid-strike does not let a teaching strike chain.
+var _owned_at_strike: bool = false
 
 @onready var _body: Node2D = get_parent()
 @onready var _sight: EnemySight = get_parent().get_node("EnemySight") as EnemySight
@@ -323,6 +325,7 @@ func _update_spacing_mode(distance: float) -> void:
 func _telegraph_tick(delta: float) -> void:
 	_current_direction = 0.0
 	if _clock.tick(delta) == GuardianMoveClock.Phase.TELEGRAPH:
+		_owned_at_strike = recall_owned
 		attack_started.emit(_clock.move)
 
 func _attack_tick(delta: float) -> void:
@@ -368,13 +371,14 @@ func _start_telegraph(attack: GuardianAttack) -> void:
 func _announce(attack: GuardianAttack) -> void:
 	attack_telegraphed.emit(attack)
 	if is_swinging():
+		_owned_at_strike = recall_owned
 		attack_started.emit(attack)
 
 ## A strike ran out: the next link of the string, or the string's end.
 func _end_strike() -> void:
 	var attack := _clock.move
 	var link := GuardianRepertoire.next_link(attack, stage, chain_scale, _links_done, max_links, _in_range,
-			blocked_ahead, _recall_requested, _roll)
+			blocked_ahead, _recall_requested, _roll, _owned_at_strike)
 	if link == null:
 		_finish_string(attack)
 		return

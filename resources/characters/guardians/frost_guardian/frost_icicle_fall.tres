@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="2_spawn"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/frost_guardian/spawns/icicle.tscn" id="3_icicle"]
+
+[sub_resource type="Resource" id="icicles"]
+script = ExtResource("2_spawn")
+scene = ExtResource("3_icicle")
+at = 0.15
+placement = 1
+count = 3
+interval = 0.4
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 4
+windup_index = 4
+duration = 1.1
+telegraph = 0.55
+attack_range = 260.0
+cooldown = 0.9
+recovery = 0.6
+recovery_index = 1
+from_stage = 1
+weight = 0.5
+repeats = false
+strikes = false
+spawns = Array[ExtResource("2_spawn")]([SubResource("icicles")])

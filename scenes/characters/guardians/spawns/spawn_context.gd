@@ -12,6 +12,8 @@ var target: Vector2 = Vector2.ZERO
 var arena: Rect2 = Rect2()
 ## The floor's y under the arena.
 var floor_y: float = 0.0
+## The feet where the move's motion lands; the origin without one.
+var landing: Vector2 = Vector2.ZERO
 
 
 static func make(origin_feet: Vector2, facing_side: int, target_feet: Vector2, bounds: Rect2,
@@ -22,6 +24,7 @@ static func make(origin_feet: Vector2, facing_side: int, target_feet: Vector2, b
 	ctx.target = target_feet
 	ctx.arena = bounds
 	ctx.floor_y = floor_line
+	ctx.landing = origin_feet
 	return ctx
 
 ## `x` kept `margin` inside the arena's walls; unchanged when it is unbounded.

@@ -13,7 +13,8 @@ extends GuardianMotion
 @export var backstep: float = 0.0
 ## Scaled s the backstep takes; cut to `delay`.
 @export var backstep_time: float = 0.2
-## Px past Ivo the dash stops; with no room before the wall's margin it stops this short of him. 0 runs to the wall.
+## Px past Ivo the dash stops; with no room before the wall's margin it stops this short of him. 0 runs to the wall;
+## negative stops that far short of him, or stays put when already closer.
 @export var past: float = 0.0
 
 
@@ -27,13 +28,15 @@ func plan(ctx: MotionContext) -> MotionPath:
 		path.add(0.0, step_time, Vector2(start, 0.0), 0.0, false, true)
 	var window := maxf(ctx.duration - delay, 0.0)
 	var distance := speed * window
-	if past > 0.0:
+	if not is_zero_approx(past):
 		distance = maxf((ctx.target.x + ctx.facing * past - ctx.feet.x - start) * ctx.facing, 0.0)
 	if ctx.arena.size.x > 0.0:
 		var edge := ctx.arena.end.x - margin if ctx.facing > 0 else ctx.arena.position.x + margin
 		var to_edge := maxf((edge - ctx.feet.x - start) * ctx.facing, 0.0)
-		if past <= 0.0:
+		if is_zero_approx(past):
 			distance = to_edge
+		elif past < 0.0:
+			distance = minf(distance, to_edge)
 		elif distance > to_edge:
 			# No room past Ivo before the wall: it stops `past` short of him rather than on him.
 			distance = maxf((ctx.target.x - ctx.facing * past - ctx.feet.x - start) * ctx.facing, 0.0)

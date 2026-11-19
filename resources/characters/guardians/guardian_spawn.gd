@@ -2,7 +2,9 @@ class_name GuardianSpawn
 extends Resource
 ## An attack a guardian move fires during its strike: a projectile or a floor hazard (GuardianSpawner).
 
-enum Placement { FRONT, AT_IVO, AROUND_IVO, ACROSS_ARENA, BOTH_SIDES }
+## Where instances go: ahead of the feet, on Ivo's feet, spread around him, across the arena, on both sides, or where
+## the move's motion lands (the origin without a motion).
+enum Placement { FRONT, AT_IVO, AROUND_IVO, ACROSS_ARENA, BOTH_SIDES, AT_LANDING }
 
 ## A SpawnedAttack scene; its kind tunables are exports on its root.
 @export var scene: PackedScene

@@ -51,8 +51,9 @@ func test_every_guardian_keeps_the_engine_invariants() -> void:
 				# A recall move must be thrown from the first stage, or no window could ever open.
 				assert_int(attack.from_stage).override_failure_message("%s: a recall move joins late" % move).is_equal(0)
 				assert_array(attack.spawns).override_failure_message("%s: a recall move spawns" % move).is_empty()
-				# Its end resets the recall cadence, so it ends its string.
-				assert_array(attack.follow_ups).override_failure_message("%s: a recall move chains" % move).is_empty()
+				# Its end resets the recall cadence, so it ends its string; only once owned, off the cadence, may it chain.
+				if not attack.leaves_cadence_when_owned():
+					assert_array(attack.follow_ups).override_failure_message("%s: a recall move chains" % move).is_empty()
 			for link: GuardianAttack in GuardianMoveGraph.links_of(attack):
 				assert_object(link.recall).override_failure_message("%s links to a recall move" % move).is_null()
 			assert_int(GuardianMoveGraph.longest_string(attack)).override_failure_message(

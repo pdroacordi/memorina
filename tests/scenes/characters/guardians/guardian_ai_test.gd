@@ -218,6 +218,52 @@ func test_an_owned_recall_move_leaves_the_cadence_only_with_owned_numbers() -> v
 	_ai.call(&"_pick_next")
 	assert_object(_ai.get(&"_next")).override_failure_message("a recall move without owned numbers left the cadence").is_same(recall)
 
+## The Frost charge turns after passing Ivo and charges back, wall or not, only once the roll is owned, from stage 1
+## ("Turn after passing Ivo (Recommended)", user, 2026-11-18; GRD-14).
+func test_the_owned_frost_charge_charges_back_wall_or_not() -> void:
+	for owned: bool in [false, true]:
+		assert_bool(_charge_backs(owned, false)).override_failure_message("owned %s" % owned).is_equal(owned)
+
+## Ownership is read as the strike begins: the press that teaches the roll mid-strike does not let that strike chain
+## (bugs/a-recall-move-with-follow-ups-never-resets-the-recall-cadence, Revision).
+func test_a_teaching_charge_never_chains_off_the_press_that_taught_it() -> void:
+	assert_bool(_charge_backs(false, true)).override_failure_message("chained off its own press").is_false()
+
+## Frost's moves reach 96 px up but the body drop (200): an Ivo jumping 130 px up beside the golem draws it from
+## stage 2; at stage 1 nothing reaches him there ("Jump clears the raised fists (Recommended)", user, 2026-11-18).
+func test_a_frost_golem_answers_a_player_above_with_the_body_drop() -> void:
+	var stats := load("res://resources/characters/guardians/frost_guardian/frost_guardian_stats.tres") as GuardianStats
+	_ai.attacks = stats.attacks
+	_ai.comfort_distance = stats.comfort_distance
+	_place_player(150.0)
+	_player.global_position.y -= 130.0
+	_ai.stage = 2
+	_ai.call(&"_pick_next")
+	assert_object(_ai.get(&"_next")).is_same(stats.attacks[4])
+	_ai.stage = 1
+	assert_object(_ai.call(&"_situational_pick")).override_failure_message("a stage-1 move reaches 130 px up").is_null()
+
+## At stage 0 nothing reaches above 96 px, so an Ivo who keeps jumping beside the golem is answered once the
+## patience runs out, where he comes down.
+func test_a_jumping_player_beside_a_stage_zero_frost_still_draws_a_move() -> void:
+	var stats := load("res://resources/characters/guardians/frost_guardian/frost_guardian_stats.tres") as GuardianStats
+	_ai.attacks = stats.attacks
+	_ai.comfort_distance = stats.comfort_distance
+	_ai.give_ground_distance = stats.give_ground_distance
+	_ai.pace_speed = stats.pace_speed
+	_ai.overhead_band = GuardianAI.overhead_band_for(68.0, 22.0)
+	var telegraphed: Array[float] = []
+	_ai.attack_telegraphed.connect(func(_attack: GuardianAttack) -> void: telegraphed.append(_ai.swing_elapsed()))
+	var elapsed := 0.0
+	while elapsed < 6.0 and telegraphed.is_empty():
+		# A single jump every 0.9 s, 80 px beside the golem, peaking at 144 px.
+		var hop := fmod(elapsed, 0.9)
+		_player.global_position = _body.global_position + Vector2(80.0, -144.0 * sin(PI * minf(hop / 0.8, 1.0)))
+		_ai.tick(STEP)
+		_body.position.x += _ai.direction * WALK_SPEED * STEP
+		elapsed += STEP
+	assert_array(telegraphed).override_failure_message("no move in 6 s against a jumping Ivo").is_not_empty()
+
 ## A move that does not repeat is never the pick right after a string it ended, near or far.
 func test_a_move_that_does_not_repeat_never_follows_itself() -> void:
 	var dash := _far_move(260.0, 1.0)
@@ -251,3 +297,26 @@ func _tick_until_swinging() -> void:
 		_ai.tick(STEP)
 		elapsed += STEP
 	assert_bool(_ai.is_swinging()).is_true()
+
+## Throws the Frost charge at an Ivo 150 px away at stage 1, away from any wall, and says whether its charge-back
+## followed; `owned_mid_strike` hands the roll over halfway through the strike.
+func _charge_backs(owned: bool, owned_mid_strike: bool) -> bool:
+	var charge := load("res://resources/characters/guardians/frost_guardian/frost_charge.tres") as GuardianAttack
+	var back := load("res://resources/characters/guardians/frost_guardian/frost_charge_back.tres") as GuardianAttack
+	_ai.cancel_attack()
+	_ai.provoke()
+	_ai.attacks = [charge]
+	_ai.stage = 1
+	_ai.blocked_ahead = false
+	_ai.recall_owned = owned
+	var next := {}
+	_ai.attack_telegraphed.connect(func(attack: GuardianAttack) -> void: next[attack] = true)
+	_place_player(-150.0)
+	_ai.call(&"_start_telegraph", charge)
+	var elapsed := 0.0
+	while _ai.is_attacking() and not next.has(back) and elapsed < 3.0:
+		if owned_mid_strike and _ai.is_swinging() and _ai.swing_elapsed() > charge.duration * 0.5:
+			_ai.recall_owned = true
+		_ai.tick(STEP)
+		elapsed += STEP
+	return next.has(back)

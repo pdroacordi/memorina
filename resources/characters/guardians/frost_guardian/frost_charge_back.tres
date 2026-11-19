@@ -1,0 +1,29 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/dash_motion.gd" id="2_dash"]
+
+[sub_resource type="Resource" id="back"]
+script = ExtResource("2_dash")
+speed = 455.0
+delay = 0.5
+margin = 48.0
+past = 48.0
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 6
+duration = 1.1666667
+windup_index = 6
+telegraph = 0.5
+attack_range = 250.0
+attack_height = 200.0
+cooldown = 0.9
+recovery = 0.7
+recovery_index = 2
+from_stage = 1
+weight = 0.0
+body_contact = false
+motion = SubResource("back")
+knockback_strength = 520.0
+knockback_lift = 160.0

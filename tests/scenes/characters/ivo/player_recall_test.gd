@@ -147,3 +147,65 @@ func _land() -> void:
 		if _ivo.is_on_floor() and _ivo.is_still():
 			return
 	fail("Ivo never landed on the test floor")
+
+## The blow the recall teaches to escape landed before the press: a miss, not a lesson; a 0-damage launcher (the Bloom
+## burst), its body's contact and another body's hit leave it open (playtests/2026-11-18-grd14-frost-feel, (5);
+## bugs/a-guardians-contact-touch-during-its-recall-window-costs-the-hit-and-the-miss-damage).
+func test_only_a_damaging_hit_from_the_move_box_closes_it_as_a_miss() -> void:
+	var recall := _ivo.get_node(^"AbilityRecall") as AbilityRecallComponent
+	var guardian := auto_free(Node2D.new()) as Node2D
+	var fist := Node2D.new()
+	var body := Node2D.new()
+	guardian.add_child(fist)
+	guardian.add_child(body)
+	add_child(guardian)
+	var stranger := auto_free(Node2D.new()) as Node2D
+	add_child(stranger)
+	var missed: Array[Enums.PlayerSkill] = []
+	_ivo.skill_recall_missed.connect(func(skill: Enums.PlayerSkill) -> void: missed.append(skill))
+	# Three damaging hits before the blow: enough life that none of them kills him (a death drops the window).
+	_ivo.health.max_hp = 9
+	_ivo.health.current_hp = 9
+	_ivo.open_recall(_stats, guardian, fist)
+	assert_bool(recall.is_armed()).is_true()
+	for source: Node2D in [fist, body, stranger]:
+		var damage := 0 if source == fist else 1
+		_hit(damage, source)
+		assert_bool(recall.is_armed()).override_failure_message("%s closed it" % source.name).is_true()
+	_hit(1, fist)
+	assert_bool(recall.is_armed()).is_false()
+	assert_array(missed).contains_exactly([_stats.skill])
+	assert_array(_recalled).is_empty()
+
+## The Bloom burst's real recall (miss_damage 1): a touch of the stag's contact box in the window costs that touch only,
+## and the window stays open; the burst's own box hitting Ivo closes it at the hit's cost, with no miss damage on top.
+func test_a_bloom_contact_touch_costs_one_note_and_its_burst_closes_without_miss_damage() -> void:
+	var bloom := auto_free((load("res://scenes/characters/guardians/bloom_guardian/bloom_guardian.tscn") as PackedScene).instantiate()) as Node2D
+	var stats := load("res://resources/characters/guardians/bloom_guardian/recall_double_jump.tres") as AbilityRecallStats
+	var recall := _ivo.get_node(^"AbilityRecall") as AbilityRecallComponent
+	var contact := bloom.get_node(^"ContactHitbox") as Node2D
+	var box := bloom.get_node(^"Hitbox") as Node2D
+	_ivo.open_recall(stats, bloom, box)
+	var before := _ivo.health.current_hp
+	_hit(1, contact)
+	assert_int(_ivo.health.current_hp).is_equal(before - 1)
+	assert_bool(recall.is_armed()).override_failure_message("the contact closed the window").is_true()
+	_hit(1, box)
+	assert_bool(recall.is_armed()).is_false()
+	assert_int(_ivo.health.current_hp).override_failure_message("miss damage on top of the blow").is_equal(before - 2)
+
+## The Frost charge's fists closing the roll's window cost that hit only.
+func test_a_frost_fist_hit_closes_the_roll_window_at_its_own_cost() -> void:
+	var frost := auto_free((load("res://scenes/characters/guardians/frost_guardian/frost_guardian.tscn") as PackedScene).instantiate()) as Node2D
+	var stats := load("res://resources/characters/guardians/frost_guardian/recall_roll.tres") as AbilityRecallStats
+	var recall := _ivo.get_node(^"AbilityRecall") as AbilityRecallComponent
+	_ivo.open_recall(stats, frost, frost.get_node(^"Hitbox") as Node2D)
+	var before := _ivo.health.current_hp
+	_hit(1, frost.get_node(^"Hitbox") as Node2D)
+	assert_bool(recall.is_armed()).is_false()
+	assert_int(_ivo.health.current_hp).is_equal(before - 1)
+
+## A hit through Ivo's hurtbox with its i-frames spent, so each one counts.
+func _hit(damage: int, source: Node2D) -> void:
+	_ivo.hurtbox.set(&"_invulnerability_timer", 0.0)
+	_ivo.hurtbox.receive_hit(damage, Vector2.ZERO, source)

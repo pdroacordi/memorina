@@ -196,10 +196,10 @@ func test_every_hitbox_of_a_string_shares_its_gate_and_the_gate_ends_with_it() -
 	var target: Node = auto_free(Node.new())
 	gate.record(target)
 	await _seconds(0.55)
-	assert_int(gate.link).is_equal(1)
+	assert_int(_ai.link_index()).is_equal(1)
 	assert_bool(gate.allows(target)).override_failure_message("a link hurt again").is_false()
 	await _seconds(0.65)
-	assert_bool(_ai.is_swinging()).is_false()
+	assert_bool(_ai.is_attacking()).is_false()
 	assert_bool(gate.allows(target)).override_failure_message("the gate outlived its string").is_true()
 
 func test_icicles_aimed_at_ivo_fall_where_he_stands_as_each_one_fires() -> void:

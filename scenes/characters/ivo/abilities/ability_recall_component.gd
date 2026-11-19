@@ -62,6 +62,15 @@ func tick(real_delta: float) -> void:
 	_disarm()
 	missed.emit(stats)
 
+## Closes an open window as a miss; returns true if one was open.
+func miss() -> bool:
+	if not is_armed():
+		return false
+	var stats := _stats
+	_disarm()
+	missed.emit(stats)
+	return true
+
 ## Drops an open window without a verdict; returns true if one was open.
 func cancel() -> bool:
 	if not is_armed():

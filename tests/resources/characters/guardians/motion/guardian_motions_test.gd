@@ -48,6 +48,15 @@ func test_a_dash_stops_at_the_edge_and_speeds_up_to_finish_in_time() -> void:
 	assert_float(path.end_time()).is_less_equal(path.duration + 0.0001)
 	assert_bool(dash.aimed()).is_true()
 
+## A negative `past` stops short of Ivo, and stays put when he is already closer (the Frost second swipe's step-in).
+func test_a_dash_with_a_negative_past_stops_short_of_ivo() -> void:
+	var dash := DashMotion.new()
+	dash.speed = 400.0
+	dash.past = -76.0
+	assert_float(dash.plan(_ctx(Vector2(200.0, 400.0), 1, Vector2(350.0, 400.0))).end_offset().x).is_equal(74.0)
+	assert_float(dash.plan(_ctx(Vector2(200.0, 400.0), 1, Vector2(250.0, 400.0))).end_offset().x).is_equal(0.0)
+	assert_float(dash.plan(_ctx(Vector2(600.0, 400.0), -1, Vector2(450.0, 400.0))).end_offset().x).is_equal(-74.0)
+
 func test_a_dash_with_a_backstep_steps_back_first_then_runs_to_the_far_edge() -> void:
 	var dash := DashMotion.new()
 	dash.speed = 800.0

@@ -1,0 +1,28 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/characters/guardians/spawns/floor_shadow/floor_shadow.gd" id="1_kind"]
+[ext_resource type="Script" path="res://scenes/combat/hitbox/hitbox.gd" id="2_hitbox"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hit"]
+size = Vector2(4, 4)
+
+[node name="FloorShadow" type="Node2D"]
+script = ExtResource("1_kind")
+warn = 0.8
+live = 0.0
+fade = 0.15
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 512
+monitoring = false
+monitorable = false
+script = ExtResource("2_hitbox")
+strikes_once = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, -2.0)
+shape = SubResource("RectangleShape2D_hit")
+debug_color = Color(0.93, 0.23, 0.34, 0.42)
+
+[connection signal="area_entered" from="Hitbox" to="Hitbox" method="_on_area_entered"]

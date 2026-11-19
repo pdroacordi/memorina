@@ -6,16 +6,33 @@
 [ext_resource type="Resource" uid="uid://bq3frostswip" path="res://resources/characters/guardians/frost_guardian/frost_swipe.tres" id="3_swipe"]
 [ext_resource type="Resource" uid="uid://bq4frostchar" path="res://resources/characters/guardians/frost_guardian/frost_charge.tres" id="4_charge"]
 [ext_resource type="Resource" uid="uid://bq6frostslam" path="res://resources/characters/guardians/frost_guardian/frost_slam.tres" id="5_slam"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/frost_guardian/frost_icicle_fall.tres" id="6_icicle_fall"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/frost_guardian/frost_body_drop.tres" id="7_body_drop"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_stage.gd" id="8_stage"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/frost_guardian/frost_guardian_voice.tres" id="9_voice"]
 [ext_resource type="Resource" path="res://resources/music/fight_frost.tres" id="90_fight_music"]
 [ext_resource type="Resource" path="res://resources/audio/sfx/combat/guardian_sounds.tres" id="95_sounds"]
+
+[sub_resource type="Resource" id="stage_0"]
+script = ExtResource("8_stage")
+
+[sub_resource type="Resource" id="stage_1"]
+script = ExtResource("8_stage")
+cooldown_scale = 0.8
+chain_scale = 1.4
+
+[sub_resource type="Resource" id="stage_2"]
+script = ExtResource("8_stage")
+cooldown_scale = 0.65
+chain_scale = 1.7
 
 [resource]
 script = ExtResource("1_stats")
 music = ExtResource("90_fight_music")
 song = ExtResource("2_song")
 voice = ExtResource("9_voice")
-attacks = Array[ExtResource("1_7xvuc")]([ExtResource("3_swipe"), ExtResource("4_charge"), ExtResource("5_slam")])
+attacks = Array[ExtResource("1_7xvuc")]([ExtResource("3_swipe"), ExtResource("4_charge"), ExtResource("5_slam"), ExtResource("6_icicle_fall"), ExtResource("7_body_drop")])
+stages = Array[ExtResource("8_stage")]([SubResource("stage_0"), SubResource("stage_1"), SubResource("stage_2")])
 hits_to_open = 8
 cycles_to_restore = 3
 call_lead_in = 2.2

@@ -92,10 +92,16 @@ var _floor_y: float = 0.0
 ## One life note per string: the move box, the contact box and the spawns refuse a link's hit on a target the string
 ## already hurt.
 var _string_gate := HitGate.new()
+## The body spares an Ivo a no-contact move carried it onto (GuardianBodyContact).
+var _body_contact := GuardianBodyContact.new()
+## The string under way has a move whose own box is its only hit.
+var _string_spares_body: bool = false
 var _shield_rest_radius: float = 0.0
 var _sprite_rest: Vector2 = Vector2.ZERO
 ## Seconds of the flinch left: the facing it took on the hit is held until the hurt clip ends.
 var _flinch_left: float = 0.0
+## The recall move under way whose recall waits for its `recall_lead`; null otherwise.
+var _recall_due: GuardianAttack = null
 ## From restoration to the end of the lesson it starts.
 var _teaching: bool = false
 ## The lesson ended and the stage holds until `perform_end` has played.
@@ -187,8 +193,12 @@ func _process_motion(delta: float) -> void:
 		if _flinch_left <= 0.0 or _ai.is_attacking():
 			face_towards(_ai.facing_intent())
 		_locomotion.ground_update(delta, _ai.direction)
+		if _ai.is_recovering() and is_instance_valid(_player) and GuardianBodyContact.skid_stops(
+				_player.global_position.x - global_position.x, velocity.x, _ai.overhead_band):
+			velocity.x = 0.0
 		if _ai.is_swinging():
 			_mover.drive(delta, _ai.swing_elapsed())
+			_open_due_recall()
 	else:
 		_locomotion.ground_update(delta, 0.0)
 		if _fight.phase() == GuardianFight.Phase.RESTORED:
@@ -206,6 +216,8 @@ func _after_move(delta: float) -> void:
 		_floor_y = global_position.y
 	if _fight.phase() == GuardianFight.Phase.PRESSURE:
 		_spawner.tick(delta, _mover.just_landed())
+	_end_string_after_recovery()
+	_body_contact.tick(delta, _player_inside_body())
 	if is_instance_valid(_player) and not _player_in_arena():
 		_abandon_call()
 	if _bowing and not _still_bowing():
@@ -264,7 +276,7 @@ func is_attacking() -> bool:
 ## The body hurts on touch, unless the move under way leaves its own box as its only hit (GuardianAttack.body_contact)
 ## or a blink has taken it out of the world.
 func body_hurts() -> bool:
-	if _mover.is_intangible():
+	if _mover.is_intangible() or _body_contact.holds():
 		return false
 	return _ai.current_attack == null or _ai.current_attack.body_contact
 
@@ -293,7 +305,9 @@ func arena_bounds() -> Rect2:
 ## Where a spawn fires from and aims at now: the feet, the facing, Ivo's feet, the arena and the floor.
 func spawn_context() -> SpawnContext:
 	var target := _player.global_position if is_instance_valid(_player) else global_position + Vector2(facing, 0.0)
-	return SpawnContext.make(global_position, facing, target, arena_bounds(), _floor_y)
+	var ctx := SpawnContext.make(global_position, facing, target, arena_bounds(), _floor_y)
+	ctx.landing = _mover.landing(global_position)
+	return ctx
 
 ## Hits counted toward the next lucidity window, 0..1.
 func pressure_progress() -> float:
@@ -425,7 +439,12 @@ func _on_attack_telegraphed(_attack: GuardianAttack) -> void:
 	_hits_since_move = 0
 	if _ai.link_index() == 0:
 		_string_gate.begin_string()
-	_string_gate.link = _ai.link_index()
+		_string_spares_body = false
+		# A new string's own body_contact rules from its wind-up; the last one's grace does not run into it.
+		_body_contact.clear()
+	else:
+		# A link starts where the last one ended: a lunge's speed does not carry it on through the wind-up.
+		velocity.x = 0.0
 	if _player != null:
 		face_towards(signf(_player.global_position.x - global_position.x))
 	_stop_telegraph()
@@ -437,6 +456,7 @@ func _on_attack_telegraphed(_attack: GuardianAttack) -> void:
 ## the recall while the player still lacks its skill.
 func _on_attack_started(attack: GuardianAttack) -> void:
 	_stop_telegraph()
+	_string_spares_body = _string_spares_body or not attack.body_contact
 	_hitbox.damage = attack.damage_for(_ai.recall_owned)
 	_hitbox.knockback_strength = attack.knockback_strength
 	_hitbox.knockback_lift = attack.knockback_lift
@@ -450,14 +470,42 @@ func _on_attack_started(attack: GuardianAttack) -> void:
 		return
 	# Nothing stray lands inside the recall's window.
 	_spawner.clear()
-	_player.begin_recall(attack.recall, attack.duration, self)
+	if attack.recall_lead > 0.0:
+		_recall_due = attack
+		return
+	_player.begin_recall(attack.recall, attack.duration, self, _hitbox)
 
 func _on_attack_finished(_attack: GuardianAttack) -> void:
+	_recall_due = null
 	_stop_telegraph()
 	_mover.end()
-	# No link follows: the string is over and its targets may be hurt again.
-	if not _ai.is_telegraphing() and not _ai.is_swinging():
-		_string_gate.begin_string()
+
+## The string's recovery is over: its targets may be hurt again, and a body its move carried onto Ivo spares him
+## until he is out of it.
+func _end_string_after_recovery() -> void:
+	if not _string_gate.is_active() or _ai.is_attacking():
+		return
+	_string_gate.end_string()
+	if _string_spares_body:
+		_string_spares_body = false
+		_body_contact.begin()
+
+func _player_inside_body() -> bool:
+	return is_instance_valid(_player) and body_rect().intersects(_player.body_rect())
+
+## A recall move's recall opens `recall_lead` s before its lunge reaches Ivo, timed here instead of by the recall's
+## distance cue (bugs/a-prompt-roll-on-a-frost-charge-thrown-from-170-220-px-runs-out-of-grace-before-the-fists-arrive).
+func _open_due_recall() -> void:
+	if _recall_due == null or _ai.current_attack != _recall_due or not is_instance_valid(_player):
+		return
+	var elapsed := _ai.swing_elapsed()
+	var distance := absf(_player.global_position.x - global_position.x)
+	if _recall_due.seconds_to_blow(elapsed, distance) > _recall_due.recall_lead:
+		return
+	var attack := _recall_due
+	_recall_due = null
+	if not SaveSystem.has_skill(attack.recall.skill):
+		_player.open_recall(attack.recall, self, _hitbox)
 
 ## What a move's motion plans against; null for a move with none.
 func _motion_context(attack: GuardianAttack) -> MotionContext:

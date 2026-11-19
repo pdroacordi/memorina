@@ -39,3 +39,9 @@ Not fixed. Either:
 ## Prevention
 
 Add the invariant to `guardian_move_graph_test.test_every_guardian_keeps_the_engine_invariants`, and a `guardian_repertoire_test` case for a recall root with links.
+
+## Revision (2026-11-18, GRD-14 review)
+
+GRD-14 deliberately relaxed the fix for the Frost charge-back. `next_link` now lets a recall move chain when it is passed `recall_owned` and the move `leaves_cadence_when_owned()`. `guardian_move_graph_test` allows `follow_ups` only on such a move. A move that still teaches never chains, so the cadence reset holds. An owned move is off the cadence (`GuardianAI._recall_move`), so the link it ends a string with does not matter.
+
+`recall_owned` flips mid-strike when the press lands, so a teaching strike's end could have chained (found latent in the GRD-14 review). Fixed the same day: `GuardianAI` reads ownership as the strike begins (`_owned_at_strike`) and passes that to `next_link`, so a strike that began teaching never chains, whatever its follow-ups' stages. Test: `guardian_ai_test.test_a_teaching_charge_never_chains_off_the_press_that_taught_it` (the roll handed over halfway through a stage-1 charge: no charge-back).

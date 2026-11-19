@@ -240,6 +240,11 @@ var _pending_recall: AbilityRecallStats = null
 var _pending_recall_left: float = 0.0
 ## Source body used by a pending distance-triggered recall.
 var _pending_recall_source: Node2D
+var _pending_recall_blow: Node2D = null
+## The hitbox of the move that opened the recall under way; its damaging hit closes the recall as a miss.
+var _recall_blow: Node2D = null
+## The window is being closed by the blow's hit, which was already its cost: no miss damage on top.
+var _recall_closed_by_hit: bool = false
 ## True while sinking without player control.
 var _sinking: bool = false
 ## True after `death_shown` emits for this death.
@@ -1202,8 +1207,9 @@ func close_call(success: bool) -> void:
 ## move) to come that close, so the world slows when the blow is about to land
 ## and not while it is still far off.
 ## If the cue never comes, the moment does not come. Nothing happens if a
-## recall is already open.
-func begin_recall(stats: AbilityRecallStats, attack_duration: float = 0.0, source: Node2D = null) -> void:
+## recall is already open. `blow` is the move's own hitbox: its damaging hit closes the window as a miss.
+func begin_recall(stats: AbilityRecallStats, attack_duration: float = 0.0, source: Node2D = null,
+		blow: Node2D = null) -> void:
 	if _recall.is_armed() or _pending_recall != null:
 		return
 	# A blow is coming: he is on his feet for it, so the press that remembers
@@ -1211,6 +1217,7 @@ func begin_recall(stats: AbilityRecallStats, attack_duration: float = 0.0, sourc
 	_stand_up()
 	_pending_recall = stats
 	_pending_recall_source = source
+	_pending_recall_blow = blow
 	_pending_recall_left = maxf(attack_duration, 0.1)
 	_tick_pending_recall(0.0)
 
@@ -1221,12 +1228,22 @@ func _tick_pending_recall(delta: float) -> void:
 	if _recall_cue_met(_pending_recall) and not is_dead():
 		var stats := _pending_recall
 		var source := _pending_recall_source
+		var blow := _pending_recall_blow
 		_pending_recall = null
 		_pending_recall_source = null
-		_open_recall(stats, source)
+		_pending_recall_blow = null
+		_open_recall(stats, source, blow)
 	elif _pending_recall_left <= 0.0:
 		_pending_recall = null
 		_pending_recall_source = null
+		_pending_recall_blow = null
+
+## The guardian timed the moment itself (GuardianAttack.recall_lead): the recall opens now, with no cue to wait for.
+func open_recall(stats: AbilityRecallStats, source: Node2D, blow: Node2D = null) -> void:
+	if _recall.is_armed() or _pending_recall != null or is_dead():
+		return
+	_stand_up()
+	_open_recall(stats, source, blow)
 
 ## Every cue the stats ask for, met.
 func _recall_cue_met(stats: AbilityRecallStats) -> bool:
@@ -1242,9 +1259,10 @@ func _recall_cue_met(stats: AbilityRecallStats) -> bool:
 ## How many presses the memory asks for is settled here, by where the body
 ## is standing at the instant the moment opens: a double jump caught with the
 ## feet planted is jump and then jump again.
-func _open_recall(stats: AbilityRecallStats, source: Node2D) -> void:
+func _open_recall(stats: AbilityRecallStats, source: Node2D, blow: Node2D = null) -> void:
 	if not _recall.arm(stats, is_on_floor()):
 		return
+	_recall_blow = blow
 	_remember_escape(source)
 	_glow_shield(1.0)
 	recall_started.emit(stats.action, stats.window, _recall.steps_left())
@@ -1291,7 +1309,7 @@ func _on_skill_recall_missed(stats: AbilityRecallStats) -> void:
 	_end_recall()
 	# Straight to health, not through the hurtbox: the launch that set the moment
 	# up may have left i-frames running, and the cost must not hide behind them.
-	if stats.miss_damage > 0 and not is_dead():
+	if stats.miss_damage > 0 and not _recall_closed_by_hit and not is_dead():
 		health.take_damage(stats.miss_damage)
 		_just_hit = health.is_alive()
 	skill_recall_missed.emit(stats.skill)
@@ -1327,6 +1345,9 @@ func _on_health_died() -> void:
 ## it (death, a hazard): dropped without a miss.
 func _drop_recall() -> void:
 	_pending_recall = null
+	_pending_recall_source = null
+	_pending_recall_blow = null
+	_recall_blow = null
 	if _recall.cancel():
 		_end_recall()
 
@@ -1438,6 +1459,13 @@ func _try_attack() -> void:
 func _on_hit_received(damage: int, knockback: Vector2, source: Node2D) -> void:
 	super(damage, knockback, source)
 	_react_to_hurt()
+	# The blow it was teaching to escape landed first: a miss, and the move comes again (design 02 §4). Only the move's
+	# own box; its body's contact or a spawn leaves the window open
+	# (bugs/a-guardians-contact-touch-during-its-recall-window-costs-the-hit-and-the-miss-damage).
+	if damage > 0 and _recall.is_armed() and source != null and source == _recall_blow:
+		_recall_closed_by_hit = true
+		_recall.miss()
+		_recall_closed_by_hit = false
 
 ## Ivo does not swim: water costs him health and, if he survives it, he sinks
 ## out of control until the composition root has faded out and respawn()ed

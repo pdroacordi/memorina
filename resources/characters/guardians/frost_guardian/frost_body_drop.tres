@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/leap_motion.gd" id="2_leap"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="3_spawn"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/frost_guardian/spawns/body_drop_shadow.tscn" id="4_shadow"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/frost_guardian/spawns/ice_shock.tscn" id="5_shock"]
+
+[sub_resource type="Resource" id="drop"]
+script = ExtResource("2_leap")
+target = 1
+height = 72.0
+delay = 0.1
+air_time = 0.75
+
+[sub_resource type="Resource" id="shadow"]
+script = ExtResource("3_spawn")
+scene = ExtResource("4_shadow")
+placement = 5
+
+[sub_resource type="Resource" id="shock"]
+script = ExtResource("3_spawn")
+scene = ExtResource("5_shock")
+on_landing = true
+placement = 4
+offset = Vector2(40, 0)
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 5
+windup_index = 5
+duration = 1.0
+telegraph = 0.6
+attack_range = 260.0
+attack_height = 200.0
+cooldown = 0.9
+recovery = 0.8
+recovery_index = 3
+from_stage = 2
+weight = 0.7
+repeats = false
+motion = SubResource("drop")
+spawns = Array[ExtResource("3_spawn")]([SubResource("shadow"), SubResource("shock")])
+knockback_strength = 520.0
+knockback_lift = 220.0

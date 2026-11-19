@@ -57,6 +57,11 @@ extends Resource
 @export_group("Recall")
 ## Opens recall only while the player lacks this skill; the teaching attack is unavoidable.
 @export var recall: AbilityRecallStats
+## Scaled s before the lunge brings the box within `recall_reach` of Ivo at which the recall opens; 0 leaves it to
+## the recall's own cue. Long enough to react, short enough that a press's grace covers the blow.
+@export var recall_lead: float = 0.0
+## Px from the guardian's centre at which the lunging box first touches Ivo; read with `recall_lead`.
+@export var recall_reach: float = 0.0
 ## Pick weight once the recall's skill is owned: the move leaves the recall cadence; negative keeps it on the cadence.
 @export var owned_weight: float = -1.0
 ## Damage once the recall's skill is owned; negative keeps `damage`.
@@ -70,6 +75,12 @@ func leaves_cadence_when_owned() -> bool:
 ## Pick weight; `owned` says whether the player owns the recall's skill.
 func weight_for(owned: bool) -> float:
 	return owned_weight if owned and leaves_cadence_when_owned() else weight
+
+## Scaled s until the lunge brings the box within `recall_reach` of an Ivo `distance` px away, `elapsed` s into the
+## strike; 0 once it has.
+func seconds_to_blow(elapsed: float, distance: float) -> float:
+	var wait := maxf(lunge_delay - elapsed, 0.0)
+	return wait + maxf(distance - recall_reach, 0.0) / maxf(lunge_speed, 1.0)
 
 ## Hit damage; `owned` says whether the player owns the recall's skill.
 func damage_for(owned: bool) -> int:

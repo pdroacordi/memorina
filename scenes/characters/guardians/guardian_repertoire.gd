@@ -16,10 +16,14 @@ static func available(attacks: Array[GuardianAttack], stage: int) -> Array[Guard
 
 ## The link after `move`'s strike, or null to end the string; `links_done` counts its moves so far, the first included.
 ## `in_range(attack)` and `roll()` (0..1) are asked only for an eligible link, and `roll` only for an uncertain chance.
+## `recall_owned`: the player owns the recall's skill, so a recall move that left the cadence may chain.
 static func next_link(move: GuardianAttack, stage: int, chain_scale: float, links_done: int, max_links: int,
-		in_range: Callable, at_wall: bool, recall_requested: bool, roll: Callable) -> GuardianAttack:
-	# A recall move never chains: its end resets the recall cadence.
-	if move == null or move.recall != null or recall_requested or links_done >= mini(max_links, MAX_LINKS):
+		in_range: Callable, at_wall: bool, recall_requested: bool, roll: Callable,
+		recall_owned: bool = false) -> GuardianAttack:
+	if move == null or recall_requested or links_done >= mini(max_links, MAX_LINKS):
+		return null
+	# A recall move chains only once it no longer teaches: while it does, its end resets the recall cadence.
+	if move.recall != null and not (recall_owned and move.leaves_cadence_when_owned()):
 		return null
 	for follow_up: GuardianFollowUp in move.follow_ups:
 		if follow_up == null or follow_up.from_stage > stage:

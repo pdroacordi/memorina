@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/floor_runner/floor_runner.tscn" id="1_base"]
+
+[node name="IceWave" instance=ExtResource("1_base")]
+warn = 0.3
+live = 1.2
+fade = 0.25
+light = Color(0.86, 0.94, 1, 1)
+dark = Color(0.16, 0.24, 0.34, 1)
+speed = 320.0
+reach = 384.0
+height = 24.0

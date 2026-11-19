@@ -2,18 +2,34 @@
 
 [ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
 [ext_resource type="Resource" uid="uid://bq2frostreca" path="res://resources/characters/guardians/frost_guardian/recall_roll.tres" id="2_recall"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_follow_up.gd" id="3_follow"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/frost_guardian/frost_charge_back.tres" id="4_back"]
+
+[sub_resource type="Resource" id="charge_back"]
+script = ExtResource("3_follow")
+attack = ExtResource("4_back")
+from_stage = 1
 
 [resource]
 script = ExtResource("1_attack")
 clip_index = 1
+windup_index = 3
 duration = 1.1666667
 telegraph = 0.7
-attack_range = 300.0
-cooldown = 2.4
+attack_range = 260.0
+cooldown = 0.9
+recovery = 0.6
+recovery_index = 2
 lunge_speed = 455.0
 lunge_delay = 0.5
 weight = 0.0
+repeats = false
 body_contact = false
+follow_ups = Array[ExtResource("3_follow")]([SubResource("charge_back")])
 knockback_strength = 520.0
 knockback_lift = 160.0
 recall = ExtResource("2_recall")
+recall_lead = 0.25
+recall_reach = 112.0
+owned_weight = 0.6
+owned_damage = 1

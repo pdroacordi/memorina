@@ -24,6 +24,14 @@ func test_at_ivo_and_around_ivo_aim_at_his_feet_on_the_floor() -> void:
 	assert_array(SpawnPlacement.points(_spawn(GuardianSpawn.Placement.AROUND_IVO, 3, 80.0), _ctx)).is_equal(
 			[Vector2(520.0, 400.0), Vector2(600.0, 400.0), Vector2(680.0, 400.0)])
 
+## The landing spot is the motion's, not Ivo's: a leap clamped off a wall lands short of an Ivo against it.
+func test_at_landing_marks_where_the_motion_comes_down_on_the_floor() -> void:
+	var spawn := _spawn(GuardianSpawn.Placement.AT_LANDING, 1, 0.0)
+	assert_array(SpawnPlacement.points(spawn, _ctx)).override_failure_message("no motion: the origin").is_equal(
+			[Vector2(300.0, 400.0)])
+	_ctx.landing = Vector2(904.0, 330.0)
+	assert_array(SpawnPlacement.points(spawn, _ctx)).is_equal([Vector2(904.0, 400.0)])
+
 func test_across_the_arena_sweeps_away_from_the_guardian() -> void:
 	var points := SpawnPlacement.points(_spawn(GuardianSpawn.Placement.ACROSS_ARENA, 4, 0.0), _ctx)
 	assert_float(points[0].x).is_less(points[3].x)

@@ -34,6 +34,9 @@ static func points(spawn: GuardianSpawn, ctx: SpawnContext) -> Array[Vector2]:
 				# Ordered from the guardian's side outward, so a sequence sweeps away from it.
 				var slot := i if ctx.facing > 0 else spawn.count - 1 - i
 				placed.append(Vector2(low + width * (slot + 0.5) / spawn.count, ctx.floor_y + spawn.offset.y))
+		GuardianSpawn.Placement.AT_LANDING:
+			for i: int in spawn.count:
+				placed.append(Vector2(ctx.landing.x + spawn.offset.x * ctx.facing, ctx.floor_y + spawn.offset.y))
 		GuardianSpawn.Placement.BOTH_SIDES:
 			for i: int in spawn.count:
 				for side: int in [ctx.facing, -ctx.facing]:

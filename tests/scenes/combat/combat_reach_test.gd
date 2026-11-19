@@ -134,6 +134,23 @@ func test_every_guardian_move_set_to_reach_higher_lands_that_high() -> void:
 			assert_float(_reach(box, raised)).override_failure_message("%s %s starts on an Ivo %.0f px up that its box cannot touch" % [
 				guardian.name, attack.resource_path.get_file(), attack.attack_height]).is_greater(0.0)
 
+## A move tuned to start on a player lower than the default reaches an Ivo standing that high, and not one standing
+## 12 px higher: its reach up is what its box reaches, so the overhead pick does not prefer it for a jump it cannot hit
+## (the Frost swipe and slam, GRD-14).
+func test_every_guardian_move_set_to_reach_lower_reaches_just_that_high() -> void:
+	var default_height := GuardianAttack.new().attack_height
+	for path: String in GUARDIAN_SCENES:
+		var guardian := auto_free(_instance(path)) as Guardian
+		for attack: GuardianAttack in _striking_moves(guardian):
+			if attack.attack_height >= default_height or attack.motion != null:
+				continue
+			var box := _hit_box(guardian, _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index]))
+			var label := "%s %s" % [guardian.name, attack.resource_path.get_file()]
+			for up: float in [attack.attack_height, attack.attack_height + 12.0]:
+				var raised := {"shape": _ivo_hurtbox.shape, "xform": Transform2D(0.0, Vector2(0.0, -up)) * (_ivo_hurtbox.xform as Transform2D)}
+				var touches := _reach(box, raised) > 0.0
+				assert_bool(touches).override_failure_message("%s, an Ivo %.0f px up" % [label, up]).is_equal(up == attack.attack_height)
+
 ## A move that does not strike keys no hit window: its spawns or its motion are the whole move.
 func test_a_guardian_move_that_does_not_strike_keys_no_hit_window() -> void:
 	for path: String in GUARDIAN_SCENES + [ENGINE_SCENE]:

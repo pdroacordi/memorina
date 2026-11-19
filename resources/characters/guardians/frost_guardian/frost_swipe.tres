@@ -1,12 +1,25 @@
 [gd_resource type="Resource" script_class="GuardianAttack" format=3 uid="uid://bq3frostswip"]
 
 [ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_follow_up.gd" id="2_follow"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/frost_guardian/frost_swipe_again.tres" id="3_again"]
+
+[sub_resource type="Resource" id="to_swipe_again"]
+script = ExtResource("2_follow")
+attack = ExtResource("3_again")
+chance = 0.6
 
 [resource]
 script = ExtResource("1_attack")
-duration = 1.1666667
+windup_index = 0
+duration = 0.5833333
+telegraph = 0.55
 attack_range = 104.0
-cooldown = 1.6
-weight = 2.0
+attack_height = 52.0
+cooldown = 0.7
+recovery = 0.6
+recovery_index = 0
+weight = 1.5
+follow_ups = Array[ExtResource("2_follow")]([SubResource("to_swipe_again")])
 knockback_strength = 460.0
 knockback_lift = 140.0

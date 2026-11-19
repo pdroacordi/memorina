@@ -891,6 +891,27 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - Guardian AI gotcha seen in data: a guardian at y 288.0 against Ivo at 287.9 reads him as "above" (overhead branch), so
     log both y values before blaming the weighted roll for a one-move fight.
 
+- **Learned 2026-11-18 (GRD-14 Frost feel)**: **`guardian_fight_player_driver.gd` ignores every owned charge when the roll is
+  seeded through `"skills": [2]`.** Its `_learned` is set only by `skill_recalled`, so with a seeded roll it never dodges a
+  charge, and 8 of 8 charges hit (`rolljump`, wasted). The session copy (`feel14/pin_driver.gd` in that scratchpad) added
+  `PL_LEARNED=1`, plus:
+  - `PL_PIN=west`: wall-pinned policy with jump sweeps (`PL_SLAM_LEADS`, `PL_SWIPE_LEADS`, `PL_CHARGE_AT`).
+  - `PL_RECALL_DELAY`; `PL_PG=1`, a closed-loop double-jump pogo; `PL_DROP_OFFS`.
+  - `[dmg]` on `struck`, and `gsx`/`psx` screen x in `[st]`.
+  Fold these into the driver if they are needed again.
+  - A per-move "jumped already" key must reset at every new telegraph, not only when the move name changes. Two swipes
+    in a row shared one key, so the second was never jumped and 30 false hits followed.
+  - The `run.sh` that does `-s "$drv"` cannot start `playtest_runner.tscn` ("Identifier not found: SaveSystem"): pass the
+    runner as the main scene, without `-s`.
+  - Ivo's real jump curve (0.4 s hold, traced per frame): feet 58.9 px at 0.133 s, 102.9 at 0.267, 111.6 at 0.30, apex
+    141.5 at 0.6, 107.8 at 0.933. The hurtbox foot is 6 px above the feet. Use these numbers, not prose, for "a jump
+    clears X" checks.
+  - The Frost arena (`lake_frost_arena`, `arena_bounds` x 4480..5760, y -1920..-1536): floor y -1632, west wall face x
+    4512 (Ivo stops at 4523), ceiling row bottom 256 px above the floor (Ivo's feet stop at 201.9 px). A body drop's
+    landing clamp is measured from `arena_bounds`, which includes the wall row.
+  - A foreground wait loop is moved to the background after ~175 s even with `timeout 560`. Chain long series in one
+    `series.sh` with `run_in_background` and poll its output file with short waits.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

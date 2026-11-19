@@ -96,6 +96,20 @@ func test_a_recall_move_never_chains() -> void:
 	assert_object(_next(recall)).is_null()
 	assert_int(_rolls).is_equal(0)
 
+## A recall move that left the cadence once its skill is owned no longer teaches, so it may chain (the Frost charge-back).
+func test_an_owned_recall_move_with_owned_numbers_chains() -> void:
+	var recall := _move()
+	recall.recall = AbilityRecallStats.new()
+	var back := _move()
+	recall.follow_ups = [_link(back, 1.0)]
+	var owned := func(move: GuardianAttack) -> GuardianAttack:
+		return GuardianRepertoire.next_link(move, 0, 1.0, 1, 3, _reach, false, false, _roll, true)
+	assert_object(owned.call(recall)).override_failure_message("chained with no owned numbers").is_null()
+	recall.owned_weight = 0.5
+	assert_object(_next(recall)).override_failure_message("chained while it still teaches").is_null()
+	assert_object(owned.call(recall)).is_same(back)
+	assert_int(_rolls).is_equal(0)
+
 func test_a_recall_move_is_never_a_link() -> void:
 	var move := _move()
 	var recall := _move()

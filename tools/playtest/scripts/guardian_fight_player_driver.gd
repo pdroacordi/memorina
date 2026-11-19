@@ -9,9 +9,17 @@ extends SceneTree
 ## PL_POUNCE=away|jump|under how the pounce is dodged (away); PL_POGO=1 pogoes in punish windows instead of swinging;
 ## PL_LASH=back|stay|two (stay swings through the string, two swings through the lash and backs off from the back-lash on); PL_ROW_LEAD=<s> (0.12); PL_DASH_AT=<strike s> (0.33);
 ## PL_SWINGS=<n> swings per approach (2); PL_MAX_SHOTS=<n> (260); PL_ANSWER=0 never answers.
+## Frost (GRD-14): backs out of the swipe string and the slam, jumps the ice wave and the landing shock, steps out of an
+## icicle's glint and the body drop's shadow; PL_CHARGE=jump|roll how an owned charge is dodged (jump);
+## PL_SWIPE=back|jump how the swipe and second swipe are dodged (back);
+## PL_LEARNED=1 treats the recall's skill as owned from the start (a timeline that seeds it through "skills").
 ## No autoload or class_name is referenced: a -s script compiles before the autoloads exist.
 const PH := ["DORMANT", "PRESSURE", "LUCIDITY", "RELAPSE", "RESTORED"]
 const LASH_STRING := ["bloom_lash", "bloom_back_lash", "bloom_antler_thrust"]
+const SWIPE_STRING := ["frost_swipe", "frost_swipe_again", "frost_slam"]
+const CHARGES := ["frost_charge", "frost_charge_back"]
+## Px an Ivo keeps from a spot's centre, by spawn kind: an icicle's, the body drop's shadow, a pod's or patch's.
+const SPOT_CLEAR := {"shard": 24.0, "shadow": 72.0, "pod": 36.0, "patch": 36.0}
 var _out := ""
 var _p: Node2D
 var _g: Node2D
@@ -48,6 +56,8 @@ var _lash_mode := "back"
 var _row_lead := 0.12
 var _dash_at := 0.33
 var _restored_at := 0
+var _charge_mode := "jump"
+var _swipe_mode := "back"
 
 func _initialize() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -67,6 +77,12 @@ func _initialize() -> void:
 		_dash_at = float(OS.get_environment("PL_DASH_AT"))
 	if OS.get_environment("PL_ROW_LEAD") != "":
 		_row_lead = float(OS.get_environment("PL_ROW_LEAD"))
+	# The roll seeded through the timeline's "skills" is owned from the start.
+	_learned = OS.get_environment("PL_LEARNED") == "1"
+	if OS.get_environment("PL_SWIPE") != "":
+		_swipe_mode = OS.get_environment("PL_SWIPE")
+	if OS.get_environment("PL_CHARGE") != "":
+		_charge_mode = OS.get_environment("PL_CHARGE")
 	if OS.get_environment("PL_MAX_SHOTS") != "":
 		_max_shots = int(OS.get_environment("PL_MAX_SHOTS"))
 	change_scene_to_file.call_deferred("res://tools/playtest/playtest_runner.tscn")
@@ -161,6 +177,11 @@ func _kind(s: Node) -> String:
 		return "row"
 	if s.has_method("launch"):
 		return "pod"
+	var kind: String = s.get_script().get_global_name()
+	if kind == "FallingShard":
+		return "shard"
+	if kind == "FloorShadow":
+		return "shadow"
 	return "patch"
 
 func _spawn_x(s: Node) -> float:
@@ -275,41 +296,46 @@ func _policy(now: int) -> void:
 					_move("")
 					_press("jump", 380)
 					return
-		elif k == "pod":
-			if t < warn + float(s.get("live")):
-				spots.append(s.global_position.x)
 		else:
-			if t < warn + float(s.get("live")):
-				spots.append(s.global_position.x)
+			# A shadow is never live: it marks its landing through its warning.
+			if t < warn + float(s.get("live")) or (k == "shadow" and t < warn):
+				# A shadow is as wide as its body's reach: keep its half width and Ivo's clear of its centre.
+				var clear := float(s.get("width")) * 0.5 + 12.0 if k == "shadow" else float(SPOT_CLEAR[k])
+				spots.append([s.global_position.x, clear])
 	if not spots.is_empty() and on_floor:
 		var bad := false
-		for x in spots:
-			if absf(px - x) < 36.0:
+		for sp in spots:
+			if absf(px - sp[0]) < sp[1]:
 				bad = true
 		if bad:
 			var best := px
 			var bestd := INF
-			for x in spots:
-				for c in [x - 48.0, x + 48.0, x - 110.0, x + 110.0]:
+			for sp in spots:
+				var x: float = sp[0]
+				for c in [x - sp[1] - 12.0, x + sp[1] + 12.0, x - sp[1] - 74.0, x + sp[1] + 74.0]:
 					var ok := true
-					for y in spots:
-						if absf(c - y) < 38.0:
+					for o in spots:
+						var y: float = o[0]
+						if absf(c - y) < o[1] + 2.0:
 							ok = false
 						# Never walk through another spot on the way.
-						if absf(y - px) >= 36.0 and (y - px) * (c - px) > 0.0 and absf(y - px) < absf(c - px):
+						if absf(y - px) >= o[1] and (y - px) * (c - px) > 0.0 and absf(y - px) < absf(c - px):
 							ok = false
+					# Never step into the guardian's body.
+					if absf(c - _g.global_position.x) < 72.0 or ((c - px) * (_g.global_position.x - px) > 0.0 and absf(_g.global_position.x - px) < absf(c - px) + 40.0):
+						ok = false
 					if arena.size.x > 0.0 and (c < arena.position.x + 16.0 or c > arena.end.x - 16.0):
 						ok = false
 					if ok and absf(c - px) < bestd:
 						bestd = absf(c - px)
 						best = c
-			_last_threat = "pod step to %.0f" % best
+			_last_threat = "spot step to %.0f" % best
 			if absf(best - px) > 3.0:
 				_move("move_right" if best > px else "move_left")
 			else:
 				_move("")
 			return
-		if _moving != "" and _last_threat.begins_with("pod"):
+		if _moving != "" and _last_threat.begins_with("spot"):
 			_move("")
 			return
 	if row_near:
@@ -319,6 +345,35 @@ func _policy(now: int) -> void:
 	var ca: Resource = _g.current_attack()
 	var an := ca.resource_path.get_file().get_basename() if ca else ""
 	var clk := _clock()
+	if an in CHARGES and (ca.get("recall") == null or _learned) and (clk == "T" or clk == "S"):
+		var cel: float = _g.get_node("AI").swing_elapsed() if clk == "S" else 0.0
+		_last_threat = "charge %s el=%.2f" % [_charge_mode, cel]
+		_move("")
+		# The fists open at 0.5 s, reach 112 px and run 455 px/s; a jump needs ~0.22 s to clear them.
+		var t_hit := 0.5 + maxf(ad - 112.0, 0.0) / 455.0 if cel < 0.5 else maxf(ad - 112.0, 0.0) / 455.0
+		if clk == "S" and t_hit - (cel if cel < 0.5 else 0.0) <= 0.24 and on_floor and now >= _next_jump:
+			_next_jump = now + 700
+			print("[pl] t=%.3f %s charge ad=%.1f el=%.2f" % [_el(), _charge_mode.to_upper(), ad, cel])
+			_press("roll" if _charge_mode == "roll" else "jump", 120 if _charge_mode == "roll" else 400)
+		return
+	if an in SWIPE_STRING and _swipe_mode == "jump" and an != "frost_slam" and (clk == "T" or clk == "S") and ad < 170.0:
+		# Jump the swipes in place late in their wind-up (their box top is 60 px), and back out of the slam.
+		_last_threat = "%s jump" % an
+		_move("")
+		var remaining := float(_g.get_node("AI").get("_clock").get("_left")) if clk == "T" else 0.0
+		if clk == "T" and remaining < 0.15 and on_floor and now >= _next_jump:
+			_next_jump = now + 600
+			print("[pl] t=%.3f JUMP %s ad=%.1f left=%.2f" % [_el(), an, ad, remaining])
+			_press("jump", 380)
+		return
+	if an in SWIPE_STRING and (clk == "T" or clk == "S") and ad < 140.0:
+		_last_threat = "%s back off" % an
+		_move(away)
+		_backoff_until = now + 250
+		return
+	if (an == "frost_icicle_fall" or an == "frost_body_drop") and clk == "T":
+		_move("")
+		return
 	if ca != null and ca.get("recall") != null:
 		if _learned and ad < 120.0 and (clk == "T" or clk == "S"):
 			_last_threat = "burst back off"
