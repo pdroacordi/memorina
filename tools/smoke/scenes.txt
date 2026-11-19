@@ -159,4 +159,8 @@ res://scenes/characters/guardians/frost_guardian/spawns/ice_wave.tscn
 res://scenes/characters/guardians/frost_guardian/spawns/ice_shock.tscn
 res://scenes/characters/guardians/frost_guardian/spawns/icicle.tscn
 res://scenes/characters/guardians/frost_guardian/spawns/body_drop_shadow.tscn
+res://scenes/characters/guardians/spawns/leaf_swirl/leaf_swirl.tscn
+res://scenes/characters/guardians/autumn_guardian/spawns/leaf_blade.tscn
+res://scenes/characters/guardians/autumn_guardian/spawns/dive_shadow.tscn
+res://scenes/characters/guardians/autumn_guardian/spawns/scatter_swirl.tscn
 res://tests/fixtures/guardians/engine_guardian.tscn

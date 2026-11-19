@@ -6,12 +6,19 @@
 [resource]
 script = ExtResource("1_attack")
 clip_index = 1
+windup_index = 7
 duration = 2.4
 telegraph = 0.9
-attack_range = 600.0
-cooldown = 2.4
+attack_range = 250.0
+attack_height = 24.0
+cooldown = 0.9
+recovery = 0.4
+recovery_index = 5
 weight = 0.0
+repeats = false
 knockback_strength = 300.0
 knockback_lift = 80.0
 push_speed = 1700.0
 recall = ExtResource("2_recall")
+owned_weight = 0.35
+owned_damage = 1

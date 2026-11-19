@@ -4,6 +4,7 @@ extends SceneTree
 ## between lobbed pods' landing spots, presses the recall's action while armed, answers the call on call_window_opened.
 ## Prints [st] (phase, stage, move, clock phase T/S/R, link, hitbox, live spawns) on every change, [hit] (what hurt Ivo),
 ## [sp] (each spawn's birth and landing x), [spr] (guardian clip frame) and [shot] lines; screenshots go to --out.
+## PL_CLIMB=1 climbs the wall through an owned gust's floor blow; PL_RECALL_DELAY=<ms> waits before answering a recall.
 ## Run: "$GODOT" --path . -s res://tools/playtest/scripts/guardian_fight_player_driver.gd -- --script=<timeline> --out=<dir>
 ## Env: PL_GOD=1 tops Ivo up at hp 1; PL_PASSIVE=1 stands still and never attacks (answers still);
 ## PL_POUNCE=away|jump|under how the pounce is dodged (away); PL_POGO=1 pogoes in punish windows instead of swinging;
@@ -13,13 +14,17 @@ extends SceneTree
 ## icicle's glint and the body drop's shadow; PL_CHARGE=jump|roll how an owned charge is dodged (jump);
 ## PL_SWIPE=back|jump how the swipe and second swipe are dodged (back);
 ## PL_LEARNED=1 treats the recall's skill as owned from the start (a timeline that seeds it through "skills").
+## Leaf (GRD-15): backs out of the sweep string and the overhead claw (PL_SWEEP=jump jumps the sweeps late in their
+## wind-up), backs away from the hop, stands under the leaf blades on their way out and jumps them on their way back,
+## steps out of the dive's shadow and the scatter's swirl, and jumps an owned gust's floor blow at the wall.
 ## No autoload or class_name is referenced: a -s script compiles before the autoloads exist.
 const PH := ["DORMANT", "PRESSURE", "LUCIDITY", "RELAPSE", "RESTORED"]
 const LASH_STRING := ["bloom_lash", "bloom_back_lash", "bloom_antler_thrust"]
 const SWIPE_STRING := ["frost_swipe", "frost_swipe_again", "frost_slam"]
 const CHARGES := ["frost_charge", "frost_charge_back"]
+const SWEEP_STRING := ["autumn_sweep", "autumn_sweep_again", "autumn_overhead_claw"]
 ## Px an Ivo keeps from a spot's centre, by spawn kind: an icicle's, the body drop's shadow, a pod's or patch's.
-const SPOT_CLEAR := {"shard": 24.0, "shadow": 72.0, "pod": 36.0, "patch": 36.0}
+const SPOT_CLEAR := {"shard": 24.0, "shadow": 72.0, "pod": 36.0, "patch": 36.0, "swirl": 44.0}
 var _out := ""
 var _p: Node2D
 var _g: Node2D
@@ -58,6 +63,11 @@ var _dash_at := 0.33
 var _restored_at := 0
 var _charge_mode := "jump"
 var _swipe_mode := "back"
+var _sweep_mode := "back"
+var _hop_dir := ""
+var _climb := false
+var _recall_delay := 0
+var _armed_at := 0
 
 func _initialize() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -81,6 +91,11 @@ func _initialize() -> void:
 	_learned = OS.get_environment("PL_LEARNED") == "1"
 	if OS.get_environment("PL_SWIPE") != "":
 		_swipe_mode = OS.get_environment("PL_SWIPE")
+	_climb = OS.get_environment("PL_CLIMB") == "1"
+	if OS.get_environment("PL_RECALL_DELAY") != "":
+		_recall_delay = int(OS.get_environment("PL_RECALL_DELAY"))
+	if OS.get_environment("PL_SWEEP") != "":
+		_sweep_mode = OS.get_environment("PL_SWEEP")
 	if OS.get_environment("PL_CHARGE") != "":
 		_charge_mode = OS.get_environment("PL_CHARGE")
 	if OS.get_environment("PL_MAX_SHOTS") != "":
@@ -182,12 +197,22 @@ func _kind(s: Node) -> String:
 		return "shard"
 	if kind == "FloorShadow":
 		return "shadow"
+	if kind == "Boomerang":
+		return "blade"
+	if kind == "LeafSwirl":
+		return "swirl"
 	return "patch"
 
 func _spawn_x(s: Node) -> float:
 	if _kind(s) == "row":
 		return s.global_position.x + float(s.get("facing")) * float(s.call("run_at", float(s.get("_t"))))
+	if _kind(s) == "blade":
+		return s.global_position.x + float(s.get("facing")) * float(s.call("turn_reach")) * sin(PI * _blade_u(s))
 	return s.global_position.x
+
+## 0..1 through a blade's flight: out before 0.5, back after.
+func _blade_u(s: Node) -> float:
+	return clampf((float(s.get("_t")) - float(s.get("warn"))) / maxf(float(s.get("live")), 0.001), 0.0, 1.0)
 
 func _clock() -> String:
 	if _g.is_telegraphing():
@@ -256,10 +281,14 @@ func _policy(now: int) -> void:
 	var rc: Node = _p.get_node("AbilityRecall")
 	if rc.is_armed():
 		_move("")
-		if now >= _next_jump:
+		if _armed_at == 0:
+			_armed_at = now
+			print("[pl] t=%.3f ARMED ivo=(%.1f,%.1f)" % [_el(), _p.global_position.x, _p.global_position.y])
+		if now - _armed_at >= _recall_delay and now >= _next_jump:
 			_next_jump = now + 280
 			_press(String(rc.armed_stats().action), 120)
 		return
+	_armed_at = 0
 	var ph: int = _g.phase()
 	if ph != 1 or _call_active or _p.is_in_lesson():
 		_move("")
@@ -274,13 +303,41 @@ func _policy(now: int) -> void:
 	var away := "move_left" if dx > 0 else "move_right"
 	var on_floor: bool = _p.is_on_floor()
 	var arena: Rect2 = _g.arena_bounds() if _g.has_method("arena_bounds") else Rect2()
+	# No room to back off: the wall (or the arena's FightWall, a cell inside it) is behind Ivo.
+	var pinned: bool = arena.size.x > 0.0 and ((dx > 0 and px - arena.position.x < 80.0) or (dx < 0 and arena.end.x - px < 80.0))
 	# 1. Spawns: jump a floor runner's head, step out of a pod's or patch's spot.
 	var spots: Array = []
 	var row_near := false
+	var blade_near := false
 	for s in _spawns():
 		var k := _kind(s)
 		var t := float(s.get("_t"))
 		var warn := float(s.get("warn"))
+		if k == "blade":
+			if not s.call("is_live", t):
+				continue
+			blade_near = true
+			var bx := _spawn_x(s)
+			# Jump a blade on its way back (low), never while another is still high on its way out over Ivo.
+			var back := _blade_u(s) > 0.5
+			for o in _spawns():
+				if _kind(o) == "blade" and _blade_u(o) < 0.5 and absf(_spawn_x(o) - px) < 40.0:
+					back = false
+			# On the way back it is low: jump it as it comes within reach; on the way out it is high: stay down.
+			if back and absf(bx - px) < 70.0 + 8.0 and on_floor and not _jumped_for.has(s.get_instance_id()):
+				for o in _spawns():
+					if _kind(o) == "blade":
+						_jumped_for[o.get_instance_id()] = true
+				_last_threat = "blade jump gap=%.0f" % (bx - px)
+				var us := []
+				for o in _spawns():
+					if _kind(o) == "blade":
+						us.append("%.2f@%.0f" % [_blade_u(o), _spawn_x(o) - px])
+				print("[pl] t=%.3f JUMP blade gap=%.1f u=%.2f blades=%s" % [_el(), bx - px, _blade_u(s), ",".join(us)])
+				_move("")
+				_press("jump", 380)
+				return
+			continue
 		if k == "row":
 			var head := _spawn_x(s)
 			var fac := float(s.get("facing"))
@@ -321,8 +378,9 @@ func _policy(now: int) -> void:
 						# Never walk through another spot on the way.
 						if absf(y - px) >= o[1] and (y - px) * (c - px) > 0.0 and absf(y - px) < absf(c - px):
 							ok = false
-					# Never step into the guardian's body.
-					if absf(c - _g.global_position.x) < 72.0 or ((c - px) * (_g.global_position.x - px) > 0.0 and absf(_g.global_position.x - px) < absf(c - px) + 40.0):
+					# Never step into the guardian's body; a diving one is in the air, and a cornered Ivo runs out under it.
+					var diving: bool = _g.current_attack() != null and _g.current_attack().resource_path.get_file() == "autumn_dive.tres"
+					if not diving and (absf(c - _g.global_position.x) < 72.0 or ((c - px) * (_g.global_position.x - px) > 0.0 and absf(_g.global_position.x - px) < absf(c - px) + 40.0)):
 						ok = false
 					if arena.size.x > 0.0 and (c < arena.position.x + 16.0 or c > arena.end.x - 16.0):
 						ok = false
@@ -338,13 +396,74 @@ func _policy(now: int) -> void:
 		if _moving != "" and _last_threat.begins_with("spot"):
 			_move("")
 			return
-	if row_near:
+	if row_near or blade_near:
 		_move("")
 		return
 	# 2. The guardian's own move.
 	var ca: Resource = _g.current_attack()
 	var an := ca.resource_path.get_file().get_basename() if ca else ""
 	var clk := _clock()
+	if an != "autumn_hop":
+		_hop_dir = ""
+	if an == "autumn_gust" and _learned and clk == "S":
+		# An owned gust carries Ivo to the wall; its floor blow opens 2.0 s in: jump it there.
+		var gel: float = _g.get_node("AI").swing_elapsed()
+		_last_threat = "gust el=%.2f" % gel
+		if _climb and gel >= 1.2:
+			# Climb: hold into the nearest wall and tap jump every 0.5 s through the floor blow.
+			var wall := "move_left" if px - arena.position.x < arena.end.x - px else "move_right"
+			_move(wall)
+			if now >= _next_jump:
+				_next_jump = now + 500
+				print("[pl] t=%.3f CLIMB gust el=%.2f y=%.1f floor=%s" % [_el(), gel, _p.global_position.y, on_floor])
+				_press("jump", 300)
+			return
+		_move("")
+		if gel >= 1.85 and gel < 2.1 and on_floor and now >= _next_jump:
+			_next_jump = now + 700
+			print("[pl] t=%.3f JUMP gust el=%.2f" % [_el(), gel])
+			_press("jump", 400)
+		return
+	if an == "autumn_overhead_claw" and pinned and (clk == "T" or clk == "S") and ad < 150.0:
+		# Pinned under the claw: a double jump over its 150 px reach.
+		_last_threat = "claw double jump"
+		_move("")
+		if clk == "T" and now >= _next_jump:
+			_next_jump = now + 900
+			print("[pl] t=%.3f DOUBLE JUMP claw ad=%.1f floor=%s" % [_el(), ad, on_floor])
+			# Still in the air from jumping the sweep: the air jump alone.
+			if on_floor:
+				_press("jump", 380)
+				_press("jump", 380, 420)
+			else:
+				_press("jump", 380)
+		return
+	if an in SWEEP_STRING and (_sweep_mode == "jump" or pinned) and an != "autumn_overhead_claw" and (clk == "T" or clk == "S") and ad < 150.0:
+		_last_threat = "%s jump" % an
+		_move("")
+		var sleft := float(_g.get_node("AI").get("_clock").get("_left")) if clk == "T" else 0.0
+		if clk == "T" and sleft < 0.12 and on_floor and now >= _next_jump:
+			_next_jump = now + 600
+			print("[pl] t=%.3f JUMP %s ad=%.1f left=%.2f" % [_el(), an, ad, sleft])
+			_press("jump", 380)
+		return
+	if an in SWEEP_STRING and (clk == "T" or clk == "S") and ad < 150.0:
+		_last_threat = "%s back off" % an
+		_move(away)
+		_backoff_until = now + 250
+		return
+	if an == "autumn_hop" and (clk == "T" or clk == "S"):
+		# Under the middle of its arc from its comfort distance out; from closer, away unless the wall is behind. The
+		# direction is chosen once per hop, as it winds up: the hop closes the distance and passes over Ivo.
+		if _hop_dir == "":
+			_hop_dir = toward if (pinned or ad >= 100.0) else away
+		var under := _hop_dir == toward
+		_last_threat = "hop under" if under else "hop away"
+		_move(("" if clk == "T" else _hop_dir) if under else _hop_dir)
+		return
+	if (an == "autumn_dive" or an == "autumn_leaf_blades" or an == "autumn_scatter") and clk == "T":
+		_move("")
+		return
 	if an in CHARGES and (ca.get("recall") == null or _learned) and (clk == "T" or clk == "S"):
 		var cel: float = _g.get_node("AI").swing_elapsed() if clk == "S" else 0.0
 		_last_threat = "charge %s el=%.2f" % [_charge_mode, cel]

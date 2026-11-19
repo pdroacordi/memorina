@@ -7,7 +7,7 @@
 [ext_resource type="Script" path="res://scenes/world/rooms/arena.gd" id="30_arena"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_arena"]
-size = Vector2(1280, 384)
+size = Vector2(1184, 384)
 
 [node name="Contents" type="Node2D"]
 
@@ -19,7 +19,7 @@ script = ExtResource("room_map_node")
 map = ExtResource("room_map")
 
 [node name="Arena" type="Area2D" parent="."]
-position = Vector2(640, 192)
+position = Vector2(688, 192)
 monitoring = false
 monitorable = false
 script = ExtResource("30_arena")

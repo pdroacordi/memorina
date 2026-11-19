@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_follow_up.gd" id="2_follow"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="3_spawn"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/blink_motion.gd" id="4_blink"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/autumn_guardian/spawns/scatter_swirl.tscn" id="5_swirl"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_sweep.tres" id="6_sweep"]
+
+[sub_resource type="Resource" id="blink"]
+script = ExtResource("4_blink")
+at = 0.3
+behind = 64.0
+min_gap = 32.0
+fade = 0.15
+
+[sub_resource type="Resource" id="swirl"]
+script = ExtResource("3_spawn")
+scene = ExtResource("5_swirl")
+placement = 5
+
+[sub_resource type="Resource" id="to_sweep"]
+script = ExtResource("2_follow")
+attack = ExtResource("6_sweep")
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 7
+windup_index = 6
+duration = 0.7
+telegraph = 0.4
+attack_range = 240.0
+cooldown = 0.8
+recovery = 0.4
+recovery_index = 6
+from_stage = 2
+weight = 0.8
+repeats = false
+strikes = false
+follow_ups = Array[ExtResource("2_follow")]([SubResource("to_sweep")])
+motion = SubResource("blink")
+spawns = Array[ExtResource("3_spawn")]([SubResource("swirl")])

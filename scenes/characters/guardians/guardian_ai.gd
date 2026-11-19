@@ -40,6 +40,10 @@ const RECOVER := 4
 var attacks: Array[GuardianAttack] = []
 ## Ordinary moves between two scheduled recall moves; 0 disables the schedule.
 var recall_after_attacks: int = 0
+## Strings whose first move a pick avoids while another is left, pushed in from GuardianStats; 0 avoids none.
+var recent_strings: int = 0
+## A far pick may choose, by weight, a move that does not reach, and walk in for it; pushed in from GuardianStats.
+var far_walks_in: bool = false
 ## False outside the pressure phase: the guardian stands where it is.
 var active: bool = false
 ## Multiplier on every cooldown; the guardian lowers it as the fight's
@@ -99,6 +103,9 @@ var _far_pick: GuardianAttack = null
 var _last_end: GuardianAttack = null
 ## `recall_owned` as the strike under way began: a press landing mid-strike does not let a teaching strike chain.
 var _owned_at_strike: bool = false
+## The first move of the string under way, and of the last `recent_strings` strings, newest last.
+var _root: GuardianAttack = null
+var _recent_roots: Array[GuardianAttack] = []
 
 @onready var _body: Node2D = get_parent()
 @onready var _sight: EnemySight = get_parent().get_node("EnemySight") as EnemySight
@@ -364,6 +371,7 @@ func _start_telegraph(attack: GuardianAttack) -> void:
 	_far_pick = null
 	_current_direction = 0.0
 	_links_done = 1
+	_root = attack
 	_clock.start(attack)
 	_announce(attack)
 
@@ -397,6 +405,7 @@ func _finish_string(attack: GuardianAttack) -> void:
 	else:
 		_since_recall += 1
 	_last_end = attack
+	_remember_root()
 	_pick_next()
 	attack_finished.emit(attack)
 
@@ -429,12 +438,29 @@ func _tallest_reach() -> float:
 func _available() -> Array[GuardianAttack]:
 	return GuardianRepertoire.available(attacks, stage)
 
-## The available moves a pick may choose: all but a last string's end that does not repeat.
+## The available moves a pick may choose: all but a last string's end that does not repeat, and all but the recent
+## strings' first moves while another is left.
 func _choosable() -> Array[GuardianAttack]:
 	var pool := _available()
 	if _last_end != null and not _last_end.repeats and pool.size() > 1:
 		pool.erase(_last_end)
-	return pool
+	if _recent_roots.is_empty():
+		return pool
+	var fresh: Array[GuardianAttack] = []
+	var pickable := false
+	for attack: GuardianAttack in pool:
+		if not _recent_roots.has(attack):
+			fresh.append(attack)
+			pickable = pickable or _weight_of(attack) > 0.0
+	return fresh if pickable else pool
+
+## The finished string's first move joins the recent ones, the oldest leaving past `recent_strings`.
+func _remember_root() -> void:
+	if recent_strings <= 0 or _root == null:
+		return
+	_recent_roots.append(_root)
+	while _recent_roots.size() > recent_strings:
+		_recent_roots.pop_front()
 
 ## A move's pick weight; a recall move whose skill is owned uses its owned weight when it has one.
 func _weight_of(attack: GuardianAttack) -> float:
@@ -495,11 +521,12 @@ func _situational_pick() -> GuardianAttack:
 	_far_pick = null
 	return null
 
-## A move that reaches a far player, chosen by weight once and kept while it still reaches and is available.
+## A move that reaches a far player, chosen by weight once and kept while it still reaches and is available; with
+## `far_walks_in`, any choosable move, kept while choosable (the guardian walks in for one that does not reach).
 func _far_opinion(distance: float) -> GuardianAttack:
 	var reaching: Array[GuardianAttack] = []
 	for attack: GuardianAttack in _choosable():
-		if _weight_of(attack) > 0.0 and attack.attack_range >= distance:
+		if _weight_of(attack) > 0.0 and (far_walks_in or attack.attack_range >= distance):
 			reaching.append(attack)
 	if _far_pick != null and reaching.has(_far_pick):
 		return _far_pick

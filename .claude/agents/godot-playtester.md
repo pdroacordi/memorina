@@ -912,6 +912,18 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - A foreground wait loop is moved to the background after ~175 s even with `timeout 560`. Chain long series in one
     `series.sh` with `run_in_background` and poll its output file with short waits.
 
+- **Learned 2026-11-19 (GRD-15 Leaf feel)**: **`guardian_fight_player_driver.gd`'s Leaf hop dodge is wrong in two ways.** It
+  recomputes "toward" every frame, so once the scarecrow passes over him Ivo turns and walks into the landing box. It also
+  picks under/away only during the hop's telegraph, so a telegraph spent standing for a live blade leaves a stale choice.
+  The session copy (`feel15/drv.gd` in that scratchpad) fixes the direction at the strike's start and adds `PL_CLIMB=1`
+  (hold into the wall and tap jump through an owned gust) and `PL_RECALL_DELAY=<ms>`. With both fixes, a no-god run restored
+  with 1 hit, where the shipped driver died at 13.8 s. Fold them in before trusting a Leaf no-god death.
+  - Its `PL_POGO` landed 0 hits on the Leaf too (as on Bloom): do not judge pogo with it.
+  - orchard_arena: the west lintel (cols 0-2) caps every jump at 74 px for x <= ~-10140, and the FightWall stop is -10196.9.
+    A double jump reaches 202 px at -10135..-10120 and 234 px from -10100. Spawn `[-9574, -1254]`. The first gust's recall
+    opens at the east wall x -9003 about 0.9 s into the strike.
+  - `rtk` mangles `grep "^\[sig\]"` (no output): grep without the `^` anchor, or filter in Python.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

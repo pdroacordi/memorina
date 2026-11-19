@@ -101,6 +101,33 @@ func test_a_dive_rises_hangs_and_lands_on_ivos_spot_inside_the_strike() -> void:
 	assert_vector(path.end_offset()).is_equal(Vector2(200.0, 0.0))
 	assert_bool(path.holds_vertical(0.6)).is_true()
 	assert_float(path.at(0.5).y).override_failure_message("the hang is not up").is_less(-100.0)
+	assert_float(path.at(0.6).x).override_failure_message("rose straight up").is_equal(0.0)
+
+## An approaching dive rises straight up, drifts part of the way across while it hangs, so it comes down steeper, and
+## still lands on Ivo's spot: its body never sweeps low toward him on the way up.
+func test_an_approaching_dive_hangs_part_of_the_way_to_ivo() -> void:
+	var dive := DiveMotion.new()
+	dive.rise_time = 0.4
+	dive.hang = 0.4
+	dive.dive_time = 0.4
+	dive.approach = 0.5
+	var ctx := _ctx(Vector2(500.0, 400.0), 1, Vector2(700.0, 400.0))
+	ctx.duration = 1.2
+	var path := dive.plan(ctx)
+	assert_float(path.at(0.4).x).is_equal_approx(0.0, 0.01)
+	assert_float(path.at(0.8).x).is_equal_approx(100.0, 0.01)
+	assert_float(path.at(0.8).y).is_equal_approx(path.at(0.4).y, 0.01)
+	assert_vector(path.end_offset()).is_equal(Vector2(200.0, 0.0))
+
+## A dive lands on the floor it left even when Ivo is in the air as it starts, after a jump or a double jump.
+func test_a_dive_at_an_airborne_ivo_lands_on_the_floor() -> void:
+	var dive := DiveMotion.new()
+	dive.approach = 0.8
+	for up: float in [140.0, 260.0]:
+		var ctx := _ctx(Vector2(500.0, 400.0), 1, Vector2(700.0, 400.0 - up))
+		ctx.duration = 1.2
+		var path := dive.plan(ctx)
+		assert_vector(path.end_offset()).override_failure_message("Ivo %.0f px up" % up).is_equal(Vector2(200.0, 0.0))
 
 func test_a_blink_takes_the_other_side_when_the_wall_is_close() -> void:
 	var blink := BlinkMotion.new()

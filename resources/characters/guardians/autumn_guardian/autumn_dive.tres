@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="3_spawn"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/dive_motion.gd" id="2_dive"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/autumn_guardian/spawns/dive_shadow.tscn" id="4_shadow"]
+
+[sub_resource type="Resource" id="dive"]
+script = ExtResource("2_dive")
+height = 100.0
+delay = 0.05
+rise_time = 0.3
+hang = 0.4
+dive_time = 0.25
+approach = 0.8
+
+[sub_resource type="Resource" id="shadow"]
+script = ExtResource("3_spawn")
+scene = ExtResource("4_shadow")
+placement = 5
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 6
+windup_index = 5
+duration = 1.2
+telegraph = 0.45
+attack_range = 250.0
+attack_height = 96.0
+cooldown = 0.8
+recovery = 0.6
+recovery_index = 3
+from_stage = 1
+weight = 0.8
+repeats = false
+motion = SubResource("dive")
+spawns = Array[ExtResource("3_spawn")]([SubResource("shadow")])
+knockback_strength = 480.0
+knockback_lift = 200.0

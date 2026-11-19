@@ -6,9 +6,26 @@
 [ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_sweep.tres" id="3_a1"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_gust.tres" id="4_a2"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_hop.tres" id="5_a3"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_leaf_blades.tres" id="6_blades"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_dive.tres" id="7_dive"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_scatter.tres" id="8_scatter"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_stage.gd" id="8_stage"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_guardian_voice.tres" id="9_voice"]
 [ext_resource type="Resource" path="res://resources/music/fight_autumn.tres" id="90_fight_music"]
 [ext_resource type="Resource" path="res://resources/audio/sfx/combat/guardian_sounds.tres" id="95_sounds"]
+
+[sub_resource type="Resource" id="stage_0"]
+script = ExtResource("8_stage")
+
+[sub_resource type="Resource" id="stage_1"]
+script = ExtResource("8_stage")
+cooldown_scale = 0.8
+chain_scale = 1.4
+
+[sub_resource type="Resource" id="stage_2"]
+script = ExtResource("8_stage")
+cooldown_scale = 0.65
+chain_scale = 1.7
 
 [resource]
 script = ExtResource("1_stats")
@@ -16,12 +33,15 @@ music = ExtResource("90_fight_music")
 id = 2
 song = ExtResource("2_song")
 voice = ExtResource("9_voice")
-attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_a1"), ExtResource("4_a2"), ExtResource("5_a3")])
+attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_a1"), ExtResource("4_a2"), ExtResource("7_dive"), ExtResource("5_a3"), ExtResource("6_blades"), ExtResource("8_scatter")])
+stages = Array[ExtResource("8_stage")]([SubResource("stage_0"), SubResource("stage_1"), SubResource("stage_2")])
 hits_to_open = 8
 cycles_to_restore = 3
 call_lead_in = 2.2
 revealed_notes = 5
 recall_after_attacks = 2
+recent_strings = 2
+far_walks_in = true
 comfort_distance = 88.0
 give_ground_distance = 50.0
 pace_time = 0.8

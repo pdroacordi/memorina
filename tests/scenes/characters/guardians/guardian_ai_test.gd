@@ -280,6 +280,65 @@ func test_a_move_that_does_not_repeat_never_follows_itself() -> void:
 	_ai.set(&"_last_end", lash)
 	assert_object(_ai.call(&"_far_opinion", 200.0)).is_same(dash)
 
+## With `recent_strings`, the first moves of the last strings are skipped by every pick while another pickable move is
+## left; with 0 nothing changes (playtests/2026-11-18-grd15-leaf-feel: a blades, hop loop for all of stage 0).
+func test_a_pick_avoids_the_recent_strings_first_moves() -> void:
+	var blades := _far_move(240.0, 1.0)
+	var hop := _far_move(250.0, 1.0)
+	var sweep := _far_move(100.0, 1.0)
+	_ai.attacks = [blades, hop, sweep]
+	_ai.comfort_distance = 82.0
+	_ai.recent_strings = 2
+	_ai.set(&"_recent_roots", [blades, hop] as Array[GuardianAttack])
+	for i: int in 20:
+		seed(i)
+		assert_object(_ai.call(&"_weighted_pick")).is_same(sweep)
+	# Far away only the recent moves reach: the far pick has nothing, and the guardian walks in for the sweep.
+	_place_player(200.0)
+	assert_object(_ai.call(&"_far_opinion", 200.0)).is_null()
+	# Nothing pickable left: every move is back in the pool.
+	_ai.set(&"_recent_roots", [blades, hop, sweep] as Array[GuardianAttack])
+	assert_int((_ai.call(&"_choosable") as Array).size()).is_equal(3)
+	_ai.recent_strings = 0
+	_ai.set(&"_recent_roots", [] as Array[GuardianAttack])
+	assert_int((_ai.call(&"_choosable") as Array).size()).is_equal(3)
+
+## With `far_walks_in` a far Ivo can draw a close move by weight, kept while he stays far; without it only a reaching
+## move is drawn (playtests/2026-11-18-grd15-leaf-feel: 0 sweeps in 64 stage-0 strings against a dodger).
+func test_a_far_pick_may_walk_in_for_a_close_move() -> void:
+	var far := _far_move(240.0, 1.0)
+	var sweep := _far_move(100.0, 3.0)
+	_ai.attacks = [far, sweep]
+	_ai.comfort_distance = 82.0
+	_place_player(200.0)
+	assert_object(_ai.call(&"_far_opinion", 200.0)).is_same(far)
+	_ai.far_walks_in = true
+	var drawn := {}
+	for i: int in 40:
+		seed(i)
+		_ai.set(&"_far_pick", null)
+		drawn[_ai.call(&"_far_opinion", 200.0)] = true
+	assert_bool(drawn.has(sweep)).is_true()
+	assert_bool(drawn.has(far)).is_true()
+	_ai.set(&"_far_pick", sweep)
+	for i: int in 10:
+		assert_object(_ai.call(&"_far_opinion", 200.0)).override_failure_message("re-rolled a kept choice").is_same(sweep)
+
+## A finished string's first move is remembered, the oldest dropped past `recent_strings`; with 0 none is.
+func test_finished_strings_feed_the_recent_moves() -> void:
+	var a := _far_move(120.0, 1.0)
+	var b := _far_move(120.0, 1.0)
+	var c := _far_move(120.0, 1.0)
+	_ai.recent_strings = 2
+	for move: GuardianAttack in [a, b, c]:
+		_ai.set(&"_root", move)
+		_ai.call(&"_remember_root")
+	assert_array(_ai.get(&"_recent_roots") as Array).is_equal([b, c])
+	_ai.recent_strings = 0
+	_ai.set(&"_recent_roots", [] as Array[GuardianAttack])
+	_ai.call(&"_remember_root")
+	assert_array(_ai.get(&"_recent_roots") as Array).is_empty()
+
 func _far_move(reach: float, weight: float) -> GuardianAttack:
 	var move := GuardianAttack.new()
 	move.telegraph = 0.2

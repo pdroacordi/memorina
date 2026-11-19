@@ -7,5 +7,7 @@ class_name Arena extends Area2D
 
 ## World-space rectangle that confines the fight.
 func bounds() -> Rect2:
-	var shape: RectangleShape2D = _shape_node.shape
-	return Rect2(_shape_node.global_position - shape.size * 0.5, shape.size)
+	# Read before its own _ready too: a guardian earlier in the tree asks from its _ready.
+	var node := _shape_node if _shape_node != null else $CollisionShape2D as CollisionShape2D
+	var shape: RectangleShape2D = node.shape
+	return Rect2(node.global_position - shape.size * 0.5, shape.size)

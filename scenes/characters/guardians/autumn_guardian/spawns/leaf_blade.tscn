@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/boomerang/boomerang.tscn" id="1_base"]
+
+[node name="LeafBlade" instance=ExtResource("1_base")]
+warn = 0.1
+live = 1.5
+fade = 0.1
+light = Color(0.96, 0.78, 0.42, 1)
+dark = Color(0.36, 0.2, 0.1, 1)
+reach = 320.0
+past = 64.0
+height = 72.0
+return_height = 14.0

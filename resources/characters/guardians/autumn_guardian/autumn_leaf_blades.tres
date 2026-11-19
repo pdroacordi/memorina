@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="3_spawn"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/autumn_guardian/spawns/leaf_blade.tscn" id="4_blade"]
+
+[sub_resource type="Resource" id="blades"]
+script = ExtResource("3_spawn")
+scene = ExtResource("4_blade")
+at = 0.2
+count = 3
+interval = 0.12
+offset = Vector2(24, 0)
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 5
+windup_index = 4
+duration = 0.6
+telegraph = 0.45
+attack_range = 240.0
+attack_height = 72.0
+cooldown = 0.8
+recovery = 0.4
+recovery_index = 4
+repeats = false
+strikes = false
+spawns = Array[ExtResource("3_spawn")]([SubResource("blades")])

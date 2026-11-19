@@ -92,6 +92,8 @@ var _floor_y: float = 0.0
 ## One life note per string: the move box, the contact box and the spawns refuse a link's hit on a target the string
 ## already hurt.
 var _string_gate := HitGate.new()
+## Ivo died: no clock of the fight advances, the AI stays off and nothing is staged on him until the world is rebuilt.
+var _player_dead: bool = false
 ## The body spares an Ivo a no-contact move carried it onto (GuardianBodyContact).
 var _body_contact := GuardianBodyContact.new()
 ## The string under way has a move whose own box is its only hit.
@@ -133,6 +135,10 @@ static func fight_at(tree: SceneTree, point: Vector2) -> bool:
 			return true
 	return false
 
+## The sight radius, px, that covers `arena` from any point in it; never below `current`.
+static func sight_radius_for(current: float, arena: Rect2) -> float:
+	return maxf(current, arena.size.length())
+
 func _enter_tree() -> void:
 	add_to_group(GROUP)
 	if cutscene_id != &"":
@@ -148,6 +154,8 @@ func _ready() -> void:
 	_ai.recall_owned = not _recall_still_needed()
 	_ai.attacks = stats.attacks
 	_ai.recall_after_attacks = stats.recall_after_attacks
+	_ai.recent_strings = stats.recent_strings
+	_ai.far_walks_in = stats.far_walks_in
 	_ai.comfort_distance = stats.comfort_distance
 	_ai.give_ground_distance = stats.give_ground_distance
 	_ai.pace_time = stats.pace_time
@@ -165,6 +173,7 @@ func _ready() -> void:
 	_shield_rest_radius = _shield.radius
 	_sprite_rest = _sprite.position
 	_solid_mask = collision_mask
+	_fit_sight_to_arena()
 	_floor_y = global_position.y
 	_hitbox.gate = _string_gate
 	_contact.gate = _string_gate
@@ -223,7 +232,7 @@ func _after_move(delta: float) -> void:
 	if _bowing and not _still_bowing():
 		_bowing = false
 		_unstage()
-	if _lucidity_wait > 0.0:
+	if _lucidity_wait > 0.0 and not _player_dead:
 		_lucidity_wait = maxf(_lucidity_wait - delta, 0.0)
 		if is_zero_approx(_lucidity_wait):
 			_lucidity_wait = 0.0
@@ -234,16 +243,16 @@ func _after_move(delta: float) -> void:
 		# left the floor yet, from reading as an arrival.
 		if (is_on_floor() and velocity.y >= 0.0) or _leap_left <= 0.0:
 			_finish_lucidity_leap()
-	# The window ran out: the same failure as a wrong note, closed the same way.
-	if _fight.tick(delta):
+	# The window ran out: the same failure as a wrong note, closed the same way. A dead Ivo stops every clock.
+	if not _player_dead and _fight.tick(delta):
 		_close_call(false)
-	elif _fight.is_window_open():
+	elif not _player_dead and _fight.is_window_open():
 		# The one clock, read where it is ticked. Nothing downstream keeps a
 		# copy of it, so the cadence is nobody's business but the meter's.
 		_player.update_call_window(_fight.window_fraction())
 	# Dangerous to touch only while it fights; a lucid or restored guardian can
 	# be walked up to. Not RESET-owned, so this write is the script's.
-	_contact.monitoring = _fight.phase() == GuardianFight.Phase.PRESSURE and body_hurts()
+	_contact.monitoring = _fight.phase() == GuardianFight.Phase.PRESSURE and body_hurts() and not _player_dead
 	_update_shield(delta)
 
 ## Leaving a room during a call must stop the phrase and release its camera state.
@@ -381,6 +390,7 @@ func _on_player_entered() -> void:
 	_player.call_progress.connect(_on_call_progress)
 	_player.sequence_failed.connect(_on_player_sequence_failed)
 	_player.skill_recalled.connect(_on_skill_recalled)
+	_player.died.connect(_on_player_died)
 	_ai.overhead_band = GuardianAI.overhead_band_for(body_rect().size.x, _player.body_rect().size.x)
 	_fight.begin()
 	_ai.active = not _fight.is_opening()
@@ -477,6 +487,7 @@ func _on_attack_started(attack: GuardianAttack) -> void:
 
 func _on_attack_finished(_attack: GuardianAttack) -> void:
 	_recall_due = null
+	_hitbox.spared = null
 	_stop_telegraph()
 	_mover.end()
 
@@ -532,8 +543,24 @@ func _stop_telegraph() -> void:
 ## opens the window: the guardian is shaken by what it forced.
 func _on_skill_recalled(_skill: Enums.PlayerSkill) -> void:
 	_ai.recall_owned = not _recall_still_needed()
+	# An answered recall is never punished by the move that asked for it, however early it came
+	# (bugs/a-prompt-answer-to-the-leaf-gust-recall-slides-ivo-back-into-its-floor-blow).
+	var attack := _ai.current_attack
+	if attack != null and attack.recall != null and _ai.is_swinging():
+		_hitbox.spared = _player.hurtbox
 	if _fight.skill_recalled():
 		_open_lucidity()
+
+## Ivo died: the fight stops where it stands while the world fades and is rebuilt
+## (bugs/a-guardian-stopped-by-ivos-death-outside-the-pressure-fights-again-in-the-death-fade).
+func _on_player_died() -> void:
+	_player_dead = true
+	_ai.cancel_attack()
+	_ai.active = false
+	_stop_telegraph()
+	_spawner.clear()
+	_lucidity_wait = 0.0
+	_call.stop()
 
 func _open_lucidity() -> void:
 	_ai.cancel_attack()
@@ -613,6 +640,8 @@ func _finish_lucidity_leap() -> void:
 	velocity = Vector2.ZERO
 	landed.emit(global_position, impact)
 	_shake_camera(lucidity_leap_shake)
+	if _player_dead:
+		return
 	face_towards(_player.global_position.x - global_position.x)
 	_stage()
 	# Emitted before the call plays, so a zero lead-in still closes the bark at the first note.
@@ -679,7 +708,7 @@ func _close_call(success: bool) -> void:
 	_player.update_call_window(0.0)
 	_player.close_call(success)
 	_push_tuning()
-	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE
+	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE and not _player_dead
 	call_ended.emit()
 
 func _abandon_call() -> void:
@@ -695,7 +724,7 @@ func _abandon_call() -> void:
 	_unstage()
 
 func _on_opening_ended() -> void:
-	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE
+	_ai.active = _fight.phase() == GuardianFight.Phase.PRESSURE and not _player_dead
 
 ## The fight's stage tuning, into the AI: the cooldown (aggression x stage), the link chances and the string length.
 func _push_tuning() -> void:
@@ -718,7 +747,7 @@ func _on_phase_changed(from: GuardianFight.Phase, to: GuardianFight.Phase) -> vo
 			if from == GuardianFight.Phase.RELAPSE:
 				_hits_since_move = 0
 				_push_tuning()
-				_ai.active = true
+				_ai.active = not _player_dead
 				_unstage()
 
 ## The madness returns: the guardian staggers, groans in its own voice, and
@@ -793,13 +822,13 @@ func _on_lesson_song_played(song: Song, _position: Vector2) -> void:
 	_pulse_emitter.spawn_pulse(song, global_position)
 
 func _frame() -> void:
-	if _framed:
+	if _framed or _player_dead:
 		return
 	_framed = true
 	_player.frame_call(self)
 
 func _stage() -> void:
-	if _staged:
+	if _staged or _player_dead:
 		return
 	_staged = true
 	_framed = true
@@ -817,6 +846,19 @@ func _unstage() -> void:
 	_framed = false
 	if is_instance_valid(_player):
 		_player.unstage_call()
+
+## Sight reaches every point of its arena from anywhere in it, so no move can carry Ivo out of it
+## (bugs/the-leaf-gust-blows-ivo-out-of-the-guardians-sight-and-the-fight-stops).
+func _fit_sight_to_arena() -> void:
+	var node := _sight.get_node(^"CollisionShape2D") as CollisionShape2D
+	var circle := node.shape as CircleShape2D
+	if circle == null:
+		return
+	var radius := sight_radius_for(circle.radius, arena_bounds())
+	if radius > circle.radius:
+		circle = circle.duplicate() as CircleShape2D
+		circle.radius = radius
+		node.shape = circle
 
 ## True while any of this guardian's moves still has a skill to teach.
 func _recall_still_needed() -> bool:

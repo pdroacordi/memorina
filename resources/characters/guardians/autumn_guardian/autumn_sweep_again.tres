@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_follow_up.gd" id="2_follow"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_overhead_claw.tres" id="3_claw"]
+
+[sub_resource type="Resource" id="to_claw"]
+script = ExtResource("2_follow")
+attack = ExtResource("3_claw")
+chance = 0.6
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 3
+windup_index = 1
+duration = 0.5
+telegraph = 0.3
+attack_range = 108.0
+attack_height = 28.0
+cooldown = 0.6
+recovery = 0.35
+recovery_index = 0
+weight = 0.0
+follow_ups = Array[ExtResource("2_follow")]([SubResource("to_claw")])
+knockback_strength = 380.0
+knockback_lift = 120.0

@@ -59,6 +59,8 @@ func _timeline(stats: GuardianStats) -> Array[String]:
 	var attacks := stats.attacks
 	_ai.attacks = attacks
 	_ai.recall_after_attacks = stats.recall_after_attacks
+	_ai.recent_strings = stats.recent_strings
+	_ai.far_walks_in = stats.far_walks_in
 	_ai.comfort_distance = stats.comfort_distance
 	_ai.give_ground_distance = stats.give_ground_distance
 	_ai.pace_time = stats.pace_time

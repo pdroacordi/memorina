@@ -126,17 +126,22 @@ func _place_hit(t: float) -> void:
 ## A floor warning across `from_x..to_x`: a light line with a dark rim over the grass, and light sparks rising to it
 ## as `progress` (0..1) grows, alternating on the scaled clock.
 func draw_floor_warning(from_x: float, to_x: float, progress: float) -> void:
+	draw_floor_warning_on(self, from_x, to_x, progress, _t, light, dark)
+
+## The floor warning drawn on any `canvas` (a GustStream's blow too), `t` scaled s into it.
+static func draw_floor_warning_on(canvas: CanvasItem, from_x: float, to_x: float, progress: float, t: float,
+		light_colour: Color, dark_colour: Color) -> void:
 	var top := -WARN_RISE
-	draw_rect(snapped_rect(Rect2(from_x - 2.0, top - 2.0, to_x - from_x + 4.0, 6.0)), dark)
-	draw_rect(snapped_rect(Rect2(from_x, top, to_x - from_x, 2.0)), light)
-	var even := int(_t * 12.0) % 2 == 0
+	canvas.draw_rect(snapped_rect(Rect2(from_x - 2.0, top - 2.0, to_x - from_x + 4.0, 6.0)), dark_colour)
+	canvas.draw_rect(snapped_rect(Rect2(from_x, top, to_x - from_x, 2.0)), light_colour)
+	var even := int(t * 12.0) % 2 == 0
 	var rise := WARN_RISE * clampf(progress, 0.0, 1.0)
 	var x := from_x
 	var k := 0
 	while x <= to_x:
 		var tall := rise if (k % 2 == 0) == even else rise * 0.6
-		draw_rect(snapped_rect(Rect2(x - 2.0, -tall, 4.0, tall)), dark)
-		draw_rect(snapped_rect(Rect2(x - 1.0, -tall, 2.0, tall)), light)
+		canvas.draw_rect(snapped_rect(Rect2(x - 2.0, -tall, 4.0, tall)), dark_colour)
+		canvas.draw_rect(snapped_rect(Rect2(x - 1.0, -tall, 2.0, tall)), light_colour)
 		x += 6.0
 		k += 1
 

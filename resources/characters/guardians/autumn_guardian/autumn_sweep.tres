@@ -1,13 +1,25 @@
 [gd_resource type="Resource" script_class="GuardianAttack" format=3]
 
 [ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_follow_up.gd" id="2_follow"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/autumn_guardian/autumn_sweep_again.tres" id="3_again"]
+
+[sub_resource type="Resource" id="to_sweep_again"]
+script = ExtResource("2_follow")
+attack = ExtResource("3_again")
+chance = 0.65
 
 [resource]
 script = ExtResource("1_attack")
-duration = 1.0
-telegraph = 0.5
+windup_index = 0
+duration = 0.5
+telegraph = 0.4
 attack_range = 108.0
-cooldown = 1.6
-weight = 1.5
+attack_height = 28.0
+cooldown = 0.6
+recovery = 0.35
+recovery_index = 0
+weight = 2.0
+follow_ups = Array[ExtResource("2_follow")]([SubResource("to_sweep_again")])
 knockback_strength = 380.0
 knockback_lift = 120.0

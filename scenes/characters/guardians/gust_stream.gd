@@ -16,6 +16,11 @@ class_name GustStream extends Node2D
 	Color("f0d9a0"), Color("5e3219"), Color("e8b860"), Color("8a4022"),
 ])
 
+## Scaled s into the strike the floor blow lands; must match the gust clip's hit window (autumn_guardian_kit_test).
+@export var blow_at: float = 2.0
+## Scaled s the floor is marked before the blow lands.
+@export var warn_time: float = 0.6
+
 ## Seconds the stream has blown, on the scaled clock.
 var _clock: float = 0.0
 
@@ -39,6 +44,18 @@ func _draw() -> void:
 	if not visible:
 		return
 	var side := float(_guardian.facing)
+	if _clock >= blow_at - warn_time and _clock < blow_at:
+		var far := side * reach
+		var from := minf(0.0, far)
+		var to := maxf(0.0, far)
+		# Only over the arena's floor: the blow's band runs past its walls.
+		var arena := _guardian.arena_bounds()
+		if arena.size.x > 0.0:
+			from = maxf(from, arena.position.x - global_position.x)
+			to = minf(to, arena.end.x - global_position.x)
+		if to > from:
+			SpawnedAttack.draw_floor_warning_on(self, from, to, (_clock - blow_at + warn_time) / warn_time, _clock,
+					colours[0], colours[1])
 	for i: int in leaf_count:
 		# Each leaf has its own lane and offset, so the stream reads as many leaves, not a line.
 		var lane := fposmod(float(i) * 0.618, 1.0)

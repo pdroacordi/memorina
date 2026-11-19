@@ -1,0 +1,10 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/floor_shadow/floor_shadow.tscn" id="1_base"]
+
+[node name="DiveShadow" instance=ExtResource("1_base")]
+warn = 1.0
+fade = 0.15
+light = Color(0.96, 0.78, 0.42, 1)
+dark = Color(0.2, 0.1, 0.05, 1)
+width = 128.0

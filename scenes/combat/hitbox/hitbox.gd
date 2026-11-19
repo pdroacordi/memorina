@@ -24,6 +24,8 @@ const INSIDE_PUSH_Y := 0.35
 
 ## Refuses a hit a string already paid for; null lets every hit through (a guardian's move box sets it).
 var gate: HitGate = null
+## A hurtbox this box never hits; null spares none. Its owner sets and clears it (a guardian whose recall was answered).
+var spared: Area2D = null
 
 ## Hurtboxes struck since monitoring last turned on, by instance id.
 var _struck: Dictionary[int, bool] = {}
@@ -52,7 +54,7 @@ func _on_area_entered(area: Area2D) -> void:
 func _hit(area: Area2D) -> void:
 	if not (area is Hurtbox):
 		return
-	if gate != null and not gate.allows(area):
+	if area == spared or (gate != null and not gate.allows(area)):
 		return
 
 	var knockback: Vector2 = Vector2.ZERO

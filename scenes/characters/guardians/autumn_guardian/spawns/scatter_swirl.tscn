@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/leaf_swirl/leaf_swirl.tscn" id="1_base"]
+
+[node name="ScatterSwirl" instance=ExtResource("1_base")]
+warn = 0.45
+fade = 0.25
+light = Color(0.96, 0.78, 0.42, 1)
+dark = Color(0.36, 0.2, 0.1, 1)
+width = 48.0
+height = 156.0

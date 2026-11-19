@@ -37,6 +37,13 @@ extends Resource
 ## Ordinary attacks between recalls; a recall also occurs as soon as the pressure threshold is met.
 @export var recall_after_attacks: int = 3
 
+@export_group("Variety")
+## Strings whose first move a pick avoids unless nothing else is left; 0 avoids none (GuardianAI._choosable).
+@export_range(0, 4) var recent_strings: int = 0
+## A far Ivo may also draw, by weight, a move that does not reach him, and the guardian walks in for it; false keeps
+## the far pick to the moves that reach (GuardianAI._far_opinion).
+@export var far_walks_in: bool = false
+
 @export_group("Movement")
 ## Desired spacing in world pixels during cooldown; 0 disables pacing.
 @export var comfort_distance: float = 140.0

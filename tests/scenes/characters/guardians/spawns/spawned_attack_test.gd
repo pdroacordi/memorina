@@ -81,3 +81,23 @@ func test_a_lob_leaves_a_patch_where_it_lands() -> void:
 	var patch := holder.get_child(holder.get_child_count() - 1) as FloorPatch
 	assert_object(patch).is_not_null()
 	assert_float(patch.position.x).is_equal_approx(200.0, 0.01)
+
+## A blade with `past` turns that far beyond Ivo as he stood, held inside its reach and the arena's wall; without it
+## it always flies its reach (GRD-15).
+func test_a_blade_turns_past_ivo_and_comes_back_at_its_return_height() -> void:
+	var blade := (load(KINDS[2]) as PackedScene).instantiate() as Boomerang
+	blade.context = SpawnContext.make(Vector2.ZERO, 1, Vector2(100.0, 0.0), Rect2(), 0.0)
+	assert_float(blade.turn_reach()).is_equal(blade.reach)
+	blade.past = 64.0
+	blade.reach = 320.0
+	assert_float(blade.turn_reach()).is_equal(164.0)
+	blade.context = SpawnContext.make(Vector2.ZERO, 1, Vector2(100.0, 0.0), Rect2(-500.0, -400.0, 640.0, 400.0), 0.0)
+	assert_float(blade.turn_reach()).is_equal(140.0 - blade.wall_margin)
+	# A wall right behind Ivo: it turns half its past beyond him, into the wall, not on top of him.
+	blade.context = SpawnContext.make(Vector2.ZERO, 1, Vector2(100.0, 0.0), Rect2(-500.0, -400.0, 608.0, 400.0), 0.0)
+	assert_float(blade.turn_reach()).is_equal(132.0)
+	blade.height = 72.0
+	blade.return_height = 14.0
+	assert_float(blade.height_at(0.2)).is_equal(72.0)
+	assert_float(blade.height_at(0.8)).is_equal(14.0)
+	blade.free()
