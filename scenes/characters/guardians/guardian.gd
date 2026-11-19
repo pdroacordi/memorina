@@ -360,10 +360,6 @@ func call_phrase(song: Song) -> void:
 	if _fight.is_window_open():
 		_fight.open_window(stats.call_lead_in + _call.duration())
 
-## The AI's moves from now on (the Finale's revealed moves).
-func set_attacks(attacks: Array[GuardianAttack]) -> void:
-	_ai.attacks = attacks
-
 ## A lucidity that ends with no answer, cycle or relapse: back to pressure where the bodies stand (the revelation).
 func end_lucidity_without_answer() -> void:
 	_fight.dismiss()
@@ -746,10 +742,14 @@ func _on_opening_ended() -> void:
 
 ## The fight's stage tuning, into the AI: the cooldown (aggression x stage), the link chances and the string length.
 func _push_tuning() -> void:
+	if _finale != null:
+		_fight.set_extra_stages(_finale.extra_stages())
 	_ai.cooldown_scale = _fight.cooldown_scale()
 	_ai.stage = _fight.stage()
 	_ai.chain_scale = _fight.chain_scale()
 	_ai.max_links = _fight.max_links()
+	_ai.walk_scale = _fight.walk_scale()
+	_ai.recovery_scale = _fight.recovery_scale()
 
 ## The fight's own transitions, as opposed to the ones this node drives: the
 ## relapse begins at an answer and ends on its own clock.

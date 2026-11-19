@@ -4,12 +4,12 @@ extends Resource
 
 ## Track B, the season the mentor tried to hold ("Primavera (Recommended)", user, 2026-10-30).
 @export var second_song: Song
-## Normal winter lucidity windows before the revelation; at least one (design 5.1).
+## Winter windows answered before the revelation; at least one, and `cycles_to_restore` is one more (design 5.1).
 @export var winter_cycles: int = 1
 ## Notes the revelation takes to reach its peak.
 @export var revelation_notes: int = 3
-## Real seconds after which the revelation peaks with no notes played.
-@export var revelation_max_seconds: float = 5.0
+## Real seconds from the revelation's answer window to its peak with no notes played: time to play its notes.
+@export var revelation_max_seconds: float = 4.0
 ## Real seconds of the freeze frame at the shatter.
 @export var freeze_frame_seconds: float = 0.3
 ## Real seconds the revelation's effects take to settle after the shatter.
@@ -24,8 +24,6 @@ extends Resource
 @export var veil_per_mixed: float = 0.35
 ## The final call, phrase by phrase, after a track is chosen (design drafts/musica_aiva.md).
 @export var final_phrases: Array[Song] = []
-## The moves from the revelation on: the winter moves and the second season's.
-@export var revealed_attacks: Array[GuardianAttack] = []
 @export var dissonance_color: Color = Color(0.62, 0.46, 0.78)
 ## Played when the last phrase is answered, before the restoration, which GuardianFinale chains on its recorded end
 ## (architecture/story42-the-final-fragment); null plays the restoration at once.

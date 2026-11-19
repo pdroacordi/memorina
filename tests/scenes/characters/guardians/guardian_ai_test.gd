@@ -191,6 +191,24 @@ func test_a_player_above_the_lower_moves_draws_the_tall_one() -> void:
 	_ai.tick(STEP)
 	assert_object(_ai.current_attack).is_same(tall)
 
+## Equally tall moves over a jumping player are drawn by weight, not taken in array order: in order, with
+## `recent_strings` 2, the mentor cycled three of them three times running (the GRD-17 fix round).
+func test_equally_tall_overhead_moves_are_drawn_by_weight() -> void:
+	var low := _far_move(120.0, 5.0)
+	var first := _far_move(120.0, 1.0)
+	var second := _far_move(120.0, 1.0)
+	first.attack_height = 150.0
+	second.attack_height = 150.0
+	_ai.attacks = [low, first, second]
+	_player.global_position = _body.global_position + Vector2(60.0, -120.0)
+	var picked := {}
+	for i: int in 40:
+		_ai.set(&"_next", null)
+		_ai.call(&"_pick_next")
+		picked[_ai.get(&"_next")] = true
+	assert_bool(picked.has(first) and picked.has(second)).is_true()
+	assert_bool(picked.has(low)).is_false()
+
 ## Until its skill is owned the recall move keeps its cadence and its call; once owned, a move with owned numbers is
 ## an ordinary move by its owned weight, and one without keeps today's cadence.
 func test_an_owned_recall_move_leaves_the_cadence_only_with_owned_numbers() -> void:

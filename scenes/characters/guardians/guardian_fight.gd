@@ -29,6 +29,8 @@ var _relapse_left: float = 0.0
 var _drain: float = 1.0
 ## Seconds of the opening hold left; 0 once the guardian may act.
 var _opening_left: float = 0.0
+## Stages taken besides good answers (the finale's revelation); stage() adds them.
+var _extra_stages: int = 0
 
 func _init(stats: GuardianStats) -> void:
 	_stats = stats
@@ -192,9 +194,13 @@ func cooldown_scale() -> float:
 	var stage_scale := tuning.cooldown_scale if tuning != null else 1.0
 	return pow(_stats.cooldown_scale_per_failure, _aggression) * stage_scale
 
-## The cure stage: good answers so far; a failure leaves it.
+## The cure stage: good answers so far plus the extra stages; a failure leaves it.
 func stage() -> int:
-	return _cycles
+	return _cycles + _extra_stages
+
+## Stages the fight has taken besides its good answers; the mentor's revelation is one (GuardianFinale).
+func set_extra_stages(count: int) -> void:
+	_extra_stages = maxi(count, 0)
 
 ## The stage's tuning, the last entry past the end; null when the guardian has none.
 func stage_tuning() -> GuardianStage:
@@ -206,6 +212,16 @@ func stage_tuning() -> GuardianStage:
 func chain_scale() -> float:
 	var tuning := stage_tuning()
 	return tuning.chain_scale if tuning != null else 1.0
+
+## Multiplier on every recovery at this stage.
+func recovery_scale() -> float:
+	var tuning := stage_tuning()
+	return tuning.recovery_scale if tuning != null else 1.0
+
+## Multiplier on the walk toward Ivo at this stage.
+func walk_scale() -> float:
+	var tuning := stage_tuning()
+	return tuning.walk_scale if tuning != null else 1.0
 
 ## Moves in one string at this stage, the first included.
 func max_links() -> int:

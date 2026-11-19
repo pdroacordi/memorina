@@ -1,6 +1,8 @@
 class_name FloorRunner
 extends SpawnedAttack
-## A row of thorns or an ice wave running along the floor away from the guardian; it stops at a gap or the arena's edge.
+## A row of thorns or an ice wave running along the floor away from the guardian. Where it stops (a gap, a wall, the
+## arena's edge or its reach) it ends: its box goes off and it fades, so it never waits on the spot
+## (bugs/the-mentors-ice-wave-parks-at-the-lanterns-west-step-on-a-pinned-ivo).
 
 ## Px it keeps from the arena's wall.
 const EDGE_MARGIN := 8.0
@@ -30,6 +32,17 @@ func run_at(t: float) -> float:
 
 func aimed() -> bool:
 	return true
+
+func is_live(t: float) -> bool:
+	return t >= warn and t < _end_time()
+
+func lifetime() -> float:
+	return _end_time() + fade
+
+## Scaled s at which its box goes off: the end of `live`, or earlier when its head stops.
+func _end_time() -> float:
+	var run := minf(minf(reach, _edge()), _gap_at)
+	return minf(warn + live, warn + run / maxf(speed, 1.0))
 
 func _advance(_delta: float) -> void:
 	if not is_live(_t) or _gap_at < INF:
@@ -67,7 +80,8 @@ func _draw() -> void:
 		return
 	var head := run_at(_t)
 	var tail := maxf(head - TRAIL, 0.0)
-	var fading := clampf(1.0 - (_t - warn - live) / maxf(fade, 0.001), 0.0, 1.0) if _t >= warn + live else 1.0
+	var end := _end_time()
+	var fading := clampf(1.0 - (_t - end) / maxf(fade, 0.001), 0.0, 1.0) if _t >= end else 1.0
 	var step := 8.0
 	var along := tail
 	while along <= head:

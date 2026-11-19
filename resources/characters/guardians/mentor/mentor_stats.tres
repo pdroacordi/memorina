@@ -11,6 +11,12 @@
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_sweep.tres" id="3_sweep"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_slam.tres" id="4_slam"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_spring.tres" id="5_spring"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_glide_sweep.tres" id="6_glide"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_icicle_fall.tres" id="6_icicles"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_thorn_row.tres" id="6_row"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_pounce.tres" id="6_pounce"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_frost_wave.tres" id="6_wave"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_stage.gd" id="8_stage"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_voice.tres" id="9_voice"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/world_restoration.tres" id="10_restoration"]
 [ext_resource type="Resource" path="res://resources/cutscene/story/final_fragment.tres" id="10_fragment"]
@@ -21,9 +27,26 @@
 script = ExtResource("1_finale")
 second_song = ExtResource("2_root")
 final_phrases = Array[ExtResource("1_song")]([ExtResource("2_final_a"), ExtResource("2_final_b")])
-revealed_attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_sweep"), ExtResource("4_slam"), ExtResource("5_spring")])
 final_fragment = ExtResource("10_fragment")
 restoration_scene = ExtResource("10_restoration")
+
+[sub_resource type="Resource" id="stage_0"]
+script = ExtResource("8_stage")
+
+[sub_resource type="Resource" id="stage_1"]
+script = ExtResource("8_stage")
+cooldown_scale = 0.7
+chain_scale = 1.4
+max_links = 4
+walk_scale = 2.0
+
+[sub_resource type="Resource" id="stage_2"]
+script = ExtResource("8_stage")
+cooldown_scale = 0.35
+chain_scale = 2.0
+max_links = 4
+walk_scale = 2.5
+recovery_scale = 0.7
 
 [resource]
 script = ExtResource("1_stats")
@@ -31,12 +54,15 @@ song = ExtResource("2_freeze")
 voice = ExtResource("9_voice")
 finale = SubResource("finale")
 music = ExtResource("11_fight_music")
-attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_sweep"), ExtResource("4_slam")])
+attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_sweep"), ExtResource("6_glide"), ExtResource("4_slam"), ExtResource("6_wave"), ExtResource("6_icicles"), ExtResource("6_row"), ExtResource("6_pounce"), ExtResource("5_spring")])
+stages = Array[ExtResource("8_stage")]([SubResource("stage_0"), SubResource("stage_1"), SubResource("stage_2")])
 hits_to_open = 8
 cycles_to_restore = 2
 call_lead_in = 2.2
 revealed_notes = 3
 recall_after_attacks = 0
+recent_strings = 2
+far_walks_in = true
 comfort_distance = 110.0
 give_ground_distance = 40.0
 pace_time = 1.0

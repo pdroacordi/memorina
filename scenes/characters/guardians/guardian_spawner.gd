@@ -86,6 +86,7 @@ func adopt(spawned: SpawnedAttack, damage: int, knockback_strength: float, knock
 	box.knockback_strength = knockback_strength
 	box.knockback_lift = knockback_lift
 	box.gate = gate
+	box.thrower = _guardian
 	spawned.expired.connect(spawned.queue_free)
 	add_child(spawned)
 

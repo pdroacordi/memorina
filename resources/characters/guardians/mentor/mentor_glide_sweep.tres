@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_follow_up.gd" id="2_follow"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/dash_motion.gd" id="3_dash"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/mentor/mentor_slam.tres" id="4_slam"]
+
+[sub_resource type="Resource" id="to_slam"]
+script = ExtResource("2_follow")
+attack = ExtResource("4_slam")
+chance = 0.6
+
+[sub_resource type="Resource" id="glide"]
+script = ExtResource("3_dash")
+speed = 560.0
+margin = 48.0
+past = -62.0
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 3
+windup_index = 1
+duration = 0.5
+telegraph = 0.45
+attack_range = 200.0
+attack_height = 40.0
+cooldown = 0.7
+recovery = 0.55
+recovery_index = 0
+weight = 0.7
+motion = SubResource("glide")
+follow_ups = Array[ExtResource("2_follow")]([SubResource("to_slam")])
+knockback_strength = 440.0
+knockback_lift = 140.0

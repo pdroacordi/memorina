@@ -22,7 +22,7 @@ const REVELATION_VEIL := 0.6
 var _guardian: Guardian
 var _stats: FinaleStats
 var _finale: FinaleFight
-## Real msec when the revelation's call opened.
+## Real msec when the revelation's answer window opened; 0 while its call still sounds.
 var _revelation_started: int = 0
 var _revelation_notes: int = 0
 
@@ -39,6 +39,7 @@ func _ready() -> void:
 	_finale = FinaleFight.new(_stats, SaveSystem.is_finale_revealed())
 	set_process(false)
 	_guardian.call_ended.connect(_on_call_ended)
+	assert(_guardian.stats.cycles_to_restore == _stats.winter_cycles + 1, "%s: the two-track call must be the last cycle" % _guardian.name)
 	# The fragment ends the same way whoever played it: the victory here, or the lantern's trigger after a quit.
 	var director := CutsceneDirector.find(get_tree())
 	if director != null:
@@ -52,12 +53,16 @@ func is_restored() -> bool:
 func open_call(player: Player) -> void:
 	var fight := _guardian.fight()
 	var total := _guardian.stats.cycles_to_restore
-	match _finale.open_window():
+	match _finale.open_window(fight.cycles()):
 		FinaleFight.Stage.WINTER:
 			player.open_call(_guardian.stats.song, _guardian.stats.revealed_notes, fight.cycles(), total)
 		FinaleFight.Stage.REVELATION:
-			_revelation_started = Time.get_ticks_msec()
+			_revelation_started = 0
 			_revelation_notes = 0
+			# Its clock runs from the window, so the player always gets to play into it (design 02 section 5.1;
+			# bugs/the-mentors-revelation-shatters-before-its-call-opens-a-window).
+			if not player.call_window_opened.is_connected(_on_revelation_window):
+				player.call_window_opened.connect(_on_revelation_window, CONNECT_ONE_SHOT)
 			player.open_call(_guardian.stats.song, 0, fight.cycles(), total, _stats.second_song, false)
 			set_process(true)
 			_sound_track_b()
@@ -123,19 +128,27 @@ func is_performing() -> bool:
 	return director != null and _stats.restoration_scene != null and director.playing() == _stats.restoration_scene
 
 func _process(_delta: float) -> void:
-	if _finale.stage() != FinaleFight.Stage.REVELATION or _finale.is_revealed():
+	# A revelation the player left (a death, the arena) stops here: its clock never shatters a later pressure.
+	if (_finale.stage() != FinaleFight.Stage.REVELATION or _finale.is_revealed()
+			or _guardian.fight().phase() != GuardianFight.Phase.LUCIDITY):
 		set_process(false)
 		return
 	dissonance_changed.emit(_revelation_level() * REVELATION_VEIL, _revelation_level())
 	if _revelation_level() >= 1.0:
 		_shatter(_guardian.fought_player())
 
+## The revelation's answer window opened: its real-time clock starts.
+func _on_revelation_window() -> void:
+	if _finale.stage() == FinaleFight.Stage.REVELATION and not _finale.is_revealed():
+		_revelation_started = Time.get_ticks_msec()
+
 func _revelation_level() -> float:
 	var by_notes := float(_revelation_notes) / maxf(_stats.revelation_notes, 1)
-	var by_time := (Time.get_ticks_msec() - _revelation_started) / 1000.0 / maxf(_stats.revelation_max_seconds, 0.01)
+	var since := Time.get_ticks_msec() - _revelation_started if _revelation_started > 0 else 0
+	var by_time := since / 1000.0 / maxf(_stats.revelation_max_seconds, 0.01)
 	return clampf(maxf(by_notes, by_time), 0.0, 1.0)
 
-## The peak: a freeze frame, then the fight returns where it stood, two-track from now on.
+## The peak: a freeze frame, then the fight returns where it stood, two-track and with the spring moves from now on.
 func _shatter(player: Player) -> void:
 	if _finale.is_revealed():
 		return
@@ -145,8 +158,6 @@ func _shatter(player: Player) -> void:
 	freeze_frame_began.emit(_stats.freeze_frame_seconds)
 	_guardian.freeze_frame(_stats.freeze_frame_seconds)
 	_guardian.end_lucidity_without_answer()
-	if not _stats.revealed_attacks.is_empty():
-		_guardian.set_attacks(_stats.revealed_attacks)
 	dissonance_changed.emit(0.0, 0.0)
 	revealed.emit()
 
@@ -200,6 +211,10 @@ func _play_restoration() -> void:
 	push_error("%s: the restoration scene could not start" % _guardian.name)
 	if director.fade != null and director.fade.is_black():
 		director.fade.to_clear()
+
+## Pressure stages past the good answers: the revelation's one, once it is seen and the winter answered.
+func extra_stages() -> int:
+	return _finale.extra_stages(_guardian.fight().cycles())
 
 func _on_call_ended() -> void:
 	if _call_b != null:

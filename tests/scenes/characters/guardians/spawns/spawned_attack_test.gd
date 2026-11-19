@@ -12,15 +12,16 @@ const KINDS: Array[String] = [
 	"res://scenes/characters/guardians/spawns/light_column/light_column.tscn",
 ]
 const STEP := 1.0 / 60.0
-## A grounded arena with no floor under it: the runner's probe is tested on its own.
+## A grounded arena; the runner runs on the floor `_floor` builds.
 const ARENA := Rect2(-2000.0, -1000.0, 4000.0, 1000.0)
 
 
 func test_every_kind_warns_then_hurts_then_expires() -> void:
+	auto_free(_floor([Rect2(-2000.0, 0.0, 4000.0, 20.0)]))
+	await get_tree().physics_frame
 	for path: String in KINDS:
 		var spawned := (load(path) as PackedScene).instantiate() as SpawnedAttack
 		spawned.context = SpawnContext.make(Vector2.ZERO, 1, Vector2(160.0, 0.0), ARENA, 0.0)
-		spawned.set(&"floor_mask", 0)
 		var expired: Array[bool] = []
 		spawned.expired.connect(func() -> void: expired.append(true))
 		add_child(spawned)
@@ -66,6 +67,33 @@ func test_a_runner_stops_at_the_arena_edge() -> void:
 	assert_float(runner.run_at(10.0)).is_equal(200.0 - FloorRunner.EDGE_MARGIN - runner.width * 0.5)
 	runner.free()
 
+## A runner whose floor ends, or that meets a step (its probe starts inside the step and reads a gap), ends there: its
+## box goes off and it expires early, so it never waits on the spot
+## (bugs/the-mentors-ice-wave-parks-at-the-lanterns-west-step-on-a-pinned-ivo).
+func test_a_runner_ends_where_it_stops() -> void:
+	for blocks: Array in [[Rect2(-200.0, 0.0, 300.0, 20.0)],
+			[Rect2(-200.0, 0.0, 300.0, 20.0), Rect2(100.0, -30.0, 300.0, 50.0)]]:
+		var holder := _floor(blocks)
+		await get_tree().physics_frame
+		var runner := (load(KINDS[0]) as PackedScene).instantiate() as FloorRunner
+		runner.context = SpawnContext.make(Vector2.ZERO, 1, Vector2(160.0, 0.0), ARENA, 0.0)
+		add_child(runner)
+		runner.set_physics_process(false)
+		var t := 0.0
+		var off_at := INF
+		while t < runner.warn + runner.live:
+			runner._physics_process(STEP)
+			t += STEP
+			if t > runner.warn and not runner.hitbox().monitoring and off_at == INF:
+				off_at = t
+		var stop := runner.run_at(t)
+		assert_float(stop).override_failure_message("ran past the stop").is_less(100.0)
+		assert_float(off_at).override_failure_message("still live at %.0f px" % stop).is_less(
+				runner.warn + stop / runner.speed + STEP * 2.0)
+		assert_float(runner.lifetime()).is_less(runner.warn + runner.live + runner.fade)
+		runner.free()
+		holder.free()
+
 func test_a_lob_leaves_a_patch_where_it_lands() -> void:
 	var holder: GuardianSpawner = auto_free(GuardianSpawner.new())
 	add_child(holder)
@@ -101,3 +129,19 @@ func test_a_blade_turns_past_ivo_and_comes_back_at_its_return_height() -> void:
 	assert_float(blade.height_at(0.2)).is_equal(72.0)
 	assert_float(blade.height_at(0.8)).is_equal(14.0)
 	blade.free()
+
+## Static floor blocks on layer 1, the runner's floor mask.
+func _floor(blocks: Array) -> Node2D:
+	var holder := Node2D.new()
+	add_child(holder)
+	for block: Rect2 in blocks:
+		var body := StaticBody2D.new()
+		body.collision_layer = 1
+		var shape := CollisionShape2D.new()
+		var rect := RectangleShape2D.new()
+		rect.size = block.size
+		shape.shape = rect
+		shape.position = block.get_center()
+		body.add_child(shape)
+		holder.add_child(body)
+	return holder

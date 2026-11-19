@@ -85,6 +85,87 @@ func test_the_revelation_shatters_into_pressure_and_is_kept() -> void:
 	assert_int(_mentor.fight().phase()).is_equal(GuardianFight.Phase.PRESSURE)
 	assert_bool(SaveSystem.is_finale_revealed()).is_true()
 	assert_int(_mentor.fight().cycles()).is_equal(1)
+	assert_int(_mentor.fight().stage()).is_equal(2)
+
+## The pressure's stage is the winter answers plus the revelation (systems/guardians, "The mentor's fight"): 0 and 1
+## are winter, 2 adds the spring's moves; a failed winter window keeps stage 0 and is winter again.
+func test_the_revelation_is_the_last_stage_of_a_first_attempt() -> void:
+	_set_up()
+	var ai := _mentor.get_node(^"AI") as GuardianAI
+	assert_int(ai.stage).is_equal(0)
+	_lucid()
+	_finale.open_call(_ivo)
+	_mentor.fight().answer_failed()
+	_mentor.call(&"_close_call", false)
+	_mentor.fight().tick(10.0)
+	assert_int(ai.stage).is_equal(0)
+	_lucid()
+	_finale.open_call(_ivo)
+	assert_bool(_finale.counts_window()).override_failure_message("a failed winter window led to the revelation").is_true()
+	_mentor.fight().answer_succeeded()
+	_mentor.call(&"_close_call", true)
+	_mentor.fight().tick(10.0)
+	assert_int(ai.stage).is_equal(1)
+	_lucid()
+	_finale.open_call(_ivo)
+	for i: int in 3:
+		_finale.mixed(_ivo)
+	assert_int(_mentor.fight().phase()).is_equal(GuardianFight.Phase.PRESSURE)
+	assert_int(ai.stage).is_equal(2)
+	assert_bool(GuardianRepertoire.available(ai.attacks, ai.stage).size() > GuardianRepertoire.available(ai.attacks, 1).size()).is_true()
+
+## A save that saw the revelation in an earlier attempt opens in winter and takes the revelation's stage at the winter
+## answer, with no revelation window.
+func test_a_revealed_save_takes_the_spring_after_the_winter_answer() -> void:
+	SaveSystem.mark_finale_revealed()
+	_set_up()
+	var ai := _mentor.get_node(^"AI") as GuardianAI
+	assert_int(ai.stage).is_equal(0)
+	_lucid()
+	_finale.open_call(_ivo)
+	_mentor.fight().answer_succeeded()
+	_mentor.call(&"_close_call", true)
+	_mentor.fight().tick(10.0)
+	assert_int(ai.stage).is_equal(2)
+
+## A revealed save hears the spring stem when its moves join, not from the fight's start.
+func test_a_revealed_saves_spring_music_waits_for_the_winter_answer() -> void:
+	SaveSystem.mark_finale_revealed()
+	_set_up()
+	_mentor.fight().tick(10.0)
+	var request := Music.playing()
+	assert_object(request).is_not_null()
+	assert_float(float(request.levels.get(&"spring", 0.0))).is_equal(0.0)
+	_lucid()
+	_finale.open_call(_ivo)
+	_mentor.fight().answer_succeeded()
+	_mentor.call(&"_close_call", true)
+	_mentor.fight().tick(10.0)
+	assert_float(float(request.levels.get(&"spring", 0.0))).is_equal(1.0)
+
+## The revelation's clock starts when its answer window opens, never while its call still sounds, so the player can
+## play into it (bugs/the-mentors-revelation-shatters-before-its-call-opens-a-window).
+func test_the_revelation_waits_for_its_window_then_peaks_on_its_clock() -> void:
+	_set_up()
+	_past_winter()
+	assert_bool(_finale.counts_window()).is_false()
+	await await_millis(int(_mentor.stats.finale.revelation_max_seconds * 1000.0) + 300)
+	assert_int(_mentor.fight().phase()).override_failure_message("shattered before its window").is_equal(GuardianFight.Phase.LUCIDITY)
+	_ivo.call_window_opened.emit()
+	await await_millis(int(_mentor.stats.finale.revelation_max_seconds * 1000.0) + 300)
+	assert_int(_mentor.fight().phase()).is_equal(GuardianFight.Phase.PRESSURE)
+	assert_bool(SaveSystem.is_finale_revealed()).is_true()
+
+## A revelation left without its peak (here a failed window) stops its clock: it never shatters the pressure after it.
+func test_a_revelation_left_unpeaked_never_shatters_the_pressure_after_it() -> void:
+	_set_up()
+	_past_winter()
+	_ivo.call_window_opened.emit()
+	_mentor.fight().answer_failed()
+	_mentor.call(&"_close_call", false)
+	await await_millis(int(_mentor.stats.finale.revelation_max_seconds * 1000.0) + 300)
+	assert_bool(SaveSystem.is_finale_revealed()).is_false()
+	assert_int(_mentor.fight().stage()).is_equal(1)
 
 func test_dissonance_hurts_from_the_second_mixed_note_and_a_pure_track_starts_the_final_call() -> void:
 	SaveSystem.mark_finale_revealed()
@@ -130,12 +211,6 @@ func test_the_fight_music_starts_with_the_fight_and_drops_with_the_mentor() -> v
 	await get_tree().process_frame
 	await get_tree().process_frame
 	assert_object(Music.playing()).is_null()
-
-func test_a_revealed_save_starts_the_fight_two_track() -> void:
-	SaveSystem.mark_finale_revealed()
-	_set_up()
-	_lucid()
-	assert_float(Music.playing().levels.get(&"spring", 0.0)).is_equal(1.0)
 
 ## The fight loop plays on through the final call ("a música de luta deve ser um loop enquanto há luta", user, 2026-11-18).
 func test_choosing_a_track_fades_the_spring_and_the_fight_loop_plays_on() -> void:

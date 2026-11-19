@@ -13,6 +13,9 @@ const SPRING_FADE := 2.0
 var _guardian: Guardian
 var _fight_request: MusicRequest
 var _hushed: bool = false
+var _finale: GuardianFinale
+## The spring stem has risen in this fight; it rises once, and a chosen track fades it for good.
+var _spring_risen: bool = false
 
 
 func _ready() -> void:
@@ -22,23 +25,29 @@ func _ready() -> void:
 	_guardian.lucid_landed.connect(_on_lucid_landed.unbind(2))
 	_guardian.call_ended.connect(_on_call_ended)
 	_guardian.restored.connect(_on_restored.unbind(1))
-	var finale := _guardian.get_node_or_null(^"Finale") as GuardianFinale
-	if finale != null:
-		finale.revelation_opened.connect(_on_revelation_opened)
-		finale.track_chosen.connect(_on_track_chosen)
-		finale.freeze_frame_began.connect(_on_freeze_frame)
+	_finale = _guardian.get_node_or_null(^"Finale") as GuardianFinale
+	if _finale != null:
+		_finale.revelation_opened.connect(_on_revelation_opened)
+		_finale.track_chosen.connect(_on_track_chosen)
+		_finale.freeze_frame_began.connect(_on_freeze_frame)
 
 func _exit_tree() -> void:
 	if _hushed:
 		Music.unhush()
 
 func _on_phase_changed(from: GuardianFight.Phase, to: GuardianFight.Phase) -> void:
-	if from != GuardianFight.Phase.DORMANT or to != GuardianFight.Phase.PRESSURE or _guardian.stats.music == null:
+	if to != GuardianFight.Phase.PRESSURE or _guardian.stats.music == null:
 		return
-	_fight_request = Music.request(_guardian.stats.music, MusicRequest.Layer.FIGHT, self)
-	# A save that has seen the revelation fights two-track from the start.
-	if _guardian.stats.finale != null and SaveSystem.is_finale_revealed():
-		Music.set_stem(_fight_request, &"spring", 1.0, 0.0)
+	if from == GuardianFight.Phase.DORMANT:
+		_fight_request = Music.request(_guardian.stats.music, MusicRequest.Layer.FIGHT, self)
+	# A save that has seen the revelation hears the spring when its moves join, at the winter answer ("Music waits for
+	# the moves (Recommended)", user, 2026-11-19).
+	if _finale != null and not _spring_risen and _finale.extra_stages() > 0:
+		_rise_spring()
+
+func _rise_spring() -> void:
+	_spring_risen = true
+	Music.set_stem(_fight_request, &"spring", 1.0, SPRING_RISE)
 
 func _on_lucid_landed() -> void:
 	Music.set_stem(_fight_request, &"lead", 0.0, 0.3)
@@ -49,7 +58,7 @@ func _on_call_ended() -> void:
 	Music.unduck(CALL_DUCK)
 
 func _on_revelation_opened() -> void:
-	Music.set_stem(_fight_request, &"spring", 1.0, SPRING_RISE)
+	_rise_spring()
 
 func _on_freeze_frame(seconds: float) -> void:
 	_hushed = true

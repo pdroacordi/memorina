@@ -6,7 +6,7 @@ status: accepted
 tags: [grd-06, guardian, finale, mentor, revelation, dissonance, dual-call, shader, world-restored, plan]
 related: [systems/guardians, architecture/guardian-fight-phase-machine, architecture/grd-04-autumn-and-summer-guardians, architecture/guardian-performance-and-talks, architecture/teaching-creatures, architecture/the-region-owns-its-forgetting, architecture/cutscenes-are-data-played-between-two-rest-states, systems/songs-and-the-memorina, systems/greyhush, systems/story, systems/cutscenes, systems/life-benches-death, systems/dialogue, gotchas/screen-texture-copy-scope, gotchas/canvas-layers-on-one-layer-index-stack-by-sibling-index-not-tree-order, gotchas/animationtree-reset-track-overwrites-script-writes, gotchas/physics-parent-before-children-one-frame-lag]
 created: 2026-10-30
-updated: 2026-11-17
+updated: 2026-11-19
 source_files:
   - scenes/characters/guardians/guardian.gd
   - scenes/characters/guardians/guardian_fight.gd
@@ -133,3 +133,11 @@ Not stated in the design (01 section 4: "por amor"; the object is open). **Q1.**
 
 - **A `FightWall` now stands in the lantern.** This plan built none, since `Player` refuses Up on a door while `Guardian.fight_at` holds. "Alçapão ao leste + parede (Recommended)" (user, 2026-11-17): the hatch moved to the east wall (`lighthouse_top.room` 36,20; `lighthouse_hatch` in `gen_world_shells.py`), and a wall stands at 35,20 with `cells` 18, floor to roof (the room is open above, and Ivo's 144 px jump clears the usual 4 cells). The `Arena` is trimmed to x 0..1152 (centre (576, 384)), so a leap lands at x 1056 or less.
 - **The body is absent until the awakening is seen.** Its `FactPresence` and the keeper's Gone stage read `all_guardians_restored` and SCENE_SEEN `mentor_wakes`; with only the first the keeper waits still at the lamp. The scene's recorded end turns the body on with Ivo inside its `ArenaTrigger`, whose re-entry `body_entered` begins the fight; `Guardian` and `GuardianFight` are unchanged. A death rewinds the record and the awakening replays ("Repete sempre (Recommended)").
+
+## Revision (2026-11-19, GRD-17)
+
+The rebuilt pressure (`systems/guardians`, "The mentor's fight") changed two things this plan built:
+
+- **The revelation is a stage, not a move swap.** `FinaleStats.revealed_attacks` and `Guardian.set_attacks` are gone. The spring's moves are in `GuardianStats.attacks` with `from_stage` 2, and `GuardianFight.stage()` is the good answers plus one once the revelation is seen and the winter answered (`FinaleFight.extra_stages`, set by `GuardianFinale` each time pressure resumes). The swap ran only at the shatter, so a save that had seen the revelation in an earlier attempt never got the spring move.
+- **The winter windows count answers, not windows** (`FinaleFight.open_window(cycles)`). A failed winter window opened the revelation at cycle 0, against 5.1 ("ter vencido pelo menos uma janela de lucidez normal"), and the final call then ended at cycle 1 of 2, so it relapsed and had to be played twice.
+- **The revelation's clock starts at its answer window** (GRD-17 fix round, `bugs/the-mentors-revelation-shatters-before-its-call-opens-a-window`). Section 3 above counted `revelation_max_seconds` from the call's opening; with the mentor's 2.2 s lead-in and the sung phrase the window opens 5.5 s in, so the 5 s clock shattered it first and the player never played into it, against 5.1 ("nunca solta o controle"). `GuardianFinale` now starts the clock on `call_window_opened`, and `revelation_max_seconds` is 4.0.

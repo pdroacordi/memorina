@@ -25,7 +25,7 @@ var _tracks: Array = []
 ## Tracks still equal to the answer so far.
 var _live: Array[int] = [TRACK_A, TRACK_B]
 var _count: int = 0
-## False for the revelation: every note after the first is mixed and the answer never completes.
+## False for the revelation: every note after the first is mixed, and the answer never completes or fails.
 var _solvable: bool = true
 
 
@@ -36,8 +36,9 @@ func _init(track_a: Array[Enums.Note], track_b: Array[Enums.Note], solvable: boo
 	_solvable = solvable
 
 func feed(note: Enums.Note) -> Result:
+	# The revelation never resets: after its first note every note is the clash, never a wrong note, so the song the
+	# player knows cannot fail it ("sem punição real", design 02 section 5.1).
 	if not _solvable and _count > 0:
-		_reset()
 		return Result.MIXED
 	var next: Array[int] = []
 	for track: int in _live:

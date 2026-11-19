@@ -12,15 +12,13 @@ const SCENES: Array[String] = [
 ]
 
 
-func test_moves_are_roots_links_and_revealed_moves_once_each() -> void:
+func test_moves_are_roots_and_links_once_each() -> void:
 	var thrust := GuardianAttack.new()
 	var lash := GuardianAttack.new()
 	lash.follow_ups = [_link(null), _link(thrust)]
 	var spring := GuardianAttack.new()
 	var stats := GuardianStats.new()
-	stats.attacks = [lash, thrust]
-	stats.finale = FinaleStats.new()
-	stats.finale.revealed_attacks = [lash, spring]
+	stats.attacks = [lash, thrust, spring]
 	assert_array(GuardianMoveGraph.moves(stats)).is_equal([lash, thrust, spring])
 
 func test_the_longest_string_counts_moves_and_ignores_a_repeat() -> void:
@@ -39,12 +37,9 @@ func test_every_guardian_keeps_the_engine_invariants() -> void:
 		var tree := guardian.get_node(^"AnimationTree") as AnimationTree
 		var machine := tree.tree_root as AnimationNodeStateMachine
 		var label := guardian.name
-		# GuardianAI._weighted_pick needs a move from the first stage, revealed moves included.
+		# GuardianAI._weighted_pick needs a move from the first stage.
 		assert_array(GuardianRepertoire.available(guardian.stats.attacks, 0)).override_failure_message(
 				"%s has no move at stage 0" % label).is_not_empty()
-		if guardian.stats.finale != null and not guardian.stats.finale.revealed_attacks.is_empty():
-			assert_array(GuardianRepertoire.available(guardian.stats.finale.revealed_attacks, 0)).override_failure_message(
-					"%s has no revealed move at stage 0" % label).is_not_empty()
 		for attack: GuardianAttack in GuardianMoveGraph.moves(guardian.stats):
 			var move := "%s %s" % [label, attack.resource_path.get_file() if attack.resource_path != "" else attack.resource_name]
 			if attack.recall != null:

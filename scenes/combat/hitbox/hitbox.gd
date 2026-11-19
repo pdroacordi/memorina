@@ -26,6 +26,9 @@ const INSIDE_PUSH_Y := 0.35
 var gate: HitGate = null
 ## A hurtbox this box never hits; null spares none. Its owner sets and clears it (a guardian whose recall was answered).
 var spared: Area2D = null
+## The body that threw this box (a guardian's spawn); a hit from inside the box pushes away from it. Null pushes away
+## from the box's own centre.
+var thrower: Node2D = null
 
 ## Hurtboxes struck since monitoring last turned on, by instance id.
 var _struck: Dictionary[int, bool] = {}
@@ -75,7 +78,12 @@ func _push_direction(area: Area2D) -> Vector2:
 	var away := global_position.direction_to(area.global_position)
 	if absf(away.x) >= INSIDE_PUSH_X:
 		return away
-	var side := signf(area.global_position.x - global_position.x)
+	# Inside the box the sides are a few px apart; away from the thrower is never back into its body
+	# (bugs/a-hit-at-the-lanterns-west-wall-knocks-ivo-into-the-mentor).
+	var from := thrower if is_instance_valid(thrower) else self
+	var side := signf(area.global_position.x - from.global_position.x)
+	if is_zero_approx(side):
+		side = signf(area.global_position.x - global_position.x)
 	if is_zero_approx(side):
 		side = signf(scale.x)
 	return Vector2(side, clampf(away.y, -INSIDE_PUSH_Y, INSIDE_PUSH_Y)).normalized()

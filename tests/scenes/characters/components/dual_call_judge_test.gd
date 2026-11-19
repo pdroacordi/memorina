@@ -36,5 +36,6 @@ func test_the_revelation_mixes_every_note_after_the_first() -> void:
 	var judge := DualCallJudge.new(_a, _b, false)
 	assert_int(judge.feed(N.UP)).is_equal(DualCallJudge.Result.COMMITTED)
 	assert_int(judge.feed(N.DOWN)).is_equal(DualCallJudge.Result.MIXED)
+	# Any note after the first, the known song's included, is the clash: never complete, never a failure.
 	for i: int in 8:
-		assert_int(judge.feed(_a[i % _a.size()])).is_not_equal(DualCallJudge.Result.COMPLETE)
+		assert_int(judge.feed(_a[i % _a.size()])).is_equal(DualCallJudge.Result.MIXED)

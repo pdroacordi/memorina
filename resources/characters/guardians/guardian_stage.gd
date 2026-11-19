@@ -11,3 +11,7 @@ const DEFAULT_MAX_LINKS := 3
 @export var chain_scale: float = 1.0
 ## Moves in one string, the first included; capped by GuardianRepertoire.MAX_LINKS.
 @export_range(1, 4) var max_links: int = DEFAULT_MAX_LINKS
+## Multiplier on the walk toward Ivo for a move (not the pacing between moves).
+@export var walk_scale: float = 1.0
+## Multiplier on every recovery: the punish window after a string, shorter at a late stage.
+@export var recovery_scale: float = 1.0

@@ -168,4 +168,5 @@ res://scenes/characters/guardians/summer_guardian/spawns/ember_patch.tscn
 res://scenes/characters/guardians/summer_guardian/spawns/sun_shaft.tscn
 res://scenes/characters/guardians/summer_guardian/spawns/pounce_shadow.tscn
 res://scenes/characters/guardians/summer_guardian/spawns/ember_burst.tscn
+res://scenes/characters/guardians/mentor_guardian/spawns/pounce_shadow.tscn
 res://tests/fixtures/guardians/engine_guardian.tscn

@@ -1,14 +1,30 @@
 [gd_resource type="Resource" script_class="GuardianAttack" format=3]
 
 [ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="2_spawn"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/bloom_guardian/spawns/seed_pod.tscn" id="3_pod"]
+
+[sub_resource type="Resource" id="pods"]
+script = ExtResource("2_spawn")
+scene = ExtResource("3_pod")
+at = 0.1
+placement = 2
+count = 3
+spacing = 96.0
+interval = 0.1
 
 [resource]
 script = ExtResource("1_attack")
-clip_index = 2
-duration = 1.1666667
-telegraph = 0.6
-attack_range = 110.0
-cooldown = 2.2
-weight = 1.0
-knockback_strength = 440.0
-knockback_lift = 260.0
+clip_index = 6
+windup_index = 6
+duration = 0.5
+telegraph = 0.5
+attack_range = 264.0
+cooldown = 0.9
+recovery = 0.4
+recovery_index = 5
+from_stage = 2
+weight = 0.7
+repeats = false
+strikes = false
+spawns = Array[ExtResource("2_spawn")]([SubResource("pods")])

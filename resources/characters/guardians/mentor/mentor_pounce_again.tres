@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/leap_motion.gd" id="4_leap"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="5_spawn"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/mentor_guardian/spawns/pounce_shadow.tscn" id="6_shadow"]
+
+[sub_resource type="Resource" id="arc"]
+script = ExtResource("4_leap")
+target = 2
+height = 110.0
+delay = 0.1
+air_time = 0.6
+past = 24.0
+
+[sub_resource type="Resource" id="shadow"]
+script = ExtResource("5_spawn")
+scene = ExtResource("6_shadow")
+placement = 5
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 5
+windup_index = 5
+duration = 0.9
+telegraph = 0.3
+attack_range = 220.0
+cooldown = 0.8
+recovery = 0.45
+recovery_index = 4
+from_stage = 2
+motion = SubResource("arc")
+weight = 0.0
+waits_for_floor = true
+spawns = Array[ExtResource("5_spawn")]([SubResource("shadow")])
+knockback_lift = 200.0

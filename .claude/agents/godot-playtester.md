@@ -941,6 +941,22 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - A pinned "jump over the roar" press was once silently dropped (no `jumped` signal). Log `[sig] jumped` beside each
     scripted jump before blaming the move.
 
+- **Learned 2026-11-19 (GRD-17 mentor feel)**: **a forced `_next` alone is overwritten whenever Ivo is far.**
+  `_refresh_next` replaces it with the far opinion past `comfort_distance * 1.3`. Also set `ai.comfort_distance = 0`, which
+  disables the far opinion and holds the guardian still during a cooldown. To choose the throw distance, force
+  `load(<move>.tres).duplicate()` with `attack_range = D`: the AI walks in to D, then throws the copy. The copy's
+  `resource_path` is empty, so match it by identity, not by name. Session copy: `feel17/drv.gd` (`FV_HAIL`, `FV_SLAM`,
+  `FV_D`, `FV_STAGE`).
+  - **To trace an idle, log the AI, not the guardian.** Every 0.1 s between moves, print `_clock.phase`/`_left`, `_next`,
+    `ai._in_range(_next)`, `ai._held_by_floor(_next)`, `floor_burning`, `_above_reach`, `_escaping`, `_spacing`, and
+    `_far_pick != null`. One run named the cause of every 2-3 s mentor idle (a far-picked short move walked in at 60 px/s).
+    `feel17/idle.py` splits the gaps by cause.
+  - **The lantern's `PL_WEST_PAD=96` hides the west step from the driver**, and `PL_BODY_CLEAR=40` forbids the room toward
+    the mentor. Its icicle hits at the wall are therefore its own limits. Before calling a move unavoidable, force it
+    against a pinned Ivo and try each human answer (step, double jump steered after the rise, jump plus a late step).
+  - A Python heredoc that writes Python or GDScript source mangles `\t`/`\n` escapes. Write generator code with the Write
+    tool, and patch files with a script file, not inline `python - <<EOF`.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

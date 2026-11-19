@@ -27,6 +27,14 @@ extends SceneTree
 ## arrives; PL_BOXED=1 answers a roar thrown into an ember gap as pinned; PL_PJ=1 jumps out of a pounce shadow over a
 ## burning patch (PL_PJ_AT, strike s); PL_FORCE_SEQ=1 forces ember spit then pounce slam, the pounce's jump-out swept
 ## (playtests/2026-11-19-grd16-sun-feel).
+## Mentor (GRD-17): backs out of the sweep string and the glide (PL_SWEEP=jump jumps them late in their wind-up), backs
+## out of the slam and jumps its ice wave, keeps moving under the hail, jumps the thorn row, walks under the pounce
+## (PL_POUNCE), steps between the seeds' thorns. Each call is answered with the phrase it shows: the winter, the
+## revelation's (mixed by design), the chosen track and each final phrase. PL_MIX=1 mixes the first two-track window
+## (three mixed notes, then lets it run out), so the pressure after it runs under the dissonance veil. PL_ANSWERS=<n>
+## answers only the first n windows, holding the fight at the stage it reached. PL_BODY_CLEAR=<px> (72) is the least
+## a step keeps from the guardian's centre (the mentor's body is 36 px wide). PL_SHOT_FROM=<s> takes no screenshot
+## before that game time.
 ## No autoload or class_name is referenced: a -s script compiles before the autoloads exist.
 const PH := ["DORMANT", "PRESSURE", "LUCIDITY", "RELAPSE", "RESTORED"]
 const LASH_STRING := ["bloom_lash", "bloom_back_lash", "bloom_antler_thrust"]
@@ -38,6 +46,8 @@ const CHARGE_REACH := {"frost_charge": [112.0, 455.0, 0.24], "frost_charge_back"
 		"summer_charge": [88.0, 400.0, 0.34], "summer_charge_back": [88.0, 400.0, 0.34]}
 const CLAW_STRING := ["summer_claw", "summer_claw_again", "summer_bite_lunge"]
 const SWEEP_STRING := ["autumn_sweep", "autumn_sweep_again", "autumn_overhead_claw"]
+const MENTOR_STRING := ["mentor_sweep", "mentor_glide_sweep", "mentor_slam"]
+const POUNCES := ["bloom_pounce", "bloom_pounce_again", "mentor_pounce", "mentor_pounce_again"]
 ## Px an Ivo keeps from a spot's centre, by spawn kind: an icicle's, the body drop's shadow, a pod's or patch's.
 const SPOT_CLEAR := {"shard": 24.0, "shadow": 72.0, "pod": 36.0, "patch": 36.0, "swirl": 44.0}
 var _out := ""
@@ -101,6 +111,18 @@ var _boxed := false
 var _pj := false
 var _pj_at := 0.05
 var _pj_until := 0
+## The call's second track, or empty: the finale's two-track windows.
+var _second: Array = []
+var _solvable := true
+var _mix := false
+## Px inside the arena's west edge where the floor begins (the lantern's 96 px step, PL_WEST_PAD).
+var _west_pad := 0.0
+## Game s before which no screenshot is taken (PL_SHOT_FROM).
+var _shot_from := 0.0
+var _mixed_windows := 0
+## Windows answered before the driver stops answering (PL_ANSWERS); -1 answers them all.
+var _answers := -1
+var _windows := 0
 
 func _initialize() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -138,6 +160,13 @@ func _initialize() -> void:
 	_pj = OS.get_environment("PL_PJ") == "1"
 	if OS.get_environment("PL_PJ_AT") != "":
 		_pj_at = float(OS.get_environment("PL_PJ_AT"))
+	_mix = OS.get_environment("PL_MIX") == "1"
+	if OS.get_environment("PL_SHOT_FROM") != "":
+		_shot_from = float(OS.get_environment("PL_SHOT_FROM"))
+	if OS.get_environment("PL_ANSWERS") != "":
+		_answers = int(OS.get_environment("PL_ANSWERS"))
+	if OS.get_environment("PL_WEST_PAD") != "":
+		_west_pad = float(OS.get_environment("PL_WEST_PAD"))
 	if OS.get_environment("PL_ROLL_LEAD") != "":
 		_roll_lead = float(OS.get_environment("PL_ROLL_LEAD"))
 	if OS.get_environment("PL_DEATH_WAIT") != "":
@@ -177,7 +206,7 @@ func _move(dir: String) -> void:
 		_act(dir, true)
 
 func _shot(tag: String) -> void:
-	if _out == "" or _shots >= _max_shots:
+	if _out == "" or _shots >= _max_shots or _el() < _shot_from:
 		return
 	_shots += 1
 	var img := root.get_viewport().get_texture().get_image()
@@ -219,8 +248,15 @@ func _process(_d: float) -> bool:
 		_hooked = true
 		_notes = _g.get("stats").song.notes
 		_p.connect("call_window_opened", _on_window)
+		# The final battle opens a call per phrase (GRD-06): answer the phrase the call shows.
+		_p.connect("call_opened", func(song: Resource, _r: int, _gs: int, _cd: int, _ct: int, _sd: int, _h: float) -> void:
+			_notes = song.notes
+			_second = [])
+		_p.connect("call_second_track", func(song: Resource, solvable: bool) -> void:
+			_second = song.notes
+			_solvable = solvable)
 		_p.get_node("Hurtbox").connect("hit_received", _on_hurt_by)
-		for sig in ["call_opened", "call_closed", "call_answered", "skill_recalled", "skill_recall_missed", "recall_started", "recall_step_taken", "recall_ended", "lesson_started", "sequence_failed", "jumped"]:
+		for sig in ["call_opened", "call_closed", "call_answered", "skill_recalled", "skill_recall_missed", "recall_started", "recall_step_taken", "recall_ended", "lesson_started", "sequence_failed", "jumped", "call_mixed", "dissonance_changed"]:
 			var argc: int = _p.get_signal_list().filter(func(x: Dictionary) -> bool: return x.name == sig)[0].args.size()
 			var cb: Callable = _on_sig.bind(sig)
 			_p.connect(sig, cb.unbind(argc) if argc > 0 else cb)
@@ -387,6 +423,8 @@ func _policy(now: int) -> void:
 	var away := "move_left" if dx > 0 else "move_right"
 	var on_floor: bool = _p.is_on_floor()
 	var arena: Rect2 = _g.arena_bounds() if _g.has_method("arena_bounds") else Rect2()
+	if arena.size.x > 0.0 and _west_pad > 0.0:
+		arena = Rect2(arena.position.x + _west_pad, arena.position.y, arena.size.x - _west_pad, arena.size.y)
 	# No room to back off: the wall (or the arena's FightWall, a cell inside it) is behind Ivo.
 	var pinned: bool = arena.size.x > 0.0 and ((dx > 0 and px - arena.position.x < 80.0) or (dx < 0 and arena.end.x - px < 80.0))
 	# 1. Spawns: jump a floor runner's head, step out of a pod's or patch's spot.
@@ -504,7 +542,7 @@ func _policy(now: int) -> void:
 						if absf(y - px) >= o[1] and (y - px) * (c - px) > 0.0 and absf(y - px) < absf(c - px):
 							ok = false
 					# Never step into the guardian's body; a diving one is in the air, and a cornered Ivo runs out under it.
-					var diving: bool = _g.current_attack() != null and _g.current_attack().resource_path.get_file() == "autumn_dive.tres"
+					var diving: bool = _g.current_attack() != null and _g.current_attack().resource_path.get_file() in ["autumn_dive.tres", "mentor_pounce.tres", "mentor_pounce_again.tres"]
 					if not diving and (absf(c - _g.global_position.x) < _body_clear() or ((c - px) * (_g.global_position.x - px) > 0.0 and absf(_g.global_position.x - px) < absf(c - px) + 40.0)):
 						ok = false
 					if arena.size.x > 0.0 and (c < arena.position.x + 16.0 or c > arena.end.x - 16.0):
@@ -692,6 +730,34 @@ func _policy(now: int) -> void:
 	if (an == "summer_ember_spit" or an == "summer_sun_shafts" or an == "summer_pounce_slam") and clk == "T":
 		_move("")
 		return
+	if an in MENTOR_STRING and (_sweep_mode == "jump" or pinned) and an != "mentor_slam" and (clk == "T" or clk == "S") and ad < 230.0:
+		# The sweeps' box tops out at 48 px: jump late in their wind-up.
+		_last_threat = "%s jump" % an
+		_move("")
+		var mleft := float(_g.get_node("AI").get("_clock").get("_left")) if clk == "T" else 0.0
+		if clk == "T" and mleft < 0.12 and on_floor and now >= _next_jump:
+			_next_jump = now + 600
+			print("[pl] t=%.3f JUMP %s ad=%.1f left=%.2f" % [_el(), an, ad, mleft])
+			_press("jump", 380)
+		return
+	if an == "mentor_slam" and pinned and (clk == "T" or clk == "S") and ad < 140.0:
+		# No room to back off: jump from the raised-arm pose; the wave is jumped by the row rule.
+		_last_threat = "slam jump"
+		_move("")
+		var sl := float(_g.get_node("AI").get("_clock").get("_left")) if clk == "T" else 0.0
+		if clk == "T" and sl < 0.2 and on_floor and now >= _next_jump:
+			_next_jump = now + 900
+			print("[pl] t=%.3f JUMP slam ad=%.1f left=%.2f" % [_el(), ad, sl])
+			_press("jump", 380)
+		return
+	if an in MENTOR_STRING and (clk == "T" or clk == "S") and ad < (230.0 if an == "mentor_glide_sweep" else 140.0):
+		_last_threat = "%s back off" % an
+		_move(away)
+		_backoff_until = now + 250
+		return
+	if (an == "mentor_icicle_fall" or an == "mentor_icicle_again" or an == "mentor_thorn_row" or an == "mentor_spring") and clk == "T":
+		_move("")
+		return
 	if (an == "frost_icicle_fall" or an == "frost_body_drop") and clk == "T":
 		_move("")
 		return
@@ -712,7 +778,7 @@ func _policy(now: int) -> void:
 			_press("jump", 400)
 		_move("")
 		return
-	if (an == "bloom_pounce" or an == "bloom_pounce_again") and (clk == "T" or clk == "S"):
+	if an in POUNCES and (clk == "T" or clk == "S"):
 		_last_threat = "pounce " + _pounce_mode
 		if _pounce_mode == "under":
 			_move(toward if clk == "S" else "")
@@ -794,7 +860,8 @@ func _stand_at() -> float:
 
 ## Px from the guardian's centre a step never ends inside.
 func _body_clear() -> float:
-	return maxf(72.0, (_g.body_rect().size.x * 0.5 if _g.has_method("body_rect") else 0.0) + 24.0)
+	var least := float(OS.get_environment("PL_BODY_CLEAR")) if OS.get_environment("PL_BODY_CLEAR") != "" else 72.0
+	return maxf(least, (_g.body_rect().size.x * 0.5 if _g.has_method("body_rect") else 0.0) + 24.0)
 
 ## What hurt Ivo: the hitting node, its position and Ivo's.
 func _on_hurt_by(damage: int, _knockback: Vector2, source: Node2D) -> void:
@@ -806,7 +873,9 @@ func _on_sig(sig: String) -> void:
 	print("[sig] t=%.3f %s ivo=(%.1f,%.1f) hp=%d" % [_el(), sig, _p.global_position.x, _p.global_position.y, _p.get_node("Health").get("current_hp")])
 	match sig:
 		"call_opened": _call_active = true
-		"call_closed": _call_active = false
+		"call_closed":
+			_call_active = false
+			_answer_left.clear()
 		"call_answered": _burst("answered", 1000)
 		"recall_started": _burst("recall", 900)
 		"skill_recalled": _learned = true
@@ -814,10 +883,16 @@ func _on_sig(sig: String) -> void:
 func _on_window() -> void:
 	print("[sig] t=%.3f call_window_opened stage=%d" % [_el(), _stage()])
 	_shot("window")
-	if not _answer:
+	_windows += 1
+	if not _answer or (_answers >= 0 and _windows > _answers):
 		return
 	_press("draw_memorina", 80, 0)
 	_answer_left = _notes.duplicate()
+	if _mix and _solvable and not _second.is_empty() and _mixed_windows == 0:
+		_mixed_windows += 1
+		# Commit to the first track, then play the other's next note: each is mixed and resets the answer.
+		_answer_left = [_notes[0], _second[1], _notes[0], _second[1], _notes[0], _second[1]]
+		print("[pl] t=%.3f MIX %s" % [_el(), _answer_left])
 	_answer_frame = Engine.get_physics_frames() + 42
 
 ## Presses the answer's next note once 0.45 s of game time has passed since the last and the voice will take it.

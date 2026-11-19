@@ -16,7 +16,6 @@ enum Stage {
 
 var _stats: FinaleStats
 var _revealed: bool
-var _windows: int = 0
 var _stage: Stage = Stage.WINTER
 ## Mixed inputs since the revelation; picks the damage.
 var _mixed_total: int = 0
@@ -31,20 +30,26 @@ func _init(stats: FinaleStats, revealed: bool = false) -> void:
 	_stats = stats
 	_revealed = revealed
 
-## Starts the next lucidity window and returns its stage.
-func open_window() -> Stage:
+## Starts the next lucidity window after `cycles` good answers and returns its stage: winter until `winter_cycles` were
+## answered, so a failed winter window is winter again (design 02 section 5.1).
+func open_window(cycles: int) -> Stage:
 	_mixed_window = 0
-	if _windows < _stats.winter_cycles:
+	if cycles < _stats.winter_cycles:
 		_stage = Stage.WINTER
 	elif not _revealed:
 		_stage = Stage.REVELATION
 	else:
 		_stage = Stage.DUAL
-	_windows += 1
 	return _stage
 
 func stage() -> Stage:
 	return _stage
+
+## Pressure stages the fight takes besides its `cycles` good answers: one once the revelation is seen and the winter
+## windows answered, so the spring moves join only then, in this attempt or a later one (systems/guardians, "The
+## mentor's fight").
+func extra_stages(cycles: int) -> int:
+	return 1 if _revealed and cycles >= _stats.winter_cycles else 0
 
 ## The revelation shattered; every window after it is two-track.
 func reveal() -> void:

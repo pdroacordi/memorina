@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="2_spawn"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/frost_guardian/spawns/ice_wave.tscn" id="3_wave"]
+
+[sub_resource type="Resource" id="wave"]
+script = ExtResource("2_spawn")
+scene = ExtResource("3_wave")
+at = 0.1
+placement = 4
+offset = Vector2(40, 0)
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 7
+windup_index = 7
+duration = 0.5
+telegraph = 0.6
+attack_range = 250.0
+cooldown = 0.9
+recovery = 0.6
+recovery_index = 1
+weight = 0.6
+repeats = false
+strikes = false
+spawns = Array[ExtResource("2_spawn")]([SubResource("wave")])

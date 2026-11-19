@@ -219,7 +219,7 @@ func test_icicles_aimed_at_ivo_fall_where_he_stands_as_each_one_fires() -> void:
 	assert_float(absf(xs[0] - xs[1])).override_failure_message("the second shard fell on the old spot").is_greater(100.0)
 
 func _throw(move: GuardianAttack) -> void:
-	_guardian.set_attacks([move])
+	_ai.attacks = [move]
 	_ai.call(&"_start_telegraph", move)
 
 ## A lash-length move on `attack_1` that reaches Ivo anywhere and never comes back on its own.

@@ -25,15 +25,6 @@ const GUARDIAN_SCENES: Array[String] = [
 ]
 ## The engine fixture: the motions and spawns no shipped guardian uses yet (architecture/grd-12-guardian-fight-engine).
 const ENGINE_SCENE := "res://tests/fixtures/guardians/engine_guardian.tscn"
-## Moves checked to a shorter reach than their attack_range, px: the revealed spring keys a strike clip that reaches 108
-## of its 110 px. Retuned with the mentor's kit in GRD-17, because GRD-12 changes no gameplay
-## (architecture/grd-12-guardian-fight-engine, Risks).
-const SHORT_REACH: Dictionary[String, float] = {
-	"mentor_spring.tres": 108.0,
-}
-## Moves whose strike clip is placeholder art that does not yet draw the keyed box: the revealed spring draws 30 px of
-## its 108. Drawn with the mentor's kit in GRD-17, for the same reason.
-const ART_PENDING: Array[String] = ["mentor_spring.tres"]
 ## Distance step, px, of the motion and spawn scans.
 const COARSE_STEP := 8.0
 ## Ivo's jump apex, px above the floor: a runner or a wave stays under it.
@@ -77,10 +68,9 @@ func test_every_guardian_move_lands_over_the_whole_distance_it_is_thrown_from() 
 			# The contact box does not turn with the guardian; the hit box does.
 			for contact_xform: Transform2D in [contact.xform, Transform2D.FLIP_X * contact.xform]:
 				var near := _farthest({"shape": contact.shape, "xform": contact_xform}, _ivo_hurtbox)
-				var reach_to := minf(attack.attack_range, SHORT_REACH.get(attack.resource_path.get_file(), INF))
-				var miss := _first_miss(box, _ivo_hurtbox, near, reach_to)
+				var miss := _first_miss(box, _ivo_hurtbox, near, attack.attack_range)
 				assert_float(miss).override_failure_message("%s is thrown from %.1f to %.0f px but misses a grounded Ivo at %.1f" % [
-					label, near, reach_to, miss]).is_equal(-1.0)
+					label, near, attack.attack_range, miss]).is_equal(-1.0)
 
 ## A move without body contact hurts only with its box, so the box is open for the whole lunge: from `lunge_delay` to the
 ## end of the clip (GRD-10, "Só a investida").
@@ -108,8 +98,6 @@ func test_every_guardian_move_touches_a_grounded_ivo_only_where_its_art_is_drawn
 		var sprite := guardian.get_node(^"Sprite2D") as Sprite2D
 		var reset := (guardian.get_node(^"AnimationPlayer") as AnimationPlayer).get_animation(&"RESET")
 		for attack: GuardianAttack in _striking_moves(guardian):
-			if attack.resource_path.get_file() in ART_PENDING:
-				continue
 			var clip := _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index])
 			var box := _hit_box(guardian, clip)
 			var at: float = box.window_start + 0.01
@@ -363,7 +351,7 @@ func test_slide_is_the_integral_of_the_decayed_push() -> void:
 	assert_float(_slide(60.0, 6.0, 1000.0)).is_equal_approx(10.0, 0.001)
 	assert_float(_slide(60.0, 6.0, 0.0)).is_equal(0.0)
 
-## The guardian's moves that key a hit window, links and revealed moves included.
+## The guardian's moves that key a hit window, links included.
 func _striking_moves(guardian: Guardian) -> Array[GuardianAttack]:
 	var moves: Array[GuardianAttack] = []
 	for attack: GuardianAttack in GuardianMoveGraph.moves(guardian.stats):

@@ -1,14 +1,11 @@
 class_name GuardianMoveGraph
 extends RefCounted
-## Every move a guardian can throw: its roots, their links (transitively) and the Finale's revealed moves, deduped.
+## Every move a guardian can throw: its roots and their links (transitively), deduped.
 
 
 static func moves(stats: GuardianStats) -> Array[GuardianAttack]:
 	var found: Array[GuardianAttack] = []
-	var roots: Array[GuardianAttack] = stats.attacks.duplicate()
-	if stats.finale != null:
-		roots.append_array(stats.finale.revealed_attacks)
-	for root: GuardianAttack in roots:
+	for root: GuardianAttack in stats.attacks:
 		_visit(root, found)
 	return found
 

@@ -57,6 +57,10 @@ var recall_owned: bool = false
 var chain_scale: float = 1.0
 ## Moves in one string, the first included, pushed in from GuardianFight.
 var max_links: int = GuardianStage.DEFAULT_MAX_LINKS
+## Multiplier on the walk toward the player for a move, pushed in from GuardianFight; pacing keeps its own speed.
+var walk_scale: float = 1.0
+## Multiplier on every recovery, pushed in from GuardianFight.
+var recovery_scale: float = 1.0
 ## The guardian's own floor patches burn; pushed in each frame by the guardian: a move that waits for the floor is
 ## not chosen.
 var floor_burning: bool = false
@@ -303,7 +307,7 @@ func _update_escape(to_player: Vector2, delta: float) -> bool:
 ## sign() of an x that sits on the guardian's own is the flip-flop this avoids.
 func _close_in(to_player: Vector2) -> void:
 	if absf(to_player.x) > TURN_BAND:
-		_current_direction = signf(to_player.x)
+		_current_direction = signf(to_player.x) * walk_scale
 
 ## Holds spacing during cooldown with hysteresis at the comfort-distance thresholds.
 func _hold_spacing(to_player: Vector2, delta: float) -> void:
@@ -409,7 +413,7 @@ func _end_strike() -> void:
 
 ## The string's last strike ended: its recovery, then its cooldown. The recall cadence counts the string once.
 func _finish_string(attack: GuardianAttack) -> void:
-	_clock.rest(attack.recovery, attack.cooldown * cooldown_scale)
+	_clock.rest(attack.recovery * recovery_scale, attack.cooldown * cooldown_scale)
 	_links_done = 0
 	if attack.recall != null:
 		_since_recall = 0
@@ -535,16 +539,20 @@ func _situational_pick() -> GuardianAttack:
 	var distance := absf(to_player.x)
 	# Only above the lowest reach, where height can rule a move out; level feet differ by float noise (bugs/the-sun-guardians-roar-never-fires).
 	if above > _lowest_reach():
-		var reaches_up: GuardianAttack = null
+		var tallest: Array[GuardianAttack] = []
 		for attack: GuardianAttack in _choosable():
 			if _weight_of(attack) <= 0.0 or attack.attack_height < above:
 				continue
 			if distance > attack.attack_range:
 				continue
-			if reaches_up == null or attack.attack_height > reaches_up.attack_height:
-				reaches_up = attack
-		if reaches_up != null:
-			return reaches_up
+			if tallest.is_empty() or attack.attack_height > tallest[0].attack_height:
+				tallest = [attack]
+			elif is_equal_approx(attack.attack_height, tallest[0].attack_height):
+				tallest.append(attack)
+		# Equally tall moves are drawn by weight: in array order, a jumping player met the same order of them every time
+		# (playtests/2026-11-19-grd17-mentor-fight, the fix round).
+		if not tallest.is_empty():
+			return tallest[0] if tallest.size() == 1 else _weighted_from(tallest)
 	# Only past the comfort band; closer in the weighted roll decides.
 	if comfort_distance > 0.0 and distance > comfort_distance * COMFORT_FAR:
 		return _far_opinion(distance)

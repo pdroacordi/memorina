@@ -300,6 +300,37 @@ func test_the_stage_is_the_good_answers_and_a_failure_keeps_it() -> void:
 	_fight.answer_succeeded()
 	assert_int(_fight.stage()).is_equal(1)
 
+## A stage taken besides the answers (the mentor's revelation) adds to them, and the tuning follows it.
+func test_extra_stages_add_to_the_good_answers() -> void:
+	var calm := GuardianStage.new()
+	var hot := GuardianStage.new()
+	hot.cooldown_scale = 0.6
+	_stats.stages = [calm, calm, hot]
+	_fight.begin()
+	_hit_until_open()
+	_fight.answer_succeeded()
+	_fight.set_extra_stages(1)
+	assert_int(_fight.stage()).is_equal(2)
+	assert_object(_fight.stage_tuning()).is_same(hot)
+	_fight.set_extra_stages(0)
+	assert_int(_fight.stage()).is_equal(1)
+
+## The walk toward Ivo and the recovery follow the stage; with no table they are the guardian's own.
+func test_the_walk_and_recovery_scales_follow_the_stage() -> void:
+	assert_float(_fight.walk_scale()).is_equal(1.0)
+	assert_float(_fight.recovery_scale()).is_equal(1.0)
+	var calm := GuardianStage.new()
+	var hot := GuardianStage.new()
+	hot.walk_scale = 2.0
+	hot.recovery_scale = 0.7
+	_stats.stages = [calm, hot]
+	_fight.begin()
+	assert_float(_fight.walk_scale()).is_equal(1.0)
+	_hit_until_open()
+	_fight.answer_succeeded()
+	assert_float(_fight.walk_scale()).is_equal(2.0)
+	assert_float(_fight.recovery_scale()).is_equal(0.7)
+
 func test_no_stages_is_neutral() -> void:
 	_fight.begin()
 	assert_object(_fight.stage_tuning()).is_null()

@@ -6,7 +6,7 @@ status: built
 tags: [grd-12, guardian, plan, ai, strings, stages, projectiles, hazards, motion, resolver, combat-reach]
 related: [systems/guardians, systems/animation, systems/creatures, systems/life-benches-death, architecture/guardian-fight-phase-machine, architecture/corrupted-creatures, architecture/grd-04-autumn-and-summer-guardians, architecture/grd-06-final-battle, architecture/animation-driver-resolver-pattern, gotchas/animationtree-reset-track-overwrites-script-writes, gotchas/body-state-cannot-change-in-the-physics-flush, gotchas/a-teleported-kinematic-body-overlaps-from-its-old-place-for-one-step, gotchas/an-explicit-process-mode-escapes-a-disabled-ancestor, gotchas/time-scale-zero-stops-delta-particles-and-time, gotchas/physics-parent-before-children-one-frame-lag, bugs/recall-move-range-exceeds-hitbox-reach, bugs/a-guardian-lunge-turned-to-follow-a-player-who-rolled-under-it, bugs/the-frost-swipe-hit-ivo-far-from-its-fist, bugs/pogo-over-a-guardian-is-a-free-ride]
 created: 2026-11-18
-updated: 2026-11-18
+updated: 2026-11-19
 source_files:
   - scenes/characters/guardians/guardian.gd
   - scenes/characters/guardians/guardian_ai.gd
@@ -143,3 +143,7 @@ Signals go up and calls go down. AI -> Guardian: `attack_telegraphed`, `attack_s
   - The dive's aim is locked at strike start ("move out"). Locking it at the hang's end needs a replan, so leave that to GRD-15 if its playtest asks.
   - Design 02 §3 says only that a failure escalates. The approved stage escalation on success should be recorded there by whoever owns the design text. GRD-14's charge-back reuses the recall charge's pattern, which the per-guardian items should check against 02 §4 ("não reutilizado como padrão geral").
 - **One note per string** ("One note per string (Recommended)", user, 2026-11-18): getting caught by a string costs at most one life note. A string is one move for damage: a `Hitbox` gate refuses a link's hit on a target the same string already hurt (the move box is keyed and cannot be switched off from script).
+
+## Revision (2026-11-19, GRD-17: the mentor's stages and the revelation)
+
+The plan left open how the mentor's stages relate to the revelation. Decided in GRD-17, following the approved board ("in stage 2 all at once"): the revelation is one more stage. `GuardianFight.set_extra_stages(n)` adds stages taken besides good answers, and `stage()` is `cycles() + n`; only `Guardian._push_tuning` sets it, from `GuardianFinale.extra_stages()` (`FinaleFight.extra_stages(cycles)`) (1 once the revelation is seen, live or in the save, and the winter windows answered). The mentor's stage 0 and 1 are winter, stage 2 is the spring's moves (`from_stage` 2) with the hardest tuning. Option 2's "composes with the revelation's swap" no longer applies: the swap (`revealed_attacks`, `set_attacks`) is removed, and `GuardianMoveGraph.moves` is roots and links. Details and the measured fight: `systems/guardians`, "The mentor's fight (GRD-17)".
