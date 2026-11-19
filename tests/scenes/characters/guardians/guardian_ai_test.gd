@@ -140,7 +140,7 @@ func test_a_far_player_draws_every_reaching_move_by_weight() -> void:
 	# Level, a hair above as move_and_slide leaves feet, and a jump's height under every move's reach up.
 	for above: float in [0.0, 0.1, 40.0]:
 		_player.global_position = _body.global_position + Vector2(250.0, -above)
-		var thrown := {}
+		var thrown: Dictionary[GuardianAttack, bool] = {}
 		for i: int in 40:
 			seed(i)
 			_ai.cancel_attack()
@@ -338,6 +338,76 @@ func test_finished_strings_feed_the_recent_moves() -> void:
 	_ai.set(&"_recent_roots", [] as Array[GuardianAttack])
 	_ai.call(&"_remember_root")
 	assert_array(_ai.get(&"_recent_roots") as Array).is_empty()
+
+## A link that turns from a wall, taken against one, winds up facing away from it even with Ivo on the wall's side; a
+## link that does not turn faces Ivo there (the Sun charge's bounce, GRD-16).
+func test_a_bounce_taken_against_a_wall_winds_up_facing_away_from_it() -> void:
+	for turns: bool in [true, false]:
+		var bounce := _far_move(300.0, 0.0)
+		bounce.turns_from_wall = turns
+		var link := GuardianFollowUp.new()
+		link.attack = bounce
+		link.needs_wall = true
+		_attack.follow_ups = [link]
+		_ai.cancel_attack()
+		_ai.provoke()
+		_place_player(60.0)
+		_ai.tick(STEP)
+		_tick_until_swinging()
+		_ai.blocked_ahead = true
+		var elapsed := 0.0
+		while _ai.current_attack != bounce and elapsed < 2.0:
+			_ai.tick(STEP)
+			elapsed += STEP
+		assert_bool(_ai.is_telegraphing()).is_true()
+		assert_bool(_ai.turns_from_wall()).is_equal(turns)
+		_ai.tick(STEP)
+		assert_float(_ai.facing_intent()).override_failure_message("turns %s" % turns).is_equal(0.0 if turns else 1.0)
+		_ai.blocked_ahead = false
+
+## While the guardian's own floor patches burn, a move that waits for the floor is not chosen, nor thrown if it was
+## chosen before they lit; once they are out it is (bugs/a-pounce-slam-thrown-after-an-ember-spit-cannot-be-walked-out-of).
+func test_a_move_that_waits_for_the_floor_is_held_while_it_burns() -> void:
+	var waits := _far_move(120.0, 5.0)
+	waits.waits_for_floor = true
+	var other := _far_move(120.0, 0.5)
+	_ai.attacks = [waits, other]
+	_place_player(60.0)
+	_ai.floor_burning = true
+	for i: int in 30:
+		seed(i)
+		_ai.cancel_attack()
+		_ai.set(&"_next", waits)
+		_ai.tick(STEP)
+		assert_object(_ai.current_attack).override_failure_message("thrown into a burning floor").is_same(other)
+	_ai.floor_burning = false
+	var thrown := {}
+	for i: int in 30:
+		seed(i)
+		_ai.cancel_attack()
+		_ai.set(&"_next", null)
+		_ai.tick(STEP)
+		thrown[_ai.current_attack] = true
+	assert_bool(thrown.has(waits)).override_failure_message("never thrown once the floor is out").is_true()
+
+func test_with_only_floor_moves_it_keeps_its_choice_and_waits_for_the_floor() -> void:
+	var first := _far_move(120.0, 1.0)
+	first.waits_for_floor = true
+	var second := _far_move(120.0, 1.0)
+	second.waits_for_floor = true
+	_ai.attacks = [first, second]
+	_place_player(60.0)
+	_ai.floor_burning = true
+	_ai.cancel_attack()
+	_ai.set(&"_next", first)
+	for i: int in 30:
+		seed(i)
+		_ai.tick(STEP)
+		assert_object(_ai.current_attack).override_failure_message("thrown into a burning floor").is_null()
+		assert_object(_ai.get(&"_next")).override_failure_message("re-rolled while it waits").is_same(first)
+	_ai.floor_burning = false
+	_ai.tick(STEP)
+	assert_object(_ai.current_attack).override_failure_message("not thrown once the floor is out").is_same(first)
 
 func _far_move(reach: float, weight: float) -> GuardianAttack:
 	var move := GuardianAttack.new()

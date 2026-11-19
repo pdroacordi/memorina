@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/lob/lob.tscn" id="1_base"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/summer_guardian/spawns/ember_patch.tscn" id="2_patch"]
+
+[node name="Ember" instance=ExtResource("1_base")]
+warn = 0.4
+live = 0.7
+light = Color(1, 0.86, 0.45, 1)
+dark = Color(0.32, 0.12, 0.04, 1)
+arc = 100.0
+hand = 80.0
+size = Vector2(12, 12)
+patch = ExtResource("2_patch")

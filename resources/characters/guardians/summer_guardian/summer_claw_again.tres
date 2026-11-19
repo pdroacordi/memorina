@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_follow_up.gd" id="2_follow"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_bite_lunge.tres" id="3_bite"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/dash_motion.gd" id="4_dash"]
+
+[sub_resource type="Resource" id="step_in"]
+script = ExtResource("4_dash")
+speed = 500.0
+margin = 48.0
+past = -84.0
+
+[sub_resource type="Resource" id="to_bite"]
+script = ExtResource("2_follow")
+attack = ExtResource("3_bite")
+chance = 0.6
+
+[resource]
+script = ExtResource("1_attack")
+windup_index = 0
+duration = 0.5
+telegraph = 0.3
+attack_range = 190.0
+attack_height = 40.0
+cooldown = 0.5
+recovery = 0.4
+recovery_index = 0
+weight = 0.0
+motion = SubResource("step_in")
+follow_ups = Array[ExtResource("2_follow")]([SubResource("to_bite")])
+knockback_strength = 400.0
+knockback_lift = 120.0

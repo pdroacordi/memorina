@@ -57,6 +57,9 @@ var recall_owned: bool = false
 var chain_scale: float = 1.0
 ## Moves in one string, the first included, pushed in from GuardianFight.
 var max_links: int = GuardianStage.DEFAULT_MAX_LINKS
+## The guardian's own floor patches burn; pushed in each frame by the guardian: a move that waits for the floor is
+## not chosen.
+var floor_burning: bool = false
 ## The body stands against a wall or the arena's edge ahead; pushed in each frame by the guardian.
 var blocked_ahead: bool = false
 ## Spacing and pacing, pushed in from GuardianStats by the guardian.
@@ -106,6 +109,8 @@ var _owned_at_strike: bool = false
 ## The first move of the string under way, and of the last `recent_strings` strings, newest last.
 var _root: GuardianAttack = null
 var _recent_roots: Array[GuardianAttack] = []
+## The link under way was taken against a wall and turns from it (GuardianAttack.turns_from_wall).
+var _from_wall: bool = false
 
 @onready var _body: Node2D = get_parent()
 @onready var _sight: EnemySight = get_parent().get_node("EnemySight") as EnemySight
@@ -135,9 +140,10 @@ func tick(delta: float) -> void:
 	super.tick(delta)
 
 ## The side to face: where it walks, else where the player is, so it watches a player it backed away from.
-## 0 during a swing and a recovery, so a lunge or leap keeps its side and carries past a player who crosses under it.
+## 0 during a swing and a recovery, so a lunge or leap keeps its side and carries past a player who crosses under it,
+## and during a wind-up that turned from a wall.
 func facing_intent() -> float:
-	if is_swinging() or is_recovering():
+	if is_swinging() or is_recovering() or turns_from_wall():
 		return 0.0
 	if not is_zero_approx(_current_direction):
 		return _current_direction
@@ -160,6 +166,10 @@ func is_recovering() -> bool:
 ## Seconds since the swing started; 0 outside one.
 func swing_elapsed() -> float:
 	return _clock.elapsed()
+
+## The wind-up under way is a link taken against a wall that faces away from it, not toward Ivo.
+func turns_from_wall() -> bool:
+	return _from_wall and is_telegraphing()
 
 ## The link under way in its string, 0 for the first move.
 func link_index() -> int:
@@ -203,7 +213,7 @@ func _select_state() -> int:
 	if is_attacking():
 		return _busy_state()
 	_refresh_next()
-	if not _escaping and _clock.phase == GuardianMoveClock.Phase.READY and _in_range(_next):
+	if not _escaping and _clock.phase == GuardianMoveClock.Phase.READY and _in_range(_next) and not _held_by_floor(_next):
 		_start_telegraph(_next)
 		return _busy_state()
 	return APPROACH
@@ -372,6 +382,7 @@ func _start_telegraph(attack: GuardianAttack) -> void:
 	_current_direction = 0.0
 	_links_done = 1
 	_root = attack
+	_from_wall = false
 	_clock.start(attack)
 	_announce(attack)
 
@@ -391,6 +402,7 @@ func _end_strike() -> void:
 		_finish_string(attack)
 		return
 	_links_done += 1
+	_from_wall = link.turns_from_wall and blocked_ahead
 	_clock.chain(link)
 	attack_finished.emit(attack)
 	_announce(link)
@@ -438,12 +450,30 @@ func _tallest_reach() -> float:
 func _available() -> Array[GuardianAttack]:
 	return GuardianRepertoire.available(attacks, stage)
 
-## The available moves a pick may choose: all but a last string's end that does not repeat, and all but the recent
-## strings' first moves while another is left.
+## A move that waits for the floor is not thrown while the guardian's own floor burns; a recall never waits.
+func _held_by_floor(attack: GuardianAttack) -> bool:
+	return floor_burning and attack != null and attack.waits_for_floor and attack.recall == null
+
+## True when a pick has a move that does not wait for the floor; without one the kept choice waits instead of re-rolling.
+func _has_clear_move() -> bool:
+	for attack: GuardianAttack in _choosable():
+		if not attack.waits_for_floor:
+			return true
+	return false
+
+## The available moves a pick may choose: all but a last string's end that does not repeat, all but the moves that wait
+## for the floor while it burns, and all but the recent strings' first moves while another is left.
 func _choosable() -> Array[GuardianAttack]:
 	var pool := _available()
 	if _last_end != null and not _last_end.repeats and pool.size() > 1:
 		pool.erase(_last_end)
+	if floor_burning:
+		var clear: Array[GuardianAttack] = []
+		for attack: GuardianAttack in pool:
+			if not attack.waits_for_floor and _weight_of(attack) > 0.0:
+				clear.append(attack)
+		if not clear.is_empty():
+			pool = clear
 	if _recent_roots.is_empty():
 		return pool
 	var fresh: Array[GuardianAttack] = []
@@ -486,7 +516,7 @@ func _pick_next() -> void:
 
 ## Keeps the selected move until a situational condition changes.
 func _refresh_next() -> void:
-	if _next == null:
+	if _next == null or (_held_by_floor(_next) and _has_clear_move()):
 		_pick_next()
 		return
 	var recall_move := _recall_move()

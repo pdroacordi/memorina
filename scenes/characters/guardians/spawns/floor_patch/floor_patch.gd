@@ -7,6 +7,9 @@ extends SpawnedAttack
 @export var height: float = 14.0
 
 
+func burns_floor() -> bool:
+	return _t < warn + live
+
 func _hit_size() -> Vector2:
 	return Vector2(width, height)
 

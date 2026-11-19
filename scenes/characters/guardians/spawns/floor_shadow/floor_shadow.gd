@@ -4,6 +4,9 @@ extends SpawnedAttack
 
 ## Px wide, the body's.
 @export var width: float = 96.0
+## Draws a rimmed bracket over the floor in place of the floor warning's comb, so it reads apart from floor patches it
+## lies over.
+@export var bracket: bool = false
 
 
 ## Only the body that casts it hurts.
@@ -23,4 +26,16 @@ func _draw() -> void:
 	var half := width * (0.35 + 0.15 * grow)
 	draw_rect(snapped_rect(Rect2(-half, -4.0, half * 2.0, 4.0)), dark)
 	draw_rect(snapped_rect(Rect2(-half * 0.7, -6.0, half * 1.4, 2.0)), dark)
-	draw_floor_warning(-width * 0.5, width * 0.5, grow)
+	if not bracket:
+		draw_floor_warning(-width * 0.5, width * 0.5, grow)
+		return
+	# A bracket: a light rail over the grass with posts at both ends, each in a dark rim, rising as the body falls.
+	var rise := WARN_RISE * (0.5 + 0.5 * grow)
+	var left := -width * 0.5
+	var right := width * 0.5
+	draw_rect(snapped_rect(Rect2(left - 2.0, -rise - 2.0, width + 4.0, 6.0)), dark)
+	draw_rect(snapped_rect(Rect2(left - 2.0, -rise - 2.0, 6.0, rise + 2.0)), dark)
+	draw_rect(snapped_rect(Rect2(right - 4.0, -rise - 2.0, 6.0, rise + 2.0)), dark)
+	draw_rect(snapped_rect(Rect2(left, -rise, width, 2.0)), light)
+	draw_rect(snapped_rect(Rect2(left, -rise, 2.0, rise)), light)
+	draw_rect(snapped_rect(Rect2(right - 2.0, -rise, 2.0, rise)), light)

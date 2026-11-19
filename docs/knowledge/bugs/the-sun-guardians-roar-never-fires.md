@@ -5,9 +5,9 @@ title: The Sun Guardian's roar (attack_range 88) is never thrown, because the cl
 status: fixed
 severity: low
 tags: [guardians, summer, ai, move-selection, reach, pre-existing]
-related: [systems/guardians, playtests/2026-11-18-grd12-engine-regression, playtests/2026-10-30-grd04-autumn-summer-fights]
+related: [systems/guardians, playtests/2026-11-19-grd16-sun-fight, playtests/2026-11-18-grd12-engine-regression, playtests/2026-10-30-grd04-autumn-summer-fights]
 created: 2026-11-18
-updated: 2026-11-18
+updated: 2026-11-19
 source_files:
   - scenes/characters/guardians/guardian_ai.gd
   - resources/characters/guardians/summer_guardian/summer_roar.tres
@@ -66,6 +66,9 @@ pick to the claw. A roar picked by the weighted roll is kept while the lion clos
 Test: `guardian_ai_test.test_the_sun_roar_is_kept_for_a_player_a_hair_above` (summer stats, roar chosen, Ivo 0.1 px up:
 nothing thrown at 100 px, the roar at 80). The Sun golden changed only at `T0@908` (the claw where the charge was); its one roar (`T2@471`) was there before, so the test above is the evidence. Not measured in
 a Sun bot fight in this change.
+
+**Confirmed in play (GRD-16, 2026-11-19):** the roar fired 2 and 3 times in the two Sun bot fights and 9 and 22 times in
+two dodging-driver fights (`playtests/2026-11-19-grd16-sun-fight`), on the rebuilt kit.
 
 ## Prevention
 

@@ -18,10 +18,11 @@ func _drawn_rect() -> Rect2:
 
 func _draw() -> void:
 	if _t < warn:
-		# Lit first: a thin flickering outline where it will burn.
-		var lit := int(_t * 14.0) % 2 == 0
-		draw_rect(snapped_rect(Rect2(-2.0, -height, 4.0, height)), light if lit else dark)
-		draw_rect(snapped_rect(Rect2(-width * 0.5, -2.0, width, 2.0)), light)
+		# Lit first: a thin light core in a dark rim, so it reads on dark stone and in the grey, and its floor marked
+		# over the grass.
+		draw_rect(snapped_rect(Rect2(-4.0, -height, 8.0, height)), dark)
+		draw_rect(snapped_rect(Rect2(-2.0, -height, 4.0, height)), light)
+		draw_floor_warning(-width * 0.5, width * 0.5, _t / maxf(warn, 0.001))
 		return
 	var share := 1.0
 	if _t >= warn + live:

@@ -1,0 +1,48 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="3_spawn"]
+[ext_resource type="Script" path="res://resources/characters/guardians/motion/leap_motion.gd" id="2_leap"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/summer_guardian/spawns/pounce_shadow.tscn" id="4_shadow"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/summer_guardian/spawns/ember_burst.tscn" id="5_burst"]
+
+[sub_resource type="Resource" id="pounce"]
+script = ExtResource("2_leap")
+target = 1
+height = 96.0
+delay = 0.25
+air_time = 0.6
+
+[sub_resource type="Resource" id="shadow"]
+script = ExtResource("3_spawn")
+scene = ExtResource("4_shadow")
+placement = 5
+
+[sub_resource type="Resource" id="burst"]
+script = ExtResource("3_spawn")
+scene = ExtResource("5_burst")
+on_landing = true
+placement = 4
+offset = Vector2(72, 0)
+knockback_strength = 360.0
+knockback_lift = 140.0
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 6
+windup_index = 7
+duration = 1.1
+telegraph = 0.5
+attack_range = 190.0
+attack_height = 96.0
+cooldown = 0.7
+recovery = 0.6
+recovery_index = 6
+from_stage = 1
+weight = 0.8
+repeats = false
+waits_for_floor = true
+motion = SubResource("pounce")
+spawns = Array[ExtResource("3_spawn")]([SubResource("shadow"), SubResource("burst")])
+knockback_strength = 480.0
+knockback_lift = 200.0

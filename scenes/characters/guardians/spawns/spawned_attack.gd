@@ -86,6 +86,10 @@ func hit_transforms(ctx: SpawnContext) -> Array[Transform2D]:
 func aimed() -> bool:
 	return false
 
+## Whether it burns the floor now or will when it lands, so a guardian holds the moves whose dodge crosses the floor.
+func burns_floor() -> bool:
+	return false
+
 ## Whether it comes from above or below, so its warning must last MIN_WARN (combat_reach_test).
 func from_above() -> bool:
 	return false

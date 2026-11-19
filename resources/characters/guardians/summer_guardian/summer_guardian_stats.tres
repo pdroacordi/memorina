@@ -6,9 +6,21 @@
 [ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_claw.tres" id="3_a1"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_charge.tres" id="4_a2"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_roar.tres" id="5_a3"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_ember_spit.tres" id="6_ember"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_sun_shafts.tres" id="7_shafts"]
+[ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_pounce_slam.tres" id="8_pounce"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_stage.gd" id="8_stage"]
 [ext_resource type="Resource" path="res://resources/characters/guardians/summer_guardian/summer_guardian_voice.tres" id="9_voice"]
 [ext_resource type="Resource" path="res://resources/music/fight_summer.tres" id="90_fight_music"]
 [ext_resource type="Resource" path="res://resources/audio/sfx/combat/guardian_sounds.tres" id="95_sounds"]
+
+[sub_resource type="Resource" id="stage_0"]
+script = ExtResource("8_stage")
+
+[sub_resource type="Resource" id="stage_1"]
+script = ExtResource("8_stage")
+cooldown_scale = 0.7
+chain_scale = 1.5
 
 [resource]
 script = ExtResource("1_stats")
@@ -16,12 +28,15 @@ music = ExtResource("90_fight_music")
 id = 3
 song = ExtResource("2_song")
 voice = ExtResource("9_voice")
-attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_a1"), ExtResource("4_a2"), ExtResource("5_a3")])
+attacks = Array[ExtResource("1_attack_script")]([ExtResource("3_a1"), ExtResource("4_a2"), ExtResource("5_a3"), ExtResource("6_ember"), ExtResource("7_shafts"), ExtResource("8_pounce")])
+stages = Array[ExtResource("8_stage")]([SubResource("stage_0"), SubResource("stage_1")])
 hits_to_open = 9
 cycles_to_restore = 2
 call_lead_in = 2.2
 revealed_notes = 4
 recall_after_attacks = 0
+recent_strings = 1
+far_walks_in = true
 comfort_distance = 134.0
 give_ground_distance = 96.0
 pace_time = 1.0

@@ -24,6 +24,8 @@ const FAIL_BURST_HZ := 12.0
 const PRESSURE_CLIMB := 0.35
 ## The beat a good answer holds the guardian bright before it drains.
 const RELAPSE_HOLD := 0.3
+## Px a no-contact lunge must have run before a wall stop spares Ivo: one begun at the wall still hits an Ivo there.
+const WALL_RUN := 32.0
 
 @export var stats: GuardianStats
 @export var terminal_velocity: float = 500.0
@@ -98,6 +100,8 @@ var _player_dead: bool = false
 var _body_contact := GuardianBodyContact.new()
 ## The string under way has a move whose own box is its only hit.
 var _string_spares_body: bool = false
+## Where the strike under way began: a wall stop spares Ivo only after a run of WALL_RUN px to it.
+var _strike_start_x: float = 0.0
 var _shield_rest_radius: float = 0.0
 var _sprite_rest: Vector2 = Vector2.ZERO
 ## Seconds of the flinch left: the facing it took on the hit is held until the hurt clip ends.
@@ -195,6 +199,7 @@ func _process_motion(delta: float) -> void:
 	_flinch_left = maxf(_flinch_left - delta, 0.0)
 	if _fight.phase() == GuardianFight.Phase.PRESSURE and _player_in_arena():
 		_ai.blocked_ahead = _mover.against_wall(arena_bounds())
+		_ai.floor_burning = _spawner.floor_burning()
 		_ai.tick(delta)
 		# Where it LOOKS, not where it walks: a guardian backing out from under
 		# a player keeps watching him, and an x sitting on its own never makes
@@ -208,6 +213,7 @@ func _process_motion(delta: float) -> void:
 		if _ai.is_swinging():
 			_mover.drive(delta, _ai.swing_elapsed())
 			_open_due_recall()
+			_spare_against_wall()
 	else:
 		_locomotion.ground_update(delta, 0.0)
 		if _fight.phase() == GuardianFight.Phase.RESTORED:
@@ -443,8 +449,8 @@ func _face_seen_player() -> void:
 		face_towards(dx)
 
 ## A move winds up: the guardian squares up to Ivo (a charge thrown the way
-## it happened to be facing goes into a wall) and the sprite pulses until the
-## swing begins.
+## it happened to be facing goes into a wall), or turns from the wall a bounce
+## is thrown against, and the sprite pulses until the swing begins.
 func _on_attack_telegraphed(_attack: GuardianAttack) -> void:
 	_hits_since_move = 0
 	if _ai.link_index() == 0:
@@ -455,7 +461,9 @@ func _on_attack_telegraphed(_attack: GuardianAttack) -> void:
 	else:
 		# A link starts where the last one ended: a lunge's speed does not carry it on through the wind-up.
 		velocity.x = 0.0
-	if _player != null:
+	if _ai.turns_from_wall():
+		face_towards(-facing)
+	elif _player != null:
 		face_towards(signf(_player.global_position.x - global_position.x))
 	_stop_telegraph()
 	_telegraph_tween = create_tween().set_loops()
@@ -472,6 +480,7 @@ func _on_attack_started(attack: GuardianAttack) -> void:
 	_hitbox.knockback_lift = attack.knockback_lift
 	_mover.begin(attack, _motion_context(attack))
 	_spawner.begin(attack)
+	_strike_start_x = global_position.x
 	# A repeated link keeps its clip's name; without the replay its Hitbox keys would not run again.
 	_animation_driver.request_replay()
 	if attack.recall == null or _player == null:
@@ -518,6 +527,13 @@ func _open_due_recall() -> void:
 	if not SaveSystem.has_skill(attack.recall.skill):
 		_player.open_recall(attack.recall, self, _hitbox)
 
+## A move whose box is its only hit, stopped by the wall ahead, has no run left: its box spares Ivo for the rest of the
+## strike, so a pinned Ivo who jumped it is not hit landing into it (playtests/2026-11-19-grd16-sun-fight).
+func _spare_against_wall() -> void:
+	if (_ai.blocked_ahead and absf(global_position.x - _strike_start_x) >= WALL_RUN
+			and not _ai.current_attack.body_contact and is_instance_valid(_player)):
+		_hitbox.spared = _player.hurtbox
+
 ## What a move's motion plans against; null for a move with none.
 func _motion_context(attack: GuardianAttack) -> MotionContext:
 	if attack.motion == null:
@@ -555,6 +571,8 @@ func _on_skill_recalled(_skill: Enums.PlayerSkill) -> void:
 ## (bugs/a-guardian-stopped-by-ivos-death-outside-the-pressure-fights-again-in-the-death-fade).
 func _on_player_died() -> void:
 	_player_dead = true
+	# Any motion cut here stops where it is, rather than sliding on in the idle pose.
+	velocity.x = 0.0
 	_ai.cancel_attack()
 	_ai.active = false
 	_stop_telegraph()

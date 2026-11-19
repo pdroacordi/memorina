@@ -924,6 +924,23 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     opens at the east wall x -9003 about 0.9 s into the strike.
   - `rtk` mangles `grep "^\[sig\]"` (no output): grep without the `^` anchor, or filter in Python.
 
+- **Learned 2026-11-19 (GRD-16 Sun feel)**: **force a guardian's move from a driver by writing `GuardianAI._next`** whenever
+  `not ai.is_attacking()`. Use `ai.set("_next", load("res://resources/.../<move>.tres"))`, which is the same cached resource
+  `current_attack()` returns. The AI walks into range and throws it. This makes a move pair (A then B) or a single move
+  repeatable instead of hoping the weighted roll shows it. Session copies: `feel16/roartest.gd` (forced roar, Ivo teleported
+  to the nearest wall, jump-over press swept per roar) and `feel16/pdrv.gd` (`PL_FORCE_SEQ=1`: spit then pounce, jump-out time
+  swept). A forced roar cycle took ~12 s, because other moves still interleave.
+  - **The shipped player driver never quits after a no-god death.** Its quit check comes after the guardian lookup, which
+    fails forever once the world is rebuilt, so the run lasts until `max_duration`. Move the check up next to `_track_frame`.
+  - **Its `PL_CHARGE=roll` rolls at the jump lead and in Ivo's facing, which is away from the lion.** It rolls early, and
+    the charge runs him down. `feel16/drv.gd` holds toward the lion and rolls 0.12 s before the box arrives (9 of 9 clean).
+  - **Its spot-step walks through a patch once Ivo is inside that patch's clear radius.** The "never walk through" test
+    skips any spot he already stands in. Between two ember patches the 40 px clear radius leaves 16 px of stand room, so
+    a back-off from a roar or a claw carries him into the patch behind. `PL_BOXED=1` (answer a boxed roar as pinned) and
+    `PL_PJ=1` (jump out of a pounce over a patch) are in `feel16/drv.gd`.
+  - A pinned "jump over the roar" press was once silently dropped (no `jumped` signal). Log `[sig] jumped` beside each
+    scripted jump before blaming the move.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

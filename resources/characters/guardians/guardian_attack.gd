@@ -34,6 +34,13 @@ extends Resource
 @export var repeats: bool = true
 ## The body hurts on touch during this move; false leaves the move's own box as its only hit (GRD-10).
 @export var body_contact: bool = true
+## Its dodge crosses the floor (a walk out of a shadow, a back-off): not chosen while the guardian's own floor patches
+## burn (GuardianSpawner.floor_burning).
+@export var waits_for_floor: bool = false
+## Px past Ivo's live position the lunge stops, so a charge he rolled through ends near him; 0 runs to the clip's end.
+@export var lunge_past: float = 0.0
+## Thrown as a link against a wall, it winds up facing away from the wall, not Ivo (the Sun charge's bounce).
+@export var turns_from_wall: bool = false
 ## String links, tried in order at the strike's end.
 @export var follow_ups: Array[GuardianFollowUp] = []
 ## A reposition solved to fit `duration`; null keeps lunge_speed, lunge_delay and leap_impulse.

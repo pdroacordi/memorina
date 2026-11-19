@@ -26,6 +26,10 @@ func _ready() -> void:
 func aimed() -> bool:
 	return true
 
+## In flight it is a patch about to land.
+func burns_floor() -> bool:
+	return patch != null and _t < warn + live
+
 ## The pod never hurts; its patch does.
 func is_live(_t_at: float) -> bool:
 	return false

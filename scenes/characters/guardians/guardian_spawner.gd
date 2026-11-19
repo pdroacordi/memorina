@@ -66,6 +66,15 @@ func clear() -> void:
 		if spawned != null:
 			spawned.kill()
 
+## Whether a live spawn burns the floor or is about to (an ember in flight): a move that waits for the floor is not
+## chosen meanwhile (GuardianAttack.waits_for_floor).
+func floor_burning() -> bool:
+	for child: Node in get_children():
+		var spawned := child as SpawnedAttack
+		if spawned != null and not spawned.is_queued_for_deletion() and spawned.burns_floor():
+			return true
+	return false
+
 ## Shots still waiting to fire.
 func pending() -> int:
 	return _shots.size()

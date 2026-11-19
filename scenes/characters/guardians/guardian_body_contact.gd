@@ -4,7 +4,8 @@ extends RefCounted
 ## move carried it onto, until he has left the body or a short grace has run out; pure, used by Guardian
 ## (bugs/the-frost-charge-skids-onto-ivo-harmlessly-and-its-body-hurts-the-instant-its-recovery-ends).
 
-## Scaled s the body stays harmless to an Ivo still inside it: time to walk out of a 68 px body.
+## Scaled s the body stays harmless to an Ivo still inside it; walking out of the widest body (the Sun lion's 132 px,
+## 77 px at 192 px/s) takes 0.4 s of it.
 const GRACE := 0.6
 ## Px a recovery skid stops short of Ivo's body.
 const SKID_GAP := 4.0

@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="GuardianAttack" format=3]
+
+[ext_resource type="Script" uid="uid://c5ugdp6dbwcxt" path="res://resources/characters/guardians/guardian_attack.gd" id="1_attack"]
+[ext_resource type="Script" path="res://resources/characters/guardians/guardian_spawn.gd" id="3_spawn"]
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/summer_guardian/spawns/sun_shaft.tscn" id="4_shaft"]
+
+[sub_resource type="Resource" id="shafts"]
+script = ExtResource("3_spawn")
+scene = ExtResource("4_shaft")
+at = 0.15
+count = 4
+spacing = 56.0
+interval = 0.6
+offset = Vector2(120, 0)
+knockback_strength = 360.0
+knockback_lift = 140.0
+
+[resource]
+script = ExtResource("1_attack")
+clip_index = 5
+windup_index = 6
+duration = 2.85
+telegraph = 0.5
+attack_range = 200.0
+attack_height = 82.0
+cooldown = 0.8
+recovery = 0.5
+recovery_index = 5
+from_stage = 1
+weight = 0.8
+repeats = false
+waits_for_floor = true
+strikes = false
+spawns = Array[ExtResource("3_spawn")]([SubResource("shafts")])

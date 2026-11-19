@@ -9,6 +9,8 @@ extends SceneTree
 ## BOT_POKE=1 steps out of ordinary moves and rolls under lunges/leaps; BOT_BOUNCE=1 double-jumps over the guardian and pogoes;
 ## BOT_RESTORED_MS=<ms> how long the restored burst captures (1800; the mentor's restoration scene wants ~22000);
 ## BOT_MAX_SHOTS=<n> the screenshot cap (160).
+## The answer's notes are paced on the physics clock, and a [frame] line gives the median real ms per frame
+## (gotchas/scripted-presses-timed-in-real-ms-collapse-at-a-low-frame-rate).
 ## No autoload or class_name is referenced: a -s script compiles before the autoloads exist.
 const PH := ["DORMANT", "PRESSURE", "LUCIDITY", "RELAPSE", "RESTORED"]
 var _out := ""
@@ -20,6 +22,14 @@ var _last := ""
 var _next_attack := 0
 var _next_jump := 0
 var _notes: Array = []
+## The answer's notes still to press, and the physics frame the next may go on: paced on the game's clock, so a slow
+## render cannot bunch two presses inside MemorinaVoice.min_note_gap
+## (gotchas/scripted-presses-timed-in-real-ms-collapse-at-a-low-frame-rate).
+var _answer_left: Array = []
+var _answer_frame := 0
+## Real ms between rendered frames, for the run's median frame time ([frame] lines).
+var _frame_ms: Array = []
+var _last_frame_ms := 0
 var _shots := 0
 var _burst_until := 0
 var _burst_next := 0
@@ -104,9 +114,11 @@ func _process(_d: float) -> bool:
 	if _burst_until > now and now >= _burst_next:
 		_burst_next = now + (250 if _burst_tag == "lucid" else 700 if _burst_tag == "restored" and _burst_until - now > 3000 else 120)
 		_shot(_burst_tag)
+	_track_frame(now)
 	_p = root.find_child("Player", true, false) as Node2D
 	if _p == null or not _p.has_method("is_in_lesson"):
 		return false
+	_answer_step()
 	if _g == null or not is_instance_valid(_g):
 		_g = _find(root)
 		if _g == null:
@@ -272,11 +284,29 @@ func _on_window() -> void:
 	if not _answer:
 		return
 	_press("draw_memorina", 80, 0)
+	_answer_left = _notes.duplicate()
+	_answer_frame = Engine.get_physics_frames() + 42
+
+## Presses the answer's next note once 0.45 s of game time has passed since the last and the voice will take it.
+func _answer_step() -> void:
+	if _answer_left.is_empty() or Engine.get_physics_frames() < _answer_frame:
+		return
+	var voice: Node = _p.get_node_or_null("MemorinaVoice")
+	if voice != null and voice.has_method("can_play_note") and not voice.can_play_note():
+		return
 	var acts := ["note_up", "note_down", "note_left", "note_right"]
-	var d := 700
-	for n in _notes:
-		_press(acts[n], 80, d)
-		d += 450
+	_press(acts[_answer_left.pop_front()], 80)
+	_answer_frame = Engine.get_physics_frames() + 27
+
+## Records the real ms since the last rendered frame; every 600 frames prints the median.
+func _track_frame(now: int) -> void:
+	if _last_frame_ms > 0:
+		_frame_ms.append(now - _last_frame_ms)
+	_last_frame_ms = now
+	if _frame_ms.size() >= 600:
+		_frame_ms.sort()
+		print("[frame] t=%.3f median_ms=%d max_ms=%d n=%d" % [_el(), _frame_ms[_frame_ms.size() / 2], _frame_ms[-1], _frame_ms.size()])
+		_frame_ms.clear()
 
 func _log(s: String) -> void:
 	var hp := -1

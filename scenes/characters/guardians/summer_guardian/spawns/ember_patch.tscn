@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/floor_patch/floor_patch.tscn" id="1_base"]
+
+[node name="EmberPatch" instance=ExtResource("1_base")]
+warn = 0.1
+live = 1.5
+fade = 0.25
+light = Color(1, 0.86, 0.45, 1)
+dark = Color(0.32, 0.12, 0.04, 1)
+width = 48.0
+height = 18.0

@@ -22,6 +22,8 @@ var _landed: bool = false
 var _driven_frame: int = -1
 ## Px from the feet's x to either side of the body.
 var _half_width: float = 0.0
+## The legacy lunge ran its `lunge_past` beyond Ivo and stopped for the rest of the strike.
+var _lunge_done: bool = false
 
 @onready var _guardian: Guardian = get_parent()
 
@@ -38,6 +40,7 @@ func begin(attack: GuardianAttack, ctx: MotionContext) -> void:
 	_blinked = false
 	_airborne = false
 	_landed = false
+	_lunge_done = false
 	if attack.motion != null and ctx != null:
 		_path = attack.motion.plan(ctx)
 		_start = ctx.feet
@@ -63,7 +66,8 @@ func drive(delta: float, elapsed: float) -> void:
 	_driven_frame = Engine.get_physics_frames()
 	if _path == null:
 		if _attack.lunge_speed > 0.0 and elapsed >= _attack.lunge_delay:
-			_guardian.velocity.x = _guardian.facing * _attack.lunge_speed
+			_lunge_done = _lunge_done or _ran_past_ivo()
+			_guardian.velocity.x = 0.0 if _lunge_done else _guardian.facing * _attack.lunge_speed
 		return
 	if not _blinked and _path.blink_at >= 0.0 and elapsed >= _path.blink_at:
 		_blinked = true
@@ -121,6 +125,13 @@ func against_wall(arena: Rect2) -> bool:
 	if facing > 0:
 		return arena.end.x - (x + _half_width) <= EDGE_BAND
 	return (x - _half_width) - arena.position.x <= EDGE_BAND
+
+## Whether the lunge is `lunge_past` beyond Ivo's live position, along its facing.
+func _ran_past_ivo() -> bool:
+	var ivo := _guardian.fought_player()
+	if _attack.lunge_past <= 0.0 or ivo == null:
+		return false
+	return (_guardian.global_position.x - ivo.global_position.x) * _guardian.facing >= _attack.lunge_past
 
 ## A path that was driven this physics frame; the hit flush of the same frame still reads it.
 func _holds() -> bool:

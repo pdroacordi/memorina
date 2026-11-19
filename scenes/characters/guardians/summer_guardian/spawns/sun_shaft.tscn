@@ -1,0 +1,12 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/light_column/light_column.tscn" id="1_base"]
+
+[node name="SunShaft" instance=ExtResource("1_base")]
+warn = 0.6
+live = 0.3
+fade = 0.15
+light = Color(1, 0.95, 0.68, 1)
+dark = Color(0.4, 0.2, 0.05, 1)
+width = 48.0
+height = 256.0

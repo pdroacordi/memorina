@@ -163,4 +163,9 @@ res://scenes/characters/guardians/spawns/leaf_swirl/leaf_swirl.tscn
 res://scenes/characters/guardians/autumn_guardian/spawns/leaf_blade.tscn
 res://scenes/characters/guardians/autumn_guardian/spawns/dive_shadow.tscn
 res://scenes/characters/guardians/autumn_guardian/spawns/scatter_swirl.tscn
+res://scenes/characters/guardians/summer_guardian/spawns/ember.tscn
+res://scenes/characters/guardians/summer_guardian/spawns/ember_patch.tscn
+res://scenes/characters/guardians/summer_guardian/spawns/sun_shaft.tscn
+res://scenes/characters/guardians/summer_guardian/spawns/pounce_shadow.tscn
+res://scenes/characters/guardians/summer_guardian/spawns/ember_burst.tscn
 res://tests/fixtures/guardians/engine_guardian.tscn

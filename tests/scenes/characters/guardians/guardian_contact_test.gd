@@ -77,6 +77,132 @@ func test_a_body_carried_onto_ivo_spares_him_until_he_is_out_of_it() -> void:
 	await _seconds(GuardianBodyContact.GRACE + 0.1)
 	assert_bool(contact.monitoring).override_failure_message("the grace never ended").is_true()
 
+## A lunge with no body contact stopped by a wall ahead spares Ivo with its box for the rest of the strike: a pinned
+## Ivo who jumped it lands into nothing (playtests/2026-11-19-grd16-sun-fight). Before the wall it spares no one.
+func test_a_lunge_stopped_by_a_wall_spares_ivo_for_the_rest_of_its_strike() -> void:
+	var holder := _guardian.get_parent() as Node2D
+	# Pinned: the wall is right behind him.
+	_ivo.teleport(_guardian.global_position + Vector2(120.0, 0.0))
+	holder.add_child(_solid(Vector2(0.0, 16.0), Vector2(2000.0, 32.0)))
+	holder.add_child(_solid(Vector2(160.0, -100.0), Vector2(32.0, 200.0)))
+	var ai := _guardian.get_node(^"AI") as GuardianAI
+	var hitbox := _guardian.get_node(^"Hitbox") as Hitbox
+	await _frames(4)
+	var lunge := GuardianAttack.new()
+	lunge.clip_index = 1
+	lunge.body_contact = false
+	lunge.telegraph = 0.1
+	lunge.duration = CHARGE.duration
+	lunge.lunge_speed = 300.0
+	lunge.cooldown = 5.0
+	ai.cancel_attack()
+	ai.provoke()
+	ai.call(&"_start_telegraph", lunge)
+	while not ai.is_swinging():
+		await _frames(1)
+	await _frames(2)
+	assert_object(hitbox.spared).override_failure_message("spared before the wall").is_null()
+	var waited := 0
+	while waited < 60 and not ai.blocked_ahead:
+		await _frames(1)
+		waited += 1
+	assert_bool(ai.blocked_ahead).override_failure_message("never reached the wall").is_true()
+	await _frames(2)
+	assert_object(hitbox.spared).is_same(_ivo.hurtbox)
+	while ai.is_swinging():
+		await _frames(1)
+	await _frames(1)
+	assert_object(hitbox.spared).override_failure_message("still spared after the strike").is_null()
+
+## A lunge that starts against the wall it faces has not run there: the box is not spared, so an Ivo between the body
+## and the wall is still hit.
+func test_a_lunge_begun_against_a_wall_spares_no_one() -> void:
+	var holder := _guardian.get_parent() as Node2D
+	holder.add_child(_solid(Vector2(0.0, 16.0), Vector2(2000.0, 32.0)))
+	holder.add_child(_solid(Vector2(60.0, -100.0), Vector2(32.0, 200.0)))
+	_ivo.teleport(_guardian.global_position + Vector2(20.0, 0.0))
+	var ai := _guardian.get_node(^"AI") as GuardianAI
+	var hitbox := _guardian.get_node(^"Hitbox") as Hitbox
+	await _frames(4)
+	var lunge := GuardianAttack.new()
+	lunge.clip_index = 1
+	lunge.body_contact = false
+	lunge.telegraph = 0.1
+	lunge.duration = CHARGE.duration
+	lunge.lunge_speed = 300.0
+	lunge.cooldown = 5.0
+	ai.cancel_attack()
+	ai.provoke()
+	ai.call(&"_start_telegraph", lunge)
+	var waited := 0
+	while waited < 60 and not ai.is_swinging():
+		await _frames(1)
+		waited += 1
+	await _frames(6)
+	assert_bool(ai.blocked_ahead).override_failure_message("not against the wall").is_true()
+	assert_object(hitbox.spared).is_null()
+
+## A lunge with `lunge_past` stops that far beyond Ivo's live position and stays there for the rest of its strike.
+func test_a_lunge_stops_its_past_beyond_ivo() -> void:
+	var holder := _guardian.get_parent() as Node2D
+	holder.add_child(_solid(Vector2(0.0, 16.0), Vector2(4000.0, 32.0)))
+	_ivo.teleport(_guardian.global_position + Vector2(120.0, 0.0))
+	var ai := _guardian.get_node(^"AI") as GuardianAI
+	await _frames(4)
+	var lunge := _lunge()
+	lunge.lunge_past = 80.0
+	ai.cancel_attack()
+	ai.provoke()
+	ai.call(&"_start_telegraph", lunge)
+	while not ai.is_swinging():
+		await _frames(1)
+	# Untouched by the box, so no knockback moves him.
+	(_guardian.get_node(^"Hitbox") as Hitbox).spared = _ivo.hurtbox
+	while ai.is_swinging() and ai.swing_elapsed() < lunge.duration - 0.1:
+		await _frames(1)
+	var past := (_guardian.global_position.x - _ivo.global_position.x)
+	assert_float(past).override_failure_message("ended %.0f px past Ivo" % past).is_between(80.0, 80.0 + 300.0 / 60.0 + 1.0)
+	assert_float(_guardian.velocity.x).is_equal(0.0)
+
+## Ivo's death stops a lunge where it is: the guardian does not slide on in its idle pose.
+func test_a_lunge_cut_by_ivos_death_stops_at_once() -> void:
+	var holder := _guardian.get_parent() as Node2D
+	holder.add_child(_solid(Vector2(0.0, 16.0), Vector2(4000.0, 32.0)))
+	_ivo.teleport(_guardian.global_position + Vector2(400.0, 0.0))
+	var ai := _guardian.get_node(^"AI") as GuardianAI
+	await _frames(4)
+	var lunge := _lunge()
+	ai.cancel_attack()
+	ai.provoke()
+	ai.call(&"_start_telegraph", lunge)
+	while not ai.is_swinging() or ai.swing_elapsed() < 0.2:
+		await _frames(1)
+	_guardian.call(&"_on_player_died")
+	var at := _guardian.global_position.x
+	await _frames(10)
+	assert_float(absf(_guardian.global_position.x - at)).override_failure_message("slid on after the death").is_less(2.0)
+
+func _lunge() -> GuardianAttack:
+	var lunge := GuardianAttack.new()
+	lunge.clip_index = 1
+	lunge.body_contact = false
+	lunge.telegraph = 0.1
+	lunge.duration = CHARGE.duration
+	lunge.lunge_speed = 300.0
+	lunge.cooldown = 5.0
+	return lunge
+
+## A static box of `size` centred at `centre`, on the world's solid layer.
+func _solid(centre: Vector2, size: Vector2) -> StaticBody2D:
+	var body := auto_free(StaticBody2D.new()) as StaticBody2D
+	var shape := CollisionShape2D.new()
+	var rect := RectangleShape2D.new()
+	rect.size = size
+	shape.shape = rect
+	body.add_child(shape)
+	body.position = centre
+	return body
+
 ## The charge's recall is opened by the guardian at its lead before the fists, not by the recall's distance cue
 ## (bugs/a-prompt-roll-on-a-frost-charge-thrown-from-170-220-px-runs-out-of-grace-before-the-fists-arrive).
 func test_the_charge_opens_its_recall_a_lead_before_the_fists() -> void:

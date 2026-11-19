@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/floor_shadow/floor_shadow.tscn" id="1_base"]
+
+[node name="PounceShadow" instance=ExtResource("1_base")]
+warn = 0.85
+fade = 0.15
+light = Color(1, 1, 0.88, 1)
+dark = Color(0.08, 0.04, 0.02, 1)
+width = 190.0
+bracket = true
