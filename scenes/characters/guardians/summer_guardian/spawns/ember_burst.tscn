@@ -2,6 +2,14 @@
 
 [ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/floor_runner/floor_runner.tscn" id="1_base"]
 
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/summer_guardian/effects/summer_ember_burst.png" id="8_art"]
+[ext_resource type="Script" path="res://resources/characters/guardians/spawn_art.gd" id="9_spawn_art"]
+
+[sub_resource type="Resource" id="Resource_art"]
+script = ExtResource("9_spawn_art")
+texture = ExtResource("8_art")
+frames = 3
+
 [node name="EmberBurst" instance=ExtResource("1_base")]
 warn = 0.2
 live = 0.4
@@ -11,3 +19,4 @@ dark = Color(0.32, 0.12, 0.04, 1)
 speed = 320.0
 reach = 128.0
 height = 18.0
+art = SubResource("Resource_art")

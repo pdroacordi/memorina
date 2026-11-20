@@ -2,6 +2,15 @@
 
 [ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/boomerang/boomerang.tscn" id="1_base"]
 
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/autumn_guardian/effects/autumn_leaf_blade.png" id="8_art"]
+[ext_resource type="Script" path="res://resources/characters/guardians/spawn_art.gd" id="9_spawn_art"]
+
+[sub_resource type="Resource" id="Resource_art"]
+script = ExtResource("9_spawn_art")
+texture = ExtResource("8_art")
+frames = 4
+fps = 12.0
+
 [node name="LeafBlade" instance=ExtResource("1_base")]
 warn = 0.1
 live = 1.5
@@ -12,3 +21,4 @@ reach = 320.0
 past = 64.0
 height = 72.0
 return_height = 14.0
+art = SubResource("Resource_art")

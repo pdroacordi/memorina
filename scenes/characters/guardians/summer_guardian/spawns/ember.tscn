@@ -3,6 +3,15 @@
 [ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/lob/lob.tscn" id="1_base"]
 [ext_resource type="PackedScene" path="res://scenes/characters/guardians/summer_guardian/spawns/ember_patch.tscn" id="2_patch"]
 
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/summer_guardian/effects/summer_ember.png" id="8_art"]
+[ext_resource type="Script" path="res://resources/characters/guardians/spawn_art.gd" id="9_spawn_art"]
+
+[sub_resource type="Resource" id="Resource_art"]
+script = ExtResource("9_spawn_art")
+texture = ExtResource("8_art")
+frames = 4
+fps = 10.0
+
 [node name="Ember" instance=ExtResource("1_base")]
 warn = 0.4
 live = 0.7
@@ -12,3 +21,4 @@ arc = 100.0
 hand = 80.0
 size = Vector2(12, 12)
 patch = ExtResource("2_patch")
+art = SubResource("Resource_art")

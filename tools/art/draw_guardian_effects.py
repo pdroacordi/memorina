@@ -1,6 +1,6 @@
 """Draw a guardian's spawned-attack strips (GRD-18; contracts tools/art/prompts/guardian_<name>_effect_*.md).
 
-Usage: python -I tools/art/draw_guardian_effects.py <bloom|frost>
+Usage: python -I tools/art/draw_guardian_effects.py <bloom|frost|autumn|summer>
 
 Each frame is drawn in art px from a character grid and written at 2x, frames side by side, the bottom row the floor
 (a pod is centred instead). Colours are the guardian's own (tools/art/sources/guardians/bloom_palette.png, sampled from
@@ -11,6 +11,11 @@ Frost (tools/art/sources/guardians/frost_still.png: blue-grey stone, pale blue i
 three rise stages (16, 20, 24 px) and one for the body drop's shock (16, 18, 20 px), each on a stone base; an icicle
 hanging (forming small, forming, whole, whole with a glint beside its top; drawn top-aligned so it grows down from where
 it hangs); the icicle bursting on the floor in two stages (10 and 18 px).
+Autumn (tools/art/sources/guardians/scarecrow_still.png: rust, amber, pale bone): a leaf blade in four spin frames (one
+diagonal leaf turned 90 degrees a frame) and the swirl's leaf, flat and edge-on.
+Summer (tools/art/sources/guardians/sun_lion_still.png: charcoal stone, orange, gold): an ember in four spin frames, its
+patch and the pounce's running embers each in three rise stages (each 16 px or more, over the grass). Flames are
+tongues of given heights (`flames`), orange at the edge, gold to pale at the root.
 """
 import sys
 from pathlib import Path
@@ -278,6 +283,113 @@ SHATTER = [
 ]
 
 
+AUTUMN_COLOURS = {
+	".": (0, 0, 0, 0),
+	"d": (75, 32, 24, 255),  # rim, the darkest rust
+	"r": (151, 65, 48, 255),  # rust midrib
+	"L": (229, 122, 60, 255),  # amber leaf
+	"l": (240, 156, 86, 255),  # amber, lit
+	"P": (242, 218, 183, 255),  # pale bone, the lit edge
+}
+
+# 10x10 art px, square so a quarter turn keeps the frame; the blade's hit is 16x12 game px at its centre.
+BLADE_W = 10
+BLADE = [
+	".......dd.",
+	"......dPld",
+	".....dPlLd",
+	"....dPlrLd",
+	"...dPlrLd.",
+	"..dPlrLLd.",
+	".dllrLLd..",
+	".dLrLLd...",
+	".drddd....",
+	"dd........",
+]
+# 4x3 art px: flat, then edge-on as it turns.
+SWIRL_W, SWIRL_H = 4, 3
+SWIRL = [
+	[
+		".dd.",
+		"dlLd",
+		".dd.",
+	],
+	[
+		"dd..",
+		"dlLd",
+		"..dd",
+	],
+]
+
+SUMMER_COLOURS = {
+	".": (0, 0, 0, 0),
+	"d": (51, 39, 40, 255),  # rim, the darkest stone
+	"c": (90, 66, 64, 255),  # cinder stone
+	"o": (188, 105, 60, 255),  # ember, dark orange
+	"O": (245, 161, 78, 255),  # orange
+	"Y": (249, 186, 93, 255),  # gold
+	"W": (251, 209, 128, 255),  # pale gold, the hottest
+}
+
+# 8x8 art px; the ember's hit is 12x12 game px at its centre.
+EMBER_W = 8
+EMBER = [
+	"..dd....",
+	".dOOdd..",
+	"dOYYOOd.",
+	"dOYWYOd.",
+	"dOOYYOcd",
+	".dOOOccd",
+	"..dccdd.",
+	"...dd...",
+]
+# The patch is 24x9 art px (48x18 game px), the runner 12x9: tongues of fire, each (centre column, height in rows),
+# over a 2-row cinder bed; every stage's tallest tongue reaches the top, so it stands 16 px or more over the grass.
+PATCH_W, PATCH_H = 24, 9
+PATCH = [
+	[(4, 2), (9, 7), (14, 2), (19, 4)],
+	[(3, 4), (8, 7), (13, 5), (18, 7), (21, 3)],
+	[(2, 6), (6, 7), (10, 5), (13, 7), (17, 6), (21, 7)],
+]
+BURST_W, BURST_H = 12, 9
+BURST = [
+	[(5, 7), (9, 2)],
+	[(3, 3), (6, 7), (9, 4)],
+	[(2, 5), (6, 6), (9, 7)],
+]
+_HEAT = ".do OYW"
+
+
+def flames(tongues: list[tuple[int, int]], width: int, height: int) -> list[str]:
+	"""Rows for tongues of fire over a 2-row cinder bed: each tongue widens from its tip, orange at the edge and gold to
+	pale at its root's centre, the hotter colour kept where two meet; a dark rim closes every flame against the grey."""
+	rows = [["."] * width for _ in range(height)]
+	for x in range(width):
+		rows[height - 1][x] = "d" if x % 3 == 0 else "c"
+		rows[height - 2][x] = "Y" if x % 4 == 1 else "o"
+	for centre, h in tongues:
+		top = height - 2 - h
+		for depth in range(h):
+			half = 0 if depth < 2 else 1 if depth < 4 else 2
+			for dx in range(-half, half + 1):
+				x = centre + dx
+				if not 0 <= x < width:
+					continue
+				edge = half > 0 and abs(dx) == half
+				key = "o" if edge or depth == 0 else "W" if depth >= h - 2 and dx == 0 else "Y" if dx == 0 and depth >= h // 2 else "O"
+				y = top + depth
+				if _HEAT.index(key) > _HEAT.index(rows[y][x]):
+					rows[y][x] = key
+	for y in range(height - 2):
+		for x in range(width):
+			if rows[y][x] != ".":
+				continue
+			near = [rows[y + dy][x + dx] for dx, dy in ((1, 0), (-1, 0), (0, 1)) if 0 <= x + dx < width and y + dy < height - 2]
+			if any(n not in ".d" for n in near):
+				rows[y][x] = "d"
+	return ["".join(row) for row in rows]
+
+
 def grid(rows: list[str], width: int, height: int, colours: dict = BLOOM_COLOURS, hang: bool = False) -> np.ndarray:
 	"""A frame from `rows`, bottom-aligned in a `width` x `height` canvas (top-aligned when it `hang`s)."""
 	frame = np.zeros((height, width, 4), np.uint8)
@@ -314,8 +426,28 @@ def frost() -> dict[str, Image.Image]:
 	}
 
 
+def autumn() -> dict[str, Image.Image]:
+	c = AUTUMN_COLOURS
+	blade = grid(BLADE, BLADE_W, BLADE_W, c)
+	return {
+		# A quarter turn a frame, clockwise for a blade thrown east (Boomerang flips it west).
+		"autumn_leaf_blade.png": strip([np.rot90(blade, -k).copy() for k in range(4)]),
+		"autumn_swirl_leaf.png": strip([grid(rows, SWIRL_W, SWIRL_H, c) for rows in SWIRL]),
+	}
+
+
+def summer() -> dict[str, Image.Image]:
+	c = SUMMER_COLOURS
+	ember = grid(EMBER, EMBER_W, EMBER_W, c)
+	return {
+		"summer_ember.png": strip([np.rot90(ember, -k).copy() for k in range(4)]),
+		"summer_ember_patch.png": strip([grid(flames(t, PATCH_W, PATCH_H), PATCH_W, PATCH_H, c) for t in PATCH]),
+		"summer_ember_burst.png": strip([grid(flames(t, BURST_W, BURST_H), BURST_W, BURST_H, c) for t in BURST]),
+	}
+
+
 def main(guardian: str) -> None:
-	sheets = {"bloom": bloom, "frost": frost}[guardian]()
+	sheets = {"bloom": bloom, "frost": frost, "autumn": autumn, "summer": summer}[guardian]()
 	out = GUARDIANS / f"{guardian}_guardian" / "effects"
 	out.mkdir(parents=True, exist_ok=True)
 	for name, image in sheets.items():

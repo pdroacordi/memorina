@@ -267,7 +267,7 @@ The orchard needs the Bloom Guardian's double jump, so Ivo has jump, double jump
 |---|---|---|---|---|---|---|---|---|---|
 | Sweep (`autumn_sweep`) | 0 | 0.4 | 0.5, hit 0.083-0.333, box x 16..118, y -36..0 | 0.35 | 0.6 | 108 (28) | 2.0 | second sweep 0.65 | jump it, or back off past 108 |
 | Second sweep (`autumn_sweep_again`, link only) | 0 | 0.3 | 0.5, the back-swing, same box | 0.35 | 0.6 | 108 (28) | - | overhead claw 0.6 | jump it, or back off |
-| Overhead claw (`autumn_overhead_claw`, link only) | 0 | 0.4, the arm raised over the head (attack_1 9) | 0.5, hit 0.1-0.3, box x 20..108, y -150..0 | 0.5 | 0.8 | 104 (140) | - | - | back off past 104; pinned, double jump over it |
+| Overhead claw (`autumn_overhead_claw`, link only) | 0 | 0.4, the arm straight up over the hood (overhead_claw 0, 2) | 0.5, hit 0.17-0.33, box x 20..84, y -150..-20, then x 20..100, y -100..-20 from 0.25 | 0.5 | 0.8 | 104 (140) | - | - | back off past 104; pinned, double jump over it |
 | Hop (`autumn_hop`, `repeats` false) | 0 | 0.45 | 0.8: `LeapMotion` PAST_IVO 8 px, 110 px high, in the air 0.1-0.7; landing box x -24..68, y -60..0 from 0.65 | 0.35 | 0.7 | 250 (96) | 1.0 | - | walk under the middle of its arc (from 88 px out); from closer, away |
 | Gust (`autumn_gust`, WALL_CLIMB recall, `repeats` false) | 0 | 0.9 | 2.4, push 1700 px/s, floor box 2.0-2.4 (as GRD-04), the floor marked from 1.4 | 0.4 | 0.9 | 250 (24) | 0; owned 0.35 | - | the recall; once owned, jump (or climb) at the wall as the leaves hit the floor |
 | Leaf blades (`autumn_leaf_blades`, no strike, `repeats` false) | 0 | 0.45 | 0.6; 3 blades at 0.2, 0.12 apart | 0.4 | 0.8 | 240 (72) | 1.0 | - | stand under them on the way out, jump them on the way back |
@@ -293,7 +293,7 @@ The orchard needs the Bloom Guardian's double jump, so Ivo has jump, double jump
 
 - **Measured** (`playtests/2026-11-18-grd15-leaf-fight`, after the review and the feel pass). Bot (`guardian_bot_autumn.json`, `BOT_GOD`): restored at 66.8 s (87.8 s with 5 hits before GRD-15), 7 hits (sweep 3, hop 3, gust 1). Dodging driver (`PL_CLIMB`): with god mode restored at 133.0 s with 3 hits, without it at 143.0 s with 2 hits; busy 65 / 69 / 72-77 % of the pressure at stages 0 / 1 / 2, idle between moves about 1.0 / 0.8 / 0.5-0.8 s on average; the sweep string is 30-31 % of stage-0 strings and no string is over 33 % at any stage; the openings after a lucidity vary; the teaching gust never hit.
 
-**Placeholder clips** (GRD-18 draws the real ones). Strips: `attack_1` (sweep, 12 frames), `attack_2` (gust, 12), `attack_3` (hop, 8), `leap` (8), `idle` (6).
+**Clips.** Strips: `attack_1` (sweep, 12 frames), `attack_2` (gust, 12), `attack_3` (hop, 8), `leap` (8), `idle` (6), and the GRD-18 strips (8 frames of 128x112 each): `overhead_claw`, `blade_throw`, `scatter`, `dive`.
 
 | Slot | Move | Frames (strip frame@s) | Length |
 |---|---|---|---|
@@ -301,28 +301,27 @@ The orchard needs the Bloom Guardian's double jump, so Ivo has jump, double jump
 | `attack_2` | gust | unchanged | 2.4 |
 | `attack_3` | hop | attack_3 0..7 every 0.1; landing box (22, -30) x(4.6, 3) from 0.65 (was boxes along the flight from 0.2) | 0.8 |
 | `attack_4` | second sweep | attack_1 7, 6, 5, 4, 3, 10 every 0.0833; box on 6-4 | 0.5 |
-| `attack_5` | overhead claw | attack_1 9@0, 4@0.1, 5@0.2, 6@0.3, 9@0.4; box (64, -75) x(4.4, 7.5) 0.1-0.3 | 0.5 |
-| `attack_6` | leaf blades | attack_1 1@0, 2@0.1, 4@0.2 (the throw), 5@0.3, 8@0.45; no hit | 0.6 |
-| `attack_7` | dive | leap 2@0, 3@0.35, 4@0.75, 5@1.0, 6@1.1; box (0, -30) x(4, 3) from 0.85 | 1.2 |
-| `attack_8` | scatter | attack_2 7@0, 8@0.1, leap 7@0.45, idle 0@0.6; `Sprite2D:visible` and `Hurtbox:monitorable` false 0.15-0.45 | 0.7 |
-| `attack_8` | frost wave | attack_2 5@0, 6@0.083, 7@0.25, 8@0.4; no hit | 0.5 |
+| `attack_5` | overhead claw | overhead_claw 1@0 (the arm raised ahead), 4@0.08, 5@0.17, 7@0.25 (the claws on the floor ahead), 6@0.4; box (52, -85) x(3.2, 6.5) from 0.17, (60, -60) x(4, 4) from 0.25, live 0.17-0.33 | 0.5 |
+| `attack_6` | leaf blades | blade_throw 4@0, 5@0.15 (the fling), 6@0.35; no hit | 0.6 |
+| `attack_7` | dive | dive 2@0, 3@0.35 (the hang), 4@0.75 (the fall), 5@0.95 (the landing), 6@1.05; box (0, -30) x(4, 3) from 0.85 | 1.2 |
+| `attack_8` | scatter | scatter 3@0, 5@0.05, 7@0.1 (apart), then 7@0.45, 5@0.55, 3@0.65 (reformed); `Sprite2D:visible`, `Hurtbox:monitorable` and `GreyhushShield:visible` false 0.15-0.45 | 0.7 |
 | `windup_1` | sweep | attack_1 0@0, 1@0.1, 2@0.2 | 0.3 |
 | `windup_2` | second sweep | attack_1 6@0 (arm out low), 2@0.1 | 0.2 |
-| `windup_3` | overhead claw | attack_1 9@0, 8@0.15 (the arm raised over the head) | 0.3 |
+| `windup_3` | overhead claw | overhead_claw 0@0, 2@0.2 (the arm straight up over the hood) | 0.4 |
 | `windup_4` | hop | leap 0@0, 1@0.15 | 0.3 |
-| `windup_5` | leaf blades | attack_3 1@0 (low reach), attack_1 1@0.15 (arm cocked) | 0.3 |
-| `windup_6` | dive | leap 6@0, 2@0.15 (curled) | 0.3 |
-| `windup_7` | scatter | attack_2 3@0, 7@0.15 (leaves flaring up) | 0.3 |
+| `windup_5` | leaf blades | blade_throw 0@0, 1@0.15 (the reach to the skirt), 3@0.3 (arm cocked high) | 0.45 |
+| `windup_6` | dive | dive 0@0, 1@0.2 (gathered) | 0.4 |
+| `windup_7` | scatter | scatter 0@0, 1@0.15, 2@0.3 (arms out, the leaves lift) | 0.4 |
 | `windup_8` | gust | attack_2 0@0, 1@0.2 | 0.4 |
 | `recover_1` | sweep, second sweep | attack_1 10@0, 11@0.15 | 0.3 |
-| `recover_2` | overhead claw | attack_1 9@0, 10@0.2 | 0.4 |
+| `recover_2` | overhead claw | overhead_claw 6@0, 7@0.25 | 0.5 |
 | `recover_3` | hop | attack_3 7@0, idle 0@0.15 | 0.3 |
-| `recover_4` | dive | leap 6@0, 7@0.25 | 0.5 |
-| `recover_5` | leaf blades | attack_1 8@0, 11@0.15 | 0.3 |
+| `recover_4` | dive | dive 6@0, 7@0.3 (the deep crouch, rising) | 0.6 |
+| `recover_5` | leaf blades | blade_throw 6@0, 7@0.2 | 0.4 |
 | `recover_6` | gust | attack_2 11@0, idle 0@0.2 | 0.35 |
-| `recover_7` | scatter | leap 7@0, idle 0@0.2 | 0.35 |
+| `recover_7` | scatter | scatter 2@0, 1@0.15, 0@0.3 (backward) | 0.4 |
 
-**For GRD-18.** The claw needs a drawn overhead strike: the placeholder raises the arm (attack_1 9) and strikes with the sweep's low frames, so its 150 px box is drawn only below Ivo's height (the feel pass: it reads as a third low swipe). The scatter needs a burst into leaves and a reforming; the placeholder hides the sprite. The hop and the dive share the leap strip's crouch family (the hop opens standing, the dive curled). The spawns are `_draw` placeholders in an autumn light/dark pair.
+**GRD-18 (2026-11-20, "approve", user).** The overhead claw, the leaf throw, the scatter and the dive are drawn PixelLab strips. The claw's hit window moved to 0.17-0.33 and follows the art: at 0.08-0.17 the arm swings across with nothing drawn at Ivo's height (`combat_reach_test`). The dive strip is a leap with a flailing hang, not a claws-first plunge (two rounds; the first crawled flat). The scatter leaves the skull and a thin body at its last frame, under the 0.15-0.45 hide. The hop still opens from the leap strip. The leaf blade and the swirl's leaves are drawn (`draw_guardian_effects.py autumn`; "approve", user, 2026-11-20).
 
 ## The Sun Guardian's fight (GRD-16, 2026-11-19)
 
@@ -361,14 +360,15 @@ The Caldera is reached from the Lake (the roll, perhaps no double jump) or from 
 
 | Slot | Move | Frames (strip frame@s) | Length |
 |---|---|---|---|
-| `attack_1` | claw, second claw | attack_1 3..8 every 0.0833; box (84, -24) x(2.8, 2.4), then (83, -24) x(2.7, 2.4), on frames 5-6 | 0.5 (was 1.0, frames 0-11) |
+| `attack_1` | claw | attack_1 3..8 every 0.0833; box (84, -24) x(2.8, 2.4), then (83, -24) x(2.7, 2.4), on frames 5-6 | 0.5 (was 1.0, frames 0-11) |
 | `attack_2` | charge, return | unchanged (attack_2 0..13) | 1.167 |
 | `attack_3` | roar | attack_3 2..10 every 0.0833; the high box on 5, the low on 6-10 (as before) | 0.75 (was 1.167, frames 0-13) |
 | `attack_4` | bite lunge | leap 5@0, 6@0.15, 7@0.3, idle 0@0.38; box (92, -52) x(3.2, 2.8) 0.05-0.25 | 0.45 |
 | `attack_5` | ember spit | attack_1 2@0, 4@0.1, 5@0.25, 10@0.4; no hit | 0.5 |
 | `attack_6` | sun shafts | attack_3 3@0, 4@0.15, then 5 and 4 in turn every 0.3 from 0.3, 6@2.7; no hit | 2.85 |
 | `attack_7` | pounce slam | leap 1@0, 2@0.25, 3@0.45, 4@0.7, 5@0.85, 6@0.95; box (0, -30) x(6.6, 3) 0.75-1.0 | 1.1 |
-| `windup_1` | claw, second claw | attack_1 1@0, 3@0.1 (the paw raised high, held) | 0.3 |
+| `attack_8` | second claw | a copy of `attack_1` until `guardian_summer_claw_other_paw` is wired | 0.5 |
+| `windup_1` | claw | attack_1 1@0, 3@0.1 (the paw raised high, held) | 0.3 |
 | `windup_2` | bite lunge | leap 7@0, 6@0.15 (head low, coiled) | 0.3 |
 | `windup_3` | charge | attack_2 3@0, 4@0.25 (low, leaning in) | 0.5 |
 | `windup_4` | return | attack_2 0@0, 1@0.25 (standing, then leaning in: the turn) | 0.45 |
@@ -376,15 +376,17 @@ The Caldera is reached from the Lake (the roll, perhaps no double jump) or from 
 | `windup_6` | ember spit | hurt 2@0, 3@0.2 (head jerked back) | 0.4 |
 | `windup_7` | sun shafts | attack_3 2@0, 3@0.2 (rearing) | 0.4 |
 | `windup_8` | pounce slam | leap 0@0, 1@0.25 (crouch, spring) | 0.4 |
-| `recover_1` | claw, second claw | attack_1 9@0, 10@0.15 | 0.3 |
+| `windup_9` | second claw | a copy of `windup_1` | 0.3 |
+| `recover_1` | claw | attack_1 9@0, 10@0.15 | 0.3 |
 | `recover_2` | bite lunge | leap 7@0, idle 0@0.25 | 0.4 |
 | `recover_3` | charge, return | attack_2 12@0, 13@0.25 | 0.5 |
 | `recover_4` | roar | attack_3 11@0, 12@0.2 | 0.4 |
 | `recover_5` | ember spit | attack_1 10@0, 11@0.15 | 0.3 |
 | `recover_6` | sun shafts | attack_3 6@0, 7@0.2 | 0.4 |
 | `recover_7` | pounce slam | leap 6@0, 7@0.25 | 0.5 |
+| `recover_8` | second claw | a copy of `recover_1` | 0.3 |
 
-**For GRD-18.** The feel pass found the claw, charge, spit and roar wind-ups read as the idle stance on the first placeholder frames; they now use the strips' most distinct poses (above), and still need drawn wind-ups. The spit borrows the hurt strip's recoil, so it looks like a flinch. The second claw replays the claw's clip and wind-up (no slot left: 7 strike slots and 8 wind-ups are used, and a shared wind-up must share its strike, `test_each_kind_of_move_winds_up_its_own_way`); a drawn other-paw swipe would give it its own. The bite, the pounce and the sun shafts are cut from the leap and the roar's rear: each needs a drawn wind-up and strike (a bite, a spit, a pounce, a sustained rear). The walk was drawn for 84 px/s at 0.125 s a frame; it now loops in 0.7 s (0.0875 s a frame) to match the 120 px/s walk (GRD-18, 2026-11-20). The spawns are `_draw` placeholders in a summer light/dark pair.
+**For GRD-18.** The feel pass found the claw, charge, spit and roar wind-ups read as the idle stance on the first placeholder frames; they now use the strips' most distinct poses (above), and still need drawn wind-ups. The spit borrows the hurt strip's recoil, so it looks like a flinch. The second claw had to replay the claw's clip and wind-up (7 strike slots and all 8 wind-ups were used, and a shared wind-up must share its strike, `test_each_kind_of_move_winds_up_its_own_way`). On the user's answer "add" (2026-11-20) the engine has 10 slots of each kind, and the second claw has its own `attack_8`, `windup_9` and `recover_8` (claw copies until `guardian_summer_claw_other_paw` is drawn). The charge and roar wind-ups get drawn strips of their own (`guardian_summer_charge_windup`, `guardian_summer_roar_windup`), on the user's answer "new" (2026-11-20). The bite, the pounce and the sun shafts are cut from the leap and the roar's rear: each needs a drawn wind-up and strike (a bite, a spit, a pounce, a sustained rear). The walk was drawn for 84 px/s at 0.125 s a frame; it now loops in 0.7 s (0.0875 s a frame) to match the 120 px/s walk (GRD-18, 2026-11-20). The ember, its patch and the pounce's running fire are drawn (`draw_guardian_effects.py summer`; "approve", user, 2026-11-20); the sun shafts and the pounce shadow stay procedural.
 
 ## The mentor's fight (GRD-17, 2026-11-19)
 
@@ -444,6 +446,7 @@ Recovery and cooldown below are the base values; each stage scales them ("Stages
 | `attack_5` | hail, hail again | attack_3 10@0, 11@0.15, 9@0.45, 10@0.55, 11@0.7, 9@0.85, 10@0.95; no hit | 1.1 |
 | `attack_6` | pounce, pounce again | leap 2@0, 3@0.15, 4@0.35, 5@0.55, 6@0.7, 7@0.8; box (0, -24) x(3, 2.4) 0.62-0.85 | 0.9 |
 | `attack_7` | seeds | attack_2 2@0, 3@0.1, 4@0.25, 5@0.4; no hit | 0.5 |
+| `attack_8` | frost wave | attack_2 5@0, 6@0.083, 7@0.25, 8@0.4; no hit | 0.5 |
 | `windup_1` | sweep | attack_1 1@0, 2@0.15 (hand drawn back) | 0.3 |
 | `windup_2` | glide | attack_1 9@0 (arm low behind), 2@0.15 | 0.3 |
 | `windup_3` | slam | attack_2 3@0, 4@0.2 (arm raised high, held) | 0.4 |
@@ -459,7 +462,7 @@ Recovery and cooldown below are the base values; each stage scales them ("Stages
 | `recover_5` | pounce | leap 7@0, idle 0@0.25 | 0.4 |
 | `recover_6` | seeds | attack_2 11@0, 13@0.2 | 0.35 |
 
-**For GRD-18.** The mentor's strips are the GRD-06 placeholders: the sweep and the slam reach 46-66 px of drawn hand, so every box is short and the mentor fights close. The glide replays the sweep's frames while it slides; the thorn row and the seeds both crouch to the floor (kneel against reach) and need drawn wind-ups; the hail and the slam share the raised arm family (straight up against forward); the pounce uses the lucidity leap's strip. The spawns are the Frost's and Bloom's, drawn since GRD-18 (the ice wave, icicles, thorn row and seed pods) in their own seasons' colours, which suits a winter that turns to spring; the pounce's shadow is a procedural spring pair.
+**For GRD-18.** The mentor's strips are the GRD-06 placeholders: the sweep and the slam reach 46-66 px of drawn hand, so every box is short and the mentor fights close. The reach stays: asked to keep the close reach or redraw a longer one (and retune), the user answered "ok" (2026-11-20), read as keep. The glide replays the sweep's frames while it slides; the thorn row and the seeds both crouch to the floor (kneel against reach) and need drawn wind-ups; the hail and the slam share the raised arm family (straight up against forward); the pounce uses the lucidity leap's strip. The spawns are the Frost's and Bloom's, drawn since GRD-18 (the ice wave, icicles, thorn row and seed pods) in their own seasons' colours, which suits a winter that turns to spring; the pounce's shadow is a procedural spring pair.
 
 ## Performance clips (GRD-08, 2026-10-30)
 
