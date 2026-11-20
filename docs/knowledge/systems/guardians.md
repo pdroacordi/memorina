@@ -356,37 +356,37 @@ The Caldera is reached from the Lake (the roll, perhaps no double jump) or from 
 
 - **Measured** (`playtests/2026-11-19-grd16-sun-fight`, the feel round's re-measure at 6 ms a frame; `playtests/2026-11-19-grd16-sun-feel` for the feel pass). Bot (`BOT_GOD`): restored at 44.4 s with 12 hits (5 body contact); it stands and swings, so the claw string chained 4 of 4 and reached the bite twice. Dodging driver, Orchard kit (jumps) and Lake kit (rolls through the charge), with and without god mode: all four restored (78.7-104.4 s) with 0-1 hits (a sun shaft); busy 68-72 / 75-79 % of the pressure at stages 0 / 1, idle 0.68-0.80 / 0.55-0.61 s; the return followed every stage-1 charge (11 of 11; 26 of 26 over eight runs, both kits); no three-move order came round more than twice running. The claw string never chained against the driver (0 of 26): it backs off through the whole claw and ends 200-230 px away, past the second claw's 190, or jumps it (open, below). A forced spit, then pounce, 11 times: the pounce always waited for the patches and never hit.
 
-**Placeholder clips** (GRD-18 draws the real ones). Strips: `attack_1` (claw, 12 frames), `attack_2` (charge, 14), `attack_3` (roar, 14), `leap` (8), `idle` (6); frame@s.
+**Clips.** Strips: `attack_1` (claw, 12 frames), `attack_2` (charge, 14), `attack_3` (roar, 14), `leap` (8), `idle` (6), and the GRD-18 strips (192x96 frames): `claw_rake` (10), `claw_other_paw` (10), `bite` (8), `ember_spit` (8), `sun_rear` (10), `pounce` (10), `charge_windup` (4), `roar_windup` (3); frame@s.
 
 | Slot | Move | Frames (strip frame@s) | Length |
 |---|---|---|---|
-| `attack_1` | claw | attack_1 3..8 every 0.0833; box (84, -24) x(2.8, 2.4), then (83, -24) x(2.7, 2.4), on frames 5-6 | 0.5 (was 1.0, frames 0-11) |
+| `attack_1` | claw | claw_rake 4@0, 5@0.06, 6@0.11 (the sweep), 7@0.1666666 (the paw, keyed with the box raked to the floor ahead), 8@0.36; box (84, -24) x(2.8, 2.4), then (83, -24) x(2.7, 2.4), live 0.167-0.333 | 0.5 |
 | `attack_2` | charge, return | unchanged (attack_2 0..13) | 1.167 |
 | `attack_3` | roar | attack_3 2..10 every 0.0833; the high box on 5, the low on 6-10 (as before) | 0.75 (was 1.167, frames 0-13) |
-| `attack_4` | bite lunge | leap 5@0, 6@0.15, 7@0.3, idle 0@0.38; box (92, -52) x(3.2, 2.8) 0.05-0.25 | 0.45 |
-| `attack_5` | ember spit | attack_1 2@0, 4@0.1, 5@0.25, 10@0.4; no hit | 0.5 |
-| `attack_6` | sun shafts | attack_3 3@0, 4@0.15, then 5 and 4 in turn every 0.3 from 0.3, 6@2.7; no hit | 2.85 |
-| `attack_7` | pounce slam | leap 1@0, 2@0.25, 3@0.45, 4@0.7, 5@0.85, 6@0.95; box (0, -30) x(6.6, 3) 0.75-1.0 | 1.1 |
-| `attack_8` | second claw | a copy of `attack_1` until `guardian_summer_claw_other_paw` is wired | 0.5 |
-| `windup_1` | claw | attack_1 1@0, 3@0.1 (the paw raised high, held) | 0.3 |
-| `windup_2` | bite lunge | leap 7@0, 6@0.15 (head low, coiled) | 0.3 |
-| `windup_3` | charge | attack_2 3@0, 4@0.25 (low, leaning in) | 0.5 |
+| `attack_4` | bite lunge | bite 2@0, 3@0.05, 4@0.15, 5@0.3 (the jaws low ahead); box (80, -52) x(2.6, 2.8) 0.05-0.25 | 0.45 |
+| `attack_5` | ember spit | ember_spit 4@0, 5@0.1, 6@0.2, 7@0.35 (the head whipped low, jaws open); no hit | 0.5 |
+| `attack_6` | sun shafts | sun_rear 3@0, then 4, 5, 6, 7, 6, 5 in turn every 0.15 from 0.15 (reared, held), 7@2.7; no hit | 2.85 |
+| `attack_7` | pounce slam | pounce 2@0, 3@0.3 (in the air), 4@0.86 (the landing, at touchdown 0.867), 5@0.93, 6@1.0; box (0, -30) x(6.6, 3) 0.75-1.0 | 1.1 |
+| `attack_8` | second claw | claw_other_paw 4@0, 5@0.08, 6@0.15 (the swipe down ahead), 7@0.36; box (78, -24) x(2.4, 2.4) 0.167-0.333 | 0.5 |
+| `windup_1` | claw | claw_rake 1@0, 3@0.1 (the paw raised high, held) | 0.3 |
+| `windup_2` | bite lunge | bite 0@0, 1@0.15 (the head lowered) | 0.3 |
+| `windup_3` | charge | charge_windup 0@0, 2@0.2, 3@0.35 (crouched low, leaning in) | 0.5 |
 | `windup_4` | return | attack_2 0@0, 1@0.25 (standing, then leaning in: the turn) | 0.45 |
-| `windup_5` | roar | attack_3 1@0, 2@0.3 (crouch, then the rear begins) | 0.5 |
-| `windup_6` | ember spit | hurt 2@0, 3@0.2 (head jerked back) | 0.4 |
-| `windup_7` | sun shafts | attack_3 2@0, 3@0.2 (rearing) | 0.4 |
-| `windup_8` | pounce slam | leap 0@0, 1@0.25 (crouch, spring) | 0.4 |
-| `windup_9` | second claw | a copy of `windup_1` | 0.3 |
-| `recover_1` | claw | attack_1 9@0, 10@0.15 | 0.3 |
-| `recover_2` | bite lunge | leap 7@0, idle 0@0.25 | 0.4 |
+| `windup_5` | roar | roar_windup 0@0, 1@0.15, 2@0.3 (the head dropped under the mane) | 0.5 |
+| `windup_6` | ember spit | ember_spit 0@0, 1@0.1, 3@0.25 (the head reared up and back) | 0.4 |
+| `windup_7` | sun shafts | sun_rear 0@0, 2@0.2 (rising onto the hind legs) | 0.4 |
+| `windup_8` | pounce slam | pounce 0@0, 1@0.2 (crouch, spring) | 0.4 |
+| `windup_9` | second claw | claw_other_paw 1@0, 3@0.1 (reared, the other paw high) | 0.3 |
+| `recover_1` | claw | claw_rake 8@0, 9@0.15 | 0.3 |
+| `recover_2` | bite lunge | bite 6@0, 7@0.2 | 0.4 |
 | `recover_3` | charge, return | attack_2 12@0, 13@0.25 | 0.5 |
 | `recover_4` | roar | attack_3 11@0, 12@0.2 | 0.4 |
-| `recover_5` | ember spit | attack_1 10@0, 11@0.15 | 0.3 |
-| `recover_6` | sun shafts | attack_3 6@0, 7@0.2 | 0.4 |
-| `recover_7` | pounce slam | leap 6@0, 7@0.25 | 0.5 |
-| `recover_8` | second claw | a copy of `recover_1` | 0.3 |
+| `recover_5` | ember spit | ember_spit 7@0, idle 0@0.15 | 0.3 |
+| `recover_6` | sun shafts | sun_rear 8@0, 9@0.2 (down onto the forepaws) | 0.4 |
+| `recover_7` | pounce slam | pounce 7@0, 8@0.2, 9@0.35 | 0.5 |
+| `recover_8` | second claw | claw_other_paw 8@0, 9@0.15 | 0.3 |
 
-**For GRD-18.** The feel pass found the claw, charge, spit and roar wind-ups read as the idle stance on the first placeholder frames; they now use the strips' most distinct poses (above), and still need drawn wind-ups. The spit borrows the hurt strip's recoil, so it looks like a flinch. The second claw had to replay the claw's clip and wind-up (7 strike slots and all 8 wind-ups were used, and a shared wind-up must share its strike, `test_each_kind_of_move_winds_up_its_own_way`). On the user's answer "add" (2026-11-20) the engine has 10 slots of each kind, and the second claw has its own `attack_8`, `windup_9` and `recover_8` (claw copies until `guardian_summer_claw_other_paw` is drawn). The charge and roar wind-ups get drawn strips of their own (`guardian_summer_charge_windup`, `guardian_summer_roar_windup`), on the user's answer "new" (2026-11-20). The bite, the pounce and the sun shafts are cut from the leap and the roar's rear: each needs a drawn wind-up and strike (a bite, a spit, a pounce, a sustained rear). The walk was drawn for 84 px/s at 0.125 s a frame; it now loops in 0.7 s (0.0875 s a frame) to match the 120 px/s walk (GRD-18, 2026-11-20). The ember, its patch and the pounce's running fire are drawn (`draw_guardian_effects.py summer`; "approve", user, 2026-11-20); the sun shafts and the pounce shadow stay procedural.
+**GRD-18 (2026-11-20, "approve", user).** The claw, the second claw, the bite, the spit, the sun shafts' rear, the pounce and the charge and roar wind-ups are drawn PixelLab strips; the charge and the roar strikes stay the GRD-04 strips. The claw shows its raked-down paw (124 px of drawn reach) through the whole hit window 0.167-0.333; the second claw's and the bite's boxes were narrowed to the drawn paw and jaws (`combat_reach_test`). The charge and sun-shaft wind-ups skip the frames whose tail reaches 120 px behind (`test_every_move_is_thrown_from_on_screen`, 200 + tail <= 320). The roar wind-up has three frames (the retry added a glowing disc after them). The walk loops in 0.7 s for the 120 px/s walk. The ember, its patch and the pounce's running fire are drawn (`draw_guardian_effects.py summer`; "approve", user, 2026-11-20); the sun shafts and the pounce shadow stay procedural.
 
 ## The mentor's fight (GRD-17, 2026-11-19)
 
@@ -411,13 +411,13 @@ Recovery and cooldown below are the base values; each stage scales them ("Stages
 | Move (`.tres`) | Stage | Telegraph | Strike | Recovery | Cooldown | Range (up) | Weight | Links | Dodge |
 |---|---|---|---|---|---|---|---|---|---|
 | Sweep (`mentor_sweep`) | 0 | 0.5, hand drawn back | 0.5, hit 0.083-0.25, box x 20..64, y -48..0 | 0.55 | 0.7 | 70 (40) | 1.5 | glide 0.6 | back off past 70, or jump it |
-| Glide (`mentor_glide_sweep`, also a root) | 0 | 0.45, arm low behind | 0.5: `DashMotion` 560 px/s to 62 px short of Ivo (stays when closer); the sweep's box 0.2-0.4 | 0.55 | 0.7 | 200 (40) | 0.7 | slam 0.6 | keep backing off through the strike, or jump it (box top 48) |
+| Glide (`mentor_glide_sweep`, also a root) | 0 | 0.45, arm low behind | 0.5: `DashMotion` 560 px/s to 62 px short of Ivo (stays when closer); box x 20..78 (the drawn hand, GRD-18) 0.2-0.4 | 0.55 | 0.7 | 200 (40) | 0.7 | slam 0.6 | keep backing off through the strike, or jump it (box top 48) |
 | Slam (`mentor_slam`, `repeats` false) | 0 | 0.65, arm raised high from 0.2 | 0.667, the hands on the floor hit 0.083-0.333, box x 16..54, y -40..0; ice wave both ways at 0.1 | 0.7 | 0.9 | 60 (33) | 1.0 | - | back off or jump from the raised arm; then jump the wave |
 | Frost wave (`mentor_frost_wave`, no strike, `repeats` false) | 0 | 0.6, arm to the face then raised | 0.5; the slam's ice wave both ways at 0.1, the hands short of Ivo | 0.6 | 0.9 | 250 | 0.6 | - | jump the wave |
 | Hail (`mentor_icicle_fall`, no strike, `repeats` false, waits for the floor) | 0 | 0.55, arm straight up | 1.1; 3 icicles at Ivo's spot at 0.15, 0.55, 0.95 | 0.6 | 0.9 | 260 | 0.6 | hail again 0.6, from stage 1 | keep moving |
 | Hail again (`mentor_icicle_again`, link only) | 1 | 0.45 | as the hail | 0.6 | 0.9 | 260 | - | - | keep moving |
 | Thorn row (`mentor_thorn_row`, no strike) | 2 | 0.45, kneeling | 0.5; a thorn row runs from 40 px ahead at 0.15 (Bloom's, 300 px/s, 420 px, 28 px tall) | 0.4 | 0.7 | 264 | 0.8 | - | jump it |
-| Pounce (`mentor_pounce`, waits for the floor) | 2 | 0.45, rising | 0.9: `LeapMotion` PAST_IVO 24 px, 110 px high, in the air 0.1-0.7; box x -30..30, y -48..0 at 0.62-0.85; a 128 px shadow on the landing from 0 | 0.45 | 0.8 | 220 (96) | 0.8 | pounce again 0.7 (certain at stage 2) | step out of the shadow: under the arc toward the take-off, or away |
+| Pounce (`mentor_pounce`, waits for the floor) | 2 | 0.45, rising | 0.9: `LeapMotion` PAST_IVO 24 px, 110 px high, in the air 0.1-0.7; box x -30..30, y -48..0 at 0.71-0.85 (touchdown, GRD-18); a 128 px shadow on the landing from 0 | 0.45 | 0.8 | 220 (96) | 0.8 | pounce again 0.7 (certain at stage 2) | step out of the shadow: under the arc toward the take-off, or away |
 | Pounce again (`mentor_pounce_again`, link only) | 2 | 0.3 | as the pounce | 0.45 | 0.8 | 220 (96) | - | - | as the pounce |
 | Seeds (`mentor_spring`, no strike, `repeats` false) | 2 | 0.5, reaching to the floor | 0.5; 3 pods round Ivo 96 apart at 0.1, each a 48 px thorn patch live 1.0 s (Bloom's seed lob) | 0.4 | 0.9 | 264 | 0.7 | - | stand in a gap between the patches |
 
@@ -435,34 +435,35 @@ Recovery and cooldown below are the base values; each stage scales them ("Stages
 
 - **Measured** (`playtests/2026-11-19-grd17-mentor-fight`, 5-6 ms a frame). Bot (`BOT_GOD`): restored at 68.5 s with 6 hits; the winter answer, the revelation, the two-track answer and both final phrases all happened. Dodging driver to the victory: 116.7-152.2 s, 0-1 hits, with and without god mode; busy 63-69 / 61-71 / 68-74 % of the pressure at stages 0 / 1 / 2, idle 0.87-1.18 / 0.70-1.01 / 0.67-1.02 s on average. Held stages: stage 0 for 118 s, 43 strings, the slam the most at 30 %, 6 hits (icicles 5); stage 2 for 269 s, 96 strings, every move thrown, the hail twice the most at 18 %, busy 79 %, idle 0.50 s, 11 hits (icicles 7). No string over 35 % at any stage and no repeating cycle. A failed winter window was winter again every time. Under the dissonance veil (a mixed two-track window, then 30 s of pressure) the seeds' marks and patches read through the static. **Fix round** (same report, "Fix round"): pinned at the west step a single jump clears the slam and its wave 6 of 6 (was 0 of 6); a still Ivo's third hit at stage 0 / 1 / 2 is 8.6-9.1 / 7.2-8.8 / 6.4-9.0 s (was 8.95 / 8.65 / 8.22), the mentor winding up or striking 47-49 / 52-60 / 68-70 % of the time; the longest idle at stages 1-2 is 1.27-1.35 s (was 2.65-2.91); the bot restores at 74.8 s with 9 hits, the god-mode driver at 238.7 s with 13, and the driver without god mode died in both final runs (57.2 s, 109.1 s), mostly to icicles at the west wall.
 
-**Placeholder clips** (GRD-18 draws the real ones). Strips: `attack_1` (12 frames), `attack_2` (14), `attack_3` (14), `leap` (8), `idle` (6); frame@s.
+**Clips.** Strips: `attack_1` (12 frames), `attack_2` (14), `attack_3` (14), `leap` (8), `idle` (6), and the GRD-18 strips (8 frames of 128x96 each): `glide`, `hail_call`, `thorn_kneel`, `seed_cast`, `pounce`; frame@s.
 
 | Slot | Move | Frames (strip frame@s) | Length |
 |---|---|---|---|
 | `attack_1` | sweep | attack_1 3..8 every 0.0833; box (42, -24) x(2.2, 2.4) on frame 4, (40, -24) x(2.0, 2.4) on 5 | 0.5 (was 1.0, frames 0-11) |
 | `attack_2` | slam | attack_2 5@0, 6@0.083, 7@0.25, 8@0.417, 9@0.5, 10@0.583; box (35, -20) x(1.8, 2) on 6, (32, -20) x(1.6, 2) on 7 | 0.667 (was 1.167) |
-| `attack_3` | thorn row | attack_3 2@0, 3@0.15, 4@0.3, 5@0.4; no hit | 0.5 (was the spring strike, 1.167) |
-| `attack_4` | glide | attack_1 2@0, 3@0.1, 4@0.2, 5@0.3, 7@0.4; the sweep's boxes 0.2-0.4 | 0.5 |
-| `attack_5` | hail, hail again | attack_3 10@0, 11@0.15, 9@0.45, 10@0.55, 11@0.7, 9@0.85, 10@0.95; no hit | 1.1 |
-| `attack_6` | pounce, pounce again | leap 2@0, 3@0.15, 4@0.35, 5@0.55, 6@0.7, 7@0.8; box (0, -24) x(3, 2.4) 0.62-0.85 | 0.9 |
-| `attack_7` | seeds | attack_2 2@0, 3@0.1, 4@0.25, 5@0.4; no hit | 0.5 |
+| `attack_3` | thorn row | thorn_kneel 2@0, 3@0.1, 4@0.2, 5@0.35 (kneeling, the hand flat ahead); no hit | 0.5 |
+| `attack_4` | glide | glide 2@0, 3@0.15, 4@0.3 (flung low along the floor), 5@0.4; box (49, -24) x(2.9, 2.4), x 20..78 for the drawn hand (74-82 px), 0.2-0.4 | 0.5 |
+| `attack_5` | hail, hail again | hail_call 2@0, 3@0.15, 4@0.45, 3@0.55, 2@0.7, 3@0.85, 4@0.95 (the arm straight up, the hand calling); no hit | 1.1 |
+| `attack_6` | pounce, pounce again | pounce 1@0, 2@0.1, 3@0.35 (in the air), 4@0.71 (the landing, at touchdown 0.717), 5@0.77, 6@0.83; box (0, -24) x(3, 2.4) 0.71-0.85 (opened at touchdown) | 0.9 |
+| `attack_7` | seeds | seed_cast 3@0, 4@0.1 (the cast forward), 5@0.25; no hit | 0.5 |
 | `attack_8` | frost wave | attack_2 5@0, 6@0.083, 7@0.25, 8@0.4; no hit | 0.5 |
 | `windup_1` | sweep | attack_1 1@0, 2@0.15 (hand drawn back) | 0.3 |
-| `windup_2` | glide | attack_1 9@0 (arm low behind), 2@0.15 | 0.3 |
+| `windup_2` | glide | glide 0@0, 1@0.15 (the arm reaching low ahead) | 0.3 |
 | `windup_3` | slam | attack_2 3@0, 4@0.2 (arm raised high, held) | 0.4 |
-| `windup_4` | hail | attack_3 9@0, 10@0.2 (arm straight up) | 0.4 |
-| `windup_5` | thorn row | leap 6@0, 5@0.2 (kneeling) | 0.4 |
-| `windup_6` | pounce | leap 0@0, 1@0.15 (rising) | 0.3 |
-| `windup_7` | seeds | attack_3 1@0, 2@0.2 (reaching to the floor) | 0.4 |
+| `windup_4` | hail | hail_call 0@0, 1@0.2 (the arm going up) | 0.4 |
+| `windup_5` | thorn row | thorn_kneel 0@0, 1@0.2 (bending to kneel) | 0.4 |
+| `windup_6` | pounce | pounce 0@0 (crouched) | 0.3 |
+| `windup_7` | seeds | seed_cast 0@0, 1@0.15, 2@0.3 (the arm raised back) | 0.4 |
 | `windup_8` | frost wave | attack_2 1@0, 3@0.2 (arm to the face, then raised) | 0.4 |
-| `recover_1` | sweep, glide | attack_1 9@0, 11@0.25 | 0.5 |
+| `recover_1` | sweep | attack_1 9@0, 11@0.25 | 0.5 |
 | `recover_2` | slam, frost wave | attack_2 9@0, 11@0.3 | 0.6 |
-| `recover_3` | hail | attack_3 12@0, 13@0.3 | 0.5 |
-| `recover_4` | thorn row | attack_3 6@0, 13@0.2 | 0.35 |
-| `recover_5` | pounce | leap 7@0, idle 0@0.25 | 0.4 |
-| `recover_6` | seeds | attack_2 11@0, 13@0.2 | 0.35 |
+| `recover_3` | hail | hail_call 5@0, 6@0.15, 7@0.3 | 0.5 |
+| `recover_4` | thorn row | thorn_kneel 6@0, 7@0.2 | 0.35 |
+| `recover_5` | pounce | pounce 6@0, 7@0.2 | 0.4 |
+| `recover_6` | seeds | seed_cast 6@0, 7@0.2 | 0.35 |
+| `recover_7` | glide | glide 5@0, 6@0.15, 7@0.3 (rising off the floor) | 0.5 |
 
-**For GRD-18.** The mentor's strips are the GRD-06 placeholders: the sweep and the slam reach 46-66 px of drawn hand, so every box is short and the mentor fights close. The reach stays: asked to keep the close reach or redraw a longer one (and retune), the user answered "ok" (2026-11-20), read as keep. The glide replays the sweep's frames while it slides; the thorn row and the seeds both crouch to the floor (kneel against reach) and need drawn wind-ups; the hail and the slam share the raised arm family (straight up against forward); the pounce uses the lucidity leap's strip. The spawns are the Frost's and Bloom's, drawn since GRD-18 (the ice wave, icicles, thorn row and seed pods) in their own seasons' colours, which suits a winter that turns to spring; the pounce's shadow is a procedural spring pair.
+**GRD-18 (2026-11-20, "approve", user).** The glide, the hail, the thorn row, the seeds and the pounce are drawn PixelLab strips; the sweep, the slam and the frost wave keep the GRD-06 strips and their close reach ("ok", user, 2026-11-20: keep the close reach). The seed cast raises the arm back and throws forward; it never reaches to the floor (three rounds: the first grew a staff, the second turned to the viewer). The pounce is a second round (the first faced the viewer); its robe breaks into pale streaks in the air. The spawns are the Frost's and Bloom's drawn sprites in their own seasons' colours; the pounce's shadow is a procedural spring pair.
 
 ## Performance clips (GRD-08, 2026-10-30)
 

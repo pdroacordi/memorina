@@ -957,6 +957,24 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - A Python heredoc that writes Python or GDScript source mangles `\t`/`\n` escapes. Write generator code with the Write
     tool, and patch files with a script file, not inline `python - <<EOF`.
 
+- **Learned 2026-11-20 (GRD-18 art check)**: **to judge a clip pose by pose, draw every physics frame.** A driver that saves
+  a PNG per change runs at ~4 fps, and the engine then steps physics ~10 times per draw: poses and box frames are skipped and
+  phase times are off by up to 0.15 s. Set `Engine.max_physics_steps_per_frame = 1` in the driver's `_initialize`: the game
+  slows in real time (~6 fps), but every physics state is drawn and logged, and phase time = physics frames / 60. This is safe
+  only when nothing is timed in real ms (no scripted presses).
+  - `tools/playtest/scripts/guardian_art_check_driver.gd` forces each move in `AC_MOVES` (`.tres` basenames in `AC_DIR`, link-only
+    moves too) `AC_REPS` times against a still god-mode Ivo (`AC_IVO_X` teleports him first). It logs strip, frame, box and
+    airborne state per change, plus the box and hurtbox screen rects with each shot. A Pillow sheet that draws those rects on
+    crops around the guardian answers "does the hit land where art is drawn" in one `Read`.
+  - **Compare frame keys with box keys in the `.tscn`, not only in frames.** A frame keyed 0.167 against a box at 0.1666666 is
+    one physics frame of box on the previous pose. A 40-line scan of every clip's `Sprite2D:frame` and `Hitbox:monitoring`
+    times found that case in seconds.
+  - Landing frames: compare the frame key with the first `air=false` frame, not with the move table's prose.
+  - Sizes: guardian sprites are scale 2, so Leaf crops need ~800x500 window px around the feet, the lion ~840x420, and the
+    mentor ~720x400. Measure a strip's reach with Pillow (2 * (64 - leftmost opaque x) for a 128 px frame), not by eye: eyeballing
+    the mentor's glide hand was 12 px off.
+  - `rtk` turns a no-match `grep` on a Godot log into the whole log. Filter logs with a small Python one-liner.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate
