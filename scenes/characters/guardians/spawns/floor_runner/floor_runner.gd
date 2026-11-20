@@ -21,6 +21,8 @@ const TRAIL := 48.0
 @export var width: float = 20.0
 ## Physics layers that count as floor under its head.
 @export_flags_2d_physics var floor_mask: int = 1
+## Spike rise stages, one drawn every frame width; null draws the light/dark placeholder.
+@export var art: SpawnArt
 
 ## Px along the facing where a probe found a gap; INF while the floor holds.
 var _gap_at: float = INF
@@ -82,6 +84,9 @@ func _draw() -> void:
 	var tail := maxf(head - TRAIL, 0.0)
 	var end := _end_time()
 	var fading := clampf(1.0 - (_t - end) / maxf(fade, 0.001), 0.0, 1.0) if _t >= end else 1.0
+	if art != null:
+		_draw_spikes(head, tail, fading)
+		return
 	var step := 8.0
 	var along := tail
 	while along <= head:
@@ -90,3 +95,13 @@ func _draw() -> void:
 		draw_rect(snapped_rect(Rect2(x - 3.0, -rise, 6.0, rise)), dark)
 		draw_rect(snapped_rect(Rect2(x - 1.0, -rise, 2.0, rise * 0.6)), light)
 		along += step
+
+## Spikes planted every frame width from the root, tallest at the head and sinking behind it.
+func _draw_spikes(head: float, tail: float, fading: float) -> void:
+	var step := maxf(art.frame_size().x, 2.0)
+	var k := ceili(tail / step)
+	while k * step <= head:
+		var along := k * step
+		var rise := (0.45 + 0.55 * (along - tail) / maxf(head - tail, 1.0)) * fading
+		art.draw_frame(self, art.stage(rise), Vector2(facing * along, 0.0), k % 2 == 1)
+		k += 1

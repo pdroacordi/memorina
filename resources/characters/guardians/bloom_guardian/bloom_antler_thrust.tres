@@ -5,7 +5,7 @@
 
 [sub_resource type="Resource" id="step_in"]
 script = ExtResource("2_step")
-distance = 32.0
+distance = 58.0
 time = 0.1
 
 [resource]

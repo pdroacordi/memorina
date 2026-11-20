@@ -11,6 +11,8 @@ const SAMPLE := 1.0 / 60.0
 ## Px above the floor a floor warning's line is drawn: over the tallest grass blade (GrassLook, 2x art), which the
 ## front grass strip draws over the creature pass.
 const WARN_RISE := float(GrassLook.MAX_BLADE_ART * 2 + 4)
+## Marks every pixel it draws self-lit, so the field never greys it ("Keep the guardian's colour", systems/guardians).
+const SELF_LIT := preload("res://scenes/characters/guardians/spawns/spawn_self_lit_material.tres")
 
 ## Scaled seconds of the warning, the hitbox off.
 @export var warn: float = 0.35
@@ -36,6 +38,7 @@ var _expired: bool = false
 
 func _ready() -> void:
 	CanvasPass.join_layer(self, CanvasPass.CREATURES)
+	material = SELF_LIT
 	_hitbox.monitoring = false
 	_fit_shape()
 	_place_hit(0.0)

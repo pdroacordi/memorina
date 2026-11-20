@@ -11,6 +11,12 @@ const KINDS: Array[String] = [
 	"res://scenes/characters/guardians/spawns/floor_patch/floor_patch.tscn",
 	"res://scenes/characters/guardians/spawns/light_column/light_column.tscn",
 ]
+const BLOOM := "res://scenes/characters/guardians/bloom_guardian/spawns/"
+## Kinds with no common timing case above, still drawn by every guardian that throws them.
+const EXTRA_KINDS: Array[String] = [
+	"res://scenes/characters/guardians/spawns/floor_shadow/floor_shadow.tscn",
+	"res://scenes/characters/guardians/spawns/leaf_swirl/leaf_swirl.tscn",
+]
 const STEP := 1.0 / 60.0
 ## A grounded arena; the runner runs on the floor `_floor` builds.
 const ARENA := Rect2(-2000.0, -1000.0, 4000.0, 1000.0)
@@ -129,6 +135,40 @@ func test_a_blade_turns_past_ivo_and_comes_back_at_its_return_height() -> void:
 	assert_float(blade.height_at(0.2)).is_equal(72.0)
 	assert_float(blade.height_at(0.8)).is_equal(14.0)
 	blade.free()
+
+## Every kind draws self-lit, so the field never greys a guardian's attack: "Keep the guardian's colour" (user,
+## 2026-11-19; systems/greyhush, "Self-lit pixels"). The mark is written unblended, so a spawn drawing over its own
+## pixels keeps it (bugs/a-spawns-overdrawn-pixels-lose-the-self-lit-mark-and-grey).
+func test_every_kind_draws_self_lit_in_the_creature_pass() -> void:
+	for path: String in KINDS + EXTRA_KINDS:
+		var spawned := (load(path) as PackedScene).instantiate() as SpawnedAttack
+		add_child(spawned)
+		spawned.set_physics_process(false)
+		var message := "%s is not self-lit" % path.get_file()
+		assert_object(spawned.material).override_failure_message(message).is_same(SpawnedAttack.SELF_LIT)
+		assert_int(spawned.visibility_layer).is_equal(CanvasPass.CREATURES)
+		spawned.free()
+	var code := (SpawnedAttack.SELF_LIT as ShaderMaterial).shader.code
+	assert_str(code).contains("GH_SELF_LIT_ALPHA")
+	assert_str(code).contains("blend_disabled")
+
+## Bloom's drawn spawns: a spike as tall as the runner's hit, three tufts as tall as the patch across it, a pod at
+## least its hit; a kind with no art keeps its placeholder (GRD-18).
+func test_the_bloom_spawns_draw_their_art_at_their_hit_size() -> void:
+	var runner := (load(BLOOM + "thorn_row.tscn") as PackedScene).instantiate() as FloorRunner
+	assert_float(runner.art.frame_size().y).is_equal(runner.height)
+	assert_int(runner.art.frames).is_equal(4)
+	var pod := (load(BLOOM + "seed_pod.tscn") as PackedScene).instantiate() as Lob
+	assert_bool(pod.art.frame_size().x >= pod.size.x and pod.art.frame_size().y >= pod.size.y).is_true()
+	var patch := (load(BLOOM + "thorn_patch.tscn") as PackedScene).instantiate() as FloorPatch
+	assert_float(patch.art.frame_size().y).is_equal(patch.height)
+	assert_float(patch.width / patch.art.frame_size().x).is_equal(3.0)
+	for spawned: SpawnedAttack in [runner, pod, patch]:
+		spawned.free()
+	for path: String in [KINDS[0], KINDS[3], KINDS[4]]:
+		var bare := (load(path) as PackedScene).instantiate()
+		assert_object(bare.get(&"art")).override_failure_message("%s has art" % path.get_file()).is_null()
+		bare.free()
 
 ## Static floor blocks on layer 1, the runner's floor mask.
 func _floor(blocks: Array) -> Node2D:

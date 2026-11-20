@@ -1,6 +1,13 @@
 [gd_scene format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/characters/guardians/spawns/floor_patch/floor_patch.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/bloom_guardian/effects/bloom_thorn_tuft.png" id="8_art"]
+[ext_resource type="Script" path="res://resources/characters/guardians/spawn_art.gd" id="9_spawn_art"]
+
+[sub_resource type="Resource" id="Resource_art"]
+script = ExtResource("9_spawn_art")
+texture = ExtResource("8_art")
+frames = 3
 
 [node name="ThornPatch" instance=ExtResource("1_base")]
 warn = 0.15
@@ -8,3 +15,4 @@ live = 1.0
 height = 22.0
 light = Color(0.78, 0.86, 0.62, 1)
 dark = Color(0.2, 0.26, 0.16, 1)
+art = SubResource("Resource_art")

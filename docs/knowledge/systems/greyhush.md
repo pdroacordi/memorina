@@ -6,12 +6,13 @@ status: active
 tags: [greyhush, memory-field, shader, dither]
 related: [performance/2026-11-11-tech12-baseline, architecture/memory-field-cpu-gpu-split, gotchas/glsl-gdscript-math-must-be-duplicated]
 created: 2026-10-02
-updated: 2026-11-16
+updated: 2026-11-19
 source_files:
   - scenes/world/memory/memory_field.gd
   - scenes/world/memory/greyhush_renderer.gd
   - scenes/world/memory/greyhush_common.gdshaderinc
   - scenes/world/memory/unshielded_mark.gdshaderinc
+  - scenes/world/memory/self_lit_mark.gdshaderinc
   - scenes/world/memory/dissonance/dissonance_fx.gd
 ---
 
@@ -33,6 +34,7 @@ The world's state at any point is a memory value from 0 to 1 (`docs/design/03_mu
   - A separate unshielded pass was rejected: it would need its own cull bit and texture for every consumer, and it could not tell who is in front.
   - Since CORE-14 a marked pixel is also drawn as ink in the grey (`creature_ink_dark`..`creature_ink_light` by luma, mixed back by the quantised `lit_amount`; `systems/creatures`). Rendering only.
   - Accepted leaks: a creature pixel over an opaque Ivo pixel, two creatures overlapping, and an antialiased item whose alpha is exactly 253 (`bugs/ivos-greyhush-shield-colours-a-creature-in-melee-range`).
+- **Self-lit pixels** (GRD-18, 2026-11-19; "Keep the guardian's colour (Recommended)", user, 2026-11-19). A guardian's spawned attacks are never greyed: `spawn_self_lit.gdshader` writes alpha `GH_SELF_LIT_ALPHA` (254/255, `self_lit_mark.gdshaderinc`) on every pixel a `SpawnedAttack` draws, and the creature composite shades a marked pixel at memory 1 and smooth memory 1, opaque: no grey, haze, contrast loss or black lift, and only the base screen vignette (`gh_vignette` with lit amount 1, no grey boost), as any fully remembered pixel. The mark is the unshielded mark's twin, one alpha step above it. It is written with `blend_disabled` and premultiplied, discarding below alpha 0.5, so a spawn drawing over its own pixels (the floor warning's light line in its dark rim, a placeholder's light rect on its dark one) keeps it; under `blend_mix` alpha accumulates to 255 and the mark was lost (`bugs/a-spawns-overdrawn-pixels-lose-the-self-lit-mark-and-grey`, `gotchas/canvas-blend-mix-accumulates-alpha-so-an-overdrawn-alpha-mark-is-lost`). A spawn pixel therefore replaces whatever creature-pass pixel lies under it; an opaque sprite drawn over it later clears the mark. Rendering only: `MemoryFieldMath` has nothing to mirror. A shield per spawn was rejected: the shader carries 8 (`systems/guardians`, "A spawn keeps its guardian's colour").
 - **Environment freezes; characters never.** `MemoryClock` drives a neighbour's `speed_scale` from the field and asserts in `_ready()` that its target has no `Character` ancestor.
 - **Sound** (SND-01 option (c), user, 2026-11-16): `SfxMuffle` low-passes the `SfxWorld` bus from `MemoryField.sample` at Ivo, 20 kHz at memory 1 to 1.2 kHz at 0 (`SfxMuffleMath`). Only world-object cues go through it; Ivo and the creatures stay clear, as characters never freeze (`systems/sound-effects`). It reads the clean CPU field, so `MemoryFieldMath` has nothing to mirror.
 - **A teacher's shield** (CORE-04, `systems/teaching-creatures`): each teaching creature carries a SILHOUETTE `GreyhushShield` (CIRCLE, `amount` 1.0) and a sprite with no material, so its pixels carry no unshielded mark and its own shield (and Ivo's, in reach) lights it. Its balloon is drawn on the HUD, never greyed.

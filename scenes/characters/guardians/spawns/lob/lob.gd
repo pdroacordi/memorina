@@ -12,6 +12,8 @@ extends SpawnedAttack
 @export var size: Vector2 = Vector2(10.0, 10.0)
 ## Left where it lands; null leaves nothing.
 @export var patch: PackedScene
+## The pod, looping from the throw; null draws the light/dark placeholder.
+@export var art: SpawnArt
 
 var _burst: bool = false
 ## Px wide its landing mark is drawn: its patch's.
@@ -86,5 +88,9 @@ func _draw() -> void:
 	# The spot it will land on, over the grass, through the warning and the flight.
 	draw_floor_warning(-_rest * 0.5, _rest * 0.5, _t / maxf(warn + live, 0.001))
 	var at := _hit_offset(_t) - Vector2(0.0, size.y * 0.5)
+	if art != null:
+		var spin := art.loop_frame(maxf(_t - warn, 0.0))
+		art.draw_frame(self, spin, at + Vector2(0.0, art.frame_size().y * 0.5), facing < 0)
+		return
 	draw_rect(snapped_rect(Rect2(at - size * 0.5 - Vector2(2.0, 2.0), size + Vector2(4.0, 4.0))), dark)
 	draw_rect(snapped_rect(Rect2(at - size * 0.5 + Vector2(2.0, 2.0), size - Vector2(4.0, 4.0))), light)

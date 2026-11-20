@@ -15,13 +15,13 @@ past = 64.0
 [resource]
 script = ExtResource("1_attack")
 clip_index = 7
-windup_index = 2
+windup_index = 7
 duration = 0.9
 telegraph = 0.55
 attack_range = 260.0
 cooldown = 0.9
 recovery = 0.5
-recovery_index = 1
+recovery_index = 6
 from_stage = 1
 weight = 0.6
 repeats = false
