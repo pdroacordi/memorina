@@ -9,6 +9,8 @@ extends SpawnedAttack
 @export var leaf_count: int = 18
 ## Turns per scaled second.
 @export var spin: float = 1.5
+## One drawn leaf, flat and edge-on (two frames); null draws the placeholder rects.
+@export var leaf: SpawnArt
 
 
 ## Only the body that reforms hurts.
@@ -32,7 +34,12 @@ func _draw() -> void:
 		var angle := TAU * (lane + _t * spin)
 		var x := snappedf(cos(angle) * spread, 2.0)
 		var y := snappedf(-height * (0.1 + 0.85 * fposmod(lane + _t * 0.4, 1.0)), 2.0)
-		var leaf := Rect2(Vector2(x - 2.0, y - 1.0), Vector2(4.0, 2.0 + 2.0 * float(i % 2)))
-		draw_rect(leaf.grow(1.0), dark)
-		draw_rect(leaf, light)
+		if leaf != null:
+			# Each leaf tumbles: flat and edge-on in turn as it goes round, mirrored on the far side.
+			var tumble := posmod(int(angle / PI * 2.0), leaf.frames)
+			leaf.draw_frame(self, tumble, Vector2(x, y + leaf.frame_size().y * 0.5), cos(angle) < 0.0)
+			continue
+		var rect := Rect2(Vector2(x - 2.0, y - 1.0), Vector2(4.0, 2.0 + 2.0 * float(i % 2)))
+		draw_rect(rect.grow(1.0), dark)
+		draw_rect(rect, light)
 	draw_floor_warning(-width * 0.5, width * 0.5, grow)

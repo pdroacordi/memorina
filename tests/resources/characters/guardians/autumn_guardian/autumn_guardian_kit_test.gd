@@ -163,6 +163,11 @@ func test_the_scatter_shows_where_it_reforms_before_it_sweeps() -> void:
 	var shown := clip.find_track(^"Sprite2D:visible", Animation.TYPE_VALUE)
 	assert_bool(clip.value_track_interpolate(shown, blink.at) as bool).is_false()
 	assert_bool(clip.value_track_interpolate(shown, back + 0.01) as bool).is_true()
+	# Its shield hides with it, so no coloured disc floats where the body was.
+	var shielded := clip.find_track(^"GreyhushShield:visible", Animation.TYPE_VALUE)
+	assert_int(shielded).override_failure_message("the scatter does not key the shield").is_not_equal(-1)
+	assert_bool(clip.value_track_interpolate(shielded, blink.at) as bool).is_false()
+	assert_bool(clip.value_track_interpolate(shielded, back + 0.01) as bool).is_true()
 	# Nor can it be struck: no hit-stop, shake or pogo bounce off the empty air
 	# (bugs/the-scattered-leaf-guardian-still-takes-sword-contact-so-a-pogo-bounces-off-thin-air).
 	var struck := clip.find_track(^"Hurtbox:monitorable", Animation.TYPE_VALUE)

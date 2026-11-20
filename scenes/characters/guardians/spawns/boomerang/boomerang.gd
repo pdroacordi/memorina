@@ -20,6 +20,8 @@ const DROP := 0.1
 @export var return_height: float = -1.0
 ## Px of the blade, the hit included.
 @export var size: Vector2 = Vector2(16.0, 12.0)
+## The drawn blade, spun from the throw and centred on the hit; null draws the placeholder.
+@export var art: SpawnArt
 
 
 func aimed() -> bool:
@@ -54,13 +56,19 @@ func _drawn_rect() -> Rect2:
 	var far := facing * turn_reach()
 	var top := maxf(height, return_height) + size.y * 0.5
 	var bottom := minf(height, height if return_height < 0.0 else return_height) - size.y * 0.5
-	return snapped_rect(Rect2(minf(0.0, far) - size.x, -top - size.y * 0.5, absf(far) + size.x * 2.0,
-			top - bottom + size.y))
+	var rect := Rect2(minf(0.0, far) - size.x, -top - size.y * 0.5, absf(far) + size.x * 2.0, top - bottom + size.y)
+	if art != null:
+		var over := (art.frame_size() - size) * 0.5
+		rect = rect.grow(maxf(maxf(over.x, over.y), 0.0))
+	return snapped_rect(rect)
 
 func _draw() -> void:
 	if _t >= warn + live:
 		return
 	var centre := _hit_offset(_t) + Vector2(0.0, -size.y * 0.5)
+	if art != null:
+		art.draw_frame(self, art.loop_frame(maxf(_t - warn, 0.0)), centre + Vector2(0.0, art.frame_size().y * 0.5), facing < 0)
+		return
 	var spin := int(_t * 24.0) % 2 == 0
 	var blade := Vector2(size.x, size.y * 0.5) if spin else Vector2(size.y * 0.5, size.x * 0.75)
 	# A light blade in a dark rim, so it reads against the grey sky and the ground alike.
