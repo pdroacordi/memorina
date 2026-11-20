@@ -18,14 +18,15 @@ chance = 0.6
 
 [resource]
 script = ExtResource("1_attack")
-windup_index = 0
+clip_index = 7
+windup_index = 8
 duration = 0.5
 telegraph = 0.3
 attack_range = 190.0
 attack_height = 40.0
 cooldown = 0.5
 recovery = 0.4
-recovery_index = 0
+recovery_index = 7
 weight = 0.0
 motion = SubResource("step_in")
 follow_ups = Array[ExtResource("2_follow")]([SubResource("to_bite")])

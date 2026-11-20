@@ -4,7 +4,7 @@ extends AnimationResolver
 
 const IDLE := &"idle"
 const WALK := &"walk"
-## Strike slots, `GuardianAttack.clip_index`; 4..8 exist in a tree only when its data uses them.
+## Strike slots, `GuardianAttack.clip_index`; 4..10 exist in a tree only when its data uses them.
 const ATTACK_1 := &"attack_1"
 const ATTACK_2 := &"attack_2"
 const ATTACK_3 := &"attack_3"
@@ -13,6 +13,8 @@ const ATTACK_5 := &"attack_5"
 const ATTACK_6 := &"attack_6"
 const ATTACK_7 := &"attack_7"
 const ATTACK_8 := &"attack_8"
+const ATTACK_9 := &"attack_9"
+const ATTACK_10 := &"attack_10"
 ## Wind-up slots, `GuardianAttack.windup_index`, played through the telegraph; each holds its last frame.
 const WINDUP_1 := &"windup_1"
 const WINDUP_2 := &"windup_2"
@@ -22,6 +24,8 @@ const WINDUP_5 := &"windup_5"
 const WINDUP_6 := &"windup_6"
 const WINDUP_7 := &"windup_7"
 const WINDUP_8 := &"windup_8"
+const WINDUP_9 := &"windup_9"
+const WINDUP_10 := &"windup_10"
 ## Recovery slots, `GuardianAttack.recovery_index`, played through the recovery; each holds its last frame.
 const RECOVER_1 := &"recover_1"
 const RECOVER_2 := &"recover_2"
@@ -31,6 +35,8 @@ const RECOVER_5 := &"recover_5"
 const RECOVER_6 := &"recover_6"
 const RECOVER_7 := &"recover_7"
 const RECOVER_8 := &"recover_8"
+const RECOVER_9 := &"recover_9"
+const RECOVER_10 := &"recover_10"
 const HURT := &"hurt"
 ## The tremble between corrupted and lucid; the shield does the colour.
 const LUCID := &"lucid"
@@ -51,10 +57,12 @@ const LEAP_RISE := &"leap_rise"
 const LEAP_FALL := &"leap_fall"
 const LEAP_LAND := &"leap_land"
 
-const ATTACK_CLIPS: Array[StringName] = [ATTACK_1, ATTACK_2, ATTACK_3, ATTACK_4, ATTACK_5, ATTACK_6, ATTACK_7, ATTACK_8]
-const WINDUP_CLIPS: Array[StringName] = [WINDUP_1, WINDUP_2, WINDUP_3, WINDUP_4, WINDUP_5, WINDUP_6, WINDUP_7, WINDUP_8]
+const ATTACK_CLIPS: Array[StringName] = [ATTACK_1, ATTACK_2, ATTACK_3, ATTACK_4, ATTACK_5, ATTACK_6, ATTACK_7, ATTACK_8,
+		ATTACK_9, ATTACK_10]
+const WINDUP_CLIPS: Array[StringName] = [WINDUP_1, WINDUP_2, WINDUP_3, WINDUP_4, WINDUP_5, WINDUP_6, WINDUP_7, WINDUP_8,
+		WINDUP_9, WINDUP_10]
 const RECOVER_CLIPS: Array[StringName] = [RECOVER_1, RECOVER_2, RECOVER_3, RECOVER_4, RECOVER_5, RECOVER_6, RECOVER_7,
-		RECOVER_8]
+		RECOVER_8, RECOVER_9, RECOVER_10]
 ## Every clip a guardian's tree must hold (guardian_voice_test).
 const CLIPS: Array[StringName] = [IDLE, WALK, ATTACK_1, ATTACK_2, ATTACK_3, HURT, LUCID, LUCID_ENTER, PLAY_SONG,
 		RELAPSE, PERFORM, PERFORM_END, RESTORED, LEAP_CROUCH, LEAP_RISE, LEAP_FALL, LEAP_LAND]

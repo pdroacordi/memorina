@@ -2,10 +2,10 @@ class_name GuardianAttack
 extends Resource
 ## Guardian attack tuning; `duration` must match the strike clip (architecture/grd-12-guardian-fight-engine).
 
-## Strike slot, `attack_1..8` (GuardianAnimationResolver.ATTACK_CLIPS).
-@export_range(0, 7) var clip_index: int = 0
+## Strike slot, `attack_1..10` (GuardianAnimationResolver.ATTACK_CLIPS).
+@export_range(0, 9) var clip_index: int = 0
 ## Wind-up slot played through `telegraph`; -1 plays IDLE.
-@export_range(-1, 7) var windup_index: int = -1
+@export_range(-1, 9) var windup_index: int = -1
 @export var duration: float = 1.0
 ## Telegraph duration in seconds.
 @export var telegraph: float = 0.4
@@ -17,7 +17,7 @@ extends Resource
 ## Seconds standing after the string's last link, facing kept: the punish window.
 @export var recovery: float = 0.0
 ## Recovery slot; -1 plays IDLE.
-@export_range(-1, 7) var recovery_index: int = -1
+@export_range(-1, 9) var recovery_index: int = -1
 ## The cure stage at which the move joins the set (GuardianRepertoire.available).
 @export var from_stage: int = 0
 ## The strike clip keys a hit window; false is a pure reposition or spawn move.
