@@ -12,6 +12,7 @@ const KINDS: Array[String] = [
 	"res://scenes/characters/guardians/spawns/light_column/light_column.tscn",
 ]
 const BLOOM := "res://scenes/characters/guardians/bloom_guardian/spawns/"
+const FROST := "res://scenes/characters/guardians/frost_guardian/spawns/"
 ## Kinds with no common timing case above, still drawn by every guardian that throws them.
 const EXTRA_KINDS: Array[String] = [
 	"res://scenes/characters/guardians/spawns/floor_shadow/floor_shadow.tscn",
@@ -169,6 +170,44 @@ func test_the_bloom_spawns_draw_their_art_at_their_hit_size() -> void:
 		var bare := (load(path) as PackedScene).instantiate()
 		assert_object(bare.get(&"art")).override_failure_message("%s has art" % path.get_file()).is_null()
 		bare.free()
+
+## Frost's drawn spawns: each runner's shard as tall as its hit, the icicle's body its hit under two art rows of glint,
+## its burst within the shard's drawn rect (GRD-18).
+func test_the_frost_spawns_draw_their_art_at_their_hit_size() -> void:
+	for scene: String in ["ice_wave.tscn", "ice_shock.tscn"]:
+		var runner := (load(FROST + scene) as PackedScene).instantiate() as FloorRunner
+		assert_float(runner.art.frame_size().y).override_failure_message(scene).is_equal(runner.height)
+		runner.free()
+	var icicle := (load(FROST + "icicle.tscn") as PackedScene).instantiate() as FallingShard
+	assert_vector(icicle.art.frame_size()).is_equal(icicle.size + Vector2(4.0, 4.0))
+	assert_float(icicle.shatter.frame_size().x * 0.5).is_less_equal(icicle.size.x + 6.0)
+	icicle.free()
+
+## Forming stages up to whole, then the glint frame on a glint beat only once whole.
+func test_an_icicle_forms_then_glints_once_whole() -> void:
+	assert_int(FallingShard.icicle_frame(0.0, true, 4)).is_equal(-1)
+	assert_int(FallingShard.icicle_frame(0.2, true, 4)).is_equal(0)
+	assert_int(FallingShard.icicle_frame(0.5, true, 4)).is_equal(1)
+	assert_int(FallingShard.icicle_frame(0.9, false, 4)).is_equal(2)
+	assert_int(FallingShard.icicle_frame(0.9, true, 4)).is_equal(3)
+
+## Every rise stage a runner draws stands above the front grass, which draws over the creature pass: a lower stage is
+## hidden (the first Bloom spikes, GRD-18).
+func test_every_runner_stage_stands_above_the_grass() -> void:
+	var grass := float(GrassLook.MAX_BLADE_ART * 2)
+	for path: String in [BLOOM + "thorn_row.tscn", FROST + "ice_wave.tscn", FROST + "ice_shock.tscn"]:
+		var runner := (load(path) as PackedScene).instantiate() as FloorRunner
+		var image := runner.art.texture.get_image()
+		var size := runner.art.frame_size()
+		for frame: int in runner.art.frames:
+			var top := size.y
+			for y: int in int(size.y):
+				for x: int in int(size.x):
+					if image.get_pixel(int(frame * size.x) + x, y).a > 0.0:
+						top = minf(top, y)
+			var label := "%s frame %d" % [path.get_file(), frame]
+			assert_float(size.y - top).override_failure_message(label).is_greater_equal(grass)
+		runner.free()
 
 ## Static floor blocks on layer 1, the runner's floor mask.
 func _floor(blocks: Array) -> Node2D:

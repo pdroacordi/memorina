@@ -41,6 +41,9 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_relapse.png" id="tex_relapse"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_perform.png" id="tex_perform"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_perform_end.png" id="tex_perform_end"]
+[ext_resource type="Texture2D" uid="uid://b3ktcm3wnarct" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_icicle_fall.png" id="tex_icicle_fall"]
+[ext_resource type="Texture2D" uid="uid://cbkr6r5nk5yvx" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_body_drop.png" id="tex_body_drop"]
+[ext_resource type="Texture2D" uid="uid://cywqdho52onrw" path="res://assets/sprites/characters/guardians/frost_guardian/frost_guardian_charge_skid.png" id="tex_charge_skid"]
 [ext_resource type="PackedScene" path="res://scenes/world/interactables/talkable/talkable.tscn" id="93_talkable"]
 [ext_resource type="Script" path="res://scenes/characters/guardians/guardian_talks.gd" id="94_talks"]
 [ext_resource type="Script" path="res://scenes/characters/guardians/guardian_music.gd" id="96_music"]
@@ -224,7 +227,7 @@ tracks/2/keys = {
 
 [sub_resource type="Animation" id="Animation_walk"]
 resource_name = "walk"
-length = 0.83333336
+length = 0.666667
 loop_mode = 1
 step = 0.083333336
 tracks/0/type = "value"
@@ -249,7 +252,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [10]
+"values": [8]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -258,10 +261,10 @@ tracks/2/path = NodePath("Sprite2D:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.083333336, 0.16666667, 0.25000001, 0.33333334, 0.41666668, 0.50000002, 0.58333335, 0.66666669, 0.75000002),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.083333, 0.166667, 0.25, 0.333333, 0.416667, 0.5, 0.583333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+"values": [0, 1, 2, 3, 4, 5, 6, 7]
 }
 
 [sub_resource type="Animation" id="Animation_attack_1"]
@@ -1174,7 +1177,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("tex_6")]
+"values": [ExtResource("tex_icicle_fall")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -1186,7 +1189,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [14]
+"values": [11]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1195,10 +1198,10 @@ tracks/2/path = NodePath("Sprite2D:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.15, 0.3, 0.45, 0.55, 0.7, 0.85, 0.95),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.15, 0.35, 0.55, 0.75, 0.95),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
-"values": [2, 4, 3, 2, 4, 3, 2, 4]
+"values": [3, 4, 5, 6, 7, 8]
 }
 
 [sub_resource type="Animation" id="Animation_attack_6"]
@@ -1215,7 +1218,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("tex_9")]
+"values": [ExtResource("tex_body_drop")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -1227,7 +1230,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [8]
+"values": [10]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1236,7 +1239,7 @@ tracks/2/path = NodePath("Sprite2D:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.15, 0.35, 0.55, 0.85),
+"times": PackedFloat32Array(0, 0.15, 0.45, 0.85, 0.93),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
 "values": [2, 3, 4, 5, 6]
@@ -1480,7 +1483,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("tex_5")]
+"values": [ExtResource("tex_charge_skid")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -1492,7 +1495,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [14]
+"values": [4]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1501,14 +1504,55 @@ tracks/2/path = NodePath("Sprite2D:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.2),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
-"values": [12, 13]
+"values": [0, 1, 2, 3]
 }
 
 [sub_resource type="Animation" id="Animation_windup_5"]
 resource_name = "windup_5"
+length = 0.45
+step = 0.083333336
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_icicle_fall")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [11]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.15, 0.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [0, 1, 2]
+}
+
+[sub_resource type="Animation" id="Animation_windup_6"]
+resource_name = "windup_6"
 length = 0.5
 step = 0.083333336
 tracks/0/type = "value"
@@ -1521,7 +1565,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("tex_9")]
+"values": [ExtResource("tex_body_drop")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -1533,7 +1577,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [8]
+"values": [10]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1542,48 +1586,7 @@ tracks/2/path = NodePath("Sprite2D:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [2]
-}
-
-[sub_resource type="Animation" id="Animation_windup_6"]
-resource_name = "windup_6"
-length = 0.4
-step = 0.083333336
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite2D:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("tex_9")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("Sprite2D:hframes")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [8]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("Sprite2D:frame")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.2),
+"times": PackedFloat32Array(0, 0.25),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [0, 1]
@@ -1726,7 +1729,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("tex_9")]
+"values": [ExtResource("tex_body_drop")]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -1738,7 +1741,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [8]
+"values": [10]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1747,10 +1750,10 @@ tracks/2/path = NodePath("Sprite2D:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.4),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0, 0.3, 0.55),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [6, 7]
+"values": [7, 8, 9]
 }
 
 [sub_resource type="Animation" id="Animation_attack_7"]
@@ -1854,6 +1857,47 @@ tracks/7/keys = {
 "values": [Vector2(4.9, 2), Vector2(4.9, 2.2), Vector2(5.2, 2.1), Vector2(4.9, 2), Vector2(4.25, 2), Vector2(2.85, 2), Vector2(4.45, 2)]
 }
 
+[sub_resource type="Animation" id="Animation_recover_5"]
+resource_name = "recover_5"
+length = 0.5
+step = 0.05
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("tex_icicle_fall")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [11]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [9, 10]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_guardian"]
 _data = {
 &"RESET": SubResource("Animation_RESET"),
@@ -1888,7 +1932,8 @@ _data = {
 &"recover_1": SubResource("Animation_recover_1"),
 &"recover_2": SubResource("Animation_recover_2"),
 &"recover_3": SubResource("Animation_recover_3"),
-&"recover_4": SubResource("Animation_recover_4")
+&"recover_4": SubResource("Animation_recover_4"),
+&"recover_5": SubResource("Animation_recover_5")
 }
 
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_idle"]
@@ -1987,6 +2032,9 @@ animation = &"attack_7"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_windup_7"]
 animation = &"windup_7"
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_recover_5"]
+animation = &"recover_5"
+
 [sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_guardian"]
 states/idle/node = SubResource("AnimationNodeAnimation_idle")
 states/idle/position = Vector2(100, 100)
@@ -2052,6 +2100,8 @@ states/recover_3/node = SubResource("AnimationNodeAnimation_recover_3")
 states/recover_3/position = Vector2(520, 660)
 states/recover_4/node = SubResource("AnimationNodeAnimation_recover_4")
 states/recover_4/position = Vector2(660, 660)
+states/recover_5/node = SubResource("AnimationNodeAnimation_recover_5")
+states/recover_5/position = Vector2(800, 660)
 
 [node name="FrostGuardian" type="CharacterBody2D"]
 collision_layer = 65536
