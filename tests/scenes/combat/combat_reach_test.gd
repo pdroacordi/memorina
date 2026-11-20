@@ -43,6 +43,8 @@ const FRAME := 1.0 / 60.0
 const IVO_DRAWN_HEIGHT := 58.0
 ## How far past the drawn art, px, a box may still touch.
 const DRAWN_SLACK := 4.0
+## Px a thrown spawn may leave from the nearest drawn pixel.
+const RELEASE_SLACK := 8.0
 
 var _ivo: Player
 var _ivo_hurtbox: Dictionary
@@ -108,6 +110,28 @@ func test_every_guardian_move_touches_a_grounded_ivo_only_where_its_art_is_drawn
 				assert_float(touch).override_failure_message("%s %s at %.3f s touches Ivo %.1f px out; the art reaches %.0f" % [
 					guardian.name, attack.resource_path.get_file(), at, touch, front]).is_less_equal(front + ivo_shape.radius + DRAWN_SLACK)
 				at += FRAME
+
+## Every thrown spawn leaves from the drawn mouth or hand: a drawn pixel near the release point on the frame showing
+## as each instance fires, in the front part of the first (bugs/the-sun-embers-and-mentor-seeds-leave-from-the-guardians-back-not-its-mouth-or-hand).
+func test_every_thrown_spawn_leaves_from_the_drawn_mouth_or_hand() -> void:
+	for path: String in GUARDIAN_SCENES:
+		var guardian := auto_free(_instance(path)) as Guardian
+		var sprite := guardian.get_node(^"Sprite2D") as Sprite2D
+		var reset := (guardian.get_node(^"AnimationPlayer") as AnimationPlayer).get_animation(&"RESET")
+		for attack: GuardianAttack in GuardianMoveGraph.moves(guardian.stats):
+			for spawn: GuardianSpawn in attack.spawns:
+				var kind := auto_free(spawn.scene.instantiate()) as SpawnedAttack
+				if not kind is Lob:
+					continue
+				var clip := _clip_of(guardian, GuardianAnimationResolver.ATTACK_CLIPS[attack.clip_index])
+				var name := "%s %s" % [guardian.name, attack.resource_path.get_file()]
+				for index: int in spawn.count:
+					var at := spawn.at + spawn.interval * index
+					assert_float(_drawn_near(sprite, clip, reset, at, spawn.release)).override_failure_message(
+						"%s: nothing drawn near its release %s at %.2f s" % [name, spawn.release, at]).is_less_equal(RELEASE_SLACK)
+				var front := _drawn_front(sprite, clip, reset, spawn.at)
+				assert_float(spawn.release.x).override_failure_message("%s: released at x %.0f, the art reaches %.0f" % [
+					name, spawn.release.x, front]).is_greater_equal(front * 0.5)
 
 ## A move tuned to start on a player higher than the default reaches an Ivo standing that high somewhere in its window.
 func test_every_guardian_move_set_to_reach_higher_lands_that_high() -> void:
@@ -525,6 +549,22 @@ func _drawn_front(sprite: Sprite2D, clip: Animation, reset: Animation, at: float
 			for edge: int in [column, column + 1]:
 				front = maxf(front, (xform * Vector2(edge - size.x / 2.0, 0.0)).x)
 	return front
+
+## The distance in px from `point` to the nearest drawn pixel of the frame the clip shows at `at`, in the root's space.
+func _drawn_near(sprite: Sprite2D, clip: Animation, reset: Animation, at: float, point: Vector2) -> float:
+	var texture := _keyed(clip, reset, "Sprite2D:texture", at, sprite.texture) as Texture2D
+	var hframes: int = _keyed(clip, reset, "Sprite2D:hframes", at, sprite.hframes)
+	var frame: int = _keyed(clip, reset, "Sprite2D:frame", at, sprite.frame)
+	var image := texture.get_image()
+	var size := Vector2i(image.get_width() / hframes, image.get_height())
+	var nearest := INF
+	for row: int in size.y:
+		for column: int in size.x:
+			if image.get_pixel(frame * size.x + column, row).a <= 0.0:
+				continue
+			var centre := sprite.transform * (Vector2(column + 0.5, row + 0.5) - Vector2(size) / 2.0)
+			nearest = minf(nearest, centre.distance_to(point))
+	return nearest
 
 func _area_box(root: Node, area_path: NodePath) -> Dictionary:
 	var area := root.get_node(area_path) as Node2D

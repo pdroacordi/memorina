@@ -35,10 +35,10 @@ func test_a_frame_lands_bottom_centre_on_the_art_grid() -> void:
 	var odd := art.frame_rect(Vector2(10.6, 0.4), false)
 	assert_float(fposmod(odd.position.x, 2.0)).is_equal(0.0)
 	assert_float(fposmod(odd.position.y, 2.0)).is_equal(0.0)
-	# Mirrored: the same box, drawn from its right edge with a negative width.
+	# Mirrored: the same position with a negative width, which the renderer flips in place over x..x+w
+	# (gotchas/a-negative-width-texture-rect-flips-in-place-at-its-position).
 	var flipped := art.frame_rect(Vector2(10.0, 0.0), true)
-	assert_that(flipped.abs()).is_equal(Rect2(4.0, -28.0, 12.0, 28.0))
-	assert_float(flipped.size.x).is_equal(-12.0)
+	assert_that(flipped).is_equal(Rect2(4.0, -28.0, -12.0, 28.0))
 
 func test_no_texture_has_no_size() -> void:
 	assert_vector(SpawnArt.new().frame_size()).is_equal(Vector2.ZERO)

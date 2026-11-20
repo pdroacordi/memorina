@@ -30,13 +30,12 @@ func loop_frame(t: float) -> int:
 		return 0
 	return posmod(floori(t * fps), frames)
 
-## Where `frame` lands with its bottom-centre on `foot`, on the 2 px art grid; a negative width mirrors it.
+## Where `frame` lands with its bottom-centre on `foot`, on the 2 px art grid; a negative width mirrors it in place
+## (gotchas/a-negative-width-texture-rect-flips-in-place-at-its-position).
 func frame_rect(foot: Vector2, flip: bool) -> Rect2:
 	var size := frame_size()
 	var at := ((foot - Vector2(size.x * 0.5, size.y)) / 2.0).round() * 2.0
-	if flip:
-		return Rect2(at + Vector2(size.x, 0.0), Vector2(-size.x, size.y))
-	return Rect2(at, size)
+	return Rect2(at, Vector2(-size.x if flip else size.x, size.y))
 
 ## Draws `frame` on `canvas` with its bottom-centre on `foot`; nothing for a negative frame.
 func draw_frame(canvas: CanvasItem, frame: int, foot: Vector2, flip: bool = false) -> void:

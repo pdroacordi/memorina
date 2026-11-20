@@ -117,6 +117,20 @@ func test_a_lob_leaves_a_patch_where_it_lands() -> void:
 	assert_object(patch).is_not_null()
 	assert_float(patch.position.x).is_equal_approx(200.0, 0.01)
 
+## A lob starts its flight at the release point, turned to the thrower's facing, and lands on its root
+## (bugs/the-sun-embers-and-mentor-seeds-leave-from-the-guardians-back-not-its-mouth-or-hand).
+func test_a_lob_leaves_from_the_mouth_or_hand_its_thrower_faces() -> void:
+	for facing: int in [1, -1]:
+		var ctx := SpawnContext.make(Vector2(400.0, 0.0), facing, Vector2.ZERO, Rect2(), 0.0)
+		ctx.release = ctx.from_feet(Vector2(92.0, -52.0))
+		assert_vector(ctx.release).is_equal(Vector2(400.0 + 92.0 * facing, -52.0))
+		var lob := auto_free((load(KINDS[3]) as PackedScene).instantiate()) as Lob
+		lob.context = ctx
+		lob.position = Vector2(150.0, 0.0)
+		assert_vector(lob.launch()).is_equal(ctx.release - lob.position)
+		assert_vector(lob._hit_offset(lob.warn)).is_equal(lob.launch() + Vector2(0.0, lob.size.y * 0.5))
+		assert_vector(lob._hit_offset(lob.warn + lob.live)).is_equal(Vector2(0.0, lob.size.y * 0.5))
+
 ## A blade with `past` turns that far beyond Ivo as he stood, held inside its reach and the arena's wall; without it
 ## it always flies its reach (GRD-15).
 func test_a_blade_turns_past_ivo_and_comes_back_at_its_return_height() -> void:

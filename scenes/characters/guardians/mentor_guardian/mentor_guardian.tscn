@@ -1225,10 +1225,10 @@ tracks/6/path = NodePath("Hitbox/CollisionShape2D:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.77),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [Vector2(0, -24)]
+"values": [Vector2(0, -24), Vector2(16, -24)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -1237,10 +1237,10 @@ tracks/7/path = NodePath("Hitbox/CollisionShape2D:scale")
 tracks/7/interp = 1
 tracks/7/loop_wrap = true
 tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.77),
+"transitions": PackedFloat32Array(1, 1),
 "update": 1,
-"values": [Vector2(3, 2.4)]
+"values": [Vector2(3, 2.4), Vector2(1.4, 2.4)]
 }
 
 [sub_resource type="Animation" id="Animation_attack_7"]
@@ -1278,7 +1278,7 @@ tracks/2/path = NodePath("Sprite2D:frame")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.1, 0.25),
+"times": PackedFloat32Array(0, 0.1, 0.31),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
 "values": [3, 4, 5]

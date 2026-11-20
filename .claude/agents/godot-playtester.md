@@ -975,6 +975,19 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     the mentor's glide hand was 12 px off.
   - `rtk` turns a no-match `grep` on a Godot log into the whole log. Filter logs with a small Python one-liner.
 
+- **Learned 2026-11-20 (GRD-19 spawn origins)**: **to check where a spawn leaves, log its launch point, do not eyeball the
+  pod.** A scratch copy of `guardian_art_check_driver.gd` walks the `GuardianSpawner` children (duck-typed:
+  `has_method("floor_burning")`, then children with `launch`). It prints `[lob] new` with `global_position + launch()`
+  minus the feet, and adds `lobs=[id t rel(x,y) pod(x,y)]` (canvas coords, `get_global_transform_with_canvas()`) to
+  each `[shot]`. It shoots every 3 physics frames while a lob is young. A yellow cross at `rel` on a 2x zoom crop
+  separated "the release point is wrong" from "the art is drawn off the point". The second was the case: a mirrored
+  `SpawnArt` frame draws one width east (`gotchas/a-negative-width-texture-rect-flips-in-place-at-its-position`).
+  - Test both facings: `AC_IVO_X` on the far side of the guardian (Sun 3650, mentor 11800, Bloom -5900). A `Lob`'s
+    mirror follows its landing side, not the guardian's facing, so one throw can mix mirrored and plain pods.
+  - Two art-check runs in parallel are fine, because the driver has no real-time presses.
+  - To measure a box against drawn limbs in a shot, count pale pixels (all channels > 185, spread < 25) in rows
+    feet-48..feet-6 relative to `g`. That works on the lantern's dark wall, but not on a light floor.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

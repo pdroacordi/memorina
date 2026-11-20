@@ -92,6 +92,7 @@ func adopt(spawned: SpawnedAttack, damage: int, knockback_strength: float, knock
 
 func _fire(shot: Shot) -> void:
 	var ctx := _guardian.spawn_context()
+	ctx.release = ctx.from_feet(shot.spawn.release)
 	var point := _point_for(shot, ctx)
 	var spawned := shot.spawn.scene.instantiate() as SpawnedAttack
 	assert(spawned != null, "%s: a GuardianSpawn scene's root must be a SpawnedAttack" % _guardian.name)

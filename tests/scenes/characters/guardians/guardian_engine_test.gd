@@ -7,6 +7,7 @@ const IVO := preload("res://scenes/characters/ivo/ivo.tscn")
 const ENGINE := preload("res://tests/fixtures/guardians/engine_guardian.tscn")
 const PATCH := preload("res://scenes/characters/guardians/spawns/floor_patch/floor_patch.tscn")
 const SHARD := preload("res://scenes/characters/guardians/spawns/falling_shard/falling_shard.tscn")
+const LOB := preload("res://scenes/characters/guardians/spawns/lob/lob.tscn")
 const BURST := preload("res://tests/fixtures/guardians/engine_burst.tres")
 
 const FLOOR_Y := 30.0
@@ -217,6 +218,23 @@ func test_icicles_aimed_at_ivo_fall_where_he_stands_as_each_one_fires() -> void:
 		xs.append((child as Node2D).position.x)
 	assert_array(xs).has_size(2)
 	assert_float(absf(xs[0] - xs[1])).override_failure_message("the second shard fell on the old spot").is_greater(100.0)
+
+## A lob leaves from its spawn's release point turned to the way the guardian faces as it fires
+## (bugs/the-sun-embers-and-mentor-seeds-leave-from-the-guardians-back-not-its-mouth-or-hand).
+func test_a_lob_leaves_from_its_release_turned_to_the_guardians_facing() -> void:
+	_ivo.teleport(Vector2(-600.0, FLOOR_Y))
+	var spawn := GuardianSpawn.new()
+	spawn.scene = LOB
+	spawn.at = 0.05
+	spawn.placement = GuardianSpawn.Placement.AT_IVO
+	spawn.release = Vector2(30.0, -50.0)
+	_throw(_move([spawn]))
+	await _seconds(0.2)
+	var lob := _spawner.get_child(0) as Lob
+	assert_object(lob).is_not_null()
+	assert_int(lob.context.facing).is_equal(-1)
+	assert_vector(lob.position + lob.launch()).is_equal_approx(
+		lob.context.origin + Vector2(-30.0, -50.0), Vector2(0.01, 0.01))
 
 func _throw(move: GuardianAttack) -> void:
 	_ai.attacks = [move]

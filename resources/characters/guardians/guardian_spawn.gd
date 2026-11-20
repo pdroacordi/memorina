@@ -21,6 +21,8 @@ enum Placement { FRONT, AT_IVO, AROUND_IVO, ACROSS_ARENA, BOTH_SIDES, AT_LANDING
 @export var interval: float = 0.0
 ## Px from the guardian's feet, facing east.
 @export var offset: Vector2 = Vector2.ZERO
+## Px from the guardian's feet, facing east, where a thrown spawn leaves the drawn mouth or hand (Lob).
+@export var release: Vector2 = Vector2(0.0, -48.0)
 
 @export_group("Hitbox")
 @export var damage: int = 1

@@ -11,6 +11,7 @@ at = 0.1
 placement = 2
 count = 3
 spacing = 96.0
+release = Vector2(48, -94)
 interval = 0.1
 
 [resource]

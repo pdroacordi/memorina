@@ -14,6 +14,8 @@ var arena: Rect2 = Rect2()
 var floor_y: float = 0.0
 ## The feet where the move's motion lands; the origin without one.
 var landing: Vector2 = Vector2.ZERO
+## Where a thrown spawn leaves the guardian's mouth or hand; the origin without one.
+var release: Vector2 = Vector2.ZERO
 
 
 static func make(origin_feet: Vector2, facing_side: int, target_feet: Vector2, bounds: Rect2,
@@ -25,7 +27,12 @@ static func make(origin_feet: Vector2, facing_side: int, target_feet: Vector2, b
 	ctx.arena = bounds
 	ctx.floor_y = floor_line
 	ctx.landing = origin_feet
+	ctx.release = origin_feet
 	return ctx
+
+## The world point `offset` px from the feet, given facing east, turned to the guardian's facing.
+func from_feet(offset: Vector2) -> Vector2:
+	return origin + Vector2(offset.x * facing, offset.y)
 
 ## `x` kept `margin` inside the arena's walls; unchanged when it is unbounded.
 func clamp_x(x: float, margin: float = 0.0) -> float:

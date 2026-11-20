@@ -1,13 +1,11 @@
 class_name Lob
 extends SpawnedAttack
-## An ember or seed pod thrown from the guardian's hand in a ballistic arc onto its root, the spot its placement chose;
+## An ember or seed pod thrown from the guardian's mouth or hand in a ballistic arc onto its root, the spot its placement chose;
 ## it leaves a FloorPatch there. Harmless in flight: only the patch hurts, so its arc never crosses the gaps it leaves
 ## (bugs/a-bloom-seed-pods-flight-crosses-the-gap-it-leaves-ivo).
 
-## Px of the arc's apex above the line from hand to landing.
+## Px of the arc's apex above the line from release to landing.
 @export var arc: float = 120.0
-## Px above the guardian's feet it leaves the hand.
-@export var hand: float = 48.0
 ## Px of the pod, the hit included.
 @export var size: Vector2 = Vector2(10.0, 10.0)
 ## Left where it lands; null leaves nothing.
@@ -40,9 +38,9 @@ func is_live(_t_at: float) -> bool:
 func from_above() -> bool:
 	return true
 
-## Where it leaves the hand, relative to the root.
+## Where it leaves the mouth or hand, relative to the root.
 func launch() -> Vector2:
-	return context.origin + Vector2(0.0, -hand) - position
+	return context.release - position
 
 ## The width it leaves on the floor: its patch's, else its own.
 func rest_width() -> float:
