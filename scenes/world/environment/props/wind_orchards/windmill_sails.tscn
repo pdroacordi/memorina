@@ -1,0 +1,14 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/wind_orchards/windmill_sails.png" id="1_tex"]
+[ext_resource type="Script" path="res://scenes/world/environment/props/ambient_motion.gd" id="2_motion"]
+
+[node name="WindmillSails" type="Sprite2D"]
+texture = ExtResource("1_tex")
+centered = false
+offset = Vector2(-98, -98)
+hframes = 12
+
+[node name="AmbientMotion" type="Node" parent="."]
+script = ExtResource("2_motion")
+frames_per_second = 7.2

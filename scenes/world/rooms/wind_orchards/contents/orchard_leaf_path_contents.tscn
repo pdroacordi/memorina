@@ -4,6 +4,10 @@
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/leaf_pile.tscn" id="pr_leaf_pile"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/wind_orchards/contents/orchard_leaf_path.room" id="room_map"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/bramble.tscn" id="pz_bramble"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/dry_grass.tscn" id="pz_dry_grass"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/leaf_drift.tscn" id="pz_leaf_drift"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/young_tree.tscn" id="pz_young_tree"]
 
 [node name="Contents" type="Node2D"]
 
@@ -15,6 +19,24 @@ z_index = -10
 
 [node name="LeafPile" parent="Props" instance=ExtResource("pr_leaf_pile")]
 position = Vector2(112, 288)
+
+[node name="DryGrass" parent="Props" instance=ExtResource("pz_dry_grass")]
+position = Vector2(200, 288)
+
+[node name="YoungTree" parent="Props" instance=ExtResource("pz_young_tree")]
+position = Vector2(304, 224)
+
+[node name="YoungTree2" parent="Props" instance=ExtResource("pz_young_tree")]
+position = Vector2(600, 128)
+
+[node name="Bramble" parent="Props" instance=ExtResource("pz_bramble")]
+position = Vector2(1000, 288)
+
+[node name="Bramble2" parent="Props" instance=ExtResource("pz_bramble")]
+position = Vector2(1150, 288)
+
+[node name="LeafDrift" parent="Props" instance=ExtResource("pz_leaf_drift")]
+position = Vector2(1240, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

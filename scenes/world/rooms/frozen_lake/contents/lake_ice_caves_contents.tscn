@@ -4,12 +4,44 @@
 [ext_resource type="Resource" path="res://resources/world/backdrops/ice_caves.tres" id="bd_set"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/frozen_lake/contents/lake_ice_caves.room" id="room_map"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/ice_column.tscn" id="pz_ice_column"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/ice_crack.tscn" id="pz_ice_crack"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/ice_crystals.tscn" id="pz_ice_crystals"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/icicle_corner.tscn" id="pz_icicle_corner"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/icicles_long.tscn" id="pz_icicles_long"]
 
 [node name="Contents" type="Node2D"]
 
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
 backdrop_set = ExtResource("bd_set")
+
+[node name="Props" type="Node2D" parent="."]
+z_index = -10
+
+[node name="IceColumn" parent="Props" instance=ExtResource("pz_ice_column")]
+position = Vector2(80, 288)
+
+[node name="IceCrystals" parent="Props" instance=ExtResource("pz_ice_crystals")]
+position = Vector2(230, 288)
+
+[node name="IceCrystals2" parent="Props" instance=ExtResource("pz_ice_crystals")]
+position = Vector2(360, 224)
+
+[node name="IcicleCorner" parent="Props" instance=ExtResource("pz_icicle_corner")]
+position = Vector2(480, 128)
+
+[node name="IciclesLong" parent="Props" instance=ExtResource("pz_icicles_long")]
+position = Vector2(640, 32)
+
+[node name="IcicleCorner2" parent="Props" instance=ExtResource("pz_icicle_corner")]
+position = Vector2(784, 96)
+
+[node name="IceCrack" parent="Props" instance=ExtResource("pz_ice_crack")]
+position = Vector2(920, 288)
+
+[node name="IceColumn2" parent="Props" instance=ExtResource("pz_ice_column")]
+position = Vector2(1140, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

@@ -8,6 +8,14 @@
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/story/waterfall_night.wav" id="l5_water"]
 [ext_resource type="Resource" path="res://resources/music/wife_song_lullaby_far.tres" id="l5_voice"]
 [ext_resource type="Script" path="res://resources/save_facts/save_fact.gd" id="l5_fact"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/barrel.tscn" id="pz_barrel"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/crate.tscn" id="pz_crate"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/frost_moss.tscn" id="pz_frost_moss"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/icicle_corner.tscn" id="pz_icicle_corner"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/icicles_long.tscn" id="pz_icicles_long"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/icicles_short.tscn" id="pz_icicles_short"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/lantern_post.tscn" id="pz_lantern_post"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/rope_coil.tscn" id="pz_rope_coil"]
 
 [sub_resource type="Resource" id="l5_due_5"]
 script = ExtResource("l5_fact")
@@ -27,6 +35,42 @@ size = Vector2(640, 1920)
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
 backdrop_set = ExtResource("bd_set")
+
+[node name="Props" type="Node2D" parent="."]
+z_index = -10
+
+[node name="Crate" parent="Props" instance=ExtResource("pz_crate")]
+position = Vector2(48, 288)
+
+[node name="Barrel" parent="Props" instance=ExtResource("pz_barrel")]
+position = Vector2(96, 288)
+
+[node name="LanternPost" parent="Props" instance=ExtResource("pz_lantern_post")]
+position = Vector2(528, 288)
+
+[node name="IcicleCorner" parent="Props" instance=ExtResource("pz_icicle_corner")]
+position = Vector2(48, 32)
+
+[node name="IcicleCorner2" parent="Props" instance=ExtResource("pz_icicle_corner")]
+position = Vector2(592, 32)
+
+[node name="IciclesShort" parent="Props" instance=ExtResource("pz_icicles_short")]
+position = Vector2(288, 512)
+
+[node name="IciclesShort2" parent="Props" instance=ExtResource("pz_icicles_short")]
+position = Vector2(256, 704)
+
+[node name="IciclesLong" parent="Props" instance=ExtResource("pz_icicles_long")]
+position = Vector2(320, 1088)
+
+[node name="FrostMoss" parent="Props" instance=ExtResource("pz_frost_moss")]
+position = Vector2(38, 960)
+
+[node name="FrostMoss2" parent="Props" instance=ExtResource("pz_frost_moss")]
+position = Vector2(38, 1632)
+
+[node name="RopeCoil" parent="Props" instance=ExtResource("pz_rope_coil")]
+position = Vector2(380, 1344)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

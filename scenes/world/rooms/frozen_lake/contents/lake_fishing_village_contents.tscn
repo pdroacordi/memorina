@@ -6,6 +6,17 @@
 
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/fisher_hut_facade.tscn" id="pr_fisher_hut"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/pier_post.tscn" id="pr_pier_post"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/barrel.tscn" id="pz_barrel"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/bucket.tscn" id="pz_bucket"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/crate.tscn" id="pz_crate"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/eel_traps.tscn" id="pz_eel_traps"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/fish_rack.tscn" id="pz_fish_rack"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/lantern_post.tscn" id="pz_lantern_post"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/net_poles.tscn" id="pz_net_poles"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/oars.tscn" id="pz_oars"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/rope_coil.tscn" id="pz_rope_coil"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/sled.tscn" id="pz_sled"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/woodpile.tscn" id="pz_woodpile"]
 
 [node name="Contents" type="Node2D"]
 
@@ -83,6 +94,42 @@ position = Vector2(1888, 320)
 
 [node name="FisherHutFacade" parent="Props" instance=ExtResource("pr_fisher_hut")]
 position = Vector2(1296, 288)
+
+[node name="LanternPost" parent="Props" instance=ExtResource("pz_lantern_post")]
+position = Vector2(176, 288)
+
+[node name="FishRack" parent="Props" instance=ExtResource("pz_fish_rack")]
+position = Vector2(400, 288)
+
+[node name="NetPoles" parent="Props" instance=ExtResource("pz_net_poles")]
+position = Vector2(560, 288)
+
+[node name="FishRack2" parent="Props" instance=ExtResource("pz_fish_rack")]
+position = Vector2(720, 288)
+
+[node name="EelTraps" parent="Props" instance=ExtResource("pz_eel_traps")]
+position = Vector2(850, 288)
+
+[node name="Crate" parent="Props" instance=ExtResource("pz_crate")]
+position = Vector2(1080, 288)
+
+[node name="Barrel" parent="Props" instance=ExtResource("pz_barrel")]
+position = Vector2(1116, 288)
+
+[node name="Woodpile" parent="Props" instance=ExtResource("pz_woodpile")]
+position = Vector2(1480, 288)
+
+[node name="Sled" parent="Props" instance=ExtResource("pz_sled")]
+position = Vector2(1600, 288)
+
+[node name="Oars" parent="Props" instance=ExtResource("pz_oars")]
+position = Vector2(1700, 288)
+
+[node name="Bucket" parent="Props" instance=ExtResource("pz_bucket")]
+position = Vector2(1750, 288)
+
+[node name="RopeCoil" parent="Props" instance=ExtResource("pz_rope_coil")]
+position = Vector2(1830, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

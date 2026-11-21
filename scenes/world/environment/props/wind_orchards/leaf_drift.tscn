@@ -1,0 +1,11 @@
+[gd_scene format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/world/props/wind_orchards/leaf_drift.png" id="1_tex"]
+[ext_resource type="Material" path="res://scenes/world/environment/props/prop_seasonal_material.tres" id="2_mat"]
+
+[node name="LeafDrift" type="Sprite2D"]
+material = ExtResource("2_mat")
+texture = ExtResource("1_tex")
+centered = false
+offset = Vector2(-30, -14)
+vframes = 3

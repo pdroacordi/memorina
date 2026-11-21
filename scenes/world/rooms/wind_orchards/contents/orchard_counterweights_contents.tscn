@@ -5,6 +5,9 @@
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/wind_orchards/contents/orchard_counterweights.room" id="room_map"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/pear_limb.tscn" id="p_pear_limb"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/mill_gear.tscn" id="pz_mill_gear"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/pulley.tscn" id="pz_pulley"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/sacks.tscn" id="pz_sacks"]
 
 [node name="Contents" type="Node2D"]
 
@@ -17,6 +20,18 @@ z_index = -10
 
 [node name="PearLimb" parent="Props" instance=ExtResource("p_pear_limb")]
 position = Vector2(46, 672)
+
+[node name="MillGear" parent="Props" instance=ExtResource("pz_mill_gear")]
+position = Vector2(110, 224)
+
+[node name="Pulley" parent="Props" instance=ExtResource("pz_pulley")]
+position = Vector2(520, 32)
+
+[node name="Sacks" parent="Props" instance=ExtResource("pz_sacks")]
+position = Vector2(150, 672)
+
+[node name="Sacks2" parent="Props" instance=ExtResource("pz_sacks")]
+position = Vector2(584, 672)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

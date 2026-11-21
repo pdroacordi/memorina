@@ -6,6 +6,12 @@
 [ext_resource type="Resource" path="res://scenes/world/rooms/summer_caldera/contents/caldera_arena.room" id="room_map"]
 [ext_resource type="PackedScene" uid="uid://csummerguard1" path="res://scenes/characters/guardians/summer_guardian/summer_guardian.tscn" id="20_guardian"]
 [ext_resource type="Script" path="res://scenes/world/rooms/arena.gd" id="30_arena"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/summer_caldera/brazier.tscn" id="pz_brazier"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/summer_caldera/column.tscn" id="pz_column"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/summer_caldera/lion_shadow_crouched.tscn" id="pz_lion_shadow_crouched"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/summer_caldera/lion_shadow_rearing.tscn" id="pz_lion_shadow_rearing"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/summer_caldera/lion_shadow_standing.tscn" id="pz_lion_shadow_standing"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/summer_caldera/sun_relief.tscn" id="pz_sun_relief"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_arena"]
 size = Vector2(1280, 384)
@@ -15,6 +21,33 @@ size = Vector2(1280, 384)
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
 backdrop_set = ExtResource("bd_set")
+
+[node name="Props" type="Node2D" parent="."]
+z_index = -10
+
+[node name="LionShadowStanding" parent="Props" instance=ExtResource("pz_lion_shadow_standing")]
+position = Vector2(380, 288)
+
+[node name="LionShadowCrouched" parent="Props" instance=ExtResource("pz_lion_shadow_crouched")]
+position = Vector2(660, 288)
+
+[node name="LionShadowRearing" parent="Props" instance=ExtResource("pz_lion_shadow_rearing")]
+position = Vector2(940, 288)
+
+[node name="SunRelief" parent="Props" instance=ExtResource("pz_sun_relief")]
+position = Vector2(640, 176)
+
+[node name="Column" parent="Props" instance=ExtResource("pz_column")]
+position = Vector2(112, 288)
+
+[node name="Brazier" parent="Props" instance=ExtResource("pz_brazier")]
+position = Vector2(200, 288)
+
+[node name="Brazier2" parent="Props" instance=ExtResource("pz_brazier")]
+position = Vector2(1080, 288)
+
+[node name="Column2" parent="Props" instance=ExtResource("pz_column")]
+position = Vector2(1168, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

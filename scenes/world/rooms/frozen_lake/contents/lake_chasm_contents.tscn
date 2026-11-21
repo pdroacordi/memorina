@@ -5,6 +5,10 @@
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/frozen_lake/contents/lake_chasm.room" id="room_map"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/border_cairn.tscn" id="pr_border_cairn"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/dead_shrub.tscn" id="pz_dead_shrub"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/icicle_corner.tscn" id="pz_icicle_corner"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/roots_hanging.tscn" id="pz_roots_hanging"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frozen_lake/snowy_rock.tscn" id="pz_snowy_rock"]
 
 [node name="Contents" type="Node2D"]
 
@@ -17,6 +21,21 @@ z_index = -10
 
 [node name="BorderCairn" parent="Props" instance=ExtResource("pr_border_cairn")]
 position = Vector2(0, 6)
+
+[node name="RootsHanging" parent="Props" instance=ExtResource("pz_roots_hanging")]
+position = Vector2(300, 224)
+
+[node name="RootsHanging2" parent="Props" instance=ExtResource("pz_roots_hanging")]
+position = Vector2(410, 224)
+
+[node name="IcicleCorner" parent="Props" instance=ExtResource("pz_icicle_corner")]
+position = Vector2(990, 416)
+
+[node name="SnowyRock" parent="Props" instance=ExtResource("pz_snowy_rock")]
+position = Vector2(784, 672)
+
+[node name="DeadShrub" parent="Props" instance=ExtResource("pz_dead_shrub")]
+position = Vector2(1110, 672)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

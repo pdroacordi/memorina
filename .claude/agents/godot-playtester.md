@@ -988,6 +988,23 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - To measure a box against drawn limbs in a shot, count pale pixels (all channels > 185, spread < 25) in rows
     feet-48..feet-6 relative to `g`. That works on the lantern's dark wall, but not on a light floor.
 
+- **Learned 2026-11-20 (WORLD-15/16/17 dressing)**: **for a prop or dressing pass, probe `AmbientMotion`, not frames.**
+  A scratch `-s` driver around the runner can find every node whose script ends in `ambient_motion.gd`, keep those
+  whose parent sprite is visible and `_on_screen()`, and print `name:frame@memory` (memory = `_field.sample(sprite.to_global(sample_offset))`)
+  every 100 ms. A 30-line summary then gives frame changes per second per mover. Writing `_field.baseline` every frame
+  forces a memory: label those runs "forced".
+  - Teleport tours from data: parse each `_contents.tscn`'s `Props` children (position + room origin from the region
+    `.tscn`), cluster them by view, and stand Ivo on the nearest grid floor (a non-solid cell over `#S%=-_`). 94 frames for
+    35 rooms in three ~60 s runs. Tall shafts with no floor: teleport mid-air and shoot 0.25 s later.
+  - A sibling can regenerate a whole dressing set mid-session (191 files in 3 minutes here). Keep a props listing and diff
+    it before writing; edited `.tscn` files apply without an import, re-cut PNGs do not.
+  - **A guardian fight stays DORMANT unless Ivo comes within ~300 px.** Walking 200 px into the arena did nothing for 95 s.
+    From the west doorways, hold `move_right` (re-sent every 0.25 s) to x ~4990 for Frost and ~3150 for Sun; both started
+    at t 3.76. The player driver releases nothing while DORMANT, so a timeline hold is safe until then.
+  - A 95 s Frost player-driver run never threw `frost_icicle_fall` and a 110 s Sun run never threw `summer_sun_shafts`. To
+    judge a spawn against the scenery, force it with `guardian_art_check_driver.gd` (`AC_MOVES`, `AC_IVO_X`) and make a
+    copy of the `guardian_bot_*.json` timeline with `max_duration` 500.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

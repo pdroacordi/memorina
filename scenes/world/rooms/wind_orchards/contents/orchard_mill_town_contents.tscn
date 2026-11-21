@@ -5,6 +5,20 @@
 [ext_resource type="Resource" path="res://scenes/world/rooms/wind_orchards/contents/orchard_mill_town.room" id="room_map"]
 
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/inn_facade.tscn" id="pr_inn"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/inhabitants/miller.tscn" id="pz_miller"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/apple_crate.tscn" id="pz_apple_crate"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/apple_tree.tscn" id="pz_apple_tree"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/beehive.tscn" id="pz_beehive"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/fence.tscn" id="pz_fence"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/hay_bale.tscn" id="pz_hay_bale"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/pear_basket.tscn" id="pz_pear_basket"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/pear_cart.tscn" id="pz_pear_cart"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/sacks.tscn" id="pz_sacks"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/scarecrow.tscn" id="pz_scarecrow"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/signpost.tscn" id="pz_signpost"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/well_head.tscn" id="pz_well_head"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/windmill_body.tscn" id="pz_windmill_body"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/windmill_sails.tscn" id="pz_windmill_sails"]
 
 [node name="Contents" type="Node2D"]
 
@@ -16,6 +30,51 @@ z_index = -10
 
 [node name="InnFacade" parent="Props" instance=ExtResource("pr_inn")]
 position = Vector2(976, 288)
+
+[node name="Signpost" parent="Props" instance=ExtResource("pz_signpost")]
+position = Vector2(60, 288)
+
+[node name="WellHead" parent="Props" instance=ExtResource("pz_well_head")]
+position = Vector2(228, 288)
+
+[node name="AppleTree" parent="Props" instance=ExtResource("pz_apple_tree")]
+position = Vector2(384, 288)
+
+[node name="HayBale" parent="Props" instance=ExtResource("pz_hay_bale")]
+position = Vector2(640, 288)
+
+[node name="PearCart" parent="Props" instance=ExtResource("pz_pear_cart")]
+position = Vector2(708, 288)
+
+[node name="AppleCrate" parent="Props" instance=ExtResource("pz_apple_crate")]
+position = Vector2(860, 288)
+
+[node name="PearBasket" parent="Props" instance=ExtResource("pz_pear_basket")]
+position = Vector2(1100, 288)
+
+[node name="Sacks" parent="Props" instance=ExtResource("pz_sacks")]
+position = Vector2(1260, 352)
+
+[node name="Fence" parent="Props" instance=ExtResource("pz_fence")]
+position = Vector2(1360, 352)
+
+[node name="Scarecrow" parent="Props" instance=ExtResource("pz_scarecrow")]
+position = Vector2(1470, 352)
+
+[node name="Fence2" parent="Props" instance=ExtResource("pz_fence")]
+position = Vector2(1560, 352)
+
+[node name="Miller" parent="Props" instance=ExtResource("pz_miller")]
+position = Vector2(1640, 352)
+
+[node name="Windmill2" parent="Props" instance=ExtResource("pz_windmill_body")]
+position = Vector2(1720, 352)
+
+[node name="Windmill2Sails" parent="Props" instance=ExtResource("pz_windmill_sails")]
+position = Vector2(1720, 253)
+
+[node name="Beehive" parent="Props" instance=ExtResource("pz_beehive")]
+position = Vector2(1810, 352)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

@@ -3,11 +3,26 @@
 [ext_resource type="Script" path="res://scenes/world/environment/backdrop/backdrop.gd" id="bd_script"]
 [ext_resource type="Script" path="res://scenes/world/rooms/maps/room_map_node.gd" id="room_map_node"]
 [ext_resource type="Resource" path="res://scenes/world/rooms/wind_orchards/contents/orchard_well.room" id="room_map"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/apple_crate.tscn" id="pz_apple_crate"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/bramble.tscn" id="pz_bramble"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/sacks.tscn" id="pz_sacks"]
 
 [node name="Contents" type="Node2D"]
 
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
+
+[node name="Props" type="Node2D" parent="."]
+z_index = -10
+
+[node name="AppleCrate" parent="Props" instance=ExtResource("pz_apple_crate")]
+position = Vector2(100, 288)
+
+[node name="Sacks" parent="Props" instance=ExtResource("pz_sacks")]
+position = Vector2(180, 288)
+
+[node name="Bramble" parent="Props" instance=ExtResource("pz_bramble")]
+position = Vector2(1200, 64)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

@@ -1,12 +1,13 @@
 class_name PropGroundingTest extends GdUnitTestSuite
 
-## Every grounded village and interior prop stands on its origin with no gap ("Many things on the game seem to just be
-## flaoting", user, 2026-10-11), and each prop's drawn size matches its size table entry (systems/props).
+## Every grounded village, interior and guardian-region prop stands on its origin with no gap ("Many things on the game
+## seem to just be flaoting", user, 2026-10-11), and each prop's drawn size matches its size table entry (systems/props).
 
 const PROPS_DIR := "res://scenes/world/environment/props"
-const GROUPS := ["village", "interiors"]
+const GROUPS := ["village", "interiors", "frozen_lake", "wind_orchards", "summer_caldera"]
 const VILLAGE_SIZES := "res://tools/art/village_prop_sizes.json"
 const INTERIOR_SIZES := "res://tools/art/interior_prop_sizes.json"
+const REGION_SIZES := "res://tools/art/region_prop_sizes.json"
 ## Art px a drawn size may differ from its table entry (a trimmed fringe or a PixelLab redraw).
 const SIZE_TOLERANCE := 2
 ## Props whose origin is not a foot, each with what it hangs from: placement must keep that thing touching it.
@@ -49,6 +50,28 @@ const HUNG := {
 	"interiors/notes_house/tally_calendar": "its string, on a nail",
 	"interiors/notes_house/wall_shelf": "its brackets, on the wall",
 	"interiors/notes_house/window": "set in the wall",
+	"interiors/fisher_hut/wall_net": "the hut wall",
+	"interiors/fisher_hut/window": "set in the wall",
+	"interiors/fisher_hut/dried_fish": "its nail, on the wall",
+	"interiors/fisher_hut/jar_shelf": "its brackets, on the wall",
+	"interiors/fisher_hut/wall_oars": "the hut wall",
+	"interiors/fisher_hut/rope_peg": "its peg, on the wall",
+	"interiors/fisher_hut/lantern": "its chain, from the ceiling",
+	"interiors/orchard_inn/mug_shelf": "its brackets, on the wall",
+	"interiors/orchard_inn/herbs_pears": "its nail, on the wall",
+	"interiors/orchard_inn/window": "set in the wall",
+	"interiors/orchard_inn/lantern": "its chain, from the ceiling",
+	"interiors/orchard_inn/pear_sign": "its chains, on the wall",
+	"frozen_lake/icicles_short": "a ceiling or a ledge's underside",
+	"frozen_lake/icicles_long": "a ceiling or a ledge's underside",
+	"frozen_lake/icicle_corner": "a ceiling or a ledge's underside",
+	"frozen_lake/roots_hanging": "the rock over the chasm's cleft",
+	"wind_orchards/vines": "a wall top or a ceiling",
+	"wind_orchards/pulley": "the ceiling",
+	"wind_orchards/windmill_sails": "its hub, on the small mill house's front",
+	"wind_orchards/great_windmill_sails": "its hub, on the great windmill's cap",
+	"summer_caldera/roots_long": "a ceiling crack",
+	"summer_caldera/roots_short": "a ceiling crack",
 }
 ## Placed props hung from, or standing on, another sprite: [contents scene, held node, support node] under `Props`.
 ## Their opaque pixels must overlap or touch (bugs/the-square-bunting-hangs-in-the-air-short-of-the-bell-tower).
@@ -129,7 +152,7 @@ func test_every_sized_prop_matches_its_table() -> void:
 	var problems := PackedStringArray()
 	var checked := 0
 	var all := _all()
-	for table: Array in [[VILLAGE_SIZES, "village/%s"], [INTERIOR_SIZES, "interiors/%s/%s"]]:
+	for table: Array in [[VILLAGE_SIZES, "village/%s"], [INTERIOR_SIZES, "interiors/%s/%s"], [REGION_SIZES, "%s/%s"]]:
 		var sheets: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(table[0]))
 		for sheet: String in sheets:
 			if sheet == "about" or sheet.ends_with("_ratio"):
