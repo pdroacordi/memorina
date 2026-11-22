@@ -111,6 +111,17 @@ func _all() -> Dictionary:
 		_scenes(PROPS_DIR.path_join(group), found)
 	return found
 
+## The opaque rect of frame 0 over every season band: a winter-drawn prop melts in its spring band (systems/props).
+func _drawn(sprite: Sprite2D) -> Rect2i:
+	var image := sprite.texture.get_image()
+	var size := Vector2i(image.get_width() / sprite.hframes, image.get_height() / sprite.vframes)
+	var drawn := Rect2i()
+	for band: int in sprite.vframes:
+		var used := image.get_region(Rect2i(Vector2i(0, band * size.y), size)).get_used_rect()
+		if used.has_area():
+			drawn = used if not drawn.has_area() else drawn.merge(used)
+	return drawn
+
 ## Frame 0 of band 0 of the sprite's texture.
 func _frame(sprite: Sprite2D) -> Image:
 	var image := sprite.texture.get_image()
@@ -166,7 +177,7 @@ func test_every_sized_prop_matches_its_table() -> void:
 				if (parts[1].begins_with("h") and key in STRETCHED) or SIZE_EXCEPTIONS.has(key):
 					continue
 				var sprite := (load(all[key]) as PackedScene).instantiate() as Sprite2D
-				var drawn := _frame(sprite).get_used_rect()
+				var drawn := _drawn(sprite)
 				sprite.free()
 				var art := (drawn.size.y if parts[1].begins_with("h") else drawn.size.x) / 2
 				var wanted := parts[1].substr(1).to_int()
