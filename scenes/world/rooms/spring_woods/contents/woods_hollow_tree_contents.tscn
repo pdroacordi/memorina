@@ -21,6 +21,9 @@
 [ext_resource type="Script" path="res://scenes/world/memory/memory_source.gd" id="fb_source"]
 [ext_resource type="Script" path="res://scenes/world/memory/fact_well.gd" id="fb_well"]
 [ext_resource type="Script" path="res://resources/save_facts/fact_level.gd" id="fb_level"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/wood_knot.tscn" id="dz_wood_knot"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/resin_streak.tscn" id="dz_resin_streak"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/nest.tscn" id="dz_wind_orchards_nest"]
 
 [sub_resource type="Resource" id="due_2"]
 script = ExtResource("fb_fact")
@@ -62,6 +65,48 @@ strength = -1.0
 [node name="Backdrop" type="Node2D" parent="."]
 script = ExtResource("bd_script")
 backdrop_set = ExtResource("bd_set")
+
+[node name="Props" type="Node2D" parent="."]
+z_index = -10
+
+[node name="WoodKnot" parent="Props" instance=ExtResource("dz_wood_knot")]
+position = Vector2(142, 252)
+
+[node name="WoodKnot2" parent="Props" instance=ExtResource("dz_wood_knot")]
+position = Vector2(306, 444)
+
+[node name="WoodKnot3" parent="Props" instance=ExtResource("dz_wood_knot")]
+position = Vector2(142, 636)
+
+[node name="WoodKnot4" parent="Props" instance=ExtResource("dz_wood_knot")]
+position = Vector2(306, 796)
+
+[node name="WoodKnot5" parent="Props" instance=ExtResource("dz_wood_knot")]
+position = Vector2(142, 956)
+
+[node name="WoodKnot6" parent="Props" instance=ExtResource("dz_wood_knot")]
+position = Vector2(306, 1116)
+
+[node name="WoodKnot7" parent="Props" instance=ExtResource("dz_wood_knot")]
+position = Vector2(142, 1308)
+
+[node name="ResinStreak" parent="Props" instance=ExtResource("dz_resin_streak")]
+position = Vector2(140, 420)
+
+[node name="ResinStreak2" parent="Props" instance=ExtResource("dz_resin_streak")]
+position = Vector2(308, 680)
+
+[node name="ResinStreak3" parent="Props" instance=ExtResource("dz_resin_streak")]
+position = Vector2(308, 580)
+
+[node name="ResinStreak4" parent="Props" instance=ExtResource("dz_resin_streak")]
+position = Vector2(140, 860)
+
+[node name="ResinStreak5" parent="Props" instance=ExtResource("dz_resin_streak")]
+position = Vector2(308, 1050)
+
+[node name="Nest" parent="Props" instance=ExtResource("dz_wind_orchards_nest")]
+position = Vector2(380, 736)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

@@ -59,6 +59,8 @@ param(
   [double]$TextGuidance = 8.0,
   [double]$ImageGuidance = 1.5,
   [int]$Seed = 0,
+  # generate: how closely pixflux keeps -Reference (1..999; lower redraws more).
+  [int]$InitStrength = 300,
   [string]$Name = "",
   [string]$Out = "",
   # fetch: a finished animate3 background job, re-downloaded without a new generation.
@@ -217,7 +219,7 @@ switch ($Command) {
     if ($Outline) { $body.outline = $Outline }
     if ($Shading) { $body.shading = $Shading }
     if ($Detail)  { $body.detail  = $Detail }
-    if ($Reference) { $body.init_image = Read-Base64Image $Reference; $body.init_image_strength = 300 }
+    if ($Reference) { $body.init_image = Read-Base64Image $Reference; $body.init_image_strength = $InitStrength }
     $r = Invoke-PixelLab POST "/generate-image-pixflux" $body
     $stem = if ($Name) { $Name } else { "generate" }
     Write-Base64Png $r.image (Join-Path $dir "${stem}_0.png")

@@ -5,6 +5,18 @@
 [ext_resource type="Resource" path="res://scenes/world/rooms/threshold/contents/threshold_fields.room" id="room_map"]
 
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/farmhouse_facade.tscn" id="pr_farmhouse"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/scythe.tscn" id="dz_scythe"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/wheat_tall.tscn" id="dz_wheat_tall"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/wheat_short.tscn" id="dz_wheat_short"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/fence_broken.tscn" id="dz_fence_broken"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/scarecrow.tscn" id="dz_scarecrow"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/crow_perched.tscn" id="dz_crow_perched"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/cart_tipped.tscn" id="dz_cart_tipped"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/sheaf_bound.tscn" id="dz_sheaf_bound"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/sheaf_loose.tscn" id="dz_sheaf_loose"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/thistles.tscn" id="dz_thistles"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/crow_looking.tscn" id="dz_crow_looking"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/threshold/field_tree.tscn" id="dz_field_tree"]
 
 [node name="Contents" type="Node2D"]
 
@@ -16,6 +28,75 @@ z_index = -10
 
 [node name="FarmhouseFacade" parent="Props" instance=ExtResource("pr_farmhouse")]
 position = Vector2(1296, 288)
+
+[node name="Scythe" parent="Props" instance=ExtResource("dz_scythe")]
+position = Vector2(112, 288)
+
+[node name="WheatTall" parent="Props" instance=ExtResource("dz_wheat_tall")]
+position = Vector2(64, 288)
+
+[node name="WheatShort" parent="Props" instance=ExtResource("dz_wheat_short")]
+position = Vector2(150, 288)
+
+[node name="WheatTall2" parent="Props" instance=ExtResource("dz_wheat_tall")]
+position = Vector2(200, 288)
+
+[node name="FenceBroken" parent="Props" instance=ExtResource("dz_fence_broken")]
+position = Vector2(270, 288)
+
+[node name="WheatTall3" parent="Props" instance=ExtResource("dz_wheat_tall")]
+position = Vector2(376, 256)
+
+[node name="WheatShort2" parent="Props" instance=ExtResource("dz_wheat_short")]
+position = Vector2(432, 256)
+
+[node name="Scarecrow" parent="Props" instance=ExtResource("dz_scarecrow")]
+position = Vector2(528, 224)
+
+[node name="CrowPerched" parent="Props" instance=ExtResource("dz_crow_perched")]
+position = Vector2(550, 166)
+
+[node name="WheatShort3" parent="Props" instance=ExtResource("dz_wheat_short")]
+position = Vector2(672, 256)
+
+[node name="WheatTall4" parent="Props" instance=ExtResource("dz_wheat_tall")]
+position = Vector2(780, 288)
+
+[node name="CartTipped" parent="Props" instance=ExtResource("dz_cart_tipped")]
+position = Vector2(866, 288)
+
+[node name="SheafBound" parent="Props" instance=ExtResource("dz_sheaf_bound")]
+position = Vector2(916, 288)
+
+[node name="SheafLoose" parent="Props" instance=ExtResource("dz_sheaf_loose")]
+position = Vector2(820, 288)
+
+[node name="Thistles" parent="Props" instance=ExtResource("dz_thistles")]
+position = Vector2(1048, 288)
+
+[node name="WheatShort4" parent="Props" instance=ExtResource("dz_wheat_short")]
+position = Vector2(1100, 288)
+
+[node name="FenceBroken2" parent="Props" instance=ExtResource("dz_fence_broken")]
+position = Vector2(1552, 288)
+
+[node name="CrowLooking" parent="Props" instance=ExtResource("dz_crow_looking")]
+position = Vector2(1588, 260)
+
+[node name="WheatTall5" parent="Props" instance=ExtResource("dz_wheat_tall")]
+position = Vector2(1648, 256)
+
+[node name="FieldTree" parent="Props" instance=ExtResource("dz_field_tree")]
+position = Vector2(1722, 224)
+
+[node name="WheatShort5" parent="Props" instance=ExtResource("dz_wheat_short")]
+position = Vector2(1778, 256)
+
+[node name="WheatTall6" parent="Props" instance=ExtResource("dz_wheat_tall")]
+position = Vector2(1856, 288)
+
+[node name="Thistles2" parent="Props" instance=ExtResource("dz_thistles")]
+position = Vector2(1904, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

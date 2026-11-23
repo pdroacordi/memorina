@@ -5,6 +5,12 @@
 [ext_resource type="Resource" path="res://scenes/world/rooms/frost_edge/contents/lighthouse_base.room" id="room_map"]
 
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/lighthouse_facade.tscn" id="pr_lighthouse"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/bollard.tscn" id="dz_bollard"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/fog_bell.tscn" id="dz_fog_bell"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/flagpole.tscn" id="dz_flagpole"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/oil_cans.tscn" id="dz_oil_cans"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/coal_bin.tscn" id="dz_coal_bin"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/railing.tscn" id="dz_railing"]
 
 [node name="Contents" type="Node2D"]
 
@@ -16,6 +22,24 @@ z_index = -10
 
 [node name="LighthouseFacade" parent="Props" instance=ExtResource("pr_lighthouse")]
 position = Vector2(656, 288)
+
+[node name="Bollard" parent="Props" instance=ExtResource("dz_bollard")]
+position = Vector2(40, 288)
+
+[node name="FogBell" parent="Props" instance=ExtResource("dz_fog_bell")]
+position = Vector2(160, 288)
+
+[node name="Flagpole" parent="Props" instance=ExtResource("dz_flagpole")]
+position = Vector2(420, 288)
+
+[node name="OilCans" parent="Props" instance=ExtResource("dz_oil_cans")]
+position = Vector2(548, 288)
+
+[node name="CoalBin" parent="Props" instance=ExtResource("dz_coal_bin")]
+position = Vector2(760, 288)
+
+[node name="Railing" parent="Props" instance=ExtResource("dz_railing")]
+position = Vector2(1253, 192)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

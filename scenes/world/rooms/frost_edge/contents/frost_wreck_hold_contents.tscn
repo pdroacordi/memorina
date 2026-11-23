@@ -11,6 +11,10 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/mill_house/grain_sack.tscn" id="pi_grain_sack"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/tavern/keg.tscn" id="pi_keg"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/elder_house/chest.tscn" id="pi_chest"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/hammock.tscn" id="dz_hammock"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/ship_lantern.tscn" id="dz_ship_lantern"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/cargo_net.tscn" id="dz_cargo_net"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/frost_edge/sea_chest.tscn" id="dz_sea_chest"]
 
 [node name="Contents" type="Node2D"]
 
@@ -41,6 +45,18 @@ position = Vector2(444, 224)
 
 [node name="Chest6" parent="Props" instance=ExtResource("pi_chest")]
 position = Vector2(584, 224)
+
+[node name="Hammock7" parent="Props" instance=ExtResource("dz_hammock")]
+position = Vector2(112, 96)
+
+[node name="ShipLantern8" parent="Props" instance=ExtResource("dz_ship_lantern")]
+position = Vector2(480, 32)
+
+[node name="CargoNet9" parent="Props" instance=ExtResource("dz_cargo_net")]
+position = Vector2(340, 256)
+
+[node name="SeaChest10" parent="Props" instance=ExtResource("dz_sea_chest")]
+position = Vector2(64, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

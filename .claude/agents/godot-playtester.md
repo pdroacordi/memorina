@@ -1019,6 +1019,24 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
   - `audio_probe_driver.gd`'s clock ran ~3.7 s ahead of the runner's here. Align by printing `[aud]` and `[playtest] log`
     lines in file order.
 
+- **Learned 2026-11-23 (WORLD-12..14 dressing)**: **tour a dressing pass from data, not from guessed spawns.**
+  - A 60-line `world.py` reads each room's `[grid]`, its contents `Props` positions and the region origins. It tiles the
+    room into 640x360 views and keeps those that hold a prop. Per view it picks the floor cell (open cell and open
+    above, over `#S%=-^_`) nearest (view centre x, centre y + 84), the spot where a standing Ivo puts the camera on that
+    view. Three teleport runs covered 19 rooms. Views with no floor within ~260 px teleported Ivo into solid rock, so
+    check the first `log`.
+  - The look-ahead puts the camera ~96 px ahead of Ivo's facing, and the room clamp does the rest. A prop near a room's
+    west end (the bridge milestone, the shore's rope coil) hides behind Ivo or off frame. Tap `move_left` 0.06 s after
+    the teleport to face west.
+  - Hung props: list every prop scene whose `offset.y >= 0` (top-anchored) and the cell above its origin. A prop hung
+    under an `=`/`-` cell floats, because a ledge is drawn only ~10 px deep, and the placement test passes it
+    (`bugs/woods-deep-hanging-moss-floats-under-its-ledge`).
+  - A scripted walk east across threshold_fields stops at x 4789 at the first one-cell step: add jumps. Gust timing
+    there from a world build: first gust ~41-72 s (peak 33 px/s), and a 108 s run does not reach the second. The
+    bridge's first is ~21-36 s (66 px/s), its second ~57 s.
+  - `foreground sleep` is blocked. Wait for a background series with an `until grep -q DONE <output>; do sleep 5; done`
+    loop.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

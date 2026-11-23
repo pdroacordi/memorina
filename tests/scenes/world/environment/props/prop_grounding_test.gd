@@ -1,10 +1,10 @@
 class_name PropGroundingTest extends GdUnitTestSuite
 
-## Every grounded village, interior and guardian-region prop stands on its origin with no gap ("Many things on the game
+## Every grounded village, interior and region prop stands on its origin with no gap ("Many things on the game
 ## seem to just be flaoting", user, 2026-10-11), and each prop's drawn size matches its size table entry (systems/props).
 
 const PROPS_DIR := "res://scenes/world/environment/props"
-const GROUPS := ["village", "interiors", "frozen_lake", "wind_orchards", "summer_caldera"]
+const GROUPS := ["village", "interiors", "frozen_lake", "wind_orchards", "summer_caldera", "threshold", "frost_edge", "spring_woods"]
 const VILLAGE_SIZES := "res://tools/art/village_prop_sizes.json"
 const INTERIOR_SIZES := "res://tools/art/interior_prop_sizes.json"
 const REGION_SIZES := "res://tools/art/region_prop_sizes.json"
@@ -72,6 +72,18 @@ const HUNG := {
 	"wind_orchards/great_windmill_sails": "its hub, on the great windmill's cap",
 	"summer_caldera/roots_long": "a ceiling crack",
 	"summer_caldera/roots_short": "a ceiling crack",
+	"interiors/farmhouse/onions_herbs": "its string, from the ceiling beam",
+	"interiors/farmhouse/coat_peg": "its peg, on the wall by the door",
+	"interiors/woodcutter_hut/axe_rack": "the hut wall",
+	"interiors/woodcutter_hut/snowshoes": "their peg, on the hut wall",
+	"interiors/woodcutter_hut/fur_coat": "its peg, on the hut wall",
+	"interiors/woodcutter_hut/jar_shelf": "its brackets, on the wall",
+	"frost_edge/lighthouse_lamp": "its chain, from the lantern room's ceiling",
+	"frost_edge/storm_lantern": "its nail, on the bench cave's back wall",
+	"frost_edge/ship_lantern": "its hook, under the hold's deck planks",
+	"frost_edge/hammock": "its two ropes, from the hold's deck planks",
+	"spring_woods/hanging_moss": "a ledge's underside or a ceiling",
+	"spring_woods/flowering_vines": "a wall top or the room's top edge",
 }
 ## Placed props hung from, or standing on, another sprite: [contents scene, held node, support node] under `Props`.
 ## Their opaque pixels must overlap or touch (bugs/the-square-bunting-hangs-in-the-air-short-of-the-bell-tower).
@@ -86,6 +98,9 @@ const SUPPORTED := [
 	["res://scenes/world/rooms/home_village/contents/village_mill_house_contents.tscn", "Gear", "Axle"],
 	["res://scenes/world/rooms/home_village/contents/village_tavern_contents.tscn", "Mugs/AtSix/MugCounter", "BarCounter13"],
 	["res://scenes/world/rooms/home_village/contents/village_tavern_contents.tscn", "Mugs/AtSix/MugTable", "TavernTableA5"],
+	["res://scenes/world/rooms/threshold/contents/threshold_fields_contents.tscn", "CrowPerched", "Scarecrow"],
+	["res://scenes/world/rooms/threshold/contents/threshold_fields_contents.tscn", "CrowLooking", "FenceBroken2"],
+	["res://scenes/world/rooms/spring_woods/contents/woods_edge_contents.tscn", "TrunkSection", "TrunkBase"],
 ]
 ## Props stretched to the ceiling after their cut (tools/art/stretch_prop.py): only their width keeps the table's size.
 const STRETCHED := ["interiors/mill_house/hook_rope"]

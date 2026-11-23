@@ -79,10 +79,10 @@ position = Vector2(700, 64)
 position = Vector2(1000, 64)
 
 [node name="IciclesShort2" parent="Props" instance=ExtResource("pz_icicles_short")]
-position = Vector2(640, 224)
+position = Vector2(640, 202)
 
 [node name="SnowHeap" parent="Props" instance=ExtResource("pz_snow_heap")]
-position = Vector2(1200, 288)
+position = Vector2(1206, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

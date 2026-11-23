@@ -1,5 +1,8 @@
 ; woods_canopy.room - the treetops above woods_deep (design 04 section 3.4). Gate: the opening up to
 ; orchard_terraces (cols 4-11) is 7 rows above the launch branch (row 4): double jump only.
+; WORLD-41: the 384 px drop back from orchard_terraces' hole lands on cols 4-8 in a SoftLanding (`n`, 6,8; 5 cells
+; wide, 3 tall) under the blossom_heap prop, like the other drops back ("Straight drop into deep snow
+; (Recommended)", user, 2026-10-15).
 
 [room]
 origin = 0, 0
@@ -14,11 +17,12 @@ tileset = spring_woods
 #...........Z..............................................#
 #.........................######...........................#
 #..............####.......######..........####.............#
-#.$............####.......######..........####.............#
+#.$...n........####.......######..........####.............#
 ####################....########################........####
 ################################################........####
 ################################################........####
 
 [entities]
 2,8 = {"slot_id": "woods_canopy_nest", "kind": 1}
+6,8 = {"width_cells": 5, "height_cells": 3}
 12,5 = {"save_id": "woods_canopy_spider"}

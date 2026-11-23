@@ -6,7 +6,7 @@ status: active
 tags: [air, wind, gale, airflow]
 related: [architecture/one-air-channel, architecture/regional-weather-push]
 created: 2026-10-02
-updated: 2026-11-11
+updated: 2026-11-23
 source_files: []
 ---
 
@@ -35,5 +35,5 @@ Design 03 sections 5.3-5.4 and 6.1: wind, a current, a song's gale and the weath
 - **Calm air is still air** (`calm_strength` 0): the reachability audit stays exact in a calm and a gust is a timing obstacle. `winter_weather_bounds_test` holds the bound with `JumpReach.wind`: calm headwind <= 3 px/s, `calm_time` >= a song plus a jump's airtime, the peak breaks a drawn song at memory 1, the fight peak stays under `wind_deadzone`. **No puzzle may depend on the regional wind**: the player can turn it to 0.
 - **The snow reads the same gust**: `RegionWind.drive()` (signed strength x fight x intensity) drives `RegionWeather`'s gust layer sideways; no sideways snow is the calm. Weather never makes a colour pulse: `region_wind.tscn` holds no `MemorySource`.
 - **Intensity**: `Settings.weather_intensity()` (0..1, `systems/settings`) scales the regional push and every ambient weather layer, never a `WindZone`, the gale or a guardian's gust.
-- Today: `winter_blizzard.tres` (speed 220, `blizzard_gusts.tres` calm 6 / rise 1.5 / gust 2 / fall 1.5 s, calm strength 0, fight 0.1 over 1 s) on threshold, frost_edge and frozen_lake, all west. First guesses; at today's memory 0.3 the peak is 66 px/s and a calm lasts ~20 real s.
+- Today: `winter_blizzard.tres` (speed 220, `blizzard_gusts.tres` calm 6 / rise 1.5 / gust 2 / fall 1.5 s, calm strength 0, fight 0.1 over 1 s) on threshold, frost_edge and frozen_lake, all west. First guesses; at today's memory 0.3 the peak is 66 px/s and a calm lasts ~20 real s. In threshold_fields, under `FieldsStillMemory` (strength -0.15), the memory is 0.15: the peak is 33 px/s and a calm lasts ~40 real s, so a player who walks across meets no gust; accepted with the hold ("Sway loops, keep the hold (Recommended)", user, 2026-11-23; `gotchas/a-hand-placed-memory-source-slows-the-region-weather-under-it`).
 - User decisions, 2026-11-11: "Winter only (Recommended)" (other seasons are MEM-06, data only); "Fixed per region (Recommended)"; "All west (Recommended)"; "Yes, a slider (Recommended)"; "Yes, every region (Recommended)" (no falling weather under rock); village weather "Later item (Recommended)"; gust sound "Later (Recommended)". Orchestrator calls: the slider scales regional weather only; a gust may start while Ivo is airborne (the rise is the warning).

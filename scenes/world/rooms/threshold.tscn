@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/world/rooms/region.gd" id="1_region"]
 [ext_resource type="Script" path="res://scenes/world/rooms/region_memory.gd" id="2_regmem"]
+[ext_resource type="Script" uid="uid://daise6urd8pcb" path="res://scenes/world/memory/memory_source.gd" id="3_source"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_fields.tscn" id="r0"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_bridge.tscn" id="r1"]
 [ext_resource type="PackedScene" path="res://scenes/world/rooms/threshold/threshold_wayshrine.tscn" id="r2"]
@@ -26,6 +27,14 @@ horizon_y = 235.0
 [node name="Memory" type="Node2D" parent="."]
 script = ExtResource("2_regmem")
 authored = 0.3
+
+[node name="FieldsStillMemory" type="Node2D" parent="Memory"]
+position = Vector2(5440, 192)
+script = ExtResource("3_source")
+shape = 1
+rect_size = Vector2(1824, 288)
+feather = 48.0
+strength = -0.15
 
 [node name="ThresholdFields" parent="." instance=ExtResource("r0")]
 position = Vector2(4480, 0)

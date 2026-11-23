@@ -18,10 +18,10 @@ script = ExtResource("bd_script")
 z_index = -10
 
 [node name="GreatWindmill" parent="Props" instance=ExtResource("pz_great_windmill_body")]
-position = Vector2(752, 448)
+position = Vector2(758, 448)
 
 [node name="GreatWindmillSails" parent="Props" instance=ExtResource("pz_great_windmill_sails")]
-position = Vector2(752, 244)
+position = Vector2(758, 244)
 
 [node name="Haystack" parent="Props" instance=ExtResource("pz_haystack")]
 position = Vector2(120, 608)

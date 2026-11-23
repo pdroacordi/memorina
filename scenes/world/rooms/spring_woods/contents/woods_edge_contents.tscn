@@ -5,6 +5,17 @@
 [ext_resource type="Resource" path="res://scenes/world/rooms/spring_woods/contents/woods_edge.room" id="room_map"]
 
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/woodcutter_hut_facade.tscn" id="pr_woodcutter_hut"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/trunk_base.tscn" id="dz_trunk_base"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/trunk_section.tscn" id="dz_trunk_section"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/wind_orchards/signpost.tscn" id="dz_wind_orchards_signpost"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/village/chopping_block.tscn" id="dz_village_chopping_block"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/log_stack.tscn" id="dz_log_stack"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/saw_horse.tscn" id="dz_saw_horse"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/hand_cart.tscn" id="dz_hand_cart"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/flowering_bush.tscn" id="dz_flowering_bush"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/birdhouse_post.tscn" id="dz_birdhouse_post"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/blossom_tree.tscn" id="dz_blossom_tree"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/spring_woods/ferns.tscn" id="dz_ferns"]
 
 [node name="Contents" type="Node2D"]
 
@@ -14,8 +25,44 @@ script = ExtResource("bd_script")
 [node name="Props" type="Node2D" parent="."]
 z_index = -10
 
+[node name="TrunkBase" parent="Props" instance=ExtResource("dz_trunk_base")]
+position = Vector2(544, 288)
+
+[node name="TrunkSection" parent="Props" instance=ExtResource("dz_trunk_section")]
+position = Vector2(548, 8)
+
 [node name="WoodcutterHutFacade" parent="Props" instance=ExtResource("pr_woodcutter_hut")]
 position = Vector2(400, 288)
+
+[node name="Signpost" parent="Props" instance=ExtResource("dz_wind_orchards_signpost")]
+position = Vector2(36, 288)
+
+[node name="ChoppingBlock" parent="Props" instance=ExtResource("dz_village_chopping_block")]
+position = Vector2(120, 288)
+
+[node name="LogStack" parent="Props" instance=ExtResource("dz_log_stack")]
+position = Vector2(170, 288)
+
+[node name="SawHorse" parent="Props" instance=ExtResource("dz_saw_horse")]
+position = Vector2(232, 288)
+
+[node name="HandCart" parent="Props" instance=ExtResource("dz_hand_cart")]
+position = Vector2(560, 288)
+
+[node name="FloweringBush" parent="Props" instance=ExtResource("dz_flowering_bush")]
+position = Vector2(700, 288)
+
+[node name="BirdhousePost" parent="Props" instance=ExtResource("dz_birdhouse_post")]
+position = Vector2(880, 288)
+
+[node name="BlossomTree" parent="Props" instance=ExtResource("dz_blossom_tree")]
+position = Vector2(1120, 288)
+
+[node name="Ferns" parent="Props" instance=ExtResource("dz_ferns")]
+position = Vector2(1052, 288)
+
+[node name="Ferns2" parent="Props" instance=ExtResource("dz_ferns")]
+position = Vector2(1250, 288)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

@@ -46,6 +46,14 @@ func picked() -> int:
 func shown() -> CanvasItem:
 	return _shown
 
+## Whether a stand-in shows in place of the pick.
+func is_standing_in() -> bool:
+	return _standing_in
+
+## The stand-in's name; empty when none holds or it shows nothing.
+func stand_in_name() -> StringName:
+	return _stand_in.name if _standing_in and _stand_in != null else &""
+
 ## A beat shows `child` (empty: nothing) until the picked stage next changes or `release(child)`; `seconds` of
 ## cross-fade, 0 cuts.
 func stand_in(child: StringName, seconds: float = 0.0) -> void:

@@ -12,6 +12,10 @@
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/farmhouse/chair_pushed.tscn" id="pi_farmhouse_chair_pushed"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/farmhouse/turnip_basket.tscn" id="pi_farmhouse_turnip_basket"]
 [ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/farmhouse/bucket.tscn" id="pi_farmhouse_bucket"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/farmhouse/coat_peg.tscn" id="dz_i_coat_peg"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/farmhouse/onions_herbs.tscn" id="dz_i_onions_herbs"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/farmhouse/churn.tscn" id="dz_i_churn"]
+[ext_resource type="PackedScene" path="res://scenes/world/environment/props/interiors/farmhouse/pot.tscn" id="dz_i_pot"]
 
 [node name="Contents" type="Node2D"]
 
@@ -45,6 +49,18 @@ position = Vector2(436, 288)
 
 [node name="Bucket7" parent="Props" instance=ExtResource("pi_farmhouse_bucket")]
 position = Vector2(480, 288)
+
+[node name="CoatPeg8" parent="Props" instance=ExtResource("dz_i_coat_peg")]
+position = Vector2(96, 184)
+
+[node name="OnionsHerbs9" parent="Props" instance=ExtResource("dz_i_onions_herbs")]
+position = Vector2(488, 32)
+
+[node name="Churn10" parent="Props" instance=ExtResource("dz_i_churn")]
+position = Vector2(520, 288)
+
+[node name="Pot11" parent="Props" instance=ExtResource("dz_i_pot")]
+position = Vector2(576, 224)
 
 [node name="RoomMap" type="Node2D" parent="."]
 script = ExtResource("room_map_node")

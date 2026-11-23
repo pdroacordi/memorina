@@ -1,15 +1,19 @@
 """Turn a PixelLab still drawn at art size (1 px = 1 art px) into a 2x-density prop PNG.
 
-python -I tools/art/clean_prop.py <in.png> <out.png> [--flat=N] [--base-shade] [--replace=#rrggbb:#rrggbb,...]
+python -I tools/art/clean_prop.py <in.png> <out.png> [--flat=N] [--palette=<png>,...] [--base-shade]
+    [--replace=#rrggbb:#rrggbb,...] [--drop-specks=N]
     Alpha becomes binary (opaque from 128), --replace repaints one exact colour with another, --flat=N reduces the
-    object to N colours of its own and repaints specks (cut_props.flatten), --base-shade darkens the bottom row by a
-    fifth, and the object is trimmed to its opaque bounds so its bottom row is its base. Written at 2x.
+    object to N colours of its own and repaints specks (cut_props.flatten), --palette snaps every opaque pixel to the
+    nearest colour of those images (the region sheet's other props, so a redraw keeps its palette), --base-shade
+    darkens the bottom row by a fifth, --drop-specks=N clears every 8-connected part smaller than N px (a stray
+    pixel), and the object is trimmed to its opaque bounds so its bottom row is its base. Written at 2x.
 """
 import os
 import sys
 
 import numpy as np
 from PIL import Image
+from scipy import ndimage
 
 # `python -I` leaves the script's own folder off the path.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -20,6 +24,17 @@ from cut_facades import save_2x  # noqa: E402
 def hex_rgb(value: str) -> tuple[int, int, int]:
     value = value.lstrip("#")
     return int(value[0:2], 16), int(value[2:4], 16), int(value[4:6], 16)
+
+
+def snap_to(art: np.ndarray, paths: list[str]) -> None:
+    colours = set()
+    for path in paths:
+        image = np.array(Image.open(path).convert("RGBA"))
+        colours |= {tuple(c) for c in image[image[..., 3] > 0][:, :3]}
+    palette = np.array(sorted(colours), dtype=int)
+    opaque = art[..., 3] > 0
+    px = art[..., :3][opaque].astype(int)
+    art[..., :3][opaque] = palette[((px[:, None] - palette[None]) ** 2).sum(-1).argmin(1)]
 
 
 def main(src: str, out: str, options: dict) -> None:
@@ -33,6 +48,12 @@ def main(src: str, out: str, options: dict) -> None:
         art[hit, :3] = after
     if "flat" in options:
         flatten(art, int(options["flat"]))
+    if options.get("palette"):
+        snap_to(art, options["palette"].split(","))
+    if "drop-specks" in options:
+        labels, _count = ndimage.label(art[..., 3] > 0, structure=np.ones((3, 3)))
+        sizes = np.bincount(labels.ravel())
+        art[(sizes[labels] < int(options["drop-specks"])) & (labels > 0)] = 0
     art = trim(art).copy()
     if "base-shade" in options:
         shade_base(art)

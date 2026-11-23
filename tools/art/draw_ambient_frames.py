@@ -10,10 +10,20 @@ Flame: python -I tools/art/draw_ambient_frames.py flame <lantern.png> <out.png> 
 Swing: python -I tools/art/draw_ambient_frames.py swing <sign.png> <out.png> --hinge=ROW
     A hanging sign swaying on its hooks: art rows below the hinge row shift sideways in proportion to their distance
     from it, 0, +1, 0, -1 art px at the bottom over four frames (sheared, never rotated off the grid).
+    [--frames=N] leans by a sine, 1 art px at the far end (six frames: 0, 1, 1, 0, -1, -1). [--box=X0:Y0:X1:Y1] moves
+    only the pixels in that art-px box and keeps the frame's size (a scarecrow's rag sleeve); [--cloth] moves only its
+    pale, unsaturated pixels (a torn sail over its mast).
+Wave: python -I tools/art/draw_ambient_frames.py wave <flag.png> <out.png> --hinge=COL [--frames=6] [--box=...] [--cloth]
+    A pennant flying from its pole: art columns right of the hinge column shift up and down in proportion to their
+    distance from it, the swing turned on its side.
+Sway: python -I tools/art/draw_ambient_frames.py sway <plant.png> <out.png>
+    A plant rooted at its bottom row (a fern): rows above it shift sideways in proportion to their height over it,
+    0, +1, 0, -1 art px at the top over four frames; the swing's shear turned upside down.
 Smoke: python -I tools/art/draw_ambient_frames.py smoke <out.png> [--frames=8]
     A seamless loop of three puffs rising and drifting right, shrinking as they go, 12x32 art px per frame.
 Both work on the art grid and write at 2x.
 """
+import os
 import sys
 
 import numpy as np
@@ -74,21 +84,72 @@ def write_panes(art: np.ndarray, found: list[np.ndarray], base: np.ndarray, out:
     print(f"{out}: {len(found)} panes, {frames} frames of {w * 2}x{h * 2}")
 
 
-def swing(src: str, out: str, hinge: int) -> None:
+def leans(frames: int) -> list[int]:
+    """Lean per frame, 1 art px at the far end: 0, +1, 0, -1 for four frames, 0, 1, 1, 0, -1, -1 for six."""
+    return [round(np.sin(2 * np.pi * k / frames)) for k in range(frames)]
+
+
+def moving(art: np.ndarray, box: tuple | None, cloth: bool) -> np.ndarray:
+    """The pixels that shear: all of them, or those inside `box` (art px), only the pale cloth ones with `cloth`."""
+    mask = art[..., 3] > 0
+    if box is not None:
+        inside = np.zeros_like(mask)
+        inside[box[1]:box[3], box[0]:box[2]] = True
+        mask &= inside
+    if cloth:
+        rgb = art[..., :3].astype(int)
+        mask &= (rgb.max(-1) - rgb.min(-1) < 40) & (rgb.min(-1) > 140)
+    return mask
+
+
+def shear(art: np.ndarray, frames: int, hinge: int, box: tuple | None, cloth: bool, across: bool) -> np.ndarray:
+    """Frames of `art` whose moving pixels past `hinge` shift, in proportion to their distance from it: sideways by
+    row (a hanging cloth, `across` False) or up and down by column (a pennant flying from its pole, `across` True)."""
+    h, w = art.shape[:2]
+    mask = moving(art, box, cloth)
+    still = art.copy()
+    still[mask] = 0
+    end = (w if across else h) if box is None else (box[2] if across else box[3])
+    reach = end - 1 - hinge
+    out = []
+    for lean in leans(frames):
+        frame = still.copy()
+        ys, xs = np.nonzero(mask)
+        for y, x in zip(ys, xs):
+            d = round(lean * max(0, (x if across else y) - hinge) / max(1, reach))
+            ty, tx = (y + d, x) if across else (y, x + d)
+            if 0 <= ty < h and 0 <= tx < w:
+                frame[ty, tx] = art[y, x]
+        out.append(frame)
+    return np.concatenate(out, axis=1)
+
+
+def swing(src: str, out: str, hinge: int, frames: int = 4, box: tuple | None = None, cloth: bool = False) -> None:
     art = art_of(src).astype(np.uint8)
     h, w = art.shape[:2]
-    pad = np.zeros((h, w + 2, 4), np.uint8)
-    pad[:, 1:-1] = art
-    frames = []
-    for lean in (0, 1, 0, -1):
-        frame = np.zeros_like(pad)
-        for y in range(h):
-            dx = round(lean * max(0, y - hinge) / max(1, h - 1 - hinge))
-            frame[y] = np.roll(pad[y], dx, axis=0)
-        frames.append(frame)
-    strip = np.concatenate(frames, axis=1)
+    if box is None:
+        # A whole sign leans past its edges: one art px of room each side.
+        pad = np.zeros((h, w + 2, 4), np.uint8)
+        pad[:, 1:-1] = art
+        art = pad
+    strip = shear(art, frames, hinge, box, cloth, False)
     Image.fromarray(strip, "RGBA").resize((strip.shape[1] * 2, h * 2), Image.NEAREST).save(out)
-    print(f"{out}: 4 frames of {(w + 2) * 2}x{h * 2}")
+    print(f"{out}: {frames} frames of {art.shape[1] * 2}x{h * 2}")
+
+
+def wave(src: str, out: str, hinge: int, frames: int, box: tuple | None, cloth: bool) -> None:
+    art = art_of(src).astype(np.uint8)
+    strip = shear(art, frames, hinge, box, cloth, True)
+    Image.fromarray(strip, "RGBA").resize((strip.shape[1] * 2, art.shape[0] * 2), Image.NEAREST).save(out)
+    print(f"{out}: {frames} frames of {art.shape[1] * 2}x{art.shape[0] * 2}")
+
+
+def sway(src: str, out: str) -> None:
+    flipped = f"{out}.flip.png"
+    Image.open(src).transpose(Image.FLIP_TOP_BOTTOM).save(flipped)
+    swing(flipped, out, 0)
+    Image.open(out).transpose(Image.FLIP_TOP_BOTTOM).save(out)
+    os.remove(flipped)
 
 
 def smoke(out: str, frames: int, w: int = 12, h: int = 32) -> None:
@@ -111,8 +172,14 @@ if __name__ == "__main__":
     opts = dict((a[2:].split("=", 1) + [""])[:2] for a in sys.argv[1:] if a.startswith("--"))
     if args[0] == "lights":
         lights(args[1], args[2], int(opts.get("frames", 3)))
-    elif args[0] == "swing":
-        swing(args[1], args[2], int(opts["hinge"]))
+    elif args[0] in ("swing", "wave"):
+        box = tuple(int(v) for v in opts["box"].split(":")) if "box" in opts else None
+        if args[0] == "swing":
+            swing(args[1], args[2], int(opts["hinge"]), int(opts.get("frames", 4)), box, "cloth" in opts)
+        else:
+            wave(args[1], args[2], int(opts["hinge"]), int(opts.get("frames", 6)), box, "cloth" in opts)
+    elif args[0] == "sway":
+        sway(args[1], args[2])
     elif args[0] == "flame":
         flame(args[1], args[2], int(opts.get("frames", 3)))
     else:
