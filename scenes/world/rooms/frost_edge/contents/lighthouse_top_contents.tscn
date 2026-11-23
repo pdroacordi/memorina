@@ -31,8 +31,6 @@
 [ext_resource type="Resource" path="res://resources/story/mentor_phrase.tres" id="st_phrase"]
 [ext_resource type="Resource" path="res://resources/story/story_pulse_stats.tres" id="st_pulse_stats"]
 [ext_resource type="Resource" path="res://resources/songs/freeze.tres" id="st_winter"]
-[ext_resource type="Resource" path="res://resources/songs/root.tres" id="st_spring"]
-[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/wife_hum_opening.wav" id="st_hum"]
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/story/memorina_flat.wav" id="st_flat"]
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_up_g4.mp3" id="st_note_up"]
 [ext_resource type="AudioStream" path="res://assets/audios/sfx/memorina/note_down_c4.mp3" id="st_note_down"]
@@ -55,6 +53,11 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/lower.png" id="s37_lower"]
 [ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/hold_out.png" id="s37_hold_out"]
 [ext_resource type="Script" path="res://scenes/world/story/line_gesture.gd" id="s37_gesture"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/give.png" id="s35_give"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world/story/mentor/let_go.png" id="s35_let_go"]
+[ext_resource type="Resource" path="res://resources/cutscene/story/memorina_hand_over.tres" id="s35_hand_over"]
+[ext_resource type="Resource" path="res://resources/save_facts/seen_memorina_hand_over.tres" id="s35_seen"]
+[ext_resource type="Script" path="res://scenes/world/memory/memory_bloom.gd" id="s35_bloom"]
 
 [sub_resource type="AtlasTexture" id="s37_holding_0"]
 atlas = ExtResource("s37_holding")
@@ -256,6 +259,85 @@ animations = [{
 "speed": 1.0
 }]
 
+[sub_resource type="AtlasTexture" id="s35_give_0"]
+atlas = ExtResource("s35_give")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s35_give_1"]
+atlas = ExtResource("s35_give")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s35_give_2"]
+atlas = ExtResource("s35_give")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s35_give_3"]
+atlas = ExtResource("s35_give")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="s35_give_frames"]
+animations = [{
+"frames": [{
+"duration": 0.1,
+"texture": SubResource("s35_give_0")
+}, {
+"duration": 0.15,
+"texture": SubResource("s35_give_1")
+}, {
+"duration": 0.15,
+"texture": SubResource("s35_give_2")
+}, {
+"duration": 0.15,
+"texture": SubResource("s35_give_3")
+}],
+"loop": false,
+"name": &"give",
+"speed": 1.0
+}]
+
+[sub_resource type="AtlasTexture" id="s35_let_go_0"]
+atlas = ExtResource("s35_let_go")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s35_let_go_1"]
+atlas = ExtResource("s35_let_go")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s35_let_go_2"]
+atlas = ExtResource("s35_let_go")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s35_let_go_3"]
+atlas = ExtResource("s35_let_go")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="s35_let_go_4"]
+atlas = ExtResource("s35_let_go")
+region = Rect2(512, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="s35_let_go_frames"]
+animations = [{
+"frames": [{
+"duration": 0.1,
+"texture": SubResource("s35_let_go_0")
+}, {
+"duration": 0.5,
+"texture": SubResource("s35_let_go_1")
+}, {
+"duration": 0.15,
+"texture": SubResource("s35_let_go_2")
+}, {
+"duration": 0.15,
+"texture": SubResource("s35_let_go_3")
+}, {
+"duration": 0.15,
+"texture": SubResource("s35_let_go_4")
+}],
+"loop": false,
+"name": &"let_go",
+"speed": 1.0
+}]
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_arena"]
 size = Vector2(1152, 768)
 
@@ -310,6 +392,12 @@ script = ExtResource("41_stage")
 when = Array[ExtResource("48_fact")]([SubResource("heard_gift")])
 show = &"Stasis"
 fade_seconds = 1.5
+
+[sub_resource type="Resource" id="mentor_empty_hand"]
+script = ExtResource("41_stage")
+when = Array[ExtResource("48_fact")]([ExtResource("s35_seen")])
+show = &"EmptyHand"
+fade_seconds = 0.0
 
 [sub_resource type="Resource" id="mentor_holding"]
 script = ExtResource("41_stage")
@@ -667,7 +755,7 @@ z_index = -10
 
 [node name="Mentor" type="Node2D" parent="Props"]
 script = ExtResource("40_staging")
-stages = Array[ExtResource("41_stage")]([SubResource("mentor_gone"), SubResource("mentor_waiting"), SubResource("mentor_stasis"), SubResource("mentor_holding"), SubResource("mentor_at_lamp")])
+stages = Array[ExtResource("41_stage")]([SubResource("mentor_gone"), SubResource("mentor_waiting"), SubResource("mentor_stasis"), SubResource("mentor_empty_hand"), SubResource("mentor_holding"), SubResource("mentor_at_lamp")])
 staging_id = &"mentor_staging"
 
 [node name="AtLamp" type="Node2D" parent="Props/Mentor"]
@@ -733,6 +821,26 @@ offset = Vector2(-61, -126)
 flip_h = true
 script = ExtResource("st_strip")
 intro = &"hold_out"
+
+[node name="Giving" type="AnimatedSprite2D" parent="Props/Mentor"]
+position = Vector2(720, 672)
+sprite_frames = SubResource("s35_give_frames")
+animation = &"give"
+centered = false
+offset = Vector2(-61, -126)
+flip_h = true
+script = ExtResource("st_strip")
+intro = &"give"
+
+[node name="LettingGo" type="AnimatedSprite2D" parent="Props/Mentor"]
+position = Vector2(720, 672)
+sprite_frames = SubResource("s35_let_go_frames")
+animation = &"let_go"
+centered = false
+offset = Vector2(-61, -126)
+flip_h = true
+script = ExtResource("st_strip")
+intro = &"let_go"
 
 [node name="Stasis" type="Node2D" parent="Props/Mentor"]
 
@@ -828,16 +936,10 @@ pulse_stats = ExtResource("st_pulse_stats")
 pulse_at = NodePath("../Pair")
 duration = 2.6
 
-[node name="MentorGift" parent="Beats" instance=ExtResource("st_staged_beat")]
+[node name="MentorGift" type="Node" parent="Beats"]
+script = ExtResource("cs_beat")
 cue = &"mentor_gift"
-pose = 2
-stand_ins = Dictionary[NodePath, StringName]({NodePath("../../Props/Mentor"): &"EmptyHand"})
-face = NodePath("../../Props/Mentor/EmptyHand")
-stream = ExtResource("st_hum")
-pulse_song = ExtResource("st_spring")
-pulse_stats = ExtResource("st_pulse_stats")
-pulse_at = NodePath("../Pair")
-duration = 2.4
+cutscene = ExtResource("s35_hand_over")
 
 [node name="MemorinaFlat" parent="Beats" instance=ExtResource("st_staged_beat")]
 cue = &"memorina_flat"
@@ -878,6 +980,13 @@ gesture = &"mentor_hold_out"
 staging = NodePath("../../Props/Mentor")
 child = &"HoldingOut"
 holds = true
+
+[node name="GiftBloom" type="Node2D" parent="."]
+position = Vector2(756, 618)
+script = ExtResource("s35_bloom")
+bloom_id = &"gift_bloom"
+feather = 48.0
+tint = Color(0.58, 0.83, 0.5, 1)
 
 [node name="Marks" type="Node2D" parent="."]
 

@@ -26,6 +26,17 @@ const ATTACK_POGO := &"attack_pogo"
 const MEMORINA_DRAW := &"memorina_draw"
 const MEMORINA_IDLE := &"memorina_idle"
 const MEMORINA_LOWER := &"memorina_lower"
+## The keeper's hand-over (STORY-35): the reach held on its last frame, the take, then the flute held under his chin; the
+## lift and the put-away play the lower sheet from that hold, so he never draws a flute he already holds.
+const MEMORINA_REACH := &"memorina_reach"
+const MEMORINA_TAKE := &"memorina_take"
+const MEMORINA_HOLD := &"memorina_hold"
+const MEMORINA_LIFT := &"memorina_lift"
+const MEMORINA_PUT_AWAY := &"memorina_put_away"
+## The flute is held under his chin: MEMORINA lifts it from here, pose NONE puts it away.
+const FLUTE_HELD: Array[StringName] = [MEMORINA_TAKE, MEMORINA_HOLD]
+## The flute is at his lips: pose NONE lowers it.
+const FLUTE_UP: Array[StringName] = [MEMORINA_IDLE, MEMORINA_LIFT]
 const GUITAR_HOLD := &"guitar_hold"
 const GUITAR_STRUM := &"guitar_strum"
 const CLIMB := &"climb"
@@ -104,7 +115,13 @@ func resolve() -> StringName:
 				return GUITAR_STRUM
 			return GUITAR_HOLD
 		DialogueBeat.Pose.MEMORINA:
+			if driver.current in FLUTE_HELD or driver.current == MEMORINA_LIFT:
+				return driver.sequence(MEMORINA_LIFT, MEMORINA_IDLE)
 			return driver.sequence(MEMORINA_DRAW, MEMORINA_IDLE)
+		DialogueBeat.Pose.RECEIVE:
+			return MEMORINA_REACH
+		DialogueBeat.Pose.MEMORINA_HELD:
+			return driver.sequence(MEMORINA_TAKE, MEMORINA_HOLD)
 		DialogueBeat.Pose.SEATED:
 			return SIT
 		DialogueBeat.Pose.KNEEL:
@@ -130,8 +147,10 @@ func resolve() -> StringName:
 		return WALK if _player.is_strolling() else RUN
 	if _player.just_landed() or driver.holding(LAND):
 		return LAND
-	# Puts the instrument away after playing it; any movement cuts it.
-	if driver.current == MEMORINA_IDLE or driver.holding(MEMORINA_LOWER):
+	# Puts the instrument away after playing or holding it; any movement cuts it.
+	if driver.current in FLUTE_HELD or driver.holding(MEMORINA_PUT_AWAY):
+		return MEMORINA_PUT_AWAY
+	if driver.current in FLUTE_UP or driver.holding(MEMORINA_LOWER):
 		return MEMORINA_LOWER
 	if _player.is_bracing():
 		return BRACE_STAND

@@ -1008,6 +1008,17 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
 - **Learned 2026-11-23 (WORLD-19 ledge drop)**: **time a press from `trace`, not from frames.** Find the first trace line whose y differs from the rest y, and compare it with the step's `t` and with a plain jump control in the same run. On this machine both the drop and a jump move 0.031 s after the step. A teleport-based move (the drop's 6 px, the helix) moves `cam_centre` by the same amount in the same frame, so on screen it shows as the world shifting, not as Ivo.
   Positions: orchard_terraces `=` span x -4512..-4384 top -1376 (floor below -1248); earth block -4640..-4512 top -1344; tavern `-` planks row 13 x 2176..2592 top 12416, row 17 x 2208..2336 top 12544. A drop is refused for a body within 11 px of the span's west end (earth one row under col 38).
 
+- **Learned 2026-11-23 (STORY-35 hand-over)**: **time a talk's timeline from `talk_reader_driver.gd` first, then copy its press times.**
+  Run the driver (`CAMLOG=1 STRIPSHOT=1`, a `log` step every 0.05 s) and take its `[dlg] press Z` times into the JSON timeline. The
+  driver presses Z only on a typed line, so raw `key` steps in its timeline (Escape, Down, Z for the pause menu's Skip) still
+  work alongside it. The lantern talk still drifts ~0.3-0.5 s between runs, so bracket a beat with 0.05 s bursts.
+  - **To prove "one sprite hands an object to another"**, composite both strips at their world transforms with Pillow
+    (mentor: x = 786 - col, y = 546 + row; Ivo at `ivo_near` facing west: x = 839 - col, y = 576 + row, room px). Diff the giver's
+    frame with the object against the next frame without it to find the object's pixels, then check the taker's frame
+    covers them. The greyhush draws the giver's copy grey, so a frame check by colour alone fails.
+  - `audio_probe_driver.gd`'s clock ran ~3.7 s ahead of the runner's here. Align by printing `[aud]` and `[playtest] log`
+    lines in file order.
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

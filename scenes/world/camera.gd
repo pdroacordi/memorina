@@ -306,6 +306,35 @@ func centre_for(subject: Node2D) -> Vector2:
 			at.y -= _talk_lift * _pair_blend
 	return at + Vector2(lead, bias + offset.y)
 
+## The canvas transform the frame settles on while following `subject`: the rest zoom, a talk's pair or the look-ahead
+## fully eased, the room's clamp and its yield to the body. A talk places its box from it, so a frame still easing never
+## picks the side. Must match `_framed_position`, `_apply_bounds` and `_keep_subject_in_view`.
+func settled_canvas_transform(subject: Node2D) -> Transform2D:
+	var at := subject.global_position
+	at.y += subject.frame_bias() if subject.has_method("frame_bias") else 0.0
+	var lead := 0.0
+	if _pairing and is_instance_valid(_pair):
+		at.x = (at.x + _pair.global_position.x) / 2.0
+		if _pair == _talk_point:
+			at.y -= _talk_lift
+	elif subject is Character:
+		lead = look_ahead_distance * float((subject as Character).facing)
+	var size := get_viewport_rect().size
+	var centre := at + Vector2(lead, framing_offset_y)
+	if _is_bound:
+		var half := size * 0.5 / _rest_zoom
+		centre.x = _clamp_axis(centre.x, _bounds.position.x + half.x, _bounds.end.x - half.x, _bounds.get_center().x)
+		centre.y = _clamp_axis(centre.y, _bounds.position.y + half.y, _bounds.end.y - half.y, _bounds.get_center().y)
+		# As _keep_subject_in_view, without a fall's lead: a talk stands on the floor.
+		if subject.has_method("body_rect"):
+			var body: Rect2 = (subject.body_rect() as Rect2).grow(subject_margin)
+			var kept := Vector2(
+				_clamp_axis(centre.x, body.end.x - half.x, body.position.x + half.x, centre.x),
+				_clamp_axis(centre.y, body.end.y - half.y, body.position.y + half.y, centre.y))
+			centre.x = _yield_axis(centre.x, kept.x, _reach.position.x + half.x, _reach.end.x - half.x)
+			centre.y = _yield_axis(centre.y, kept.y, _reach.position.y + half.y, _reach.end.y - half.y)
+	return Transform2D(0.0, Vector2.ONE * _rest_zoom, 0.0, size * 0.5 - centre * _rest_zoom)
+
 ## Where a followed marker stands for the frame to centre on `centre`: a marker carries no look-ahead or framing, so the
 ## offset the camera holds is taken off.
 func rig_point_for(centre: Vector2) -> Vector2:
@@ -334,6 +363,12 @@ func snap(keep_fall_lead: bool = false) -> void:
 	# A cut lands a running zoom or pair ease too, so the frame uncovered after a travel does not settle in view.
 	_land(_focus_tween)
 	_land(_pair_tween)
+	# Placed now, not on the next step: a snap after this step's camera update would draw one frame where it stood.
+	if _subject != null:
+		global_position = _framed_position()
+		_apply_bounds()
+		_keep_subject_in_view(0.0)
+		_last_centre_y = global_position.y + offset.y
 	reset_smoothing()
 
 ## A decaying random offset; a stronger call while one runs replaces it.

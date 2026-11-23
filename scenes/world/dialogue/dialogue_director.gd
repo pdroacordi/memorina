@@ -29,6 +29,8 @@ signal phrase_closed
 @export var catalog: DialogueCatalog
 ## Ivo: with the speaker, where he stands on screen decides the box's side.
 @export var listener: Node2D
+## The box's side is read from the frame it settles on for the talk, not the one shown; null reads the shown frame.
+@export var camera: GameCamera
 
 ## Null while no talk runs.
 var _runner: DialogueRunner
@@ -117,11 +119,15 @@ func _begin() -> void:
 	talk_began.emit(_facing)
 	_step()
 
-## Opposite the speakers on screen and off the speaker's face (DialogueBoxSide); the top when Ivo is unknown.
+## Opposite the speakers on screen and off the speaker's face (DialogueBoxSide), in the talk's settled frame, so a
+## scene's camera still easing back never picks it; the top when Ivo is unknown.
+## (bugs/a-talk-resumed-after-a-cutscene-places-its-box-under-the-scenes-camera)
 func _side() -> DialogueBoxSide.Side:
 	if listener == null or not listener.is_inside_tree():
 		return DialogueBoxSide.Side.TOP
 	var canvas := listener.get_canvas_transform()
+	if camera != null and camera.is_inside_tree():
+		canvas = camera.settled_canvas_transform(listener)
 	var ys := PackedFloat32Array([(canvas * _at).y, (canvas * listener.global_position).y])
 	var face_y := (canvas * (_at + Vector2.UP * _face_height)).y if _face_height > 0.0 else NAN
 	return DialogueBoxSide.place(ys, listener.get_viewport_rect().size.y, face_y, DialogueBox.TOP_BOX_BOTTOM)

@@ -1,0 +1,124 @@
+[gd_resource type="Resource" script_class="Cutscene" format=3]
+
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_together.gd" id="e_together"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sequence.gd" id="e_sequence"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bars.gd" id="e_bars"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_camera.gd" id="e_camera"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_face.gd" id="e_face"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_wait.gd" id="e_wait"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_stage.gd" id="e_stage"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_pose.gd" id="e_pose"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_sound.gd" id="e_sound"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_bloom.gd" id="e_bloom"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene_step.gd" id="e_step"]
+[ext_resource type="Script" path="res://resources/cutscene/cutscene.gd" id="e_cutscene"]
+[ext_resource type="AudioStream" path="res://assets/audios/sfx/story/wife_hum_opening.wav" id="a_hum"]
+
+[sub_resource type="Resource" id="bars_1"]
+script = ExtResource("e_bars")
+open = true
+seconds = 0.6
+
+[sub_resource type="Resource" id="camera_pair"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"ivo", &"mentor_home"])
+offset = Vector2(0, -60)
+zoom = 2.0
+seconds = 1.0
+
+[sub_resource type="Resource" id="face_keeper"]
+script = ExtResource("e_face")
+actor = &"ivo"
+toward = &"mentor_home"
+
+[sub_resource type="Resource" id="together_frame"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("bars_1"), SubResource("camera_pair"), SubResource("face_keeper")])
+
+[sub_resource type="Resource" id="wait_offer"]
+script = ExtResource("e_wait")
+seconds = 0.4
+
+[sub_resource type="Resource" id="stage_giving"]
+script = ExtResource("e_stage")
+staging = &"mentor_staging"
+child = &"Giving"
+
+[sub_resource type="Resource" id="pose_receive"]
+script = ExtResource("e_pose")
+pose = 8
+
+[sub_resource type="Resource" id="wait_reach"]
+script = ExtResource("e_wait")
+seconds = 0.7
+
+[sub_resource type="Resource" id="together_reach"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("stage_giving"), SubResource("pose_receive"), SubResource("wait_reach")])
+
+[sub_resource type="Resource" id="stage_letting_go"]
+script = ExtResource("e_stage")
+staging = &"mentor_staging"
+child = &"LettingGo"
+
+[sub_resource type="Resource" id="wait_let_go"]
+script = ExtResource("e_wait")
+seconds = 1.1
+
+[sub_resource type="Resource" id="stage_empty_hand"]
+script = ExtResource("e_stage")
+staging = &"mentor_staging"
+child = &"EmptyHand"
+
+[sub_resource type="Resource" id="keeper_lets_go"]
+script = ExtResource("e_sequence")
+steps = Array[ExtResource("e_step")]([SubResource("stage_letting_go"), SubResource("wait_let_go"), SubResource("stage_empty_hand")])
+
+[sub_resource type="Resource" id="pose_held"]
+script = ExtResource("e_pose")
+pose = 9
+
+[sub_resource type="Resource" id="hum"]
+script = ExtResource("e_sound")
+stream = ExtResource("a_hum")
+
+[sub_resource type="Resource" id="bloom_open"]
+script = ExtResource("e_bloom")
+bloom_id = &"gift_bloom"
+radius = 112.0
+ring = 0.5
+seconds = 0.4
+
+[sub_resource type="Resource" id="wait_colour"]
+script = ExtResource("e_wait")
+seconds = 1.0
+
+[sub_resource type="Resource" id="bloom_close"]
+script = ExtResource("e_bloom")
+bloom_id = &"gift_bloom"
+strength = 0.0
+seconds = 0.8
+
+[sub_resource type="Resource" id="colour"]
+script = ExtResource("e_sequence")
+steps = Array[ExtResource("e_step")]([SubResource("bloom_open"), SubResource("wait_colour"), SubResource("bloom_close")])
+
+[sub_resource type="Resource" id="camera_hands"]
+script = ExtResource("e_camera")
+targets = Array[StringName]([&"ivo"])
+offset = Vector2(0, -36)
+zoom = 3.0
+seconds = 1.6
+
+[sub_resource type="Resource" id="together_grip"]
+script = ExtResource("e_together")
+steps = Array[ExtResource("e_step")]([SubResource("keeper_lets_go"), SubResource("pose_held"), SubResource("hum"), SubResource("colour"), SubResource("camera_hands")])
+
+[sub_resource type="Resource" id="wait_held"]
+script = ExtResource("e_wait")
+seconds = 0.8
+
+[resource]
+script = ExtResource("e_cutscene")
+id = &"memorina_hand_over"
+steps = Array[ExtResource("e_step")]([SubResource("together_frame"), SubResource("wait_offer"), SubResource("together_reach"), SubResource("together_grip"), SubResource("wait_held")])

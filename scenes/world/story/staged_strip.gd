@@ -12,6 +12,13 @@ func _ready() -> void:
 	animation_finished.connect(_on_animation_finished)
 	_on_visibility_changed()
 
+## Puts the strip back on `clip`'s `frame`, playing on from it or held there, as a dropped scene found it.
+func resume_at(clip: StringName, at: int, playing: bool) -> void:
+	animation = clip
+	set_frame_and_progress(at, 0.0)
+	if not playing:
+		pause()
+
 func _on_visibility_changed() -> void:
 	if not is_visible_in_tree():
 		stop()

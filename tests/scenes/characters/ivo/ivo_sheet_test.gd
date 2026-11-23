@@ -9,6 +9,9 @@ const HELD_PROPS := {
 	"ivo_guitar.png": "res://assets/sprites/world/props/interiors/ivo_house/guitar.png",
 	"ivo_memorina_play.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
 	"ivo_memorina_lower.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
+	"ivo_memorina_reach.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
+	"ivo_memorina_take.png": "res://tools/art/sources/story/ivo_memorina_take_palette.png",
+	"ivo_memorina_hold.png": "res://tools/art/sources/story/ivo_memorina_still_2x.png",
 	"ivo_sit_memorina.png": "res://assets/sprites/characters/ivo/ivo_memorina_play.png",
 	"ivo_sit_memorina_raise.png": "res://assets/sprites/characters/ivo/ivo_memorina_play.png",
 	"ivo_ribbon.png": "res://assets/sprites/world/props/garden/ribbon_hand.png",
@@ -28,7 +31,7 @@ const GROUNDED: Array[StringName] = [
 	&"idle", &"run", &"brace", &"brace_stand", &"land", &"hurt", &"sit", &"death", &"memorina_draw", &"memorina_idle", &"memorina_lower",
 	&"idle_attack_swing_in", &"idle_attack_swing_out", &"run_attack_swing_in", &"run_attack_swing_out",
 	&"guitar_hold", &"guitar_strum", &"kneel", &"sit_ground", &"push_swing", &"ribbon", &"sit_memorina_raise", &"sit_memorina",
-	&"sit_memorina_lower",
+	&"sit_memorina_lower", &"memorina_reach", &"memorina_take", &"memorina_hold", &"memorina_lift", &"memorina_put_away",
 ]
 ## Sheet frames in flight, both boots off the floor 1-3 art px; the running attack keeps the run's legs.
 const FLIGHT := {&"run": [3, 4, 7], &"run_attack_swing_in": [3, 4], &"run_attack_swing_out": [7]}
@@ -67,7 +70,8 @@ const LENGTHS := {
 	&"memorina_idle": 1.0, &"memorina_lower": 0.33333334, &"idle_attack_swing_in": 0.41666666, &"idle_attack_swing_out": 0.33333334,
 	&"run_attack_swing_in": 0.41666666, &"run_attack_swing_out": 0.33333334, &"jump_attack": 0.33333334,
 	&"fall_attack": 0.33333334, &"air_downwards_attack": 0.5, &"sit_memorina_raise": 0.625, &"sit_memorina": 1.0,
-	&"sit_memorina_lower": 0.625,
+	&"sit_memorina_lower": 0.625, &"memorina_reach": 0.625, &"memorina_take": 1.075, &"memorina_hold": 1.75,
+	&"memorina_lift": 0.16666667, &"memorina_put_away": 0.25,
 }
 
 var _library: AnimationLibrary
@@ -112,6 +116,20 @@ func test_clip_lengths_are_unchanged() -> void:
 	for clip: StringName in LENGTHS:
 		assert_float(_library.get_animation(clip).length).override_failure_message(String(clip)) \
 			.is_equal_approx(LENGTHS[clip], 0.0001)
+
+## Every clip but RESET is a state of the tree, so the resolver can play it (STORY-07 found clips missing from a tree).
+func test_every_clip_is_a_state_of_the_tree() -> void:
+	var machine := (_ivo.get_node("AnimationTree") as AnimationTree).tree_root as AnimationNodeStateMachine
+	var played := {}
+	for state: StringName in machine.get_node_list():
+		var node := machine.get_node(state) as AnimationNodeAnimation
+		if node != null:
+			played[node.animation] = true
+	var missing := PackedStringArray()
+	for clip: StringName in _library.get_animation_list():
+		if clip != &"RESET" and not played.has(clip):
+			missing.append(String(clip))
+	assert_array(Array(missing)).is_empty()
 
 func test_grounded_clips_stand_on_the_floor_line() -> void:
 	var problems := PackedStringArray()

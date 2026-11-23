@@ -1,0 +1,262 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "pt_BR",
+ "owned_items": [
+  0
+ ],
+ "player_position": [
+  11780,
+  -1250
+ ],
+ "max_duration": 34.0,
+ "clock": "real",
+ "_note": "STORY-35: as story35_hand_over, but the scene is skipped from the pause menu (Escape at 24.95, ~1.2 s into the scene, Down to Pular cena, Z). Re-timed 2026-11-23. Depending on the run's ~0.3-0.5 s drift the pause lands in the offer hold or in Giving. The skip must land EmptyHand, Ivo memorina_take from frame 0 then memorina_hold, no hum, no colour, the talk framing, and the talk resuming on 'Essa e...'. s35s_03_landed is still under the pause menu (the Z is processed after it).",
+ "steps": [
+  {
+   "t": 0.5,
+   "screenshot": "00_arrive"
+  },
+  {
+   "t": 0.6,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 1.2,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 1.8,
+   "screenshot": "01_approach_a"
+  },
+  {
+   "t": 2.4,
+   "screenshot": "01_approach_b"
+  },
+  {
+   "t": 3.5,
+   "screenshot": "02_hey"
+  },
+  {
+   "t": 3.76,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 3.84,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 5.45,
+   "screenshot": "03_turning_5.45"
+  },
+  {
+   "t": 5.6,
+   "screenshot": "03_silence"
+  },
+  {
+   "t": 5.65,
+   "screenshot": "03_turning_5.65"
+  },
+  {
+   "t": 5.85,
+   "screenshot": "03_turning_5.85"
+  },
+  {
+   "t": 6.05,
+   "screenshot": "03_turning_6.05"
+  },
+  {
+   "t": 6.25,
+   "screenshot": "03_turning_6.25"
+  },
+  {
+   "t": 6.5,
+   "screenshot": "03_turned"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "04_long_way"
+  },
+  {
+   "t": 8.55,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 8.63,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 10.8,
+   "screenshot": "05_a_story"
+  },
+  {
+   "t": 11.25,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 11.33,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 12.2,
+   "screenshot": "06_i_keep"
+  },
+  {
+   "t": 12.48,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 12.56,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 13.6,
+   "screenshot": "07_pause"
+  },
+  {
+   "t": 15.6,
+   "screenshot": "08_i_kept"
+  },
+  {
+   "t": 16.04,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 16.12,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 18.4,
+   "screenshot": "09_a_song"
+  },
+  {
+   "t": 18.82,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 18.9,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 20.0,
+   "screenshot": "10_phrase"
+  },
+  {
+   "t": 23.2,
+   "screenshot": "11_many_hands"
+  },
+  {
+   "t": 23.68,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 23.76,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 24.45,
+   "screenshot": "s35s_00_in_scene"
+  },
+  {
+   "t": 24.47,
+   "log": "s35s_00_in_scene"
+  },
+  {
+   "t": 24.95,
+   "key": "Escape",
+   "pressed": true
+  },
+  {
+   "t": 25.03,
+   "key": "Escape",
+   "pressed": false
+  },
+  {
+   "t": 25.45,
+   "screenshot": "s35s_01_pause"
+  },
+  {
+   "t": 25.47,
+   "log": "s35s_01_pause"
+  },
+  {
+   "t": 25.75,
+   "key": "Down",
+   "pressed": true
+  },
+  {
+   "t": 25.83,
+   "key": "Down",
+   "pressed": false
+  },
+  {
+   "t": 26.15,
+   "screenshot": "s35s_02_pause_skip"
+  },
+  {
+   "t": 26.17,
+   "log": "s35s_02_pause_skip"
+  },
+  {
+   "t": 26.6,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 26.65,
+   "screenshot": "s35s_03_landed"
+  },
+  {
+   "t": 26.67,
+   "log": "s35s_03_landed"
+  },
+  {
+   "t": 26.68,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 27.35,
+   "screenshot": "s35s_04_take_after_skip"
+  },
+  {
+   "t": 27.37,
+   "log": "s35s_04_take_after_skip"
+  },
+  {
+   "t": 28.45,
+   "screenshot": "s35s_05_held"
+  },
+  {
+   "t": 28.47,
+   "log": "s35s_05_held"
+  },
+  {
+   "t": 29.45,
+   "screenshot": "s35s_06_her_song"
+  },
+  {
+   "t": 29.47,
+   "log": "s35s_06_her_song"
+  },
+  {
+   "t": 32.85,
+   "log": "end"
+  }
+ ]
+}

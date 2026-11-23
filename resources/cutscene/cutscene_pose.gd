@@ -1,6 +1,6 @@
 class_name CutscenePose
 extends CutsceneStep
-## What Ivo holds until the next pose or the scene's end (DialogueBeat.Pose).
+## What Ivo holds until the next pose; the scene's last pose holds after it while a talk does (DialogueBeat.Pose).
 
 @export var pose: DialogueBeat.Pose = DialogueBeat.Pose.NONE
 

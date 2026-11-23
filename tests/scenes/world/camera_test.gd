@@ -118,6 +118,50 @@ func test_snap_lands_a_released_talk() -> void:
 	await get_tree().physics_frame
 	assert_float(_centre().x).is_equal_approx(_camera.centre_for(_subject).x, 1.0)
 
+## STORY-35 (bugs/a-talk-resumed-after-a-cutscene-places-its-box-under-the-scenes-camera): the settled frame is the
+## talk's own framing, whatever frame is shown: the canvas the talk settles on, and the same while a rig holds a scene's
+## frame elsewhere at another zoom.
+func test_the_settled_frame_is_the_talks_framing_whatever_is_shown() -> void:
+	var ivo := IVO.instantiate() as Player
+	ivo.position = Vector2(600, 330.0)
+	add_child(ivo)
+	auto_free(ivo)
+	_floor(Vector2(0.0, 330.0), 2000.0)
+	_camera.set_bounds(Rect2(-4000, -4000, 8000, 8000))
+	_camera.follow(ivo)
+	_camera.frame_talk(Vector2(ivo.global_position.x - 56.0, 330.0), 1.5, false, 64.0)
+	for i: int in 90:
+		await get_tree().physics_frame
+	await get_tree().process_frame
+	var settled := _camera.settled_canvas_transform(ivo)
+	var shown := get_viewport().get_canvas_transform()
+	assert_vector(settled.get_scale()).is_equal_approx(shown.get_scale(), Vector2.ONE * 0.001)
+	assert_vector(settled.origin).is_equal_approx(shown.origin, Vector2.ONE * 1.5)
+	var rig := auto_free(Node2D.new()) as Node2D
+	add_child(rig)
+	rig.global_position = ivo.global_position + Vector2(28.0, 24.0)
+	_camera.follow(rig)
+	_camera.zoom_to(2.88, 0.0)
+	await get_tree().physics_frame
+	var during := _camera.settled_canvas_transform(ivo)
+	assert_vector(during.get_scale()).is_equal_approx(settled.get_scale(), Vector2.ONE * 0.001)
+	assert_vector(during.origin).is_equal_approx(settled.origin, Vector2.ONE * 0.5)
+
+## A snap places the frame on its subject at once (a skip's cut, a respawn): no frame is drawn where it stood.
+func test_a_snap_places_the_frame_at_once() -> void:
+	_camera.set_bounds(Rect2(-4000, -4000, 8000, 8000))
+	_subject.global_position = Vector2(600, 300)
+	for i: int in 3:
+		await get_tree().physics_frame
+	var rig := auto_free(Node2D.new()) as Node2D
+	add_child(rig)
+	rig.global_position = Vector2(600, 220)
+	_camera.follow(rig)
+	await get_tree().physics_frame
+	_camera.follow(_subject)
+	_camera.snap()
+	assert_float(_centre().distance_to(_camera.centre_for(_subject))).is_less(0.5)
+
 ## Dialogue.cut (flashback 4's "Por você."): the talk's pair and zoom land at once, with no ease.
 func test_a_cut_talk_frames_at_once() -> void:
 	var ivo := IVO.instantiate() as Player

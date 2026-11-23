@@ -23,8 +23,9 @@ const GROUP := &"dialogue_beats"
 ## held reaches it, read through `Player.up_held()`. Append only: scenes store these as ints.
 enum Hold { FREE, STILL, NOTES, HELD_UP }
 ## What Ivo holds from the beat's start until the next beat or the talk's end; SEATED (STORY-16) sits him where he
-## stands, the bench's clip; the last four are the flashbacks' (STORY-05). Append only: scenes store these as ints.
-enum Pose { NONE, GUITAR, MEMORINA, SEATED, KNEEL, SIT_GROUND, PUSH_SWING, RIBBON }
+## stands, the bench's clip; KNEEL to RIBBON are the flashbacks' (STORY-05); RECEIVE and MEMORINA_HELD take the
+## Memorina from the keeper (STORY-35). Append only: scenes store these as ints.
+enum Pose { NONE, GUITAR, MEMORINA, SEATED, KNEEL, SIT_GROUND, PUSH_SWING, RIBBON, RECEIVE, MEMORINA_HELD }
 
 ## Matches a DialogueLine's `cue`.
 @export var cue: StringName = &""

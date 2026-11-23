@@ -159,6 +159,63 @@ func test_the_memorina_clips_raise_play_and_lower_the_flute() -> void:
 			frames.append(int(clip.track_get_key_value(track, key)))
 		assert_array(frames).is_equal(expected[name][2])
 
+## STORY-35: RECEIVE reaches and holds the reach; MEMORINA_HELD takes the flute and loops the hold under his chin, the
+## Memorina still sheathed.
+func test_the_hand_over_poses_reach_take_and_hold() -> void:
+	await _land()
+	_ivo.begin_talk(Vector2(-100, FLOOR_Y))
+	_ivo.pause_talk(DialogueBeat.Hold.STILL, DialogueBeat.Pose.RECEIVE)
+	await _frames(2)
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_REACH))
+	await _frames(50)
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_REACH))
+	assert_int((_ivo.get_node("Sprite2D") as Sprite2D).frame).is_equal(4)
+	_ivo.pause_talk(DialogueBeat.Hold.STILL, DialogueBeat.Pose.MEMORINA_HELD)
+	await _frames(2)
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_TAKE))
+	await _frames(80)
+	assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_HOLD))
+	assert_bool(_ivo.is_memorina_drawn()).is_false()
+
+## From the hold, MEMORINA lifts the flute to his lips (never the belt draw); no pose puts it away.
+func test_from_the_hold_the_flute_lifts_or_goes_away() -> void:
+	for pose: int in [DialogueBeat.Pose.MEMORINA, DialogueBeat.Pose.NONE]:
+		await _land()
+		_ivo.begin_talk(Vector2(-100, FLOOR_Y))
+		_ivo.pause_talk(DialogueBeat.Hold.STILL, DialogueBeat.Pose.MEMORINA_HELD)
+		await _frames(80)
+		assert_str(String(_driver().current)).is_equal(String(PlayerAnimationResolver.MEMORINA_HOLD))
+		var seen: Array[StringName] = []
+		_ivo.pause_talk(DialogueBeat.Hold.STILL, pose)
+		for i: int in 30:
+			await _frames(1)
+			if seen.is_empty() or seen.back() != _driver().current:
+				seen.append(_driver().current)
+		var expected: Array[StringName] = [PlayerAnimationResolver.MEMORINA_LIFT, PlayerAnimationResolver.MEMORINA_IDLE]
+		if pose == DialogueBeat.Pose.NONE:
+			expected = [PlayerAnimationResolver.MEMORINA_PUT_AWAY, PlayerAnimationResolver.IDLE]
+		assert_array(seen).override_failure_message("pose %d: %s" % [pose, seen]).is_equal(expected)
+		assert_bool(_ivo.is_memorina_drawn()).is_false()
+		_ivo.end_talk()
+		await _frames(30)
+
+## The lift and the put-away are the lower sheet from its frame 1, the hold's first frame: no new art.
+func test_the_lift_and_the_put_away_play_the_lower_sheet() -> void:
+	var player := _ivo.get_node("AnimationPlayer") as AnimationPlayer
+	var lower := player.get_animation(PlayerAnimationResolver.MEMORINA_LOWER)
+	var sheet: Texture2D = lower.track_get_key_value(lower.find_track(^"Sprite2D:texture", Animation.TYPE_VALUE), 0)
+	var expected := {PlayerAnimationResolver.MEMORINA_LIFT: [1, 0], PlayerAnimationResolver.MEMORINA_PUT_AWAY: [1, 2, 3]}
+	for name: StringName in expected:
+		var clip := player.get_animation(name)
+		assert_int(clip.loop_mode).is_equal(Animation.LOOP_NONE)
+		var texture: Texture2D = clip.track_get_key_value(clip.find_track(^"Sprite2D:texture", Animation.TYPE_VALUE), 0)
+		assert_object(texture).is_same(sheet)
+		var track := clip.find_track(^"Sprite2D:frame", Animation.TYPE_VALUE)
+		var frames: Array[int] = []
+		for key: int in clip.track_get_key_count(track):
+			frames.append(int(clip.track_get_key_value(track, key)))
+		assert_array(frames).is_equal(expected[name])
+
 ## A drawn Memorina plays the draw, then the loop; sheathed, he lowers it, then stands idle.
 func test_drawing_and_sheathing_the_memorina_raise_and_lower_it() -> void:
 	SaveSystem.set_item_owned(Enums.PlayerItem.MEMORINA, true)

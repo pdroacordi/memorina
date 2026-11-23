@@ -25,6 +25,8 @@ var _bubbles: Array[EmoteBubble] = []
 var _visuals: Array[CutsceneVisual] = []
 var _blooms: Array[MemoryBloom] = []
 var _frayed: Array[StoryActor] = []
+## Each staging a CutsceneStage stood in -> what it showed before the scene's first.
+var _staged: Dictionary[FactStaging, ShownBefore] = {}
 ## The year a CutsceneYear ran; restore settles it.
 var _year: RegionYear
 var _rig_used: bool = false
@@ -213,15 +215,22 @@ func fray(id: StringName, on: bool) -> void:
 
 func stage(staging_id: StringName, child: StringName, seconds: float) -> void:
 	var staging := cast.find_staging(staging_id)
-	if staging != null:
-		staging.stand_in(child, seconds)
+	if staging == null:
+		return
+	if not _staged.has(staging):
+		_staged[staging] = ShownBefore.new(staging)
+	staging.stand_in(child, seconds)
 
 ## Whether the frame was taken from Ivo and must return to him.
 func took_camera() -> bool:
 	return _rig_used
 
-## Ends all the scene started but the record, the bars at once when `cut`; `clear_fade` also clears a fade it left black.
-func restore(clear_fade: bool, cut: bool = false) -> void:
+## Ends all the scene started but the record, the bars at once when `cut`; a drop (`dropped`) also clears a fade it left
+## black, gives each staging it stood in the stand-in shown before and releases Ivo's pose.
+func restore(dropped: bool, cut: bool = false) -> void:
+	if dropped:
+		_restage()
+	_staged.clear()
 	for found: StoryActor in _frayed:
 		if is_instance_valid(found):
 			fray(found.actor_id, false)
@@ -250,15 +259,16 @@ func restore(clear_fade: bool, cut: bool = false) -> void:
 	if _driving_ivo:
 		_driving_ivo = false
 		_director.ivo_driven.emit(null)
-	if _posed:
-		_posed = false
+	# A scene's last pose is its rest: Player.end_scene keeps it inside a talk and drops it outside one.
+	if _posed and dropped:
 		_director.ivo_posed.emit(DialogueBeat.Pose.NONE)
+	_posed = false
 	if _director.engraving != null:
 		_director.engraving.hide_now()
 	if _director.credits != null:
 		_director.credits.hide_now()
 	settle_year()
-	if clear_fade and _director.fade != null and _director.fade.is_black():
+	if dropped and _director.fade != null and _director.fade.is_black():
 		_director.fade.to_clear()
 
 func engrave(frame: EngravingFrame, tint: Color, dissolve: bool, second_tint: Color) -> void:
@@ -307,3 +317,41 @@ func _body(id: StringName) -> Character:
 		return _director.ivo
 	var found: Character = cast.actor(id)
 	return found if found != null else cast.find_body(id)
+
+## A drop gives each staging the stand-in it showed before, on the frame it showed, unless its pick changed meanwhile.
+func _restage() -> void:
+	for key: Variant in _staged:
+		if not is_instance_valid(key):
+			continue
+		var staging := key as FactStaging
+		var before: ShownBefore = _staged[staging]
+		if not staging.is_standing_in() or staging.picked() != before.picked:
+			continue
+		if not before.standing_in:
+			staging.release(staging.stand_in_name())
+			continue
+		staging.stand_in(before.child)
+		var strip := staging.shown() as StagedStrip
+		if strip != null and before.animation != &"":
+			strip.resume_at(before.animation, before.frame, before.playing)
+
+
+## What a staging showed before a scene stood it in: its pick, its stand-in and, for a strip, where it was.
+class ShownBefore:
+	var picked: int
+	var standing_in: bool
+	var child: StringName
+	## The strip's clip and frame; empty when the stand-in is not a StagedStrip.
+	var animation: StringName = &""
+	var frame: int = 0
+	var playing: bool = false
+
+	func _init(staging: FactStaging) -> void:
+		picked = staging.picked()
+		standing_in = staging.is_standing_in()
+		child = staging.stand_in_name()
+		var strip := staging.shown() as StagedStrip
+		if standing_in and strip != null:
+			animation = strip.animation
+			frame = strip.frame
+			playing = strip.is_playing()

@@ -35,6 +35,13 @@ func test_one_step_per_subject_inside_a_together() -> void:
 	assert_str(" ".join(problems)).contains("girl")
 	assert_array(Array(_catalog([C.scene(&"a", [C.together([C.walk(&"girl", 10.0), C.walk(&"ivo", 5.0)])])]).validate())).is_empty()
 
+## A sequence inside a together runs its steps in order, so they may share a subject; the together's other steps may not.
+func test_a_sequence_inside_a_together_may_move_one_subject_twice() -> void:
+	var walks := C.sequence([C.walk(&"girl", 10.0), C.wait(0.5), C.walk(&"girl", 20.0)])
+	assert_array(Array(_catalog([C.scene(&"a", [C.together([walks, C.walk(&"ivo", 5.0)])])]).validate())).is_empty()
+	var problems := _catalog([C.scene(&"a", [C.together([walks, C.gesture(&"girl", &"sit")])])]).validate()
+	assert_str(" ".join(problems)).contains("girl")
+
 func test_a_scene_seen_fact_names_a_catalog_scene() -> void:
 	var cases: Array[CutsceneCase] = [C.case_of([D.fact(SaveFact.Kind.SCENE_SEEN, &"nowhere")], [])]
 	var problems := _catalog([C.scene(&"a", [C.branch(cases)])]).validate()

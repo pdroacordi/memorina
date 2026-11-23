@@ -42,8 +42,9 @@ static func leaves(steps: Array[CutsceneStep]) -> Array[CutsceneStep]:
 			found.append_array(leaves(children))
 	return found
 
+## `together`: under a CutsceneTogether at any depth; `parallel`: `steps` run at once, so no two share a subject.
 func _check(steps: Array[CutsceneStep], scene: Cutscene, together: bool, at_end: bool, ids: Array[StringName],
-		problems: PackedStringArray) -> void:
+		problems: PackedStringArray, parallel: bool = together) -> void:
 	var subjects: Array[StringName] = []
 	for i: int in steps.size():
 		var item := steps[i]
@@ -54,12 +55,12 @@ func _check(steps: Array[CutsceneStep], scene: Cutscene, together: bool, at_end:
 		if item is CutsceneTogether:
 			_check((item as CutsceneTogether).steps, scene, true, false, ids, problems)
 		elif item is CutsceneSequence:
-			_check((item as CutsceneSequence).steps, scene, together, last, ids, problems)
+			_check((item as CutsceneSequence).steps, scene, together, last, ids, problems, false)
 		elif item is CutsceneBranch:
 			for case: CutsceneCase in (item as CutsceneBranch).cases:
 				_check_facts(case.when, scene, ids, problems)
 				_check_facts(case.unless, scene, ids, problems)
-				_check(case.steps, scene, together, last, ids, problems)
+				_check(case.steps, scene, together, last, ids, problems, false)
 		elif item is CutsceneTalk:
 			if together:
 				problems.append("%s: a talk inside a together" % scene.id)
@@ -67,7 +68,7 @@ func _check(steps: Array[CutsceneStep], scene: Cutscene, together: bool, at_end:
 				problems.append("%s: a talk that does not wait is not the scene's last step" % scene.id)
 			if (item as CutsceneTalk).talk == null:
 				problems.append("%s: a talk with no dialogue set" % scene.id)
-		if together:
+		if parallel:
 			for subject: StringName in _subjects_of(item):
 				if subjects.has(subject):
 					problems.append("%s: two steps of one together move '%s'" % [scene.id, subject])

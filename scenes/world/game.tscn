@@ -157,10 +157,11 @@ script = ExtResource("44_titlewatch")
 [node name="RegionMusic" type="Node" parent="World"]
 script = ExtResource("99_regionmusic")
 
-[node name="DialogueDirector" type="Node" parent="World" node_paths=PackedStringArray("listener")]
+[node name="DialogueDirector" type="Node" parent="World" node_paths=PackedStringArray("listener", "camera")]
 script = ExtResource("46_director")
 catalog = ExtResource("47_dialogues")
 listener = NodePath("../Player")
+camera = NodePath("../Camera2D")
 
 [node name="CutsceneDirector" type="Node" parent="World" node_paths=PackedStringArray("ivo", "camera", "letterbox", "fade", "engraving", "credits", "dialogue")]
 script = ExtResource("50_cutscenes")

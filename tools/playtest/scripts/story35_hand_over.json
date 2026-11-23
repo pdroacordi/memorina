@@ -1,0 +1,459 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "locale": "pt_BR",
+ "owned_items": [
+  0
+ ],
+ "player_position": [
+  11780,
+  -1250
+ ],
+ "max_duration": 38.0,
+ "_note": "STORY-35: the hand-over as a cutscene. Re-timed 2026-11-23 from a talk_reader_driver run (READ 1.0): Left 0.6-1.2 s (0.5 s stops Ivo short of the zone), Z 1.0 s after each line types. The scene starts on the 23.68 Z (~23.77) and runs ~5.1 s: zoom 2 by 24.77, Giving + memorina_reach at ~25.17, the grip (LettingGo, memorina_take, hum, bloom, push to zoom 3) at ~25.85, memorina_take frame 3 (the flute shrinks, Ivo grows) at ~26.25, memorina_hold from ~26.65, zoom 3 at ~27.47, the talk resumes on 'Essa e...' at ~28.90. The handoff burst (every 0.05 s from 25.75) brackets the grip and take frame 3. Runs vary ~0.3-0.5 s, so log steps every 0.05 s bracket the grip.",
+ "steps": [
+  {
+   "t": 0.5,
+   "screenshot": "00_arrive"
+  },
+  {
+   "t": 0.6,
+   "key": "Left",
+   "pressed": true
+  },
+  {
+   "t": 1.2,
+   "key": "Left",
+   "pressed": false
+  },
+  {
+   "t": 1.8,
+   "screenshot": "01_approach_a"
+  },
+  {
+   "t": 2.4,
+   "screenshot": "01_approach_b"
+  },
+  {
+   "t": 3.5,
+   "screenshot": "02_hey"
+  },
+  {
+   "t": 3.76,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 3.84,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 5.45,
+   "screenshot": "03_turning_5.45"
+  },
+  {
+   "t": 5.6,
+   "screenshot": "03_silence"
+  },
+  {
+   "t": 5.65,
+   "screenshot": "03_turning_5.65"
+  },
+  {
+   "t": 5.85,
+   "screenshot": "03_turning_5.85"
+  },
+  {
+   "t": 6.05,
+   "screenshot": "03_turning_6.05"
+  },
+  {
+   "t": 6.25,
+   "screenshot": "03_turning_6.25"
+  },
+  {
+   "t": 6.5,
+   "screenshot": "03_turned"
+  },
+  {
+   "t": 8.0,
+   "screenshot": "04_long_way"
+  },
+  {
+   "t": 8.55,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 8.63,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 10.8,
+   "screenshot": "05_a_story"
+  },
+  {
+   "t": 11.25,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 11.33,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 12.2,
+   "screenshot": "06_i_keep"
+  },
+  {
+   "t": 12.48,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 12.56,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 13.6,
+   "screenshot": "07_pause"
+  },
+  {
+   "t": 15.6,
+   "screenshot": "08_i_kept"
+  },
+  {
+   "t": 16.04,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 16.12,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 18.4,
+   "screenshot": "09_a_song"
+  },
+  {
+   "t": 18.82,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 18.9,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 20.0,
+   "screenshot": "10_phrase"
+  },
+  {
+   "t": 23.2,
+   "screenshot": "11_many_hands"
+  },
+  {
+   "t": 23.68,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 23.76,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 24.15,
+   "screenshot": "s35_00_bars"
+  },
+  {
+   "t": 24.17,
+   "log": "s35_00_bars"
+  },
+  {
+   "t": 24.95,
+   "screenshot": "s35_01_offer"
+  },
+  {
+   "t": 24.97,
+   "log": "s35_01_offer"
+  },
+  {
+   "t": 25.45,
+   "screenshot": "s35_02_reach"
+  },
+  {
+   "t": 25.47,
+   "log": "s35_02_reach"
+  },
+  {
+   "t": 25.7,
+   "log": "h25.70"
+  },
+  {
+   "t": 25.75,
+   "screenshot": "s35_03_handoff_00"
+  },
+  {
+   "t": 25.75,
+   "log": "h25.75"
+  },
+  {
+   "t": 25.8,
+   "screenshot": "s35_03_handoff_01"
+  },
+  {
+   "t": 25.8,
+   "log": "h25.80"
+  },
+  {
+   "t": 25.85,
+   "screenshot": "s35_03_handoff_02"
+  },
+  {
+   "t": 25.85,
+   "log": "h25.85"
+  },
+  {
+   "t": 25.9,
+   "screenshot": "s35_03_handoff_03"
+  },
+  {
+   "t": 25.9,
+   "log": "h25.90"
+  },
+  {
+   "t": 25.95,
+   "screenshot": "s35_03_handoff_04"
+  },
+  {
+   "t": 25.95,
+   "log": "h25.95"
+  },
+  {
+   "t": 26.0,
+   "screenshot": "s35_03_handoff_05"
+  },
+  {
+   "t": 26.0,
+   "log": "h26.00"
+  },
+  {
+   "t": 26.05,
+   "screenshot": "s35_03_handoff_06"
+  },
+  {
+   "t": 26.05,
+   "log": "h26.05"
+  },
+  {
+   "t": 26.07,
+   "log": "s35_03_handoff"
+  },
+  {
+   "t": 26.1,
+   "screenshot": "s35_03_handoff_07"
+  },
+  {
+   "t": 26.1,
+   "log": "h26.10"
+  },
+  {
+   "t": 26.15,
+   "screenshot": "s35_03_handoff_08"
+  },
+  {
+   "t": 26.15,
+   "log": "h26.15"
+  },
+  {
+   "t": 26.2,
+   "screenshot": "s35_03_handoff_09"
+  },
+  {
+   "t": 26.2,
+   "log": "h26.20"
+  },
+  {
+   "t": 26.25,
+   "screenshot": "s35_03_handoff_10"
+  },
+  {
+   "t": 26.25,
+   "log": "h26.25"
+  },
+  {
+   "t": 26.3,
+   "screenshot": "s35_03_handoff_11"
+  },
+  {
+   "t": 26.3,
+   "log": "h26.30"
+  },
+  {
+   "t": 26.35,
+   "screenshot": "s35_03_handoff_12"
+  },
+  {
+   "t": 26.35,
+   "log": "h26.35"
+  },
+  {
+   "t": 26.4,
+   "screenshot": "s35_03_handoff_13"
+  },
+  {
+   "t": 26.4,
+   "log": "h26.40"
+  },
+  {
+   "t": 26.45,
+   "screenshot": "s35_04_grip_colour"
+  },
+  {
+   "t": 26.45,
+   "screenshot": "s35_03_handoff_14"
+  },
+  {
+   "t": 26.45,
+   "log": "h26.45"
+  },
+  {
+   "t": 26.47,
+   "log": "s35_04_grip_colour"
+  },
+  {
+   "t": 26.5,
+   "log": "h26.50"
+  },
+  {
+   "t": 26.55,
+   "log": "h26.55"
+  },
+  {
+   "t": 26.6,
+   "log": "h26.60"
+  },
+  {
+   "t": 26.65,
+   "log": "h26.65"
+  },
+  {
+   "t": 26.7,
+   "log": "h26.70"
+  },
+  {
+   "t": 26.75,
+   "log": "h26.75"
+  },
+  {
+   "t": 26.8,
+   "log": "h26.80"
+  },
+  {
+   "t": 26.85,
+   "log": "h26.85"
+  },
+  {
+   "t": 26.9,
+   "log": "h26.90"
+  },
+  {
+   "t": 26.95,
+   "log": "h26.95"
+  },
+  {
+   "t": 27.25,
+   "screenshot": "s35_05_push_in"
+  },
+  {
+   "t": 27.27,
+   "log": "s35_05_push_in"
+  },
+  {
+   "t": 28.15,
+   "screenshot": "s35_06_colour_closing"
+  },
+  {
+   "t": 28.17,
+   "log": "s35_06_colour_closing"
+  },
+  {
+   "t": 28.75,
+   "screenshot": "s35_07_held"
+  },
+  {
+   "t": 28.77,
+   "log": "s35_07_held"
+  },
+  {
+   "t": 30.05,
+   "screenshot": "s35_08_her_song"
+  },
+  {
+   "t": 30.07,
+   "log": "s35_08_her_song"
+  },
+  {
+   "t": 30.64,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 30.72,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 31.25,
+   "screenshot": "s35_09_choice_still_held"
+  },
+  {
+   "t": 31.27,
+   "log": "s35_09_choice_still_held"
+  },
+  {
+   "t": 31.73,
+   "key": "Z",
+   "pressed": true
+  },
+  {
+   "t": 31.81,
+   "key": "Z",
+   "pressed": false
+  },
+  {
+   "t": 32.0,
+   "screenshot": "s35_10_lift"
+  },
+  {
+   "t": 32.02,
+   "log": "s35_10_lift"
+  },
+  {
+   "t": 32.65,
+   "screenshot": "s35_11_flat_note"
+  },
+  {
+   "t": 32.67,
+   "log": "s35_11_flat_note"
+  },
+  {
+   "t": 34.85,
+   "screenshot": "s35_12_yours_too"
+  },
+  {
+   "t": 34.87,
+   "log": "s35_12_yours_too"
+  },
+  {
+   "t": 37.35,
+   "log": "end"
+  }
+ ]
+}

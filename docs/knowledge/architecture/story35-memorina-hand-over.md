@@ -6,7 +6,7 @@ status: active
 tags: [story-35, story, mentor, lighthouse, cutscene, staging, staged-strip, pose, memorina, hand-over, item, animation, pixellab, plan]
 related: [architecture/cutscenes-are-data-played-between-two-rest-states, architecture/story34-mentor-at-the-lantern, architecture/story37-the-mentor-moves-while-he-talks, architecture/story38-the-keeper-wakes, systems/cutscenes, systems/story, systems/dialogue, systems/animation, systems/art-pipeline, systems/notices, systems/music, systems/greyhush, bugs/the-mentors-new-strips-redraw-the-figure-between-frame-0-and-frame-1, gotchas/a-replaced-sheet-plays-the-old-import-until-reimported, gotchas/animationtree-reset-track-overwrites-script-writes, playtests/2026-11-18-story37-the-mentor-moves]
 created: 2026-11-22
-updated: 2026-11-22
+updated: 2026-11-23
 source_files:
   - resources/dialogue/story/mentor.tres
   - scenes/world/rooms/frost_edge/contents/lighthouse_top_contents.tscn
@@ -17,6 +17,8 @@ source_files:
 ---
 
 # STORY-35 plan: the Memorina's hand-over as an animated scene
+
+**Status: BUILT** (2026-11-23). See "As built" at the end; the contracts are in `tools/art/prompts/story_*.md`, the systems entries `systems/cutscenes` and `systems/story` ("The hand-over"), `systems/animation`.
 
 "não há animação da entrega da memorina, nem da pra entender oq acontece ali. Deveria ter. Algo mais como uma cutscene da entrega, mais animado." (user, 2026-11-16). Roadmap: a cutscene (`systems/cutscenes`) with hand-over clips; art contract first. Design 05 Act 3: "Muitas mãos. Nenhuma ~guardou~. (estende a flauta)" · **[Presente]** Ivo pega a Memorina · **[Lampejo]** "Quando a mão dele fecha na flauta, as primeiras notas da música da manhã soam numa voz de mulher, em cor, por um segundo." · "Essa é… essa é a música dela."
 
@@ -227,3 +229,18 @@ Built on `architecture/cutscenes-are-data-played-between-two-rest-states`, `arch
 - The keeper: "Swapped strips (Recommended)", not a mentor `StoryActor`.
 - The rest, "Yes, all (Recommended)": a spring bloom from the flute; Ivo holds it under his chin, breathing, through his line and the choice; the keeper's empty hand opens, holds 0.5 s and returns to his chest; the five contracts are drawn with PixelLab and shown before wiring.
 - The art (user, 2026-11-23): "Approve, wire it (Recommended)", with the known flaw that the flute and Ivo change size at take frame 3; the playtest judges it at speed.
+
+## As built (2026-11-23)
+
+- **As planned:** `Beats/MentorGift` is a `CutsceneBeat` playing `memorina_hand_over` (the shot list above, about 5.1 s); `Props/Mentor/Giving` and `LettingGo` are intro-only `StagedStrip`s; `mentor_staging` has six stages (EmptyHand on `seen_memorina_hand_over.tres`, 0 s, between Stasis and Holding); `GiftBloom` at (756, 618); `DialogueBeat.Pose` appends `RECEIVE` (8) and `MEMORINA_HELD` (9); the resolver's five clips (`memorina_reach`, `_take`, `_hold`, `_lift`, `_put_away`) are in Ivo's AnimationPlayer and tree. The removed `StagedBeat` took `wife_hum_opening.wav` and the spring `root` pulse with it; the hum is a `CutsceneSound`.
+- **`let_go` has 5 frames** (0.1 / 0.5 / 0.15 / 0.15 / held), as the art paragraph above says; the hand-off timing is let_go frame 0 (0.1 s) against take frame 0 (0.125 s), at least one tick apart either way.
+- **Two contract gaps the plan assumed away, closed in the cutscene runtime:**
+  1. A scene's end released Ivo's pose (`WorldCutsceneContext.restore` emitted `ivo_posed(NONE)` before `Player.end_scene`), so a pose could never outlive a scene inside a talk, contrary to the plan's "a pose set by a scene inside a talk holds after it". Now only a drop releases it; a recorded or skipped end leaves the scene's last pose, which `end_scene` keeps inside a talk and drops outside one. The other scenes that end posed (`flashback_4`, `flashback_4_crossing`, `epilogue`) either end their talk with the scene or play outside one, so nothing else changes.
+  2. A drop left a `CutsceneStage`'s stand-in showing; the docs promised "the rest shown before (a stand-in included) shows again". The context now records each staging's stand-in before the scene's first `CutsceneStage` (`FactStaging.is_standing_in()`, `stand_in_name()`) and a drop puts it back unless the pick changed, on the frame it showed (`StagedStrip.resume_at`; `bugs/a-dropped-cutscene-replays-the-gesture-it-gives-back`), so a dropped hand-over rests on `HoldingOut`'s held last frame.
+- **`CutsceneCatalog.validate` checked a sequence inside a together as if it were the together**, so the grip's two sequences (`LettingGo` → `EmptyHand`; the bloom open → close) were refused for moving one subject twice. A sequence's or a branch case's own steps now run in order for that check; they still count against the together's other steps (`cutscene_catalog_test.test_a_sequence_inside_a_together_may_move_one_subject_twice`).
+- **Seam tests** live in `tests/scenes/world/story/memorina_hand_over_test.gd` (no shared `strip_seam.gd`, as in STORY-37): the keeper's flute is found by colour (the colours `give` 3 draws only inside world (749..762, 610..625)); every rendered frame of the played scene is sampled for zero or two flutes.
+- **Not run:** the playtests `tools/playtest/scripts/story35_hand_over.json` and `story35_hand_over_skip.json` are written from `mentor_gift.json`'s measured Z times, re-timed for the hand-over; the first run should check the Z times still land after STORY-37's gestures.
+- **After the playtest (`playtests/2026-11-23-story35-hand-over`):**
+  - The resumed talk opened its box at the bottom over Ivo. It took the side from the scene's camera, still easing back or skipped. Fixed at the root in the talk's box placement (`bugs/a-talk-resumed-after-a-cutscene-places-its-box-under-the-scenes-camera`). The skip's one stray frame at the scene's centre is gone (`GameCamera.snap()` places at once).
+  - `ivo_memorina_take.png` is 10 frames (1.075 s). The flute shrinks over frames 3-8 (160 px, then 164, 120, 77, 53, 29, 14, 12) and the figure changes drawing between frames 3 and 4 with the flute still large, not in one frame (contract `tools/art/prompts/story_ivo_memorina_take.md`).
+  - The hold stays at chest height. Its frame 0 must be `ivo_memorina_lower` frame 1: that is the take's last frame and the start of `memorina_lift` and `memorina_put_away`. Raising the flute only in the later frames would make it bob through every breath, so "under his chin" needs a new lower sheet (not done).

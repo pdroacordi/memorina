@@ -191,6 +191,47 @@ func test_the_box_is_placed_opposite_the_speakers() -> void:
 	_director.start(_talkable)
 	assert_array(sides).is_equal([DialogueBoxSide.Side.TOP, DialogueBoxSide.Side.BOTTOM, DialogueBoxSide.Side.TOP])
 
+## A talk resumed after a scene places its box from the frame the talk settles on, not the scene's frame still easing
+## back (bugs/a-talk-resumed-after-a-cutscene-places-its-box-under-the-scenes-camera).
+func test_a_resumed_talk_places_its_box_from_its_own_frame() -> void:
+	var sides: Array[int] = []
+	_director.box_placed.connect(func(side: DialogueBoxSide.Side) -> void: sides.append(side))
+	var ivo := auto_free(Node2D.new()) as Node2D
+	add_child(ivo)
+	_talkable.position = Vector2(40, 0)
+	var camera := auto_free(GameCamera.new()) as GameCamera
+	add_child(camera)
+	camera.follow(ivo)
+	_director.listener = ivo
+	_director.camera = camera
+	for i: int in 3:
+		await get_tree().physics_frame
+	var beat := auto_free(DialogueBeat.new()) as DialogueBeat
+	beat.cue = &"scene"
+	add_child(beat)
+	var cued := F.line("A")
+	cued.cue = &"scene"
+	_talk([cued, F.line("B")])
+	_director.advance()
+	beat.finish()
+	# The scene's rig holds the frame where Ivo shows in the other half of the screen.
+	var rig := auto_free(Node2D.new()) as Node2D
+	add_child(rig)
+	var away := 150.0 if sides[0] == DialogueBoxSide.Side.TOP else -150.0
+	rig.global_position = ivo.global_position + Vector2(0, away)
+	camera.follow(rig)
+	camera.zoom_to(2.88, 0.0)
+	for i: int in 2:
+		await get_tree().physics_frame
+	await get_tree().process_frame
+	var shown := ivo.get_canvas_transform()
+	var height := get_viewport().get_visible_rect().size.y
+	var live := DialogueBoxSide.opposite(PackedFloat32Array([(shown * _talkable.speaker_position()).y,
+			(shown * ivo.global_position).y]), height)
+	assert_int(live).override_failure_message("the scene's frame must pick the other side").is_not_equal(sides[0])
+	_director.resume()
+	assert_array(sides).is_equal([sides[0], sides[0]])
+
 ## A tall speaker whose face the top box would cover gets the bottom box (Talkable.face_height).
 func test_a_tall_speakers_face_keeps_the_box_off_it() -> void:
 	var sides: Array[int] = []

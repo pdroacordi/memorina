@@ -5,6 +5,9 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_guitar.png" id="76_guitar"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_memorina_play.png" id="77_memo_play"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_memorina_lower.png" id="78_memo_lower"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_memorina_reach.png" id="81_memo_reach"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_memorina_take.png" id="82_memo_take"]
+[ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_memorina_hold.png" id="83_memo_hold"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_air_spin.png" id="3_466qv"]
 [ext_resource type="Script" uid="uid://c1uo8k8aac7gw" path="res://scenes/characters/ivo/player_input.gd" id="3_pinput"]
 [ext_resource type="Texture2D" path="res://assets/sprites/characters/ivo/ivo_jump.png" id="3_soiyk"]
@@ -2400,6 +2403,212 @@ tracks/2/keys = {
 "values": [0, 1, 2, 3, 4, 5, 6, 7, 8]
 }
 
+[sub_resource type="Animation" id="Animation_memo_reach"]
+resource_name = "memorina_reach"
+length = 0.625
+step = 0.0416666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("81_memo_reach")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [5]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4]
+}
+
+[sub_resource type="Animation" id="Animation_memo_take"]
+resource_name = "memorina_take"
+length = 1.075
+step = 0.0416666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("82_memo_take")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [10]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.125, 0.25, 0.375, 0.475, 0.575, 0.675, 0.775, 0.875, 0.975),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+}
+
+[sub_resource type="Animation" id="Animation_memo_hold"]
+resource_name = "memorina_hold"
+length = 1.75
+loop_mode = 1
+step = 0.0416666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("83_memo_hold")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.375, 0.625, 0.875, 1.25, 1.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 2, 1]
+}
+
+[sub_resource type="Animation" id="Animation_memo_lift"]
+resource_name = "memorina_lift"
+length = 0.1666667
+step = 0.0416666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("78_memo_lower")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.0833333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [1, 0]
+}
+
+[sub_resource type="Animation" id="Animation_memo_put_away"]
+resource_name = "memorina_put_away"
+length = 0.25
+step = 0.0416666667
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:texture")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("78_memo_lower")]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite2D:hframes")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [4]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite2D:frame")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.0833333, 0.1666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [1, 2, 3]
+}
+
 [sub_resource type="Animation" id="Animation_sit_memo_raise"]
 resource_name = "sit_memorina_raise"
 length = 0.625
@@ -2560,6 +2769,11 @@ _data = {
 &"memorina_draw": SubResource("Animation_memodraw"),
 &"memorina_idle": SubResource("Animation_memoidle"),
 &"memorina_lower": SubResource("Animation_memolower"),
+&"memorina_reach": SubResource("Animation_memo_reach"),
+&"memorina_take": SubResource("Animation_memo_take"),
+&"memorina_hold": SubResource("Animation_memo_hold"),
+&"memorina_lift": SubResource("Animation_memo_lift"),
+&"memorina_put_away": SubResource("Animation_memo_put_away"),
 &"guitar_hold": SubResource("Animation_guitarhold"),
 &"guitar_strum": SubResource("Animation_guitarstrum"),
 &"roll": SubResource("Animation_lk6ox"),
@@ -2684,6 +2898,21 @@ animation = &"climb_back"
 [sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_climb_back_hold"]
 animation = &"climb_back_hold"
 
+[sub_resource type="AnimationNodeAnimation" id="node_memorina_reach"]
+animation = &"memorina_reach"
+
+[sub_resource type="AnimationNodeAnimation" id="node_memorina_take"]
+animation = &"memorina_take"
+
+[sub_resource type="AnimationNodeAnimation" id="node_memorina_hold"]
+animation = &"memorina_hold"
+
+[sub_resource type="AnimationNodeAnimation" id="node_memorina_lift"]
+animation = &"memorina_lift"
+
+[sub_resource type="AnimationNodeAnimation" id="node_memorina_put_away"]
+animation = &"memorina_put_away"
+
 [sub_resource type="AnimationNodeAnimation" id="node_sit_memorina_raise"]
 animation = &"sit_memorina_raise"
 
@@ -2740,6 +2969,16 @@ states/memorina_idle/node = SubResource("AnimationNodeAnimation_memoidle")
 states/memorina_idle/position = Vector2(129, 660)
 states/memorina_lower/node = SubResource("AnimationNodeAnimation_memolower")
 states/memorina_lower/position = Vector2(257, 660)
+states/memorina_reach/node = SubResource("node_memorina_reach")
+states/memorina_reach/position = Vector2(357, 660)
+states/memorina_take/node = SubResource("node_memorina_take")
+states/memorina_take/position = Vector2(457, 660)
+states/memorina_hold/node = SubResource("node_memorina_hold")
+states/memorina_hold/position = Vector2(557, 660)
+states/memorina_lift/node = SubResource("node_memorina_lift")
+states/memorina_lift/position = Vector2(657, 660)
+states/memorina_put_away/node = SubResource("node_memorina_put_away")
+states/memorina_put_away/position = Vector2(757, 660)
 states/guitar_hold/node = SubResource("AnimationNodeAnimation_guitarhold")
 states/guitar_hold/position = Vector2(129, 760)
 states/guitar_strum/node = SubResource("AnimationNodeAnimation_guitarstrum")
