@@ -11,7 +11,7 @@ const NO_LOOK := 255
 @export var legend: RoomLegend
 @export var origin := Vector2i.ZERO
 @export var size := Vector2i.ZERO
-## The text rows, kept for error messages and the map guide's examples.
+## The text rows: error messages, the map guide's examples, and a cell's legend entry (is_droppable, ReachGrid).
 @export var rows := PackedStringArray()
 ## The `[back]` rows, empty when the room has none.
 @export var back_rows := PackedStringArray()
@@ -88,6 +88,22 @@ func is_void(cell: Vector2i) -> bool:
 
 func is_platform(cell: Vector2i) -> bool:
 	return contains(cell) and platform[_index(cell)] == 1
+
+## Whether `cell` is a ledge whose legend entry is droppable (architecture/drop-through-ledges).
+func is_droppable(cell: Vector2i) -> bool:
+	if not is_platform(cell):
+		return false
+	var local := cell - origin
+	var entry := legend.entry(rows[local.y][local.x])
+	return entry != null and entry.droppable
+
+## `cell` as LedgeDrop sees it; must classify like ReachGrid.drop_cell.
+func drop_cell(cell: Vector2i) -> LedgeDrop.Cell:
+	if not contains(cell) or is_solid(cell):
+		return LedgeDrop.Cell.STOPS
+	if is_platform(cell):
+		return LedgeDrop.Cell.DROPPABLE if is_droppable(cell) else LedgeDrop.Cell.STOPS
+	return LedgeDrop.Cell.OPEN
 
 ## The dual grid is one cell larger than the map each way: a display cell sits on each cell corner.
 func display_size() -> Vector2i:

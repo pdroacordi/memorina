@@ -64,6 +64,8 @@ enum Anchor {
 @export var ground: Enums.Ground = Enums.Ground.EARTH
 ## GROUND, PLATFORM and BACK: which of the room's biome sheets draws it.
 @export var look: BiomeTileset.Look = BiomeTileset.Look.EARTH
+## PLATFORM: Down + Jump drops Ivo through it (architecture/drop-through-ledges).
+@export var droppable := false
 ## SECRET: draws the biome's crack decal on the cell.
 @export var crack := false
 ## WATER: the WaterLayer preset that pours this kind of water.

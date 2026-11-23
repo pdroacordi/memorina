@@ -7,7 +7,7 @@ severity: high
 tags: [rooms, softlock, one-way-ledge, interior, tavern, world-05, base-kit]
 related: [playtests/2026-10-09-traversal-opening, systems/rooms, architecture/doors-and-interiors]
 created: 2026-10-09
-updated: 2026-10-09
+updated: 2026-11-22
 source_files:
   - scenes/world/rooms/home_village/contents/village_tavern.room
   - scenes/characters/ivo/player.gd
@@ -55,3 +55,7 @@ reached from every spot.
 ## Resolution (2026-10-09)
 
 A two-cell stairwell at the east end of the upper floor (row 13, cols 31-32) lets Ivo walk off it; there is still no drop-through for `=` (the legend's wording is wrong about that, a roadmap row).
+
+## Resolution (2026-11-22, WORLD-19)
+
+Drop-through is built: Down + Jump drops through `=` ledges only (user, 2026-11-22: "Yes, Down + Jump (Recommended)", "Only `=` ledges (Recommended)"; `architecture/drop-through-ledges`). The tavern's floors are `-` planks, which never drop, so the stairwell stays its way down; the legend's `=` line now holds.

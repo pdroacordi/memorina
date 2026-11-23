@@ -4,9 +4,9 @@ type: architecture
 title: Room reachability audit - a JumpReach lattice over the stitched world, dominators for "leads nowhere"
 status: active
 tags: [rooms, room-map, reachability, level-design, audit, tests, jump-reach]
-related: [systems/rooms, systems/world, systems/roots-and-climbing, systems/water, architecture/rooms-are-text, gotchas/zigzag-ledges-two-rows-apart-seal-a-shaft, bugs/the-tavern-upper-floor-has-no-way-down, bugs/the-mill-loft-is-unreachable-from-the-lowered-drawbridge, bugs/the-woods-deep-pit-shaft-traps-a-kit-without-the-double-jump, bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera]
+related: [architecture/drop-through-ledges, systems/rooms, systems/world, systems/roots-and-climbing, systems/water, architecture/rooms-are-text, gotchas/zigzag-ledges-two-rows-apart-seal-a-shaft, bugs/the-tavern-upper-floor-has-no-way-down, bugs/the-mill-loft-is-unreachable-from-the-lowered-drawbridge, bugs/the-woods-deep-pit-shaft-traps-a-kit-without-the-double-jump, bugs/a-redoma-first-player-is-trapped-in-the-summer-caldera]
 created: 2026-10-10
-updated: 2026-10-15
+updated: 2026-11-22
 source_files:
   - scenes/world/rooms/maps/reach/reach_grid.gd
   - scenes/world/rooms/maps/reach/reach_lattice.gd
@@ -54,7 +54,7 @@ Fixtures cover each finding and the zigzag seal, and pin the lattice to `JumpRea
 **Movement.**
 - The body is `ceil(capsule width / 32)` by `ceil(capsule height / 32)` cells, read from `ivo.tscn` as `MapGuide.ivo_reach()` reads it (1x2 today). The redraw changes only data.
 - A standing cell has its footprint in air with no hazard, over solid ground, a one-way or song floor. A **surface** is a maximal run of standing cells in one row. It is a **platform** if all its support is one-way ledge or an island (a solid group touching no room edge); otherwise it is **ground**.
-- A lattice step is the 1/6 s Ivo takes to run one cell. It moves -1, 0 or +1 column plus the rise or fall rasterized from `JumpReach.arc`. One-ways pass upward and land downward. There is no drop-through until WORLD-19.
+- A lattice step is the 1/6 s Ivo takes to run one cell. It moves -1, 0 or +1 column plus the rise or fall rasterized from `JumpReach.arc`. One-ways pass upward and land downward. There is no drop-through until WORLD-19 (retired: see "WORLD-19 revision").
 - Tiers: base; +DOUBLE_JUMP (the air jump branches at any step); +WALL_CLIMB (a footprint against a 2-cell wall is a take-off). ROLL is no tier: `Player._try_jump` refuses jumps while rolling. Expected reach: base up 4 cells and across 8, double jump up 8 and across 13; falls are unlimited. Coyote time and air inertia are ignored (optimistic, under a cell).
 
 **Findings.**
@@ -155,3 +155,11 @@ User, 2026-10-14, on the WORLD-35 board: "Yes (Recommended)" to "Run the reach a
 - **Not modelled.** A mover's rest floor without its song: the base kit loses a hung lowering platform, so the check leans to false traps (visible errors), but a rest floor that leads into a trap would be missed. Vendaval's extra reach: a natural current carries every kit, and orchard_windy_gap's 20-cell chasm "clears" without the gale. Timing. Fragments found apart from their guardian: each fragment comes with its guardian's milestone.
 - **GRD-04** appends `Enums.Guardian` members for autumn and summer. Give those milestones `restored_guardians` then; `all_guardians_restored.tres` will stop holding at +both.
   - Revision, 2026-10-15 (WORLD-35 step 5): the members came early, for the sun stair's grate (`guardian_restored_summer.tres`). The autumn and summer milestones now set them, so `all_guardians_restored.tres` holds only for the caldera kit, and lighthouse_top is new only for it. `ReachKitCheck.given` still finds no placed guardian in orchard_arena or caldera_arena, so neither is an exit until GRD-04. Four guardians for the hatch is an orchestrator call (2026-10-15), following design 04 section 2, which names four guardians.
+
+## WORLD-19 revision: drop-through (2026-11-22)
+
+User, 2026-11-22: "Yes, Down + Jump (Recommended)"; for which ledges drop: "Only `=` ledges (Recommended)" (`architecture/drop-through-ledges`).
+- **Grid.** `ReachGrid.DROP` (1024) is set with ONE_WAY on a cell whose legend entry is `droppable` (`=` only). `ReachGrid.drop_cell(cell, room)` classifies a cell for `LedgeDrop` as `RoomMap.drop_cell` does; a cell outside the ledge's room is STOPS.
+- **Lattice.** `ReachLattice.can_drop(cell)`: standing, a DROP cell under the feet, and `LedgeDrop.allows_at` over the footprint's columns with `body.y` rows (2) open below. From such a seed the search adds a FALL from rest with the feet one quantum (16 px) into the ledge, kept air jump and -1/0/+1 steps as any fall. `ReachLattice._OUTSIDE` moved to `1 << 30`, because DROP took its old bit.
+- **First run.** The union audit and all eleven kits are unchanged: no new error, no KIT_TRAP, and no allowlist entry went stale (`room_reach_test`, `room_kit_test`). The `=` spans with a clear drop today are lake_well's catch ledge (row 3, over the bank), lake_waterfall_path, woods_canopy, woods_crown (its branch over the hole), woods_deep's branches, woods_hollow_tree's knots, threshold_ravine_cave, orchard_leaf_path, orchard_mill_town and orchard_terraces; each already had an open end to walk off, so the drops add ways the walk-offs already gave. `-` planks (the tavern, the vault's catch plank, the helix galleries) and `^` roofs never drop.
+

@@ -4,9 +4,9 @@ type: system
 title: Input: actions, gamepad layout, the three event readers, rebinding and device glyphs
 status: active
 tags: [input, gamepad, glyphs, keybindings, menu, pause]
-related: [systems/settings, systems/dialogue, systems/map, systems/notebook, architecture/character-controller-input-split, architecture/pause-menu-worldfreeze-reuse, systems/screens, gotchas/a-stick-is-pressed-on-every-motion-event, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-menu-press-reaches-the-last-node-first, bugs/player-input-edge-state-goes-stale-across-a-pause-menu]
+related: [architecture/drop-through-ledges, systems/settings, systems/dialogue, systems/map, systems/notebook, architecture/character-controller-input-split, architecture/pause-menu-worldfreeze-reuse, systems/screens, gotchas/a-stick-is-pressed-on-every-motion-event, gotchas/gui-focus-moves-once-per-stick-tilt, gotchas/a-menu-press-reaches-the-last-node-first, bugs/player-input-edge-state-goes-stale-across-a-pause-menu]
 created: 2026-10-02
-updated: 2026-11-16
+updated: 2026-11-23
 source_files:
   - scenes/characters/ivo/player_input.gd
   - scenes/ui/menu/menu_input.gd
@@ -44,6 +44,7 @@ The table is the project default. The rebindable actions (jump, attack, roll, dr
 - User decisions, 2026-10-02: pad "Start / Select / LB" (Start = pause, Select = notebook, LB = map); "A confirm, B back".
 - `notebook` is live (UI-03, `systems/notebook`): E / Select toggle it, Esc and B close it, left / right turn its pages and up / down move between entries.
 - `map`, `map_zoom_in` and `map_zoom_out` are live (UI-04, `systems/map`). Z / X and pad A / X zoom only while the map is open; `Screens` consumes them only then, so otherwise they jump and attack.
+- **Down + Jump drops through a ledge** (WORLD-19, `architecture/drop-through-ledges`). User, 2026-11-22: "Yes, Down + Jump (Recommended)"; for which ledges drop: "Only `=` ledges (Recommended)". No new action, signal or `PlayerInput` change: `Player._try_jump` reads `look_direction` (> `Player.DROP_AXIS`, 0.5, the climb's Up mirrored) when a jump pressed on the floor (`JumpComponent.buffered_on_floor()`, never in the air or in coyote) fires on the floor, and asks `LedgeDropComponent.try_drop()`. Down then Jump drops; Jump then Down is a jump; both in one frame drop. Blocked, drawn, seated, riding, in knockback or with a recall armed or pending, the press stays what it was. Pogo (Down + attack in the air) does not overlap.
 
 ## The three InputEvent readers
 

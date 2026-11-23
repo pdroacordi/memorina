@@ -223,6 +223,34 @@ func test_every_reward_slot_stands_on_a_floor() -> void:
 				problems.append("%s: slot %s at %s stands on nothing" % [path, placed.params.get("slot_id", "?"), placed.cell - map.origin])
 	assert_array(Array(problems)).is_empty()
 
+## Down sits him on a bench in reach, so no droppable ledge lies under its seat area (architecture/drop-through-ledges).
+func test_no_bench_stands_on_a_droppable_ledge() -> void:
+	var legend := RoomLegend.load_default()
+	var problems := PackedStringArray()
+	var cell_px := float(RoomMap.CELL_PX)
+	for path: String in _room_files(ROOMS_DIR):
+		var map := RoomMapParser.parse(FileAccess.get_file_as_string(path), legend, path).map
+		for placed: Dictionary in map.entities:
+			var entry := legend.entry(placed.symbol)
+			if entry.reach_role != RoomLegendEntry.ReachRole.BENCH:
+				continue
+			var seat := _seat_span(entry.scene)
+			var cell: Vector2i = placed.cell
+			var centre := RoomMapNode.entity_position(cell, entry.anchor).x
+			for x: int in range(floori((centre + seat.x) / cell_px), ceili((centre + seat.y) / cell_px)):
+				if map.is_droppable(Vector2i(x, cell.y + 1)):
+					problems.append("%s: bench at %s has a droppable ledge under its seat at column %d" % [path, cell - map.origin, x - map.origin.x])
+	assert_array(Array(problems)).is_empty()
+
+## The seat area's left and right edges in px from the bench's origin.
+func _seat_span(scene: PackedScene) -> Vector2:
+	var bench := scene.instantiate()
+	var shape := bench.get_node("Seat/CollisionShape2D") as CollisionShape2D
+	var half := (shape.shape as RectangleShape2D).size.x * 0.5
+	var at := (shape.get_parent() as Node2D).position.x + shape.position.x
+	bench.free()
+	return Vector2(at - half, at + half)
+
 ## A soft-landing zone's top stands 2 cells or more over the first floor in every column of its span, so a fall enters
 ## it frames before it lands, while the count is still being raised in the physics flush (systems/rooms "Soft landing").
 func test_every_soft_landing_rises_two_cells_over_its_floors() -> void:

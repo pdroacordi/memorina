@@ -181,7 +181,7 @@ else in the code knows what a character means.
 | `.` | any grid | empty | - | - | - | Nothing: air in `[grid]` and `[back]`, no water in `[water]`. |
 | `#` | `[grid]`, `[back]`, `[secret]` | ground | earth | earth | - | Earth: soil with a grassy top (the season's top). Enraizar's roots grow from it. |
 | `S` | `[grid]`, `[back]`, `[secret]` | ground | stone | stone | - | Stone: the biome's rock or laid stone. Roots never grow from it - use it where a song must NOT reach. |
-| `=` | `[grid]` | ledge | earth | earth | - | One-way earth ledge, one cell high: jump up through it, stand on it, drop through it. |
+| `=` | `[grid]` | ledge | earth | earth | - | One-way earth ledge, one cell high: jump up through it, stand on it, drop through it with Down + Jump. |
 | `%` | `[grid]`, `[back]`, `[secret]` | ground | wood | wood | - | Wood: planks, beams, stilts. Solid; roots never grow from it. |
 | `-` | `[grid]` | ledge | wood | wood | - | One-way plank, one cell high: jump up through it, stand on it. |
 | `^` | `[grid]` | roof | wood | - | - | Roof: a one-way ledge with no tile art, drawn by the building's facade prop; it lies on the facade's roof line (facade_doors_test). |

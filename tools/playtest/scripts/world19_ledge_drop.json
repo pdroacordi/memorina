@@ -1,0 +1,156 @@
+{
+ "scene": "res://scenes/world/game.tscn",
+ "max_duration": 9.0,
+ "locale": "en",
+ "player_position": [
+  -4448,
+  -1378
+ ],
+ "skills": [],
+ "steps": [
+  {
+   "t": 1.0,
+   "log": "drop:pre"
+  },
+  {
+   "t": 1.0,
+   "screenshot": "drop_01_on_ledge"
+  },
+  {
+   "t": 1.2,
+   "trace": true
+  },
+  {
+   "t": 1.2,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 1.4,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 1.5,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 1.5,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 1.5,
+   "screenshot": "drop_02_falling"
+  },
+  {
+   "t": 2.5,
+   "trace": false
+  },
+  {
+   "t": 2.5,
+   "log": "drop:post (expect y about -1248)"
+  },
+  {
+   "t": 2.5,
+   "screenshot": "drop_03_landed"
+  },
+  {
+   "t": 3.0,
+   "teleport": [
+    -4592,
+    -1346
+   ]
+  },
+  {
+   "t": 3.6,
+   "log": "earth:pre"
+  },
+  {
+   "t": 3.6,
+   "screenshot": "earth_01_on_block"
+  },
+  {
+   "t": 3.7,
+   "trace": true
+  },
+  {
+   "t": 3.8,
+   "action": "look_down",
+   "pressed": true
+  },
+  {
+   "t": 4.0,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 4.1,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 4.1,
+   "action": "look_down",
+   "pressed": false
+  },
+  {
+   "t": 4.25,
+   "screenshot": "earth_02_rising"
+  },
+  {
+   "t": 5.2,
+   "trace": false
+  },
+  {
+   "t": 5.2,
+   "log": "earth:post (expect y about -1344, back on the block)"
+  },
+  {
+   "t": 5.5,
+   "teleport": [
+    -4448,
+    -1378
+   ]
+  },
+  {
+   "t": 6.1,
+   "log": "ledge_jump:pre"
+  },
+  {
+   "t": 6.1,
+   "screenshot": "ledge_jump_01_on_ledge"
+  },
+  {
+   "t": 6.2,
+   "trace": true
+  },
+  {
+   "t": 6.3,
+   "action": "jump",
+   "pressed": true
+  },
+  {
+   "t": 6.45,
+   "action": "jump",
+   "pressed": false
+  },
+  {
+   "t": 6.6,
+   "screenshot": "ledge_jump_02_rising"
+  },
+  {
+   "t": 7.6,
+   "trace": false
+  },
+  {
+   "t": 7.6,
+   "log": "ledge_jump:post (expect y about -1376, back on the span)"
+  },
+  {
+   "t": 7.6,
+   "screenshot": "ledge_jump_03_landed"
+  }
+ ]
+}

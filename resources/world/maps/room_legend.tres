@@ -58,8 +58,9 @@ description = "Stone: the biome's rock or laid stone. Roots never grow from it -
 script = ExtResource("2_entry")
 symbol = "="
 kind = 1
+droppable = true
 required_params = PackedStringArray()
-description = "One-way earth ledge, one cell high: jump up through it, stand on it, drop through it."
+description = "One-way earth ledge, one cell high: jump up through it, stand on it, drop through it with Down + Jump."
 
 [sub_resource type="Resource" id="wood"]
 script = ExtResource("2_entry")

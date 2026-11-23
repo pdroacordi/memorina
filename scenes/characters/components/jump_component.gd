@@ -11,6 +11,8 @@ var is_jumping: bool = false
 
 var _coyote_timer: float = 0.0
 var _buffer_timer: float = 0.0
+## Whether the body stood on the floor when the buffered press was made.
+var _buffered_on_floor: bool = false
 
 # The component is a direct child of the body it drives.
 @onready var _body: Character = get_parent()
@@ -26,12 +28,18 @@ func tick_timers(delta: float, on_floor: bool) -> void:
 
 func buffer_jump() -> void:
 	_buffer_timer = stats.jump_buffer_max
+	_buffered_on_floor = _body.is_on_floor()
 
 func clear_buffer() -> void:
 	_buffer_timer = 0.0
+	_buffered_on_floor = false
 
 func has_buffered_jump() -> bool:
 	return _buffer_timer > 0.0
+
+## Whether the buffered press was made on the floor, read against the last physics step; false with no press buffered.
+func buffered_on_floor() -> bool:
+	return has_buffered_jump() and _buffered_on_floor
 
 func can_ground_jump(on_floor: bool) -> bool:
 	return on_floor or _coyote_timer > 0.0
@@ -40,12 +48,17 @@ func can_ground_jump(on_floor: bool) -> bool:
 func refresh_coyote() -> void:
 	_coyote_timer = stats.coyote_time_max
 
+## Ends coyote time: a press just after a drop through a ledge is no ground jump.
+func spend_coyote() -> void:
+	_coyote_timer = 0.0
+
 ## Shared launch for ground and air jumps.
 func launch(height: float) -> void:
 	_body.velocity.y = jump_force(height)
 	is_jumping = true
 	_coyote_timer = 0.0
 	_buffer_timer = 0.0
+	_buffered_on_floor = false
 
 func try_ground_jump(on_floor: bool) -> bool:
 	if not can_ground_jump(on_floor):

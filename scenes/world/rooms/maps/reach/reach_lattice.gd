@@ -29,8 +29,8 @@ const _WET := 16
 const _SOFT := 32
 const _CLIMB := 64
 const _EXIT := 128
-# Raw cell bit: in no room and no sky band.
-const _OUTSIDE := 1024
+# Raw cell bit: in no room and no sky band. Above every ReachGrid flag.
+const _OUTSIDE := 1 << 30
 
 enum _Profile { JUMP, FALL, AIR, TERMINAL }
 const _STEPS: Array[int] = [-1, 0, 1]
@@ -100,6 +100,9 @@ func search(grid: ReachGrid, from: Array[Vector2i], double_jump: bool, wall_clim
 			if grounded:
 				_push(states, seen, _key(x, anchor, _Profile.JUMP, 0, 1))
 			_push(states, seen, _key(x, anchor, _Profile.FALL, 0, 1))
+		# Down + Jump: a fall from rest with the feet a quantum into the ledge (LedgeDropComponent.DROP_DEPTH is 6 px).
+		if can_drop(cell):
+			_push(states, seen, _key(local.x, anchor + 1, _Profile.FALL, 0, 1))
 	var next := 0
 	while next < states.size():
 		var key := states[next]
@@ -228,6 +231,14 @@ func is_standing(cell: Vector2i) -> bool:
 ## Whether the footprint at `cell` holds a root or is inside a current.
 func is_transit(cell: Vector2i) -> bool:
 	return _at(cell) & _TRANSIT != 0
+
+## Whether Ivo standing with his feet in `cell` drops through the ledge under him (LedgeDrop).
+func can_drop(cell: Vector2i) -> bool:
+	if not is_standing(cell) or _grid.flags(cell + Vector2i.DOWN) & ReachGrid.DROP == 0:
+		return false
+	var room := _grid.room_at(cell + Vector2i.DOWN)
+	return LedgeDrop.allows_at(func(at: Vector2i) -> LedgeDrop.Cell: return _grid.drop_cell(at, room),
+			cell.x, cell.x + body.x - 1, cell.y + 1, body.y * _CELL)
 
 ## Whether the footprint at `cell` holds a root.
 func is_climb(cell: Vector2i) -> bool:

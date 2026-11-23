@@ -47,6 +47,14 @@ static func teleport_body(body: CharacterBody2D, point: Vector2) -> void:
 	PhysicsServer2D.body_set_state(rid, PhysicsServer2D.BODY_STATE_TRANSFORM, body.global_transform)
 	PhysicsServer2D.body_set_mode(rid, PhysicsServer2D.BODY_MODE_KINEMATIC)
 
+## `body`'s CollisionShape2D child's rect in world px; empty without one.
+static func shape_rect(body: Node2D) -> Rect2:
+	var shape_node := body.get_node_or_null(^"CollisionShape2D") as CollisionShape2D
+	if shape_node == null or shape_node.shape == null:
+		return Rect2()
+	var rect := shape_node.shape.get_rect()
+	return Rect2(shape_node.global_position + rect.position, rect.size)
+
 func _ready() -> void:
 	add_to_group(CHARACTERS_GROUP)
 	floor_snap_length = FLOOR_SNAP
@@ -69,11 +77,7 @@ func teleport(point: Vector2) -> void:
 
 ## The body's collision rect in world px; empty without a CollisionShape2D child.
 func body_rect() -> Rect2:
-	var shape_node := get_node_or_null(^"CollisionShape2D") as CollisionShape2D
-	if shape_node == null or shape_node.shape == null:
-		return Rect2()
-	var rect := shape_node.shape.get_rect()
-	return Rect2(shape_node.global_position + rect.position, rect.size)
+	return shape_rect(self)
 
 func face_towards(axis: float) -> void:
 	if is_zero_approx(axis):

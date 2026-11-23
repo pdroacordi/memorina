@@ -3,11 +3,12 @@ class_name ReachGridTest extends GdUnitTestSuite
 ## Checks what each map character becomes in the stitched grid.
 
 func test_ground_ledges_and_roofs_are_flagged() -> void:
-	var grid := ReachFixture.grid(PackedStringArray(["#=^.", "SSSS"]), Vector2i.ZERO)
+	var grid := ReachFixture.grid(PackedStringArray(["#=^.-", "SSSSS"]), Vector2i.ZERO)
 	assert_int(grid.flags(Vector2i(0, 0))).is_equal(ReachGrid.SOLID)
-	assert_int(grid.flags(Vector2i(1, 0))).is_equal(ReachGrid.ONE_WAY)
+	assert_int(grid.flags(Vector2i(1, 0))).is_equal(ReachGrid.ONE_WAY | ReachGrid.DROP)
 	assert_int(grid.flags(Vector2i(2, 0))).is_equal(ReachGrid.ONE_WAY | ReachGrid.ROOF)
 	assert_int(grid.flags(Vector2i(3, 0))).is_equal(0)
+	assert_int(grid.flags(Vector2i(4, 0))).is_equal(ReachGrid.ONE_WAY)
 
 func test_outside_every_room_is_air() -> void:
 	var grid := ReachFixture.grid(PackedStringArray(["####"]), Vector2i.ZERO)

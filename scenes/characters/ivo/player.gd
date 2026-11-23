@@ -98,6 +98,8 @@ signal talk_started(talkable: Talkable)
 signal pickup_talk_started(dialogue: Dialogue, at: Vector2)
 ## A talk handed to a beat may go on: Ivo is free on the floor again (request_talk_resume).
 signal talk_resumed
+## Down + Jump dropped him through a ledge from `at` (architecture/drop-through-ledges).
+signal dropped_through(at: Vector2)
 ## A note input while a beat holds him to the notes (the guitar); the dialogue director hands it to the beat.
 signal beat_note_pressed(note: Enums.Note, glyph_set: Enums.GlyphSet)
 
@@ -124,6 +126,8 @@ const RECALL_ESCAPE_TIME := 0.9
 const UP_BUFFER := 0.1
 ## A cutscene walk under this pace (0..1 of his run) shows the walk clip, not the run (STORY-16).
 const STROLL_PACE := 0.75
+## Down held past this (0..1) turns a jump press on a droppable ledge into a drop; mirrors the climb's Up.
+const DROP_AXIS := 0.5
 ## Story poses he holds on the ground; leaving one for any other plays the stand-up clip.
 const GROUND_POSES: Array[int] = [DialogueBeat.Pose.SEATED, DialogueBeat.Pose.KNEEL, DialogueBeat.Pose.SIT_GROUND]
 
@@ -141,6 +145,7 @@ enum Taken { ITEM, LETTER, SONGBOOK, SEED }
 @onready var _roll            : RollComponent = $Roll
 @onready var _climb           : ClimbComponent = $Climb
 @onready var _rider           : HelixRiderComponent = $HelixRider
+@onready var _ledge_drop      : LedgeDropComponent = $LedgeDrop
 @onready var _sit             : SitComponent = $Sit
 @onready var _doors           : DoorComponent = $Doors
 @onready var _talks           : TalkComponent = $Talks
@@ -296,6 +301,7 @@ func _ready() -> void:
 	# signals with from=".". Re-emitting keeps those scene connections working
 	# untouched, so moving logic into a component never costs a scene edit.
 	_jump.jumped.connect(jumped.emit)
+	_ledge_drop.dropped.connect(dropped_through.emit)
 	_landing.hard_landed.connect(hard_landed.emit)
 	_landing.landed.connect(landed.emit)
 	_double_jump.double_jumped.connect(_on_double_jumped)
@@ -1403,10 +1409,23 @@ func _try_jump(on_floor: bool) -> void:
 		_climb.release()
 		_jump.try_ground_jump(true)
 		return
+	# Pressed on the floor, never in the air or in coyote: a jump buffered in the air with Down held lands as a jump
+	# (bugs/a-jump-buffered-in-the-air-with-down-held-drops-through-a-ledge-on-landing).
+	if on_floor and _jump.buffered_on_floor() and _input.look_direction > DROP_AXIS and _can_drop() \
+			and _ledge_drop.try_drop():
+		_jump.clear_buffer()
+		_jump.spend_coyote()
+		return
 	if _jump.try_ground_jump(on_floor):
 		_wall_mobility.stop()
 	elif _double_jump.try_jump():
 		_wall_mobility.stop()
+
+# A recall's armed or pending press is its jump, never a drop.
+func _can_drop() -> bool:
+	if is_in_knockback() or _rider.is_riding() or _sit.is_sitting():
+		return false
+	return not _recall.is_armed() and _pending_recall == null
 
 ## Where a roll or a wall grip goes with nothing held: the held axis, or for RECALL_ESCAPE_TIME after a recall, away
 ## from what forced it (a gust's wall is gripped with nothing held, GRD-04).

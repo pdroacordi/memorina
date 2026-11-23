@@ -1005,6 +1005,9 @@ Godot/GDScript engine behavior (not specific to this harness) rather than a limi
     judge a spawn against the scenery, force it with `guardian_art_check_driver.gd` (`AC_MOVES`, `AC_IVO_X`) and make a
     copy of the `guardian_bot_*.json` timeline with `max_duration` 500.
 
+- **Learned 2026-11-23 (WORLD-19 ledge drop)**: **time a press from `trace`, not from frames.** Find the first trace line whose y differs from the rest y, and compare it with the step's `t` and with a plain jump control in the same run. On this machine both the drop and a jump move 0.031 s after the step. A teleport-based move (the drop's 6 px, the helix) moves `cam_centre` by the same amount in the same frame, so on screen it shows as the world shifting, not as Ivo.
+  Positions: orchard_terraces `=` span x -4512..-4384 top -1376 (floor below -1248); earth block -4640..-4512 top -1344; tavern `-` planks row 13 x 2176..2592 top 12416, row 17 x 2208..2336 top 12544. A drop is refused for a body within 11 px of the span's west end (earth one row under col 38).
+
 ## What you do NOT do
 
 - Do not edit gameplay code to fix what you find — report it; implementation is a separate

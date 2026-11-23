@@ -69,20 +69,41 @@ func _best_double_jump_gap() -> float:
 				break
 	return steps * JumpReach.STEP * _reach.locomotion.move_speed + _reach.body_radius * 2.0
 
-func test_a_one_way_is_jumped_up_through_and_never_dropped_through() -> void:
+# A floor under a ledge of `symbol` three rows down, Ivo's feet on the ledge at (5, 2).
+func _drop_grid(symbol: String) -> ReachGrid:
+	return ReachFixture.grid(PackedStringArray([
+		"#..........#",
+		"#..........#",
+		"#..........#",
+		"#" + symbol.repeat(10) + "#",
+		"#..........#",
+		"#..........#",
+		"############",
+	]), Vector2i(5, 5))
+
+func test_a_one_way_is_jumped_up_through() -> void:
+	var up := ReachFixture.ivo().landings(_drop_grid("-"), [Vector2i(5, 5)] as Array[Vector2i], ReachLattice.Tier.BASE)
+	assert_bool(Vector2i(5, 2) in up).is_true()
+
+func test_an_earth_ledge_is_dropped_through() -> void:
+	var down := ReachFixture.ivo().landings(_drop_grid("="), [Vector2i(5, 2)] as Array[Vector2i], ReachLattice.Tier.BASE)
+	assert_bool(Vector2i(5, 5) in down).is_true()
+
+func test_a_plank_is_never_dropped_through() -> void:
+	var down := ReachFixture.ivo().landings(_drop_grid("-"), [Vector2i(5, 2)] as Array[Vector2i], ReachLattice.Tier.BASE)
+	assert_bool(down.any(func(cell: Vector2i) -> bool: return cell.y == 5)).is_false()
+
+func test_an_earth_ledge_one_row_over_ground_is_never_dropped_through() -> void:
 	var grid := ReachFixture.grid(PackedStringArray([
 		"#..........#",
 		"#..........#",
 		"#..........#",
 		"#==========#",
 		"#..........#",
-		"#..........#",
 		"############",
-	]), Vector2i(5, 5))
-	var up := ReachFixture.ivo().landings(grid, [Vector2i(5, 5)] as Array[Vector2i], ReachLattice.Tier.BASE)
+	]), Vector2i(5, 4))
 	var down := ReachFixture.ivo().landings(grid, [Vector2i(5, 2)] as Array[Vector2i], ReachLattice.Tier.BASE)
-	assert_bool(Vector2i(5, 2) in up).is_true()
-	assert_bool(down.any(func(cell: Vector2i) -> bool: return cell.y == 5)).is_false()
+	assert_bool(down.any(func(cell: Vector2i) -> bool: return cell.y == 4)).is_false()
 
 func test_a_roof_carries_like_a_one_way() -> void:
 	var grid := ReachFixture.grid(PackedStringArray([

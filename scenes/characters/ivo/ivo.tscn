@@ -86,6 +86,7 @@
 [ext_resource type="Script" path="res://scenes/characters/ivo/ivo_music_yield.gd" id="98_musicyield"]
 [ext_resource type="Script" path="res://scenes/audio/sfx_emitter.gd" id="94_sfxemit"]
 [ext_resource type="Script" path="res://scenes/characters/components/step_surface_probe.gd" id="95_stepprobe"]
+[ext_resource type="Script" path="res://scenes/characters/components/ledge_drop_component.gd" id="96_ledgedrop"]
 [ext_resource type="Resource" path="res://resources/audio/sfx/ivo/ivo_sounds.tres" id="96_ivosoundset"]
 [ext_resource type="Resource" path="res://resources/audio/sfx/ivo/ivo_footfalls.tres" id="97_footfalls"]
 
@@ -2862,6 +2863,9 @@ shape = SubResource("RectangleShape2D_climbsensor")
 
 [node name="HelixRider" type="Node" parent="."]
 script = ExtResource("73_helixrider")
+
+[node name="LedgeDrop" type="Node" parent="."]
+script = ExtResource("96_ledgedrop")
 
 [node name="Sit" type="Node" parent="."]
 script = ExtResource("71_sitco")

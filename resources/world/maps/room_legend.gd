@@ -35,6 +35,8 @@ func problems() -> PackedStringArray:
 			var fits := RoomLegendEntry.Kind.WATER if water_role else RoomLegendEntry.Kind.ENTITY
 			if candidate.kind != fits:
 				found.append("'%s' cannot have the reach role %s" % [candidate.symbol, RoomLegendEntry.ReachRole.keys()[candidate.reach_role]])
+		if candidate.droppable and candidate.kind != RoomLegendEntry.Kind.PLATFORM:
+			found.append("'%s' cannot be droppable: only a ledge is" % candidate.symbol)
 		match candidate.kind:
 			RoomLegendEntry.Kind.WATER:
 				if candidate.water_layer == null:

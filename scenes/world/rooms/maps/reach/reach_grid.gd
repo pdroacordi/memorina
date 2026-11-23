@@ -18,6 +18,8 @@ const ROOF := 128
 const WATER := 256
 ## A current's downwind edge, where it sets Ivo down.
 const CURRENT_EXIT := 512
+## Set with ONE_WAY on a ledge Down + Jump drops through (RoomLegendEntry.droppable).
+const DROP := 1024
 
 ## Px per cell.
 const CELL := RoomMap.CELL_PX
@@ -70,6 +72,8 @@ func add_room(id: StringName, map: RoomMap, cell_origin: Vector2i, region: Strin
 			elif map.is_platform(cell):
 				var entry := map.legend.entry(map.rows[y][x])
 				flags |= (ROOF | ONE_WAY) if entry != null and entry.kind == RoomLegendEntry.Kind.ROOF else ONE_WAY
+				if map.is_droppable(cell):
+					flags |= DROP
 			if map.secret_at(cell) > 0:
 				flags |= SECRET
 			# A mover of a room added earlier may already have flagged this cell.
@@ -171,6 +175,18 @@ func set_start(cell: Vector2i) -> void:
 
 func flags(cell: Vector2i) -> int:
 	return _cells.get(cell, 0)
+
+## `cell` as LedgeDrop sees it from a ledge in room `room`; must classify like RoomMap.drop_cell, where every cell
+## outside the ledge's room is off the map.
+func drop_cell(cell: Vector2i, room: int) -> LedgeDrop.Cell:
+	if room < 0 or not _room_rects[room].has_point(cell):
+		return LedgeDrop.Cell.STOPS
+	var at := flags(cell)
+	if at & SOLID != 0:
+		return LedgeDrop.Cell.STOPS
+	if at & ONE_WAY != 0:
+		return LedgeDrop.Cell.DROPPABLE if at & DROP != 0 else LedgeDrop.Cell.STOPS
+	return LedgeDrop.Cell.OPEN
 
 ## The rectangle, in world cells, holding every room.
 func bounds() -> Rect2i:
